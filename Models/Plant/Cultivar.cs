@@ -80,7 +80,7 @@ namespace Models.PMF
 
                     if (propertyName != string.Empty && propertyValue != string.Empty)
                     {
-                        IVariable property = model.GetVariableObject(propertyName) as IVariable;
+                        IVariable property = Apsim.GetVariableObject(model, propertyName) as IVariable;
                         if (property != null)
                         {
                             this.oldPropertyValues.Add(property.Value);

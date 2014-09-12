@@ -12,8 +12,6 @@ namespace Models.PMF
     [Serializable]
     public class CompositeBiomass : Biomass
     {
-
-
         public string[] Propertys = null;
 
         /// <summary>
@@ -25,7 +23,7 @@ namespace Models.PMF
 
             foreach (string PropertyName in Propertys)
             {
-                object v = Util.GetVariable(PropertyName, this);
+                object v = Apsim.Get(this, PropertyName);
                 if (v == null)
                     throw new Exception("Cannot find: " + PropertyName + " in composite biomass: " + this.Name);
 

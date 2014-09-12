@@ -23,7 +23,8 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-	[Link] Plant Plant;          
+	[Link] Plant Plant;  
+    [Link] Zone zone;
 					
 		[Description("Path for coefficient to be Overwritten")]
 		public string OverRidePath { get; set; }
@@ -34,7 +35,7 @@ namespace Models
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
-			Set(OverRidePath, ResetValue);
+			zone.Set(OverRidePath, ResetValue);
 	    }
 	}
 }
@@ -325,12 +326,12 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.8370896065453246</double>
-            <double>1.463442064386993</double>
-            <double>1.1988606073560995</double>
-            <double>1.0300993672854668</double>
-            <double>0.47033795108372745</double>
-            <double>0.47013740649559976</double>
+            <double>1.82</double>
+            <double>1.47</double>
+            <double>1.2</double>
+            <double>1.03</double>
+            <double>0.47</double>
+            <double>0.47</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -522,7 +523,8 @@ namespace Models
 		[Link] WeatherFile Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant PMFSlurp;          
+		[Link] Plant PMFSlurp;
+        [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -599,7 +601,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Get("[PMFSlurp].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("[PMFSlurp].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -609,8 +611,8 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)Get("[PMFSlurp].Leaf.Transpiration");
-            AccumEP -= (double)Get("[PMFSlurp].Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[PMFSlurp].Leaf.Transpiration");
+            AccumEP -= (double)zone.Get("[PMFSlurp].Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -637,9 +639,6 @@ namespace Models
       </Manager>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -649,7 +648,18 @@ namespace Models
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypesList</Name>
+          <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>wheat</PoolName>
+            <ResidueType>wheat</ResidueType>
+            <Mass>2000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
         <mass>2000</mass>
@@ -665,6 +675,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -801,7 +812,8 @@ namespace Models
 	public class Script : Model
 	{      
 	[Link] Plant Plant;          
-    [Link] Clock Clock;			
+    [Link] Clock Clock;	
+    [Link] Zone zone;
 		
 		[Description("Path for coefficient to be Overwritten")]
 		public string OverRidePath { get; set; }
@@ -815,8 +827,8 @@ namespace Models
         {
             if (Clock.Today.Date == ChangeDate)
             {
-			object ResetValue = OverRideInterger;
-			Set(OverRidePath, ResetValue);
+            object ResetValue = OverRideInterger;
+			zone.Set(OverRidePath, ResetValue);
 			}
 	    }
 	}
@@ -2148,6 +2160,8 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>235</ExplorerWidth>
 </Simulations>

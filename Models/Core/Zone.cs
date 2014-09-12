@@ -28,5 +28,74 @@ namespace Models.Core
         [Description("Slope (deg)")]
         public double Slope { get; set; }
 
+
+        /// <summary>
+        /// Gets an array of plant models that are in scope.
+        /// </summary>
+        [XmlIgnore]
+        public List<ICrop2> Plants
+        {
+            get
+            {
+                var plants = new List<ICrop2>();
+                foreach (var plant in FindAll(typeof(ICrop2)))
+                {
+                    plants.Add(plant as ICrop2);
+                }
+
+                return plants;
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of a variable or model.
+        /// </summary>
+        /// <param name="namePath">The name of the object to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public object Get(string namePath)
+        {
+            return Locator().Get(namePath, this);
+        }
+
+        /// <summary>
+        /// Get the underlying variable object for the given path.
+        /// </summary>
+        /// <param name="namePath">The name of the variable to return</param>
+        /// <returns>The found object or null if not found</returns>
+        public IVariable GetVariableObject(string namePath)
+        {
+            return Locator().GetInternal(namePath, this);
+        }
+
+        /// <summary>
+        /// Sets the value of a variable. Will throw if variable doesn't exist.
+        /// </summary>
+        /// <param name="namePath">The name of the object to set</param>
+        /// <param name="value">The value to set the property to</param>
+        public void Set(string namePath, object value)
+        {
+            Locator().Set(namePath, this, value);
+        }
+
+
+        /// <summary>
+        /// Gets the locater model for the specified model.
+        /// </summary>
+        /// <param name="model">The model to find the locator for</param>
+        /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
+        private Locater Locator()
+        {
+            var simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+            if (simulation == null)
+            {
+                // Simulation can be null if this model is not under a simulation e.g. DataStore.
+                return new Locater();
+            }
+            else
+            {
+                return simulation.Locater;
+            }
+        }
+
     }
 }

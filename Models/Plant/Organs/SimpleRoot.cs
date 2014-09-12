@@ -92,7 +92,7 @@ namespace Models.PMF.Organs
                 double[] SWSupply;
                 if (TalkDirectlyToRoot)
                 {
-                    SWSupply = (double[])this.Get(OurName + "Root.SWSupply");
+                    SWSupply = (double[])Apsim.Get(this, OurName + "Root.SWSupply");
                     return Utility.Math.Sum(SWSupply);
                 }
 

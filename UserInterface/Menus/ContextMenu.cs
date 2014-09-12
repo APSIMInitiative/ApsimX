@@ -46,7 +46,7 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Copy")]
         public void OnCopyClick(object sender, EventArgs e)
         {
-            Model model = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+            Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             if (model != null)
             {
                 // Set the clipboard text.
@@ -69,7 +69,7 @@ namespace UserInterface.Presenters
                 object newModel = Utility.Xml.Deserialise(document.DocumentElement);
 
                 // See if the presenter is happy with this model being added.
-                Model parentModel = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+                Model parentModel = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
                 AllowDropArgs allowDropArgs = new AllowDropArgs();
                 allowDropArgs.NodePath = this.explorerPresenter.CurrentNodePath;
                 allowDropArgs.DragObject = new DragObject()
@@ -101,7 +101,7 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Delete")]
         public void OnDeleteClick(object sender, EventArgs e)
         {
-            Model model = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+            Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             if (model != null && model.GetType().Name != "Simulations")
             {
                 DeleteModelCommand command = new DeleteModelCommand(model);
@@ -126,7 +126,7 @@ namespace UserInterface.Presenters
         public void RunAPSIM(object sender, EventArgs e)
         {
             this.explorerPresenter.Save();
-            Model model = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+            Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
             command.Do(null);
         }
@@ -155,7 +155,7 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Check Soil", AppliesTo = new Type[] { typeof(Soil) })]
         public void CheckSoil(object sender, EventArgs e)
         {
-            Soil currentSoil = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Soil;
+            Soil currentSoil = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Soil;
             if (currentSoil != null)
             {
                 string errorMessages = currentSoil.Check(false);
@@ -238,7 +238,7 @@ namespace UserInterface.Presenters
                                               typeof(FactorValue) })]
         public void AddFactorValue(object sender, EventArgs e)
         {
-            Model factor = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+            Model factor = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             if (factor != null)
             {
                 AddModelCommand command = new AddModelCommand("<FactorValue/>", factor);
@@ -254,7 +254,7 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Add factor", AppliesTo = new Type[] { typeof(Factors) })]
         public void AddFactor(object sender, EventArgs e)
         {
-            Model factors = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+            Model factors = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             if (factors != null)
             {
                 AddModelCommand command = new AddModelCommand("<Factor/>", factors);
@@ -273,7 +273,7 @@ namespace UserInterface.Presenters
             string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
             if (destinationFolder != null)
             {
-                Model modelClicked = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as Model;
+                Model modelClicked = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
                 if (modelClicked != null)
                 {
                     if (modelClicked is Simulations)
@@ -300,7 +300,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void RunPostSimulationModels(object sender, EventArgs e)
         {
-            DataStore dataStore = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as DataStore;
+            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
             {
                 try
@@ -325,7 +325,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            DataStore dataStore = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as DataStore;
+            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
             {
                 dataStore.DeleteAllTables();
@@ -342,7 +342,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void ExportDataStoreToCSV(object sender, EventArgs e)
         {
-            DataStore dataStore = this.explorerPresenter.ApsimXFile.Get(this.explorerPresenter.CurrentNodePath) as DataStore;
+            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
             {
                 dataStore.WriteToTextFiles();

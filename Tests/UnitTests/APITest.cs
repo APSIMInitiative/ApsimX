@@ -166,8 +166,8 @@ namespace UnitTests
             Assert.AreEqual(inScopeForGraph[8].Name, "Field1");
             Assert.AreEqual(inScopeForGraph[9].Name, "Test");
             
-            List<IModel> zones = graphAPI.FindAll(typeof(Zone));
-            Assert.AreEqual(zones.Count, 3);
+            List<IModel> zones = Apsim.FindAll(graph, typeof(Zone));
+            Assert.AreEqual(zones.Count, 4);
             Assert.AreEqual(zones[0].Name, "Field2SubZone");
             Assert.AreEqual(zones[1].Name, "Field2");
             Assert.AreEqual(zones[2].Name, "Field1");
@@ -223,33 +223,33 @@ namespace UnitTests
             Apsim graphAPI = Apsim.Create(graph);
             
             // Make sure we can get a link to a local model from Field1
-            Assert.AreEqual((field1API.Get("Field1Report") as IModel).Name, "Field1Report");
+            Assert.AreEqual((field1.Get("Field1Report") as IModel).Name, "Field1Report");
             
             // Make sure we can get a variable from a local model.
-            Assert.AreEqual(field1API.Get("Field1Report.Name"), "Field1Report");
+            Assert.AreEqual(field1.Get("Field1Report.Name"), "Field1Report");
 
             // Make sure we can get a variable from a local model using a full path.
-            Assert.AreEqual((field1API.Get(".Simulations.Test.Field1.Field1Report") as IModel).Name, "Field1Report");
-            Assert.AreEqual(field1API.Get(".Simulations.Test.Field1.Field1Report.Name"), "Field1Report");
+            Assert.AreEqual((field1.Get(".Simulations.Test.Field1.Field1Report") as IModel).Name, "Field1Report");
+            Assert.AreEqual(field1.Get(".Simulations.Test.Field1.Field1Report.Name"), "Field1Report");
 
             // Make sure we get a null when trying to link to a top level model from Field1
-            Assert.IsNull(field1API.Get("WeatherFile"));
+            Assert.IsNull(field1.Get("WeatherFile"));
 
             // Make sure we can get a top level model from Field1 using a full path.
-            Assert.AreEqual(Utility.Reflection.Name(field1API.Get(".Simulations.Test.WeatherFile")), "WeatherFile");
+            Assert.AreEqual(Utility.Reflection.Name(field1.Get(".Simulations.Test.WeatherFile")), "WeatherFile");
 
             // Make sure we can get a model in Field2 from Field1 using a full path.
-            Assert.AreEqual(Utility.Reflection.Name(field1API.Get(".Simulations.Test.Field2.Graph1")), "Graph1");
+            Assert.AreEqual(Utility.Reflection.Name(field1.Get(".Simulations.Test.Field2.Graph1")), "Graph1");
 
             // Make sure we can get a property from a model in Field2 from Field1 using a full path.
-            Assert.AreEqual(field1API.Get(".Simulations.Test.Field2.Graph1.Name"), "Graph1");
+            Assert.AreEqual(field1.Get(".Simulations.Test.Field2.Graph1.Name"), "Graph1");
 
             // Make sure we can get a property from a model in Field2/Field2SubZone from Field1 using a full path.
-            Assert.AreEqual(field1API.Get(".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport.Name"), "Field2SubZoneReport");
+            Assert.AreEqual(field1.Get(".Simulations.Test.Field2.Field2SubZone.Field2SubZoneReport.Name"), "Field2SubZoneReport");
             
             // Test the in scope capability of get.
-            Assert.AreEqual(soilAPI.Get("[Graph1].Name"), "Graph1");
-            Assert.AreEqual(graphAPI.Get("[Soil].Water.Name"), "Water");
+            Assert.AreEqual(zone2.Get("[Graph1].Name"), "Graph1");
+            Assert.AreEqual(zone2.Get("[Soil].Water.Name"), "Water");
         }
         
         /// <summary>
@@ -259,9 +259,9 @@ namespace UnitTests
         public void SetTest()
         {
             WeatherFile weather = this.simulation.Children[0] as WeatherFile;
-            Assert.AreEqual(this.simulationAPI.Get("[WeatherFile].Rain"), 0.0);
-            this.simulationAPI.Set("[WeatherFile].Rain", 111.0);
-            Assert.AreEqual(this.simulationAPI.Get("[WeatherFile].Rain"), 111.0);
+            Assert.AreEqual(this.simulation.Get("[WeatherFile].Rain"), 0.0);
+            this.simulation.Set("[WeatherFile].Rain", 111.0);
+            Assert.AreEqual(this.simulation.Get("[WeatherFile].Rain"), 111.0);
         }
 
         /// <summary>

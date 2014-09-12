@@ -29,9 +29,6 @@ namespace Models.Soils
         private Clock Clock = null;
 
         //[Link]
-        //private Zone Paddock = null;
-
-        //[Link]
         private SoilWatTillageType SoilWatTillageType = null;
 
         [Link]
@@ -1264,7 +1261,7 @@ namespace Models.Soils
                     propName = solutes[solnum].ownerName + "." + solutes[solnum].name;
                 else
                     propName = solutes[solnum].name;
-                object objValue = this.Get(propName);
+                object objValue = Apsim.Get(this, propName);
                 if (objValue != null)
                 {
                     Value = objValue as double[];

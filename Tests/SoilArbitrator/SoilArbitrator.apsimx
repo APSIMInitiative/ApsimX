@@ -2081,6 +2081,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>1Tree1Field</Name>
@@ -2831,6 +2833,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>1Tree2Field</Name>
@@ -4278,6 +4282,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>1Tree3Field</Name>
@@ -6390,6 +6396,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>2Tree1Field</Name>
@@ -7172,6 +7180,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>3Tree1Field</Name>
@@ -7980,6 +7990,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>

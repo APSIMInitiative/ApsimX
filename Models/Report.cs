@@ -256,9 +256,9 @@ namespace Models
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
-        new public object Get(string name)
+        public object Get(string name)
         {
-            return base.Get(name);
+            return Apsim.Get(this, name);
         }
         /// <summary>
         /// An event handler to allow us to initialise ourselves.

@@ -35,7 +35,7 @@ namespace Models.PMF.Functions
                 double XValue = 0;
                 try
                 {
-                    object v = Util.GetVariable(XProperty, this);
+                    object v = Apsim.Get(this, XProperty);
                     if (v == null)
                         throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                     XValue = Convert.ToDouble(v);

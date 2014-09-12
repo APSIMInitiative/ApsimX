@@ -141,7 +141,7 @@ namespace Models.PMF
             int i = 0;
             foreach (string PropertyName in Propertys)
             {
-                object Obj = Util.GetVariable(PropertyName + SubPropertyName, this);
+                object Obj = Apsim.Get(this, PropertyName + SubPropertyName);
                 if (Obj == null)
                     throw new Exception("Cannot find: " + PropertyName + " in ArrayBiomass: " + this.Name);
 

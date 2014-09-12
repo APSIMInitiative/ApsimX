@@ -49,6 +49,7 @@ namespace Models.Core
             public Model matchingModel;
             string ComponentName;
             string EventName;
+            private Zone zone;
 
             public DynamicEventSubscriber(string namePath, EventHandler handler, Model parentModel)
             {
@@ -64,7 +65,9 @@ namespace Models.Core
             }
             public void Connect(Model model)
             {
-                object Component = model.Get(ComponentName);
+                zone = Apsim.Parent(model, typeof(Zone)) as Zone;
+
+                object Component = zone.Get(ComponentName);
                 if (Component == null)
                     throw new Exception(Apsim.FullPath(model) + " can not find the component: " + ComponentName);
                 EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
@@ -75,7 +78,7 @@ namespace Models.Core
             }
             public void Disconnect(Model model)
             {
-                object Component = model.Get(ComponentName);
+                object Component = zone.Get(ComponentName);
                 if (Component != null)
                 {
                     EventInfo ComponentEvent = Component.GetType().GetEvent(EventName);
@@ -90,7 +93,7 @@ namespace Models.Core
             public bool IsMatch(EventPublisher publisher)
             {
                 if (matchingModel == null)
-                    matchingModel = parent.Get(ComponentName) as Model;
+                    matchingModel = zone.Get(ComponentName) as Model;
 
                 return Apsim.FullPath(publisher.Model) == Apsim.FullPath(matchingModel) && EventName == publisher.Name;
             }

@@ -782,7 +782,8 @@ namespace Models
 		[Link] WeatherFile Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant Potato;          
+		[Link] Plant Potato;
+        [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -861,7 +862,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -871,7 +872,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -4402,7 +4403,8 @@ namespace Models
 		[Link] WeatherFile Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant Potato;          
+		[Link] Plant Potato;    
+        [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -4481,7 +4483,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -4491,7 +4493,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -6601,8 +6603,8 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-	[Link] Plant Plant;          
-					
+        [Link] Plant Plant;          
+        [Link] Zone zone;
 		[Description("Path for coefficient to be Overwritten")]
 		public string OverRidePath { get; set; }
 		[Description("Value for new coefficient Interger")]
@@ -6612,7 +6614,7 @@ namespace Models
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
-			Set(OverRidePath, ResetValue);
+			zone.Set(OverRidePath, ResetValue);
 	    }
 	}
 }
@@ -8158,7 +8160,8 @@ namespace Models
 		[Link] WeatherFile Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant Potato;          
+		[Link] Plant Potato;  
+        [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -8237,7 +8240,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -8247,7 +8250,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -11892,7 +11895,8 @@ namespace Models
 		[Link] WeatherFile Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant Potato;          
+		[Link] Plant Potato;
+        [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -11971,7 +11975,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -11981,7 +11985,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -14072,8 +14076,8 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-	[Link] Plant Plant;          
-					
+        [Link] Plant Plant;          
+		[Link] Zone zone;			
 		[Description("Path for coefficient to be Overwritten")]
 		public string OverRidePath { get; set; }
 		[Description("Value for new coefficient Interger")]
@@ -14083,7 +14087,7 @@ namespace Models
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
-			Set(OverRidePath, ResetValue);
+			zone.Set(OverRidePath, ResetValue);
 	    }
 	}
 }
@@ -15717,7 +15721,8 @@ namespace Models
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;          
-					
+        [Link] Zone zone;
+        
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
 		[XmlIgnore] public double AccumPlantN { get; set; }
@@ -15795,7 +15800,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -15805,7 +15810,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -17840,7 +17845,8 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-	[Link] Plant Plant;          
+        [Link] Plant Plant;          
+		[Link] Zone zone;			
 					
 		[Description("Path for coefficient to be Overwritten")]
 		public string OverRidePath { get; set; }
@@ -17851,7 +17857,7 @@ namespace Models
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
-			Set(OverRidePath, ResetValue);
+			zone.Set(OverRidePath, ResetValue);
 	    }
 	}
 }
@@ -20237,7 +20243,8 @@ namespace Models
 		[Link] WeatherFile Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant Potato;          
+		[Link] Plant Potato;
+        [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -20317,7 +20324,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -20327,7 +20334,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -22362,7 +22369,8 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{      
-	[Link] Plant Plant;          
+        [Link] Plant Plant;          
+		[Link] Zone zone;			
 					
 		[Description("Path for coefficient to be Overwritten")]
 		public string OverRidePath { get; set; }
@@ -22373,7 +22381,7 @@ namespace Models
 		private void OnSowing(object sender, EventArgs e)
 		{
 			object ResetValue = OverRideInterger;
-			Set(OverRidePath, ResetValue);
+			zone.Set(OverRidePath, ResetValue);
 	    }
 	}
 }

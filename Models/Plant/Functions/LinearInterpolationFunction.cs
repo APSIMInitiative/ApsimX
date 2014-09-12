@@ -41,7 +41,7 @@ namespace Models.PMF.Functions
                     return XYPairs.Y[0];
 
                 string PropertyName = XProperty;
-                object v = Util.GetVariable(PropertyName, this);
+                object v = Apsim.Get(this, PropertyName);
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 double XValue = (double) v;
@@ -60,7 +60,7 @@ namespace Models.PMF.Functions
             {
                 string PropertyName = XProperty;
 
-                double[] v = (double[])this.Get(XProperty);
+                double[] v = (double[])Apsim.Get(this, XProperty);
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 if (v is Array)

@@ -86,6 +86,9 @@ namespace Models
     public partial class MicroClimate : Model
     {
         [Link]
+        Zone zone = null;
+
+        [Link]
         Clock Clock = null;
 
         [Link]
@@ -998,7 +1001,7 @@ namespace Models
             double windspeed = windspeed_default;
             if (!windspeed_checked)
             {
-                object val = this.Get("windspeed");
+                object val = zone.Get("windspeed");
                 use_external_windspeed = val != null;
                 if (use_external_windspeed)
                     windspeed = (double)val;

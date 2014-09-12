@@ -117,7 +117,7 @@ namespace Models.Core
                 Utility.Symbol sym = (Utility.Symbol) variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
-                object sometypeofobject = (Object as Model).Get(sym.m_name.Trim());
+                object sometypeofobject = Apsim.Get(Object as Model, sym.m_name.Trim());
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)

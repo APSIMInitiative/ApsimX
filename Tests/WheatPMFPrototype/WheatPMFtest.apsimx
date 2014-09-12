@@ -488,6 +488,7 @@ namespace Models
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant WheatPMFPrototype;          
+		[Link] Zone zone;			
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
 		
@@ -564,7 +565,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)Get("[WheatPMFPrototype].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("[WheatPMFPrototype].Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -574,8 +575,8 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)Get("[WheatPMFPrototype].Leaf.Transpiration");
-            AccumEP -= (double)Get("[WheatPMFPrototype].Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[WheatPMFPrototype].Leaf.Transpiration");
+            AccumEP -= (double)zone.Get("[WheatPMFPrototype].Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
