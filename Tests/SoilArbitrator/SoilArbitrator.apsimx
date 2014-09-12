@@ -11444,17 +11444,17 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.02705307748547</double>
-            <double>0.88223774029773161</double>
-            <double>0.88544458983535446</double>
-            <double>0.88773325749770049</double>
-            <double>0.76908780145791111</double>
-            <double>0.44949647977831092</double>
-            <double>0.26971489163587969</double>
-            <double>0.21977188220219174</double>
-            <double>0.15983845859217749</double>
-            <double>0.12987031209620681</double>
-            <double>0.11987989160368677</double>
+            <double>1.0344214548764783</double>
+            <double>0.88576332786527312</double>
+            <double>0.88643330133743059</double>
+            <double>0.88772223517732018</double>
+            <double>0.769084983735846</double>
+            <double>0.44949514841611254</double>
+            <double>0.26971425545105066</double>
+            <double>0.21977148640568345</double>
+            <double>0.15983824870613414</double>
+            <double>0.12987019764438035</double>
+            <double>0.11987983028025401</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -11754,7 +11754,7 @@ namespace Models
       <Manager>
         <Name>Calculations</Name>
         <Script>
-          <TotalSW>1332.91441962756</TotalSW>
+          <TotalSW>1315.7650120601</TotalSW>
           <Uptake>0.298135407196895</Uptake>
           <Uptake1>0.298135407196895</Uptake1>
         </Script>
@@ -12172,17 +12172,17 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0335073944285318</double>
-            <double>0.88461749192745343</double>
-            <double>0.88561431143190328</double>
-            <double>0.88771889031645135</double>
-            <double>0.76908365735438078</double>
-            <double>0.44949451206579261</double>
-            <double>0.26971397247466306</double>
-            <double>0.21977133906390531</double>
-            <double>0.15983819592394596</double>
-            <double>0.12987019204191197</double>
-            <double>0.1198798518887103</double>
+            <double>1.0172801962020162</double>
+            <double>0.87775273944546739</double>
+            <double>0.88463118604068136</double>
+            <double>0.88770914378604593</double>
+            <double>0.76907915684044292</double>
+            <double>0.44949185516426171</double>
+            <double>0.26971240066245311</double>
+            <double>0.21977010540743505</double>
+            <double>0.15983733253420743</double>
+            <double>0.12986951961368803</double>
+            <double>0.11987925817413229</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
@@ -12430,7 +12430,7 @@ namespace Models
       <Manager>
         <Name>Calculations</Name>
         <Script>
-          <TotalSW>1340.63049092243</TotalSW>
+          <TotalSW>1408.73985411142</TotalSW>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
