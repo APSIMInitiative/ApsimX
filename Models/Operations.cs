@@ -55,13 +55,13 @@ namespace Models
                     string argumentsString = Utility.String.SplitOffBracketedValue(ref st, '(', ')');
                     string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-                    int posPeriod = st.IndexOf('.');
+                    int posPeriod = st.LastIndexOf('.');
                     if (posPeriod == -1)
                         throw new ApsimXException(this, "Bad operations action found: " + operation.Action);
                     string modelName = st.Substring(0, posPeriod);
                     string methodName = st.Substring(posPeriod+1).Replace(";", "").Trim();
 
-                    Model model = Apsim.Find(this, modelName);
+                    Model model = Apsim.Get(this, modelName) as Model;
                     if (model == null)
                         throw new ApsimXException(this, "Cannot find model: " + modelName);
                     MethodInfo method = model.GetType().GetMethod(methodName);

@@ -24,7 +24,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private ITabbedExplorerView View;
 
-        public Utility.Configuration config;    // point to the mainform config
+        /// <summary>
+        /// point to the mainform config
+        /// </summary>
+        public Utility.Configuration config;
 
         /// <summary>
         /// A list of ExplorerPresenters - one for each open tab.
@@ -58,15 +61,17 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Close the application.
         /// </summary>
-        public void Close()
+        public void Close(bool askToSave = true)
         {
             UserControl view = View as UserControl;
             Form mainForm = view.ParentForm;
+            if (!askToSave)
+                mainForm.DialogResult = DialogResult.Cancel;
             mainForm.Close();
         }
 
         /// <summary>
-        /// Allow the for to close?
+        /// Allow the form to close?
         /// </summary>
         public bool AllowClose()
         {

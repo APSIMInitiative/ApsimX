@@ -67,11 +67,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (IVariable Property in Apsim.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
-                {
-                    e.Items.Add(Property.Name);
-                }
-                e.Items.Sort();
+                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true));
             }
         }
 

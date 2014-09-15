@@ -94,8 +94,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (MethodInfo method in o.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public))
-                    e.Items.Add(method.Name);
+                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true));
             }
         }
 

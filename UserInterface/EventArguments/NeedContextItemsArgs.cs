@@ -8,6 +8,12 @@ namespace UserInterface.EventArguments
     using System;
     using System.Collections.Generic;
     using Interfaces;
+    using System.Linq;
+    using ICSharpCode.NRefactory.CSharp;
+    using ICSharpCode.NRefactory;
+    using System.Reflection;
+using Models.Core;
+using System.Text;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -31,12 +37,102 @@ namespace UserInterface.EventArguments
         public List<string> Items;
 
         /// <summary>
-        /// Sorts the ContextItem list by name
+        /// The view is asking for variable names for its intellisense.
         /// </summary>
-        public void SortAllItems()
+        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods)
         {
-            this.AllItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
+            List<ContextItem> allItems = new List<ContextItem>();
+
+            // find the properties and methods
+            if (atype != null)
+            {
+                if (properties)
+                {
+                    foreach (PropertyInfo property in atype.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                    {
+                        VariableProperty var = new VariableProperty(atype, property);
+                        NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                        item.Name = var.Name;
+                        item.IsProperty = true;
+                        item.IsEvent = false;
+                        item.IsWriteable = !var.IsReadOnly;
+                        item.TypeName = var.DataType.Name;
+                        item.Descr = var.Description;
+                        item.Units = var.Units;
+                        allItems.Add(item);
+                    }
+                }
+
+                if (methods)
+                {
+                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                    {
+                        if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_"))
+                        {
+                            DescriptionAttribute descriptionAttribute = Utility.Reflection.GetAttribute(atype, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                            item.Name = method.Name;
+                            item.IsProperty = false;
+                            item.IsEvent = true;
+                            item.IsWriteable = false;
+                            item.TypeName = method.ReturnType.Name;
+                            if (descriptionAttribute != null)
+                                item.Descr = descriptionAttribute.ToString();
+                            item.Units = string.Empty;
+
+                            // build a parameter string representation
+                            ParameterInfo[] allparams = method.GetParameters();
+                            StringBuilder paramText = new StringBuilder("( ");
+                            if (allparams.Count() > 0)
+                            {
+                                for (int p = 0; p < allparams.Count(); p++)
+                                {
+                                    ParameterInfo parameter = allparams[p];
+                                    paramText.Append(parameter.ParameterType.Name + " " + parameter.Name);
+                                    if (p < allparams.Count() - 1)
+                                        paramText.Append(", ");
+                                }
+                            }
+                            paramText.Append(" )");
+                            item.ParamString = paramText.ToString();
+
+                            allItems.Add(item);
+                        }
+                    }
+                }
+            }
+
+            allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
+            return allItems;
         }
+
+        /// <summary>
+        /// The view is asking for variable names for its intellisense.
+        /// </summary>
+        public static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods)
+        {
+            List<ContextItem> allItems = ExamineTypeForContextItems(o.GetType(), properties, methods);
+
+            // add in the child models.
+            if (o != null)
+            {
+                foreach (IModel model in (o as IModel).Children)
+                {
+                    NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                    item.Name = model.Name;
+                    item.IsProperty = false;
+                    item.IsEvent = false;
+                    item.IsWriteable = false;
+                    item.TypeName = model.GetType().Name;
+                    item.Units = string.Empty;
+                    allItems.Add(item);
+                }
+
+                allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
+            }
+            return allItems;
+        }
+
 
         /// <summary>
         /// Complete context item information
@@ -82,6 +178,11 @@ namespace UserInterface.EventArguments
             /// This property is writeable
             /// </summary>
             public bool IsWriteable;
+
+            /// <summary>
+            /// The property is a child model.
+            /// </summary>
+            public bool IsChildModel;
         }
     } 
 }

@@ -334,7 +334,7 @@ namespace UnitTests
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilNitrogen"));
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilWater"));
         }
-        
+
         /// <summary>
         /// Find an return the database file name.
         /// </summary>

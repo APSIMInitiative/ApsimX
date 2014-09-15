@@ -36,9 +36,9 @@ namespace UserInterface.Commands
                 Doc.LoadXml(FromModelXml);
                 FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
                 FromModel.Parent = ToParent;
+                Apsim.ParentAllChildren(FromModel);
 
                 ToParent.Children.Add(FromModel);
-                FromModel.Parent = ToParent;
                 Apsim.EnsureNameIsUnique(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent);
 

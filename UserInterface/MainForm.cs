@@ -101,6 +101,7 @@ namespace UserInterface
                     if (err.InnerException != null)
                         ErrorMessage += "\r\n" + err.InnerException.Message;
                     ErrorMessage += "\r\n" + err.StackTrace;
+                    DialogResult = System.Windows.Forms.DialogResult.Cancel;
                     Close();
                 }
             }
@@ -111,7 +112,10 @@ namespace UserInterface
         /// </summary>
         private void OnClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = !Presenter1.AllowClose() || !Presenter2.AllowClose();
+            if (DialogResult == System.Windows.Forms.DialogResult.Cancel)
+                e.Cancel = false;
+            else
+                e.Cancel = !Presenter1.AllowClose() || !Presenter2.AllowClose();
         }
 
         /// <summary>

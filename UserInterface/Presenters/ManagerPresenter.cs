@@ -74,63 +74,8 @@ namespace UserInterface.Presenters
             // find the properties and methods
             if (typeName != string.Empty)
             {
-                Type [] types = Assembly.GetAssembly(typeof(Clock)).GetTypes();
-                bool found = false;
-                int i = 0;
-                while (!found && (i < types.Count()))
-                {
-                    Type atype = types[i];
-                    if (atype.Name == typeName)
-                    {
-                        found = true;
-                        foreach (PropertyInfo property in atype.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                        {
-                            VariableProperty var = new VariableProperty(atype, property);
-                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
-                            item.Name = var.Name;
-                            item.IsProperty = true;
-                            item.IsEvent = false;
-                            item.IsWriteable = !var.IsReadOnly;
-                            item.TypeName = var.DataType.Name;
-                            item.Descr = var.Description;
-                            item.Units = var.Units;
-                            e.AllItems.Add(item);
-                        }
-                        foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
-                        {
-                            DescriptionAttribute descriptionAttribute = Utility.Reflection.GetAttribute(atype, typeof(DescriptionAttribute), false) as DescriptionAttribute;
-                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
-                            item.Name = method.Name;
-                            item.IsProperty = false;
-                            item.IsEvent = true;
-                            item.IsWriteable = false;
-                            item.TypeName = method.ReturnType.Name;
-                            if (descriptionAttribute != null)
-                                item.Descr = descriptionAttribute.ToString();
-                            item.Units = string.Empty;
-
-                            // build a parameter string representation
-                            ParameterInfo[] allparams = method.GetParameters();
-                            StringBuilder paramText = new StringBuilder("( ");
-                            if (allparams.Count() > 0)
-                            {
-                                for (int p = 0; p < allparams.Count(); p++)
-                                {
-                                    ParameterInfo parameter = allparams[p];
-                                    paramText.Append(parameter.ParameterType.Name + " " + parameter.Name);
-                                    if (p < allparams.Count() - 1)
-                                        paramText.Append(", ");
-                                }
-                            }
-                            paramText.Append(" )");
-                            item.ParamString = paramText.ToString();
-
-                            e.AllItems.Add(item);
-                        }
-                    }
-                    i++;
-                }
-                e.SortAllItems();
+                Type atype = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
+                e.AllItems.AddRange(NeedContextItemsArgs.ExamineTypeForContextItems(atype, true, true));
             }
         }
 
