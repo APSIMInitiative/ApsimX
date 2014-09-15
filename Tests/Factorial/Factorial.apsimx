@@ -619,10 +619,21 @@
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
+          <cpr />
           <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -633,6 +644,7 @@
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -722,6 +734,8 @@
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -1316,10 +1330,21 @@
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
+          <cpr />
           <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -1330,6 +1355,7 @@
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -1377,6 +1403,8 @@
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -1391,7 +1419,7 @@
             <Name>FertiliserRule</Name>
             <Operation>
               <Date>2003-11-15T00:00:00</Date>
-              <Action>Fertiliser.Apply(0, Fertiliser.Types.NO3N, 0);</Action>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 0);</Action>
             </Operation>
           </Operations>
         </FactorValue>
@@ -1401,11 +1429,11 @@
             <Name>FertiliserRule</Name>
             <Operation>
               <Date>2003-11-15T00:00:00</Date>
-              <Action>Fertiliser.Apply(50, Fertiliser.Types.NO3N, 0);</Action>
+              <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N, 0);</Action>
             </Operation>
             <Operation>
               <Date>2003-11-16T00:00:00</Date>
-              <Action>Fertiliser.Apply(50, Fertiliser.Types.NO3N, 0);</Action>
+              <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N, 0);</Action>
             </Operation>
           </Operations>
         </FactorValue>
@@ -1992,10 +2020,21 @@
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
+          <cpr />
           <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -2006,6 +2045,7 @@
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -2032,12 +2072,14 @@
           <Name>FertiliserRule</Name>
           <Operation>
             <Date>2003-11-15T00:00:00</Date>
-            <Action>Fertiliser.Apply(10, Fertiliser.Types.NO3N, 0);</Action>
+            <Action>[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 0);</Action>
           </Operation>
         </Operations>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
   </Experiment>
   <Experiment>
@@ -2665,9 +2707,6 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <_standing_fraction>
-            <double>0</double>
-          </_standing_fraction>
           <ReportAdditions>no</ReportAdditions>
           <ReportRemovals>no</ReportRemovals>
           <ResidueTypes>
@@ -2678,10 +2717,21 @@
             <Name>TillageTypesList</Name>
             <TillageType />
           </TillageTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Potato</PoolName>
+              <ResidueType>Potato</ResidueType>
+              <Mass>1000</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>Potato</PoolName>
           <type>Potato</type>
           <mass>1000</mass>
           <standing_fraction>0</standing_fraction>
+          <cpr />
           <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -2692,6 +2742,7 @@
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -2751,12 +2802,14 @@
           <Name>FertiliserRule</Name>
           <Operation>
             <Date>2003-11-15T00:00:00</Date>
-            <Action>Fertiliser.Apply(10, Fertiliser.Types.UreaN, 0);</Action>
+            <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 0);</Action>
           </Operation>
         </Operations>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
   </Experiment>
   <DataStore>

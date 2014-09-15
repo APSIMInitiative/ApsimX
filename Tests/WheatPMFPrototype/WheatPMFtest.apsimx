@@ -604,9 +604,6 @@ namespace Models
       </Manager>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -618,6 +615,16 @@ namespace Models
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>wheat</PoolName>
+            <ResidueType>wheat</ResidueType>
+            <Mass>2000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
         <mass>2000</mass>
@@ -633,6 +640,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -640,47 +648,47 @@ namespace Models
         <Name>operations</Name>
         <Operation>
           <Date>1998-10-02T00:00:00</Date>
-          <Action>Irrigation.Apply(40);</Action>
+          <Action>[Irrigation].Apply(40);</Action>
         </Operation>
         <Operation>
           <Date>1998-10-26T00:00:00</Date>
-          <Action>Irrigation.Apply(70);</Action>
+          <Action>[Irrigation].Apply(70);</Action>
         </Operation>
         <Operation>
           <Date>1998-12-15T00:00:00</Date>
-          <Action>Irrigation.Apply(70);</Action>
+          <Action>[Irrigation].Apply(70);</Action>
         </Operation>
         <Operation>
           <Date>1998-12-29T00:00:00</Date>
-          <Action>Irrigation.Apply(10);</Action>
+          <Action>[Irrigation].Apply(10);</Action>
         </Operation>
         <Operation>
           <Date>1998-12-30T00:00:00</Date>
-          <Action>Irrigation.Apply(55);</Action>
+          <Action>[Irrigation].Apply(55);</Action>
         </Operation>
         <Operation>
           <Date>1999-01-07T00:00:00</Date>
-          <Action>Irrigation.Apply(50);</Action>
+          <Action>[Irrigation].Apply(50);</Action>
         </Operation>
         <Operation>
           <Date>1999-01-21T00:00:00</Date>
-          <Action>Irrigation.Apply(40);</Action>
+          <Action>[Irrigation].Apply(40);</Action>
         </Operation>
         <Operation>
           <Date>1999-02-10T00:00:00</Date>
-          <Action>Irrigation.Apply(28);</Action>
+          <Action>[Irrigation].Apply(28);</Action>
         </Operation>
         <Operation>
           <Date>1999-02-19T00:00:00</Date>
-          <Action>Irrigation.Apply(15);</Action>
+          <Action>[Irrigation].Apply(15);</Action>
         </Operation>
         <Operation>
           <Date>1999-03-09T00:00:00</Date>
-          <Action>Irrigation.Apply(25);</Action>
+          <Action>[Irrigation].Apply(25);</Action>
         </Operation>
         <Operation>
           <Date>1998-12-29T00:00:00</Date>
-          <Action>Fertiliser.Apply(150, Fertiliser.Types.UreaN, 10);</Action>
+          <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
         </Operation>
       </Operations>
       <Report>
@@ -2082,6 +2090,8 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>289</ExplorerWidth>
 </Simulations>
