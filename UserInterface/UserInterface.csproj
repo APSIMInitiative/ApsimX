@@ -36,6 +36,9 @@
     <ApplicationIcon>Resources\apsim_logo32.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClosedXML">
+      <HintPath>..\packages\ClosedXML.0.74.0\lib\net40-client\ClosedXML.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>..\packages\ICSharpCode.NRefactory.5.4.0\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
@@ -152,6 +155,7 @@
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
+    <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
     <Compile Include="Views\EditorView.cs">
       <SubType>UserControl</SubType>
@@ -612,6 +616,7 @@
     <None Include="Resources\gfolder_32.png" />
     <EmbeddedResource Include="Resources\Export.css" />
     <EmbeddedResource Include="Resources\hd_bg.png" />
+    <None Include="Resources\Excel161.png" />
     <Content Include="Resources\memo16.png" />
     <None Include="Resources\MicroClimate161.png" />
     <None Include="Resources\Plant2.css" />

@@ -213,6 +213,16 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ExporttoEXCEL {
+            get {
+                object obj = ResourceManager.GetObject("ExporttoEXCEL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ExporttoHTML {
             get {
                 object obj = ResourceManager.GetObject("ExporttoHTML", resourceCulture);
@@ -489,7 +499,7 @@ namespace UserInterface.Properties {
         ///  color: black;
         ///}
         ///table {
-        ///  border: 1px solid #cccccc;
+        ///  border: 0px solid #cccccc;
         ///  font-size: 9pt;
         ///  font-family: Arial,Helvetica,sans-serif;
         ///  bor [rest of string was truncated]&quot;;.

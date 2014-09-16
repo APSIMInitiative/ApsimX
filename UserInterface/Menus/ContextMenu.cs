@@ -6,9 +6,12 @@
 namespace UserInterface.Presenters
 {
     using System;
+    using System.Collections.Generic;
+    using System.Data;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
+    using System.Windows.Forms;
     using System.Xml;
     using Commands;
     using Interfaces;
@@ -17,7 +20,6 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Models.Factorial;
     using Models.Soils;
-    using System.Windows.Forms;
     
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -28,6 +30,11 @@ namespace UserInterface.Presenters
         /// Reference to the ExplorerPresenter.
         /// </summary>
         private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// The command that is currently being run.
+        /// </summary>
+        private RunCommand command = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenu" /> class.
@@ -109,9 +116,6 @@ namespace UserInterface.Presenters
             }
         }
 
-
-        private RunCommand command = null;
-
         /// <summary>
         /// Event handler for a User interface "Run APSIM" action
         /// </summary>
@@ -127,21 +131,20 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.Save();
             Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-            command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
-            command.Do(null);
+            this.command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
+            this.command.Do(null);
         }
 
         /// <summary>
-        /// A run has completed so reenable the run button.
+        /// A run has completed so re-enable the run button.
         /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
+        /// <returns>True when APSIM is not running</returns>
         public bool RunAPSIMEnabled()
         {
-            bool isRunning = command != null && command.IsRunning;
+            bool isRunning = this.command != null && this.command.IsRunning;
             if (!isRunning)
             {
-                command = null;
+                this.command = null;
             }
 
             return !isRunning;
@@ -317,7 +320,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Empty the datastore
+        /// Empty the data store
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
@@ -332,9 +335,8 @@ namespace UserInterface.Presenters
             }
         }
 
-
         /// <summary>
-        /// Export the datastore to .csv
+        /// Export the data store to comma separated values
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
@@ -349,5 +351,33 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Export the data store to EXCEL format
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Export to EXCEL",
+                     AppliesTo = new Type[] { typeof(DataStore) })]
+        public void ExportDataStoreToEXCEL(object sender, EventArgs e)
+        {
+            DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
+            if (dataStore != null)
+            {
+                List<DataTable> tables = new List<DataTable>();
+                foreach (string tableName in dataStore.TableNames)
+                {
+                    if (tableName != "Simulations" && tableName != "Messages" && tableName != "InitialConditions")
+                    {
+                        DataTable table = dataStore.GetData("*", tableName, true);
+                        table.TableName = tableName;
+                        tables.Add(table);
+                    }
+                }
+                Cursor.Current = Cursors.WaitCursor; 
+                string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
+                Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
+                Cursor.Current = Cursors.Default; 
+            }
+        }
     }
 }
