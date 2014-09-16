@@ -292,7 +292,7 @@ namespace UserInterface.Presenters
             string fileName = Path.Combine(folder, Graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-            string html = "<img class=\"graph\" src=\"" + Graph.Name + ".png" + "\" align=\"left\"/>";
+            string html = "<img class=\"graph\" src=\"" + Graph.Name + ".png" + "\"/>";
             if (this.Graph.Caption != null)
                 html += "<p>" + this.Graph.Caption + "</p>";
             return html;
