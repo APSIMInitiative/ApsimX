@@ -842,7 +842,7 @@ namespace Models
         <Inverted>false</Inverted>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -9761,6 +9761,7 @@ namespace Models
   </Experiment>
   <Graph>
     <Name>Yield</Name>
+    <Caption>This figure shows predicted vs observed wheat yields.</Caption>
     <Axis>
       <Type>Bottom</Type>
       <Title>Observed Yield</Title>

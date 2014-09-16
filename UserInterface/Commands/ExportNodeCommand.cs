@@ -68,6 +68,12 @@ namespace UserInterface.Commands
             StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("UserInterface.Resources.Export.css"));
             string css = reader.ReadToEnd();
 
+            // Write the css file.
+            using (FileStream file = new FileStream(Path.Combine(folderPath, "export.css"), FileMode.Create, FileAccess.Write))
+            {
+                assembly.GetManifestResourceStream("UserInterface.Resources.Export.css").CopyTo(file);
+            }
+
             //write image files
             using (FileStream file = new FileStream(Path.Combine(folderPath, "apsim_logo.png"), FileMode.Create, FileAccess.Write))
             {
@@ -79,32 +85,49 @@ namespace UserInterface.Commands
                 assembly.GetManifestResourceStream("UserInterface.Resources.hd_bg.png").CopyTo(file);
             }
 
+            DoExportInternal(modelToExport, folderPath, string.Empty);
+        }
+
+        private void DoExportInternal(Model modelToExport, string folderPath, string url)
+        {
+            // Make sure the specified folderPath exists because we're going to 
+            // write to it.
+            Directory.CreateDirectory(folderPath);
+
             if (modelToExport is Simulation)
                 DoExportSimulation(modelToExport, folderPath);
             else
             {
                 // Create index.html
                 StreamWriter index = new StreamWriter(Path.Combine(folderPath, "Index.html"));
-                index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head><style type=text/css>" + css + "</style></head>");
+                index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\">");
+                index.WriteLine("<head>");
+                index.WriteLine("   <link rel=\"stylesheet\" type=\"text/css\" href=\"" + url + "export.css\">");
+                index.WriteLine("</head>");
                 index.WriteLine("<body>");
-                index.WriteLine("<div id=\"content\"><div id=\"left\"><img src=\"apsim_logo.png\" /></div>");
-                index.WriteLine("<div id=\"right\"><img src=\"hd_bg.png\" /></div>");
-                index.WriteLine("<h2>" + modelToExport.Name + "</h2>");
+                index.WriteLine("<div id=\"content\"><div id=\"left\"><img src=\"" + url + "apsim_logo.png\" /></div>");
+                index.WriteLine("<div id=\"right\"><img src=\"" + url + "hd_bg.png\" /></div>");
+                if (modelToExport.Name == "Simulations")
+                    index.WriteLine("<h2>" + Path.GetFileNameWithoutExtension((modelToExport as Simulations).FileName) + "</h2>");
+                else
+                    index.WriteLine("<h2>" + modelToExport.Name + "</h2>");
 
                 // Look for child models that are a folder or simulation etc
                 // that we need to recurse down through.
                 foreach (Model child in modelToExport.Children)
                 {
-                    if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
+                    bool dontGoThroughChild = (child is Simulation && child.Parent is Experiment);
+
+                    if (!dontGoThroughChild && Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
                         string childFolderPath = Path.Combine(folderPath, child.Name);
 
                         string childFileName = Path.Combine(childFolderPath, "Index.html");
                         index.WriteLine("<p><a href=file://{0}>{1}</a></p>",
                                         new object[] {Utility.String.DQuote(childFileName),
-                                                    child.Name});
+                                                child.Name});
 
-                        DoExport(child, childFolderPath);
+                        DoExportInternal(child, childFolderPath, url + "../");
                     }
                 }
 
@@ -157,7 +180,7 @@ namespace UserInterface.Commands
         {
             foreach (Model child in modelToExport.Children)
             {
-                if (child is Zone)
+                if (child is Zone && !(child is Simulation))
                     DoExportZone(child, folderPath, index);
                 else
                 {

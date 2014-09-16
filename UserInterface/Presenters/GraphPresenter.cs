@@ -24,7 +24,6 @@ namespace UserInterface.Presenters
         private IPresenter CurrentPresenter = null;
         private List<SeriesInfo> seriesMetadata = new List<SeriesInfo>();
 
-
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
@@ -48,7 +47,6 @@ namespace UserInterface.Presenters
 
             DrawGraph();
         }
-
 
         /// <summary>
         /// Detach the model from the view.
@@ -281,13 +279,12 @@ namespace UserInterface.Presenters
             return parent;
         }
 
-
         /// <summary>
         /// Export the contents of this graph to the specified file.
         /// </summary>
         public string ConvertToHtml(string folder)
         {
-            Rectangle r = new Rectangle(0, 0, 600, 600);
+            Rectangle r = new Rectangle(0, 0, 800, 800);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
             GraphView.Export(img);
@@ -295,7 +292,10 @@ namespace UserInterface.Presenters
             string fileName = Path.Combine(folder, Graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-            return "<img class=\"graph\" src=\"" + Graph.Name + ".png" + "\"/>";
+            string html = "<img class=\"graph\" src=\"" + Graph.Name + ".png" + "\" align=\"left\"/>";
+            if (this.Graph.Caption != null)
+                html += "<p>" + this.Graph.Caption + "</p>";
+            return html;
         }
 
         /// <summary>
@@ -643,7 +643,7 @@ namespace UserInterface.Presenters
                 else if (graphValues.TableName != null && graphValues.FieldName != null)
                 {
                     // Create the data if we haven't already
-                    if (this.data == null)
+                    if (this.data == null && this.dataStore.TableExists(graphValues.TableName))
                     {
                         this.data = this.dataStore.GetFilteredData(graphValues.TableName, filter);
                     }
