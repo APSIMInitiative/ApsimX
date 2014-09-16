@@ -28,7 +28,17 @@ namespace UserInterface.Views
         /// <summary>
         /// Overall font size for the graph.
         /// </summary>
-        private const int FontSize = 16;
+        private const double FontSize = 14;
+
+        /// <summary>
+        /// Overall font to use.
+        /// </summary>
+        private new const string Font = "Calibri Light";
+
+        /// <summary>
+        /// Margin to use
+        /// </summary>
+        private new const int Margin = 75;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
@@ -39,7 +49,6 @@ namespace UserInterface.Views
             this.plot1.Model = new PlotModel();
             this.splitter.Visible = false;
             this.bottomPanel.Visible = false;
-            this.plot1.Model.MouseMove += Model_MouseMove;
         }
         
         /// <summary>
@@ -62,6 +71,10 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler OnTitleClick;
 
+        /// <summary>
+        /// Invoked when the user clicks on the graph caption.
+        /// </summary>
+        public event EventHandler OnCaptionClick;
 
         /// <summary>
         /// Invoked when the user hovers over a series point.
@@ -76,6 +89,7 @@ namespace UserInterface.Views
             this.plot1.Model.Series.Clear();
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
+
         }
 
         /// <summary>
@@ -83,8 +97,11 @@ namespace UserInterface.Views
         /// </summary>
         public override void Refresh()
         {
+            this.plot1.Model.DefaultFont = Font;
+            this.plot1.Model.DefaultFontSize = FontSize;
+
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
-            this.plot1.Model.PlotMargins = new OxyThickness(100, 0, 0, 0);
+            this.plot1.Model.PlotMargins = new OxyThickness(100, Margin, 100, Margin);
             this.plot1.Model.LegendBorder = OxyColors.Black;
             this.plot1.Model.LegendBackground = OxyColors.White;
             this.plot1.Model.InvalidatePlot(true);
@@ -121,7 +138,8 @@ namespace UserInterface.Views
         {
             if (x != null && y != null)
             {
-                LineSeries series = new LineSeries();
+                Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
+                series.OnHoverOverPoint += OnHoverOverPoint;
                 series.Title = title;
                 series.Color = ConverterExtensions.ToOxyColor(colour);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -280,7 +298,6 @@ namespace UserInterface.Views
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
             if (oxyAxis != null)
             {
-                oxyAxis.FontSize = FontSize;
                 oxyAxis.Title = title;
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
@@ -307,6 +324,8 @@ namespace UserInterface.Views
             LegendPosition oxyLegendPosition;
             if (Enum.TryParse<LegendPosition>(legendPositionType.ToString(), out oxyLegendPosition))
             {
+                this.plot1.Model.LegendFont = Font;
+                this.plot1.Model.LegendFontSize = FontSize;
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
@@ -320,6 +339,24 @@ namespace UserInterface.Views
         public void FormatTitle(string text)
         {
             this.plot1.Model.Title = text;
+        }
+
+        /// <summary>
+        /// Format the footer.
+        /// </summary>
+        /// <param name="text">The text for the footer</param>
+        public void FormatCaption(string text)
+        {
+            captionLabel.MaximumSize = new Size(panel1.Width, 300);
+            if (text != null && text != string.Empty)
+            {
+                captionLabel.Text = text;
+                captionLabel.Font = new Font(Font, (float) (FontSize * 0.8));
+            }
+            else
+            {
+                captionLabel.Text = "          ";
+            }
         }
 
         /// <summary>
@@ -667,48 +704,15 @@ namespace UserInterface.Views
             }
         }
 
-        private Label label = new Label();
-
-        private void Model_MouseMove(object sender, OxyMouseEventArgs e)
+        /// <summary>
+        /// User has clicked the caption
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCaptionLabelDoubleClick(object sender, EventArgs e)
         {
-            OxyPlot.Series.Series series = this.plot1.Model.GetSeriesFromPoint(e.Position, 10);
-            if (series != null && this.OnHoverOverPoint != null)
-            {
-                TrackerHitResult t = series.GetNearestPoint(e.Position, false);
-
-                HoverPointArgs hoverArguments = new HoverPointArgs();
-                hoverArguments.SeriesName = series.Title;
-                hoverArguments.X = t.DataPoint.X;
-                hoverArguments.Y = t.DataPoint.Y;
-                this.OnHoverOverPoint.Invoke(this, hoverArguments);
-
-                if (hoverArguments.HoverText != null)
-                {
-                    //this.plot1.Controls.Add(label);
-                    label.Text = hoverArguments.HoverText;
-                    label.BackColor = SystemColors.Info;
-                    label.ForeColor = SystemColors.InfoText;
-                    label.AutoSize = true;
-                    label.Font = new Font(label.Font.FontFamily, 12f);
-                    label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-                    label.TextAlign = ContentAlignment.MiddleCenter;
-
-                    Point p = this.PointToClient(MousePosition);
-                    p.Offset(-label.Width / 2, -30); // make label appear above the cursor.
-
-                    int rightSideOfLabel = p.X + label.Width;
-                    if (rightSideOfLabel > this.Width)
-                    {
-                        p.Offset(-(rightSideOfLabel - this.Width), 0);
-                    }
-                    label.Location = p;
-
-                    this.plot1.Controls.Add(label);
-                    return;
-                }
-            }
-
-            this.plot1.Controls.Remove(label);
+            if (OnCaptionClick != null)
+                OnCaptionClick.Invoke(this, e);
         }
 
         /// <summary>
@@ -733,6 +737,7 @@ namespace UserInterface.Views
                 this.plot1.Refresh();
             }
         }
+
     }
 }
 

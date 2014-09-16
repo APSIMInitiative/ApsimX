@@ -16,6 +16,11 @@ namespace UserInterface.Presenters
         private ExplorerPresenter ExplorerPresenter;
 
         /// <summary>
+        /// Gets or sets a value indicating whether the graph footer should be shown.
+        /// </summary>
+        public bool ShowCaption { get; set; }
+
+        /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
@@ -36,7 +41,10 @@ namespace UserInterface.Presenters
 
         private void PopulateView()
         {
-            View.Populate(Graph.Title);
+            if (ShowCaption)
+                View.Populate(Graph.Caption);
+            else
+                View.Populate(Graph.Title);
         }
 
         /// <summary>
@@ -66,7 +74,10 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnTitleChanged(string NewText)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "Title", NewText));
+            if (ShowCaption)
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "Caption", NewText));
+            else
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "Title", NewText));
         }
 
     }

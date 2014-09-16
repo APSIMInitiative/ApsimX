@@ -44,6 +44,11 @@ namespace UserInterface.Interfaces
         event EventHandler OnTitleClick;
 
         /// <summary>
+        /// Invoked when the user clicks on the graph caption.
+        /// </summary>
+        event EventHandler OnCaptionClick;
+
+        /// <summary>
         /// Invoked when the user hovers over a series point.
         /// </summary>
         event EventHandler<HoverPointArgs> OnHoverOverPoint;
@@ -169,6 +174,12 @@ namespace UserInterface.Interfaces
         void FormatTitle(string text);
 
         /// <summary>
+        /// Format the footer.
+        /// </summary>
+        /// <param name="text">The text for the footer</param>
+        void FormatCaption(string text);
+
+        /// <summary>
         /// Export the graph to the specified 'bitmap'
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
@@ -186,5 +197,6 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="seriesIndex">series index</param>
         void ToggleEnableSeries(int seriesIndex);
+
     }
 }

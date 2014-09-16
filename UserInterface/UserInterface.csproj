@@ -152,6 +152,7 @@
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
+    <Compile Include="Utility\LineSeriesWithTracker.cs" />
     <Compile Include="Views\EditorView.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -38,6 +38,7 @@ namespace UserInterface.Presenters
             GraphView.OnPlotClick += OnPlotClick;
             GraphView.OnLegendClick += OnLegendClick;
             GraphView.OnTitleClick += OnTitleClick;
+            GraphView.OnCaptionClick += OnCaptionClick;
             GraphView.OnHoverOverPoint += OnHoverOverPoint;
             ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             this.GraphView.AddContextAction("Copy graph XML to clipboard", CopyGraphXML);
@@ -62,6 +63,7 @@ namespace UserInterface.Presenters
             GraphView.OnPlotClick -= OnPlotClick;
             GraphView.OnLegendClick -= OnLegendClick;
             GraphView.OnTitleClick -= OnTitleClick;
+            GraphView.OnCaptionClick -= OnCaptionClick;
             GraphView.OnHoverOverPoint -= OnHoverOverPoint;
             ExplorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
             DataStore.Disconnect();
@@ -91,6 +93,9 @@ namespace UserInterface.Presenters
 
                 // Format the title
                 GraphView.FormatTitle(Graph.Title);
+
+                //Format the footer
+                GraphView.FormatCaption(Graph.Caption);
 
                 GraphView.Refresh();
             }
@@ -339,6 +344,22 @@ namespace UserInterface.Presenters
             TitlePresenter titlePresenter = new TitlePresenter();
             CurrentPresenter = titlePresenter; 
             
+            TitleView t = new TitleView();
+            GraphView.ShowEditorPanel(t);
+            titlePresenter.Attach(Graph, t, ExplorerPresenter);
+        }
+
+        /// <summary>
+        /// User has clicked a footer.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCaptionClick(object sender, EventArgs e)
+        {
+            TitlePresenter titlePresenter = new TitlePresenter();
+            CurrentPresenter = titlePresenter;
+            titlePresenter.ShowCaption = true;
+
             TitleView t = new TitleView();
             GraphView.ShowEditorPanel(t);
             titlePresenter.Attach(Graph, t, ExplorerPresenter);
@@ -682,7 +703,7 @@ namespace UserInterface.Presenters
 
                         // Draw the equation.
                         double interval = (largestAxisScale - lowestAxisScale) / 20;
-                        double yPosition = largestAxisScale - (seriesIndex + 1) * interval;
+                        double yPosition = largestAxisScale - (seriesIndex) * interval;
 
                         string equation = "y = " + stats.m.ToString("f2") + " x + " + stats.c.ToString("f2") + "\r\n"
                                          + "r2 = " + stats.R2.ToString("f2") + "\r\n"

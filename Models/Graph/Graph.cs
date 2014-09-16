@@ -16,7 +16,7 @@ namespace Models.Graph
 
         public string Title {get; set;}
 
-        public string Footer { get; set; }
+        public string Caption { get; set; }
 
         [XmlElement("Axis")]
         public List<Axis> Axes { get; set; }
