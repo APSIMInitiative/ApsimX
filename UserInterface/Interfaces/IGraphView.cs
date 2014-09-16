@@ -156,10 +156,16 @@ namespace UserInterface.Interfaces
         /// <param name="axisType">The axis type to format</param>
         /// <param name="title">The axis title. If null then a default axis title will be shown</param>
         /// <param name="inverted">Invert the axis?</param>
+        /// <param name="minimum">Minimum axis scale</param>
+        /// <param name="maximum">Maximum axis scale</param>
+        /// <param name="interval">Axis scale interval</param>
         void FormatAxis(
             Models.Graph.Axis.AxisType axisType, 
-            string title, 
-            bool inverted);
+            string title,
+            bool inverted,
+            double minimum,
+            double maximum,
+            double interval);
 
         /// <summary>
         /// Format the legend.
@@ -198,5 +204,14 @@ namespace UserInterface.Interfaces
         /// <param name="seriesIndex">series index</param>
         void ToggleEnableSeries(int seriesIndex);
 
+        /// <summary>
+        /// Gets the maximum scale of the specified axis.
+        /// </summary>
+        double AxisMaximum(Models.Graph.Axis.AxisType axisType);
+
+        /// <summary>
+        /// Gets the minimum scale of the specified axis.
+        /// </summary>
+        double AxisMinimum(Models.Graph.Axis.AxisType axisType);
     }
 }

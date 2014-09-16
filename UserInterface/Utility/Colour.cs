@@ -22,7 +22,7 @@ namespace Utility
                                         Color.FromArgb(77,175,74),
                                         Color.FromArgb(152,78,163),
                                         Color.FromArgb(255,127,0),
-                                        Color.FromArgb(255,255,51),
+                                        //Color.FromArgb(255,255,51),
                                         Color.FromArgb(166,86,40),
                                         Color.FromArgb(247,129,191),
                                         Color.FromArgb(153,153,153),

@@ -75,16 +75,22 @@ namespace UserInterface.Presenters
             GraphView.Clear();
             if (Graph != null && Graph.Series != null)
             {
+                // Create all series.
                 FillSeriesInfo();
-
                 foreach (SeriesInfo seriesInfo in seriesMetadata)
-                {
                     seriesInfo.DrawOnView(this.GraphView);
-                }
 
                 // Format the axes.
                 foreach (Models.Graph.Axis A in Graph.Axes)
                     FormatAxis(A);
+
+                // Add any regression lines if necessary.
+                int seriesIndex = 0;
+                foreach (SeriesInfo seriesInfo in seriesMetadata)
+                {
+                    seriesInfo.AddRegressionLine(this.GraphView, seriesIndex);
+                    seriesIndex++;
+                }
 
                 // Format the legend.
                 GraphView.FormatLegend(Graph.LegendPosition);
@@ -205,7 +211,7 @@ namespace UserInterface.Presenters
                 // Create a default title by appending all 'names' together.
                 title = Utility.String.BuildString(names.ToArray(), ", ");
             }
-            GraphView.FormatAxis(axis.Type, title, axis.Inverted);
+            GraphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval);
         }
 
         /// <summary>
@@ -590,9 +596,6 @@ namespace UserInterface.Presenters
                 {
                     graphView.DrawArea(Title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour);
                 }
-
-                if (series.ShowRegressionLine)
-                    AddRegressionLine(graphView);
             }
 
             /// <summary>
@@ -672,48 +675,58 @@ namespace UserInterface.Presenters
             /// <summary>
             /// Add a regresion line, 1:1 line and regression stats to the graph.
             /// </summary>
-            private void AddRegressionLine(IGraphView graphView)
+            public void AddRegressionLine(IGraphView graphView, int seriesIndex)
             {
-                IEnumerable x = X;
-                IEnumerable y = Y;
-
-                if (x != null && y != null)
+                if (series.ShowRegressionLine)
                 {
-                    Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(x, y);
-                    if (stats != null)
+                    IEnumerable x = X;
+                    IEnumerable y = Y;
+
+                    if (x != null && y != null)
                     {
-                        // Show the regression line.
-                        double minimumX = Utility.Math.Min(x);
-                        double maximumX = Utility.Math.Max(x);
-                        double[] regressionX = new double[] { minimumX, maximumX };
-                        double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
-                        graphView.DrawLineAndMarkers("", regressionX, regressionY,
-                                                     series.XAxis, series.YAxis, Colour,
-                                                     Series.LineType.Solid, Series.MarkerType.None);
+                        Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(x, y);
+                        if (stats != null)
+                        {
+                            // Show the regression line.
+                            //double minimumX = Utility.Math.Min(x);
+                            //double maximumX = Utility.Math.Max(x);
 
-                        // Show the 1:1 line
-                        double minimumY = Utility.Math.Min(y);
-                        double maximumY = Utility.Math.Max(y);
-                        double lowestAxisScale = Math.Min(minimumX, minimumY);
-                        double largestAxisScale = Math.Max(maximumX, maximumY);
-                        double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };
-                        graphView.DrawLineAndMarkers("", oneToOne, oneToOne,
-                                                     series.XAxis, series.YAxis, Colour,
-                                                     Series.LineType.Dash, Series.MarkerType.None);
+                            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom);
+                            double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
+                            double[] regressionX = new double[] { minimumX, maximumX };
+                            double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
+                            graphView.DrawLineAndMarkers("", regressionX, regressionY,
+                                                         series.XAxis, series.YAxis, Colour,
+                                                         Series.LineType.Solid, Series.MarkerType.None);
 
-                        // Draw the equation.
-                        double interval = (largestAxisScale - lowestAxisScale) / 20;
-                        double yPosition = largestAxisScale - (seriesIndex) * interval;
+                            // Show the 1:1 line
+                            double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
+                            double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
+                            double lowestAxisScale = Math.Min(minimumX, minimumY);
+                            double largestAxisScale = Math.Max(maximumX, maximumY);
+                            double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };
+                            graphView.DrawLineAndMarkers("", oneToOne, oneToOne,
+                                                         series.XAxis, series.YAxis, Colour,
+                                                         Series.LineType.Dash, Series.MarkerType.None);
 
-                        string equation = "y = " + stats.m.ToString("f2") + " x + " + stats.c.ToString("f2") + "\r\n"
-                                         + "r2 = " + stats.R2.ToString("f2") + "\r\n"
-                                         + "n = " + stats.n.ToString() + "\r\n"
-                                         + "NSE = " + stats.NSE.ToString("f2") + "\r\n"
-                                         + "ME = " + stats.ME.ToString("f2") + "\r\n"
-                                         + "MAE = " + stats.MAE.ToString("f2") + "\r\n"
-                                         + "RSR = " + stats.RSR.ToString("f2") + "\r\n"
-                                         + "RMSD = " + stats.RMSD.ToString("f2");
-                        graphView.DrawText(equation, lowestAxisScale, yPosition, series.XAxis, series.YAxis, Colour);
+                            // Draw the equation.
+                            double interval = (largestAxisScale - lowestAxisScale) / 13;
+                            double yPosition = largestAxisScale - seriesIndex * interval;
+
+                            string equation = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {2:F2}\r\n" +
+                                                            "NSE = {3:F2}, ME = {4:F2}, MAE = {5:F2}\r\n" +
+                                                            "RSR = {6:F2}, RMSD = {7:F2}",
+                                                            new object[] {stats.m,
+                                                                          stats.c,
+                                                                          stats.R2,
+                                                                          stats.n,
+                                                                          stats.NSE,
+                                                                          stats.ME,
+                                                                          stats.MAE,
+                                                                          stats.RSR,
+                                                                          stats.RMSD});
+                            graphView.DrawText(equation, lowestAxisScale, yPosition, series.XAxis, series.YAxis, Colour);
+                        }
                     }
                 }
             }

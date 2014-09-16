@@ -102,7 +102,7 @@ namespace UserInterface.Views
 
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
             this.plot1.Model.PlotMargins = new OxyThickness(100, Margin, 100, Margin);
-            this.plot1.Model.LegendBorder = OxyColors.Black;
+            this.plot1.Model.LegendBorder = OxyColors.Transparent;
             this.plot1.Model.LegendBackground = OxyColors.White;
             this.plot1.Model.InvalidatePlot(true);
 
@@ -281,6 +281,7 @@ namespace UserInterface.Views
             //annotation.XAxis = this.GetAxis(xAxisType);
             //annotation.YAxis = this.GetAxis(yAxisType);
             annotation.TextColor = ConverterExtensions.ToOxyColor(colour);
+            annotation.FontSize = FontSize - 1;
             this.plot1.Model.Annotations.Add(annotation);
         }
 
@@ -290,10 +291,16 @@ namespace UserInterface.Views
         /// <param name="axisType">The axis type to format</param>
         /// <param name="title">The axis title. If null then a default axis title will be shown</param>
         /// <param name="inverted">Invert the axis?</param>
+        /// <param name="minimum">Minimum axis scale</param>
+        /// <param name="maximum">Maximum axis scale</param>
+        /// <param name="interval">Axis scale interval</param>
         public void FormatAxis(
             Models.Graph.Axis.AxisType axisType,
             string title,
-            bool inverted)
+            bool inverted,
+            double minimum,
+            double maximum,
+            double interval)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
             if (oxyAxis != null)
@@ -312,6 +319,12 @@ namespace UserInterface.Views
                     oxyAxis.StartPosition = 0;
                     oxyAxis.EndPosition = 1;
                 }
+                if (!double.IsNaN(minimum))
+                    oxyAxis.Minimum = minimum;
+                if (!double.IsNaN(maximum))
+                    oxyAxis.Maximum = maximum;
+                if (!double.IsNaN(interval) && interval > 0)
+                    oxyAxis.MajorStep = interval;
             }
         }
 
@@ -738,6 +751,34 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Gets the maximum scale of the specified axis.
+        /// </summary>
+        public double AxisMaximum(Models.Graph.Axis.AxisType axisType)
+        {
+            OxyPlot.Axes.Axis axis = GetAxis(axisType);
+            if (axis != null)
+            {
+                return axis.ActualMaximum;
+            }
+            else
+                return double.NaN;
+        }
+
+        /// <summary>
+        /// Gets the minimum scale of the specified axis.
+        /// </summary>
+        public double AxisMinimum(Models.Graph.Axis.AxisType axisType)
+        {
+            plot1.Refresh();
+            OxyPlot.Axes.Axis axis = GetAxis(axisType);
+            if (axis != null)
+            {
+                return axis.ActualMinimum;
+            }
+            else
+                return double.NaN;
+        }
     }
 }
 

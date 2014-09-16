@@ -593,8 +593,8 @@ namespace UserInterface.Classes
                                      Color.Blue, Models.Graph.Series.LineType.Solid, Models.Graph.Series.MarkerType.FilledCircle);
 
             // Format the axes.
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, XName, false);
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, YName, false);
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, XName, false, double.NaN, double.NaN, double.NaN);
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, YName, false, double.NaN, double.NaN, double.NaN);
 
             // Format the title
             graph.BackColor = Color.White;

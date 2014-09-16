@@ -1,26 +1,82 @@
-﻿using Models.Core;
-using System;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Axis.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Models.Graph
 {
+    using System;
+
+    /// <summary>
+    /// A class representing an axis on a graph.
+    /// </summary>
     [Serializable]
     public class Axis
     {
-        public enum AxisType { Left, Top, Right, Bottom };
+        /// <summary>
+        /// An enumeration for different axis orientations
+        /// </summary>
+        public enum AxisType 
+        { 
+            /// <summary>
+            /// Left orientation
+            /// </summary>
+            Left,
+
+            /// <summary>
+            /// Top orientation
+            /// </summary>
+            Top,
+
+            /// <summary>
+            /// Right orientation
+            /// </summary>
+            Right,
+
+            /// <summary>
+            /// Bottom orientation
+            /// </summary>
+            Bottom
+        }
 
         /// <summary>
-        /// The 'type' of axis - left, top, right or bottom.
+        /// Constructor for axis class.
+        /// </summary>
+        public Axis()
+        {
+            Minimum = double.NaN;
+            Maximum = double.NaN;
+            Interval = double.NaN;
+        }
+
+        /// <summary>
+        /// Gets or sets the 'type' of axis - left, top, right or bottom.
         /// </summary>
         public AxisType Type { get; set; }
 
         /// <summary>
-        /// The title of the axis.
+        /// Gets or sets the title of the axis.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// Is the axis inverted?
+        /// Gets or sets a value indicating whether the axis is inverted?
         /// </summary>
         public bool Inverted { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum axis scale
+        /// </summary>
+        public double Minimum { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum axis scale
+        /// </summary>
+        public double Maximum { get; set; }
+
+        /// <summary>
+        /// Gets or sets the interval axis scale
+        /// </summary>
+        public double Interval { get; set; }
     }
 }

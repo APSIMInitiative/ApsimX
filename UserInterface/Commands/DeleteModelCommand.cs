@@ -37,7 +37,7 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history instance</param>
         public void Do(CommandHistory commandHistory)
         {
-            this.modelToDelete.Parent.Children.Remove(this.modelToDelete as Model);
+            modelWasRemoved = this.modelToDelete.Parent.Children.Remove(this.modelToDelete as Model);
             commandHistory.InvokeModelStructureChanged(this.modelToDelete.Parent);
         }
 

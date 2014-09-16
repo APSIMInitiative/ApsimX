@@ -33,11 +33,6 @@ namespace UserInterface.Views
         public event EventHandler OnSimulationSelected;
 
         /// <summary>
-        /// Invoked when the create now button is clicked.
-        /// </summary>
-        public event EventHandler ExportNowClicked;
-
-        /// <summary>
         /// Invoked when the auto export checkbox is clicked.
         /// </summary>
         public event EventHandler AutoExportClicked;
