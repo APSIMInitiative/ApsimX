@@ -44,7 +44,9 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
@@ -55,56 +57,69 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Graph);
-            this.splitContainer1.Size = new System.Drawing.Size(674, 527);
-            this.splitContainer1.SplitterDistance = 250;
+            this.splitContainer1.Panel2MinSize = 600;
+            this.splitContainer1.Size = new System.Drawing.Size(899, 649);
+            this.splitContainer1.SplitterDistance = 41;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 3;
             // 
             // ProfileGrid
             // 
+            this.ProfileGrid.AutoFilterOn = false;
             this.ProfileGrid.DataSource = null;
             this.ProfileGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ProfileGrid.Location = new System.Drawing.Point(0, 185);
+            this.ProfileGrid.GetCurrentCell = null;
+            this.ProfileGrid.Location = new System.Drawing.Point(0, 145);
+            this.ProfileGrid.Margin = new System.Windows.Forms.Padding(5);
             this.ProfileGrid.Name = "ProfileGrid";
+            this.ProfileGrid.NumericFormat = null;
             this.ProfileGrid.ReadOnly = false;
             this.ProfileGrid.RowCount = 0;
-            this.ProfileGrid.Size = new System.Drawing.Size(250, 342);
+            this.ProfileGrid.Size = new System.Drawing.Size(899, 0);
             this.ProfileGrid.TabIndex = 4;
             // 
             // splitter1
             // 
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitter1.Location = new System.Drawing.Point(0, 182);
+            this.splitter1.Location = new System.Drawing.Point(0, 141);
+            this.splitter1.Margin = new System.Windows.Forms.Padding(4);
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(250, 3);
+            this.splitter1.Size = new System.Drawing.Size(899, 4);
             this.splitter1.TabIndex = 5;
             this.splitter1.TabStop = false;
             // 
             // PropertyGrid
             // 
+            this.PropertyGrid.AutoFilterOn = false;
             this.PropertyGrid.DataSource = null;
             this.PropertyGrid.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PropertyGrid.GetCurrentCell = null;
             this.PropertyGrid.Location = new System.Drawing.Point(0, 0);
+            this.PropertyGrid.Margin = new System.Windows.Forms.Padding(5);
             this.PropertyGrid.Name = "PropertyGrid";
+            this.PropertyGrid.NumericFormat = null;
             this.PropertyGrid.ReadOnly = false;
             this.PropertyGrid.RowCount = 0;
-            this.PropertyGrid.Size = new System.Drawing.Size(250, 182);
+            this.PropertyGrid.Size = new System.Drawing.Size(899, 141);
             this.PropertyGrid.TabIndex = 2;
             // 
             // Graph
             // 
             this.Graph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Graph.Location = new System.Drawing.Point(0, 0);
+            this.Graph.Margin = new System.Windows.Forms.Padding(4);
             this.Graph.Name = "Graph";
-            this.Graph.Size = new System.Drawing.Size(420, 527);
+            this.Graph.Size = new System.Drawing.Size(899, 603);
             this.Graph.TabIndex = 4;
             // 
             // ProfileView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ProfileView";
-            this.Size = new System.Drawing.Size(674, 527);
+            this.Size = new System.Drawing.Size(899, 649);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

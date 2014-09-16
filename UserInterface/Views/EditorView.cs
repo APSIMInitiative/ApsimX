@@ -171,13 +171,19 @@
         {
             get
             {
-                return TextBox.Text.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+                string text = TextBox.Text.TrimEnd("\r\n".ToCharArray());
+                return text.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
             }
             set
             {
                 string St = string.Empty;
                 foreach (string Value in value)
-                    St += Value + "\r\n";
+                {
+                    if (St != string.Empty)
+                        St += "\r\n";
+
+                    St += Value;
+                }
                 Text = St;
             }
         }

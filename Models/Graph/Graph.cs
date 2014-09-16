@@ -1,60 +1,114 @@
-﻿using System.Xml.Serialization;
-using Models.Core;
-using System.Collections.Generic;
-using System;
-using System.IO;
-using System.Collections;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Graph.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.Graph
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
+    using Models.Core;
+
+    /// <summary>
+    /// Represents a graph
+    /// </summary>
     [ViewName("UserInterface.Views.GraphView")]
     [PresenterName("UserInterface.Presenters.GraphPresenter")]
     [Serializable]
     public class Graph : Model
     {
-        [NonSerialized] private DataStore _DataStore = null;
-
-        public string Title {get; set;}
-
-        public string Caption { get; set; }
-
-        [XmlElement("Axis")]
-        public List<Axis> Axes { get; set; }
-
-        [XmlElement("Series")]
-        public List<Series> Series { get; set; }
-
-        public enum LegendPositionType { TopLeft, TopRight, BottomLeft, BottomRight };
-        public LegendPositionType LegendPosition { get; set; }
+        /// <summary>
+        /// The data store to use when retrieving data
+        /// </summary>
+        [NonSerialized] 
+        private DataStore dataStore = null;
 
         /// <summary>
-        /// Destructor. Get rid of DataStore
+        /// Finalizes an instance of the <see cref="Graph" /> class./>
         /// </summary>
         ~Graph()
         {
-            if (_DataStore != null)
-                _DataStore.Disconnect();
-            _DataStore = null;
+            if (this.dataStore != null)
+                this.dataStore.Disconnect();
+            this.dataStore = null;
         }
 
-        public IEnumerable GetValidFieldNames(GraphValues graphValues)
-        {
-            return graphValues.ValidFieldNames(this);
-        }
-
-
-        
         /// <summary>
-        /// Return an instance of the datastore. Creates it if it doesn't exist.
+        /// An enumeration for the position of the legend
+        /// </summary>
+        public enum LegendPositionType
+        {
+            /// <summary>
+            /// Top left corner of the graph
+            /// </summary>
+            TopLeft,
+
+            /// <summary>
+            /// Top right corner of the graph
+            /// </summary>
+            TopRight,
+
+            /// <summary>
+            /// Bottom left corner of the graph
+            /// </summary>
+            BottomLeft,
+
+            /// <summary>
+            /// Bottom right corner of the graph
+            /// </summary>
+            BottomRight
+        }
+
+        /// <summary>
+        /// Gets or sets the title of the graph
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets the caption at the bottom of the graph
+        /// </summary>
+        public string Caption { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all axes
+        /// </summary>
+        [XmlElement("Axis")]
+        public List<Axis> Axes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of all series
+        /// </summary>
+        [XmlElement("Series")]
+        public List<Series> Series { get; set; }
+
+        /// <summary>
+        /// Gets or sets the location of the legend
+        /// </summary>
+        public LegendPositionType LegendPosition { get; set; }
+
+        /// <summary>
+        /// Gets an instance of the data store. Creates it if it doesn't exist.
         /// </summary>
         public DataStore DataStore
         {
             get
             {
-                if (_DataStore == null)
-                    _DataStore = new DataStore(this);
-                return _DataStore;
+                if (this.dataStore == null)
+                    this.dataStore = new DataStore(this);
+                return this.dataStore;
             }
+        }
+
+        /// <summary>
+        /// Get a list of valid field names
+        /// </summary>
+        /// <param name="graphValues">The graph values object</param>
+        /// <returns>The list of field names that are valid</returns>
+        public IEnumerable GetValidFieldNames(GraphValues graphValues)
+        {
+            return graphValues.ValidFieldNames(this);
         }
     }
 }

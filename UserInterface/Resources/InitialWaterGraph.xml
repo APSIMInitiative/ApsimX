@@ -13,6 +13,8 @@
   </Axis>
   <Series>
     <Type>Area</Type>
+    <Title>Available water</Title>
+    <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-3479297</ColourArgb>
@@ -29,9 +31,12 @@
     <Y2>
       <FieldName>[Soil].DepthMidPoints</FieldName>
     </Y2>
+    <SplitOn>*</SplitOn>
   </Series>  
   <Series>
     <Type>Line</Type>
+    <Title>Air dry</Title>
+    <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-65536</ColourArgb>
@@ -42,22 +47,12 @@
     <Y>
       <FieldName>[Soil].DepthMidPoints</FieldName>
     </Y>
+    <SplitOn>*</SplitOn>
   </Series>
   <Series>
     <Type>Line</Type>
-    <XAxis>Top</XAxis>
-    <YAxis>Left</YAxis>
-    <ColourArgb>-16776961</ColourArgb>
-    <Marker>None</Marker>
-    <X>
-      <FieldName>[Soil].DUL</FieldName>
-    </X>
-    <Y>
-      <FieldName>[Soil].DepthMidPoints</FieldName>
-    </Y>
-  </Series>
-  <Series>
-    <Type>Line</Type>
+    <Title>LL15</Title>
+    <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-16711681</ColourArgb>
@@ -68,9 +63,28 @@
     <Y>
       <FieldName>[Soil].DepthMidPoints</FieldName>
     </Y>
+    <SplitOn>*</SplitOn>
   </Series>
   <Series>
     <Type>Line</Type>
+    <Title>DUL</Title>
+    <ShowInLegend>true</ShowInLegend>
+    <XAxis>Top</XAxis>
+    <YAxis>Left</YAxis>
+    <ColourArgb>-16776961</ColourArgb>
+    <Marker>None</Marker>
+    <X>
+      <FieldName>[Soil].DUL</FieldName>
+    </X>
+    <Y>
+      <FieldName>[Soil].DepthMidPoints</FieldName>
+    </Y>
+    <SplitOn>*</SplitOn>
+  </Series>
+  <Series>
+    <Type>Line</Type>
+    <Title>SAT</Title>
+    <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-16760704</ColourArgb>
@@ -81,5 +95,6 @@
     <Y>
       <FieldName>[Soil].DepthMidPoints</FieldName>
     </Y>
+    <SplitOn>*</SplitOn>
   </Series>
 </Graph>

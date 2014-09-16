@@ -54,6 +54,11 @@ namespace UserInterface.Interfaces
         event EventHandler<HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>
+        /// Left margin in pixels.
+        /// </summary>
+        int LeftRightPadding { get; set; }
+
+        /// <summary>
         /// Show the specified editor.
         /// </summary>
         /// <param name="editor">Show the specified series editor</param>

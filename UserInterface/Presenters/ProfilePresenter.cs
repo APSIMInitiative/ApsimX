@@ -116,6 +116,8 @@ namespace UserInterface.Presenters
                     this.parentZone.Children.Add(this.graph);
                     this.graph.Parent = this.parentZone;
                     this.view.ShowGraph(true);
+                    int padding = (this.view as ProfileView).Width / 2 / 2;
+                    this.view.Graph.LeftRightPadding = padding;
                     this.graphPresenter = new GraphPresenter();
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                 }

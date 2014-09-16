@@ -639,9 +639,7 @@ namespace UserInterface.Presenters
                 if (graphValues.TableName == null && graphValues.FieldName != null)
                 {
                     // Use reflection to access a property.
-                    object Obj = Apsim.Get(graph, graphValues.FieldName);
-                    if (Obj != null && Obj.GetType().IsArray)
-                        return Obj as Array;
+                    return graphValues.GetData(this.graph);
                 }
                 else if (graphValues.TableName != null && graphValues.FieldName != null)
                 {

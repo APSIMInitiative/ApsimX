@@ -38,7 +38,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Margin to use
         /// </summary>
-        private new const int Margin = 75;
+        private new const int TopMargin = 75;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
@@ -82,6 +82,11 @@ namespace UserInterface.Views
         public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>
+        /// Left margin in pixels.
+        /// </summary>
+        public int LeftRightPadding { get; set; }
+
+        /// <summary>
         /// Clear the graph of everything.
         /// </summary>
         public void Clear()
@@ -101,10 +106,13 @@ namespace UserInterface.Views
             this.plot1.Model.DefaultFontSize = FontSize;
 
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
-            this.plot1.Model.PlotMargins = new OxyThickness(100, Margin, 100, Margin);
+            this.plot1.Model.PlotMargins = new OxyThickness(100, TopMargin, 100, TopMargin);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
             this.plot1.Model.LegendBackground = OxyColors.White;
             this.plot1.Model.InvalidatePlot(true);
+
+            if (this.LeftRightPadding != 0)
+                this.Padding = new Padding(this.LeftRightPadding, 0, this.LeftRightPadding, 0);
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
             {

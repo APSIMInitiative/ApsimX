@@ -14,10 +14,20 @@ namespace Models.Graph
     public class Axis
     {
         /// <summary>
+        /// Constructor for axis class.
+        /// </summary>
+        public Axis()
+        {
+            this.Minimum = double.NaN;
+            this.Maximum = double.NaN;
+            this.Interval = double.NaN;
+        }
+
+        /// <summary>
         /// An enumeration for different axis orientations
         /// </summary>
-        public enum AxisType 
-        { 
+        public enum AxisType
+        {
             /// <summary>
             /// Left orientation
             /// </summary>
@@ -37,16 +47,6 @@ namespace Models.Graph
             /// Bottom orientation
             /// </summary>
             Bottom
-        }
-
-        /// <summary>
-        /// Constructor for axis class.
-        /// </summary>
-        public Axis()
-        {
-            Minimum = double.NaN;
-            Maximum = double.NaN;
-            Interval = double.NaN;
         }
 
         /// <summary>
