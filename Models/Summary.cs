@@ -592,6 +592,8 @@ namespace Models
 
                 // Work out the property name.
                 string propertyName = row["Description"].ToString();
+                if (propertyName == string.Empty)
+                    propertyName = row["Name"].ToString();
                 string units = row["Units"].ToString();
                 string displayFormat = row["DisplayFormat"].ToString();
 

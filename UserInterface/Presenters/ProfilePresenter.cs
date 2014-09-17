@@ -80,6 +80,11 @@ namespace UserInterface.Presenters
         private Zone parentZone;
 
         /// <summary>
+        /// When the user right clicks a column header, this field contains the index of that column
+        /// </summary>
+        private int indexOfClickedVariable;
+
+        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The underlying model we are to use</param>
@@ -127,6 +132,10 @@ namespace UserInterface.Presenters
             // we can save the contents.
             this.view.ProfileGrid.CellsChanged += this.OnProfileGridCellValueChanged;
 
+            // Trap the right click on column header so that we can potentially put
+            // units on the context menu.
+            this.view.ProfileGrid.ColumnHeaderClicked += this.OnColumnHeaderClicked;
+
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
@@ -137,6 +146,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
+            this.view.ProfileGrid.ColumnHeaderClicked -= this.OnColumnHeaderClicked;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
        
             if (this.parentZone != null && this.graph != null)
@@ -313,7 +323,7 @@ namespace UserInterface.Presenters
                 double total = property.Total;
                 if (!double.IsNaN(total))
                 {
-                    columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
+                    columnName = columnName + "\r\n" + total.ToString("N1");
                 }
 
                 Array values = property.Value as Array;
@@ -473,6 +483,35 @@ namespace UserInterface.Presenters
             {
                 this.graphPresenter.DrawGraph();
             }
+        }
+
+        /// <summary>
+        /// The column header has been clicked
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnColumnHeaderClicked(object sender, GridHeaderClickedArgs e)
+        {
+            if (e.RightClick)
+            {
+                this.view.ProfileGrid.ClearContextActions();
+                this.indexOfClickedVariable = e.Column.ColumnIndex;
+                VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
+                foreach (string unit in property.AllowableUnits)
+                    this.view.ProfileGrid.AddContextAction(unit, this.OnUnitClick);                     
+            }
+        }
+
+        /// <summary>
+        /// The unit menu item has been clicked by user.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnUnitClick(object sender, EventArgs e)
+        {
+            VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
+            property.Units = (sender as System.Windows.Forms.ToolStripDropDownItem).Text;
+            this.OnModelChanged(this.model);
         }
     }
 }

@@ -77,6 +77,11 @@ namespace UserInterface.Interfaces
         void AddContextAction(string menuItemText, System.EventHandler onClick);
 
         /// <summary>
+        /// Clear all presenter defined context items.
+        /// </summary>
+        void ClearContextActions();
+
+        /// <summary>
         /// Returns true if the grid row is empty.
         /// </summary>
         /// <param name="rowIndex">The row index</param>

@@ -38,7 +38,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Margin to use
         /// </summary>
-        private new const int TopMargin = 75;
+        private const int TopMargin = 75;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.

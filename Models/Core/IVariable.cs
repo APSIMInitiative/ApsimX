@@ -35,8 +35,8 @@ namespace Models.Core
         public abstract string Description { get; }
 
         /// <summary>
-        /// Gets the units of the property (in brackets) or null if not found.
+        /// Gets or sets the units of the property (in brackets) or null if not found.
         /// </summary>
-        public abstract string Units { get; }
+        public abstract string Units { get; set;  }
     }
 } 

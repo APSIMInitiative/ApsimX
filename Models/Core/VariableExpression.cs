@@ -107,8 +107,14 @@ namespace Models.Core
             {
                 return null;
             }
+            set
+            {
+            }
         }
 
+        /// <summary>
+        /// Fill the function variables with names.
+        /// </summary>
         private void FillVariableNames()
         {
             ArrayList variablesToFill = fn.Variables;

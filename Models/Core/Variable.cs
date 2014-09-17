@@ -73,6 +73,11 @@
             {
                 return null;
             }
+
+            set
+            {
+
+            }
         }
 
     }
@@ -134,7 +139,6 @@
             }
         }
 
-
         /// <summary>
         /// Returns a description of the property or null if not found.
         /// </summary>
@@ -160,6 +164,10 @@
                 if (unitsAttribute != null)
                     return "(" + unitsAttribute.ToString() + ")";
                 return null;
+            }
+
+            set
+            {
             }
         }
     }

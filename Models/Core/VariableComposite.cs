@@ -101,7 +101,6 @@ namespace Models.Core
             }
         }
 
-
         /// <summary>
         /// Gets a description of the property or null if not found.
         /// </summary>
@@ -113,7 +112,6 @@ namespace Models.Core
             }
         }
 
-
         /// <summary>
         /// Gets the units of the property (in brackets) or null if not found.
         /// </summary>
@@ -123,7 +121,11 @@ namespace Models.Core
             {
                 return null;
             }
-        }
 
+            set
+            {
+
+            }
+        }
     }
 } 

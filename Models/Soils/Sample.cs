@@ -243,8 +243,6 @@ namespace Models.Soils
         /// Gets NO3. Units: kg/ha.
         /// </summary>
         [Summary]
-        [Description("NO3")]
-        [Units("kg/ha")]
         [Display(Format = "N1", ShowTotal = true)]
         public double[] NO3kgha
         {
@@ -305,8 +303,6 @@ namespace Models.Soils
         /// Gets NH4. Units: kg/ha.
         /// </summary>
         [Summary]
-        [Description("NH4")]
-        [Units("kg/ha")]
         [Display(Format = "N1", ShowTotal = true)]
         public double[] NH4kgha
         {
@@ -338,8 +334,6 @@ namespace Models.Soils
         /// Gets SW. Units: mm/mm.
         /// </summary>
         [Summary]
-        [Description("SW")]
-        [Units("mm")]
         [Display(Format = "N1", ShowTotal = true)]
         public double[] SWmm
         {

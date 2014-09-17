@@ -18,5 +18,10 @@ namespace UserInterface.EventArguments
         /// Gets or sets the column that had its header clicked.
         /// </summary>
         public IGridColumn Column { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the right mouse button was clicked.
+        /// </summary>
+        public bool RightClick { get; set; }
     }  
 }

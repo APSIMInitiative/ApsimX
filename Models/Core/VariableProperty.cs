@@ -24,12 +24,12 @@ namespace Models.Core
         private PropertyInfo property;
 
         /// <summary>
-        /// An optional lower bound array specifier.
+        /// An optional lower bound array index.
         /// </summary>
         private int lowerArraySpecifier;
 
         /// <summary>
-        /// An optional upper bound array specifier.
+        /// An optional upper bound array index.
         /// </summary>
         private int upperArraySpecifier;
 
@@ -38,7 +38,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="model">The underlying model for the property</param>
         /// <param name="property">The PropertyInfo for this property</param>
-        /// <param name="arraySpecifier">An optional array specifier e.g. 1:3</param>
+        /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
         public VariableProperty(object model, PropertyInfo property, string arraySpecifier = null)
         {
             if (model == null || property == null)
@@ -54,19 +54,19 @@ namespace Models.Core
                 int posColon = arraySpecifier.IndexOf(':');
                 if (posColon == -1)
                 {
-                    lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
-                    upperArraySpecifier = lowerArraySpecifier;
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
+                    this.upperArraySpecifier = this.lowerArraySpecifier;
                 }
                 else
                 {
-                    lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
-                    upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
+                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
                 }
             }
             else
             {
-                lowerArraySpecifier = 0;
-                upperArraySpecifier = 0;
+                this.lowerArraySpecifier = 0;
+                this.upperArraySpecifier = 0;
             }
         }
 
@@ -128,8 +128,38 @@ namespace Models.Core
                 {
                     unitString = (string)unitsToStringInfo.Invoke(this.Object, new object[] { null });
                 }
+                else if (unitsInfo != null)
+                {
+                    return unitsInfo.GetValue(this.Object, null).ToString();
+                }
 
                 return unitString;
+            }
+
+            set
+            {
+                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                if (unitsInfo != null)
+                {
+                    unitsInfo.SetValue(this.Object, Enum.Parse(unitsInfo.PropertyType, value), null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of allowable units
+        /// </summary>
+        public string[] AllowableUnits
+        {
+            get
+            {
+                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                if (unitsInfo != null)
+                {
+                    return Enum.GetNames(unitsInfo.PropertyType);
+                }
+                else
+                    return new string[0];
             }
         }
 
@@ -195,7 +225,7 @@ namespace Models.Core
             {
                 object obj = this.property.GetValue(this.Object, null);
 
-                if (obj != null && obj.GetType().IsArray && lowerArraySpecifier != 0)
+                if (obj != null && obj.GetType().IsArray && this.lowerArraySpecifier != 0)
                 {
                     Array array = obj as Array;
                     if (array.Length == 0)
@@ -203,21 +233,20 @@ namespace Models.Core
                         return null;
                     }
 
-                    int numElements = upperArraySpecifier - lowerArraySpecifier + 1;
+                    int numElements = this.upperArraySpecifier - this.lowerArraySpecifier + 1;
                     Array values = Array.CreateInstance(this.property.PropertyType.GetElementType(), numElements);
-                    for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
+                    for (int i = this.lowerArraySpecifier; i <= this.upperArraySpecifier; i++)
                     {
-                        int index = i - lowerArraySpecifier;
+                        int index = i - this.lowerArraySpecifier;
                         if (i < 1 || i > array.Length)
                         {
-                            throw new Exception("Array index out of bounds while getting variable: " + Name);
+                            throw new Exception("Array index out of bounds while getting variable: " + this.Name);
                         }
 
                         values.SetValue(array.GetValue(i - 1), index);
                     }
                     if (values.Length == 1)
                     {
-                    //    return values.GetValue(0);
                     }
 
                     return values;
@@ -230,7 +259,7 @@ namespace Models.Core
             {
                 if (value is string)
                 {
-                    SetFromString(value as string);
+                    this.SetFromString(value as string);
                 }
                 else
                 {
@@ -240,7 +269,7 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Gets the value of the specified property with arrays converted to comma separated strings.
+        /// Gets or sets the value of the specified property with arrays converted to comma separated strings.
         /// </summary>
         public object ValueWithArrayHandling
         {
@@ -281,58 +310,11 @@ namespace Models.Core
             {
                 if (value is string)
                 {
-                    SetFromString(value as string);
+                    this.SetFromString(value as string);
                 }
                 else
                 {
                     this.Value = value;   
-                }
-            }
-        }
-
-        /// <summary>
-        /// Set the value of this object via a string.
-        /// </summary>
-        /// <param name="value">The string value to set this property to</param>
-        private void SetFromString(string value)
-        {
-            if (DataType.IsArray)
-            {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (DataType == typeof(double[]))
-                {
-                    Value = Utility.Math.StringsToDoubles(stringValues);
-                }
-                else if (DataType == typeof(int[]))
-                {
-                    Value = Utility.Math.StringsToDoubles(stringValues);
-                }
-                else if (DataType == typeof(string[]))
-                {
-                    Value = stringValues;
-                }
-                else
-                {
-                    throw new ApsimXException(null, "Invalid property type: " + DataType.ToString());
-                }
-            }
-            else
-            {
-                if (DataType == typeof(double))
-                {
-                    Value = Convert.ToDouble(value);
-                }
-                else if (DataType == typeof(int))
-                {
-                    Value = Convert.ToInt32(value);
-                }
-                else if (DataType == typeof(string))
-                {
-                    this.property.SetValue(this.Object, value, null);
-                }
-                else
-                {
-                    Value = value;
                 }
             }
         }
@@ -413,6 +395,53 @@ namespace Models.Core
                 else
                 {
                     return DisplayAttribute.DisplayTypeEnum.None;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the value of this object via a string.
+        /// </summary>
+        /// <param name="value">The string value to set this property to</param>
+        private void SetFromString(string value)
+        {
+            if (this.DataType.IsArray)
+            {
+                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (this.DataType == typeof(double[]))
+                {
+                    this.Value = Utility.Math.StringsToDoubles(stringValues);
+                }
+                else if (this.DataType == typeof(int[]))
+                {
+                    this.Value = Utility.Math.StringsToDoubles(stringValues);
+                }
+                else if (this.DataType == typeof(string[]))
+                {
+                    this.Value = stringValues;
+                }
+                else
+                {
+                    throw new ApsimXException(null, "Invalid property type: " + this.DataType.ToString());
+                }
+            }
+            else
+            {
+                if (this.DataType == typeof(double))
+                {
+                    this.Value = Convert.ToDouble(value);
+                }
+                else if (this.DataType == typeof(int))
+                {
+                    this.Value = Convert.ToInt32(value);
+                }
+                else if (this.DataType == typeof(string))
+                {
+                    this.property.SetValue(this.Object, value, null);
+                }
+                else
+                {
+                    this.Value = value;
                 }
             }
         }

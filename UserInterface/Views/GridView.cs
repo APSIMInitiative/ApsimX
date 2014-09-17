@@ -213,6 +213,15 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Clear all presenter defined context items.
+        /// </summary>
+        public void ClearContextActions()
+        {
+            while (this.popupMenu.Items.Count > 3)
+                this.popupMenu.Items.RemoveAt(3);
+        }
+
+        /// <summary>
         /// Returns true if the grid row is empty.
         /// </summary>
         /// <param name="rowIndex">The row index</param>
@@ -402,7 +411,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The event arguments</param>
-        private void OnCellClick(object sender, DataGridViewCellEventArgs e)
+        private void OnCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex == -1)
             {
@@ -410,6 +419,7 @@ namespace UserInterface.Views
                 {
                     GridHeaderClickedArgs args = new GridHeaderClickedArgs();
                     args.Column = this.GetColumn(e.ColumnIndex);
+                    args.RightClick = e.Button == System.Windows.Forms.MouseButtons.Right;
                     this.ColumnHeaderClicked.Invoke(this, args);
                 }
             }
