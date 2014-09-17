@@ -493,7 +493,7 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Units("mm")]
-        private double pond_evap;      //! evaporation from the surface of the pond (mm)
+        public double pond_evap { get; set; }       //! evaporation from the surface of the pond (mm)
 
         /// <summary>
         /// Surface water ponding depth
@@ -526,6 +526,7 @@ namespace Models.Soils
 
         //end of soilwat2_set_my_variable()
         private double WaterTableInitial = double.NaN;
+        [XmlIgnore]
         public double WaterTable
         {
             get
@@ -623,18 +624,22 @@ namespace Models.Soils
             }
         }
 
-
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        private double[] sat       //! saturated water content for layer  
+        public double[] sat       //! saturated water content for layer  
         {
             get
             {
-                int num_layers = _dlayer.Length;
-                double[] _sat = new double[num_layers];
-                for (int layer = 0; layer < num_layers; layer++)
-                    _sat[layer] = Utility.Math.Divide(_sat_dep[layer], _dlayer[layer], 0.0);
-                return _sat;
+                if (_dlayer != null)
+                    {
+	                int num_layers = _dlayer.Length;
+	                double[] _sat = new double[num_layers];
+	                for (int layer = 0; layer < num_layers; layer++)
+	                    _sat[layer] = Utility.Math.Divide(_sat_dep[layer], _dlayer[layer], 0.0);
+	                return _sat;
+            		}
+                return null;
             }
             set
             {
@@ -662,12 +667,16 @@ namespace Models.Soils
         {
             get
             {
+            if (_dlayer != null)
+                {
                 int num_layers = _dlayer.Length;
                 double[] _dul = new double[num_layers];
                 //* made settable to allow for erosion
                 for (int layer = 0; layer < num_layers; layer++)
                     _dul[layer] = Utility.Math.Divide(_dul_dep[layer], _dlayer[layer], 0.0);
                 return _dul;
+            	}
+            return null;
             }
             set
             {
@@ -752,11 +761,15 @@ namespace Models.Soils
         {
             get
             {
+            if (_dlayer != null)
+                {
                 int num_layers = _dlayer.Length;
                 double[] _ll15 = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     _ll15[layer] = Utility.Math.Divide(_ll15_dep[layer], _dlayer[layer], 0.0);
                 return _ll15;
+            	}
+            return null;
             }
             set
             {
@@ -783,15 +796,20 @@ namespace Models.Soils
 #else
         [Units("0-1")]
 #endif
-        private double[] air_dry   //! air dry soil water content
+        [XmlIgnore]
+        public double[] air_dry   //! air dry soil water content
         {
             get
             {
+            if (_dlayer != null)
+                {
                 int num_layers = _dlayer.Length;
                 double[] _air_dry = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     _air_dry[layer] = Utility.Math.Divide(_air_dry_dep[layer], _dlayer[layer], 0.0);
                 return _air_dry;
+            	}
+            return null;
             }
             set
             {
@@ -947,8 +965,9 @@ namespace Models.Soils
 
 
         private double[] _air_dry_dep;
+        [XmlIgnore]
         [Units("mm")]
-        private double[] air_dry_dep  // air_dry * dlayer //see soilwat2_init() for initialisation
+        public double[] air_dry_dep  // air_dry * dlayer //see soilwat2_init() for initialisation
         {
             get { return _air_dry_dep; }
             set
