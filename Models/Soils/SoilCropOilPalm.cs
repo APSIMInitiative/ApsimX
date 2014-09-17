@@ -69,5 +69,5 @@ namespace Models.Soils
         /// Gets or sets the meta data for the exploration factor
         /// </summary>
         public string[] XFMetadata { get; set; }
-    }
+    } 
 }
