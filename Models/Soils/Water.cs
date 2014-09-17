@@ -95,34 +95,24 @@ namespace Models.Soils
         public string[] KSMetadata { get; set; }
 
         [Description("Soil crop parameterisations")]
-        [XmlElement("SoilCrop")]
-        public List<SoilCrop> Crops { get; set; }
-
-        [EventSubscribe("Loaded")]
-        private void OnLoaded()
+        [XmlIgnore]
+        public List<ISoilCrop> Crops
         {
-            foreach (SoilCrop crop in Crops)
-                crop.Soil = Parent as Soil;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Water()
-        {
-            Crops = new List<SoilCrop>();
+            get
+            {
+                List<ISoilCrop> crops = new List<ISoilCrop>();
+                foreach (ISoilCrop crop in Apsim.Children(this, typeof(ISoilCrop)))
+                    crops.Add(crop);
+                return crops;
+            }
         }
 
         /// <summary>
         /// Return the specified crop to caller. Will return null if not found.
         /// </summary>
-        public SoilCrop Crop(string CropName)
+        public ISoilCrop Crop(string CropName)
         {
-            SoilCrop C = FindCrop(CropName);
-            if (C == null)
-                return null;
-            else
-                return C;
+            return this.Children.Find(m => m.Name.Equals(CropName, StringComparison.CurrentCultureIgnoreCase)) as ISoilCrop;
         }
 
         /// <summary>
@@ -139,58 +129,47 @@ namespace Models.Soils
                     CropNames[i] = Crops[i].Name;
                 return CropNames;
             }
-            set
-            {
-                // Add in extra crops if necessary.
-                for (int i = 0; i < value.Length; i++)
-                {
-                    SoilCrop Crop = FindCrop(value[i]);
-                    if (Crop == null)
-                    {
-                        Crop = new SoilCrop { Name = value[i] };
-                        Crops.Add(Crop);
-                    }
+            //set
+            //{
+            //    // Add in extra crops if necessary.
+            //    for (int i = 0; i < value.Length; i++)
+            //    {
+            //        ISoilCrop Crop = FindCrop(value[i]);
+            //        if (Crop == null)
+            //        {
+            //            Crop = new SoilCrop { Name = value[i] };
+            //            Crops.Add(Crop);
+            //        }
 
-                }
+            //    }
 
-                // Remove unwanted crops if necessary.
-                for (int i = Crops.Count - 1; i >= 0; i--)
-                {
-                    int Pos = Utility.String.IndexOfCaseInsensitive(value, Crops[i].Name);
-                    if (Pos != -1 && value[Pos] != "")
-                        Crops[i].Name = value[Pos];  // ensure case transfer.
-                    else
-                        Crops.Remove(Crops[i]);      // remove unwanted crop.
-                }
+            //    // Remove unwanted crops if necessary.
+            //    for (int i = Crops.Count - 1; i >= 0; i--)
+            //    {
+            //        int Pos = Utility.String.IndexOfCaseInsensitive(value, Crops[i].Name);
+            //        if (Pos != -1 && value[Pos] != "")
+            //            Crops[i].Name = value[Pos];  // ensure case transfer.
+            //        else
+            //            Crops.Remove(Crops[i]);      // remove unwanted crop.
+            //    }
 
-                // Now reorder.
-                for (int i = 0, insert = 0; i < value.Length; i++)
-                {
-                    int ExistingCropIndex = FindCropIndex(value[i]);
-                    if (ExistingCropIndex != -1)
-                    {
-                        if (insert != ExistingCropIndex)
-                        {
-                            SoilCrop C = Crops[ExistingCropIndex];  // grab the crop
-                            Crops.RemoveAt(ExistingCropIndex);      // remove it from the list.
-                            Crops.Insert(insert, C);                     // add it at the correct index.
-                        }
-                        insert++;
-                    }
-                }
+            //    // Now reorder.
+            //    for (int i = 0, insert = 0; i < value.Length; i++)
+            //    {
+            //        int ExistingCropIndex = FindCropIndex(value[i]);
+            //        if (ExistingCropIndex != -1)
+            //        {
+            //            if (insert != ExistingCropIndex)
+            //            {
+            //                SoilCrop C = Crops[ExistingCropIndex];  // grab the crop
+            //                Crops.RemoveAt(ExistingCropIndex);      // remove it from the list.
+            //                Crops.Insert(insert, C);                     // add it at the correct index.
+            //            }
+            //            insert++;
+            //        }
+            //    }
 
-            }
-        }
-
-        /// <summary>
-        /// Return the specified crop to caller. Will return null if not found.
-        /// </summary>
-        private SoilCrop FindCrop(string CropName)
-        {
-            foreach (SoilCrop Crop in Crops)
-                if (Crop.Name.Equals(CropName, StringComparison.CurrentCultureIgnoreCase))
-                    return Crop;
-            return null;
+            //}
         }
 
         /// <summary>

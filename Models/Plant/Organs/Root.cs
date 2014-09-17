@@ -99,7 +99,9 @@ namespace Models.PMF.Organs
         
         #region Class Properties
         private bool isGrowing { get { return (Plant.PlantInGround && Plant.SowingData.Depth < this.Depth); } }
-        
+
+        private SoilCrop soilCrop;
+
         [Units("kg/ha")]
         public double NUptake
         {
@@ -116,7 +118,7 @@ namespace Models.PMF.Organs
             {
                 double[] value = new double[Soil.SoilWater.dlayer.Length];
                 for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-                    value[i] = Soil.LL(this.Plant.Name)[i] * Soil.SoilWater.dlayer[i];
+                    value[i] = soilCrop.LL[i] * Soil.SoilWater.dlayer[i];
                 return value;
             }
         }
@@ -186,10 +188,10 @@ namespace Models.PMF.Organs
             int RootLayer = LayerIndex(Depth);
             double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
 
-            Depth = Depth + RootFrontVelocity.Value * Soil.XF(this.Plant.Name)[RootLayer] * TEM;
+            Depth = Depth + RootFrontVelocity.Value * soilCrop.XF[RootLayer] * TEM;
             double MaxDepth = 0;
             for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-                if (Soil.XF(this.Plant.Name)[i] > 0)
+                if (soilCrop.XF[i] > 0)
                     MaxDepth += Soil.SoilWater.dlayer[i];
 
             Depth = Math.Min(Depth, MaxDepth);
@@ -316,18 +318,21 @@ namespace Models.PMF.Organs
 
             double[] KlAdjusted = new double[Soil.SoilWater.dlayer.Length];
             for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-                KlAdjusted[i] = Soil.KL(this.Plant.Name)[i] * KLModifier.Value;
+                KlAdjusted[i] = soilCrop.KL[i] * KLModifier.Value;
             Plant.RootProperties.KL = KlAdjusted;
 
             double[] LL_dep = new double[Soil.SoilWater.dlayer.Length];
             for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-                LL_dep[i] = Soil.LL(this.Plant.Name)[i] * Soil.Thickness[i];
+                LL_dep[i] = soilCrop.LL[i] * Soil.Thickness[i];
             Plant.RootProperties.LowerLimitDep = LL_dep;
    
         }
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            soilCrop = this.Soil.Crop(this.Plant.Name) as SoilCrop;
+            if (soilCrop == null)
+                throw new ApsimXException(this, "Cannot find a soil crop parameterisation for " + Name);
             Clear();
         }
 
@@ -654,7 +659,7 @@ namespace Models.PMF.Organs
                     SWSupply = new double[Soil.SoilWater.dlayer.Length];
                 for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                     if (layer <= LayerIndex(Depth))
-                        SWSupply[layer] = Math.Max(0.0, Soil.KL(this.Plant.Name)[layer] * KLModifier.Value * (Soil.SoilWater.sw_dep[layer] - Soil.LL(this.Plant.Name)[layer] * Soil.SoilWater.dlayer[layer]) * RootProportion(layer, Depth));
+                        SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer] * Soil.SoilWater.dlayer[layer]) * RootProportion(layer, Depth));
                     else
                         SWSupply[layer] = 0;
 

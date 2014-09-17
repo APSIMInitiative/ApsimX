@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="SoilCrop.cs" company="APSIM Initiative">
+// <copyright file="SoilCropOilPalm.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -10,12 +10,12 @@ namespace Models.Soils
     using Models.Core;
 
     /// <summary>
-    /// A soil crop parameterization class.
+    /// A soil crop interface
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class SoilCrop : Model, ISoilCrop
+    public class SoilCropOilPalm : Model, ISoilCrop
     {
         /// <summary>
         /// Gets the parent soil
@@ -45,31 +45,6 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Gets or sets the crop lower limit
-        /// </summary>
-        [Description("LL")]
-        [Units("mm/mm")]
-        public double[] LL { get; set; }
-
-        /// <summary>
-        /// Gets the plant available water by layer
-        /// </summary>
-        [Description("PAWC")]
-        [Display(Format = "N1", ShowTotal = true)]
-        [Units("mm")]
-        public double[] PAWC
-        {
-            get
-            {
-                Soil parentSoil = Soil;
-                if (parentSoil != null)
-                    return Utility.Math.Multiply(Soil.CalcPAWC(parentSoil.Thickness, this.LL, parentSoil.DUL, this.XF), parentSoil.Thickness);
-                else
-                    return new double[0];
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the KL value.
         /// </summary>
         [Description("KL")]
@@ -84,11 +59,6 @@ namespace Models.Soils
         [Display(Format = "N1")]
         [Units("mm/mm")]
         public double[] XF { get; set; }
-
-        /// <summary>
-        /// Gets or sets the metadata for crop lower limit
-        /// </summary>
-        public string[] LLMetadata { get; set; }
 
         /// <summary>
         /// Gets or sets the metadata for KL

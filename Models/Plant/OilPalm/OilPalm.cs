@@ -69,7 +69,7 @@ namespace Models.PMF.OilPalm
 
         [NonSerialized]
         private RootSystem rootSystem;
-
+        private SoilCropOilPalm soilCrop;
         private Cultivar cultivarDefinition;
 
         /// <summary>
@@ -624,6 +624,7 @@ namespace Models.PMF.OilPalm
             Bunches = new List<BunchType>();
             Roots = new List<RootType>();
 
+            soilCrop = Soil.Crop(Name) as SoilCropOilPalm; 
             
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.Thickness.Length];
@@ -805,7 +806,7 @@ namespace Models.PMF.OilPalm
         private void DoRootGrowth(double Allocation)
         {
             int RootLayer = LayerIndex(RootDepth);
-            RootDepth = RootDepth + RootFrontVelocity.Value * Soil.XF("OilPalm")[RootLayer];
+            RootDepth = RootDepth + RootFrontVelocity.Value * soilCrop.XF[RootLayer];
             RootDepth = Math.Min(MaximumRootDepth, RootDepth);
             RootDepth = Math.Min(Utility.Math.Sum(Soil.SoilWater.dlayer), RootDepth);
 
@@ -1026,7 +1027,7 @@ namespace Models.PMF.OilPalm
 
 
             for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL("OilPalm")[j] * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
 
             double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
 

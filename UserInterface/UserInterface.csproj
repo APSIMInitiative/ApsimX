@@ -621,6 +621,7 @@
     <None Include="Resources\MicroClimate161.png" />
     <None Include="Resources\Plant2.css" />
     <None Include="Resources\palm16.png" />
+    <None Include="Resources\SoilCrop1.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup />

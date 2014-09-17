@@ -22,14 +22,6 @@
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOM</Name>
-        <_standing_fraction>
-          <double>0</double>
-          <double>0</double>
-        </_standing_fraction>
-        <c_fract>0.4</c_fract>
-        <pond_active>no</pond_active>
-        <report_additions>no</report_additions>
-        <report_removals>no</report_removals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -38,28 +30,78 @@
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>oilpalm</PoolName>
+            <ResidueType>oilpalm</ResidueType>
+            <Mass>24000</Mass>
+            <CNRatio>39</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+          <Pool>
+            <PoolName>oilpalmstem</PoolName>
+            <ResidueType>oilpalmstem</ResidueType>
+            <Mass>63000</Mass>
+            <CNRatio>145</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>oilpalm oilpalmstem</PoolName>
         <type>oilpalm oilpalmstem</type>
         <mass>24000 63000</mass>
         <standing_fraction>0 0</standing_fraction>
         <cpr />
         <cnr>39 145</cnr>
-        <crit_residue_wt>2000</crit_residue_wt>
-        <opt_temp>20</opt_temp>
-        <cum_eos_max>20</cum_eos_max>
-        <cnrf_coeff>0.277</cnrf_coeff>
-        <cnrf_optcn>25</cnrf_optcn>
-        <leach_rain_tot>25</leach_rain_tot>
-        <min_rain_to_leach>10</min_rain_to_leach>
-        <crit_min_surfom_orgC>0.004</crit_min_surfom_orgC>
-        <default_cpr>0</default_cpr>
-        <standing_extinct_coeff>0.5</standing_extinct_coeff>
-        <fractionFaecesAdded>0.5</fractionFaecesAdded>
+        <CriticalResidueWeight>2000</CriticalResidueWeight>
+        <OptimumDecompTemp>20</OptimumDecompTemp>
+        <MaxCumulativeEOS>20</MaxCumulativeEOS>
+        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+        <TotalLeachRain>25</TotalLeachRain>
+        <MinRainToLeach>10</MinRainToLeach>
+        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+        <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
+        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+        <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
       <Soil>
         <Name>Soil</Name>
         <Water>
           <Name>Water</Name>
+          <SoilCropOilPalm>
+            <Name>OilPalm</Name>
+            <KL>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCropOilPalm>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -144,51 +186,6 @@
             <double>0.45</double>
             <double>0.45</double>
           </SAT>
-          <SoilCrop>
-            <Name>OilPalm</Name>
-            <LL>
-              <double>0.38</double>
-              <double>0.38</double>
-              <double>0.3</double>
-              <double>0.41</double>
-              <double>0.406</double>
-              <double>0.406</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </LL>
-            <KL>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -631,9 +628,9 @@
           <year4N>0.9</year4N>
           <MatureN>1.05</MatureN>
           <Irrigated>True</Irrigated>
-          <Plant_population>0</Plant_population>
           <WaterRequirementYoung>20</WaterRequirementYoung>
           <WaterRequirementMature>40</WaterRequirementMature>
+          <Plant_population>0</Plant_population>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -688,7 +685,8 @@ namespace Models
 		
 		public double Plant_population {get;set;}
 		
-		public override void OnSimulationCommencing()
+		[EventSubscribe("Commencing")]
+		public void OnSimulationCommencing(object Sender, EventArgs e)
 		{
 		    Plant_population = 0;
 		}
@@ -821,7 +819,8 @@ namespace Models
         public double AnnualN2O {get;set;}
         public double AnnualLeaching {get; set;}
         
-		public override void OnSimulationCommencing()
+        [EventSubscribe("Commencing")]
+		public void OnSimulationCommencing(object Sender, EventArgs e)
 		{
 		    AnnualRain = 0;
 		    AnnualIrrigation = 0;
@@ -938,11 +937,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>graph</Title>
@@ -972,11 +977,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>graph</Title>
@@ -1006,11 +1017,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>graph</Title>
@@ -1040,11 +1057,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>graph</Title>
@@ -1074,11 +1097,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Annual Irrigation Addition</Title>
@@ -1122,6 +1151,8 @@ namespace Models
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>

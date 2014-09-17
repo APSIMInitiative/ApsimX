@@ -243,6 +243,39 @@ namespace Models
           <Name>APS26Field</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>Wheat</Name>
+              <LL>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.21</double>
+                <double>0.19</double>
+                <double>0.14</double>
+                <double>0.14</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -303,39 +336,6 @@ namespace Models
               <double>0.43</double>
               <double>0.43</double>
             </SAT>
-            <SoilCrop>
-              <Name>Wheat</Name>
-              <LL>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.21</double>
-                <double>0.19</double>
-                <double>0.14</double>
-                <double>0.14</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -835,11 +835,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Observed Yield</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Predicted Yield</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -870,11 +876,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Observed Biomass</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Predicted Biomass</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -1046,6 +1058,36 @@ namespace Models
           <Name>APS6Field</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>Wheat</Name>
+              <LL>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.22</double>
+                <double>0.18</double>
+                <double>0.14</double>
+                <double>0.25</double>
+                <double>0.28</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1100,36 +1142,6 @@ namespace Models
               <double>0.4</double>
               <double>0.4</double>
             </SAT>
-            <SoilCrop>
-              <Name>Wheat</Name>
-              <LL>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.22</double>
-                <double>0.18</double>
-                <double>0.14</double>
-                <double>0.25</double>
-                <double>0.28</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -1715,6 +1727,39 @@ namespace Models
           <Name>APS14Field</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>Wheat</Name>
+              <LL>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.24</double>
+                <double>0.19</double>
+                <double>0.18</double>
+                <double>0.14</double>
+                <double>0.25</double>
+                <double>0.28</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.05</double>
+                <double>0.04</double>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.02</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1775,39 +1820,6 @@ namespace Models
               <double>0.4</double>
               <double>0.4</double>
             </SAT>
-            <SoilCrop>
-              <Name>Wheat</Name>
-              <LL>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.24</double>
-                <double>0.19</double>
-                <double>0.18</double>
-                <double>0.14</double>
-                <double>0.25</double>
-                <double>0.28</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.05</double>
-                <double>0.04</double>
-                <double>0.03</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -2425,11 +2437,17 @@ private void OnDoManagement(object sender, EventArgs e)
         <Type>Bottom</Type>
         <Title>Observed yield</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Predicted Yield</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Type>Scatter</Type>
@@ -2780,6 +2798,45 @@ private void OnDoManagement(object sender, EventArgs e)
           <Name>MER-86Field</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>Wheat</Name>
+              <LL>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.05</double>
+                <double>0.1</double>
+                <double>0.12</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+              </KL>
+              <XF>
+                <double>0.2</double>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.6</double>
+                <double>0.6</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -2852,45 +2909,6 @@ private void OnDoManagement(object sender, EventArgs e)
               <double>0.23</double>
               <double>0.23</double>
             </SAT>
-            <SoilCrop>
-              <Name>Wheat</Name>
-              <LL>
-                <double>0.03</double>
-                <double>0.03</double>
-                <double>0.03</double>
-                <double>0.05</double>
-                <double>0.1</double>
-                <double>0.12</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.17</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </KL>
-              <XF>
-                <double>0.2</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -3449,11 +3467,17 @@ private void OnDoManagement(object sender, EventArgs e)
         <Type>Bottom</Type>
         <Title>Date</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Biomass</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Type>Line</Type>
@@ -3539,11 +3563,17 @@ private void OnDoManagement(object sender, EventArgs e)
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Y axis title</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Type>Line</Type>
@@ -3867,6 +3897,45 @@ private void OnDoManagement(object sender, EventArgs e)
           <Name>MER-73Field</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>Wheat</Name>
+              <LL>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.05</double>
+                <double>0.1</double>
+                <double>0.12</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+              </KL>
+              <XF>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.2</double>
+                <double>0</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -3939,45 +4008,6 @@ private void OnDoManagement(object sender, EventArgs e)
               <double>0.23</double>
               <double>0.23</double>
             </SAT>
-            <SoilCrop>
-              <Name>Wheat</Name>
-              <LL>
-                <double>0.03</double>
-                <double>0.03</double>
-                <double>0.03</double>
-                <double>0.05</double>
-                <double>0.1</double>
-                <double>0.12</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.17</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </KL>
-              <XF>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.2</double>
-                <double>0</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -4700,11 +4730,17 @@ private void OnDoManagement(object sender, EventArgs e)
         <Type>Bottom</Type>
         <Title>Date</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Biomass</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Type>Line</Type>
@@ -4790,11 +4826,17 @@ private void OnDoManagement(object sender, EventArgs e)
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Y axis title</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -4824,11 +4866,17 @@ private void OnDoManagement(object sender, EventArgs e)
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Y axis title</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -6029,6 +6077,39 @@ public class Script : Model
           <Name>LincolnField</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>Wheat</Name>
+              <LL>
+                <double>0.08</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.09</double>
+                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0.6</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -6089,39 +6170,6 @@ public class Script : Model
               <double>0.44</double>
               <double>0.44</double>
             </SAT>
-            <SoilCrop>
-              <Name>Wheat</Name>
-              <LL>
-                <double>0.08</double>
-                <double>0.07</double>
-                <double>0.07</double>
-                <double>0.09</double>
-                <double>0.11</double>
-                <double>0.16</double>
-                <double>0.15</double>
-                <double>0.12</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.03</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>0.6</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -6539,10 +6587,16 @@ public class Script : Model
         <Type>Left</Type>
         <Title>Leaf Area Index</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -6592,10 +6646,16 @@ public class Script : Model
         <Type>Left</Type>
         <Title>Leaf Area Index</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -6645,10 +6705,16 @@ public class Script : Model
         <Type>Left</Type>
         <Title>Leaf Area Index</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -7848,6 +7914,39 @@ public class Script : Model
             <Name>LincolnField</Name>
             <Water>
               <Name>Water</Name>
+              <SoilCrop>
+                <Name>Wheat</Name>
+                <LL>
+                  <double>0.08</double>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.09</double>
+                  <double>0.11</double>
+                  <double>0.16</double>
+                  <double>0.15</double>
+                  <double>0.12</double>
+                </LL>
+                <KL>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.04</double>
+                  <double>0.03</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                  <double>0.02</double>
+                </KL>
+                <XF>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0.6</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                </XF>
+              </SoilCrop>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -7908,39 +8007,6 @@ public class Script : Model
                 <double>0.44</double>
                 <double>0.44</double>
               </SAT>
-              <SoilCrop>
-                <Name>Wheat</Name>
-                <LL>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </LL>
-                <KL>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                </KL>
-                <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0.6</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                </XF>
-              </SoilCrop>
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
@@ -8358,10 +8424,16 @@ public class Script : Model
           <Type>Left</Type>
           <Title>Leaf Area Index</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -8411,10 +8483,16 @@ public class Script : Model
           <Type>Left</Type>
           <Title>Leaf Area Index</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -8464,10 +8542,16 @@ public class Script : Model
           <Type>Left</Type>
           <Title>Leaf Area Index</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -9005,6 +9089,39 @@ public class Script : Model
           <Name>Soil</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>Wheat</Name>
+              <LL>
+                <double>0.08</double>
+                <double>0.07</double>
+                <double>0.07</double>
+                <double>0.09</double>
+                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.15</double>
+                <double>0.12</double>
+              </LL>
+              <KL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0.6</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -9065,39 +9182,6 @@ public class Script : Model
               <double>0.44</double>
               <double>0.44</double>
             </SAT>
-            <SoilCrop>
-              <Name>Wheat</Name>
-              <LL>
-                <double>0.08</double>
-                <double>0.07</double>
-                <double>0.07</double>
-                <double>0.09</double>
-                <double>0.11</double>
-                <double>0.16</double>
-                <double>0.15</double>
-                <double>0.12</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.03</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>0.6</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -9625,10 +9709,16 @@ namespace Models
         <Type>Left</Type>
         <Title>Leaf Area Index</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -9678,10 +9768,16 @@ namespace Models
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -9711,10 +9807,16 @@ namespace Models
         <Type>Left</Type>
         <Title>Leaf Area Index</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -9766,11 +9868,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Observed Yield</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Predicted Yield</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>Series 0</Title>
@@ -9820,11 +9928,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Observed Above Ground Wt</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Predicted Above Ground Wt</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>Series 0</Title>

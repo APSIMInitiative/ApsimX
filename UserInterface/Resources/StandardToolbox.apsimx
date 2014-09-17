@@ -234,30 +234,18 @@
               <double>0</double>
             </XF>
           </SoilCrop>
-          <SoilCrop>
-            <Name>Barley</Name>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.36</double>
-              <double>0.43</double>
-              <double>0.51</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
+          <SoilCropOilPalm>
+            <Name>OilPalm</Name>
             <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
               <double>0.06</double>
               <double>0.04</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
               <double>0.02</double>
               <double>0.01</double>
-              <double>0</double>
+              <double>0.01</double>
+              <double>0.01</double>
               <double>0</double>
               <double>0</double>
               <double>0</double>
@@ -270,12 +258,13 @@
               <double>1</double>
               <double>1</double>
               <double>1</double>
-              <double>0</double>
+              <double>1</double>
+              <double>1</double>
               <double>0</double>
               <double>0</double>
               <double>0</double>
             </XF>
-          </SoilCrop>
+          </SoilCropOilPalm>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>

@@ -435,6 +435,37 @@
           <Name>Soil</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCropOilPalm>
+              <Name>OilPalm</Name>
+              <KL>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+              </XF>
+            </SoilCropOilPalm>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -519,51 +550,6 @@
               <double>0.45</double>
               <double>0.45</double>
             </SAT>
-            <SoilCrop>
-              <Name>OilPalm</Name>
-              <LL>
-                <double>0.38</double>
-                <double>0.38</double>
-                <double>0.3</double>
-                <double>0.41</double>
-                <double>0.406</double>
-                <double>0.406</double>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.3</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.03</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -1374,11 +1360,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>LAI</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -1428,11 +1420,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>StemMass</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -1482,11 +1480,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Frond Production</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -1536,11 +1540,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Bunch Production</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -1590,11 +1600,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Yield</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -1644,11 +1660,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Bunch Size</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -2092,6 +2114,33 @@ namespace Models
           <Name>Soil</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCropOilPalm>
+              <Name>OilPalm</Name>
+              <KL>
+                <double>0.04</double>
+                <double>0.04</double>
+                <double>0.02</double>
+                <double>0.02</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCropOilPalm>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -2164,45 +2213,6 @@ namespace Models
               <double>0.51</double>
               <double>0.51</double>
             </SAT>
-            <SoilCrop>
-              <Name>OilPalm</Name>
-              <LL>
-                <double>0.3</double>
-                <double>0.4</double>
-                <double>0.23</double>
-                <double>0.23</double>
-                <double>0.23</double>
-                <double>0.23</double>
-                <double>0.23</double>
-                <double>0.23</double>
-                <double>0.23</double>
-                <double>0.23</double>
-              </LL>
-              <KL>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -2899,11 +2909,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>LAI</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -2953,11 +2969,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>StemMass</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -3007,11 +3029,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Frond Production</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -3061,11 +3089,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Bunch Production</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -3115,11 +3149,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Yield</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -3169,11 +3209,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Bunch Size</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -3769,6 +3815,31 @@ namespace Models
           <Name>Soil</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCropOilPalm>
+              <Name>OilPalm</Name>
+              <KL>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.015</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+                <double>0.01</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </XF>
+            </SoilCropOilPalm>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -3835,42 +3906,6 @@ namespace Models
               <double>0.57</double>
               <double>0.57</double>
             </SAT>
-            <SoilCrop>
-              <Name>OilPalm</Name>
-              <LL>
-                <double>0.43</double>
-                <double>0.43</double>
-                <double>0.42</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-              </LL>
-              <KL>
-                <double>0.03</double>
-                <double>0.02</double>
-                <double>0.015</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>0</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -4585,11 +4620,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>LAI</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -4639,11 +4680,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>StemMass</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -4693,11 +4740,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Frond Production</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -4747,11 +4800,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Bunch Production</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -4801,11 +4860,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Yield</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title />
@@ -4855,11 +4920,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>Year</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Bunch Size</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -4936,11 +5007,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title />
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title />
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>graph</Title>
@@ -4990,11 +5067,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Predicted Bunch Production</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Observed Bunch Production</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>graph</Title>
@@ -5044,11 +5127,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Predicted Bunch Size</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Observed Bunch Size</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>graph</Title>
@@ -5098,11 +5187,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Predicted Bunch Production</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Observed Bunch Production</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>graph</Title>

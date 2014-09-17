@@ -82,7 +82,7 @@ namespace Models.Soils
                     }
                     else
                     {
-                        pawc = this.Soil.PAWCCrop(this.RelativeTo);
+                        pawc = this.PAWCCrop(this.RelativeTo);
                     }
 
                     // Convert from mm/mm to mm and sum over the profile.
@@ -167,8 +167,9 @@ namespace Models.Soils
                 }
                 else
                 {
-                    ll = this.Soil.LL(this.RelativeTo);
-                    xf = this.Soil.XF(this.RelativeTo);
+                    SoilCrop soilCrop = this.Soil.Crop(this.RelativeTo) as SoilCrop;
+                    ll = soilCrop.LL;
+                    xf = soilCrop.XF;
                 }
 
                 // Get the soil water values for each layer.
@@ -192,7 +193,7 @@ namespace Models.Soils
                 }
                 else
                 {
-                    pawc = this.Soil.PAWCCrop(this.RelativeTo);
+                    pawc = this.PAWCCrop(this.RelativeTo);
                 }
 
                 // Convert from mm/mm to mm and sum over the profile.
@@ -209,6 +210,21 @@ namespace Models.Soils
                     this.fractionFull = 0;
                 }
             }
+        }
+
+        /// <summary>
+        /// Return the plant available water CAPACITY. Units: mm/mm
+        /// </summary>
+        public double[] PAWCCrop(string CropName)
+        {
+            SoilCrop soilCrop = Apsim.Find(Soil, CropName) as SoilCrop;
+            if (soilCrop != null)
+                return Soil.CalcPAWC(Soil.Thickness,
+                                     soilCrop.LL,
+                                     Soil.DUL,
+                                     soilCrop.XF);
+            else
+                return new double[0];
         }
 
         /// <summary>

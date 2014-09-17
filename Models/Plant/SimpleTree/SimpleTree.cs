@@ -34,6 +34,7 @@ namespace Models.PMF
                 rootSystem = value;
             }
         }
+
         /// <summary>
         /// Cover live
         /// </summary>
@@ -103,7 +104,7 @@ namespace Models.PMF
             CoverLive = 0.5;
             plant_status = "alive";
             sw_demand = 0;
-
+            
             //HEB.  I have put these here so values can be got by interface
             LocalCanopyData.sender = Name;
             LocalCanopyData.lai = 0;
@@ -134,6 +135,8 @@ namespace Models.PMF
             List<UptakeInfo> thisCrop = info.AsEnumerable().Where(x => x.Plant.Equals(this)).ToList();
             thisCrop = CalcSWSourceStrength(thisCrop);
 
+            double[] kl = (double[]) Apsim.Get(RootSystem.RootZones[0].Soil, "Water.SimpleTree.KL");
+
             for (int i = 0; i < thisCrop.Count; i++)
             {
                 List<RootZone> thisRZ = RootSystem.RootZones.AsEnumerable().Where(x => x.Zone.Name.Equals(this.Parent.Name)).ToList();
@@ -144,7 +147,7 @@ namespace Models.PMF
                 for (int j = 0; j < thisCrop[i].SWDep.Length; j++)
                 {
                     thisCrop[i].Uptake[j] = Math.Max(0.0, RootProportion(j, RootSystem.RootZones[0].RootDepth, RootSystem.RootZones[0].Soil.Thickness) *
-                                                      RootSystem.RootZones[0].Soil.KL("SimpleTree")[j] * (thisCrop[i].SWDep[j] - RootSystem.RootZones[0].Soil.SoilWater.ll15_dep[j]) *
+                                                      kl[j] * (thisCrop[i].SWDep[j] - RootSystem.RootZones[0].Soil.SoilWater.ll15_dep[j]) *
                                                       thisCrop[i].Strength);
                 }
             }

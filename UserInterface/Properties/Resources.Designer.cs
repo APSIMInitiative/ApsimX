@@ -346,13 +346,12 @@ namespace UserInterface.Properties {
         ///  &lt;/Axis&gt;
         ///  &lt;Series&gt;
         ///    &lt;Type&gt;Area&lt;/Type&gt;
+        ///    &lt;Title&gt;Available water&lt;/Title&gt;
+        ///    &lt;ShowInLegend&gt;true&lt;/ShowInLegend&gt;
         ///    &lt;XAxis&gt;Top&lt;/XAxis&gt;
         ///    &lt;YAxis&gt;Left&lt;/YAxis&gt;
         ///    &lt;ColourArgb&gt;-3479297&lt;/ColourArgb&gt;
-        ///    &lt;Marker&gt;None&lt;/Marker&gt;
-        ///    &lt;X&gt;
-        ///      &lt;FieldName&gt;[Soil].LL15&lt;/FieldName&gt;
-        ///    &lt;/ [rest of string was truncated]&quot;;.
+        ///    &lt;Mark [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InitialWaterGraph {
             get {
@@ -633,6 +632,16 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SoilCropOilPalm16 {
+            get {
+                object obj = ResourceManager.GetObject("SoilCropOilPalm16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SoilNitrogen16 {
             get {
                 object obj = ResourceManager.GetObject("SoilNitrogen16", resourceCulture);
@@ -795,9 +804,9 @@ namespace UserInterface.Properties {
         ///        &lt;/Axis&gt;
         ///        &lt;Series&gt;
         ///          &lt;Type&gt;Area&lt;/Type&gt;
-        ///          &lt;XAxis&gt;Top&lt;/XAxis&gt;
-        ///          &lt;YAxis&gt;Left&lt;/YAxis&gt;
-        ///          &lt;ColourArgb [rest of string was truncated]&quot;;.
+        ///          &lt;Title&gt;LL15&lt;/Title&gt;
+        ///          &lt;ShowInLegend&gt;false&lt;/ShowInLegend&gt;
+        ///      [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WaterGraph {
             get {

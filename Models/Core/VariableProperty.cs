@@ -361,9 +361,9 @@ namespace Models.Core
         {
             get
             {
-                if (this.Object is SoilCrop)
+                if (this.Object is ISoilCrop)
                 {
-                    return (this.Object as SoilCrop).Name;
+                    return (this.Object as ISoilCrop).Name;
                 }
 
                 return null;

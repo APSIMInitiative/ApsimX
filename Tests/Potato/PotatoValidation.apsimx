@@ -253,6 +253,33 @@
           <Name>Soil</Name>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>Potato</Name>
+              <LL>
+                <double>0.13</double>
+                <double>0.13</double>
+                <double>0.1</double>
+                <double>0.15</double>
+                <double>0.3</double>
+                <double>0.3</double>
+              </LL>
+              <KL>
+                <double>0.1</double>
+                <double>0.06</double>
+                <double>0.04</double>
+                <double>0.01</double>
+                <double>0</double>
+                <double>0</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+                <double>0</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -301,33 +328,6 @@
               <double>0.44</double>
               <double>0.44</double>
             </SAT>
-            <SoilCrop>
-              <Name>Potato</Name>
-              <LL>
-                <double>0.13</double>
-                <double>0.13</double>
-                <double>0.1</double>
-                <double>0.15</double>
-                <double>0.3</double>
-                <double>0.3</double>
-              </LL>
-              <KL>
-                <double>0.1</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.01</double>
-                <double>0</double>
-                <double>0</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>0</double>
-                <double>0</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -837,7 +837,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -847,7 +847,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -885,11 +885,17 @@ namespace Models
               <Type>Bottom</Type>
               <Title>X axis title 2</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Left</Type>
               <Title>Accumulated N changes (kg/ha)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>AccumPlantN</Title>
@@ -1059,10 +1065,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Accumulated Water Changes (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Pond</Title>
@@ -1272,10 +1284,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -1505,10 +1523,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Nitrogen (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -1758,10 +1782,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Stress factors (0-1)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Ft</Title>
@@ -1851,15 +1881,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Water (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>Length (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Supply</Title>
@@ -2009,15 +2048,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Cover </Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>LAI (m2/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Cover Dead</Title>
@@ -2127,10 +2175,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Senescing Cohorts</Title>
@@ -2300,14 +2354,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -2417,14 +2480,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -2534,14 +2606,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -2651,10 +2732,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -2744,8 +2831,8 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>[Potato].Phenology.CurrentPhaseName</string>
-            <string>[Potato].Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.CurrentPhaseName</string>
+            <string>Potato.Phenology.StageCode.Value</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -2755,7 +2842,7 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSoilOMN</string>
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Potato].Root.NSupplyUptake</string>
+            <string>Potato.Root.NSupplyUptake</string>
             <string>[Soil].SoilWater.eo</string>
             <string>[Soil].SoilWater.es</string>
             <string>[ExtraVariables].Script.SWC</string>
@@ -2773,80 +2860,80 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Potato].Summariser.AboveGround.Wt</string>
-            <string>[Potato].Summariser.BelowGround.Wt</string>
-            <string>[Potato].Summariser.Total.Wt</string>
-            <string>[Potato].Summariser.TotalDead.Wt</string>
-            <string>[Potato].Summariser.TotalLive.Wt</string>
-            <string>[Potato].Leaf.Dead.Wt</string>
-            <string>[Potato].Leaf.Live.Wt</string>
-            <string>[Potato].Stem.Dead.Wt</string>
-            <string>[Potato].Stem.Live.Wt</string>
-            <string>[Potato].Tuber.Dead.Wt</string>
-            <string>[Potato].Tuber.Live.Wt</string>
-            <string>[Potato].Root.Dead.Wt</string>
-            <string>[Potato].Root.Live.Wt</string>
-            <string>[Potato].Summariser.AboveGround.N</string>
-            <string>[Potato].Summariser.BelowGround.N</string>
-            <string>[Potato].Summariser.Total.N</string>
-            <string>[Potato].Summariser.TotalLive.N</string>
-            <string>[Potato].Summariser.TotalDead.N</string>
-            <string>[Potato].Leaf.Dead.N</string>
-            <string>[Potato].Leaf.Live.N</string>
-            <string>[Potato].Stem.Dead.N</string>
-            <string>[Potato].Stem.Live.N</string>
-            <string>[Potato].Tuber.Dead.N</string>
-            <string>[Potato].Tuber.Live.N</string>
-            <string>[Potato].Root.Live.N</string>
-            <string>[Potato].Root.Dead.N</string>
-            <string>[Potato].Leaf.Live.NConc</string>
-            <string>[Potato].Leaf.Dead.NConc</string>
-            <string>[Potato].Stem.Live.NConc</string>
-            <string>[Potato].Stem.Dead.NConc</string>
-            <string>[Potato].Tuber.Live.NConc</string>
-            <string>[Potato].Tuber.Dead.NConc</string>
-            <string>[Potato].Root.Live.NConc</string>
-            <string>[Potato].Root.Dead.NConc</string>
-            <string>[Potato].Root.WaterSupply</string>
-            <string>[Potato].Root.WaterUptake</string>
-            <string>[Potato].Leaf.Transpiration</string>
-            <string>[Potato].Leaf.WaterDemand</string>
-            <string>[Potato].Root.Depth</string>
-            <string>[Potato].Leaf.CoverGreen</string>
-            <string>[Potato].Leaf.CoverTotal</string>
-            <string>[Potato].Leaf.CoverDead</string>
-            <string>[Potato].Leaf.LAI</string>
-            <string>[Potato].Leaf.LAIDead</string>
-            <string>[Potato].Structure.Height</string>
-            <string>[Potato].Leaf.Fn</string>
-            <string>[Potato].Leaf.Fw</string>
-            <string>[Potato].Leaf.Photosynthesis.FT.Value</string>
-            <string>[Potato].Leaf.Photosynthesis.FVPD.Value</string>
-            <string>[Potato].Structure.PlantTotalNodeNo</string>
-            <string>[Potato].Structure.TotalStemPopn</string>
-            <string>[Potato].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[Potato].Leaf.ExpandingCohortNo</string>
-            <string>[Potato].Leaf.AppearedCohortNo</string>
-            <string>[Potato].Leaf.DeadCohortNo</string>
-            <string>[Potato].Structure.MainStemNodeNo</string>
-            <string>[Potato].Leaf.SenescingCohortNo</string>
-            <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>[Potato].Stem.MinimumNConc.Value</string>
-            <string>[Potato].Tuber.MinimumNConc.Value</string>
-            <string>[Potato].Root.MinimumNConc.Value</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>[Potato].Stem.MaximumNConc.Value</string>
-            <string>[Potato].Tuber.MaximumNConc.Value</string>
-            <string>[Potato].Root.MaximumNConc.Value</string>
-            <string>[Potato].Stem.Live.StructuralWt</string>
-            <string>[Potato].Stem.Live.NonStructuralWt</string>
-            <string>[Potato].Leaf.SpecificArea</string>
-            <string>[Potato].Leaf.ExpandedCohortNo</string>
+            <string>Potato.Summariser.AboveGround.Wt</string>
+            <string>Potato.Summariser.BelowGround.Wt</string>
+            <string>Potato.Summariser.Total.Wt</string>
+            <string>Potato.Summariser.TotalDead.Wt</string>
+            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.Leaf.Dead.Wt</string>
+            <string>Potato.Leaf.Live.Wt</string>
+            <string>Potato.Stem.Dead.Wt</string>
+            <string>Potato.Stem.Live.Wt</string>
+            <string>Potato.Tuber.Dead.Wt</string>
+            <string>Potato.Tuber.Live.Wt</string>
+            <string>Potato.Root.Dead.Wt</string>
+            <string>Potato.Root.Live.Wt</string>
+            <string>Potato.Summariser.AboveGround.N</string>
+            <string>Potato.Summariser.BelowGround.N</string>
+            <string>Potato.Summariser.Total.N</string>
+            <string>Potato.Summariser.TotalLive.N</string>
+            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.Leaf.Dead.N</string>
+            <string>Potato.Leaf.Live.N</string>
+            <string>Potato.Stem.Dead.N</string>
+            <string>Potato.Stem.Live.N</string>
+            <string>Potato.Tuber.Dead.N</string>
+            <string>Potato.Tuber.Live.N</string>
+            <string>Potato.Root.Live.N</string>
+            <string>Potato.Root.Dead.N</string>
+            <string>Potato.Leaf.Live.NConc</string>
+            <string>Potato.Leaf.Dead.NConc</string>
+            <string>Potato.Stem.Live.NConc</string>
+            <string>Potato.Stem.Dead.NConc</string>
+            <string>Potato.Tuber.Live.NConc</string>
+            <string>Potato.Tuber.Dead.NConc</string>
+            <string>Potato.Root.Live.NConc</string>
+            <string>Potato.Root.Dead.NConc</string>
+            <string>Potato.Root.WaterSupply</string>
+            <string>Potato.Root.WaterUptake</string>
+            <string>Potato.Leaf.Transpiration</string>
+            <string>Potato.Leaf.WaterDemand</string>
+            <string>Potato.Root.Depth</string>
+            <string>Potato.Leaf.CoverGreen</string>
+            <string>Potato.Leaf.CoverTotal</string>
+            <string>Potato.Leaf.CoverDead</string>
+            <string>Potato.Leaf.LAI</string>
+            <string>Potato.Leaf.LAIDead</string>
+            <string>Potato.Structure.Height</string>
+            <string>Potato.Leaf.Fn</string>
+            <string>Potato.Leaf.Fw</string>
+            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
+            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
+            <string>Potato.Structure.PlantTotalNodeNo</string>
+            <string>Potato.Structure.TotalStemPopn</string>
+            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
+            <string>Potato.Leaf.ExpandingCohortNo</string>
+            <string>Potato.Leaf.AppearedCohortNo</string>
+            <string>Potato.Leaf.DeadCohortNo</string>
+            <string>Potato.Structure.MainStemNodeNo</string>
+            <string>Potato.Leaf.SenescingCohortNo</string>
+            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
+            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+            <string>Potato.Stem.MinimumNConc.Value</string>
+            <string>Potato.Tuber.MinimumNConc.Value</string>
+            <string>Potato.Root.MinimumNConc.Value</string>
+            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+            <string>Potato.Stem.MaximumNConc.Value</string>
+            <string>Potato.Tuber.MaximumNConc.Value</string>
+            <string>Potato.Root.MaximumNConc.Value</string>
+            <string>Potato.Stem.Live.StructuralWt</string>
+            <string>Potato.Stem.Live.NonStructuralWt</string>
+            <string>Potato.Leaf.SpecificArea</string>
+            <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Potato].Arbitrator.NDemand</string>
+            <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -2856,8 +2943,8 @@ namespace Models
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
             <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>[Potato].Tuber.LiveFWt</string>
-            <string>[Potato].Tuber.DryMatterContent.Value</string>
+            <string>Potato.Tuber.LiveFWt</string>
+            <string>Potato.Tuber.DryMatterContent.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2971,11 +3058,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -3025,11 +3118,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf Area Index (m2/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3079,11 +3178,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3133,11 +3238,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3187,11 +3298,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Total  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -3241,11 +3358,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3295,11 +3418,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3349,11 +3478,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3403,11 +3538,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Canopy Cover (0-1)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3457,11 +3598,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3511,11 +3658,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf  nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3565,11 +3718,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title> Stem nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -3619,11 +3778,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Appeared leaves</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Type>Line</Type>
@@ -3671,11 +3836,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -3725,11 +3896,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -3779,11 +3956,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Observed Fresh Tuber Yield (g/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -3940,54 +4123,6 @@ namespace Models
           </InitialWater>
           <Water>
             <Name>Water</Name>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-            </BD>
-            <AirDry>
-              <double>0.08</double>
-              <double>0.13</double>
-              <double>0.1</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-            </AirDry>
-            <LL15>
-              <double>0.13</double>
-              <double>0.13</double>
-              <double>0.1</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-            </LL15>
-            <DUL>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.31</double>
-              <double>0.15</double>
-              <double>0.1</double>
-              <double>0.06</double>
-            </DUL>
-            <SAT>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.44</double>
-              <double>0.46</double>
-              <double>0.44</double>
-              <double>0.44</double>
-            </SAT>
             <SoilCrop>
               <Name>wheat</Name>
               <LL>
@@ -4042,6 +4177,54 @@ namespace Models
                 <double>0</double>
               </XF>
             </SoilCrop>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+            </BD>
+            <AirDry>
+              <double>0.08</double>
+              <double>0.13</double>
+              <double>0.1</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </AirDry>
+            <LL15>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.1</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </LL15>
+            <DUL>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.31</double>
+              <double>0.15</double>
+              <double>0.1</double>
+              <double>0.06</double>
+            </DUL>
+            <SAT>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.44</double>
+              <double>0.44</double>
+            </SAT>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -4467,7 +4650,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -4477,7 +4660,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -4515,11 +4698,17 @@ namespace Models
               <Type>Bottom</Type>
               <Title>X axis title 2</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Left</Type>
               <Title>Accumulated N changes (kg/ha)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>AccumPlantN</Title>
@@ -4689,10 +4878,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Accumulated Water Changes (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Pond</Title>
@@ -4902,10 +5097,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -5135,10 +5336,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Nitrogen (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -5388,10 +5595,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Stress factors (0-1)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Ft</Title>
@@ -5481,15 +5694,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Water (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>Length (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Supply</Title>
@@ -5639,15 +5861,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Cover </Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>LAI (m2/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Cover Dead</Title>
@@ -5757,10 +5988,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Senescing Cohorts</Title>
@@ -5930,14 +6167,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -6047,14 +6293,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -6164,14 +6419,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -6281,10 +6545,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -6374,8 +6644,8 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>[Potato].Phenology.CurrentPhaseName</string>
-            <string>[Potato].Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.CurrentPhaseName</string>
+            <string>Potato.Phenology.StageCode.Value</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -6385,7 +6655,7 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSoilOMN</string>
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Potato].Root.NSupplyUptake</string>
+            <string>Potato.Root.NSupplyUptake</string>
             <string>[Soil].SoilWater.eo</string>
             <string>[Soil].SoilWater.es</string>
             <string>[ExtraVariables].Script.SWC</string>
@@ -6403,80 +6673,80 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Potato].Summariser.AboveGround.Wt</string>
-            <string>[Potato].Summariser.BelowGround.Wt</string>
-            <string>[Potato].Summariser.Total.Wt</string>
-            <string>[Potato].Summariser.TotalDead.Wt</string>
-            <string>[Potato].Summariser.TotalLive.Wt</string>
-            <string>[Potato].Leaf.Dead.Wt</string>
-            <string>[Potato].Leaf.Live.Wt</string>
-            <string>[Potato].Stem.Dead.Wt</string>
-            <string>[Potato].Stem.Live.Wt</string>
-            <string>[Potato].Tuber.Dead.Wt</string>
-            <string>[Potato].Tuber.Live.Wt</string>
-            <string>[Potato].Root.Dead.Wt</string>
-            <string>[Potato].Root.Live.Wt</string>
-            <string>[Potato].Summariser.AboveGround.N</string>
-            <string>[Potato].Summariser.BelowGround.N</string>
-            <string>[Potato].Summariser.Total.N</string>
-            <string>[Potato].Summariser.TotalLive.N</string>
-            <string>[Potato].Summariser.TotalDead.N</string>
-            <string>[Potato].Leaf.Dead.N</string>
-            <string>[Potato].Leaf.Live.N</string>
-            <string>[Potato].Stem.Dead.N</string>
-            <string>[Potato].Stem.Live.N</string>
-            <string>[Potato].Tuber.Dead.N</string>
-            <string>[Potato].Tuber.Live.N</string>
-            <string>[Potato].Root.Live.N</string>
-            <string>[Potato].Root.Dead.N</string>
-            <string>[Potato].Leaf.Live.NConc</string>
-            <string>[Potato].Leaf.Dead.NConc</string>
-            <string>[Potato].Stem.Live.NConc</string>
-            <string>[Potato].Stem.Dead.NConc</string>
-            <string>[Potato].Tuber.Live.NConc</string>
-            <string>[Potato].Tuber.Dead.NConc</string>
-            <string>[Potato].Root.Live.NConc</string>
-            <string>[Potato].Root.Dead.NConc</string>
-            <string>[Potato].Root.WaterSupply</string>
-            <string>[Potato].Root.WaterUptake</string>
-            <string>[Potato].Leaf.Transpiration</string>
-            <string>[Potato].Leaf.WaterDemand</string>
-            <string>[Potato].Root.Depth</string>
-            <string>[Potato].Leaf.CoverGreen</string>
-            <string>[Potato].Leaf.CoverTotal</string>
-            <string>[Potato].Leaf.CoverDead</string>
-            <string>[Potato].Leaf.LAI</string>
-            <string>[Potato].Leaf.LAIDead</string>
-            <string>[Potato].Structure.Height</string>
-            <string>[Potato].Leaf.Fn</string>
-            <string>[Potato].Leaf.Fw</string>
-            <string>[Potato].Leaf.Photosynthesis.FT.Value</string>
-            <string>[Potato].Leaf.Photosynthesis.FVPD.Value</string>
-            <string>[Potato].Structure.PlantTotalNodeNo</string>
-            <string>[Potato].Structure.TotalStemPopn</string>
-            <string>[Potato].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[Potato].Leaf.ExpandingCohortNo</string>
-            <string>[Potato].Leaf.AppearedCohortNo</string>
-            <string>[Potato].Leaf.DeadCohortNo</string>
-            <string>[Potato].Structure.MainStemNodeNo</string>
-            <string>[Potato].Leaf.SenescingCohortNo</string>
-            <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>[Potato].Stem.MinimumNConc.Value</string>
-            <string>[Potato].Tuber.MinimumNConc.Value</string>
-            <string>[Potato].Root.MinimumNConc.Value</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>[Potato].Stem.MaximumNConc.Value</string>
-            <string>[Potato].Tuber.MaximumNConc.Value</string>
-            <string>[Potato].Root.MaximumNConc.Value</string>
-            <string>[Potato].Stem.Live.StructuralWt</string>
-            <string>[Potato].Stem.Live.NonStructuralWt</string>
-            <string>[Potato].Leaf.SpecificArea</string>
-            <string>[Potato].Leaf.ExpandedCohortNo</string>
+            <string>Potato.Summariser.AboveGround.Wt</string>
+            <string>Potato.Summariser.BelowGround.Wt</string>
+            <string>Potato.Summariser.Total.Wt</string>
+            <string>Potato.Summariser.TotalDead.Wt</string>
+            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.Leaf.Dead.Wt</string>
+            <string>Potato.Leaf.Live.Wt</string>
+            <string>Potato.Stem.Dead.Wt</string>
+            <string>Potato.Stem.Live.Wt</string>
+            <string>Potato.Tuber.Dead.Wt</string>
+            <string>Potato.Tuber.Live.Wt</string>
+            <string>Potato.Root.Dead.Wt</string>
+            <string>Potato.Root.Live.Wt</string>
+            <string>Potato.Summariser.AboveGround.N</string>
+            <string>Potato.Summariser.BelowGround.N</string>
+            <string>Potato.Summariser.Total.N</string>
+            <string>Potato.Summariser.TotalLive.N</string>
+            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.Leaf.Dead.N</string>
+            <string>Potato.Leaf.Live.N</string>
+            <string>Potato.Stem.Dead.N</string>
+            <string>Potato.Stem.Live.N</string>
+            <string>Potato.Tuber.Dead.N</string>
+            <string>Potato.Tuber.Live.N</string>
+            <string>Potato.Root.Live.N</string>
+            <string>Potato.Root.Dead.N</string>
+            <string>Potato.Leaf.Live.NConc</string>
+            <string>Potato.Leaf.Dead.NConc</string>
+            <string>Potato.Stem.Live.NConc</string>
+            <string>Potato.Stem.Dead.NConc</string>
+            <string>Potato.Tuber.Live.NConc</string>
+            <string>Potato.Tuber.Dead.NConc</string>
+            <string>Potato.Root.Live.NConc</string>
+            <string>Potato.Root.Dead.NConc</string>
+            <string>Potato.Root.WaterSupply</string>
+            <string>Potato.Root.WaterUptake</string>
+            <string>Potato.Leaf.Transpiration</string>
+            <string>Potato.Leaf.WaterDemand</string>
+            <string>Potato.Root.Depth</string>
+            <string>Potato.Leaf.CoverGreen</string>
+            <string>Potato.Leaf.CoverTotal</string>
+            <string>Potato.Leaf.CoverDead</string>
+            <string>Potato.Leaf.LAI</string>
+            <string>Potato.Leaf.LAIDead</string>
+            <string>Potato.Structure.Height</string>
+            <string>Potato.Leaf.Fn</string>
+            <string>Potato.Leaf.Fw</string>
+            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
+            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
+            <string>Potato.Structure.PlantTotalNodeNo</string>
+            <string>Potato.Structure.TotalStemPopn</string>
+            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
+            <string>Potato.Leaf.ExpandingCohortNo</string>
+            <string>Potato.Leaf.AppearedCohortNo</string>
+            <string>Potato.Leaf.DeadCohortNo</string>
+            <string>Potato.Structure.MainStemNodeNo</string>
+            <string>Potato.Leaf.SenescingCohortNo</string>
+            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
+            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+            <string>Potato.Stem.MinimumNConc.Value</string>
+            <string>Potato.Tuber.MinimumNConc.Value</string>
+            <string>Potato.Root.MinimumNConc.Value</string>
+            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+            <string>Potato.Stem.MaximumNConc.Value</string>
+            <string>Potato.Tuber.MaximumNConc.Value</string>
+            <string>Potato.Root.MaximumNConc.Value</string>
+            <string>Potato.Stem.Live.StructuralWt</string>
+            <string>Potato.Stem.Live.NonStructuralWt</string>
+            <string>Potato.Leaf.SpecificArea</string>
+            <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Potato].Arbitrator.NDemand</string>
+            <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -6486,8 +6756,8 @@ namespace Models
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
             <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>[Potato].Tuber.LiveFWt</string>
-            <string>[Potato].Tuber.DryMatterContent.Value</string>
+            <string>Potato.Tuber.LiveFWt</string>
+            <string>Potato.Tuber.DryMatterContent.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -6580,7 +6850,7 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <OverRidePath>[Potato].Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.value</OverRidePath>
             <OverRideInterger>34</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;
@@ -6694,11 +6964,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -6748,11 +7024,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf Area Index (m2/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -6802,11 +7084,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -6856,11 +7144,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -6910,11 +7204,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Total  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -6964,11 +7264,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -7018,11 +7324,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -7072,11 +7384,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -7126,11 +7444,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Canopy Cover (0-1)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -7180,11 +7504,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -7234,11 +7564,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf  nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -7288,11 +7624,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title> Stem nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -7342,11 +7684,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Appeared leaves</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Type>Line</Type>
@@ -7394,11 +7742,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -7448,11 +7802,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -7502,11 +7862,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Observed Fresh Tuber Yield (g/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -7658,54 +8024,6 @@ namespace Models
           </InitialWater>
           <Water>
             <Name>Water</Name>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-            </BD>
-            <AirDry>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.05</double>
-              <double>0.04</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </AirDry>
-            <LL15>
-              <double>0.13</double>
-              <double>0.13</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.11</double>
-              <double>0.11</double>
-            </LL15>
-            <DUL>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.31</double>
-              <double>0.27</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </DUL>
-            <SAT>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.44</double>
-              <double>0.46</double>
-              <double>0.44</double>
-              <double>0.44</double>
-            </SAT>
             <SoilCrop>
               <Name>wheat</Name>
               <LL>
@@ -7760,6 +8078,54 @@ namespace Models
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+            </BD>
+            <AirDry>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </AirDry>
+            <LL15>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.11</double>
+              <double>0.11</double>
+            </LL15>
+            <DUL>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.31</double>
+              <double>0.27</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </DUL>
+            <SAT>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.44</double>
+              <double>0.44</double>
+            </SAT>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -8233,7 +8599,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -8243,7 +8609,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -8281,11 +8647,17 @@ namespace Models
               <Type>Bottom</Type>
               <Title>X axis title 2</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Left</Type>
               <Title>Accumulated N changes (kg/ha)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>AccumPlantN</Title>
@@ -8455,10 +8827,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Accumulated Water Changes (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Pond</Title>
@@ -8668,10 +9046,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -8901,10 +9285,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Nitrogen (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -9154,10 +9544,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Stress factors (0-1)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Ft</Title>
@@ -9247,15 +9643,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Water (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>Length (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Supply</Title>
@@ -9405,15 +9810,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Cover </Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>LAI (m2/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Cover Dead</Title>
@@ -9523,10 +9937,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Senescing Cohorts</Title>
@@ -9696,14 +10116,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -9813,14 +10242,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -9930,14 +10368,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -10047,10 +10494,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -10140,8 +10593,8 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>[Potato].Phenology.CurrentPhaseName</string>
-            <string>[Potato].Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.CurrentPhaseName</string>
+            <string>Potato.Phenology.StageCode.Value</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -10151,7 +10604,7 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSoilOMN</string>
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Potato].Root.NSupplyUptake</string>
+            <string>Potato.Root.NSupplyUptake</string>
             <string>[Soil].SoilWater.eo</string>
             <string>[Soil].SoilWater.es</string>
             <string>[ExtraVariables].Script.SWC</string>
@@ -10169,80 +10622,80 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Potato].Summariser.AboveGround.Wt</string>
-            <string>[Potato].Summariser.BelowGround.Wt</string>
-            <string>[Potato].Summariser.Total.Wt</string>
-            <string>[Potato].Summariser.TotalDead.Wt</string>
-            <string>[Potato].Summariser.TotalLive.Wt</string>
-            <string>[Potato].Leaf.Dead.Wt</string>
-            <string>[Potato].Leaf.Live.Wt</string>
-            <string>[Potato].Stem.Dead.Wt</string>
-            <string>[Potato].Stem.Live.Wt</string>
-            <string>[Potato].Tuber.Dead.Wt</string>
-            <string>[Potato].Tuber.Live.Wt</string>
-            <string>[Potato].Root.Dead.Wt</string>
-            <string>[Potato].Root.Live.Wt</string>
-            <string>[Potato].Summariser.AboveGround.N</string>
-            <string>[Potato].Summariser.BelowGround.N</string>
-            <string>[Potato].Summariser.Total.N</string>
-            <string>[Potato].Summariser.TotalLive.N</string>
-            <string>[Potato].Summariser.TotalDead.N</string>
-            <string>[Potato].Leaf.Dead.N</string>
-            <string>[Potato].Leaf.Live.N</string>
-            <string>[Potato].Stem.Dead.N</string>
-            <string>[Potato].Stem.Live.N</string>
-            <string>[Potato].Tuber.Dead.N</string>
-            <string>[Potato].Tuber.Live.N</string>
-            <string>[Potato].Root.Live.N</string>
-            <string>[Potato].Root.Dead.N</string>
-            <string>[Potato].Leaf.Live.NConc</string>
-            <string>[Potato].Leaf.Dead.NConc</string>
-            <string>[Potato].Stem.Live.NConc</string>
-            <string>[Potato].Stem.Dead.NConc</string>
-            <string>[Potato].Tuber.Live.NConc</string>
-            <string>[Potato].Tuber.Dead.NConc</string>
-            <string>[Potato].Root.Live.NConc</string>
-            <string>[Potato].Root.Dead.NConc</string>
-            <string>[Potato].Root.WaterSupply</string>
-            <string>[Potato].Root.WaterUptake</string>
-            <string>[Potato].Leaf.Transpiration</string>
-            <string>[Potato].Leaf.WaterDemand</string>
-            <string>[Potato].Root.Depth</string>
-            <string>[Potato].Leaf.CoverGreen</string>
-            <string>[Potato].Leaf.CoverTotal</string>
-            <string>[Potato].Leaf.CoverDead</string>
-            <string>[Potato].Leaf.LAI</string>
-            <string>[Potato].Leaf.LAIDead</string>
-            <string>[Potato].Structure.Height</string>
-            <string>[Potato].Leaf.Fn</string>
-            <string>[Potato].Leaf.Fw</string>
-            <string>[Potato].Leaf.Photosynthesis.FT.Value</string>
-            <string>[Potato].Leaf.Photosynthesis.FVPD.Value</string>
-            <string>[Potato].Structure.PlantTotalNodeNo</string>
-            <string>[Potato].Structure.TotalStemPopn</string>
-            <string>[Potato].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[Potato].Leaf.ExpandingCohortNo</string>
-            <string>[Potato].Leaf.AppearedCohortNo</string>
-            <string>[Potato].Leaf.DeadCohortNo</string>
-            <string>[Potato].Structure.MainStemNodeNo</string>
-            <string>[Potato].Leaf.SenescingCohortNo</string>
-            <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>[Potato].Stem.MinimumNConc.Value</string>
-            <string>[Potato].Tuber.MinimumNConc.Value</string>
-            <string>[Potato].Root.MinimumNConc.Value</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>[Potato].Stem.MaximumNConc.Value</string>
-            <string>[Potato].Tuber.MaximumNConc.Value</string>
-            <string>[Potato].Root.MaximumNConc.Value</string>
-            <string>[Potato].Stem.Live.StructuralWt</string>
-            <string>[Potato].Stem.Live.NonStructuralWt</string>
-            <string>[Potato].Leaf.SpecificArea</string>
-            <string>[Potato].Leaf.ExpandedCohortNo</string>
+            <string>Potato.Summariser.AboveGround.Wt</string>
+            <string>Potato.Summariser.BelowGround.Wt</string>
+            <string>Potato.Summariser.Total.Wt</string>
+            <string>Potato.Summariser.TotalDead.Wt</string>
+            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.Leaf.Dead.Wt</string>
+            <string>Potato.Leaf.Live.Wt</string>
+            <string>Potato.Stem.Dead.Wt</string>
+            <string>Potato.Stem.Live.Wt</string>
+            <string>Potato.Tuber.Dead.Wt</string>
+            <string>Potato.Tuber.Live.Wt</string>
+            <string>Potato.Root.Dead.Wt</string>
+            <string>Potato.Root.Live.Wt</string>
+            <string>Potato.Summariser.AboveGround.N</string>
+            <string>Potato.Summariser.BelowGround.N</string>
+            <string>Potato.Summariser.Total.N</string>
+            <string>Potato.Summariser.TotalLive.N</string>
+            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.Leaf.Dead.N</string>
+            <string>Potato.Leaf.Live.N</string>
+            <string>Potato.Stem.Dead.N</string>
+            <string>Potato.Stem.Live.N</string>
+            <string>Potato.Tuber.Dead.N</string>
+            <string>Potato.Tuber.Live.N</string>
+            <string>Potato.Root.Live.N</string>
+            <string>Potato.Root.Dead.N</string>
+            <string>Potato.Leaf.Live.NConc</string>
+            <string>Potato.Leaf.Dead.NConc</string>
+            <string>Potato.Stem.Live.NConc</string>
+            <string>Potato.Stem.Dead.NConc</string>
+            <string>Potato.Tuber.Live.NConc</string>
+            <string>Potato.Tuber.Dead.NConc</string>
+            <string>Potato.Root.Live.NConc</string>
+            <string>Potato.Root.Dead.NConc</string>
+            <string>Potato.Root.WaterSupply</string>
+            <string>Potato.Root.WaterUptake</string>
+            <string>Potato.Leaf.Transpiration</string>
+            <string>Potato.Leaf.WaterDemand</string>
+            <string>Potato.Root.Depth</string>
+            <string>Potato.Leaf.CoverGreen</string>
+            <string>Potato.Leaf.CoverTotal</string>
+            <string>Potato.Leaf.CoverDead</string>
+            <string>Potato.Leaf.LAI</string>
+            <string>Potato.Leaf.LAIDead</string>
+            <string>Potato.Structure.Height</string>
+            <string>Potato.Leaf.Fn</string>
+            <string>Potato.Leaf.Fw</string>
+            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
+            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
+            <string>Potato.Structure.PlantTotalNodeNo</string>
+            <string>Potato.Structure.TotalStemPopn</string>
+            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
+            <string>Potato.Leaf.ExpandingCohortNo</string>
+            <string>Potato.Leaf.AppearedCohortNo</string>
+            <string>Potato.Leaf.DeadCohortNo</string>
+            <string>Potato.Structure.MainStemNodeNo</string>
+            <string>Potato.Leaf.SenescingCohortNo</string>
+            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
+            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+            <string>Potato.Stem.MinimumNConc.Value</string>
+            <string>Potato.Tuber.MinimumNConc.Value</string>
+            <string>Potato.Root.MinimumNConc.Value</string>
+            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+            <string>Potato.Stem.MaximumNConc.Value</string>
+            <string>Potato.Tuber.MaximumNConc.Value</string>
+            <string>Potato.Root.MaximumNConc.Value</string>
+            <string>Potato.Stem.Live.StructuralWt</string>
+            <string>Potato.Stem.Live.NonStructuralWt</string>
+            <string>Potato.Leaf.SpecificArea</string>
+            <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Potato].Arbitrator.NDemand</string>
+            <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -10252,8 +10705,8 @@ namespace Models
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
             <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>[Potato].Tuber.LiveFWt</string>
-            <string>[Potato].Tuber.DryMatterContent.Value</string>
+            <string>Potato.Tuber.LiveFWt</string>
+            <string>Potato.Tuber.DryMatterContent.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -10387,11 +10840,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -10441,11 +10900,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf Area Index (m2/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10495,11 +10960,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10549,11 +11020,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10603,11 +11080,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Total  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -10657,11 +11140,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10711,11 +11200,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10765,11 +11260,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10819,11 +11320,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Canopy Cover (0-1)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10873,11 +11380,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10927,11 +11440,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf  nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -10981,11 +11500,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title> Stem nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -11035,11 +11560,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Appeared leaves</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Type>Line</Type>
@@ -11087,11 +11618,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -11141,11 +11678,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -11195,11 +11738,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Observed Fresh Tuber Yield (g/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -11337,54 +11886,6 @@ namespace Models
           </InitialWater>
           <Water>
             <Name>Water</Name>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-            </BD>
-            <AirDry>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.05</double>
-              <double>0.04</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </AirDry>
-            <LL15>
-              <double>0.13</double>
-              <double>0.13</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.11</double>
-              <double>0.11</double>
-            </LL15>
-            <DUL>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.31</double>
-              <double>0.27</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </DUL>
-            <SAT>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.44</double>
-              <double>0.46</double>
-              <double>0.44</double>
-              <double>0.44</double>
-            </SAT>
             <SoilCrop>
               <Name>wheat</Name>
               <LL>
@@ -11466,6 +11967,54 @@ namespace Models
                 <double>0</double>
               </XF>
             </SoilCrop>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+            </BD>
+            <AirDry>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </AirDry>
+            <LL15>
+              <double>0.13</double>
+              <double>0.13</double>
+              <double>0.1</double>
+              <double>0.08</double>
+              <double>0.11</double>
+              <double>0.11</double>
+            </LL15>
+            <DUL>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.31</double>
+              <double>0.27</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </DUL>
+            <SAT>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.44</double>
+              <double>0.44</double>
+            </SAT>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -11991,7 +12540,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -12001,7 +12550,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -12036,8 +12585,8 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>[Potato].Phenology.CurrentPhaseName</string>
-            <string>[Potato].Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.CurrentPhaseName</string>
+            <string>Potato.Phenology.StageCode.Value</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -12047,7 +12596,7 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSoilOMN</string>
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Potato].Root.NSupplyUptake</string>
+            <string>Potato.Root.NSupplyUptake</string>
             <string>[Soil].SoilWater.eo</string>
             <string>[Soil].SoilWater.es</string>
             <string>[ExtraVariables].Script.SWC</string>
@@ -12065,80 +12614,80 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Potato].Summariser.AboveGround.Wt</string>
-            <string>[Potato].Summariser.BelowGround.Wt</string>
-            <string>[Potato].Summariser.Total.Wt</string>
-            <string>[Potato].Summariser.TotalDead.Wt</string>
-            <string>[Potato].Summariser.TotalLive.Wt</string>
-            <string>[Potato].Leaf.Dead.Wt</string>
-            <string>[Potato].Leaf.Live.Wt</string>
-            <string>[Potato].Stem.Dead.Wt</string>
-            <string>[Potato].Stem.Live.Wt</string>
-            <string>[Potato].Tuber.Dead.Wt</string>
-            <string>[Potato].Tuber.Live.Wt</string>
-            <string>[Potato].Root.Dead.Wt</string>
-            <string>[Potato].Root.Live.Wt</string>
-            <string>[Potato].Summariser.AboveGround.N</string>
-            <string>[Potato].Summariser.BelowGround.N</string>
-            <string>[Potato].Summariser.Total.N</string>
-            <string>[Potato].Summariser.TotalLive.N</string>
-            <string>[Potato].Summariser.TotalDead.N</string>
-            <string>[Potato].Leaf.Dead.N</string>
-            <string>[Potato].Leaf.Live.N</string>
-            <string>[Potato].Stem.Dead.N</string>
-            <string>[Potato].Stem.Live.N</string>
-            <string>[Potato].Tuber.Dead.N</string>
-            <string>[Potato].Tuber.Live.N</string>
-            <string>[Potato].Root.Live.N</string>
-            <string>[Potato].Root.Dead.N</string>
-            <string>[Potato].Leaf.Live.NConc</string>
-            <string>[Potato].Leaf.Dead.NConc</string>
-            <string>[Potato].Stem.Live.NConc</string>
-            <string>[Potato].Stem.Dead.NConc</string>
-            <string>[Potato].Tuber.Live.NConc</string>
-            <string>[Potato].Tuber.Dead.NConc</string>
-            <string>[Potato].Root.Live.NConc</string>
-            <string>[Potato].Root.Dead.NConc</string>
-            <string>[Potato].Root.WaterSupply</string>
-            <string>[Potato].Root.WaterUptake</string>
-            <string>[Potato].Leaf.Transpiration</string>
-            <string>[Potato].Leaf.WaterDemand</string>
-            <string>[Potato].Root.Depth</string>
-            <string>[Potato].Leaf.CoverGreen</string>
-            <string>[Potato].Leaf.CoverTotal</string>
-            <string>[Potato].Leaf.CoverDead</string>
-            <string>[Potato].Leaf.LAI</string>
-            <string>[Potato].Leaf.LAIDead</string>
-            <string>[Potato].Structure.Height</string>
-            <string>[Potato].Leaf.Fn</string>
-            <string>[Potato].Leaf.Fw</string>
-            <string>[Potato].Leaf.Photosynthesis.FT.Value</string>
-            <string>[Potato].Leaf.Photosynthesis.FVPD.Value</string>
-            <string>[Potato].Structure.PlantTotalNodeNo</string>
-            <string>[Potato].Structure.TotalStemPopn</string>
-            <string>[Potato].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[Potato].Leaf.ExpandingCohortNo</string>
-            <string>[Potato].Leaf.AppearedCohortNo</string>
-            <string>[Potato].Leaf.DeadCohortNo</string>
-            <string>[Potato].Structure.MainStemNodeNo</string>
-            <string>[Potato].Leaf.SenescingCohortNo</string>
-            <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>[Potato].Stem.MinimumNConc.Value</string>
-            <string>[Potato].Tuber.MinimumNConc.Value</string>
-            <string>[Potato].Root.MinimumNConc.Value</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>[Potato].Stem.MaximumNConc.Value</string>
-            <string>[Potato].Tuber.MaximumNConc.Value</string>
-            <string>[Potato].Root.MaximumNConc.Value</string>
-            <string>[Potato].Stem.Live.StructuralWt</string>
-            <string>[Potato].Stem.Live.NonStructuralWt</string>
-            <string>[Potato].Leaf.SpecificArea</string>
-            <string>[Potato].Leaf.ExpandedCohortNo</string>
+            <string>Potato.Summariser.AboveGround.Wt</string>
+            <string>Potato.Summariser.BelowGround.Wt</string>
+            <string>Potato.Summariser.Total.Wt</string>
+            <string>Potato.Summariser.TotalDead.Wt</string>
+            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.Leaf.Dead.Wt</string>
+            <string>Potato.Leaf.Live.Wt</string>
+            <string>Potato.Stem.Dead.Wt</string>
+            <string>Potato.Stem.Live.Wt</string>
+            <string>Potato.Tuber.Dead.Wt</string>
+            <string>Potato.Tuber.Live.Wt</string>
+            <string>Potato.Root.Dead.Wt</string>
+            <string>Potato.Root.Live.Wt</string>
+            <string>Potato.Summariser.AboveGround.N</string>
+            <string>Potato.Summariser.BelowGround.N</string>
+            <string>Potato.Summariser.Total.N</string>
+            <string>Potato.Summariser.TotalLive.N</string>
+            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.Leaf.Dead.N</string>
+            <string>Potato.Leaf.Live.N</string>
+            <string>Potato.Stem.Dead.N</string>
+            <string>Potato.Stem.Live.N</string>
+            <string>Potato.Tuber.Dead.N</string>
+            <string>Potato.Tuber.Live.N</string>
+            <string>Potato.Root.Live.N</string>
+            <string>Potato.Root.Dead.N</string>
+            <string>Potato.Leaf.Live.NConc</string>
+            <string>Potato.Leaf.Dead.NConc</string>
+            <string>Potato.Stem.Live.NConc</string>
+            <string>Potato.Stem.Dead.NConc</string>
+            <string>Potato.Tuber.Live.NConc</string>
+            <string>Potato.Tuber.Dead.NConc</string>
+            <string>Potato.Root.Live.NConc</string>
+            <string>Potato.Root.Dead.NConc</string>
+            <string>Potato.Root.WaterSupply</string>
+            <string>Potato.Root.WaterUptake</string>
+            <string>Potato.Leaf.Transpiration</string>
+            <string>Potato.Leaf.WaterDemand</string>
+            <string>Potato.Root.Depth</string>
+            <string>Potato.Leaf.CoverGreen</string>
+            <string>Potato.Leaf.CoverTotal</string>
+            <string>Potato.Leaf.CoverDead</string>
+            <string>Potato.Leaf.LAI</string>
+            <string>Potato.Leaf.LAIDead</string>
+            <string>Potato.Structure.Height</string>
+            <string>Potato.Leaf.Fn</string>
+            <string>Potato.Leaf.Fw</string>
+            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
+            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
+            <string>Potato.Structure.PlantTotalNodeNo</string>
+            <string>Potato.Structure.TotalStemPopn</string>
+            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
+            <string>Potato.Leaf.ExpandingCohortNo</string>
+            <string>Potato.Leaf.AppearedCohortNo</string>
+            <string>Potato.Leaf.DeadCohortNo</string>
+            <string>Potato.Structure.MainStemNodeNo</string>
+            <string>Potato.Leaf.SenescingCohortNo</string>
+            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
+            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+            <string>Potato.Stem.MinimumNConc.Value</string>
+            <string>Potato.Tuber.MinimumNConc.Value</string>
+            <string>Potato.Root.MinimumNConc.Value</string>
+            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+            <string>Potato.Stem.MaximumNConc.Value</string>
+            <string>Potato.Tuber.MaximumNConc.Value</string>
+            <string>Potato.Root.MaximumNConc.Value</string>
+            <string>Potato.Stem.Live.StructuralWt</string>
+            <string>Potato.Stem.Live.NonStructuralWt</string>
+            <string>Potato.Leaf.SpecificArea</string>
+            <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Potato].Arbitrator.NDemand</string>
+            <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -12148,8 +12697,8 @@ namespace Models
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
             <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>[Potato].Tuber.LiveFWt</string>
-            <string>[Potato].Tuber.DryMatterContent.Value</string>
+            <string>Potato.Tuber.LiveFWt</string>
+            <string>Potato.Tuber.DryMatterContent.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -12221,11 +12770,17 @@ namespace Models
               <Type>Bottom</Type>
               <Title>X axis title 2</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Left</Type>
               <Title>Accumulated N changes (kg/ha)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title />
@@ -12395,10 +12950,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Accumulated Water Changes (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Pond</Title>
@@ -12608,10 +13169,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -12841,10 +13408,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Nitrogen (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -13094,10 +13667,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Stress factors (0-1)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Ft</Title>
@@ -13187,15 +13766,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Water (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>Length (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Supply</Title>
@@ -13345,15 +13933,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Cover </Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>LAI (m2/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Cover Dead</Title>
@@ -13463,10 +14060,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Senescing Cohorts</Title>
@@ -13636,14 +14239,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -13753,14 +14365,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -13870,14 +14491,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -13987,10 +14617,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -14078,7 +14714,7 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <OverRidePath>[Potato].Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.value</OverRidePath>
             <OverRideInterger>10</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;
@@ -14129,11 +14765,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -14183,11 +14825,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf Area Index (m2/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14237,11 +14885,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14291,11 +14945,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14345,11 +15005,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Total  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -14399,11 +15065,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14453,11 +15125,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14507,11 +15185,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14561,11 +15245,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Canopy Cover (0-1)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14615,11 +15305,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14669,11 +15365,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf  nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -14723,11 +15425,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title> Stem nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -14777,11 +15485,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Appeared leaves</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Type>Line</Type>
@@ -14829,11 +15543,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -14883,11 +15603,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -14937,11 +15663,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Observed Fresh Tuber Yield (g/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -15121,54 +15853,6 @@ namespace Models
           </InitialWater>
           <Water>
             <Name>Water</Name>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-            </BD>
-            <AirDry>
-              <double>0.08</double>
-              <double>0.16</double>
-              <double>0.14</double>
-              <double>0.11</double>
-              <double>0.16</double>
-              <double>0.15</double>
-            </AirDry>
-            <LL15>
-              <double>0.16</double>
-              <double>0.16</double>
-              <double>0.14</double>
-              <double>0.11</double>
-              <double>0.16</double>
-              <double>0.15</double>
-            </LL15>
-            <DUL>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.31</double>
-              <double>0.27</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </DUL>
-            <SAT>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.44</double>
-              <double>0.46</double>
-              <double>0.44</double>
-              <double>0.44</double>
-            </SAT>
             <SoilCrop>
               <Name>wheat</Name>
               <LL>
@@ -15223,6 +15907,54 @@ namespace Models
                 <double>0</double>
               </XF>
             </SoilCrop>
+            <Thickness>
+              <double>100</double>
+              <double>200</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+              <double>1.2</double>
+            </BD>
+            <AirDry>
+              <double>0.08</double>
+              <double>0.16</double>
+              <double>0.14</double>
+              <double>0.11</double>
+              <double>0.16</double>
+              <double>0.15</double>
+            </AirDry>
+            <LL15>
+              <double>0.16</double>
+              <double>0.16</double>
+              <double>0.14</double>
+              <double>0.11</double>
+              <double>0.16</double>
+              <double>0.15</double>
+            </LL15>
+            <DUL>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.31</double>
+              <double>0.27</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </DUL>
+            <SAT>
+              <double>0.5</double>
+              <double>0.5</double>
+              <double>0.44</double>
+              <double>0.46</double>
+              <double>0.44</double>
+              <double>0.44</double>
+            </SAT>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -15828,7 +16560,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -15838,7 +16570,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -15874,8 +16606,8 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>[Potato].Phenology.CurrentPhaseName</string>
-            <string>[Potato].Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.CurrentPhaseName</string>
+            <string>Potato.Phenology.StageCode.Value</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -15885,7 +16617,7 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSoilOMN</string>
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Potato].Root.NSupplyUptake</string>
+            <string>Potato.Root.NSupplyUptake</string>
             <string>[Soil].SoilWater.eo</string>
             <string>[Soil].SoilWater.es</string>
             <string>[ExtraVariables].Script.SWC</string>
@@ -15903,80 +16635,80 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Potato].Summariser.AboveGround.Wt</string>
-            <string>[Potato].Summariser.BelowGround.Wt</string>
-            <string>[Potato].Summariser.Total.Wt</string>
-            <string>[Potato].Summariser.TotalDead.Wt</string>
-            <string>[Potato].Summariser.TotalLive.Wt</string>
-            <string>[Potato].Leaf.Dead.Wt</string>
-            <string>[Potato].Leaf.Live.Wt</string>
-            <string>[Potato].Stem.Dead.Wt</string>
-            <string>[Potato].Stem.Live.Wt</string>
-            <string>[Potato].Tuber.Dead.Wt</string>
-            <string>[Potato].Tuber.Live.Wt</string>
-            <string>[Potato].Root.Dead.Wt</string>
-            <string>[Potato].Root.Live.Wt</string>
-            <string>[Potato].Summariser.AboveGround.N</string>
-            <string>[Potato].Summariser.BelowGround.N</string>
-            <string>[Potato].Summariser.Total.N</string>
-            <string>[Potato].Summariser.TotalLive.N</string>
-            <string>[Potato].Summariser.TotalDead.N</string>
-            <string>[Potato].Leaf.Dead.N</string>
-            <string>[Potato].Leaf.Live.N</string>
-            <string>[Potato].Stem.Dead.N</string>
-            <string>[Potato].Stem.Live.N</string>
-            <string>[Potato].Tuber.Dead.N</string>
-            <string>[Potato].Tuber.Live.N</string>
-            <string>[Potato].Root.Live.N</string>
-            <string>[Potato].Root.Dead.N</string>
-            <string>[Potato].Leaf.Live.NConc</string>
-            <string>[Potato].Leaf.Dead.NConc</string>
-            <string>[Potato].Stem.Live.NConc</string>
-            <string>[Potato].Stem.Dead.NConc</string>
-            <string>[Potato].Tuber.Live.NConc</string>
-            <string>[Potato].Tuber.Dead.NConc</string>
-            <string>[Potato].Root.Live.NConc</string>
-            <string>[Potato].Root.Dead.NConc</string>
-            <string>[Potato].Root.WaterSupply</string>
-            <string>[Potato].Root.WaterUptake</string>
-            <string>[Potato].Leaf.Transpiration</string>
-            <string>[Potato].Leaf.WaterDemand</string>
-            <string>[Potato].Root.Depth</string>
-            <string>[Potato].Leaf.CoverGreen</string>
-            <string>[Potato].Leaf.CoverTotal</string>
-            <string>[Potato].Leaf.CoverDead</string>
-            <string>[Potato].Leaf.LAI</string>
-            <string>[Potato].Leaf.LAIDead</string>
-            <string>[Potato].Structure.Height</string>
-            <string>[Potato].Leaf.Fn</string>
-            <string>[Potato].Leaf.Fw</string>
-            <string>[Potato].Leaf.Photosynthesis.FT.Value</string>
-            <string>[Potato].Leaf.Photosynthesis.FVPD.Value</string>
-            <string>[Potato].Structure.PlantTotalNodeNo</string>
-            <string>[Potato].Structure.TotalStemPopn</string>
-            <string>[Potato].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[Potato].Leaf.ExpandingCohortNo</string>
-            <string>[Potato].Leaf.AppearedCohortNo</string>
-            <string>[Potato].Leaf.DeadCohortNo</string>
-            <string>[Potato].Structure.MainStemNodeNo</string>
-            <string>[Potato].Leaf.SenescingCohortNo</string>
-            <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>[Potato].Stem.MinimumNConc.Value</string>
-            <string>[Potato].Tuber.MinimumNConc.Value</string>
-            <string>[Potato].Root.MinimumNConc.Value</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>[Potato].Stem.MaximumNConc.Value</string>
-            <string>[Potato].Tuber.MaximumNConc.Value</string>
-            <string>[Potato].Root.MaximumNConc.Value</string>
-            <string>[Potato].Stem.Live.StructuralWt</string>
-            <string>[Potato].Stem.Live.NonStructuralWt</string>
-            <string>[Potato].Leaf.SpecificArea</string>
-            <string>[Potato].Leaf.ExpandedCohortNo</string>
+            <string>Potato.Summariser.AboveGround.Wt</string>
+            <string>Potato.Summariser.BelowGround.Wt</string>
+            <string>Potato.Summariser.Total.Wt</string>
+            <string>Potato.Summariser.TotalDead.Wt</string>
+            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.Leaf.Dead.Wt</string>
+            <string>Potato.Leaf.Live.Wt</string>
+            <string>Potato.Stem.Dead.Wt</string>
+            <string>Potato.Stem.Live.Wt</string>
+            <string>Potato.Tuber.Dead.Wt</string>
+            <string>Potato.Tuber.Live.Wt</string>
+            <string>Potato.Root.Dead.Wt</string>
+            <string>Potato.Root.Live.Wt</string>
+            <string>Potato.Summariser.AboveGround.N</string>
+            <string>Potato.Summariser.BelowGround.N</string>
+            <string>Potato.Summariser.Total.N</string>
+            <string>Potato.Summariser.TotalLive.N</string>
+            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.Leaf.Dead.N</string>
+            <string>Potato.Leaf.Live.N</string>
+            <string>Potato.Stem.Dead.N</string>
+            <string>Potato.Stem.Live.N</string>
+            <string>Potato.Tuber.Dead.N</string>
+            <string>Potato.Tuber.Live.N</string>
+            <string>Potato.Root.Live.N</string>
+            <string>Potato.Root.Dead.N</string>
+            <string>Potato.Leaf.Live.NConc</string>
+            <string>Potato.Leaf.Dead.NConc</string>
+            <string>Potato.Stem.Live.NConc</string>
+            <string>Potato.Stem.Dead.NConc</string>
+            <string>Potato.Tuber.Live.NConc</string>
+            <string>Potato.Tuber.Dead.NConc</string>
+            <string>Potato.Root.Live.NConc</string>
+            <string>Potato.Root.Dead.NConc</string>
+            <string>Potato.Root.WaterSupply</string>
+            <string>Potato.Root.WaterUptake</string>
+            <string>Potato.Leaf.Transpiration</string>
+            <string>Potato.Leaf.WaterDemand</string>
+            <string>Potato.Root.Depth</string>
+            <string>Potato.Leaf.CoverGreen</string>
+            <string>Potato.Leaf.CoverTotal</string>
+            <string>Potato.Leaf.CoverDead</string>
+            <string>Potato.Leaf.LAI</string>
+            <string>Potato.Leaf.LAIDead</string>
+            <string>Potato.Structure.Height</string>
+            <string>Potato.Leaf.Fn</string>
+            <string>Potato.Leaf.Fw</string>
+            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
+            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
+            <string>Potato.Structure.PlantTotalNodeNo</string>
+            <string>Potato.Structure.TotalStemPopn</string>
+            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
+            <string>Potato.Leaf.ExpandingCohortNo</string>
+            <string>Potato.Leaf.AppearedCohortNo</string>
+            <string>Potato.Leaf.DeadCohortNo</string>
+            <string>Potato.Structure.MainStemNodeNo</string>
+            <string>Potato.Leaf.SenescingCohortNo</string>
+            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
+            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+            <string>Potato.Stem.MinimumNConc.Value</string>
+            <string>Potato.Tuber.MinimumNConc.Value</string>
+            <string>Potato.Root.MinimumNConc.Value</string>
+            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+            <string>Potato.Stem.MaximumNConc.Value</string>
+            <string>Potato.Tuber.MaximumNConc.Value</string>
+            <string>Potato.Root.MaximumNConc.Value</string>
+            <string>Potato.Stem.Live.StructuralWt</string>
+            <string>Potato.Stem.Live.NonStructuralWt</string>
+            <string>Potato.Leaf.SpecificArea</string>
+            <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Potato].Arbitrator.NDemand</string>
+            <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -15986,8 +16718,8 @@ namespace Models
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
             <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>[Potato].Tuber.LiveFWt</string>
-            <string>[Potato].Tuber.DryMatterContent.Value</string>
+            <string>Potato.Tuber.LiveFWt</string>
+            <string>Potato.Tuber.DryMatterContent.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -16001,11 +16733,17 @@ namespace Models
               <Type>Bottom</Type>
               <Title>X axis title 2</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Left</Type>
               <Title>Accumulated N changes (kg/ha)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title />
@@ -16175,10 +16913,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Accumulated Water Changes (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Pond</Title>
@@ -16388,10 +17132,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -16621,10 +17371,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Nitrogen (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -16874,10 +17630,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Stress factors (0-1)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Ft</Title>
@@ -16967,15 +17729,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Water (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>Length (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Supply</Title>
@@ -17125,15 +17896,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Cover </Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>LAI (m2/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Cover Dead</Title>
@@ -17243,10 +18023,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Senescing Cohorts</Title>
@@ -17416,14 +18202,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -17533,14 +18328,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -17650,14 +18454,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -17767,10 +18580,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -17858,7 +18677,7 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <OverRidePath>[Potato].Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.value</OverRidePath>
             <OverRideInterger>28</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;
@@ -17973,11 +18792,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -18027,11 +18852,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf Area Index (m2/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18081,11 +18912,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18135,11 +18972,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18189,11 +19032,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Total  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -18243,11 +19092,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18297,11 +19152,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18351,11 +19212,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18405,11 +19272,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Canopy Cover (0-1)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18459,11 +19332,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18513,11 +19392,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf  nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -18567,11 +19452,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title> Stem nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -18621,11 +19512,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Appeared leaves</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Type>Line</Type>
@@ -18673,11 +19570,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -18727,11 +19630,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -18781,11 +19690,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Observed Fresh Tuber Yield (g/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -19069,6 +19984,33 @@ namespace Models
           </InitialWater>
           <Water>
             <Name>Water</Name>
+            <SoilCrop>
+              <Name>potato</Name>
+              <LL>
+                <double>0.06</double>
+                <double>0.06</double>
+                <double>0.12</double>
+                <double>0.12</double>
+                <double>0.12</double>
+                <double>0.12</double>
+              </LL>
+              <KL>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.07</double>
+                <double>0.05</double>
+                <double>0.05</double>
+                <double>0.05</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -19117,33 +20059,6 @@ namespace Models
               <double>0.25</double>
               <double>0.25</double>
             </SAT>
-            <SoilCrop>
-              <Name>potato</Name>
-              <LL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.12</double>
-                <double>0.12</double>
-                <double>0.12</double>
-                <double>0.12</double>
-              </LL>
-              <KL>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.07</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -20362,7 +21277,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)zone.Get("[Potato].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -20372,7 +21287,7 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			AccumEP -= (double)zone.Get("[Potato].Leaf.Transpiration");
+			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -20408,8 +21323,8 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
-            <string>[Potato].Phenology.CurrentPhaseName</string>
-            <string>[Potato].Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.CurrentPhaseName</string>
+            <string>Potato.Phenology.StageCode.Value</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -20419,7 +21334,7 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSoilOMN</string>
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Potato].Root.NSupplyUptake</string>
+            <string>Potato.Root.NSupplyUptake</string>
             <string>[Soil].SoilWater.eo</string>
             <string>[Soil].SoilWater.es</string>
             <string>[ExtraVariables].Script.SWC</string>
@@ -20437,80 +21352,80 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Potato].Summariser.AboveGround.Wt</string>
-            <string>[Potato].Summariser.BelowGround.Wt</string>
-            <string>[Potato].Summariser.Total.Wt</string>
-            <string>[Potato].Summariser.TotalDead.Wt</string>
-            <string>[Potato].Summariser.TotalLive.Wt</string>
-            <string>[Potato].Leaf.Dead.Wt</string>
-            <string>[Potato].Leaf.Live.Wt</string>
-            <string>[Potato].Stem.Dead.Wt</string>
-            <string>[Potato].Stem.Live.Wt</string>
-            <string>[Potato].Tuber.Dead.Wt</string>
-            <string>[Potato].Tuber.Live.Wt</string>
-            <string>[Potato].Root.Dead.Wt</string>
-            <string>[Potato].Root.Live.Wt</string>
-            <string>[Potato].Summariser.AboveGround.N</string>
-            <string>[Potato].Summariser.BelowGround.N</string>
-            <string>[Potato].Summariser.Total.N</string>
-            <string>[Potato].Summariser.TotalLive.N</string>
-            <string>[Potato].Summariser.TotalDead.N</string>
-            <string>[Potato].Leaf.Dead.N</string>
-            <string>[Potato].Leaf.Live.N</string>
-            <string>[Potato].Stem.Dead.N</string>
-            <string>[Potato].Stem.Live.N</string>
-            <string>[Potato].Tuber.Dead.N</string>
-            <string>[Potato].Tuber.Live.N</string>
-            <string>[Potato].Root.Live.N</string>
-            <string>[Potato].Root.Dead.N</string>
-            <string>[Potato].Leaf.Live.NConc</string>
-            <string>[Potato].Leaf.Dead.NConc</string>
-            <string>[Potato].Stem.Live.NConc</string>
-            <string>[Potato].Stem.Dead.NConc</string>
-            <string>[Potato].Tuber.Live.NConc</string>
-            <string>[Potato].Tuber.Dead.NConc</string>
-            <string>[Potato].Root.Live.NConc</string>
-            <string>[Potato].Root.Dead.NConc</string>
-            <string>[Potato].Root.WaterSupply</string>
-            <string>[Potato].Root.WaterUptake</string>
-            <string>[Potato].Leaf.Transpiration</string>
-            <string>[Potato].Leaf.WaterDemand</string>
-            <string>[Potato].Root.Depth</string>
-            <string>[Potato].Leaf.CoverGreen</string>
-            <string>[Potato].Leaf.CoverTotal</string>
-            <string>[Potato].Leaf.CoverDead</string>
-            <string>[Potato].Leaf.LAI</string>
-            <string>[Potato].Leaf.LAIDead</string>
-            <string>[Potato].Structure.Height</string>
-            <string>[Potato].Leaf.Fn</string>
-            <string>[Potato].Leaf.Fw</string>
-            <string>[Potato].Leaf.Photosynthesis.FT.Value</string>
-            <string>[Potato].Leaf.Photosynthesis.FVPD.Value</string>
-            <string>[Potato].Structure.PlantTotalNodeNo</string>
-            <string>[Potato].Structure.TotalStemPopn</string>
-            <string>[Potato].Leaf.PlantAppearedGreenLeafNo</string>
-            <string>[Potato].Leaf.ExpandingCohortNo</string>
-            <string>[Potato].Leaf.AppearedCohortNo</string>
-            <string>[Potato].Leaf.DeadCohortNo</string>
-            <string>[Potato].Structure.MainStemNodeNo</string>
-            <string>[Potato].Leaf.SenescingCohortNo</string>
-            <string>[Potato].Structure.PrimaryBudTotalNodeNo</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
-            <string>[Potato].Stem.MinimumNConc.Value</string>
-            <string>[Potato].Tuber.MinimumNConc.Value</string>
-            <string>[Potato].Root.MinimumNConc.Value</string>
-            <string>[Potato].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>[Potato].Stem.MaximumNConc.Value</string>
-            <string>[Potato].Tuber.MaximumNConc.Value</string>
-            <string>[Potato].Root.MaximumNConc.Value</string>
-            <string>[Potato].Stem.Live.StructuralWt</string>
-            <string>[Potato].Stem.Live.NonStructuralWt</string>
-            <string>[Potato].Leaf.SpecificArea</string>
-            <string>[Potato].Leaf.ExpandedCohortNo</string>
+            <string>Potato.Summariser.AboveGround.Wt</string>
+            <string>Potato.Summariser.BelowGround.Wt</string>
+            <string>Potato.Summariser.Total.Wt</string>
+            <string>Potato.Summariser.TotalDead.Wt</string>
+            <string>Potato.Summariser.TotalLive.Wt</string>
+            <string>Potato.Leaf.Dead.Wt</string>
+            <string>Potato.Leaf.Live.Wt</string>
+            <string>Potato.Stem.Dead.Wt</string>
+            <string>Potato.Stem.Live.Wt</string>
+            <string>Potato.Tuber.Dead.Wt</string>
+            <string>Potato.Tuber.Live.Wt</string>
+            <string>Potato.Root.Dead.Wt</string>
+            <string>Potato.Root.Live.Wt</string>
+            <string>Potato.Summariser.AboveGround.N</string>
+            <string>Potato.Summariser.BelowGround.N</string>
+            <string>Potato.Summariser.Total.N</string>
+            <string>Potato.Summariser.TotalLive.N</string>
+            <string>Potato.Summariser.TotalDead.N</string>
+            <string>Potato.Leaf.Dead.N</string>
+            <string>Potato.Leaf.Live.N</string>
+            <string>Potato.Stem.Dead.N</string>
+            <string>Potato.Stem.Live.N</string>
+            <string>Potato.Tuber.Dead.N</string>
+            <string>Potato.Tuber.Live.N</string>
+            <string>Potato.Root.Live.N</string>
+            <string>Potato.Root.Dead.N</string>
+            <string>Potato.Leaf.Live.NConc</string>
+            <string>Potato.Leaf.Dead.NConc</string>
+            <string>Potato.Stem.Live.NConc</string>
+            <string>Potato.Stem.Dead.NConc</string>
+            <string>Potato.Tuber.Live.NConc</string>
+            <string>Potato.Tuber.Dead.NConc</string>
+            <string>Potato.Root.Live.NConc</string>
+            <string>Potato.Root.Dead.NConc</string>
+            <string>Potato.Root.WaterSupply</string>
+            <string>Potato.Root.WaterUptake</string>
+            <string>Potato.Leaf.Transpiration</string>
+            <string>Potato.Leaf.WaterDemand</string>
+            <string>Potato.Root.Depth</string>
+            <string>Potato.Leaf.CoverGreen</string>
+            <string>Potato.Leaf.CoverTotal</string>
+            <string>Potato.Leaf.CoverDead</string>
+            <string>Potato.Leaf.LAI</string>
+            <string>Potato.Leaf.LAIDead</string>
+            <string>Potato.Structure.Height</string>
+            <string>Potato.Leaf.Fn</string>
+            <string>Potato.Leaf.Fw</string>
+            <string>Potato.Leaf.Photosynthesis.FT.Value</string>
+            <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
+            <string>Potato.Structure.PlantTotalNodeNo</string>
+            <string>Potato.Structure.TotalStemPopn</string>
+            <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
+            <string>Potato.Leaf.ExpandingCohortNo</string>
+            <string>Potato.Leaf.AppearedCohortNo</string>
+            <string>Potato.Leaf.DeadCohortNo</string>
+            <string>Potato.Structure.MainStemNodeNo</string>
+            <string>Potato.Leaf.SenescingCohortNo</string>
+            <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
+            <string>Potato.Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+            <string>Potato.Stem.MinimumNConc.Value</string>
+            <string>Potato.Tuber.MinimumNConc.Value</string>
+            <string>Potato.Root.MinimumNConc.Value</string>
+            <string>Potato.Leaf.LeafCohortParameters.MaximumNConc.Value</string>
+            <string>Potato.Stem.MaximumNConc.Value</string>
+            <string>Potato.Tuber.MaximumNConc.Value</string>
+            <string>Potato.Root.MaximumNConc.Value</string>
+            <string>Potato.Stem.Live.StructuralWt</string>
+            <string>Potato.Stem.Live.NonStructuralWt</string>
+            <string>Potato.Leaf.SpecificArea</string>
+            <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[Soil].SoilNitrogen.no3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Potato].Arbitrator.NDemand</string>
+            <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -20520,8 +21435,8 @@ namespace Models
             <string>[ExtraVariables].Script.DltNMinRes</string>
             <string>[ExtraVariables].Script.DltNMinTot</string>
             <string>[PotatoHarvestRule].Script.FinalTag</string>
-            <string>[Potato].Tuber.LiveFWt</string>
-            <string>[Potato].Tuber.DryMatterContent.Value</string>
+            <string>Potato.Tuber.LiveFWt</string>
+            <string>Potato.Tuber.DryMatterContent.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -20535,11 +21450,17 @@ namespace Models
               <Type>Bottom</Type>
               <Title>X axis title 2</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Left</Type>
               <Title>Accumulated N changes (kg/ha)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title />
@@ -20709,10 +21630,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Accumulated Water Changes (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Pond</Title>
@@ -20922,10 +21849,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -21155,10 +22088,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Nitrogen (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Leaf</Title>
@@ -21408,10 +22347,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Stress factors (0-1)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Ft</Title>
@@ -21501,15 +22446,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Water (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>Length (mm)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Supply</Title>
@@ -21659,15 +22613,24 @@ namespace Models
               <Type>Left</Type>
               <Title>Cover </Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Title>LAI (m2/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Cover Dead</Title>
@@ -21777,10 +22740,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Crop Biomass (g/m2)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>Senescing Cohorts</Title>
@@ -21950,14 +22919,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -22067,14 +23045,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -22184,14 +23171,23 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Right</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -22301,10 +23297,16 @@ namespace Models
               <Type>Left</Type>
               <Title>Nitrogen Content (g/g)</Title>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
@@ -22392,7 +23394,7 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <OverRidePath>[Potato].Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.value</OverRidePath>
             <OverRideInterger>28</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;
@@ -22444,11 +23446,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -22498,11 +23506,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf Area Index (m2/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -22552,11 +23566,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -22606,11 +23626,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -22660,11 +23686,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Total  live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -22714,11 +23746,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -22768,11 +23806,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -22822,11 +23866,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Stem live nitrogen (g N/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -22876,11 +23926,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Canopy Cover (0-1)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -22930,11 +23986,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -22984,11 +24046,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Leaf  nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -23038,11 +24106,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title> Stem nitrogen content (g N/g DM)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -23092,11 +24166,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Appeared leaves</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Type>Line</Type>
@@ -23144,11 +24224,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -23198,11 +24284,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Date</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Tuber fresh live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Prediceted</Title>
@@ -23252,11 +24344,17 @@ namespace Models
           <Type>Bottom</Type>
           <Title>Observed Fresh Tuber Yield (g/m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Observed</Title>
@@ -23288,11 +24386,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Observed Fresh Tuber Yield (g/m2)</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>Observed</Title>
@@ -23322,11 +24426,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Observed Fresh Tuber Yield (g/m2)</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>Observed</Title>
@@ -23356,11 +24466,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Observed LAI (m2/m2)</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Predicted LAI (m2 /m2)</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>Observed</Title>
@@ -23390,11 +24506,17 @@ namespace Models
       <Type>Bottom</Type>
       <Title>Observed tuber N (g/m2)</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title>Predicted  tuber N (g/m2)</Title>
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>Observed</Title>

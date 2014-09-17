@@ -446,82 +446,72 @@ namespace Models.Soils
         /// A list of crop names.
         /// </summary>
         [XmlIgnore]
-        public string[] CropNames { get { return Water.CropNames; } set { Water.CropNames = value; } }
+        public string[] CropNames { get { return Water.CropNames; } }
 
         /// <summary>
         /// Return a specific crop to caller. Will throw if crop doesn't exist.
         /// </summary>
-        public SoilCrop Crop(string CropName) 
-        { 
-            SoilCrop MeasuredCrop = Water.Crop(CropName); 
+        public ISoilCrop Crop(string CropName) 
+        {
+            ISoilCrop MeasuredCrop = Water.Crop(CropName); 
             if (MeasuredCrop != null)
                 return MeasuredCrop;
-            SoilCrop Predicted = PredictedCrop(CropName);
+            ISoilCrop Predicted = PredictedCrop(CropName);
             if (Predicted != null)
                 return Predicted;
             throw new Exception("Soil could not find crop: " + CropName);
         }
 
-        /// <summary>
-        /// Crop lower limit mapped. Units: mm/mm
-        /// </summary>
-        public double[] LL(string CropName)
-        {
-            return LLMapped(CropName, Thickness);
-        }
+        ///// <summary>
+        ///// Crop lower limit mapped. Units: mm/mm
+        ///// </summary>
+        //public double[] LL(string CropName)
+        //{
+        //    return LLMapped(CropName, Thickness);
+        //}
 
-        /// <summary>
-        /// KL mapped. Units: /day
-        /// </summary>
-        public double[] KL(string CropName)
-        {
-            SoilCrop SoilCrop = Crop(CropName);
-            if (SoilCrop.KL == null)
-                return null;
-            return Map(SoilCrop.KL, Water.Thickness, Thickness, MapType.Concentration, SoilCrop.KL.Last());
-        }
+        ///// <summary>
+        ///// KL mapped. Units: /day
+        ///// </summary>
+        //public double[] KL(string CropName)
+        //{
+        //    SoilCrop SoilCrop = Crop(CropName);
+        //    if (SoilCrop.KL == null)
+        //        return null;
+        //    return Map(SoilCrop.KL, Water.Thickness, Thickness, MapType.Concentration, SoilCrop.KL.Last());
+        //}
 
-        /// <summary>
-        /// XF mapped. Units: 0-1
-        /// </summary>
-        public double[] XF(string CropName)
-        {
-            SoilCrop SoilCrop = Crop(CropName);
-            if (SoilCrop.XF == null)
-            {
-                double[] XF = new double[Thickness.Length];
-                for (int i = 0; i != XF.Length; i++)
-                    XF[i] = 1.0;
-                return XF;
-            }
-            return Map(SoilCrop.XF, Water.Thickness, Thickness, MapType.Concentration, SoilCrop.XF.Last());
-        }
+        ///// <summary>
+        ///// XF mapped. Units: 0-1
+        ///// </summary>
+        //public double[] XF(string CropName)
+        //{
+        //    SoilCrop SoilCrop = Crop(CropName);
+        //    if (SoilCrop.XF == null)
+        //    {
+        //        double[] XF = new double[Thickness.Length];
+        //        for (int i = 0; i != XF.Length; i++)
+        //            XF[i] = 1.0;
+        //        return XF;
+        //    }
+        //    return Map(SoilCrop.XF, Water.Thickness, Thickness, MapType.Concentration, SoilCrop.XF.Last());
+        //}
 
-        /// <summary>
-        /// Return the plant available water CAPACITY. Units: mm/mm
-        /// </summary>
-        public double[] PAWCCrop(string CropName)
-        {
-            return CalcPAWC(Thickness,
-                            LL(CropName),
-                            DUL,
-                            XF(CropName));
-        }
 
-        /// <summary>
-        /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
-        /// </summary>
-        public double[] PAWCrop(string CropName)
-        {
-            return CalcPAWC(Thickness,
-                            LL(CropName),
-                            SW,
-                            XF(CropName));
-        }
-        public double[] PAWmm(string CropName)
-        {
-            return Utility.Math.Multiply(PAWCrop(CropName), Thickness);
-        }
+        ///// <summary>
+        ///// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
+        ///// </summary>
+        //public double[] PAWCrop(string CropName)
+        //{
+        //    return CalcPAWC(Thickness,
+        //                    LL(CropName),
+        //                    SW,
+        //                    XF(CropName));
+        //}
+        //public double[] PAWmm(string CropName)
+        //{
+        //    return Utility.Math.Multiply(PAWCrop(CropName), Thickness);
+        //}
 
         /// <summary>
         /// Return the plant available water CAPACITY at water node thickness. Units: mm/mm
@@ -624,7 +614,7 @@ namespace Models.Soils
         /// <summary>
         /// Return a predicted SoilCrop for the specified crop name or null if not found.
         /// </summary>
-        private SoilCrop PredictedCrop(string CropName)
+        private ISoilCrop PredictedCrop(string CropName)
         {
             double[] A = null;
             double B = double.NaN;
@@ -710,7 +700,7 @@ namespace Models.Soils
             double[] XF = Map(PredictedXF, PredictedThickness, Water.Thickness, MapType.Concentration, PredictedXF.Last());
             string[] Metadata = Utility.String.CreateStringArray("Estimated", Water.Thickness.Length);
 
-            return new SoilCrop()
+            SoilCrop soilCrop = new SoilCrop()
             {
                 LL = LL,
                 LLMetadata = Metadata,
@@ -719,6 +709,7 @@ namespace Models.Soils
                 XF = XF,
                 XFMetadata = Metadata
             };
+            return soilCrop as ISoilCrop;
         }
 
         /// <summary>
@@ -1479,7 +1470,7 @@ namespace Models.Soils
         /// </summary>
         internal double[] LLMapped(string CropName, double[] ToThickness)
         {
-            SoilCrop SoilCrop = Crop(CropName);
+            SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
             if (Utility.Math.AreEqual(Water.Thickness, ToThickness))
                 return SoilCrop.LL;
             double[] Values = Map(SoilCrop.LL, Water.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
@@ -1501,7 +1492,7 @@ namespace Models.Soils
         /// </summary>
         internal double[] XFMapped(string CropName, double[] ToThickness)
         {
-            SoilCrop SoilCrop = Crop(CropName);
+            SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
             if (Utility.Math.AreEqual(Water.Thickness, ToThickness))
                 return SoilCrop.XF;
             return Map(SoilCrop.XF, Water.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
@@ -1876,52 +1867,56 @@ namespace Models.Soils
 
             foreach (string Crop in CropNames)
             {
-                double[] LL = this.LLMapped(Crop, Water.Thickness);
-                double[] KL = this.KL(Crop);
-                double[] XF = this.XF(Crop);
-
-                if (!Utility.Math.ValuesInArray(LL) || 
-                    !Utility.Math.ValuesInArray(KL) ||
-                    !Utility.Math.ValuesInArray(XF))
-                    Msg += "Values for LL, KL or XF are missing for crop " + Crop + "\r\n";
-
-                else
+                SoilCrop soilCrop = this.Crop(Crop) as SoilCrop;
+                if (soilCrop != null)
                 {
-                    for (int layer = 0; layer != Water.Thickness.Length; layer++)
+                    double[] LL = this.LLMapped(Crop, Water.Thickness);
+                    double[] KL = soilCrop.KL;
+                    double[] XF = soilCrop.XF;
+
+                    if (!Utility.Math.ValuesInArray(LL) ||
+                        !Utility.Math.ValuesInArray(KL) ||
+                        !Utility.Math.ValuesInArray(XF))
+                        Msg += "Values for LL, KL or XF are missing for crop " + Crop + "\r\n";
+
+                    else
                     {
-                        int RealLayerNumber = layer + 1;
+                        for (int layer = 0; layer != Water.Thickness.Length; layer++)
+                        {
+                            int RealLayerNumber = layer + 1;
 
-                        if (KL[layer] == Utility.Math.MissingValue)
-                            Msg += Crop + " KL value missing"
-                                     + " in layer " + RealLayerNumber.ToString() + "\r\n";
+                            if (KL[layer] == Utility.Math.MissingValue)
+                                Msg += Crop + " KL value missing"
+                                         + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                        else if (Utility.Math.GreaterThan(KL[layer], 1, 3))
-                            Msg += Crop + " KL value of " + KL[layer].ToString("f3")
-                                     + " in layer " + RealLayerNumber.ToString() + " is greater than 1"
-                                     + "\r\n";
+                            else if (Utility.Math.GreaterThan(KL[layer], 1, 3))
+                                Msg += Crop + " KL value of " + KL[layer].ToString("f3")
+                                         + " in layer " + RealLayerNumber.ToString() + " is greater than 1"
+                                         + "\r\n";
 
-                        if (XF[layer] == Utility.Math.MissingValue)
-                            Msg += Crop + " XF value missing"
-                                     + " in layer " + RealLayerNumber.ToString() + "\r\n";
+                            if (XF[layer] == Utility.Math.MissingValue)
+                                Msg += Crop + " XF value missing"
+                                         + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                        else if (Utility.Math.GreaterThan(XF[layer], 1, 3))
-                            Msg += Crop + " XF value of " + XF[layer].ToString("f3")
-                                     + " in layer " + RealLayerNumber.ToString() + " is greater than 1"
-                                     + "\r\n";
+                            else if (Utility.Math.GreaterThan(XF[layer], 1, 3))
+                                Msg += Crop + " XF value of " + XF[layer].ToString("f3")
+                                         + " in layer " + RealLayerNumber.ToString() + " is greater than 1"
+                                         + "\r\n";
 
-                        if (LL[layer] == Utility.Math.MissingValue)
-                            Msg += Crop + " LL value missing"
-                                     + " in layer " + RealLayerNumber.ToString() + "\r\n";
+                            if (LL[layer] == Utility.Math.MissingValue)
+                                Msg += Crop + " LL value missing"
+                                         + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                        else if (Utility.Math.LessThan(LL[layer], Water.AirDry[layer], 3))
-                            Msg += Crop + " LL of " + LL[layer].ToString("f3")
-                                         + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + Water.AirDry[layer].ToString("f3")
-                                       + "\r\n";
+                            else if (Utility.Math.LessThan(LL[layer], Water.AirDry[layer], 3))
+                                Msg += Crop + " LL of " + LL[layer].ToString("f3")
+                                             + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + Water.AirDry[layer].ToString("f3")
+                                           + "\r\n";
 
-                        else if (Utility.Math.GreaterThan(LL[layer], Water.DUL[layer], 3))
-                            Msg += Crop + " LL of " + LL[layer].ToString("f3")
-                                         + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + Water.DUL[layer].ToString("f3")
-                                       + "\r\n";
+                            else if (Utility.Math.GreaterThan(LL[layer], Water.DUL[layer], 3))
+                                Msg += Crop + " LL of " + LL[layer].ToString("f3")
+                                             + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + Water.DUL[layer].ToString("f3")
+                                           + "\r\n";
+                        }
                     }
                 }
             }

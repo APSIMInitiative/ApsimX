@@ -267,19 +267,24 @@ namespace UserInterface.Presenters
                 bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
                 if (hasDescription && property.CanRead)
                 {
-                    if (property.PropertyType == typeof(double[]) || 
+                    if (this.model.Name == "Water" &&
+                        property.Name == "Depth" &&
+                        typeof(ISoilCrop).IsAssignableFrom(model.GetType()))
+                    {
+                    }
+                    else if (property.PropertyType == typeof(double[]) || 
                         property.PropertyType == typeof(string[]))
                     {
                         this.propertiesInGrid.Add(new VariableProperty(model, property));
                     }
                     else if (property.PropertyType.FullName.Contains("SoilCrop"))
                     {
-                        List<SoilCrop> crops = property.GetValue(model, null) as List<SoilCrop>;
+                        List<ISoilCrop> crops = property.GetValue(model, null) as List<ISoilCrop>;
                         if (crops != null)
                         {
-                            foreach (SoilCrop crop in crops)
+                            foreach (ISoilCrop crop in crops)
                             {
-                                this.FindAllProperties(crop);
+                                this.FindAllProperties(crop as Model);
                             }
                         }
                     }

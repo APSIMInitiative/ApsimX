@@ -88,54 +88,6 @@ namespace Models
         </InitialWater>
         <Water>
           <Name>Water</Name>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-          </BD>
-          <AirDry>
-            <double>0.08</double>
-            <double>0.13</double>
-            <double>0.1</double>
-            <double>0.06</double>
-            <double>0.04</double>
-            <double>0.02</double>
-          </AirDry>
-          <LL15>
-            <double>0.13</double>
-            <double>0.13</double>
-            <double>0.1</double>
-            <double>0.06</double>
-            <double>0.04</double>
-            <double>0.02</double>
-          </LL15>
-          <DUL>
-            <double>0.33</double>
-            <double>0.33</double>
-            <double>0.31</double>
-            <double>0.15</double>
-            <double>0.1</double>
-            <double>0.06</double>
-          </DUL>
-          <SAT>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.44</double>
-            <double>0.46</double>
-            <double>0.44</double>
-            <double>0.44</double>
-          </SAT>
           <SoilCrop>
             <Name>PMFSlurp</Name>
             <LL>
@@ -190,6 +142,54 @@ namespace Models
               <double>0</double>
             </XF>
           </SoilCrop>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.2</double>
+            <double>1.2</double>
+            <double>1.2</double>
+            <double>1.2</double>
+            <double>1.2</double>
+            <double>1.2</double>
+          </BD>
+          <AirDry>
+            <double>0.08</double>
+            <double>0.13</double>
+            <double>0.1</double>
+            <double>0.06</double>
+            <double>0.04</double>
+            <double>0.02</double>
+          </AirDry>
+          <LL15>
+            <double>0.13</double>
+            <double>0.13</double>
+            <double>0.1</double>
+            <double>0.06</double>
+            <double>0.04</double>
+            <double>0.02</double>
+          </LL15>
+          <DUL>
+            <double>0.33</double>
+            <double>0.33</double>
+            <double>0.31</double>
+            <double>0.15</double>
+            <double>0.1</double>
+            <double>0.06</double>
+          </DUL>
+          <SAT>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.44</double>
+            <double>0.46</double>
+            <double>0.44</double>
+            <double>0.44</double>
+          </SAT>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -602,7 +602,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-			AccumPlantN -= (double)zone.Get("[PMFSlurp].Root.NUptake");
+			AccumPlantN -= (double)zone.Get("PMFSlurp.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -613,7 +613,7 @@ namespace Models
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
 			//AccumEP -= (double)zone.Get("[PMFSlurp].Leaf.Transpiration");
-            AccumEP -= (double)zone.Get("[PMFSlurp].Root.WaterUptake");
+            AccumEP -= (double)zone.Get("PMFSlurp.Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -796,7 +796,7 @@ namespace Models
       <Manager>
         <Name>ResetPMFSlurpProperties</Name>
         <Script>
-          <OverRidePath>[PMFSlurp].Leaf.LAIFunction.value</OverRidePath>
+          <OverRidePath>PMFSlurp.Leaf.LAIFunction.value</OverRidePath>
           <OverRideInterger>5</OverRideInterger>
           <ChangeDate>1998-11-14</ChangeDate>
         </Script>
@@ -842,15 +842,24 @@ namespace Models
           <Type>Left</Type>
           <Title>Water (mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Right</Type>
           <Title>Length (mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Series 0</Title>
@@ -883,11 +892,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Accumulated N changes (kg/ha)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>AccumPlantN</Title>
@@ -1057,10 +1072,16 @@ namespace Models
         <Type>Left</Type>
         <Title>Accumulated Water Changes (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Pond</Title>
@@ -1270,10 +1291,16 @@ namespace Models
         <Type>Left</Type>
         <Title>Crop Biomass (g/m2)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Leaf</Title>
@@ -1503,10 +1530,16 @@ namespace Models
         <Type>Left</Type>
         <Title>Crop Nitrogen (g/m2)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Leaf</Title>
@@ -1756,15 +1789,24 @@ namespace Models
         <Type>Left</Type>
         <Title>Water (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Right</Type>
         <Title>Length (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Supply</Title>
@@ -1914,14 +1956,23 @@ namespace Models
         <Type>Left</Type>
         <Title>Cover </Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Right</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Cover Dead</Title>
@@ -2051,15 +2102,24 @@ namespace Models
         <Type>Left</Type>
         <Title>Water (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Right</Type>
         <Title>Length (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>
@@ -2109,15 +2169,24 @@ namespace Models
         <Type>Left</Type>
         <Title>Water (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Right</Type>
         <Title>Length (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series 0</Title>

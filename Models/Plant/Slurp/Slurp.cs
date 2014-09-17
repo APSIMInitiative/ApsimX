@@ -223,7 +223,9 @@ namespace Models.PMF.Slurp
             CanopyProperties.CanopyEmissivity = 0.96;
             CanopyProperties.Frgr = localFrgr;
 
-            RootProperties.KL = Soil.KL(Name);
+            SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
+
+            RootProperties.KL = soilCrop.KL;
 
             RootProperties.MinNO3ConcForUptake = new double[Soil.SoilWater.dlayer.Length];
             RootProperties.MinNH4ConcForUptake = new double[Soil.SoilWater.dlayer.Length];
@@ -232,7 +234,7 @@ namespace Models.PMF.Slurp
 
             for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
             {
-                RootProperties.LowerLimitDep[j] = Soil.LL(Name)[j] * Soil.SoilWater.dlayer[j];
+                RootProperties.LowerLimitDep[j] = soilCrop.LL[j] * Soil.SoilWater.dlayer[j];
                 RootProperties.MinNO3ConcForUptake[j] = 0.0;
                 RootProperties.MinNH4ConcForUptake[j] = 0.0;
             }

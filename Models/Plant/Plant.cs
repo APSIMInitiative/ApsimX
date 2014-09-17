@@ -607,8 +607,10 @@ namespace Models.PMF
                 CanopyProperties.CanopyEmissivity = 0;
             }
 
-            RootProperties.KL = Soil.KL(Name);
-            RootProperties.LowerLimitDep = Soil.LL(Name);
+            SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
+
+            RootProperties.KL = soilCrop.KL;
+            RootProperties.LowerLimitDep = soilCrop.LL;
             RootProperties.RootDepth = 0;
             RootProperties.MaximumDailyNUptake = 0;
             RootProperties.KNO3 = Root.KNO3;

@@ -71,8 +71,8 @@
           </FactorValue>
         </FactorValue>
         <Paths>
-          <string>[Slurp1].localDemandNitrogen</string>
-          <string>[Slurp2].localDemandNitrogen</string>
+          <string>[Field].Slurp1.localDemandNitrogen</string>
+          <string>[Field].Slurp2.localDemandNitrogen</string>
         </Paths>
       </Factor>
     </Factors>
@@ -96,48 +96,6 @@
           <Name>Soil</Name>
           <Water>
             <Name>Water</Name>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </BD>
-            <AirDry>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
-            </AirDry>
-            <LL15>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </LL15>
-            <DUL>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-            </DUL>
-            <SAT>
-              <double>0.6</double>
-              <double>0.6</double>
-              <double>0.6</double>
-              <double>0.6</double>
-            </SAT>
-            <KS>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-              <double>100</double>
-            </KS>
             <SoilCrop>
               <Name>Slurp</Name>
               <LL>
@@ -201,6 +159,48 @@
                 <double>1</double>
               </XF>
             </SoilCrop>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </BD>
+            <AirDry>
+              <double>0.15</double>
+              <double>0.15</double>
+              <double>0.15</double>
+              <double>0.15</double>
+            </AirDry>
+            <LL15>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </LL15>
+            <DUL>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+              <double>0.55</double>
+            </DUL>
+            <SAT>
+              <double>0.6</double>
+              <double>0.6</double>
+              <double>0.6</double>
+              <double>0.6</double>
+            </SAT>
+            <KS>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+              <double>100</double>
+            </KS>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -475,9 +475,6 @@
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
-          <_standing_fraction>
-            <double>0</double>
-          </_standing_fraction>
           <ReportAdditions>no</ReportAdditions>
           <ReportRemovals>no</ReportRemovals>
           <ResidueTypes>
@@ -488,10 +485,21 @@
             <Name>TillageTypesList</Name>
             <TillageType />
           </TillageTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Wheat</PoolName>
+              <ResidueType>Wheat</ResidueType>
+              <Mass>0</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
           <PoolName>Wheat</PoolName>
           <type>Wheat</type>
           <mass>0</mass>
           <standing_fraction>0</standing_fraction>
+          <cpr />
           <cnr>80</cnr>
           <CriticalResidueWeight>2000</CriticalResidueWeight>
           <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -502,6 +510,7 @@
           <MinRainToLeach>10</MinRainToLeach>
           <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
           <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
@@ -635,6 +644,8 @@ namespace Models
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
+      <Area>0</Area>
+      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>Combined</Name>
@@ -642,11 +653,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Uptake N</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series1</Title>
@@ -676,11 +693,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Y axis title</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series1</Title>
@@ -710,11 +733,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Y axis title</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series1</Title>
@@ -744,11 +773,17 @@ namespace Models
         <Type>Bottom</Type>
         <Title>X axis title 2</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Y axis title</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series1</Title>

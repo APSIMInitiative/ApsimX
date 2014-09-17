@@ -9,6 +9,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Models;
 using Models.Core;
+using Models.Soils;
 
 namespace Models
 {
@@ -4546,6 +4547,8 @@ namespace Models
             p_soilNavailable = 0;
             double spDepth = 0;		 // depth before next soil layer
             int layer = 0;
+            SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
+                    
             for (layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
                 if (spDepth <= p_rootFrontier)
@@ -4554,7 +4557,7 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (Soil.SoilWater.sw_dep[layer] - Soil.LL(Name)[layer]) / (Soil.SoilWater.dul[layer] - Soil.LL(Name)[layer]);
+                    swaf = (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.dul[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     p_soilNavailable += (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
                     SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
@@ -4759,12 +4762,13 @@ namespace Models
         /// <returns></returns>
         private double SWUptakeProcess()
         {
+            SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
 
             //find out soil available water
             p_waterSupply = 0;
             for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
-                SWSupply[layer] = Math.Max(0.0, Soil.KL(Name)[layer] * (Soil.SoilWater.sw_dep[layer] - Soil.LL(Name)[layer] * (Soil.SoilWater.dlayer[layer])))
+                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer] * (Soil.SoilWater.dlayer[layer])))
                                 * LayerFractionForRoots(layer, p_rootFrontier);
                 if (layer < p_bottomRootLayer)
                     p_waterSupply += SWSupply[layer];

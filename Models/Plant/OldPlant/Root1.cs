@@ -792,9 +792,10 @@ namespace Models.PMF.OldPlant
             RootLength = new double[Soil.SoilWater.dlayer.Length];
             RootLengthSenesced = new double[Soil.SoilWater.dlayer.Length];
 
-            ll = Soil.Crop(Plant.Name).LL;
-            kl = Soil.Crop(Plant.Name).KL;
-            xf = Soil.Crop(Plant.Name).XF;
+            SoilCrop soilCrop = Soil.Crop(Plant.Name) as SoilCrop;
+            ll = soilCrop.LL;
+            kl = soilCrop.KL;
+            xf = soilCrop.XF;
 
             ll_dep = Utility.Math.Multiply(ll, Soil.SoilWater.dlayer);
             Util.ZeroArray(no3gsm_min);

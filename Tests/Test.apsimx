@@ -49,84 +49,6 @@
         <Name>Soil</Name>
         <Water>
           <Name>Water</Name>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1.02</double>
-            <double>1.03</double>
-            <double>1.02</double>
-            <double>1.02</double>
-            <double>1.06</double>
-            <double>1.11</double>
-            <double>1.12</double>
-            <double>1.15</double>
-            <double>1.18</double>
-            <double>1.2</double>
-            <double>1.25</double>
-          </BD>
-          <AirDry>
-            <double>0.15</double>
-            <double>0.26</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.3</double>
-            <double>0.31</double>
-            <double>0.32</double>
-            <double>0.33</double>
-            <double>0.34</double>
-            <double>0.35</double>
-            <double>0.36</double>
-          </AirDry>
-          <LL15>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.3</double>
-            <double>0.31</double>
-            <double>0.32</double>
-            <double>0.33</double>
-            <double>0.34</double>
-            <double>0.35</double>
-            <double>0.36</double>
-          </LL15>
-          <DUL>
-            <double>0.54</double>
-            <double>0.53</double>
-            <double>0.54</double>
-            <double>0.54</double>
-            <double>0.52</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.48</double>
-            <double>0.47</double>
-            <double>0.46</double>
-            <double>0.44</double>
-          </DUL>
-          <SAT>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.57</double>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.53</double>
-            <double>0.52</double>
-            <double>0.51</double>
-            <double>0.49</double>
-          </SAT>
           <SoilCrop>
             <Name>Wheat</Name>
             <LL>
@@ -253,6 +175,84 @@
               <double>0</double>
             </XF>
           </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.02</double>
+            <double>1.03</double>
+            <double>1.02</double>
+            <double>1.02</double>
+            <double>1.06</double>
+            <double>1.11</double>
+            <double>1.12</double>
+            <double>1.15</double>
+            <double>1.18</double>
+            <double>1.2</double>
+            <double>1.25</double>
+          </BD>
+          <AirDry>
+            <double>0.15</double>
+            <double>0.26</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.3</double>
+            <double>0.31</double>
+            <double>0.32</double>
+            <double>0.33</double>
+            <double>0.34</double>
+            <double>0.35</double>
+            <double>0.36</double>
+          </AirDry>
+          <LL15>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.3</double>
+            <double>0.31</double>
+            <double>0.32</double>
+            <double>0.33</double>
+            <double>0.34</double>
+            <double>0.35</double>
+            <double>0.36</double>
+          </LL15>
+          <DUL>
+            <double>0.54</double>
+            <double>0.53</double>
+            <double>0.54</double>
+            <double>0.54</double>
+            <double>0.52</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.48</double>
+            <double>0.47</double>
+            <double>0.46</double>
+            <double>0.44</double>
+          </DUL>
+          <SAT>
+            <double>0.59</double>
+            <double>0.58</double>
+            <double>0.59</double>
+            <double>0.58</double>
+            <double>0.57</double>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.53</double>
+            <double>0.52</double>
+            <double>0.51</double>
+            <double>0.49</double>
+          </SAT>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -770,11 +770,17 @@
       <Type>Bottom</Type>
       <Title />
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Axis>
       <Type>Left</Type>
       <Title />
       <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
     </Axis>
     <Series>
       <Title>rain</Title>
