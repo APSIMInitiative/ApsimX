@@ -10,8 +10,9 @@ using System.IO;
 namespace Models.PMF.Phen
 {
 	/// <summary>
-	/// The generic phase function in phenology. 
+	/// The base phase function in phenology. 
 	/// </summary>
+	/// \warning Do not use this function in \ref Models.PMF.Phen.Phenology "Phenology" function.
 	/// \pre All Phase functions have to be the children of \ref Models.PMF.Phen.Phenology "Phenology" function.
 	/// \param End The stage name of phase ending, which should be the same as the Start name 
 	/// in previous phase except the first phase.
@@ -23,6 +24,8 @@ namespace Models.PMF.Phen
 	/// \retval TTForToday The thermal time for today in current phase (&deg;Cd).
 	/// \retval FractionComplete The complete fraction in current phase (from 0 to 1).
 	/// <remarks>
+	/// This is a base function in phenology. \ref Models.PMF.Phen.Phenology "Phenology" function
+	/// will call \a DoTimeStep to calculate phenology development.
 	/// </remarks>
     [Serializable]
     abstract public class Phase : Model

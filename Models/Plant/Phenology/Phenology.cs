@@ -19,10 +19,50 @@ namespace Models.PMF.Phen
     /// <summary>
     /// Perform daily increase of phenology.
     /// </summary>
-    /// \retval CurrentPhaseName The current phase name
-    /// \retval Stage The number of current stage
+    /// \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" function 
+    /// should be included as the last child of 
+    /// \ref Models.PMF.Phen.Phenology "Phenology" function
+    /// \pre A Models.Clock "Clock" function has to exist.
+    /// \retval CurrentPhaseName The current phase name.
+    /// \retval CurrentStageName The current stage name. 
+    /// Return name of parameter \p Start of 
+    /// \ref Models.PMF.Phen.Phase "Phase" function 
+    /// on the day of phase starting, or ? in other days.
+    /// \retval Stage A one based stage number (start from 1).
+    /// \retval DaysAfterSowing The day after sowing. 
+    /// \retval FractionInCurrentPhase The fraction in current phase (0-1).
     /// <remarks>
+    /// Generally, the plant phenology is divided into \f$N_{p}\f$ 
+    /// phases (i.e. \ref Models.PMF.Phen.Phase "Phase" functions) and stages 
+    /// (children number of Phenology function, only count 
+    /// \ref Models.PMF.Phen.Phase "Phase" functions).
+    /// Any functions inherited from \ref Models.PMF.Phen.Phase "Phase" function 
+    /// could be used as children of Phenology function, except the last phase,
+    /// which should be the \ref Models.PMF.Phen.EndPhase "EndPhase" function.
     /// 
+    /// The stage names are defined by the \p Start and \p End parameters 
+    /// in each \ref Models.PMF.Phen.Phase "Phase" function. Consequently,
+    /// The parameter value of \p Start should equal to the parameter value
+    /// of \p End of previous \ref Models.PMF.Phen.Phase "Phase" function,
+    /// except for the first phase. The parameter value of \p End 
+    /// should equal to the parameter value of \p Start of next 
+    /// \ref Models.PMF.Phen.Phase "Phase" function, except for the last phase. 
+    /// 
+    /// The equality of stage and phase number raise from the last phase,
+    /// which is \ref Models.PMF.Phen.EndPhase "EndPhase" function and the 
+    /// \t End stage is unused.
+    /// 
+    /// Phenology function performs a daily time step function, get the current 
+    /// phase to do its development for the day. If thermal time is leftover after 
+    /// Phase is progressed, and the time step for the subsequent phase is calculated 
+    /// using leftover thermal time.
+	/// 
+    /// On commencing simulation and sowing,
+    /// \ref Models.PMF.Phen.Phenology "Phenology" function and all related 
+    /// \ref Models.PMF.Phen.Phase "Phase" functions will be reset.
+    /// On harvest, \ref Models.PMF.Phen.Phenology "Phenology" will 
+    /// jump to the last phase function i.e. \ref Models.PMF.Phen.EndPhase 
+    /// "EndPhase" function.
     /// </remarks>
     [Serializable]
     public class Phenology : Model
