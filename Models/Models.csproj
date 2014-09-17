@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="AgPasture.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
+    <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\Apsim.cs" />
     <Compile Include="Core\Attributes\BoundsAttribute.cs" />
     <Compile Include="Core\Attributes\SummaryAttribute.cs" />
