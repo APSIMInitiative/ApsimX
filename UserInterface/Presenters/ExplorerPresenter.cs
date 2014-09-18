@@ -412,6 +412,14 @@ namespace UserInterface.Presenters
             return valid;
         }
 
+        /// <summary>
+        /// Rename the current node.
+        /// </summary>
+        public void Rename()
+        {
+            this.view.RenameCurrentNode();
+        }
+
         #region Events from view
 
         /// <summary>

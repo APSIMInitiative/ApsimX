@@ -51,7 +51,14 @@ namespace UserInterface.Presenters
             this.dataStoreView.AutoExportClicked += OnAutoExportClicked;
 
             this.dataStoreView.Grid.ReadOnly = true;
-            this.dataStoreView.Grid.AutoFilterOn = true;
+
+            // MONO doesn't seem to like the auto filter option.
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                Environment.OSVersion.Platform == PlatformID.Win32Windows)
+            {
+                this.dataStoreView.Grid.AutoFilterOn = true;
+            }
+
             this.dataStoreView.Grid.NumericFormat = "N3";
             this.dataStoreView.TableNames = this.GetTableNames();
             this.dataStoreView.SimulationNames = this.dataStore.SimulationNames;

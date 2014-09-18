@@ -46,11 +46,22 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// User has clicked rename
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Rename", ShortcutKey = Keys.F2)]
+        public void OnRename(object sender, EventArgs e)
+        {
+            this.explorerPresenter.Rename();
+        }
+
+        /// <summary>
         /// User has clicked Copy
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Copy")]
+        [ContextMenu(MenuName = "Copy", ShortcutKey = Keys.Control | Keys.C)]
         public void OnCopyClick(object sender, EventArgs e)
         {
             Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
@@ -66,7 +77,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Paste")]
+        [ContextMenu(MenuName = "Paste", ShortcutKey = Keys.Control | Keys.V)]
         public void OnPasteClick(object sender, EventArgs e)
         {
             try
@@ -105,7 +116,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Delete")]
+        [ContextMenu(MenuName = "Delete", ShortcutKey = Keys.Delete)]
         public void OnDeleteClick(object sender, EventArgs e)
         {
             Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
@@ -268,35 +279,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Export" action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to HTML")]
-        public void ExportToHTML(object sender, EventArgs e)
-        {
-            string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
-            if (destinationFolder != null)
-            {
-                Model modelClicked = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                if (modelClicked != null)
-                {
-                    if (modelClicked is Simulations)
-                    {
-                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
-                        this.explorerPresenter.CommandHistory.Add(command, true);
-                    }
-                    else
-                    {
-                        string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
-
-                        Classes.PMFDocumentation.Go(fileName, modelClicked);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Run post simulation models.
         /// </summary>
         /// <param name="sender">Sender of the event</param>
@@ -381,5 +363,35 @@ namespace UserInterface.Presenters
                 Cursor.Current = Cursors.Default; 
             }
         }
+
+        /// <summary>
+        /// Event handler for a User interface "Export" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Export to HTML")]
+        public void ExportToHTML(object sender, EventArgs e)
+        {
+            string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
+            if (destinationFolder != null)
+            {
+                Model modelClicked = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+                if (modelClicked != null)
+                {
+                    if (modelClicked is Simulations)
+                    {
+                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
+                        this.explorerPresenter.CommandHistory.Add(command, true);
+                    }
+                    else
+                    {
+                        string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
+
+                        Classes.PMFDocumentation.Go(fileName, modelClicked);
+                    }
+                }
+            }
+        }
+
     }
 }
