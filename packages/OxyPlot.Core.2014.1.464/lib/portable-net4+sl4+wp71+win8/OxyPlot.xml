@@ -11306,6 +11306,13 @@
             <remarks>If this method is overridden, the <see cref="M:OxyPlot.Axes.Axis.Transform(System.Double)"/> method must also be overridden.
             See <see cref="T:OxyPlot.Axes.LogarithmicAxis"/> for examples on how to implement this.</remarks>
         </member>
+        <member name="M:OxyPlot.Axes.Axis.FormatValueOverride(System.Double)">
+            <summary>
+            Formats the value to be used on the axis.
+            </summary>
+            <param name="x">The value to format.</param>
+            <returns>The formatted value.</returns>
+        </member>
         <member name="M:OxyPlot.Axes.Axis.CalculateActualMaximum">
             <summary>
             Calculates the actual maximum value of the axis, including the <see cref="P:OxyPlot.Axes.Axis.MaximumPadding"/>.
@@ -11943,18 +11950,18 @@
             <param name="minorStep">The minor step.</param>
             <param name="title">The title.</param>
         </member>
-        <member name="M:OxyPlot.Axes.LinearAxis.FormatValue(System.Double)">
-            <summary>
-            Formats the value to be used on the axis.
-            </summary>
-            <param name="x">The value.</param>
-            <returns>The formatted value.</returns>
-        </member>
         <member name="M:OxyPlot.Axes.LinearAxis.IsXyAxis">
             <summary>
             Determines whether the axis is used for X/Y values.
             </summary>
             <returns><c>true</c> if it is an XY axis; otherwise, <c>false</c> .</returns>
+        </member>
+        <member name="M:OxyPlot.Axes.LinearAxis.FormatValueOverride(System.Double)">
+            <summary>
+            Formats the value to be used on the axis.
+            </summary>
+            <param name="x">The value to format.</param>
+            <returns>The formatted value.</returns>
         </member>
         <member name="P:OxyPlot.Axes.LinearAxis.FormatAsFractions">
             <summary>
@@ -12314,13 +12321,6 @@
             <param name="title">The title.</param>
             <param name="categories">The categories.</param>
         </member>
-        <member name="M:OxyPlot.Axes.CategoryAxis.FormatValue(System.Double)">
-            <summary>
-            Formats the value to be used on the axis.
-            </summary>
-            <param name="x">The value.</param>
-            <returns>The formatted value.</returns>
-        </member>
         <member name="M:OxyPlot.Axes.CategoryAxis.GetMaxWidth">
             <summary>
             Gets the maximum width of all category labels.
@@ -12446,6 +12446,13 @@
             Resets the current values.
             </summary>
             <remarks>The current values may be modified during update of max/min and rendering.</remarks>
+        </member>
+        <member name="M:OxyPlot.Axes.CategoryAxis.FormatValueOverride(System.Double)">
+            <summary>
+            Formats the value to be used on the axis.
+            </summary>
+            <param name="x">The value to format.</param>
+            <returns>The formatted value.</returns>
         </member>
         <member name="M:OxyPlot.Axes.CategoryAxis.UpdateLabels(System.Collections.Generic.IEnumerable{OxyPlot.Series.Series})">
             <summary>
@@ -12787,13 +12794,6 @@
             <param name="value">The date/time structure.</param>
             <returns>The number of days after the time origin.</returns>
         </member>
-        <member name="M:OxyPlot.Axes.DateTimeAxis.FormatValue(System.Double)">
-            <summary>
-            Formats the specified value by the axis' ActualStringFormat.
-            </summary>
-            <param name="x">The x.</param>
-            <returns>The formatted DateTime value</returns>
-        </member>
         <member name="M:OxyPlot.Axes.DateTimeAxis.GetTickValues(System.Collections.Generic.IList{System.Double}@,System.Collections.Generic.IList{System.Double}@,System.Collections.Generic.IList{System.Double}@)">
             <summary>
             Gets the tick values.
@@ -12815,6 +12815,13 @@
             Updates the intervals.
             </summary>
             <param name="plotArea">The plot area.</param>
+        </member>
+        <member name="M:OxyPlot.Axes.DateTimeAxis.FormatValueOverride(System.Double)">
+            <summary>
+            Formats the value to be used on the axis.
+            </summary>
+            <param name="x">The value to format.</param>
+            <returns>The formatted value.</returns>
         </member>
         <member name="M:OxyPlot.Axes.DateTimeAxis.CalculateActualInterval(System.Double,System.Double)">
             <summary>
@@ -13068,19 +13075,19 @@
             <param name="value">The value.</param>
             <returns>A time span.</returns>
         </member>
-        <member name="M:OxyPlot.Axes.TimeSpanAxis.FormatValue(System.Double)">
-            <summary>
-            Formats the value.
-            </summary>
-            <param name="x">The x.</param>
-            <returns>The format value.</returns>
-        </member>
         <member name="M:OxyPlot.Axes.TimeSpanAxis.GetValue(System.Double)">
             <summary>
             Gets the value from an axis coordinate, converts from double to the correct data type if necessary. e.g. DateTimeAxis returns the DateTime and CategoryAxis returns category strings.
             </summary>
             <param name="x">The coordinate.</param>
             <returns>The value.</returns>
+        </member>
+        <member name="M:OxyPlot.Axes.TimeSpanAxis.FormatValueOverride(System.Double)">
+            <summary>
+            Formats the value to be used on the axis.
+            </summary>
+            <param name="x">The value to format.</param>
+            <returns>The formatted value.</returns>
         </member>
         <member name="M:OxyPlot.Axes.TimeSpanAxis.CalculateActualInterval(System.Double,System.Double)">
             <summary>

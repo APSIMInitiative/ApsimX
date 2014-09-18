@@ -231,7 +231,8 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Save all changes.
         /// </summary>
-        public void Save()
+        /// <returns>True if file was saved.</returns>
+        public bool Save()
         {
             try
             {
@@ -240,39 +241,49 @@ namespace UserInterface.Presenters
                 this.HideRightHandPanel();
                 
                 if (this.ApsimXFile.FileName == null)
-                {
                     this.SaveAs();
-                }
 
-                this.ApsimXFile.Write(this.ApsimXFile.FileName);
+                if (this.ApsimXFile.FileName != null)
+                {
+                    this.ApsimXFile.Write(this.ApsimXFile.FileName);
+                    return true;
+                }
             }
             catch (Exception err)
             {
                 this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
             }
+
+            return false;
         }
 
         /// <summary>
         /// Save the current file under a different name.
         /// </summary>
-        public void SaveAs()
+        /// <returns>True if file was saved.</returns>
+        public bool SaveAs()
         {
             string newFileName = this.view.SaveAs(this.ApsimXFile.FileName);
             if (newFileName != null)
             {
                 try
                 {
-                    this.config.Settings.DelMruFile(this.ApsimXFile.FileName);
+                    if (this.ApsimXFile.FileName != null)
+                        this.config.Settings.DelMruFile(this.ApsimXFile.FileName);
+
                     this.config.Settings.AddMruFile(newFileName);
                     this.config.Save();
                     this.ApsimXFile.Write(newFileName);
                     this.view.ChangeTabText(Path.GetFileNameWithoutExtension(newFileName));
+                    return true;
                 }
                 catch (Exception err)
                 {
                     this.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
                 }
             }
+
+            return false;
         }
  
         /// <summary>

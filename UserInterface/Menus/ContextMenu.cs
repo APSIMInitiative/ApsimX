@@ -129,10 +129,12 @@ namespace UserInterface.Presenters
                      ShortcutKey = Keys.F5)]
         public void RunAPSIM(object sender, EventArgs e)
         {
-            this.explorerPresenter.Save();
-            Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-            this.command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
-            this.command.Do(null);
+            if (this.explorerPresenter.Save())
+            {
+                Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+                this.command = new Commands.RunCommand(this.explorerPresenter.ApsimXFile, model, this.explorerPresenter);
+                this.command.Do(null);
+            }
         }
 
         /// <summary>

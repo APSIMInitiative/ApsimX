@@ -50,7 +50,7 @@ namespace UserInterface.Views
             this.splitter.Visible = false;
             this.bottomPanel.Visible = false;
         }
-        
+
         /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)
         /// </summary>
@@ -780,6 +780,7 @@ namespace UserInterface.Views
         {
             plot1.Refresh();
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
+
             if (axis != null)
             {
                 return axis.ActualMinimum;

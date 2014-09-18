@@ -131,16 +131,6 @@ namespace Models
         }
 
         /// <summary>
-        /// DataStore has been loaded. Open the database.
-        /// </summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded()
-        {
-            Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            Filename = Path.ChangeExtension(simulations.FileName, ".db");
-        }
-
-        /// <summary>
         /// Destructor. Close our DB connection.
         /// </summary>
         ~DataStore()
@@ -600,6 +590,12 @@ namespace Models
         {
             lock (Locks)
             {
+                if (Filename == null)
+                {
+                    Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                    Filename = Path.ChangeExtension(simulations.FileName, ".db");
+                }
+
                 if (Filename != null && 
                     (Connection == null || 
                     (ForWriting == false && forWriting == true)))

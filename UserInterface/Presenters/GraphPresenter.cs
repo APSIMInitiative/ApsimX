@@ -691,6 +691,9 @@ namespace UserInterface.Presenters
 
                             double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom);
                             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
+                            double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
+                            double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
+
                             double[] regressionX = new double[] { minimumX, maximumX };
                             double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
                             graphView.DrawLineAndMarkers("", regressionX, regressionY,
@@ -698,8 +701,6 @@ namespace UserInterface.Presenters
                                                          Series.LineType.Solid, Series.MarkerType.None);
 
                             // Show the 1:1 line
-                            double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
-                            double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
                             double lowestAxisScale = Math.Min(minimumX, minimumY);
                             double largestAxisScale = Math.Max(maximumX, maximumY);
                             double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };

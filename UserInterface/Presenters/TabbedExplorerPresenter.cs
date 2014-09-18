@@ -134,7 +134,7 @@ namespace UserInterface.Presenters
             ExplorerView ExplorerView = new ExplorerView();
             ExplorerPresenter Presenter = new ExplorerPresenter();
             Presenters.Add(Presenter);
-
+            Presenter.Config = config;  // give it access to the configuration settings for MRU's
             XmlDocument Doc = new XmlDocument();
             Doc.LoadXml(contents);
             Simulations simulations = Simulations.Read(Doc.DocumentElement);
@@ -262,7 +262,12 @@ namespace UserInterface.Presenters
             initialPath = Path.GetFullPath(Path.Combine(initialPath, @"../Examples"));
 
             string FileName = View.AskUserForFileName( initialPath, "*.apsimx|*.apsimx");
-            OpenApsimXFileInTab(FileName);
+
+            if (FileName != null)
+            {
+                StreamReader reader = new StreamReader(FileName);
+                OpenApsimXFromMemoryInTab("", reader.ReadToEnd());
+            }
         }
     }
 }
