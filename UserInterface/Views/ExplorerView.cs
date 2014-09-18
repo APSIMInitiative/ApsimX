@@ -150,6 +150,14 @@ namespace UserInterface.Views
             TreeView.Nodes[0].Expand(); // expand the root tree node
         }
 
+        /// <summary>
+        /// Rename the current node.
+        /// </summary>
+        public void RenameCurrentNode()
+        {
+            this.TreeView.SelectedNode.BeginEdit();
+        }
+
         #region Tree node
 
         /// <summary>

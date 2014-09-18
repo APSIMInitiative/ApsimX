@@ -190,6 +190,11 @@ namespace UserInterface.Interfaces
         void AddRightHandView(UserControl Control);
 
         /// <summary>
+        /// Rename the current node.
+        /// </summary>
+        void RenameCurrentNode();
+
+        /// <summary>
         /// Ask about saving.
         /// </summary>
         /// <returns>-1, 0, 1</returns>
