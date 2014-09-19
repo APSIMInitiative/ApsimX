@@ -749,15 +749,19 @@ namespace UserInterface.Presenters
             {
                 foreach (Exception err in this.ApsimXFile.LoadErrors)
                 {
-                    string message;
+                    string message = string.Empty;
                     if (err is ApsimXException)
                     {
                         message = string.Format("[{0}]: {1}", (err as ApsimXException).model, err.Message);
                     }
                     else
                     {
-                        message = string.Format("{0}", err.Message + "\r\n" + err.StackTrace);
+                        if (!string.IsNullOrEmpty(err.Source) && err.Source != "mscorlib")
+                            message = "[" + err.Source + "]: ";
+                        message += string.Format("{0}", err.Message + "\r\n" + err.StackTrace);
                     }
+                    if (err.InnerException != null)
+                        message += "\r\n" + err.InnerException.Message;
 
                     this.view.ShowMessage(message, DataStore.ErrorLevel.Error);
                 }

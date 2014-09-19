@@ -106,6 +106,12 @@
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
+    <Compile Include="Utility\FindAndReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utility\FindAndReplaceForm.designer.cs">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormInsertHyperlink.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -309,6 +315,9 @@
     <Compile Include="Views\TabbedMetDataView.Designer.cs">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Utility\FindAndReplaceForm.resx">
+      <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormInsertHyperlink.resx">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
       <SubType>Designer</SubType>

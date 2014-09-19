@@ -290,7 +290,7 @@ namespace UserInterface.Presenters
         /// <param name="value">The value to set the property to</param>
         private void SetPropertyValue(VariableProperty property, object value)
         {
-            if (property.DataType.IsArray)
+            if (property.DataType.IsArray && value != null)
             {
                 string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (property.DataType == typeof(double[]))

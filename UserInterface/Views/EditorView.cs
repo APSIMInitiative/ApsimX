@@ -14,6 +14,7 @@
     using EventArguments;
     using ICSharpCode.TextEditor.Document;
     using ICSharpCode.TextEditor.Gui.InsightWindow;
+    using TextEditor;
 
 
     /// <summary>
@@ -72,6 +73,11 @@
         /// The completion form
         /// </summary>
         private Form CompletionForm;
+
+        /// <summary>
+        /// The find-and-replace form
+        /// </summary>
+        private FindAndReplaceForm _findForm = new FindAndReplaceForm();
 
         /// <summary>
         /// The completion list
@@ -140,7 +146,8 @@
             CompletionView.Columns.Add(col4);
             CompletionView.SmallImageList = imageList1;
 
-            TextBox.ActiveTextAreaControl.TextArea.KeyPress += this.OnKeyDown;
+            TextBox.ActiveTextAreaControl.TextArea.KeyPress += this.OnKeyPress;
+            TextBox.ActiveTextAreaControl.TextArea.KeyDown += this.OnKeyDown;
             IntelliSenseChars = ".";
             this.searchValue = string.Empty;
             timer1.Interval = 3000;
@@ -215,16 +222,53 @@
             HighlightingManager.Manager.AddSyntaxModeFileProvider(fsmProvider); // Attach to the text editor.
             TextBox.SetHighlighting(resourceName); // Activate the highlighting, use the name from the SyntaxDefinition node.
         }
-                
+
+        /// <summary>
+        /// Preprocesses key strokes. Similar to OnKeyPress, but allow function keys to be handled
+        /// </summary>
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Key arguments</param>
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F3)
+            {
+                if (string.IsNullOrEmpty(_findForm.LookFor))
+                {
+                    _findForm.ShowFor(TextBox, false);
+                    e.Handled = true;
+                }
+                else
+                {
+                    _findForm.FindNext(true, e.Shift,
+                        string.Format("Search text «{0}» not found.", _findForm.LookFor));
+                }
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = false;
+            }
+        }
+
         /// <summary>
         /// Preprocesses key strokes so that the ContextList can be displayed when needed. 
         /// </summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Key arguments</param>
-        private void OnKeyDown(object sender, KeyPressEventArgs e)
+        private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
+            if ((e.KeyChar == (char)6))
+            {
+                _findForm.ShowFor(TextBox, false);
+                e.Handled = true;
+            }
+            else if (e.KeyChar == (char)8)
+            {
+                _findForm.ShowFor(TextBox, true);
+                e.Handled = true;
+            }
             // If user one of the IntelliSenseChars, then display contextlist.
-            if (IntelliSenseChars.Contains(e.KeyChar) && ContextItemsNeeded != null)
+            else if (IntelliSenseChars.Contains(e.KeyChar) && ContextItemsNeeded != null)
             {
                 if (ShowCompletionWindow(e.KeyChar))
                 {
@@ -500,5 +544,114 @@
         {
             searchValue = string.Empty;
         }
+        #region Code related to Edit menu
+
+        /// <summary>Performs an action encapsulated in IEditAction.</summary>
+        /// <remarks>
+        /// There is an implementation of IEditAction for every action that 
+        /// the user can invoke using a shortcut key (arrow keys, Ctrl+X, etc.)
+        /// The editor control doesn't provide a public funciton to perform one
+        /// of these actions directly, so I wrote DoEditAction() based on the
+        /// code in TextArea.ExecuteDialogKey(). You can call ExecuteDialogKey
+        /// directly, but it is more fragile because it takes a Keys value (e.g.
+        /// Keys.Left) instead of the action to perform.
+        /// <para/>
+        /// Clipboard commands could also be done by calling methods in
+        /// editor.ActiveTextAreaControl.TextArea.ClipboardHandler.
+        /// </remarks>
+        private void DoEditAction(ICSharpCode.TextEditor.Actions.IEditAction action)
+        {
+            if (TextBox != null && action != null)
+            {
+                var area = TextBox.ActiveTextAreaControl.TextArea;
+                TextBox.BeginUpdate();
+                try
+                {
+                    lock (TextBox.Document)
+                    {
+                        action.Execute(area);
+                        if (area.SelectionManager.HasSomethingSelected && area.AutoClearSelection /*&& caretchanged*/)
+                        {
+                            if (area.Document.TextEditorProperties.DocumentSelectionMode == DocumentSelectionMode.Normal)
+                            {
+                                area.SelectionManager.ClearSelection();
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    TextBox.EndUpdate();
+                    area.Caret.UpdateCaretPosition();
+                }
+            }
+        }
+
+        // The following block comes from the example code provided at 
+        // http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
+        // I leave it here because it provides the handlers needed for a popup menu
+        // Currently find and replace functions are accessed via keystrokes (e.g, ctrl-F, F3)
+        /*
+        private void menuEditCut_Click(object sender, EventArgs e)
+        {
+            if (HaveSelection())
+                DoEditAction(new ICSharpCode.TextEditor.Actions.Cut());
+        }
+        private void menuEditCopy_Click(object sender, EventArgs e)
+        {
+            if (HaveSelection())
+                DoEditAction(new ICSharpCode.TextEditor.Actions.Copy());
+        }
+        private void menuEditPaste_Click(object sender, EventArgs e)
+        {
+            DoEditAction(new ICSharpCode.TextEditor.Actions.Paste());
+        }
+        private void menuEditDelete_Click(object sender, EventArgs e)
+        {
+            if (HaveSelection())
+                DoEditAction(new ICSharpCode.TextEditor.Actions.Delete());
+        }
+
+        private bool HaveSelection()
+        {
+            return TextBox.ActiveTextAreaControl.TextArea.SelectionManager.HasSomethingSelected;
+        }
+
+        private void menuEditFind_Click(object sender, EventArgs e)
+        {
+            _findForm.ShowFor(TextBox, true);
+        }
+
+        private void menuFindAgain_Click(object sender, EventArgs e)
+        {
+            _findForm.FindNext(true, false,
+                string.Format("Search text «{0}» not found.", _findForm.LookFor));
+        }
+        private void menuFindAgainReverse_Click(object sender, EventArgs e)
+        {
+            _findForm.FindNext(true, true,
+                string.Format("Search text «{0}» not found.", _findForm.LookFor));
+        }
+
+        private void menuToggleBookmark_Click(object sender, EventArgs e)
+        {
+                DoEditAction(new ICSharpCode.TextEditor.Actions.ToggleBookmark());
+                TextBox.IsIconBarVisible = TextBox.Document.BookmarkManager.Marks.Count > 0;
+        }
+
+        private void menuGoToNextBookmark_Click(object sender, EventArgs e)
+        {
+            DoEditAction(new ICSharpCode.TextEditor.Actions.GotoNextBookmark
+                (bookmark => true));
+        }
+
+        private void menuGoToPrevBookmark_Click(object sender, EventArgs e)
+        {
+            DoEditAction(new ICSharpCode.TextEditor.Actions.GotoPrevBookmark
+                (bookmark => true));
+        }
+        */ 
+
+        #endregion
     }
 }
