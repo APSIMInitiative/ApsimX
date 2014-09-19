@@ -82,6 +82,7 @@ namespace Models.Core
                     }
                     catch (Exception err)
                     {
+                        err.Source = child.Name;
                         simulations.LoadErrors.Add(err);
                     }
                 }
