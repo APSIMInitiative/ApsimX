@@ -10,9 +10,16 @@ namespace Models.PMF
     using System.Xml.Serialization;
     using Models.Core;
 
-    /// <summary>
+	/// <summary>
     /// Cultivar class for holding cultivar overrides.
     /// </summary>
+    /// <remarks>
+    /// A cultivar includes \p Aliases to indicate other common names
+    /// and \p Commands to specify genotypic parameters.
+    /// The format of \p Commands is "name=value". The "name" of parameter
+    /// should include the full path under Plant function,
+    /// e.g. [Phenology].Vernalisation.PhotopSens = 3.5.
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.CultivarView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
