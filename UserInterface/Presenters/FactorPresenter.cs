@@ -22,7 +22,7 @@ namespace UserInterface.Presenters
             FactorView = view as IEditorView;
             ExplorerPresenter = explorerPresenter;
 
-            FactorView.Lines = Factor.Paths.ToArray();
+            FactorView.Lines = Factor.Specifications.ToArray();
 
             FactorView.TextHasChangedByUser += OnTextHasChangedByUser;
             FactorView.ContextItemsNeeded += OnContextItemsNeeded;
@@ -74,7 +74,7 @@ namespace UserInterface.Presenters
 
             List<string> newPaths = new List<string>();
             newPaths.AddRange(FactorView.Lines);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Factor, "Paths", newPaths));
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Factor, "Specifications", newPaths));
 
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -85,7 +85,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelChanged(object changedModel)
         {
-            FactorView.Lines = Factor.Paths.ToArray();
+            FactorView.Lines = Factor.Specifications.ToArray();
         }
 
 

@@ -129,108 +129,68 @@
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Cultivar</Name>
-        <FactorValue>
-          <Name>Burbank</Name>
-          <FactorValue>
-            <Name>RussetBurbank</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>2.2</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>120</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>JerseyBenny</Name>
-          <FactorValue>
-            <Name>JerseyBenny</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>3.6</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>160</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>RedRascal</Name>
-          <FactorValue>
-            <Name>RedRascal</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>4.87</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>140</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Horizon</Name>
-          <FactorValue>
-            <Name>Horizon</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>3.2</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>135</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>IlamHardy</Name>
-          <FactorValue>
-            <Name>IlamHardy</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>4.63</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>135</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Karaka</Name>
-          <FactorValue>
-            <Name>Karaka</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>3</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>135</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Nooksac</Name>
-          <FactorValue>
-            <Name>Nooksac</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>2.3</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>165</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Rua</Name>
-          <FactorValue>
-            <Name>Rua</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>2.55</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>140</Name>
-          </FactorValue>
-        </FactorValue>
-        <Paths>
-          <string>[PotatoSowingRule].Script.CultivarName</string>
-          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber</string>
-          <string>[PotatoSowingRule].Script.PlantingDepth</string>
-        </Paths>
+        <Name>CultivarBurbank</Name>
+        <Specifications>
+          <string>[PotatoSowingRule].Script.CultivarName=RussetBurbank</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=2.2</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth=120</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>CultivarJerseyBenny</Name>
+        <Specifications>
+          <string>[PotatoSowingRule].Script.CultivarName=JerseyBenny</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=3.6</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth=160</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>CultivarRedRascal</Name>
+        <Specifications>
+          <string>[PotatoSowingRule].Script.CultivarName=RedRascal</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=4.87</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth=140</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>CultivarHorizon</Name>
+        <Specifications>
+          <string>[PotatoSowingRule].Script.CultivarName=Horizon</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=3.2</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth=135</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>CultivarIlamHardy</Name>
+        <Specifications>
+          <string>[PotatoSowingRule].Script.CultivarName=IlamHardy</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=4.63</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth=135</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>CultivarKaraka</Name>
+        <Specifications>
+          <string>[PotatoSowingRule].Script.CultivarName=Karaka</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=3</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth=135</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>CultivarNooksac</Name>
+        <Specifications>
+          <string>[PotatoSowingRule].Script.CultivarName=Nooksac</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=2.3</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth=165</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>CultivarRua</Name>
+        <Specifications>
+          <string>[PotatoSowingRule].Script.CultivarName=Rua</string>
+          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=2.55</string>
+          <string>[PotatoSowingRule].Script.PlantingDepth=140</string>
+        </Specifications>
       </Factor>
     </Factors>
     <Simulation>
@@ -395,7 +355,6 @@
             <CN2Bare>0</CN2Bare>
             <CNRed>-9E-05</CNRed>
             <CNCov>0</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -3998,82 +3957,52 @@ namespace Models
       <Name>Factors</Name>
       <Factor>
         <Name>Sowing</Name>
-        <FactorValue>
+        <Factor>
           <Name>14Oct</Name>
-          <FactorValue>
-            <Name>1998-10-14</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>200</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>3.0</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>34</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[PotatoSowingRule].Script.SowingDate=1998-10-14</string>
+            <string>[PotatoSowingRule].Script.PlantingDepth=200</string>
+            <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=3.0</string>
+            <string>[SetIntergerCropParameter].Script.OverRideInterger=34</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>2Nov</Name>
-          <FactorValue>
-            <Name>1998-11-02</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>160</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>3.8</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>28</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[PotatoSowingRule].Script.SowingDate=1998-11-02</string>
+            <string>[PotatoSowingRule].Script.PlantingDepth=160</string>
+            <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=3.8</string>
+            <string>[SetIntergerCropParameter].Script.OverRideInterger=28</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>23Nov</Name>
-          <FactorValue>
-            <Name>1998-11-23</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>120</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>5.7</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>20</Name>
-          </FactorValue>
-        </FactorValue>
-        <Paths>
-          <string>[PotatoSowingRule].Script.SowingDate</string>
-          <string>[PotatoSowingRule].Script.PlantingDepth</string>
-          <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber</string>
-          <string>[SetIntergerCropParameter].Script.OverRideInterger</string>
-        </Paths>
+          <Specifications>
+            <string>[PotatoSowingRule].Script.SowingDate=1998-11-23</string>
+            <string>[PotatoSowingRule].Script.PlantingDepth=120</string>
+            <string>[PotatoSowingRule].Script.StemNumberPerSeedTuber=5.7</string>
+            <string>[SetIntergerCropParameter].Script.OverRideInterger=20</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
       <Factor>
         <Name>Population</Name>
-        <FactorValue>
+        <Factor>
           <Name>4</Name>
-          <FactorValue>
-            <Name>300</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>770</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[PotatoSowingRule].Script.RowSpace=300</string>
+            <string>[PotatoSowingRule].Script.RowWidth=770</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>2</Name>
-          <FactorValue>
-            <Name>600</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>770</Name>
-          </FactorValue>
-        </FactorValue>
-        <Paths>
-          <string>[PotatoSowingRule].Script.RowSpace</string>
-          <string>[PotatoSowingRule].Script.RowWidth</string>
-        </Paths>
+          <Specifications>
+            <string>[PotatoSowingRule].Script.RowSpace=600</string>
+            <string>[PotatoSowingRule].Script.RowWidth=770</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
@@ -4292,7 +4221,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -7903,78 +7831,84 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Nitrogen</Name>
-        <FactorValue>
-          <Name>472</Name>
-          <Operations>
-            <Name>operations</Name>
-            <Operation>
-              <Date>2000-05-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(300, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-06-14T00:00:00</Date>
-              <Action>[Fertiliser].Apply(170, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>350</Name>
-          <Operations>
-            <Name>operations</Name>
-            <Operation>
-              <Date>2000-05-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(180, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-06-14T00:00:00</Date>
-              <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-07-10T00:00:00</Date>
-              <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-08-03T00:00:00</Date>
-              <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>242</Name>
-          <Operations>
-            <Name>operations</Name>
-            <Operation>
-              <Date>2000-05-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(180, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-06-14T00:00:00</Date>
-              <Action>[Fertiliser].Apply(46, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-07-10T00:00:00</Date>
-              <Action>[Fertiliser].Apply(46, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>0</Name>
-          <Operations>
-            <Name>operations</Name>
-            <Operation>
-              <Date>2000-05-02T00:00:00</Date>
-              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-06-14T00:00:00</Date>
-              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <Paths>
+        <Name>Nitrogen472</Name>
+        <Operations>
+          <Name>operations</Name>
+          <Operation>
+            <Date>2000-05-02T00:00:00</Date>
+            <Action>[Fertiliser].Apply(300, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-06-14T00:00:00</Date>
+            <Action>[Fertiliser].Apply(170, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
           <string>[operations]</string>
-        </Paths>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Nitrogen350</Name>
+        <Operations>
+          <Name>operations</Name>
+          <Operation>
+            <Date>2000-05-02T00:00:00</Date>
+            <Action>[Fertiliser].Apply(180, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-06-14T00:00:00</Date>
+            <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-07-10T00:00:00</Date>
+            <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-08-03T00:00:00</Date>
+            <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[operations]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Nitrogen242</Name>
+        <Operations>
+          <Name>operations</Name>
+          <Operation>
+            <Date>2000-05-02T00:00:00</Date>
+            <Action>[Fertiliser].Apply(180, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-06-14T00:00:00</Date>
+            <Action>[Fertiliser].Apply(46, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-07-10T00:00:00</Date>
+            <Action>[Fertiliser].Apply(46, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[operations]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Nitrogen0</Name>
+        <Operations>
+          <Name>operations</Name>
+          <Operation>
+            <Date>2000-05-02T00:00:00</Date>
+            <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-06-14T00:00:00</Date>
+            <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[operations]</string>
+        </Specifications>
       </Factor>
     </Factors>
     <Simulation>
@@ -8193,7 +8127,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -11779,64 +11712,67 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Nitrogen</Name>
-        <FactorValue>
-          <Name>368</Name>
-          <Operations>
-            <Name>operations</Name>
-            <Operation>
-              <Date>2004-05-10T00:00:00</Date>
-              <Action>[Fertiliser].Apply(230, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-07-17T00:00:00</Date>
-              <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-08-26T00:00:00</Date>
-              <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>253</Name>
-          <Operations>
-            <Name>operations</Name>
-            <Operation>
-              <Date>2004-05-10T00:00:00</Date>
-              <Action>[Fertiliser].Apply(115, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-07-17T00:00:00</Date>
-              <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-08-26T00:00:00</Date>
-              <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>0</Name>
-          <Operations>
-            <Name>operations</Name>
-            <Operation>
-              <Date>2004-05-10T00:00:00</Date>
-              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-07-17T00:00:00</Date>
-              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-08-26T00:00:00</Date>
-              <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <Paths>
+        <Name>Nitrogen368</Name>
+        <Operations>
+          <Name>operations</Name>
+          <Operation>
+            <Date>2004-05-10T00:00:00</Date>
+            <Action>[Fertiliser].Apply(230, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2004-07-17T00:00:00</Date>
+            <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2004-08-26T00:00:00</Date>
+            <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
           <string>[operations]</string>
-        </Paths>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Nitrogen253</Name>
+        <Operations>
+          <Name>operations</Name>
+          <Operation>
+            <Date>2004-05-10T00:00:00</Date>
+            <Action>[Fertiliser].Apply(115, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2004-07-17T00:00:00</Date>
+            <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2004-08-26T00:00:00</Date>
+            <Action>[Fertiliser].Apply(69, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[operations]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Nitrogen0</Name>
+        <Operations>
+          <Name>operations</Name>
+          <Operation>
+            <Date>2004-05-10T00:00:00</Date>
+            <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2004-07-17T00:00:00</Date>
+            <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2004-08-26T00:00:00</Date>
+            <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[operations]</string>
+        </Specifications>
       </Factor>
     </Factors>
     <Simulation>
@@ -12082,7 +12018,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -15704,106 +15639,112 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Fertiliser</Name>
-        <FactorValue>
-          <Name>300early</Name>
-          <Operations>
-            <Name>Fertiliser</Name>
-            <Operation>
-              <Date>1999-10-19T00:00:00</Date>
-              <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-12-01T00:00:00</Date>
-              <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>150early</Name>
-          <Operations>
-            <Name>Fertiliser</Name>
-            <Operation>
-              <Date>1999-10-19T00:00:00</Date>
-              <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>275split</Name>
-          <Operations>
-            <Name>Fertiliser</Name>
-            <Operation>
-              <Date>1999-10-19T00:00:00</Date>
-              <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-12-01T00:00:00</Date>
-              <Action>[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-12-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-01-17T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-01-21T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-01-24T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-01-31T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-02-07T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-02-14T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-02-21T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-02-28T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-03-06T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-03-13T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-03-20T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-03-27T00:00:00</Date>
-              <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
-            </Operation>
-          </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>Nil</Name>
-          <Operations>
-            <Name>Fertiliser</Name>
-          </Operations>
-        </FactorValue>
-        <Paths>
+        <Name>Fertiliser300early</Name>
+        <Operations>
+          <Name>Fertiliser</Name>
+          <Operation>
+            <Date>1999-10-19T00:00:00</Date>
+            <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-12-01T00:00:00</Date>
+            <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
           <string>[FertiliserApplications]</string>
-        </Paths>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Fertiliser150early</Name>
+        <Operations>
+          <Name>Fertiliser</Name>
+          <Operation>
+            <Date>1999-10-19T00:00:00</Date>
+            <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[FertiliserApplications]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Fertiliser275split</Name>
+        <Operations>
+          <Name>Fertiliser</Name>
+          <Operation>
+            <Date>1999-10-19T00:00:00</Date>
+            <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-12-01T00:00:00</Date>
+            <Action>[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-12-13T00:00:00</Date>
+            <Action>[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-01-17T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-01-21T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-01-24T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-01-31T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-02-07T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-02-14T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-02-21T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-02-28T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-03-06T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-03-13T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-03-20T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-03-27T00:00:00</Date>
+            <Action>[Fertiliser].Apply(13, Fertiliser.Types.UreaN, 10);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[FertiliserApplications]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>FertiliserNil</Name>
+        <Operations>
+          <Name>Fertiliser</Name>
+        </Operations>
+        <Specifications>
+          <string>[FertiliserApplications]</string>
+        </Specifications>
       </Factor>
     </Factors>
     <Simulation>
@@ -16022,7 +15963,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -19732,11 +19672,8 @@ namespace Models
       <Name>Factors</Name>
       <Factor>
         <Name>Sowing</Name>
-        <FactorValue>
+        <Factor>
           <Name>23Nov</Name>
-          <FactorValue>
-            <Name>2007-11-23</Name>
-          </FactorValue>
           <Operations>
             <Name>FertigationEvents</Name>
             <Operation>
@@ -19772,24 +19709,17 @@ namespace Models
               <Action>[Fertiliser].Apply(40, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
-          <FactorValue>
-            <Name>27</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>52</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>67</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>2008-03-05</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[PotatoSowingRule].Script.SowingDate=2007-11-23</string>
+            <string>[FertigationEvents]</string>
+            <string>[FertiliserRule].Script.Day1=27</string>
+            <string>[FertiliserRule].Script.Day2=52</string>
+            <string>[FertiliserRule].Script.Day3=67</string>
+            <string>[PotatoHarvestRule].Script.HarvestDate=2008-03-05</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>3Dec</Name>
-          <FactorValue>
-            <Name>2007-12-03</Name>
-          </FactorValue>
           <Operations>
             <Name>FertigationEvents</Name>
             <Operation>
@@ -19821,24 +19751,17 @@ namespace Models
               <Action>[Fertiliser].Apply(40, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
-          <FactorValue>
-            <Name>42</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>57</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>72</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>2008-04-14</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[PotatoSowingRule].Script.SowingDate=2007-12-03</string>
+            <string>[FertigationEvents]</string>
+            <string>[FertiliserRule].Script.Day1=42</string>
+            <string>[FertiliserRule].Script.Day2=57</string>
+            <string>[FertiliserRule].Script.Day3=72</string>
+            <string>[PotatoHarvestRule].Script.HarvestDate=2008-04-14</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>17Dec</Name>
-          <FactorValue>
-            <Name>2007-12-17</Name>
-          </FactorValue>
           <Operations>
             <Name>FertigationEvents</Name>
             <Operation>
@@ -19870,71 +19793,44 @@ namespace Models
               <Action>[Fertiliser].Apply(40, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
-          <FactorValue>
-            <Name>28</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>43</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>58</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>2008-04-14</Name>
-          </FactorValue>
-        </FactorValue>
-        <Paths>
-          <string>[PotatoSowingRule].Script.SowingDate</string>
-          <string>[FertigationEvents]</string>
-          <string>[FertiliserRule].Script.Day1</string>
-          <string>[FertiliserRule].Script.Day2</string>
-          <string>[FertiliserRule].Script.Day3</string>
-          <string>[PotatoHarvestRule].Script.HarvestDate</string>
-        </Paths>
+          <Specifications>
+            <string>[PotatoSowingRule].Script.SowingDate=2007-12-17</string>
+            <string>[FertigationEvents]</string>
+            <string>[FertiliserRule].Script.Day1=28</string>
+            <string>[FertiliserRule].Script.Day2=43</string>
+            <string>[FertiliserRule].Script.Day3=58</string>
+            <string>[PotatoHarvestRule].Script.HarvestDate=2008-04-14</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
       <Factor>
         <Name>Nitrogen</Name>
-        <FactorValue>
+        <Factor>
           <Name>lowN</Name>
-          <FactorValue>
-            <Name>0</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>0</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>0</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[FertiliserRule].Script.Fert1=0</string>
+            <string>[FertiliserRule].Script.Fert2=0</string>
+            <string>[FertiliserRule].Script.Fert3=0</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>medN</Name>
-          <FactorValue>
-            <Name>37</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>38</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>25</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[FertiliserRule].Script.Fert1=37</string>
+            <string>[FertiliserRule].Script.Fert2=38</string>
+            <string>[FertiliserRule].Script.Fert3=25</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>highN</Name>
-          <FactorValue>
-            <Name>75</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>75</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>50</Name>
-          </FactorValue>
-        </FactorValue>
-        <Paths>
-          <string>[FertiliserRule].Script.Fert1</string>
-          <string>[FertiliserRule].Script.Fert2</string>
-          <string>[FertiliserRule].Script.Fert3</string>
-        </Paths>
+          <Specifications>
+            <string>[FertiliserRule].Script.Fert1=75</string>
+            <string>[FertiliserRule].Script.Fert2=75</string>
+            <string>[FertiliserRule].Script.Fert3=50</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
@@ -20126,7 +20022,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>

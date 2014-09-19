@@ -258,7 +258,7 @@ namespace Models
 
         public object Get(string name)
         {
-            return Apsim.Get(this, name);
+            return Apsim.Get(this.Parent, name);
         }
         /// <summary>
         /// An event handler to allow us to initialise ourselves.

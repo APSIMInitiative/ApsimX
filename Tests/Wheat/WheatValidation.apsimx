@@ -34,25 +34,13 @@
       <Name>Factors</Name>
       <Factor>
         <Name>NRate</Name>
-        <FactorValue>
-          <Name>0</Name>
-        </FactorValue>
-        <FactorValue>
-          <Name>40</Name>
-        </FactorValue>
-        <FactorValue>
-          <Name>80</Name>
-        </FactorValue>
-        <FactorValue>
-          <Name>160</Name>
-        </FactorValue>
-        <Paths>
-          <string>[ApplyFertiliser].Script.Amount</string>
-        </Paths>
+        <Specifications>
+          <string>[ApplyFertiliser].Script.Amount=0,40,80,160</string>
+        </Specifications>
       </Factor>
       <Factor>
         <Name>Water</Name>
-        <FactorValue>
+        <Factor>
           <Name>Wet</Name>
           <Operations>
             <Name>IrrigationSchedule</Name>
@@ -129,8 +117,11 @@
               <Action>[Irrigation].Apply(amount:11);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Dry</Name>
           <Operations>
             <Name>IrrigationSchedule</Name>
@@ -139,10 +130,13 @@
               <Action>[Wheat].Sow(population:120, cultivar:"GattonHartog", depth:40, rowSpacing:250);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
+          <Specifications>
+            <string>[IrrigationSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Specifications>
           <string>[IrrigationSchedule]</string>
-        </Paths>
+        </Specifications>
       </Factor>
     </Factors>
     <Simulation>
@@ -165,30 +159,30 @@
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Wheat].Zadok.Stage</string>
-            <string>[Wheat].Phenology.CurrentStageName</string>
-            <string>[Wheat].AboveGround.Wt</string>
-            <string>[Wheat].AboveGround.N</string>
-            <string>[Wheat].Grain.Yield</string>
-            <string>[Wheat].Grain.Protein</string>
-            <string>[Wheat].Grain.Size</string>
-            <string>[Wheat].Grain.GrainNo</string>
-            <string>[Wheat].Grain.Wt</string>
-            <string>[Wheat].Grain.N</string>
-            <string>[Wheat].Leaf.LAI</string>
-            <string>[Wheat].Leaf.Live.Wt</string>
-            <string>[Wheat].Leaf.Live.N</string>
-            <string>[Wheat].Head.Wt</string>
-            <string>[Wheat].Head.N</string>
-            <string>[Wheat].Stem.Live.Wt</string>
-            <string>[Wheat].Stem.Live.N</string>
-            <string>[Wheat].Root.RootDepth</string>
-            <string>[Wheat].EP</string>
-            <string>[Wheat].SWStress.Photo</string>
-            <string>[Wheat].SWStress.Expansion</string>
-            <string>[Wheat].NStress.Photo</string>
-            <string>[Wheat].NStress.Expansion</string>
-            <string>[Wheat].Total.Wt</string>
+            <string>Wheat.Zadok.Stage</string>
+            <string>Wheat.Phenology.CurrentStageName</string>
+            <string>Wheat.AboveGround.Wt</string>
+            <string>Wheat.AboveGround.N</string>
+            <string>Wheat.Grain.Yield</string>
+            <string>Wheat.Grain.Protein</string>
+            <string>Wheat.Grain.Size</string>
+            <string>Wheat.Grain.GrainNo</string>
+            <string>Wheat.Grain.Wt</string>
+            <string>Wheat.Grain.N</string>
+            <string>Wheat.Leaf.LAI</string>
+            <string>Wheat.Leaf.Live.Wt</string>
+            <string>Wheat.Leaf.Live.N</string>
+            <string>Wheat.Head.Wt</string>
+            <string>Wheat.Head.N</string>
+            <string>Wheat.Stem.Live.Wt</string>
+            <string>Wheat.Stem.Live.N</string>
+            <string>Wheat.Root.RootDepth</string>
+            <string>Wheat.EP</string>
+            <string>Wheat.SWStress.Photo</string>
+            <string>Wheat.SWStress.Expansion</string>
+            <string>Wheat.NStress.Photo</string>
+            <string>Wheat.NStress.Expansion</string>
+            <string>Wheat.Total.Wt</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -403,7 +397,6 @@ namespace Models
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -917,8 +910,8 @@ namespace Models
       <Name>Factors</Name>
       <Factor>
         <Name>NRate</Name>
-        <FactorValue>
-          <Name>0</Name>
+        <Factor>
+          <Name>NRate0</Name>
           <Operations>
             <Name>ApplyFertiliser</Name>
             <Operation>
@@ -926,9 +919,12 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>40</Name>
+          <Specifications>
+            <string>[ApplyFertiliser]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>NRate40</Name>
           <Operations>
             <Name>ApplyFertiliser</Name>
             <Operation>
@@ -936,9 +932,12 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 40, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>80</Name>
+          <Specifications>
+            <string>[ApplyFertiliser]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>NRate80</Name>
           <Operations>
             <Name>ApplyFertiliser</Name>
             <Operation>
@@ -946,9 +945,12 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>120</Name>
+          <Specifications>
+            <string>[ApplyFertiliser]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>NRate120</Name>
           <Operations>
             <Name>ApplyFertiliser</Name>
             <Operation>
@@ -960,9 +962,12 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
-          <Name>160</Name>
+          <Specifications>
+            <string>[ApplyFertiliser]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>NRate160</Name>
           <Operations>
             <Name>ApplyFertiliser</Name>
             <Operation>
@@ -974,8 +979,11 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 120, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[ApplyFertiliser]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>360</Name>
           <Operations>
             <Name>ApplyFertiliser</Name>
@@ -992,10 +1000,9 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 120, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[ApplyFertiliser]</string>
-        </Paths>
+          <Specifications />
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
@@ -1018,30 +1025,30 @@ namespace Models
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Wheat].Zadok.Stage</string>
-            <string>[Wheat].Phenology.CurrentStageName</string>
-            <string>[Wheat].AboveGround.Wt</string>
-            <string>[Wheat].AboveGround.N</string>
-            <string>[Wheat].Grain.Yield</string>
-            <string>[Wheat].Grain.Protein</string>
-            <string>[Wheat].Grain.Size</string>
-            <string>[Wheat].Grain.GrainNo</string>
-            <string>[Wheat].Grain.Wt</string>
-            <string>[Wheat].Grain.N</string>
-            <string>[Wheat].Leaf.LAI</string>
-            <string>[Wheat].Leaf.Live.Wt</string>
-            <string>[Wheat].Leaf.Live.N</string>
-            <string>[Wheat].Head.Wt</string>
-            <string>[Wheat].Head.N</string>
-            <string>[Wheat].Stem.Live.Wt</string>
-            <string>[Wheat].Stem.Live.N</string>
-            <string>[Wheat].Root.RootDepth</string>
-            <string>[Wheat].EP</string>
-            <string>[Wheat].SWStress.Photo</string>
-            <string>[Wheat].SWStress.Expansion</string>
-            <string>[Wheat].NStress.Photo</string>
-            <string>[Wheat].NStress.Expansion</string>
-            <string>[Wheat].Total.Wt</string>
+            <string>Wheat.Zadok.Stage</string>
+            <string>Wheat.Phenology.CurrentStageName</string>
+            <string>Wheat.AboveGround.Wt</string>
+            <string>Wheat.AboveGround.N</string>
+            <string>Wheat.Grain.Yield</string>
+            <string>Wheat.Grain.Protein</string>
+            <string>Wheat.Grain.Size</string>
+            <string>Wheat.Grain.GrainNo</string>
+            <string>Wheat.Grain.Wt</string>
+            <string>Wheat.Grain.N</string>
+            <string>Wheat.Leaf.LAI</string>
+            <string>Wheat.Leaf.Live.Wt</string>
+            <string>Wheat.Leaf.Live.N</string>
+            <string>Wheat.Head.Wt</string>
+            <string>Wheat.Head.N</string>
+            <string>Wheat.Stem.Live.Wt</string>
+            <string>Wheat.Stem.Live.N</string>
+            <string>Wheat.Root.RootDepth</string>
+            <string>Wheat.EP</string>
+            <string>Wheat.SWStress.Photo</string>
+            <string>Wheat.SWStress.Expansion</string>
+            <string>Wheat.NStress.Photo</string>
+            <string>Wheat.NStress.Expansion</string>
+            <string>Wheat.Total.Wt</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -1209,7 +1216,6 @@ namespace Models
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1568,7 +1574,7 @@ namespace Models
       <Name>Factors</Name>
       <Factor>
         <Name>Stubble</Name>
-        <FactorValue>
+        <Factor>
           <Name>Bare</Name>
           <Operations>
             <Name>Bare</Name>
@@ -1577,8 +1583,11 @@ namespace Models
               <Action>[SurfaceOrganicMatter].Incorporate(fraction: 1.0, depth:100);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[OMSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Lucerne</Name>
           <Operations>
             <Name>Lucerne</Name>
@@ -1591,8 +1600,11 @@ namespace Models
               <Action>[SurfaceOrganicMatter].Incorporate(fraction: 1.0, depth:100);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[OMSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Straw</Name>
           <Operations>
             <Name>Straw</Name>
@@ -1605,14 +1617,15 @@ namespace Models
               <Action>[SurfaceOrganicMatter].Incorporate(fraction: 1.0, depth:100);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[OMSchedule]</string>
-        </Paths>
+          <Specifications>
+            <string>[OMSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
       <Factor>
         <Name>NRate</Name>
-        <FactorValue>
+        <Factor>
           <Name>000</Name>
           <Operations>
             <Name>0</Name>
@@ -1621,8 +1634,11 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[FertiliserSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>040</Name>
           <Operations>
             <Name>40</Name>
@@ -1631,8 +1647,11 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 40, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[FertiliserSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>080</Name>
           <Operations>
             <Name>80</Name>
@@ -1641,8 +1660,11 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[FertiliserSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>200</Name>
           <Operations>
             <Name>200</Name>
@@ -1655,10 +1677,11 @@ namespace Models
               <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.NO3N);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[FertiliserSchedule]</string>
-        </Paths>
+          <Specifications>
+            <string>[FertiliserSchedule]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
@@ -1681,30 +1704,30 @@ namespace Models
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Wheat].Zadok.Stage</string>
-            <string>[Wheat].Phenology.CurrentStageName</string>
-            <string>[Wheat].AboveGround.Wt</string>
-            <string>[Wheat].AboveGround.N</string>
-            <string>[Wheat].Grain.Yield</string>
-            <string>[Wheat].Grain.Protein</string>
-            <string>[Wheat].Grain.Size</string>
-            <string>[Wheat].Grain.GrainNo</string>
-            <string>[Wheat].Grain.Wt</string>
-            <string>[Wheat].Grain.N</string>
-            <string>[Wheat].Leaf.LAI</string>
-            <string>[Wheat].Leaf.Live.Wt</string>
-            <string>[Wheat].Leaf.Live.N</string>
-            <string>[Wheat].Head.Wt</string>
-            <string>[Wheat].Head.N</string>
-            <string>[Wheat].Stem.Live.Wt</string>
-            <string>[Wheat].Stem.Live.N</string>
-            <string>[Wheat].Root.RootDepth</string>
-            <string>[Wheat].EP</string>
-            <string>[Wheat].SWStress.Photo</string>
-            <string>[Wheat].SWStress.Expansion</string>
-            <string>[Wheat].NStress.Photo</string>
-            <string>[Wheat].NStress.Expansion</string>
-            <string>[Wheat].Total.Wt</string>
+            <string>Wheat.Zadok.Stage</string>
+            <string>Wheat.Phenology.CurrentStageName</string>
+            <string>Wheat.AboveGround.Wt</string>
+            <string>Wheat.AboveGround.N</string>
+            <string>Wheat.Grain.Yield</string>
+            <string>Wheat.Grain.Protein</string>
+            <string>Wheat.Grain.Size</string>
+            <string>Wheat.Grain.GrainNo</string>
+            <string>Wheat.Grain.Wt</string>
+            <string>Wheat.Grain.N</string>
+            <string>Wheat.Leaf.LAI</string>
+            <string>Wheat.Leaf.Live.Wt</string>
+            <string>Wheat.Leaf.Live.N</string>
+            <string>Wheat.Head.Wt</string>
+            <string>Wheat.Head.N</string>
+            <string>Wheat.Stem.Live.Wt</string>
+            <string>Wheat.Stem.Live.N</string>
+            <string>Wheat.Root.RootDepth</string>
+            <string>Wheat.EP</string>
+            <string>Wheat.SWStress.Photo</string>
+            <string>Wheat.SWStress.Expansion</string>
+            <string>Wheat.NStress.Photo</string>
+            <string>Wheat.NStress.Expansion</string>
+            <string>Wheat.Total.Wt</string>
             <string>[ExtraVariables].Script.MineralN</string>
             <string>[ExtraVariables].Script.TotalNO3</string>
             <string>[ExtraVariables].Script.TotalNH4</string>
@@ -1887,7 +1910,6 @@ namespace Models
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2477,7 +2499,7 @@ private void OnDoManagement(object sender, EventArgs e)
       <Name>Factors</Name>
       <Factor>
         <Name>NRate</Name>
-        <FactorValue>
+        <Factor>
           <Name>15</Name>
           <Operations>
             <Name>FertiliserOperations</Name>
@@ -2486,8 +2508,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Fertiliser].Apply(Amount: 15, Type: Fertiliser.Types.NO3N, Depth: 50);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[FertiliserOperations]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>60</Name>
           <Operations>
             <Name>FertiliserOperations</Name>
@@ -2496,14 +2521,15 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N, Depth: 50);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[FertiliserOperations]</string>
-        </Paths>
+          <Specifications>
+            <string>[FertiliserOperations]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
       <Factor>
         <Name>Water</Name>
-        <FactorValue>
+        <Factor>
           <Name>Dry</Name>
           <Operations>
             <Name>IrrigationOperations</Name>
@@ -2620,8 +2646,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply (amount:0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationOperations]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Wet</Name>
           <Operations>
             <Name>IrrigationOperations</Name>
@@ -2738,10 +2767,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply (amount:20);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[IrrigationOperations]</string>
-        </Paths>
+          <Specifications>
+            <string>[IrrigationOperations]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
@@ -2764,30 +2794,30 @@ private void OnDoManagement(object sender, EventArgs e)
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Wheat].Zadok.Stage</string>
-            <string>[Wheat].Phenology.CurrentStageName</string>
-            <string>[Wheat].AboveGround.Wt</string>
-            <string>[Wheat].AboveGround.N</string>
-            <string>[Wheat].Grain.Yield</string>
-            <string>[Wheat].Grain.Protein</string>
-            <string>[Wheat].Grain.Size</string>
-            <string>[Wheat].Grain.GrainNo</string>
-            <string>[Wheat].Grain.Wt</string>
-            <string>[Wheat].Grain.N</string>
-            <string>[Wheat].Leaf.LAI</string>
-            <string>[Wheat].Leaf.Live.Wt</string>
-            <string>[Wheat].Leaf.Live.N</string>
-            <string>[Wheat].Head.Wt</string>
-            <string>[Wheat].Head.N</string>
-            <string>[Wheat].Stem.Live.Wt</string>
-            <string>[Wheat].Stem.Live.N</string>
-            <string>[Wheat].Root.RootDepth</string>
-            <string>[Wheat].EP</string>
-            <string>[Wheat].SWStress.Photo</string>
-            <string>[Wheat].SWStress.Expansion</string>
-            <string>[Wheat].NStress.Photo</string>
-            <string>[Wheat].NStress.Expansion</string>
-            <string>[Wheat].Total.Wt</string>
+            <string>Wheat.Zadok.Stage</string>
+            <string>Wheat.Phenology.CurrentStageName</string>
+            <string>Wheat.AboveGround.Wt</string>
+            <string>Wheat.AboveGround.N</string>
+            <string>Wheat.Grain.Yield</string>
+            <string>Wheat.Grain.Protein</string>
+            <string>Wheat.Grain.Size</string>
+            <string>Wheat.Grain.GrainNo</string>
+            <string>Wheat.Grain.Wt</string>
+            <string>Wheat.Grain.N</string>
+            <string>Wheat.Leaf.LAI</string>
+            <string>Wheat.Leaf.Live.Wt</string>
+            <string>Wheat.Leaf.Live.N</string>
+            <string>Wheat.Head.Wt</string>
+            <string>Wheat.Head.N</string>
+            <string>Wheat.Stem.Live.Wt</string>
+            <string>Wheat.Stem.Live.N</string>
+            <string>Wheat.Root.RootDepth</string>
+            <string>Wheat.EP</string>
+            <string>Wheat.SWStress.Photo</string>
+            <string>Wheat.SWStress.Expansion</string>
+            <string>Wheat.NStress.Photo</string>
+            <string>Wheat.NStress.Expansion</string>
+            <string>Wheat.Total.Wt</string>
             <string />
           </VariableNames>
           <EventNames>
@@ -2976,7 +3006,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -3660,7 +3689,7 @@ private void OnDoManagement(object sender, EventArgs e)
       <Name>Factors</Name>
       <Factor>
         <Name>NRate</Name>
-        <FactorValue>
+        <Factor>
           <Name>0</Name>
           <Operations>
             <Name>FertiliserOperations</Name>
@@ -3669,8 +3698,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N, Depth: 50);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[FertiliserOperations]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>15</Name>
           <Operations>
             <Name>FertiliserOperations</Name>
@@ -3679,14 +3711,15 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Fertiliser].Apply(Amount: 15, Type: Fertiliser.Types.NO3N, Depth: 50);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[FertiliserOperations]</string>
-        </Paths>
+          <Specifications>
+            <string>[FertiliserOperations]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
       <Factor>
         <Name>Water</Name>
-        <FactorValue>
+        <Factor>
           <Name>Dry</Name>
           <Operations>
             <Name>IrrigationOperations</Name>
@@ -3803,8 +3836,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply (amount:0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationOperations]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>40</Name>
           <Operations>
             <Name>IrrigationOperations</Name>
@@ -3813,8 +3849,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply (amount:40);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationOperations]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>150</Name>
           <Operations>
             <Name>IrrigationOperations</Name>
@@ -3835,10 +3874,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply (amount:50);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[IrrigationOperations]</string>
-        </Paths>
+          <Specifications>
+            <string>[IrrigationOperations]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
@@ -3861,30 +3901,30 @@ private void OnDoManagement(object sender, EventArgs e)
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Wheat].Zadok.Stage</string>
-            <string>[Wheat].Phenology.CurrentStageName</string>
-            <string>[Wheat].AboveGround.Wt</string>
-            <string>[Wheat].AboveGround.N</string>
-            <string>[Wheat].Grain.Yield</string>
-            <string>[Wheat].Grain.Protein</string>
-            <string>[Wheat].Grain.Size</string>
-            <string>[Wheat].Grain.GrainNo</string>
-            <string>[Wheat].Grain.Wt</string>
-            <string>[Wheat].Grain.N</string>
-            <string>[Wheat].Leaf.LAI</string>
-            <string>[Wheat].Leaf.Live.Wt</string>
-            <string>[Wheat].Leaf.Live.N</string>
-            <string>[Wheat].Head.Wt</string>
-            <string>[Wheat].Head.N</string>
-            <string>[Wheat].Stem.Live.Wt</string>
-            <string>[Wheat].Stem.Live.N</string>
-            <string>[Wheat].Root.RootDepth</string>
-            <string>[Wheat].EP</string>
-            <string>[Wheat].SWStress.Photo</string>
-            <string>[Wheat].SWStress.Expansion</string>
-            <string>[Wheat].NStress.Photo</string>
-            <string>[Wheat].NStress.Expansion</string>
-            <string>[Wheat].Total.Wt</string>
+            <string>Wheat.Zadok.Stage</string>
+            <string>Wheat.Phenology.CurrentStageName</string>
+            <string>Wheat.AboveGround.Wt</string>
+            <string>Wheat.AboveGround.N</string>
+            <string>Wheat.Grain.Yield</string>
+            <string>Wheat.Grain.Protein</string>
+            <string>Wheat.Grain.Size</string>
+            <string>Wheat.Grain.GrainNo</string>
+            <string>Wheat.Grain.Wt</string>
+            <string>Wheat.Grain.N</string>
+            <string>Wheat.Leaf.LAI</string>
+            <string>Wheat.Leaf.Live.Wt</string>
+            <string>Wheat.Leaf.Live.N</string>
+            <string>Wheat.Head.Wt</string>
+            <string>Wheat.Head.N</string>
+            <string>Wheat.Stem.Live.Wt</string>
+            <string>Wheat.Stem.Live.N</string>
+            <string>Wheat.Root.RootDepth</string>
+            <string>Wheat.EP</string>
+            <string>Wheat.SWStress.Photo</string>
+            <string>Wheat.SWStress.Expansion</string>
+            <string>Wheat.NStress.Photo</string>
+            <string>Wheat.NStress.Expansion</string>
+            <string>Wheat.Total.Wt</string>
             <string>[ExtraVariables].Script.MineralN</string>
             <string>[ExtraVariables].Script.TotalNO3</string>
             <string>[ExtraVariables].Script.TotalNH4</string>
@@ -4075,7 +4115,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -4927,7 +4966,7 @@ private void OnDoManagement(object sender, EventArgs e)
       <Name>Factors</Name>
       <Factor>
         <Name>Irrig</Name>
-        <FactorValue>
+        <Factor>
           <Name>Control</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5008,8 +5047,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(41);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SpringD1</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5090,8 +5132,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(41);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SpringD2</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5172,8 +5217,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(41);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SpringD3</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5254,8 +5302,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(41);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SpringD4</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5336,8 +5387,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(41);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SummerD1</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5418,8 +5472,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SummerD2</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5500,8 +5557,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SummerD3</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5582,8 +5642,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SummerD4</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5664,8 +5727,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>SummerD5</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5746,8 +5812,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Nil</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5828,8 +5897,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>Half</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -5910,10 +5982,11 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Irrigation].Apply(0);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[IrrigationEvents]</string>
-        </Paths>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
@@ -6237,7 +6310,6 @@ public class Script : Model
             <CN2Bare>75</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -6476,30 +6548,30 @@ public class Script : Model
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Wheat].Zadok.Stage</string>
-            <string>[Wheat].Phenology.CurrentStageName</string>
-            <string>[Wheat].AboveGround.Wt</string>
-            <string>[Wheat].AboveGround.N</string>
-            <string>[Wheat].Grain.Yield</string>
-            <string>[Wheat].Grain.Protein</string>
-            <string>[Wheat].Grain.Size</string>
-            <string>[Wheat].Grain.GrainsPerGramStem</string>
-            <string>[Wheat].Grain.Wt</string>
-            <string>[Wheat].Grain.N</string>
-            <string>[Wheat].Leaf.LAI</string>
-            <string>[Wheat].Leaf.Live.Wt</string>
-            <string>[Wheat].Leaf.Live.N</string>
-            <string>[Wheat].Head.Wt</string>
-            <string>[Wheat].Head.N</string>
-            <string>[Wheat].Stem.Live.Wt</string>
-            <string>[Wheat].Stem.Live.N</string>
-            <string>[Wheat].Root.RootDepth</string>
-            <string>[Wheat].EP</string>
-            <string>[Wheat].SWStress.Photo</string>
-            <string>[Wheat].SWStress.Expansion</string>
-            <string>[Wheat].NStress.Photo</string>
-            <string>[Wheat].NStress.Expansion</string>
-            <string>[Wheat].Total.Wt</string>
+            <string>Wheat.Zadok.Stage</string>
+            <string>Wheat.Phenology.CurrentStageName</string>
+            <string>Wheat.AboveGround.Wt</string>
+            <string>Wheat.AboveGround.N</string>
+            <string>Wheat.Grain.Yield</string>
+            <string>Wheat.Grain.Protein</string>
+            <string>Wheat.Grain.Size</string>
+            <string>Wheat.Grain.GrainsPerGramStem</string>
+            <string>Wheat.Grain.Wt</string>
+            <string>Wheat.Grain.N</string>
+            <string>Wheat.Leaf.LAI</string>
+            <string>Wheat.Leaf.Live.Wt</string>
+            <string>Wheat.Leaf.Live.N</string>
+            <string>Wheat.Head.Wt</string>
+            <string>Wheat.Head.N</string>
+            <string>Wheat.Stem.Live.Wt</string>
+            <string>Wheat.Stem.Live.N</string>
+            <string>Wheat.Root.RootDepth</string>
+            <string>Wheat.EP</string>
+            <string>Wheat.SWStress.Photo</string>
+            <string>Wheat.SWStress.Expansion</string>
+            <string>Wheat.NStress.Photo</string>
+            <string>Wheat.NStress.Expansion</string>
+            <string>Wheat.Total.Wt</string>
             <string />
             <string />
             <string />
@@ -6764,7 +6836,7 @@ public class Script : Model
         <Name>Factors</Name>
         <Factor>
           <Name>Irrig</Name>
-          <FactorValue>
+          <Factor>
             <Name>Control</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -6845,8 +6917,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(41);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SpringD1</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -6927,8 +7000,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(41);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SpringD2</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7009,8 +7083,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(41);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SpringD3</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7091,8 +7166,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(41);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SpringD4</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7173,8 +7249,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(41);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SummerD1</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7255,8 +7332,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(0);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SummerD2</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7337,8 +7415,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(0);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SummerD3</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7419,8 +7498,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(0);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SummerD4</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7501,8 +7581,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(0);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>SummerD5</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7583,8 +7664,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(0);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>Nil</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7665,8 +7747,9 @@ public class Script : Model
                 <Action>[Irrigation].Apply(0);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <FactorValue>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>Half</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
@@ -7747,10 +7830,11 @@ public class Script : Model
                 <Action>[Irrigation].Apply(0);</Action>
               </Operation>
             </Operations>
-          </FactorValue>
-          <Paths>
+            <Specifications />
+          </Factor>
+          <Specifications>
             <string>[IrrigationEvents]</string>
-          </Paths>
+          </Specifications>
         </Factor>
       </Factors>
       <Simulation>
@@ -8074,7 +8158,6 @@ public class Script : Model
               <CN2Bare>75</CN2Bare>
               <CNRed>20</CNRed>
               <CNCov>0.8</CNCov>
-              <WaterTable>NaN</WaterTable>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -8313,30 +8396,30 @@ public class Script : Model
             <Name>Report</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>[Wheat].Zadok.Stage</string>
-              <string>[Wheat].Phenology.CurrentStageName</string>
-              <string>[Wheat].AboveGround.Wt</string>
-              <string>[Wheat].AboveGround.N</string>
-              <string>[Wheat].Grain.Yield</string>
-              <string>[Wheat].Grain.Protein</string>
-              <string>[Wheat].Grain.Size</string>
-              <string>[Wheat].Grain.GrainsPerGramStem</string>
-              <string>[Wheat].Grain.Wt</string>
-              <string>[Wheat].Grain.N</string>
-              <string>[Wheat].Leaf.LAI</string>
-              <string>[Wheat].Leaf.Live.Wt</string>
-              <string>[Wheat].Leaf.Live.N</string>
-              <string>[Wheat].Head.Wt</string>
-              <string>[Wheat].Head.N</string>
-              <string>[Wheat].Stem.Live.Wt</string>
-              <string>[Wheat].Stem.Live.N</string>
-              <string>[Wheat].Root.RootDepth</string>
-              <string>[Wheat].EP</string>
-              <string>[Wheat].SWStress.Photo</string>
-              <string>[Wheat].SWStress.Expansion</string>
-              <string>[Wheat].NStress.Photo</string>
-              <string>[Wheat].NStress.Expansion</string>
-              <string>[Wheat].Total.Wt</string>
+              <string>Wheat.Zadok.Stage</string>
+              <string>Wheat.Phenology.CurrentStageName</string>
+              <string>Wheat.AboveGround.Wt</string>
+              <string>Wheat.AboveGround.N</string>
+              <string>Wheat.Grain.Yield</string>
+              <string>Wheat.Grain.Protein</string>
+              <string>Wheat.Grain.Size</string>
+              <string>Wheat.Grain.GrainsPerGramStem</string>
+              <string>Wheat.Grain.Wt</string>
+              <string>Wheat.Grain.N</string>
+              <string>Wheat.Leaf.LAI</string>
+              <string>Wheat.Leaf.Live.Wt</string>
+              <string>Wheat.Leaf.Live.N</string>
+              <string>Wheat.Head.Wt</string>
+              <string>Wheat.Head.N</string>
+              <string>Wheat.Stem.Live.Wt</string>
+              <string>Wheat.Stem.Live.N</string>
+              <string>Wheat.Root.RootDepth</string>
+              <string>Wheat.EP</string>
+              <string>Wheat.SWStress.Photo</string>
+              <string>Wheat.SWStress.Expansion</string>
+              <string>Wheat.NStress.Photo</string>
+              <string>Wheat.NStress.Expansion</string>
+              <string>Wheat.Total.Wt</string>
               <string />
               <string />
               <string />
@@ -8603,7 +8686,7 @@ public class Script : Model
       <Name>Factors</Name>
       <Factor>
         <Name>Irrig</Name>
-        <FactorValue>
+        <Factor>
           <Name>01</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -8696,8 +8779,11 @@ public class Script : Model
               <Action>[Irrigation].Apply(41);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>03</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -8766,8 +8852,11 @@ public class Script : Model
               <Action>[Irrigation].Apply(41);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>05</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -8800,8 +8889,11 @@ public class Script : Model
               <Action>[Irrigation].Apply(40);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>06</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -8834,8 +8926,11 @@ public class Script : Model
               <Action>[Irrigation].Apply(7);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>07</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -8880,8 +8975,11 @@ public class Script : Model
               <Action>[Irrigation].Apply(30);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>08</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -8938,8 +9036,11 @@ public class Script : Model
               <Action>[Irrigation].Apply(24);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <FactorValue>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
           <Name>11</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
@@ -8956,10 +9057,11 @@ public class Script : Model
               <Action>[Irrigation].Apply(7);</Action>
             </Operation>
           </Operations>
-        </FactorValue>
-        <Paths>
-          <string>[IrrigationEvents]</string>
-        </Paths>
+          <Specifications>
+            <string>[IrrigationEvents]</string>
+          </Specifications>
+        </Factor>
+        <Specifications />
       </Factor>
     </Factors>
     <Simulation>
@@ -9249,7 +9351,6 @@ public class Script : Model
             <CN2Bare>75</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -9568,30 +9669,30 @@ public class Script : Model
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Wheat].Zadok.Stage</string>
-            <string>[Wheat].Phenology.CurrentStageName</string>
-            <string>[Wheat].AboveGround.Wt</string>
-            <string>[Wheat].AboveGround.N</string>
-            <string>[Wheat].Grain.Yield</string>
-            <string>[Wheat].Grain.Protein</string>
-            <string>[Wheat].Grain.Size</string>
-            <string>[Wheat].Grain.GrainsPerGramStem</string>
-            <string>[Wheat].Grain.Wt</string>
-            <string>[Wheat].Grain.N</string>
-            <string>[Wheat].Leaf.LAI</string>
-            <string>[Wheat].Leaf.Live.Wt</string>
-            <string>[Wheat].Leaf.Live.N</string>
-            <string>[Wheat].Head.Wt</string>
-            <string>[Wheat].Head.N</string>
-            <string>[Wheat].Stem.Live.Wt</string>
-            <string>[Wheat].Stem.Live.N</string>
-            <string>[Wheat].Root.RootDepth</string>
-            <string>[Wheat].EP</string>
-            <string>[Wheat].SWStress.Photo</string>
-            <string>[Wheat].SWStress.Expansion</string>
-            <string>[Wheat].NStress.Photo</string>
-            <string>[Wheat].NStress.Expansion</string>
-            <string>[Wheat].Total.Wt</string>
+            <string>Wheat.Zadok.Stage</string>
+            <string>Wheat.Phenology.CurrentStageName</string>
+            <string>Wheat.AboveGround.Wt</string>
+            <string>Wheat.AboveGround.N</string>
+            <string>Wheat.Grain.Yield</string>
+            <string>Wheat.Grain.Protein</string>
+            <string>Wheat.Grain.Size</string>
+            <string>Wheat.Grain.GrainsPerGramStem</string>
+            <string>Wheat.Grain.Wt</string>
+            <string>Wheat.Grain.N</string>
+            <string>Wheat.Leaf.LAI</string>
+            <string>Wheat.Leaf.Live.Wt</string>
+            <string>Wheat.Leaf.Live.N</string>
+            <string>Wheat.Head.Wt</string>
+            <string>Wheat.Head.N</string>
+            <string>Wheat.Stem.Live.Wt</string>
+            <string>Wheat.Stem.Live.N</string>
+            <string>Wheat.Root.RootDepth</string>
+            <string>Wheat.EP</string>
+            <string>Wheat.SWStress.Photo</string>
+            <string>Wheat.SWStress.Expansion</string>
+            <string>Wheat.NStress.Photo</string>
+            <string>Wheat.NStress.Expansion</string>
+            <string>Wheat.Total.Wt</string>
             <string>Evaluate sum([Soil].SoilWater.sw_dep) as TotalSW</string>
             <string />
           </VariableNames>

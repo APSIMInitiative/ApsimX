@@ -1,60 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using System.Xml.Serialization;
+﻿// -----------------------------------------------------------------------
+// <copyright file="FactorValue.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.Factorial
 {
-    [ValidParent(typeof(Factor))]
-    public class FactorValue : Model
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+
+    /// <summary>
+    /// This class represents a series of paths and the same number of object values.
+    /// Its sole purpose is to apply the object values to the model represented by the paths.
+    /// </summary>
+    public class FactorValue
     {
-        private List<string> FactorPaths;
-        private string FactorName;
+        /// <summary>
+        /// Name of factor value
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
-        /// Default constructor
+        /// The paths to the models.
         /// </summary>
-        public FactorValue() { }
+        private List<string> paths;
 
         /// <summary>
-        /// Constructor used by range FactorValues.
+        /// The values for each path.
         /// </summary>
-        public FactorValue(List<string> paths, string factorName)
+        private List<object> values;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FactorValue(string name, string path, object value)
         {
-            FactorPaths = paths;
-            FactorName = factorName;
+            this.Name = name;
+            this.paths = new List<string>();
+            paths.Add(path);
+            values = new List<object>();
+            this.values.Add(value);
         }
 
         /// <summary>
-        /// A FactorValue that is a range will return multiple FactorValue objects.
+        /// Constructor
         /// </summary>
-        public FactorValue[] CreateValues()
+        public FactorValue(string name, List<string> paths, List<object> values)
         {
-            // Grab the parent Factor name and paths.
-            FactorPaths = ParentFactor.Paths;
-            FactorName = ParentFactor.Name;
-            if (IsRange)
-            {
-                // Format of a range:
-                //    value1 to value2 step increment.
-                string[] rangeBits = Name.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                double from = Convert.ToDouble(rangeBits[0]);
-                double to = Convert.ToDouble(rangeBits[2]);
-                double step = Convert.ToDouble(rangeBits[4]);
-
-                List<FactorValue> newValues = new List<FactorValue>();
-                for (double value = from; value <= to; value += step)
-                {
-                    FactorValue newValue = new FactorValue(FactorPaths, FactorName);
-                    newValue.Name = value.ToString();
-                    newValues.Add(newValue);
-                }
-                return newValues.ToArray();
-            }
-            else
-                return new FactorValue[1] { this };
+            this.Name = name;
+            this.paths = paths;
+            this.values = values;
         }
 
         /// <summary>
@@ -62,48 +57,28 @@ namespace Models.Factorial
         /// </summary>
         public void ApplyToSimulation(Simulation newSimulation)
         {
-            if (FactorPaths.Count > 1 && FactorPaths.Count != Children.Count)
-                throw new ApsimXException(this, "The number of factor paths does not match the number of factor values");
+            if (paths.Count > 1 && paths.Count != values.Count)
+                throw new Exception("The number of factor paths does not match the number of factor values");
 
-            if (FactorPaths.Count == 1)
+            // Multiple child factor values specified - apply each one.
+            for (int i = 0; i != paths.Count; i++)
             {
-                if (Children != null && Children.Count > 1)
-                    throw new ApsimXException(this, "One factor path was specified with multiple child factor values.");
-
-                if (Children == null || Children.Count == 0)
-                    ApplyNameAsValue(newSimulation, FactorPaths[0], Name);
+                if (values[i] is string)
+                    ApplyStringAsValue(newSimulation, paths[i], values[i].ToString());
                 else
-                    ApplyModelReplacement(newSimulation, FactorPaths[0], Children[0]);
-            }
-            else if (Children != null)
-            {
-                // Multiple child factor values specified - apply each one.
-                for (int i = 0; i != FactorPaths.Count; i++)
-                {
-                    if (Children[i] is FactorValue)
-                    {
-                        FactorValue factorValue = Children[i] as FactorValue;
-                        if (factorValue != null)
-                            ApplyNameAsValue(newSimulation, FactorPaths[i], factorValue.Name);
-                        else
-                            ApplyModelReplacement(newSimulation, FactorPaths[i], factorValue.Children[0]);
-                    }
-                    else
-                        ApplyModelReplacement(newSimulation, FactorPaths[i], Children[i]);
+                    ApplyModelReplacement(newSimulation, paths[i], values[i] as IModel);
 
                     
-                }
             }
 
             string newSimulationName = newSimulation.Name;
-            AddToName(ref newSimulationName);
             newSimulation.Name = newSimulationName;
         }
 
         /// <summary>
         /// Use the name of this object as a value to insert into the specified 'newSimulation'
         /// </summary>
-        private void ApplyNameAsValue(Simulation newSimulation, string path, string name)
+        private static void ApplyStringAsValue(Simulation newSimulation, string path, string name)
         {
             object originalValue = newSimulation.Get(path);
             object newValue;
@@ -125,65 +100,21 @@ namespace Models.Factorial
         /// <summary>
         /// Replace the object specified by 'path' in 'newSimulation' with the specified 'value'
         /// </summary>
-        private void ApplyModelReplacement(Simulation newSimulation, string path, Model value)
+        private static void ApplyModelReplacement(Simulation newSimulation, string path, IModel value)
         {
-            Model newModel = Apsim.Clone(value) as Model;
-            Model modelToReplace = newSimulation.Get(path) as Model;
+            IModel newModel = Apsim.Clone(value);
+            IModel modelToReplace = newSimulation.Get(path) as IModel;
             if (modelToReplace == null)
-                throw new ApsimXException(this, "Cannot find model to replace. Model path: " + path);
+                throw new Exception("Cannot find model to replace. Model path: " + path);
 
-            int index = modelToReplace.Parent.Children.IndexOf(modelToReplace);
+            int index = modelToReplace.Parent.Children.IndexOf(modelToReplace as Model);
             if (index == -1)
-                throw new ApsimXException(this, "Cannot find model to replace. Model path: " + path);
+                throw new Exception("Cannot find model to replace. Model path: " + path);
 
             modelToReplace.Parent.Children.RemoveAt(index);
-            modelToReplace.Parent.Children.Insert(index, newModel);
+            modelToReplace.Parent.Children.Insert(index, newModel as Model);
             newModel.Name = modelToReplace.Name;
             newModel.Parent = modelToReplace.Parent;
         }
-
-        /// <summary>
-        /// Add this FactorValues name to the specified simulation.
-        /// </summary>
-        /// <param name="simulationName"></param>
-        public void AddToName(ref string simulationName)
-        {
-            simulationName += FactorName + Name;
-        }
-
-        /// <summary>
-        /// Return true if this FactorValue is a range.
-        /// </summary>
-        public bool IsRange 
-        { 
-            get 
-            { 
-                // Format of a range:
-                //    value1 to value2 step increment.
-
-                string[] rangeBits = Name.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (rangeBits.Length == 5 && 
-                    rangeBits[1].Equals("to", StringComparison.CurrentCultureIgnoreCase) &&
-                    rangeBits[3].Equals("step", StringComparison.CurrentCultureIgnoreCase))
-                    return true;
-                else
-                    return false;
-            } 
-        }
-
-        /// <summary>
-        /// Return the parent factor.
-        /// </summary>
-        private Factor ParentFactor
-        {
-            get
-            {
-                Factor parentFactor = this.Parent as Factor;
-                if (parentFactor == null)
-                    throw new ApsimXException(this, "Cannot find a parent factor");
-                return parentFactor;
-            }
-        }
-
     }
 }

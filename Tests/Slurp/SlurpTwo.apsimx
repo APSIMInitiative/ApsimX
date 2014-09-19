@@ -37,6 +37,27 @@
         <Name>Soil</Name>
         <Water>
           <Name>Water</Name>
+          <SoilCrop>
+            <Name>Slurp</Name>
+            <LL>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -79,27 +100,6 @@
             <double>100</double>
             <double>100</double>
           </KS>
-          <SoilCrop>
-            <Name>Slurp</Name>
-            <LL>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -167,7 +167,6 @@
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -338,9 +337,6 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -352,10 +348,21 @@
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Slurp</PoolName>
+            <ResidueType>Slurp</ResidueType>
+            <Mass>0</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
         <mass>0</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -366,6 +373,7 @@
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -510,18 +518,18 @@ namespace Models
         <Name>ReportOne</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Slurp].demandWater as demandWater</string>
-          <string>Evaluate sum([Slurp].uptakeWater[1:4]) as UptakeWater</string>
+          <string>Slurp.demandWater as demandWater</string>
+          <string>Evaluate sum(Slurp.uptakeWater[1:4]) as UptakeWater</string>
           <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
           <string>[Diffs].Script.diffSWDepUptake as deltaSWDep</string>
-          <string>[Slurp].demandNitrogen as demandNitrogen</string>
-          <string>Evaluate sum([Slurp].uptakeNitrogen[1:4]) as UptakeNitrogen</string>
-          <string>Evaluate sum([Slurp].uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
+          <string>Slurp.demandNitrogen as demandNitrogen</string>
+          <string>Evaluate sum(Slurp.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
+          <string>Evaluate sum(Slurp.uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
           <string>[Soil]SoilNitrogen.nh4</string>
           <string>[SOil]SoilNitrogen.no3</string>
-          <string>[Slurp].uptakeNitrogenPropNO3</string>
+          <string>Slurp.uptakeNitrogenPropNO3</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -536,15 +544,24 @@ namespace Models
         <Type>Bottom</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Right</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series1</Title>
@@ -628,6 +645,8 @@ namespace Models
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>SlurpTwo</Name>
@@ -649,48 +668,6 @@ namespace Models
         <Name>Soil</Name>
         <Water>
           <Name>Water</Name>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-          </BD>
-          <AirDry>
-            <double>0.15</double>
-            <double>0.15</double>
-            <double>0.15</double>
-            <double>0.15</double>
-          </AirDry>
-          <LL15>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-          </LL15>
-          <DUL>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.55</double>
-          </DUL>
-          <SAT>
-            <double>0.6</double>
-            <double>0.6</double>
-            <double>0.6</double>
-            <double>0.6</double>
-          </SAT>
-          <KS>
-            <double>100</double>
-            <double>100</double>
-            <double>100</double>
-            <double>100</double>
-          </KS>
           <SoilCrop>
             <Name>Slurp1</Name>
             <LL>
@@ -733,6 +710,48 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </BD>
+          <AirDry>
+            <double>0.15</double>
+            <double>0.15</double>
+            <double>0.15</double>
+            <double>0.15</double>
+          </AirDry>
+          <LL15>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </LL15>
+          <DUL>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.55</double>
+            <double>0.55</double>
+          </DUL>
+          <SAT>
+            <double>0.6</double>
+            <double>0.6</double>
+            <double>0.6</double>
+            <double>0.6</double>
+          </SAT>
+          <KS>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+          </KS>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -800,7 +819,6 @@ namespace Models
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -1007,9 +1025,6 @@ namespace Models
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
@@ -1021,10 +1036,21 @@ namespace Models
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>Slurp</PoolName>
+            <ResidueType>Slurp</ResidueType>
+            <Mass>0</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>Slurp</PoolName>
         <type>Slurp</type>
         <mass>0</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>80</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -1035,6 +1061,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -1150,12 +1177,12 @@ namespace Models
           <string>[Clock].Today</string>
           <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
           <string>[Diffs].Script.diffSWDepUptake</string>
-          <string>[Slurp1].demandWater</string>
-          <string>[Slurp2].demandWater</string>
-          <string>Evaluate sum([Slurp1].uptakeWater[1:4]) as Slurp1Uptake</string>
-          <string>Evaluate sum([Slurp2].uptakeWater[1:4]) as Slurp2Uptake</string>
-          <string>[Slurp1].uptakeWater[4]</string>
-          <string>[Slurp2].uptakeWater[4]</string>
+          <string>Slurp1.demandWater</string>
+          <string>Slurp2.demandWater</string>
+          <string>Evaluate sum(Slurp1.uptakeWater[1:4]) as Slurp1Uptake</string>
+          <string>Evaluate sum(Slurp2.uptakeWater[1:4]) as Slurp2Uptake</string>
+          <string>Slurp1.uptakeWater[4]</string>
+          <string>Slurp2.uptakeWater[4]</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1165,10 +1192,10 @@ namespace Models
         <Name>ReportNitrogen</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Slurp1].demandNitrogen as demandNitrogen1</string>
-          <string>[Slurp2].demandNitrogen as demandNitrogen2</string>
-          <string>Evaluate sum([Slurp1].uptakeNitrogen[1:4]) as Slurp1UptakeN</string>
-          <string>Evaluate sum([Slurp2].uptakeNitrogen[1:4]) as Slurp2UptakeN</string>
+          <string>Slurp1.demandNitrogen as demandNitrogen1</string>
+          <string>Slurp2.demandNitrogen as demandNitrogen2</string>
+          <string>Evaluate sum(Slurp1.uptakeNitrogen[1:4]) as Slurp1UptakeN</string>
+          <string>Evaluate sum(Slurp2.uptakeNitrogen[1:4]) as Slurp2UptakeN</string>
           <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake</string>
         </VariableNames>
@@ -1185,15 +1212,24 @@ namespace Models
         <Type>Bottom</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Right</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series1</Title>
@@ -1303,15 +1339,24 @@ namespace Models
         <Type>Bottom</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title />
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Right</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Series1</Title>
@@ -1415,6 +1460,8 @@ namespace Models
       </Series>
       <LegendPosition>TopRight</LegendPosition>
     </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
