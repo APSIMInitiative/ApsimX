@@ -1,8 +1,16 @@
-/// \mainpage APSIM API Documentation
+/// \mainpage Home
+/// The Agricultural Production Systems sIMulator (\link http://www.apsim.info/ APSIM\endlink) is 
+/// internationally recognised as a highly advanced simulator of 
+/// agricultural systems. It contains a suite of modules which enable 
+/// the simulation of systems that cover a range of plant, animal, soil, 
+/// climate and management interactions. APSIM is undergoing continual development, 
+/// with new capability added to regular releases of official versions. 
+/// Its development and maintenance is underpinned by rigorous science and 
+/// software engineering standards.
 /// \section Introduction
 /// This documentation provides the detail description about the science
 /// in the APSIM model.
-///
-/// \section Tutorials
-/// \ref tutorials
+/// \section related_pages Related pages
+/// - \subpage pathspecification "Path Specification"
+/// - \subpage tutorial "Tutorials"
 
