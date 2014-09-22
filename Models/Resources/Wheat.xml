@@ -28,7 +28,25 @@
     <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
     <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
     <Command>[Phenology].FloralInitiationToFlowering.Target = 630.0</Command>
-  </Cultivar>  
+  </Cultivar>
+  <Cultivar>
+    <Name>Spear</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+    <Command>[Phenology].FloralInitiationToFlowering.Target = 555.0</Command>
+    <Command>[Grain].GrainsPerGramStem = 20</Command>
+    <Command>[Grain].MaxGrainSize = 0.045</Command>
+    <Command>[Phenology].StartGrainFillToEndGrainFill.Target = 580</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Wilgoyne</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
+    <Command>[Phenology].FloralInitiationToFlowering.Target = 555.0</Command>
+    <Command>[Grain].GrainsPerGramStem = 20</Command>
+    <Command>[Grain].MaxGrainSize = 0.045</Command>
+    <Command>[Phenology].StartGrainFillToEndGrainFill.Target = 580</Command>
+  </Cultivar>
   <Population1>
     <Name>Population</Name>
     <PhaseBasedSwitch>
