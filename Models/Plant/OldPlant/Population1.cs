@@ -267,7 +267,30 @@ namespace Models.PMF.OldPlant
             }
         }
 
+public void KillCrop(double KillFraction)
+//=======================================================================================
+// Event Handler for Kill Crop Event
+   {
+   if (Plant.plant_status != "out")
+      {
+      //bound_check_real_var(scienceAPI, Kill.KillFraction, 0.0, 1.0, "KillFraction");
+      dlt_plants_death_external = dlt_plants_death_external - Density * KillFraction;
 
+      if (KillFraction > 0.0)
+         {
+         string msg= "Plant kill. ";
+          double KillPC = KillFraction*100;
+         msg = msg + KillPC.ToString("f2");
+         msg = msg + "% crop killed because of external action.";
+         Summary.WriteMessage(this,msg);
+         }
+      }
+   else
+      {
+      string msg = Plant.Name + " is not in the ground - unable to kill crop.";
+      Summary.WriteMessage(this,msg);
+      }
+   }
 
 
 

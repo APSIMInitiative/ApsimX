@@ -10,7 +10,12 @@
     <Name>GattonHartog</Name>
     <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
     <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-  </Cultivar>    
+  </Cultivar>
+  <Cultivar>
+    <Name>h45</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
+  </Cultivar>
   <Cultivar>
     <Name>Rongotea</Name>
     <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
