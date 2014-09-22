@@ -8814,7 +8814,9 @@ public class Script : Model
             <Action>[Irrigation].Apply(7);</Action>
           </Operation>
         </Operations>
-        <Specifications />
+        <Specifications>
+          <string>[IrrigationEvents]</string>
+        </Specifications>
       </Factor>
     </Factors>
     <Simulation>
