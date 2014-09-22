@@ -227,8 +227,7 @@ namespace UserInterface.Views
             }
             Node.ImageKey = Description.ResourceNameForImage;
             Node.SelectedImageKey = Description.ResourceNameForImage;
-            Node.Nodes.Clear();
-            if (Description.HasChildren)
+            if (Description.HasChildren && Node.Nodes.Count == 0)
                 Node.Nodes.Add("Loading...");
         }
 
@@ -676,6 +675,7 @@ namespace UserInterface.Views
         private void OnBeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             nodePathBeforeRename = CurrentNodePath;
+            TreeView.ContextMenuStrip = null;
             e.CancelEdit = false;
         }
 
@@ -684,6 +684,7 @@ namespace UserInterface.Views
         /// </summary>
         private void OnAfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
+            TreeView.ContextMenuStrip = this.PopupMenu;
             if (Rename != null && e.Label != null)
             {
                 NodeRenameArgs args = new NodeRenameArgs()

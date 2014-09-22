@@ -73,9 +73,9 @@
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>N0</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>0</Name>
           <Operation>
             <Date>1996-04-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
@@ -146,9 +146,9 @@
         </Specifications>
       </Factor>
       <Factor>
-        <Name>N1</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>1</Name>
           <Operation>
             <Date>1996-04-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
@@ -259,9 +259,9 @@
         </Specifications>
       </Factor>
       <Factor>
-        <Name>N2</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>2</Name>
           <Operation>
             <Date>1996-04-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
@@ -1722,9 +1722,9 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>N0</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>0</Name>
           <Operation>
             <Date>1998-04-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
@@ -1779,9 +1779,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>N1</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>1</Name>
           <Operation>
             <Date>1998-04-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
@@ -1916,9 +1916,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>N2</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>2</Name>
           <Operation>
             <Date>1998-04-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
@@ -3273,9 +3273,9 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>N0</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>0</Name>
           <Operation>
             <Date>1991-03-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
@@ -3306,9 +3306,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>N1</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>1</Name>
           <Operation>
             <Date>1991-02-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
@@ -3531,9 +3531,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>N2</Name>
+        <Name>N</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>2</Name>
           <Operation>
             <Date>1991-02-01T00:00:00</Date>
             <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>

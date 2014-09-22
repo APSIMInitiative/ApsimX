@@ -115,9 +115,9 @@
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>CoverStandingStubble</Name>
+        <Name>Cover</Name>
         <SurfaceOrganicMatter>
-          <Name>Stubble left by harvester</Name>
+          <Name>StandingStubble</Name>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -151,14 +151,8 @@
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Specifications>
-          <string>[SurfaceOrganicMatter]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>CoverHarvesterWindrow</Name>
         <SurfaceOrganicMatter>
-          <Name>Windrow left by harvester</Name>
+          <Name>HarvesterWindrow</Name>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -192,14 +186,8 @@
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Specifications>
-          <string>[SurfaceOrganicMatter]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>CoverMownStubble</Name>
         <SurfaceOrganicMatter>
-          <Name>Stubble mown and bailed</Name>
+          <Name>MownStubble</Name>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -233,14 +221,8 @@
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Specifications>
-          <string>[SurfaceOrganicMatter]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>CoverBareSoil</Name>
         <SurfaceOrganicMatter>
-          <Name>Stubble mown, bailed and cultivared</Name>
+          <Name>BareSoil</Name>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>

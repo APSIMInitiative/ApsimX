@@ -89,8 +89,10 @@ namespace Models.Factorial
                 for (int i = 0; i < paths.Count; i++)
                 {
                     string factorName;
-                    if (values[i] is IModel)
-                        factorName = Name;
+                    if (values[i] is IModel && (values[i] as IModel).Parent.Parent is Factor)
+                        factorName = Name;   // OLD - Need to remove.
+                    else if (values[i] is IModel)
+                        factorName = Name + (values[i] as IModel).Name;
                     else
                         factorName = Name + values[i].ToString();
 
