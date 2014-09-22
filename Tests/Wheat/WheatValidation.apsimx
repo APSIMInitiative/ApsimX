@@ -9723,77 +9723,89 @@ namespace Models
       <Name>Factors</Name>
       <Factor>
         <Name>Sow</Name>
-        <Factor>
+        <Operations>
           <Name>SpearEarly</Name>
-          <Operations>
-            <Name>SowingSchedule</Name>
-            <Operation>
-              <Date>1997-06-06T00:00:00</Date>
-              <Action>[Wheat].Sow(population:150, cultivar:"spear", depth:30, rowSpacing:250);</Action>
-            </Operation>
-          </Operations>
-          <Specifications>
-            <string>[SowingSchedule]</string>
-          </Specifications>
-        </Factor>
-        <Specifications />
+          <Operation>
+            <Date>1997-06-06T00:00:00</Date>
+            <Action>[Wheat].Sow(population:150, cultivar:"spear", depth:30, rowSpacing:250);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>SpearMid</Name>
+          <Operation>
+            <Date>1997-07-08T00:00:00</Date>
+            <Action>[Wheat].Sow(population:108, cultivar:"spear", depth:30, rowSpacing:250);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>WilgoyneEarly</Name>
+          <Operation>
+            <Date>1997-06-06T00:00:00</Date>
+            <Action>[Wheat].Sow(population:150, cultivar:"wilgoyne", depth:30, rowSpacing:250);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>WilgoyneMid</Name>
+          <Operation>
+            <Date>1997-07-08T00:00:00</Date>
+            <Action>[Wheat].Sow(population:108, cultivar:"wilgoyne", depth:30, rowSpacing:250);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>WilgoyneLate</Name>
+          <Operation>
+            <Date>1997-07-08T00:00:00</Date>
+            <Action>[Wheat].Sow(population:100, cultivar:"wilgoyne", depth:30, rowSpacing:250);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[SowingSchedule]</string>
+        </Specifications>
       </Factor>
       <Factor>
-        <Name>SowingN</Name>
+        <Name>SowN</Name>
         <Specifications>
           <string>[SowingFertiliser].Script.Amount=0,50</string>
         </Specifications>
       </Factor>
       <Factor>
-        <Name>TopdressN</Name>
+        <Name>TopN</Name>
         <Specifications>
           <string>[SowingFertiliser].Script.Amount=0,30</string>
         </Specifications>
       </Factor>
       <Factor>
-        <Name>Water</Name>
-        <Factor>
+        <Name>Irr</Name>
+        <Operations>
           <Name>Wet</Name>
-          <Operations>
-            <Name>IrrigationSchedule</Name>
-            <Operation>
-              <Date>1997-09-23T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:15);</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-10-01T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:15);</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-10-06T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:15);</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-10-14T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:20);</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-10-21T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:17.5);</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-10-26T00:00:00</Date>
-              <Action>[Irrigation].Apply(amount:17.5);</Action>
-            </Operation>
-          </Operations>
-          <Specifications>
-            <string>[IrrigationSchedule]</string>
-          </Specifications>
-        </Factor>
-        <Factor>
+          <Operation>
+            <Date>1997-09-23T00:00:00</Date>
+            <Action>[Irrigation].Apply(amount:15);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-01T00:00:00</Date>
+            <Action>[Irrigation].Apply(amount:15);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-06T00:00:00</Date>
+            <Action>[Irrigation].Apply(amount:15);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-14T00:00:00</Date>
+            <Action>[Irrigation].Apply(amount:20);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-21T00:00:00</Date>
+            <Action>[Irrigation].Apply(amount:17.5);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-26T00:00:00</Date>
+            <Action>[Irrigation].Apply(amount:17.5);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
           <Name>Dry</Name>
-          <Operations>
-            <Name>IrrigationSchedule</Name>
-          </Operations>
-          <Specifications>
-            <string>[IrrigationSchedule]</string>
-          </Specifications>
-        </Factor>
+        </Operations>
         <Specifications>
           <string>[IrrigationSchedule]</string>
         </Specifications>
@@ -9811,7 +9823,7 @@ namespace Models
       </Summary>
       <WeatherFile>
         <Name>WeatherFile</Name>
-        <FileName>C:\ApsimX\Tests\Wheat\Cunderdin.met</FileName>
+        <FileName>Cunderdin.met</FileName>
       </WeatherFile>
       <Zone>
         <Name>paddock</Name>
@@ -9846,13 +9858,9 @@ namespace Models
             <string>[ExtraVariables].Script.MineralN</string>
             <string>[ExtraVariables].Script.TotalNO3</string>
             <string>[ExtraVariables].Script.TotalNH4</string>
-            <string />
-            <string />
-            <string />
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
-            <string />
           </EventNames>
         </Report>
         <Irrigation>
@@ -10095,9 +10103,9 @@ namespace Models
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>NaN</slope>
-            <discharge_width>NaN</discharge_width>
-            <catchment_area>NaN</catchment_area>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
             <eo_source />
             <max_pond>0</max_pond>
             <CN2Bare>25</CN2Bare>
@@ -10141,6 +10149,25 @@ namespace Models
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <KLAT>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KLAT>
           </SoilWater>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -10310,6 +10337,44 @@ namespace Models
               <double>200</double>
               <double>200</double>
             </Thickness>
+            <NO3>
+              <double>23</double>
+              <double>23</double>
+              <double>12</double>
+              <double>9</double>
+              <double>4</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+              <double>2</double>
+            </NO3>
+            <NH4>
+              <double>2</double>
+              <double>2</double>
+              <double>1</double>
+              <double>2</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </NH4>
             <SW>
               <double>0.034</double>
               <double>0.156</double>
@@ -10329,12 +10394,169 @@ namespace Models
               <double>0.145</double>
               <double>0.145</double>
             </SW>
+            <OC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </OC>
+            <EC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </EC>
+            <CL>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </CL>
+            <ESP>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </ESP>
+            <PH>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </PH>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
             <SWUnits>Volumetric</SWUnits>
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
+            <oc>
+              <double>0.72352640308603</double>
+              <double>0.72301158556202039</double>
+              <double>0.45528010944098596</double>
+              <double>0.387092498436611</double>
+              <double>0.29950113221038871</double>
+              <double>0.21999754370504637</double>
+              <double>0.19001057362088997</double>
+              <double>0.18998552523739173</double>
+              <double>0.099964977125739443</double>
+              <double>0.099968106112963959</double>
+              <double>0.099990261202082154</double>
+              <double>0.10001425103904392</double>
+              <double>0.10000482680173992</double>
+              <double>0.10000034929500608</double>
+              <double>0.10000004452705698</double>
+              <double>0.10000011874242137</double>
+              <double>0.099999927332399569</double>
+            </oc>
+          </SoilNitrogen>
           <RecordNumber>0</RecordNumber>
           <SoilType>heavy
 </SoilType>
@@ -10346,19 +10568,23 @@ namespace Models
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
         </Soil>
-        <Fertiliser>
-          <Name>Fertiliser</Name>
-        </Fertiliser>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
+          <PondActive>no</PondActive>
+          <ReportAdditions>no</ReportAdditions>
+          <ReportRemovals>no</ReportRemovals>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
+          <TillageTypes>
+            <Name>TillageTypesList</Name>
+            <TillageType />
+          </TillageTypes>
           <Pools>
             <Pool>
               <PoolName>wheat_stubble</PoolName>
-              <ResidueType>Wheat</ResidueType>
+              <ResidueType>wheat</ResidueType>
               <Mass>500</Mass>
               <CNRatio>120</CNRatio>
               <CPRatio>0</CPRatio>
@@ -10366,7 +10592,7 @@ namespace Models
             </Pool>
           </Pools>
           <PoolName>wheat_stubble</PoolName>
-          <type>Wheat</type>
+          <type>wheat</type>
           <mass>500</mass>
           <standing_fraction>0</standing_fraction>
           <cpr>0</cpr>
@@ -10384,6 +10610,9 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+        </Fertiliser>
         <Plant15>
           <Name>Wheat</Name>
           <ResourceName>Wheat</ResourceName>
@@ -10705,6 +10934,47 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
+    <Graph>
+      <Name>Biomass</Name>
+      <Title>APS26 Predicted vs Observed Biomass</Title>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+    </Graph>
   </Experiment>
   <Graph>
     <Name>Yield</Name>
