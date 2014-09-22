@@ -106,7 +106,7 @@ namespace UserInterface.Views
             this.plot1.Model.DefaultFontSize = FontSize;
 
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
-            this.plot1.Model.PlotMargins = new OxyThickness(100, TopMargin, 100, TopMargin);
+            //this.plot1.Model.PlotMargins = new OxyThickness(100, TopMargin, 100, TopMargin);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
             this.plot1.Model.LegendBackground = OxyColors.White;
             this.plot1.Model.InvalidatePlot(true);

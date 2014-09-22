@@ -53,11 +53,12 @@
             this.splitContainer1.Panel1.Controls.Add(this.ProfileGrid);
             this.splitContainer1.Panel1.Controls.Add(this.splitter1);
             this.splitContainer1.Panel1.Controls.Add(this.PropertyGrid);
+            this.splitContainer1.Panel1MinSize = 300;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Graph);
-            this.splitContainer1.Panel2MinSize = 600;
+            this.splitContainer1.Panel2MinSize = 100;
             this.splitContainer1.Size = new System.Drawing.Size(899, 649);
             this.splitContainer1.SplitterDistance = 41;
             this.splitContainer1.SplitterWidth = 5;
@@ -106,6 +107,7 @@
             // Graph
             // 
             this.Graph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Graph.LeftRightPadding = 0;
             this.Graph.Location = new System.Drawing.Point(0, 0);
             this.Graph.Margin = new System.Windows.Forms.Padding(4);
             this.Graph.Name = "Graph";
