@@ -227,8 +227,18 @@ namespace UserInterface.Views
             }
             Node.ImageKey = Description.ResourceNameForImage;
             Node.SelectedImageKey = Description.ResourceNameForImage;
-            if (Description.HasChildren && Node.Nodes.Count == 0)
-                Node.Nodes.Add("Loading...");
+            if (Description.HasChildren)
+            {
+                if (Node.Nodes.Count == 0)
+                {
+                    Node.Nodes.Add("Loading...");
+                    Node.Collapse();
+                }
+            }
+            else
+            {
+                Node.Nodes.Clear();
+            }
         }
 
         /// <summary>
