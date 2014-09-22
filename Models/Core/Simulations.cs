@@ -302,9 +302,10 @@ namespace Models.Core
             {
                 foreach (Simulation simulation in simulationsToRun)
                 {
-                    simulation.Commencing -= OnSimulationCommencing;
-                    simulation.Commencing += OnSimulationCommencing;
-                    jobManager.AddJob(simulation);
+                    Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
+                    clonedSimulation.Commencing -= OnSimulationCommencing;
+                    clonedSimulation.Commencing += OnSimulationCommencing;
+                    jobManager.AddJob(clonedSimulation);
                 }
             }
         }

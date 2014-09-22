@@ -7,6 +7,7 @@ using Models;
 using System.Reflection;
 using UserInterface.EventArguments;
 using Models.Core;
+using Models.Factorial;
 
 namespace UserInterface.Presenters
 {
@@ -87,14 +88,20 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            object o = Apsim.Get(Operations, e.ObjectName);
-
-            if (o == null)
-                o = Apsim.Find(Operations, e.ObjectName);
-
-            if (o != null)
+            if (Operations.Parent is Factor)
             {
-                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true));
+            }
+            else
+            {
+                object o = Apsim.Get(Operations, e.ObjectName);
+
+                if (o == null)
+                    o = Apsim.Find(Operations, e.ObjectName);
+
+                if (o != null)
+                {
+                    e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true));
+                }
             }
         }
 

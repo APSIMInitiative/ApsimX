@@ -166,7 +166,7 @@ namespace Models.Factorial
             Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
             if (experiment != null)
             {
-                IModel modelToReplace = Apsim.Get(experiment, specification) as IModel;
+                IModel modelToReplace = Apsim.Get(experiment.BaseSimulation, specification) as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
 

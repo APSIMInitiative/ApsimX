@@ -72,6 +72,7 @@ namespace Models.PMF.OldPlant
 
         public bool AutoHarvest { get; set; }
 
+        [XmlIgnore]
         public SowPlant2Type SowingData;
 
         public string CropType { get; set; }
