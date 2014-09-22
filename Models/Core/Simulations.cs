@@ -181,7 +181,10 @@ namespace Models.Core
             if (parent is Experiment)
                 simulations.AddRange((parent as Experiment).Create());
             else if (parent is Simulation)
-                simulations.Add(parent as Simulation);
+            {
+                Simulation clonedSim = Apsim.Clone(parent) as Simulation;
+                simulations.Add(clonedSim);
+            }
             else
             {
                 // Look for simulations.
@@ -190,7 +193,10 @@ namespace Models.Core
                     if (model is Experiment)
                         simulations.AddRange((model as Experiment).Create());
                     else if (model is Simulation && !(model.Parent is Experiment))
-                        simulations.Add(model as Simulation);
+                    {
+                        Simulation clonedSim = Apsim.Clone(model) as Simulation;
+                        simulations.Add(clonedSim);
+                    }
                 }
             }
             // Make sure each simulation has it's filename set correctly.
@@ -302,10 +308,9 @@ namespace Models.Core
             {
                 foreach (Simulation simulation in simulationsToRun)
                 {
-                    Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
-                    clonedSimulation.Commencing -= OnSimulationCommencing;
-                    clonedSimulation.Commencing += OnSimulationCommencing;
-                    jobManager.AddJob(clonedSimulation);
+                    simulation.Commencing -= OnSimulationCommencing;
+                    simulation.Commencing += OnSimulationCommencing;
+                    jobManager.AddJob(simulation);
                 }
             }
         }
