@@ -7831,9 +7831,9 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Nitrogen472</Name>
+        <Name>Nitrogen</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>472</Name>
           <Operation>
             <Date>2000-05-02T00:00:00</Date>
             <Action>[Fertiliser].Apply(300, Fertiliser.Types.UreaN, 10);</Action>
@@ -7848,9 +7848,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>Nitrogen350</Name>
+        <Name>Nitrogen</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>350</Name>
           <Operation>
             <Date>2000-05-02T00:00:00</Date>
             <Action>[Fertiliser].Apply(180, Fertiliser.Types.UreaN, 10);</Action>
@@ -7873,9 +7873,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>Nitrogen242</Name>
+        <Name>Nitrogen</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>242</Name>
           <Operation>
             <Date>2000-05-02T00:00:00</Date>
             <Action>[Fertiliser].Apply(180, Fertiliser.Types.UreaN, 10);</Action>
@@ -7894,9 +7894,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>Nitrogen0</Name>
+        <Name>Nitrogen</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>0</Name>
           <Operation>
             <Date>2000-05-02T00:00:00</Date>
             <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
@@ -11712,9 +11712,9 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Nitrogen368</Name>
+        <Name>Nitrogen</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>368</Name>
           <Operation>
             <Date>2004-05-10T00:00:00</Date>
             <Action>[Fertiliser].Apply(230, Fertiliser.Types.UreaN, 10);</Action>
@@ -11733,9 +11733,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>Nitrogen253</Name>
+        <Name>Nitrogen</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>253</Name>
           <Operation>
             <Date>2004-05-10T00:00:00</Date>
             <Action>[Fertiliser].Apply(115, Fertiliser.Types.UreaN, 10);</Action>
@@ -11754,9 +11754,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>Nitrogen0</Name>
+        <Name>Nitrogen</Name>
         <Operations>
-          <Name>operations</Name>
+          <Name>0</Name>
           <Operation>
             <Date>2004-05-10T00:00:00</Date>
             <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
@@ -15639,9 +15639,9 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Fertiliser300early</Name>
+        <Name>Fertiliser</Name>
         <Operations>
-          <Name>Fertiliser</Name>
+          <Name>300early</Name>
           <Operation>
             <Date>1999-10-19T00:00:00</Date>
             <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
@@ -15656,9 +15656,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>Fertiliser150early</Name>
+        <Name>Fertiliser</Name>
         <Operations>
-          <Name>Fertiliser</Name>
+          <Name>150early</Name>
           <Operation>
             <Date>1999-10-19T00:00:00</Date>
             <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
@@ -15669,9 +15669,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>Fertiliser275split</Name>
+        <Name>Fertiliser</Name>
         <Operations>
-          <Name>Fertiliser</Name>
+          <Name>275split</Name>
           <Operation>
             <Date>1999-10-19T00:00:00</Date>
             <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);</Action>
@@ -15738,9 +15738,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>FertiliserNil</Name>
+        <Name>Fertiliser</Name>
         <Operations>
-          <Name>Fertiliser</Name>
+          <Name>Nil</Name>
         </Operations>
         <Specifications>
           <string>[FertiliserApplications]</string>
