@@ -1166,30 +1166,30 @@ namespace Models
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
-      <Type>Tolerance</Type>
+      <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalNO3</ColumnNames>
-      <Parameters>1,1</Parameters>
+      <Parameters>1,2</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
-      <Type>Tolerance</Type>
+      <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.SW</ColumnNames>
-      <Parameters>1,1</Parameters>
+      <Parameters>1,2</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
-      <Type>Tolerance</Type>
+      <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalN</ColumnNames>
-      <Parameters>1,1</Parameters>
+      <Parameters>1,2</Parameters>
     </Test>
     <Test>
       <SimulationName>comparisons</SimulationName>
       <TableName>Report</TableName>
-      <Type>Tolerance</Type>
+      <Type>CompareToInput</Type>
       <ColumnNames>Calculations.Script.TotalC</ColumnNames>
-      <Parameters>1,1</Parameters>
+      <Parameters>1,2</Parameters>
     </Test>
   </Tests>
   <ExplorerWidth>250</ExplorerWidth>

@@ -51,6 +51,6 @@ namespace Models.Core
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        List<Soils.UptakeInfo> GetPotSWUptake(List<Soils.UptakeInfo> info);
+        List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info);
     }
 }

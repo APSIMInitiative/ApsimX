@@ -110,10 +110,8 @@ Mean <- function (x, func, params, ...) {
 # @baseData: vector - reference data
 ##################################
 Tolerance <- function (x, func, params, baseData, ...) {
-  if (is.na(baseData)){
-    if (class(baseData) == "logical") {
-      stop(paste(noquote("Tolerance test requires a baseline and one was not found.")))
-    }
+    if(!file.exists(paste(dbName, ".baseline", sep=""))){
+        stop(paste(noquote("Tolerance test requires a baseline and one was not found.")))
   }else
     return
   

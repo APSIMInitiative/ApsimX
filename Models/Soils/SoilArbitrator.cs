@@ -197,7 +197,7 @@ namespace Models.Soils
                     throw new ApsimXException(this, "Calculating Euler integration. Number of UptakeSums different to expected value of iterations.");
                 double[] ActualUptake = Utility.Math.Add(ThisZone[0].Uptake, ThisZone[1].Uptake); //will need to change if we go to more iterations
                 ActualUptake = Utility.Math.Divide_Value(ActualUptake, NumIterations);
-                Soil Soil = (Soil)z.Find(typeof(Soil));
+                Soil Soil = (Soil)Apsim.Find(z,(typeof(Soil)));
                 Soil.SoilWater.sw_dep = Utility.Math.Subtract(Soil.SoilWater.sw_dep, ActualUptake);
                 SummaryFile.WriteMessage(this, z.Name + " " + String.Join(" ", ActualUptake.Select(x => x.ToString()).ToArray()));
             }
