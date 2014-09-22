@@ -503,8 +503,7 @@ namespace UserInterface.Views
             // Remove unwanted nodes if necessary.
             while (Args.Descriptions.Count < Nodes.Count)
             {
-                Console.WriteLine("Removing nodes");
-                Nodes.RemoveAt(0);
+                Nodes.RemoveAt(Nodes.Count-1);
             }
 
             // Configure each child node.
