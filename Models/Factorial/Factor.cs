@@ -90,7 +90,7 @@ namespace Models.Factorial
                 {
                     string factorName;
                     if (values[i] is IModel && (values[i] as IModel).Parent.Parent is Factor)
-                        factorName = Name; 
+                        factorName = Name;   // OLD - Need to remove.
                     else if (values[i] is IModel)
                         factorName = Name + (values[i] as IModel).Name;
                     else
