@@ -44,7 +44,18 @@ namespace Models.PMF
         /// </summary>
         public string plant_status { get; set; }
         // Plant soil water demand
+        [XmlIgnore]
         public double sw_demand { get; set; }
+        /// <summary>
+        /// A list of uptakes generated for the soil arbitrator
+        /// </summary>
+        [XmlIgnore]
+        public List<UptakeInfo> Uptakes;
+        /// <summary>
+        /// The actual uptake of the plant
+        /// </summary>
+        [XmlIgnore]
+        public double[] Uptake {get;set;}
 
         private int NumPlots;
         private double[] dlayer;
@@ -101,6 +112,7 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Uptakes = new List<UptakeInfo>();
             CoverLive = 0.5;
             plant_status = "alive";
             sw_demand = 0;
@@ -129,7 +141,7 @@ namespace Models.PMF
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        public List<UptakeInfo> GetPotSWUptake(List<UptakeInfo> info)
+        public List<UptakeInfo> GetSWUptake(List<UptakeInfo> info)
         {
             //get the uptake information applicable to this crop
             List<UptakeInfo> thisCrop = info.AsEnumerable().Where(x => x.Plant.Equals(this)).ToList();
@@ -149,7 +161,26 @@ namespace Models.PMF
                     thisCrop[i].Uptake[j] = Math.Max(0.0, RootProportion(j, RootSystem.RootZones[0].RootDepth, RootSystem.RootZones[0].Soil.Thickness) *
                                                       kl[j] * (thisCrop[i].SWDep[j] - RootSystem.RootZones[0].Soil.SoilWater.ll15_dep[j]) *
                                                       thisCrop[i].Strength);
+                    thisCrop[i].Plant = this;
                 }
+
+               /* for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+                {
+                    SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
+                    EP += SWUptake[j];
+                    Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - SWUptake[j];
+
+                }*/
+            }
+
+            foreach (UptakeInfo ui in thisCrop)
+            {
+                UptakeInfo temp = new UptakeInfo();
+                temp.Plant = ui.Plant;
+                temp.Uptake = new double[ui.Uptake.Length];
+                for (int i = 0; i < ui.Uptake.Length; i++)
+                    temp.Uptake[i] = ui.Uptake[i];
+                Uptakes.Add(temp);
             }
             return thisCrop;
         }
@@ -178,7 +209,7 @@ namespace Models.PMF
 
             TotalESW = (double)Utility.Math.Sum(ESWDeps);
             for (int i = 0; i < info.Count; i++)
-                info[i].Strength =  ESWDeps[i] / TotalESW; // * RootData.RootZones[i].Zone.Area); //ignore area for now; need to find a better way of implementing it
+                info[i].Strength = ESWDeps[i] / TotalESW; // * RootData.RootZones[i].Zone.Area); //ignore area for now; need to find a better way of implementing it - probably area ratio
 
             return info;
         }

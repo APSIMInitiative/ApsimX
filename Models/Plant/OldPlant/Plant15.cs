@@ -979,7 +979,7 @@ namespace Models.PMF.OldPlant
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.UptakeInfo> GetPotSWUptake(List<Soils.UptakeInfo> info)
+        public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
         {
             return info;
         }

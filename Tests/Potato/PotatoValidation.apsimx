@@ -53,7 +53,6 @@
     <AutoExport>false</AutoExport>
   </DataStore>
   <Tests>
-    <Name>Tests</Name>
     <Test>
       <SimulationName>All</SimulationName>
       <TableName>TimeSeriesStats</TableName>
@@ -111,6 +110,7 @@
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
+
   <Experiment>
     <Name>Potato</Name>
     <Memo>
