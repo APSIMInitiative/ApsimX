@@ -253,7 +253,6 @@
           <CN2Bare>68</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -536,8 +535,8 @@
         <Name>AnnualOutput</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[OilPalm].Age</string>
-          <string>[OilPalm].LAI</string>
+          <string>OilPalm.Age</string>
+          <string>OilPalm.LAI</string>
           <string>[Calculations].Script.AnnualRain</string>
           <string>[Calculations].Script.AnnualIrrigation</string>
           <string>[Calculations].Script.AnnualFronds</string>
@@ -570,12 +569,12 @@
           <string>[Clock].Today.Year</string>
           <string>[Clock].Today</string>
           <string>[Clock].Today.Month</string>
-          <string>[OilPalm].Age</string>
+          <string>OilPalm.Age</string>
           <string>[SurfaceOM].surfaceom_n</string>
           <string>[SurfaceOM].surfaceom_wt</string>
-          <string>[OilPalm].LAI</string>
-          <string>[OilPalm].StemMass</string>
-          <string>[OilPalm].UnderstoryCoverGreen</string>
+          <string>OilPalm.LAI</string>
+          <string>OilPalm.StemMass</string>
+          <string>OilPalm.UnderstoryCoverGreen</string>
           <string>[Calculations].Script.surfaceom_wt_oilpalmstem</string>
           <string>[Calculations].Script.surfaceom_wt_oilpalmunderstory</string>
           <string>[Calculations].Script.SoilCtpha</string>
@@ -736,35 +735,35 @@ namespace Models
       <Manager>
         <Name>Calculations</Name>
         <Script>
-          <AnnualRain>2165.30000440031</AnnualRain>
-          <AnnualIrrigation>356.700000427663</AnnualIrrigation>
-          <Offset>471</Offset>
-          <AnnualFronds>20</AnnualFronds>
-          <AnnualBunches>7.46029338810094</AnnualBunches>
-          <AnnualYield>23.8040348161072</AnnualYield>
-          <AnnualBunchSize>23.6352881381655</AnnualBunchSize>
-          <SoilCtpha>310.163646435492</SoilCtpha>
-          <surfaceom_wt_oilpalmstem>0</surfaceom_wt_oilpalmstem>
+          <AnnualRain>0</AnnualRain>
+          <Offset>6</Offset>
+          <AnnualFronds>0</AnnualFronds>
+          <AnnualBunches>0</AnnualBunches>
+          <AnnualYield>0</AnnualYield>
+          <AnnualBunchSize>0</AnnualBunchSize>
+          <SoilCtpha>NaN</SoilCtpha>
+          <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
           <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
           <OilPalmYield>0</OilPalmYield>
-          <TotalNO3>68.5030887648526</TotalNO3>
-          <NitTot>25975.8982665967</NitTot>
-          <AnnualUnderstoryNFixation>4.02872504183794</AnnualUnderstoryNFixation>
-          <AnnualUnderstoryNPP>436.009203662115</AnnualUnderstoryNPP>
-          <AnnualUnderstoryNUptake>5.12746823506647</AnnualUnderstoryNUptake>
-          <AnnualPalmNUptake>255.570605355269</AnnualPalmNUptake>
-          <AnnualTotalVegetativeNPP>19695.176801006</AnnualTotalVegetativeNPP>
-          <AnnualPalmVegetativeNPP>19259.1675973439</AnnualPalmVegetativeNPP>
-          <AnnualFrondNPP>11083.9268552134</AnnualFrondNPP>
-          <AnnualStemNPP>2991.58714877594</AnnualStemNPP>
-          <AnnualRootNPP>5183.65359335462</AnnualRootNPP>
-          <AnnualBunchNPP>13706.7072414693</AnnualBunchNPP>
-          <AnnualTotalNInput>145.778725041838</AnnualTotalNInput>
-          <AnnualFertiliserNAdded>141.75</AnnualFertiliserNAdded>
-          <AnnualNRemoved>76.075314868797</AnnualNRemoved>
-          <AnnualDenitrification>15.516183869044</AnnualDenitrification>
-          <AnnualN2O>2.72591856591509</AnnualN2O>
-          <AnnualLeaching>3.89602284488769</AnnualLeaching>
+          <TotalNO3>NaN</TotalNO3>
+          <NitTot>NaN</NitTot>
+          <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
+          <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+          <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
+          <AnnualPalmNUptake>0</AnnualPalmNUptake>
+          <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
+          <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
+          <AnnualFrondNPP>0</AnnualFrondNPP>
+          <AnnualStemNPP>0</AnnualStemNPP>
+          <AnnualRootNPP>0</AnnualRootNPP>
+          <AnnualBunchNPP>0</AnnualBunchNPP>
+          <AnnualTotalNInput>0</AnnualTotalNInput>
+          <AnnualFertiliserNAdded>0</AnnualFertiliserNAdded>
+          <AnnualNRemoved>0</AnnualNRemoved>
+          <AnnualDenitrification>0</AnnualDenitrification>
+          <AnnualN2O>0</AnnualN2O>
+          <AnnualLeaching>0</AnnualLeaching>
+          <AnnualIrrigation>0</AnnualIrrigation>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -789,7 +788,6 @@ namespace Models
 		[Link] Irrigation Irrigation;
 		
 		public double AnnualRain {get; set;}
-		public double AnnualIrrigation {get; set;}
 		public double Offset {get; set;}
 		public double AnnualFronds {get; set;}
 		public double AnnualBunches {get; set;}
@@ -818,12 +816,12 @@ namespace Models
         public double AnnualDenitrification {get; set;}
         public double AnnualN2O {get;set;}
         public double AnnualLeaching {get; set;}
+        public double AnnualIrrigation {get;set;}
         
         [EventSubscribe("Commencing")]
-		public void OnSimulationCommencing(object Sender, EventArgs e)
+        private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 		    AnnualRain = 0;
-		    AnnualIrrigation = 0;
 			Offset = 0;
 			OilPalmYield = 0;
 			AnnualFronds = 0;
@@ -852,6 +850,7 @@ namespace Models
 			AnnualDenitrification = 0;
 			AnnualN2O = 0;
 		    AnnualLeaching = 0;	
+		    AnnualIrrigation = 0;
 		}
 		
 
@@ -859,7 +858,6 @@ namespace Models
        private void OnStartOfYear(object sender, EventArgs e)
        {
             AnnualRain = 0;
-            AnnualIrrigation = 0;
 	   		Offset = OilPalm.CumulativeFrondNumber;
 			AnnualYield = 0;
 			AnnualBunches = 0;
@@ -881,13 +879,13 @@ namespace Models
             AnnualDenitrification = 0;
             AnnualN2O = 0;
             AnnualLeaching = 0;
+            AnnualIrrigation = 0;
 		}
 		
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += WeatherFile.Rain;
-            AnnualIrrigation += Irrigation.IrrigationApplied;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
@@ -912,6 +910,7 @@ namespace Models
             AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.dnit);
             AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
+            AnnualIrrigation +=Irrigation.IrrigationApplied;
             
 		}
 		
