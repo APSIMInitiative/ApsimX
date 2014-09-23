@@ -44,6 +44,12 @@
     <Command>[Phenology].StartGrainFillToEndGrainFill.Target = 580</Command>
   </Cultivar>
   <Cultivar>
+    <Name>Gutha</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+    <Command>[Grain].GrainsPerGramStem = 20</Command>
+  </Cultivar>
+  <Cultivar>
     <Name>Wilgoyne</Name>
     <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
     <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
@@ -1200,11 +1206,11 @@
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
-          <double>7</double>
-          <double>7.01</double>
+          <double>5.6</double>
+          <double>6.01</double>
         </X>
         <Y>
-          <double>0.65</double>
+          <double>0.70</double>
           <double>0</double>
         </Y>
       </XYPairs>
@@ -1847,8 +1853,14 @@
   <CompositeBiomass>
     <Name>AboveGround</Name>
     <Propertys>
-      <string>[AboveGroundLive]</string>
-      <string>[AboveGroundDead]</string>
+      <string>[Leaf].Live</string>
+      <string>[Stem].Live</string>
+      <string>[Pod].Live</string>
+      <string>[Grain].Live</string>
+      <string>[Leaf].Dead</string>
+      <string>[Stem].Dead</string>
+      <string>[Pod].Dead</string>
+      <string>[Grain].Dead</string>
     </Propertys>
   </CompositeBiomass>
   <CompositeBiomass>

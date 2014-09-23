@@ -315,7 +315,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return WaterDemand;
+                return Root.SWUptake;
             }
         }
 
