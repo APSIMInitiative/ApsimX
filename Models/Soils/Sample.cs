@@ -143,7 +143,7 @@ namespace Models.Soils
         /// Gets or sets soil water. Units will be as specified by SWUnits
         /// </summary>
         [Description("SW")]
-        [Display(Format = "N1", ShowTotal = true)]
+        [Display(Format = "N3", ShowTotal = true)]
         public double[] SW { get; set; }
 
         /// <summary>
