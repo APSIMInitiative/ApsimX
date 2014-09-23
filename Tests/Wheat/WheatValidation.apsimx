@@ -976,6 +976,8 @@ namespace Models
             <string>[Clock].Today</string>
             <string>Wheat.Zadok.Stage</string>
             <string>Wheat.Phenology.CurrentStageName</string>
+            <string>Wheat.AboveGroundLive.Wt</string>
+            <string>Wheat.AboveGroundDead.Wt</string>
             <string>Wheat.AboveGround.Wt</string>
             <string>Wheat.AboveGround.N</string>
             <string>Wheat.Grain.Yield</string>
@@ -1545,7 +1547,7 @@ namespace Models
           <Name>Straw</Name>
           <Operation>
             <Date>1993-06-03T00:00:00</Date>
-            <Action>[SurfaceOrganicMatter].Add(type: "barley", mass: 3580, N: 28.8);</Action>
+            <Action>[SurfaceOrganicMatter].Add(type: "barley", mass: 3584, N: 28.8);</Action>
           </Operation>
           <Operation>
             <Date>1993-06-03T00:00:00</Date>
@@ -2421,7 +2423,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Name>60</Name>
           <Operation>
             <Date>1986-05-29T00:00:00</Date>
-            <Action>[Fertiliser].Apply(Amount: 60, Type: Fertiliser.Types.NO3N, Depth: 50);</Action>
+            <Action>[Fertiliser].Apply(Amount: 30, Type: Fertiliser.Types.NO3N, Depth: 50);</Action>
           </Operation>
         </Operations>
         <Specifications>
@@ -3203,7 +3205,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Name>SowingOperations</Name>
           <Operation>
             <Date>1986-05-29T00:00:00</Date>
-            <Action>[Wheat].Sow(population:149, cultivar:"GattonHartog", depth:30, rowSpacing:250); </Action>
+            <Action>[Wheat].Sow(population:149, cultivar:"Gutha", depth:30, rowSpacing:250); </Action>
           </Operation>
         </Operations>
         <Plant15>
@@ -14280,6 +14282,126 @@ private void OnDoManagement(object sender, EventArgs e)
       <Y>
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Wheat.AboveGround.Wt</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Experiment</SplitOn>
+    </Series>
+    <LegendPosition>BottomRight</LegendPosition>
+  </Graph>
+  <Graph>
+    <Name>BiomassN</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Observed Above Ground Wt</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Predicted Above Ground Wt</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series 0</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.Wheat.AboveGround.N</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.Wheat.AboveGround.N</FieldName>
+      </Y>
+      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>*</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.Wheat.AboveGround.N</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.Wheat.AboveGround.N</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <SplitOn>Experiment</SplitOn>
+    </Series>
+    <LegendPosition>BottomRight</LegendPosition>
+  </Graph>
+  <Graph>
+    <Name>GrainNumber</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Observed Above Ground Wt</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Predicted Above Ground Wt</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series 0</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.Wheat.Grain.GrainNo</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.Wheat.Grain.GrainNo</FieldName>
+      </Y>
+      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <SplitOn>*</SplitOn>
+    </Series>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.Wheat.Grain.GrainNo</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.Wheat.Grain.GrainNo</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
