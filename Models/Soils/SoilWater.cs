@@ -215,7 +215,7 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Maximum surface storage capacity of soil")]
+        [Description("Maximum water storage on soil surface")]
         public double max_pond         //! maximum surface storage capacity of soil  //sv- used to store water from runoff on the surface.
         {
             get { return _max_pond; }
