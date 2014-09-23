@@ -141,12 +141,6 @@
             <Action>[Fertiliser].Apply(47.3, Fertiliser.Types.NH4NO3N, 10);</Action>
           </Operation>
         </Operations>
-        <Specifications>
-          <string>[operations]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>N</Name>
         <Operations>
           <Name>1</Name>
           <Operation>
@@ -254,12 +248,6 @@
             <Action>[Fertiliser].Apply(57, Fertiliser.Types.UreaN, 10);</Action>
           </Operation>
         </Operations>
-        <Specifications>
-          <string>[operations]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>N</Name>
         <Operations>
           <Name>2</Name>
           <Operation>
@@ -1774,12 +1762,6 @@ namespace Models
             <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
           </Operation>
         </Operations>
-        <Specifications>
-          <string>[operations]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>N</Name>
         <Operations>
           <Name>1</Name>
           <Operation>
@@ -1911,12 +1893,6 @@ namespace Models
             <Action>[Fertiliser].Apply(70, Fertiliser.Types.NH4NO3N, 10);</Action>
           </Operation>
         </Operations>
-        <Specifications>
-          <string>[operations]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>N</Name>
         <Operations>
           <Name>2</Name>
           <Operation>
@@ -3301,12 +3277,6 @@ namespace Models
             <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
           </Operation>
         </Operations>
-        <Specifications>
-          <string>[operations]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>N</Name>
         <Operations>
           <Name>1</Name>
           <Operation>
@@ -3526,12 +3496,6 @@ namespace Models
             <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
           </Operation>
         </Operations>
-        <Specifications>
-          <string>[operations]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>N</Name>
         <Operations>
           <Name>2</Name>
           <Operation>
