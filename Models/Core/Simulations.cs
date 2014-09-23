@@ -115,13 +115,22 @@ namespace Models.Core
                 simulations.Parent = null;
                 Apsim.ParentAllChildren(simulations);
 
-                // Call OnLoaded in all models.
-                foreach (Model child in Apsim.ChildrenRecursively(simulations))
-                    Apsim.CallEventHandler(child, "Loaded", null);
+                CallOnLoaded(simulations);
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
             return simulations;
+        }
+
+        /// <summary>
+        /// Call Loaded event in specified model and all children
+        /// </summary>
+        /// <param name="simulations"></param>
+        private static void CallOnLoaded(IModel model)
+        {
+            // Call OnLoaded in all models.
+            foreach (Model child in Apsim.ChildrenRecursively(model))
+                Apsim.CallEventHandler(child, "Loaded", null);
         }
 
         /// <summary>
@@ -183,6 +192,7 @@ namespace Models.Core
             else if (parent is Simulation)
             {
                 Simulation clonedSim = Apsim.Clone(parent) as Simulation;
+                CallOnLoaded(clonedSim);
                 simulations.Add(clonedSim);
             }
             else
@@ -195,6 +205,7 @@ namespace Models.Core
                     else if (model is Simulation && !(model.Parent is Experiment))
                     {
                         Simulation clonedSim = Apsim.Clone(model) as Simulation;
+                        CallOnLoaded(clonedSim);
                         simulations.Add(clonedSim);
                     }
                 }
