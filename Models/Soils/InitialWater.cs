@@ -68,6 +68,8 @@ namespace Models.Soils
         /// Gets or sets the fraction of a full profile. If NaN is returned then
         /// the depth of wet soil is the specified method.
         /// </summary>
+        [Summary]
+        [Description("Fraction full")]
         public double FractionFull
         {
             get
@@ -119,6 +121,8 @@ namespace Models.Soils
         /// Gets or sets the depth of wet soil (mm). If NaN is returned then
         /// fraction full is the specified method.
         /// </summary>
+        [Summary]
+        [Description("Depth of wet soil")]
         public double DepthWetSoil
         {
             get
@@ -136,23 +140,24 @@ namespace Models.Soils
             }
         }
 
-        [Summary]
-        [XmlIgnore]
-        [Units("cm")]
-        [Description("Depth")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(Soil.Thickness);
-            }
-        }
+        //[XmlIgnore]
+        //[Units("cm")]
+        //[Description("Depth")]
+        //public string[] Depth
+        //{
+        //    get
+        //    {
+        //        return Soil.ToDepthStrings(Soil.Thickness);
+        //    }
+        //}
 
         /// <summary>
         /// Gets or sets the plant available water content
         /// </summary>
         [Summary]
         [XmlIgnore]
+        [Description("Plant available water")]
+        [Units("mm")]
         public double PAW
         {
             get
@@ -230,6 +235,8 @@ namespace Models.Soils
         /// <summary>
         /// Gets or sets the crop that starting plant available water is relative to.
         /// </summary>
+        [Summary]
+        [Description("Relative to")]
         public string RelativeTo { get; set; }
 
         /// <summary>
