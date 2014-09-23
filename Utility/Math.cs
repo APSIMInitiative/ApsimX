@@ -641,7 +641,8 @@ namespace Utility
             {
                 double xValue = Convert.ToDouble(xEnum.Current);
                 double yValue = Convert.ToDouble(yEnum.Current);
-                SumOfSquaredSD += System.Math.Pow(xValue - Xbar, 2);
+                if (!double.IsNaN(xValue) && !double.IsNaN(yValue))
+                    SumOfSquaredSD += System.Math.Pow(xValue - Xbar, 2);
             }
 
             CSSXY = SumXY - SumX * SumY / Num_points;     // Corrected SS for products
