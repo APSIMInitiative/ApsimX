@@ -128,12 +128,12 @@ namespace Models.Factorial
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();
             if (Factors != null)
             {
-                bool doFullFactorial = false;
+                bool doFullFactorial = true;
                 foreach (Factor factor in Factors.factors)
                 {
                     List<FactorValue> factorValues = factor.CreateValues();
-                    if (factorValues.Count > 1)
-                        doFullFactorial = true;
+                    if (factor.Specifications.Count > 1)
+                        doFullFactorial = false;
                     allValues.Add(factorValues);
                 }
                 if (doFullFactorial)
