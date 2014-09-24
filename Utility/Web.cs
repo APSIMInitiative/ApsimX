@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.IO;
-using System.Net.Sockets;
-using System.Threading;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Web.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
+
+    /// <summary>
+    /// A class containing some web utilities
+    /// </summary>
     class Web
     {
         /// <summary>
@@ -77,8 +83,5 @@ namespace Utility
             }
             return Response;
         }
-
-
-
     }
 }

@@ -135,7 +135,7 @@ namespace Models.Soils
                 else
                 {
                     // pH in CaCl = (pH in water + 0.1375) / 1.1045
-                    PH = Utility.Math.Divide_Value(Utility.Math.Add_Value(PH, 0.1375), 1.1045);
+                    PH = Utility.Math.Divide_Value(Utility.Math.AddValue(PH, 0.1375), 1.1045);
                 }
                 PHUnits = ToUnits;
             }

@@ -1,9 +1,16 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Process.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
+    using System;
+    using System.IO;
+
+    /// <summary>
+    /// A collection of utilities for dealing with processes (threads)
+    /// </summary>
     public class Process
     {
         public enum CompilationMode
@@ -26,7 +33,6 @@ namespace Utility
             Mixed
         };
 
-        //=========================================================================
         /// <summary>
         /// Determine if the file refered to is a native win32 or a CLR assembly.
         /// Mixed mode assemblies are CLR.
@@ -34,7 +40,6 @@ namespace Utility
         /// </summary>
         /// <param name="filename">File name of the Assembly or native dll to probe.</param>
         /// <returns>Compilation mode.</returns>
-        //=========================================================================
         static public CompilationMode isManaged(string filename)
         {
             try
@@ -150,12 +155,18 @@ namespace Utility
             else
                 return "";
         }
-
-
+		
+		/// <summary>
+        /// 
+        /// </summary>
         static private UInt32 UInt32FromBytes(byte[] p, uint offset)
         {
             return (UInt32)(p[offset + 3] << 24 | p[offset + 2] << 16 | p[offset + 1] << 8 | p[offset]);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         static private UInt16 UInt16FromBytes(byte[] p, uint offset)
         {
             return (UInt16)(p[offset + 1] << 8 | p[offset]);

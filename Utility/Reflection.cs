@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.CodeDom.Compiler;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Reflection.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
+
     public class Reflection
     {
-
-
         /// <summary>
         /// Returns true if the specified type T is of type TypeName
         /// <summary>
@@ -44,6 +47,12 @@ namespace Utility
             return list;
         }
 
+        /// <summary>
+        /// Get the value of a field or property.
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Obj"></param>
+        /// <returns></returns>
         public static object GetValueOfFieldOrProperty(string Name, object Obj)
         {
             int Pos = Name.IndexOf('.');
@@ -269,8 +278,10 @@ namespace Utility
             return null;
         }
 
-
-        public static Dictionary<string, Assembly> AssemblyCache = new Dictionary<string, Assembly>();
+        /// <summary>
+        /// An assembly cache.
+        /// </summary>
+        private static Dictionary<string, Assembly> AssemblyCache = new Dictionary<string, Assembly>();
 
         /// <summary>
         /// Compile the specified 'code' into an executable assembly. If 'assemblyFileName'
@@ -338,7 +349,6 @@ namespace Utility
             }
         }
 
-
         /// <summary>
         /// Binary serialise the object and return the resulting stream.
         /// </summary>
@@ -367,7 +377,6 @@ namespace Utility
             IFormatter formatter = new BinaryFormatter();
             return formatter.Deserialize(stream);
         }
-
 
         /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'.
@@ -442,6 +451,12 @@ namespace Utility
             return BinaryDeserialise(stream);
         }
 
+        /// <summary>
+        /// Return a list of sorted properties.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="flags"></param>
+        /// <returns></returns>
         public static PropertyInfo[] GetPropertiesSorted(Type type, BindingFlags flags)
         {
             List<PropertyInfo> properties = new List<PropertyInfo>();
@@ -453,6 +468,9 @@ namespace Utility
 
         }
 
+        /// <summary>
+        /// A private property comparer.
+        /// </summary>
         private class PropertyInfoComparer : IComparer<PropertyInfo>
         {
             // Calls CaseInsensitiveComparer.Compare with the parameters reversed.
