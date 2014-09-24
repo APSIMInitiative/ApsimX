@@ -227,9 +227,18 @@ namespace UserInterface.Views
             }
             Node.ImageKey = Description.ResourceNameForImage;
             Node.SelectedImageKey = Description.ResourceNameForImage;
-            Node.Nodes.Clear();
             if (Description.HasChildren)
-                Node.Nodes.Add("Loading...");
+            {
+                if (Node.Nodes.Count == 0)
+                {
+                    Node.Nodes.Add("Loading...");
+                    Node.Collapse();
+                }
+            }
+            else
+            {
+                Node.Nodes.Clear();
+            }
         }
 
         /// <summary>
@@ -367,38 +376,26 @@ namespace UserInterface.Views
         /// <param name="Message"></param>
         public void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel)
         {
-
             StatusWindow.Visible = Message != null;
-            StatusWindow.Select(StatusWindow.TextLength, 0);
-
-            // Output the date.
-            StatusWindow.SelectionColor = Color.Black;
-            StatusWindow.SelectedText = DateTime.Now.ToString() + ":";
-
+            
             // Output the message
-            StatusWindow.Select(StatusWindow.TextLength, 0);
-
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
             {
-                StatusWindow.SelectionColor = Color.Red;
+                StatusWindow.ForeColor = Color.Red;
             }
             else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
             {
-                StatusWindow.SelectionColor = Color.Brown;
+                StatusWindow.ForeColor = Color.Brown;
             }
             else
             {
-                StatusWindow.SelectionColor = Color.Blue;
+                StatusWindow.ForeColor = Color.Blue;
             }
-            Message = "\n" + Message.TrimEnd("\n".ToCharArray());
+            Message = Message.TrimEnd("\n".ToCharArray());
             Message = Message.Replace("\n", "\n                      ");
             Message += "\n";
-
-            StatusWindow.SelectedText = Message;
-            StatusWindow.ScrollToCaret();
-            //StatusWindow.Select(0, Message.Length);
-
-            //Application.DoEvents();
+            StatusWindow.Text = Message;
+            this.toolTip1.SetToolTip(this.StatusWindow, Message);
         }
 
         /// <summary>
@@ -494,8 +491,7 @@ namespace UserInterface.Views
             // Remove unwanted nodes if necessary.
             while (Args.Descriptions.Count < Nodes.Count)
             {
-                Console.WriteLine("Removing nodes");
-                Nodes.RemoveAt(0);
+                Nodes.RemoveAt(Nodes.Count-1);
             }
 
             // Configure each child node.
@@ -676,6 +672,7 @@ namespace UserInterface.Views
         private void OnBeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             nodePathBeforeRename = CurrentNodePath;
+            TreeView.ContextMenuStrip = null;
             e.CancelEdit = false;
         }
 
@@ -684,6 +681,7 @@ namespace UserInterface.Views
         /// </summary>
         private void OnAfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
+            TreeView.ContextMenuStrip = this.PopupMenu;
             if (Rename != null && e.Label != null)
             {
                 NodeRenameArgs args = new NodeRenameArgs()
@@ -711,7 +709,7 @@ namespace UserInterface.Views
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            StatusWindow.Clear();
+            //StatusWindow.Clear();
         }
 
         /// <summary>

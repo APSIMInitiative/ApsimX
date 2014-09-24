@@ -52,17 +52,26 @@ namespace Models.PMF.Phen
     /// which is \ref Models.PMF.Phen.EndPhase "EndPhase" function and the 
     /// \t End stage is unused.
     /// 
+    /// On commencing simulation and sowing
+    /// ----------------
+    /// On commencing simulation and sowing
+    /// \ref Models.PMF.Phen.Phenology "Phenology" function and all related 
+    /// \ref Models.PMF.Phen.Phase "Phase" functions will be reset.
+    /// 
+    /// On harvest
+    /// -----------------
+    /// On harvest, \ref Models.PMF.Phen.Phenology "Phenology" will 
+    /// jump to the last phase function i.e. \ref Models.PMF.Phen.EndPhase 
+    /// "EndPhase" function.
+    /// 
+    /// On daily
+    /// -----------------
     /// Phenology function performs a daily time step function, get the current 
     /// phase to do its development for the day. If thermal time is leftover after 
     /// Phase is progressed, and the time step for the subsequent phase is calculated 
     /// using leftover thermal time.
 	/// 
-    /// On commencing simulation and sowing,
-    /// \ref Models.PMF.Phen.Phenology "Phenology" function and all related 
-    /// \ref Models.PMF.Phen.Phase "Phase" functions will be reset.
-    /// On harvest, \ref Models.PMF.Phen.Phenology "Phenology" will 
-    /// jump to the last phase function i.e. \ref Models.PMF.Phen.EndPhase 
-    /// "EndPhase" function.
+    /// 
     /// </remarks>
     [Serializable]
     public class Phenology : Model

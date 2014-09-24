@@ -42,6 +42,9 @@ namespace UserInterface.Commands
                 Apsim.EnsureNameIsUnique(FromModel);
                 CommandHistory.InvokeModelStructureChanged(ToParent);
 
+                // Call OnLoaded
+                Apsim.CallEventHandler(FromModel, "Loaded", null);
+
                 ModelAdded = true;
             }
             catch (Exception exp)

@@ -6,74 +6,53 @@
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>NDemand</Name>
-        <FactorValue>
-          <Name>Level1</Name>
-          <FactorValue>
-            <Name>6</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>0</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Level2</Name>
-          <FactorValue>
-            <Name>5</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>1</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Level3</Name>
-          <FactorValue>
-            <Name>4</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>2</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Level4</Name>
-          <FactorValue>
-            <Name>3</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>3</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Level5</Name>
-          <FactorValue>
-            <Name>2</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>4</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Level6</Name>
-          <FactorValue>
-            <Name>1</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>5</Name>
-          </FactorValue>
-        </FactorValue>
-        <FactorValue>
-          <Name>Level7</Name>
-          <FactorValue>
-            <Name>0</Name>
-          </FactorValue>
-          <FactorValue>
-            <Name>6</Name>
-          </FactorValue>
-        </FactorValue>
-        <Paths>
-          <string>[Field].Slurp1.localDemandNitrogen</string>
-          <string>[Field].Slurp2.localDemandNitrogen</string>
-        </Paths>
+        <Name>Level1</Name>
+        <Specifications>
+          <string>[Field].Slurp1.localDemandNitrogen=6</string>
+          <string>[Field].Slurp2.localDemandNitrogen=0</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Level2</Name>
+        <Specifications>
+          <string>[Field].Slurp1.localDemandNitrogen=5</string>
+          <string>[Field].Slurp2.localDemandNitrogen=1</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Level3</Name>
+        <Specifications>
+          <string>[Field].Slurp1.localDemandNitrogen=4</string>
+          <string>[Field].Slurp2.localDemandNitrogen=2</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Level4</Name>
+        <Specifications>
+          <string>[Field].Slurp1.localDemandNitrogen=3</string>
+          <string>[Field].Slurp2.localDemandNitrogen=3</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Level5</Name>
+        <Specifications>
+          <string>[Field].Slurp1.localDemandNitrogen=2</string>
+          <string>[Field].Slurp2.localDemandNitrogen=4</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Level6</Name>
+        <Specifications>
+          <string>[Field].Slurp1.localDemandNitrogen=1</string>
+          <string>[Field].Slurp2.localDemandNitrogen=5</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Level7</Name>
+        <Specifications>
+          <string>[Field].Slurp1.localDemandNitrogen=0</string>
+          <string>[Field].Slurp2.localDemandNitrogen=6</string>
+        </Specifications>
       </Factor>
     </Factors>
     <Simulation>
@@ -268,7 +247,6 @@
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -621,21 +599,19 @@ namespace Models
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>Evaluate ([Slurp1].demandWater + [Slurp2].demandWater) as demandWater</string>
-            <string>Evaluate sum([Slurp1].uptakeWater[1:4] + [Slurp2].uptakeWater[1:4]) as UptakeWater</string>
+            <string>Evaluate (Slurp1.demandWater + Slurp2.demandWater) as demandWater</string>
+            <string>Evaluate sum(Slurp1.uptakeWater[1:4] + Slurp2.uptakeWater[1:4]) as UptakeWater</string>
             <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
             <string>[Diffs].Script.diffSWDepUptake as deltaSWDep</string>
-            <string>Evaluate ([Slurp1].demandNitrogen + [Slurp2].demandNitrogen) as demandNitrogen</string>
-            <string>Evaluate sum([Slurp1].uptakeNitrogen[1:4] + [Slurp2].uptakeNitrogen[1:4]) as UptakeNitrogen</string>
-            <string>Evaluate sum([Slurp1].uptakeNitrogenPropNO3[1:4] + [Slurp2].uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
+            <string>Evaluate (Slurp1.demandNitrogen + Slurp2.demandNitrogen) as demandNitrogen</string>
+            <string>Evaluate sum(Slurp1.uptakeNitrogen[1:4] + Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
+            <string>Evaluate sum(Slurp1.uptakeNitrogenPropNO3[1:4] + Slurp2.uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
             <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
             <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
-            <string>Evaluate sum([Slurp1].uptakeNitrogen[1:4]) as UptakeNitrogen1</string>
-            <string>Evaluate sum([Slurp2].uptakeNitrogen[1:4]) as UptakeNitrogen2</string>
-            <string>[Slurp1].demandNitrogen as demandNitrogen1</string>
-            <string>[Slurp2].demandNitrogen as demandNitrogen2</string>
-            <string />
-            <string />
+            <string>Evaluate sum(Slurp1.uptakeNitrogen[1:4]) as UptakeNitrogen1</string>
+            <string>Evaluate sum(Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen2</string>
+            <string>Slurp1.demandNitrogen as demandNitrogen1</string>
+            <string>Slurp2.demandNitrogen as demandNitrogen2</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>

@@ -26,8 +26,12 @@ namespace Models.Factorial
             List<Simulation> simulations = new List<Simulation>();
             foreach (List<FactorValue> combination in allCombinations)
             {
+                string newSimulationName = Name;
+                foreach (FactorValue value in combination)
+                    newSimulationName += value.Name;
+
                 Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-                newSimulation.Name = Name;
+                newSimulation.Name = newSimulationName;
                 newSimulation.Parent = null;
                 Apsim.ParentAllChildren(newSimulation);
 
@@ -67,12 +71,12 @@ namespace Models.Factorial
             {
                 string newSimulationName = Name;
                 foreach (FactorValue value in combination)
-                    value.AddToName(ref newSimulationName);
+                    newSimulationName += value.Name;
 
                 if (newSimulationName == name)
                 {
                     Simulation newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-                    newSimulation.Name = Name;
+                    newSimulation.Name = newSimulationName;
                     newSimulation.Parent = null;
                     Apsim.ParentAllChildren(newSimulation);
 
@@ -105,7 +109,7 @@ namespace Models.Factorial
                     string newSimulationName = Name;
 
                     foreach (FactorValue value in combination)
-                        value.AddToName(ref newSimulationName);
+                        newSimulationName += value.Name;
 
                     names.Add(newSimulationName);
                 }
@@ -120,20 +124,22 @@ namespace Models.Factorial
         {
             Factors Factors = Apsim.Child(this, typeof(Factors)) as Factors;
 
-            // Create a list of list of factorValuse so that we can do permutations of them.
+            // Create a list of list of factorValues so that we can do permutations of them.
             List<List<FactorValue>> allValues = new List<List<FactorValue>>();
             if (Factors != null)
             {
+                bool doFullFactorial = true;
                 foreach (Factor factor in Factors.factors)
                 {
-                    List<FactorValue> values = new List<FactorValue>();
-                    foreach (FactorValue factorValue in factor.FactorValues)
-                        values.AddRange(factorValue.CreateValues());
-                    if (values.Count > 0)
-                        allValues.Add(values);
+                    List<FactorValue> factorValues = factor.CreateValues();
+                    if (factor.Specifications.Count > 1)
+                        doFullFactorial = false;
+                    allValues.Add(factorValues);
                 }
-                List<List<FactorValue>> allCombinations = AllCombinationsOf<FactorValue>(allValues.ToArray());
-                return allCombinations;
+                if (doFullFactorial)
+                    return AllCombinationsOf<FactorValue>(allValues.ToArray());
+                else
+                    return allValues;
             }
             return null;
         }

@@ -1,20 +1,24 @@
-using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-
+// -----------------------------------------------------------------------
+// <copyright file="DataTables.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
-    //------------------------------------------
-    // Some utilities for loading and unloading
-    // a DataTable
-    // -----------------------------------------
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Text;
+
+    /// <summary>
+    /// Some utilities for manipulating a data table.
+    /// </summary>
     public class DataTable
     {
-        // ---------------------------------------------------
-        // Add a value to the specified data table
-        // ---------------------------------------------------
+        /// <summary>
+        /// Add a value to the specified data table
+        /// </summary>
         static public void AddValue(System.Data.DataTable Table, string ColumnName, string Value, int StartRow, int Count)
         {
             string[] Values = new string[Count];
@@ -23,9 +27,9 @@ namespace Utility
             AddColumn(Table, ColumnName, Values, StartRow, Count);
         }
 
-        // ---------------------------------------------------
-        // Add a value to the specified data table
-        // ---------------------------------------------------
+        /// <summary>
+        /// Add a value to the specified data table
+        /// </summary>
         static public void AddValue(System.Data.DataTable Table, string ColumnName, double Value, int StartRow, int Count)
         {
             string[] Values = new string[Count];
@@ -40,9 +44,9 @@ namespace Utility
         }
 
 
-        // ---------------------------------------------------
-        // Add a column of values to the specified data table
-        // ---------------------------------------------------
+        /// <summary>
+        /// Add a column of values to the specified data table
+        /// </summary>
         static public void AddColumn(System.Data.DataTable Table, string ColumnName, double[] Values, int StartRow, int Count)
         {
             if (Table.Columns.IndexOf(ColumnName) == -1)
@@ -50,7 +54,7 @@ namespace Utility
 
             if (Values == null)
                 return;
-
+		
             // Make sure there are enough values in the table.
             while (Table.Rows.Count < Values.Length + StartRow)
                 Table.Rows.Add(Table.NewRow());
@@ -66,9 +70,9 @@ namespace Utility
             }
         }
 
-        // ---------------------------------------------------
-        // Add a column of values to the specified data table
-        // ---------------------------------------------------
+        /// <summary>
+        /// Add a column of values to the specified data table
+        /// </summary>
         static public void AddColumn(System.Data.DataTable Table, string ColumnName, double[] Values)
         {
             int Count = 0;
@@ -77,9 +81,9 @@ namespace Utility
             AddColumn(Table, ColumnName, Values, 0, Count);
         }
 
-        // ---------------------------------------------------
-        // Add a column of values to the specified data table
-        // ---------------------------------------------------
+        /// <summary> 
+        /// Add a column of values to the specified data table
+        /// </summary>
         static public void AddColumn(System.Data.DataTable Table, string ColumnName, string[] Values)
         {
             int Count = 0;
@@ -88,9 +92,9 @@ namespace Utility
             AddColumn(Table, ColumnName, Values, 0, Count);
         }
 
-        // ---------------------------------------------------
-        // Add a column of values to the specified data table
-        // ---------------------------------------------------
+        /// <summary>
+        /// Add a column of values to the specified data table
+        /// </summary>
         static public void AddColumn(System.Data.DataTable Table, string ColumnName, string[] Values, int StartRow, int Count)
         {
             if (Table.Columns.IndexOf(ColumnName) == -1)
@@ -98,7 +102,7 @@ namespace Utility
 
             if (Values == null)
                 return;
-
+			
             // Make sure there are enough values in the table.
             while (Table.Rows.Count < Values.Length + StartRow)
                 Table.Rows.Add(Table.NewRow());
@@ -157,13 +161,21 @@ namespace Utility
             }
         }
 
-        // ---------------------------------------------------
-        // Get a column of values from the specified data table
-        // ---------------------------------------------------
+        /// <summary>
+        /// Get a column of values from the specified data table
+        /// </summary>
         static public double[] GetColumnAsDoubles(System.Data.DataTable Table, string ColumnName)
         {
             return GetColumnAsDoubles(Table, ColumnName, Table.Rows.Count);
         }
+
+        /// <summary>
+        /// Get a column as doubles
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <param name="ColumnName"></param>
+        /// <param name="NumValues"></param>
+        /// <returns></returns>
         static public double[] GetColumnAsDoubles(System.Data.DataTable Table, string ColumnName, int NumValues)
         {
             double[] Values = new double[NumValues];
@@ -176,6 +188,13 @@ namespace Utility
             }
             return Values;
         }
+
+        /// <summary>
+        /// Get a column as doubles
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <param name="ColumnName"></param>
+        /// <returns></returns>
         static public double[] GetColumnAsDoubles(DataView Table, string ColumnName)
         {
             int NumValues = Table.Count;
@@ -190,6 +209,14 @@ namespace Utility
             return Values;
         }
 
+        /// <summary>
+        /// Get a column as doubles.
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <param name="ColumnName"></param>
+        /// <param name="NumValues"></param>
+        /// <param name="StartRow"></param>
+        /// <returns></returns>
         static public double[] GetColumnAsDoubles(System.Data.DataTable Table, string ColumnName, int NumValues, int StartRow)
         {
             double[] Values = new double[NumValues];
@@ -215,13 +242,21 @@ namespace Utility
             return Values;
         }
 
-        // ---------------------------------------------------
-        // Get a column of values from the specified data table
-        // ---------------------------------------------------
+        /// <summary>
+        /// Get a column of values from the specified data table
+        /// </summary>
         static public string[] GetColumnAsStrings(System.Data.DataTable Table, string ColumnName)
         {
             return GetColumnAsStrings(Table, ColumnName, Table.Rows.Count);
         }
+        
+        /// <summary>
+        /// Get a column as strings
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <param name="ColumnName"></param>
+        /// <param name="NumValues"></param>
+        /// <returns></returns>
         static public string[] GetColumnAsStrings(System.Data.DataTable Table, string ColumnName, int NumValues)
         {
             string[] Values = new string[NumValues];
@@ -229,6 +264,15 @@ namespace Utility
                 Values[Row] = Convert.ToString(Table.Rows[Row][ColumnName]);
             return Values;
         }
+        
+        /// <summary>
+        /// Get a column as strings.
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <param name="ColumnName"></param>
+        /// <param name="NumValues"></param>
+        /// <param name="StartRow"></param>
+        /// <returns></returns>
         static public string[] GetColumnAsStrings(System.Data.DataTable Table, string ColumnName, int NumValues, int StartRow)
         {
             string[] Values = new string[NumValues];
@@ -241,6 +285,12 @@ namespace Utility
             return Values;
         }
 
+        /// <summary>
+        /// Get a column as dates.
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <param name="ColumnName"></param>
+        /// <returns></returns>
         static public DateTime[] GetColumnAsDates(System.Data.DataTable Table, string ColumnName)
         {
             DateTime[] Values = new DateTime[Table.Rows.Count];
@@ -249,10 +299,9 @@ namespace Utility
             return Values;
         }
 
-
-        // ---------------------------------------------------
-        // Get a list of column names
-        // ---------------------------------------------------
+        /// <summary>
+        /// Get a list of column names
+        /// </summary>
         static public string[] GetColumnNames(System.Data.DataTable Table)
         {
             if (Table != null)
@@ -266,10 +315,9 @@ namespace Utility
                 return new string[0];
         }
 
-
-        // ---------------------------------------------------------------------
-        // Get number of non blank values in column of the specified data table
-        // ---------------------------------------------------------------------
+        /// <summary>
+        /// Get number of non blank values in column of the specified data table
+        /// </summary>
         static public int GetNumberOfNonBlankRows(System.Data.DataTable Table, string ColumnName)
         {
             for (int Row = Table.Rows.Count - 1; Row >= 0; Row--)
@@ -280,6 +328,11 @@ namespace Utility
             return Table.Rows.Count;
         }
 
+        /// <summary>
+        /// Get a date from the specified row
+        /// </summary>
+        /// <param name="Row"></param>
+        /// <returns></returns>
         static public DateTime GetDateFromRow(System.Data.DataRow Row)
         {
             // ---------------------------------------------------------------------
@@ -323,7 +376,13 @@ namespace Utility
                                 "[a year, month and day column]");
         }
 
-
+        /// <summary>
+        /// Filter the specified table for the given date range.
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <param name="StartYear"></param>
+        /// <param name="EndYear"></param>
+        /// <returns></returns>
         static public DataView FilterTableForYear(System.Data.DataTable Table, int StartYear, int EndYear)
         {
             // ---------------------------------------------------------------------
@@ -349,7 +408,12 @@ namespace Utility
             return View;
         }
 
-
+        /// <summary>
+        /// Get the distinct rows from the specified table using the values in the specified column
+        /// </summary>
+        /// <param name="Table"></param>
+        /// <param name="ColumnName"></param>
+        /// <returns></returns>
         static public List<string> GetDistinctValues(System.Data.DataTable Table, string ColumnName)
         {
             // ---------------------------------------------------------------------
@@ -365,14 +429,12 @@ namespace Utility
             }
             return Values;
         }
-        static public double[] ColumnValues(DataView View, string ColumnName)
-        {
-            double[] Values = new double[View.Count];
-            for (int Row = 0; Row != View.Count; Row++)
-                Values[Row] = Convert.ToDouble(View[Row][ColumnName]);
-            return Values;
-        }
 
+        /// <summary>
+        /// Get a list of monthly sums for the specified data view.
+        /// </summary>
+        /// <param name="View"></param>
+        /// <returns></returns>
         static public System.Data.DataTable MonthlySums(DataView View)
         {
             // ----------------------------------------------------------------------------------
@@ -481,6 +543,5 @@ namespace Utility
             //    st.Append(new string(' ', width - value.Length));
             st.Append(value);
         }
-
     }
 }

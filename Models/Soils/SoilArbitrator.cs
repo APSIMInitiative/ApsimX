@@ -17,7 +17,6 @@ namespace Models.Soils
     {
         public ICrop Crop;
         public List<RootZone> RootZones;
-
         public double[] Uptake { get; set; }
 
 
@@ -75,6 +74,8 @@ namespace Models.Soils
     {
         [Link]
         Simulation Simulation;
+        [Link]
+        Summary SummaryFile;
         List<RootSystem> RootSystems;
         List<RootZone> RootZones;
         List<Zone> Zones;
@@ -162,7 +163,7 @@ namespace Models.Soils
                 List<UptakeInfo> Run = new List<UptakeInfo>();
                 foreach (RootSystem rs in RootSystems)
                 {
-                    Run.AddRange(rs.Crop.GetPotSWUptake(InitSW));
+                    Run.AddRange(rs.Crop.GetSWUptake(InitSW));
                 }
 
                 // go through all zones and get a new SWDep using given uptakes
@@ -192,11 +193,27 @@ namespace Models.Soils
             foreach (Zone z in Zones)
             {
                 List<UptakeInfo> ThisZone = UptakeSums.AsEnumerable().Where(x => x.Zone.Name.Equals(z.Name)).ToList();
-                if (ThisZone.Count != 2)
+                if (ThisZone.Count != NumIterations)
                     throw new ApsimXException(this, "Calculating Euler integration. Number of UptakeSums different to expected value of iterations.");
-                 double[] ActualUptake = Utility.Math.Subtract(ThisZone[0].Uptake, ThisZone[1].Uptake);
-                 Soil Soil = (Soil)Apsim.Find(z, typeof(Soil));
-                 Soil.SoilWater.sw_dep = Utility.Math.Subtract(Soil.SoilWater.sw_dep, ActualUptake);
+                double[] ActualUptake = Utility.Math.Add(ThisZone[0].Uptake, ThisZone[1].Uptake); //will need to change if we go to more iterations
+                ActualUptake = Utility.Math.Divide_Value(ActualUptake, NumIterations);
+                Soil Soil = (Soil)Apsim.Find(z,(typeof(Soil)));
+                Soil.SoilWater.sw_dep = Utility.Math.Subtract(Soil.SoilWater.sw_dep, ActualUptake);
+                SummaryFile.WriteMessage(this, z.Name + " " + String.Join(" ", ActualUptake.Select(x => x.ToString()).ToArray()));
+            }
+
+            // Calculate plant uptake
+            foreach (RootSystem rs in RootSystems)
+            {
+                PMF.SimpleTree Tree = (PMF.SimpleTree)rs.Crop;
+                int NumUptakes = Tree.Uptakes.Count;
+                double[] TotalUptake = new double[Tree.Uptakes[0].Uptake.Length];
+
+                foreach (UptakeInfo uptake in Tree.Uptakes)
+                {
+                    TotalUptake = Utility.Math.Add(TotalUptake, uptake.Uptake);
+                }
+                Tree.Uptake = Utility.Math.Divide_Value(TotalUptake, Tree.Uptakes.Count);
             }
         }
 

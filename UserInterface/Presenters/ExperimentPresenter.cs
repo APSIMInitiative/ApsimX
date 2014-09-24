@@ -38,11 +38,18 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnRunApsimClick(object sender, EventArgs e)
         {
-            Simulation simulation = Experiment.CreateSpecificSimulation(ListView.MemoLines[ListView.CurrentPosition.Y]);
-            Commands.RunCommand run = new Commands.RunCommand(Apsim.Parent(Experiment, typeof(Simulations)) as Simulations,
-                                                              simulation,
-                                                              ExplorerPresenter);
-            run.Do(null);
+            try
+            {
+                Simulation simulation = Experiment.CreateSpecificSimulation(ListView.MemoLines[ListView.CurrentPosition.Y]);
+                Commands.RunCommand run = new Commands.RunCommand(Apsim.Parent(Experiment, typeof(Simulations)) as Simulations,
+                                                                  simulation,
+                                                                  ExplorerPresenter);
+                run.Do(null);
+            }
+            catch (Exception err)
+            {
+                ExplorerPresenter.ShowMessage(err.Message, Models.DataStore.ErrorLevel.Error);
+            }
         }
 
     }

@@ -1,18 +1,18 @@
-using System;
-using System.Text;
-using System.Threading;
-using System.Collections;
-using System.Runtime.InteropServices;
-using System.Data;
-using System.Collections.Generic;
-
+// -----------------------------------------------------------------------
+// <copyright file="SQLite.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Runtime.InteropServices;
 
     /// <summary>
-    /// A .NET wrapper around the SQLite library
+    /// A class representing an exception thrown by this library.
     /// </summary>
-
     public class SQLiteException : Exception
     {
         public SQLiteException(string message) :
@@ -22,39 +22,41 @@ namespace Utility
         }
     }
 
+    /// <summary>
+    /// A class for accessing an SQLite database.
+    /// </summary>
     [Serializable]
     public class SQLite
     {
-        const int SQLITE_OK = 0;
-        const int SQLITE_ROW = 100;
-        const int SQLITE_DONE = 101;
-        const int SQLITE_INTEGER = 1;
-        const int SQLITE_FLOAT = 2;
-        const int SQLITE_TEXT = 3;
-        const int SQLITE_BLOB = 4;
-        const int SQLITE_NULL = 5;
+        private const int SQLITE_OK = 0;
+        private const int SQLITE_ROW = 100;
+        private const int SQLITE_DONE = 101;
+        private const int SQLITE_INTEGER = 1;
+        private const int SQLITE_FLOAT = 2;
+        private const int SQLITE_TEXT = 3;
+        private const int SQLITE_BLOB = 4;
+        private const int SQLITE_NULL = 5;
 
-        const int SQLITE_OPEN_READONLY       =   0x00000001;  /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_READWRITE      =   0x00000002; /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_CREATE         =   0x00000004; /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_DELETEONCLOSE  =   0x00000008; /* VFS only */
-        const int SQLITE_OPEN_EXCLUSIVE      =   0x00000010; /* VFS only */
-        const int SQLITE_OPEN_AUTOPROXY      =   0x00000020; /* VFS only */
-        const int SQLITE_OPEN_URI            =   0x00000040; /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_MEMORY         =   0x00000080; /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_MAIN_DB        =   0x00000100; /* VFS only */
-        const int SQLITE_OPEN_TEMP_DB        =   0x00000200; /* VFS only */
-        const int SQLITE_OPEN_TRANSIENT_DB   =   0x00000400; /* VFS only */
-        const int SQLITE_OPEN_MAIN_JOURNAL   =   0x00000800; /* VFS only */
-        const int SQLITE_OPEN_TEMP_JOURNAL   =   0x00001000; /* VFS only */
-        const int SQLITE_OPEN_SUBJOURNAL     =   0x00002000; /* VFS only */
-        const int SQLITE_OPEN_MASTER_JOURNAL =   0x00004000; /* VFS only */
-        const int SQLITE_OPEN_NOMUTEX        =   0x00008000; /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_FULLMUTEX      =   0x00010000; /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_SHAREDCACHE    =   0x00020000; /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_PRIVATECACHE   =   0x00040000; /* Ok for sqlite3_open_v2() */
-        const int SQLITE_OPEN_WAL            =   0x00080000; /* VFS only */
-
+        private const int SQLITE_OPEN_READONLY       =   0x00000001;  /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_READWRITE      =   0x00000002; /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_CREATE         =   0x00000004; /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_DELETEONCLOSE  =   0x00000008; /* VFS only */
+        private const int SQLITE_OPEN_EXCLUSIVE      =   0x00000010; /* VFS only */
+        private const int SQLITE_OPEN_AUTOPROXY      =   0x00000020; /* VFS only */
+        private const int SQLITE_OPEN_URI            =   0x00000040; /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_MEMORY         =   0x00000080; /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_MAIN_DB        =   0x00000100; /* VFS only */
+        private const int SQLITE_OPEN_TEMP_DB        =   0x00000200; /* VFS only */
+        private const int SQLITE_OPEN_TRANSIENT_DB   =   0x00000400; /* VFS only */
+        private const int SQLITE_OPEN_MAIN_JOURNAL   =   0x00000800; /* VFS only */
+        private const int SQLITE_OPEN_TEMP_JOURNAL   =   0x00001000; /* VFS only */
+        private const int SQLITE_OPEN_SUBJOURNAL     =   0x00002000; /* VFS only */
+        private const int SQLITE_OPEN_MASTER_JOURNAL =   0x00004000; /* VFS only */
+        private const int SQLITE_OPEN_NOMUTEX        =   0x00008000; /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_FULLMUTEX      =   0x00010000; /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_SHAREDCACHE    =   0x00020000; /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_PRIVATECACHE   =   0x00040000; /* Ok for sqlite3_open_v2() */
+        private const int SQLITE_OPEN_WAL            =   0x00080000; /* VFS only */
 
         #region Externals
         //When using sqlite3 without .dll the platforms are intelligent enough to add the OS specific details.
@@ -491,7 +493,5 @@ namespace Utility
         {
             sqlite3_mutex_leave(sqlite3_db_mutex(_db));
         }
-
     }
-
 }

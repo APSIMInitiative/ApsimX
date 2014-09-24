@@ -1,14 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Path.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
+    using System;
+    using System.IO;
+
+    /// <summary>
+    /// A collection of path utilities.
+    /// </summary>
     public class PathUtils
     {
-
+        /// <summary>
+        /// Convert the specified URL to a path.
+        /// </summary>
+        /// <param name="Url"></param>
+        /// <returns></returns>
         public static string ConvertURLToPath(string Url)
         {
             Uri uri = new Uri(Url);
@@ -78,8 +87,6 @@ namespace Utility
             }
         }
 
-
-
         /// <summary>
         /// Creates a relative path from one file or folder to another.
         /// http://stackoverflow.com/questions/275689/how-to-get-relative-path-from-absolute-path
@@ -121,9 +128,12 @@ namespace Utility
 
             return relativePath;
         }
-
-
-
+        
+        /// <summary>
+        /// Try and reduce the path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         private static string ReducePath(string path)
         {
             return path.Substring(path.IndexOf(Path.DirectorySeparatorChar) + 1, path.Length - path.IndexOf(Path.DirectorySeparatorChar)  - 1);

@@ -47,6 +47,7 @@ namespace Models.Soils
         /// <summary>
         /// Gets or sets the crop lower limit
         /// </summary>
+        [Summary]
         [Description("LL")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
@@ -54,6 +55,7 @@ namespace Models.Soils
         /// <summary>
         /// Gets the plant available water by layer
         /// </summary>
+        [Summary]
         [Description("PAWC")]
         [Display(Format = "N1", ShowTotal = true)]
         [Units("mm")]
@@ -72,6 +74,7 @@ namespace Models.Soils
         /// <summary>
         /// Gets or sets the KL value.
         /// </summary>
+        [Summary]
         [Description("KL")]
         [Display(Format = "N2")]
         [Units("mm/mm")]
@@ -80,6 +83,7 @@ namespace Models.Soils
         /// <summary>
         /// Gets or sets the exploration factor
         /// </summary>
+        [Summary]
         [Description("XF")]
         [Display(Format = "N1")]
         [Units("mm/mm")]

@@ -170,14 +170,14 @@ namespace Models.Core
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    Model localModel = relativeToModel.Children.FirstOrDefault(m => m.Name == namePathBits[i]);
+                    IModel localModel = relativeToModel.Children.FirstOrDefault(m => m.Name == namePathBits[i]);
                     if (localModel == null)
                     {
                         break;
                     }
                     else
                     {
-                        relativeToModel = localModel;
+                        relativeToModel = localModel as Model;
                     }
                 }
 
@@ -200,12 +200,12 @@ namespace Models.Core
                     }
 
                     // Look for either a property or a child model.
-                    Model localModel = null;
+                    IModel localModel = null;
                     PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
                     if (propertyInfo == null && relativeToObject is Model)
                     {
                         // Not a property, may be a child model.
-                        localModel = (relativeToObject as Model).Children.FirstOrDefault(m => m.Name == namePathBits[i]);
+                        localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name == namePathBits[i]);
                         if (localModel == null)
                         {
                             return null;

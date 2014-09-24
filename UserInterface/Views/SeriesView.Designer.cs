@@ -121,7 +121,6 @@
             this.seriesEditorView1.SeriesType = "Scatter";
             this.seriesEditorView1.ShowInLegend = false;
             this.seriesEditorView1.Size = new System.Drawing.Size(685, 272);
-            this.seriesEditorView1.SplitOn = "Simulation";
             this.seriesEditorView1.TabIndex = 70;
             this.seriesEditorView1.Visible = false;
             this.seriesEditorView1.X = "";

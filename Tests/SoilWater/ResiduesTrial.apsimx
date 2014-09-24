@@ -116,161 +116,149 @@
       <Name>Factors</Name>
       <Factor>
         <Name>Cover</Name>
-        <FactorValue>
+        <SurfaceOrganicMatter>
           <Name>StandingStubble</Name>
-          <SurfaceOrganicMatter>
-            <Name>Stubble left by harvester</Name>
-            <ResidueTypes>
-              <Name>ResidueTypes</Name>
-              <LoadFromResource>ResidueTypes</LoadFromResource>
-            </ResidueTypes>
-            <Pools>
-              <Pool>
-                <PoolName>Barley</PoolName>
-                <ResidueType>Barley</ResidueType>
-                <Mass>2026</Mass>
-                <CNRatio>80</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>1</StandingFraction>
-              </Pool>
-            </Pools>
-            <PoolName>Barley</PoolName>
-            <type>Barley</type>
-            <mass>2026</mass>
-            <standing_fraction>1</standing_fraction>
-            <cpr />
-            <cnr>80</cnr>
-            <CriticalResidueWeight>2000</CriticalResidueWeight>
-            <OptimumDecompTemp>20</OptimumDecompTemp>
-            <MaxCumulativeEOS>20</MaxCumulativeEOS>
-            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-            <TotalLeachRain>25</TotalLeachRain>
-            <MinRainToLeach>10</MinRainToLeach>
-            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-            <DefaultCPRatio>0</DefaultCPRatio>
-            <DefaultStandingFraction>0</DefaultStandingFraction>
-            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-            <FractionFaecesAdded>0.5</FractionFaecesAdded>
-          </SurfaceOrganicMatter>
-        </FactorValue>
-        <FactorValue>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Barley</PoolName>
+              <ResidueType>Barley</ResidueType>
+              <Mass>2026</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>1</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Barley</PoolName>
+          <type>Barley</type>
+          <mass>2026</mass>
+          <standing_fraction>1</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <SurfaceOrganicMatter>
           <Name>HarvesterWindrow</Name>
-          <SurfaceOrganicMatter>
-            <Name>Windrow left by harvester</Name>
-            <ResidueTypes>
-              <Name>ResidueTypes</Name>
-              <LoadFromResource>ResidueTypes</LoadFromResource>
-            </ResidueTypes>
-            <Pools>
-              <Pool>
-                <PoolName>Barley</PoolName>
-                <ResidueType>Barley</ResidueType>
-                <Mass>8300</Mass>
-                <CNRatio>80</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>0</StandingFraction>
-              </Pool>
-            </Pools>
-            <PoolName>Barley</PoolName>
-            <type>Barley</type>
-            <mass>8300</mass>
-            <standing_fraction>0</standing_fraction>
-            <cpr />
-            <cnr>80</cnr>
-            <CriticalResidueWeight>2000</CriticalResidueWeight>
-            <OptimumDecompTemp>20</OptimumDecompTemp>
-            <MaxCumulativeEOS>20</MaxCumulativeEOS>
-            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-            <TotalLeachRain>25</TotalLeachRain>
-            <MinRainToLeach>10</MinRainToLeach>
-            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-            <DefaultCPRatio>0</DefaultCPRatio>
-            <DefaultStandingFraction>0</DefaultStandingFraction>
-            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-            <FractionFaecesAdded>0.5</FractionFaecesAdded>
-          </SurfaceOrganicMatter>
-        </FactorValue>
-        <FactorValue>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Barley</PoolName>
+              <ResidueType>Barley</ResidueType>
+              <Mass>8300</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Barley</PoolName>
+          <type>Barley</type>
+          <mass>8300</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <SurfaceOrganicMatter>
           <Name>MownStubble</Name>
-          <SurfaceOrganicMatter>
-            <Name>Stubble mown and bailed</Name>
-            <ResidueTypes>
-              <Name>ResidueTypes</Name>
-              <LoadFromResource>ResidueTypes</LoadFromResource>
-            </ResidueTypes>
-            <Pools>
-              <Pool>
-                <PoolName>Barley</PoolName>
-                <ResidueType>Barley</ResidueType>
-                <Mass>400</Mass>
-                <CNRatio>80</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>1</StandingFraction>
-              </Pool>
-            </Pools>
-            <PoolName>Barley</PoolName>
-            <type>Barley</type>
-            <mass>400</mass>
-            <standing_fraction>1</standing_fraction>
-            <cpr />
-            <cnr>80</cnr>
-            <CriticalResidueWeight>2000</CriticalResidueWeight>
-            <OptimumDecompTemp>20</OptimumDecompTemp>
-            <MaxCumulativeEOS>20</MaxCumulativeEOS>
-            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-            <TotalLeachRain>25</TotalLeachRain>
-            <MinRainToLeach>10</MinRainToLeach>
-            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-            <DefaultCPRatio>0</DefaultCPRatio>
-            <DefaultStandingFraction>0</DefaultStandingFraction>
-            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-            <FractionFaecesAdded>0.5</FractionFaecesAdded>
-          </SurfaceOrganicMatter>
-        </FactorValue>
-        <FactorValue>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Barley</PoolName>
+              <ResidueType>Barley</ResidueType>
+              <Mass>400</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>1</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Barley</PoolName>
+          <type>Barley</type>
+          <mass>400</mass>
+          <standing_fraction>1</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <SurfaceOrganicMatter>
           <Name>BareSoil</Name>
-          <SurfaceOrganicMatter>
-            <Name>Stubble mown, bailed and cultivared</Name>
-            <ResidueTypes>
-              <Name>ResidueTypes</Name>
-              <LoadFromResource>ResidueTypes</LoadFromResource>
-            </ResidueTypes>
-            <Pools>
-              <Pool>
-                <PoolName>Barley</PoolName>
-                <ResidueType>Barley</ResidueType>
-                <Mass>0</Mass>
-                <CNRatio>80</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>1</StandingFraction>
-              </Pool>
-            </Pools>
-            <PoolName>Barley</PoolName>
-            <type>Barley</type>
-            <mass>0</mass>
-            <standing_fraction>1</standing_fraction>
-            <cpr />
-            <cnr>80</cnr>
-            <CriticalResidueWeight>2000</CriticalResidueWeight>
-            <OptimumDecompTemp>20</OptimumDecompTemp>
-            <MaxCumulativeEOS>20</MaxCumulativeEOS>
-            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-            <TotalLeachRain>25</TotalLeachRain>
-            <MinRainToLeach>10</MinRainToLeach>
-            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-            <DefaultCPRatio>0</DefaultCPRatio>
-            <DefaultStandingFraction>0</DefaultStandingFraction>
-            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-            <FractionFaecesAdded>0.5</FractionFaecesAdded>
-          </SurfaceOrganicMatter>
-        </FactorValue>
-        <Paths>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>Barley</PoolName>
+              <ResidueType>Barley</ResidueType>
+              <Mass>0</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>1</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>Barley</PoolName>
+          <type>Barley</type>
+          <mass>0</mass>
+          <standing_fraction>1</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <Specifications>
           <string>[SurfaceOrganicMatter]</string>
-        </Paths>
+        </Specifications>
       </Factor>
     </Factors>
     <Simulation>
@@ -479,7 +467,6 @@
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>200</double>
               <double>200</double>
@@ -927,10 +914,16 @@
             <Type>Left</Type>
             <Title>Depth (mm)</Title>
             <Inverted>true</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
           </Axis>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
           </Axis>
           <Series>
             <Title>SWC20cm</Title>
@@ -1229,11 +1222,17 @@ namespace Models
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Residue biomass (kg/ha)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Residue</Title>
@@ -1281,11 +1280,17 @@ namespace Models
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Residue biomass (kg/ha)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Residue</Title>
@@ -1333,11 +1338,17 @@ namespace Models
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Residue biomass (kg/ha)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -1386,11 +1397,17 @@ namespace Models
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Soil water (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -1439,11 +1456,17 @@ namespace Models
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Soil water (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>
@@ -1492,11 +1515,17 @@ namespace Models
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Axis>
         <Type>Left</Type>
         <Title>Soil water (mm)</Title>
         <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
       </Axis>
       <Series>
         <Title>Predicted</Title>

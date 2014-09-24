@@ -77,9 +77,6 @@ namespace Models
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
@@ -90,10 +87,21 @@ namespace Models
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>AgPasture</PoolName>
+            <ResidueType>grass</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>40</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>AgPasture</PoolName>
         <type>grass</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>40</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -104,6 +112,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -287,69 +296,6 @@ namespace Models
         </Analysis>
         <Water>
           <Name>Water</Name>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>200</double>
-            <double>150</double>
-            <double>250</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1.3</double>
-            <double>1.33</double>
-            <double>1.01</double>
-            <double>0.54</double>
-            <double>0.31</double>
-            <double>0.31</double>
-            <double>0.31</double>
-          </BD>
-          <AirDry>
-            <double>0.075</double>
-            <double>0.12</double>
-            <double>0.075</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </AirDry>
-          <LL15>
-            <double>0.15</double>
-            <double>0.133</double>
-            <double>0.075</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </LL15>
-          <DUL>
-            <double>0.36</double>
-            <double>0.33</double>
-            <double>0.24</double>
-            <double>0.08</double>
-            <double>0.035</double>
-            <double>0.03</double>
-            <double>0.03</double>
-          </DUL>
-          <SAT>
-            <double>0.45</double>
-            <double>0.428</double>
-            <double>0.3</double>
-            <double>0.172</double>
-            <double>0.11</double>
-            <double>0.11</double>
-            <double>0.11</double>
-          </SAT>
-          <KS>
-            <double>5000</double>
-            <double>5000</double>
-            <double>5000</double>
-            <double>10000</double>
-            <double>17500</double>
-            <double>20000</double>
-            <double>20000</double>
-          </KS>
           <SoilCrop>
             <Name>ryegrass_clover</Name>
             <LL>
@@ -590,6 +536,69 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>200</double>
+            <double>150</double>
+            <double>250</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.3</double>
+            <double>1.33</double>
+            <double>1.01</double>
+            <double>0.54</double>
+            <double>0.31</double>
+            <double>0.31</double>
+            <double>0.31</double>
+          </BD>
+          <AirDry>
+            <double>0.075</double>
+            <double>0.12</double>
+            <double>0.075</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </AirDry>
+          <LL15>
+            <double>0.15</double>
+            <double>0.133</double>
+            <double>0.075</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </LL15>
+          <DUL>
+            <double>0.36</double>
+            <double>0.33</double>
+            <double>0.24</double>
+            <double>0.08</double>
+            <double>0.035</double>
+            <double>0.03</double>
+            <double>0.03</double>
+          </DUL>
+          <SAT>
+            <double>0.45</double>
+            <double>0.428</double>
+            <double>0.3</double>
+            <double>0.172</double>
+            <double>0.11</double>
+            <double>0.11</double>
+            <double>0.11</double>
+          </SAT>
+          <KS>
+            <double>5000</double>
+            <double>5000</double>
+            <double>5000</double>
+            <double>10000</double>
+            <double>17500</double>
+            <double>20000</double>
+            <double>20000</double>
+          </KS>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -640,6 +649,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -649,15 +663,9 @@ namespace Models
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -941,42 +949,42 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[AgPasture].SwardName</string>
-          <string>[AgPasture].SpeciesName</string>
-          <string>[AgPasture].TotalPlantWt</string>
-          <string>[AgPasture].AboveGroundWt</string>
-          <string>[AgPasture].StandingPlantWt</string>
-          <string>[AgPasture].BelowGroundWt</string>
-          <string>[AgPasture].HarvestableWt</string>
-          <string>[AgPasture].SpeciesTotalWt</string>
-          <string>[AgPasture].SpeciesAboveGroundWt</string>
-          <string>[AgPasture].HarvestWt</string>
-          <string>[AgPasture].SpeciesHarvestWt</string>
-          <string>[AgPasture].LAI_total</string>
-          <string>[AgPasture].LAI_green</string>
-          <string>[AgPasture].LAI_dead</string>
-          <string>[AgPasture].PlantPotentialGrowthWt</string>
-          <string>[AgPasture].PlantGrowthNoNLimit</string>
-          <string>[AgPasture].PlantGrowthWt</string>
-          <string>[AgPasture].HerbageGrowthWt</string>
-          <string>[AgPasture].LitterDepositionWt</string>
-          <string>[AgPasture].RootSenescenceWt</string>
-          <string>[AgPasture].WaterDemand</string>
-          <string>[AgPasture].WaterSupply</string>
-          <string>[AgPasture].WaterUptake</string>
-          <string>[AgPasture].TotalPlantN</string>
-          <string>[AgPasture].NitrogenDemand</string>
-          <string>[AgPasture].PlantFixedN</string>
-          <string>[AgPasture].NitrogenUptake</string>
-          <string>[AgPasture].LitterDepositionN</string>
-          <string>[AgPasture].RootSenescenceN</string>
-          <string>[AgPasture].GLFtemp</string>
-          <string>[AgPasture].GLFwater</string>
-          <string>[AgPasture].GLFn</string>
-          <string>[AgPasture].GLFnConcentration</string>
-          <string>[AgPasture].GLFrgr</string>
-          <string>[Agpasture].GPP</string>
-          <string>[Agpasture].NitrogenSupply</string>
+          <string>AgPasture.SwardName</string>
+          <string>AgPasture.SpeciesName</string>
+          <string>AgPasture.TotalPlantWt</string>
+          <string>AgPasture.AboveGroundWt</string>
+          <string>AgPasture.StandingPlantWt</string>
+          <string>AgPasture.BelowGroundWt</string>
+          <string>AgPasture.HarvestableWt</string>
+          <string>AgPasture.SpeciesTotalWt</string>
+          <string>AgPasture.SpeciesAboveGroundWt</string>
+          <string>AgPasture.HarvestWt</string>
+          <string>AgPasture.SpeciesHarvestWt</string>
+          <string>AgPasture.LAI_total</string>
+          <string>AgPasture.LAI_green</string>
+          <string>AgPasture.LAI_dead</string>
+          <string>AgPasture.PlantPotentialGrowthWt</string>
+          <string>AgPasture.PlantGrowthNoNLimit</string>
+          <string>AgPasture.PlantGrowthWt</string>
+          <string>AgPasture.HerbageGrowthWt</string>
+          <string>AgPasture.LitterDepositionWt</string>
+          <string>AgPasture.RootSenescenceWt</string>
+          <string>AgPasture.WaterDemand</string>
+          <string>AgPasture.WaterSupply</string>
+          <string>AgPasture.WaterUptake</string>
+          <string>AgPasture.TotalPlantN</string>
+          <string>AgPasture.NitrogenDemand</string>
+          <string>AgPasture.PlantFixedN</string>
+          <string>AgPasture.NitrogenUptake</string>
+          <string>AgPasture.LitterDepositionN</string>
+          <string>AgPasture.RootSenescenceN</string>
+          <string>AgPasture.GLFtemp</string>
+          <string>AgPasture.GLFwater</string>
+          <string>AgPasture.GLFn</string>
+          <string>AgPasture.GLFnConcentration</string>
+          <string>AgPasture.GLFrgr</string>
+          <string>AgPasture.GPP</string>
+          <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
@@ -997,11 +1005,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -1084,6 +1098,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -1091,11 +1106,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -1158,6 +1179,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -1165,11 +1187,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>DMcut</Title>
@@ -1192,6 +1220,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -1199,11 +1228,17 @@ namespace Models
           <Type>Left</Type>
           <Title>growth rate (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Potential</Title>
@@ -1286,6 +1321,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -1293,11 +1329,17 @@ namespace Models
           <Type>Left</Type>
           <Title>LAI</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Total</Title>
@@ -1360,6 +1402,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -1367,11 +1410,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Water demand, uptake (mm/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -1414,6 +1463,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -1421,11 +1471,17 @@ namespace Models
           <Type>Left</Type>
           <Title>N demand, uptake (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -1488,6 +1544,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -1495,11 +1552,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil mineral N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>SoilNO3</Title>
@@ -1542,6 +1605,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -1549,14 +1613,23 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil organic N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Right</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>HumusN</Title>
@@ -1639,6 +1712,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -1646,6 +1720,8 @@ namespace Models
     <Input>
       <Name>Observed</Name>
     </Input>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>Test2</Name>
@@ -1774,9 +1850,6 @@ namespace Models
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
@@ -1787,10 +1860,21 @@ namespace Models
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>AgPasture</PoolName>
+            <ResidueType>grass</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>40</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>AgPasture</PoolName>
         <type>grass</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>40</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -1801,6 +1885,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -1984,69 +2069,6 @@ namespace Models
         </Analysis>
         <Water>
           <Name>Water</Name>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>200</double>
-            <double>150</double>
-            <double>250</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1.3</double>
-            <double>1.33</double>
-            <double>1.01</double>
-            <double>0.54</double>
-            <double>0.31</double>
-            <double>0.31</double>
-            <double>0.31</double>
-          </BD>
-          <AirDry>
-            <double>0.075</double>
-            <double>0.12</double>
-            <double>0.075</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </AirDry>
-          <LL15>
-            <double>0.15</double>
-            <double>0.133</double>
-            <double>0.075</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </LL15>
-          <DUL>
-            <double>0.36</double>
-            <double>0.33</double>
-            <double>0.24</double>
-            <double>0.08</double>
-            <double>0.035</double>
-            <double>0.03</double>
-            <double>0.03</double>
-          </DUL>
-          <SAT>
-            <double>0.45</double>
-            <double>0.428</double>
-            <double>0.3</double>
-            <double>0.172</double>
-            <double>0.11</double>
-            <double>0.11</double>
-            <double>0.11</double>
-          </SAT>
-          <KS>
-            <double>5000</double>
-            <double>5000</double>
-            <double>5000</double>
-            <double>10000</double>
-            <double>17500</double>
-            <double>20000</double>
-            <double>20000</double>
-          </KS>
           <SoilCrop>
             <Name>ryegrass_clover</Name>
             <LL>
@@ -2287,6 +2309,69 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>200</double>
+            <double>150</double>
+            <double>250</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.3</double>
+            <double>1.33</double>
+            <double>1.01</double>
+            <double>0.54</double>
+            <double>0.31</double>
+            <double>0.31</double>
+            <double>0.31</double>
+          </BD>
+          <AirDry>
+            <double>0.075</double>
+            <double>0.12</double>
+            <double>0.075</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </AirDry>
+          <LL15>
+            <double>0.15</double>
+            <double>0.133</double>
+            <double>0.075</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </LL15>
+          <DUL>
+            <double>0.36</double>
+            <double>0.33</double>
+            <double>0.24</double>
+            <double>0.08</double>
+            <double>0.035</double>
+            <double>0.03</double>
+            <double>0.03</double>
+          </DUL>
+          <SAT>
+            <double>0.45</double>
+            <double>0.428</double>
+            <double>0.3</double>
+            <double>0.172</double>
+            <double>0.11</double>
+            <double>0.11</double>
+            <double>0.11</double>
+          </SAT>
+          <KS>
+            <double>5000</double>
+            <double>5000</double>
+            <double>5000</double>
+            <double>10000</double>
+            <double>17500</double>
+            <double>20000</double>
+            <double>20000</double>
+          </KS>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -2337,6 +2422,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -2346,15 +2436,9 @@ namespace Models
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -2638,42 +2722,42 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[AgPasture].SwardName</string>
-          <string>[AgPasture].SpeciesName</string>
-          <string>[AgPasture].TotalPlantWt</string>
-          <string>[AgPasture].AboveGroundWt</string>
-          <string>[AgPasture].StandingPlantWt</string>
-          <string>[AgPasture].BelowGroundWt</string>
-          <string>[AgPasture].HarvestableWt</string>
-          <string>[AgPasture].SpeciesTotalWt</string>
-          <string>[AgPasture].SpeciesAboveGroundWt</string>
-          <string>[AgPasture].HarvestWt</string>
-          <string>[AgPasture].SpeciesHarvestWt</string>
-          <string>[AgPasture].LAI_total</string>
-          <string>[AgPasture].LAI_green</string>
-          <string>[AgPasture].LAI_dead</string>
-          <string>[AgPasture].PlantPotentialGrowthWt</string>
-          <string>[AgPasture].PlantGrowthNoNLimit</string>
-          <string>[AgPasture].PlantGrowthWt</string>
-          <string>[AgPasture].HerbageGrowthWt</string>
-          <string>[AgPasture].LitterDepositionWt</string>
-          <string>[AgPasture].RootSenescenceWt</string>
-          <string>[AgPasture].WaterDemand</string>
-          <string>[AgPasture].WaterSupply</string>
-          <string>[AgPasture].WaterUptake</string>
-          <string>[AgPasture].TotalPlantN</string>
-          <string>[AgPasture].NitrogenDemand</string>
-          <string>[AgPasture].PlantFixedN</string>
-          <string>[AgPasture].NitrogenUptake</string>
-          <string>[AgPasture].LitterDepositionN</string>
-          <string>[AgPasture].RootSenescenceN</string>
-          <string>[AgPasture].GLFtemp</string>
-          <string>[AgPasture].GLFwater</string>
-          <string>[AgPasture].GLFn</string>
-          <string>[AgPasture].GLFnConcentration</string>
-          <string>[AgPasture].GLFrgr</string>
-          <string>[Agpasture].GPP</string>
-          <string>[Agpasture].NitrogenSupply</string>
+          <string>AgPasture.SwardName</string>
+          <string>AgPasture.SpeciesName</string>
+          <string>AgPasture.TotalPlantWt</string>
+          <string>AgPasture.AboveGroundWt</string>
+          <string>AgPasture.StandingPlantWt</string>
+          <string>AgPasture.BelowGroundWt</string>
+          <string>AgPasture.HarvestableWt</string>
+          <string>AgPasture.SpeciesTotalWt</string>
+          <string>AgPasture.SpeciesAboveGroundWt</string>
+          <string>AgPasture.HarvestWt</string>
+          <string>AgPasture.SpeciesHarvestWt</string>
+          <string>AgPasture.LAI_total</string>
+          <string>AgPasture.LAI_green</string>
+          <string>AgPasture.LAI_dead</string>
+          <string>AgPasture.PlantPotentialGrowthWt</string>
+          <string>AgPasture.PlantGrowthNoNLimit</string>
+          <string>AgPasture.PlantGrowthWt</string>
+          <string>AgPasture.HerbageGrowthWt</string>
+          <string>AgPasture.LitterDepositionWt</string>
+          <string>AgPasture.RootSenescenceWt</string>
+          <string>AgPasture.WaterDemand</string>
+          <string>AgPasture.WaterSupply</string>
+          <string>AgPasture.WaterUptake</string>
+          <string>AgPasture.TotalPlantN</string>
+          <string>AgPasture.NitrogenDemand</string>
+          <string>AgPasture.PlantFixedN</string>
+          <string>AgPasture.NitrogenUptake</string>
+          <string>AgPasture.LitterDepositionN</string>
+          <string>AgPasture.RootSenescenceN</string>
+          <string>AgPasture.GLFtemp</string>
+          <string>AgPasture.GLFwater</string>
+          <string>AgPasture.GLFn</string>
+          <string>AgPasture.GLFnConcentration</string>
+          <string>AgPasture.GLFrgr</string>
+          <string>AgPasture.GPP</string>
+          <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
@@ -2693,11 +2777,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -2780,6 +2870,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -2787,11 +2878,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -2854,6 +2951,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -2861,11 +2959,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>DMcut</Title>
@@ -2888,6 +2992,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -2895,11 +3000,17 @@ namespace Models
           <Type>Left</Type>
           <Title>growth rate (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Potential</Title>
@@ -2982,6 +3093,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -2989,11 +3101,17 @@ namespace Models
           <Type>Left</Type>
           <Title>LAI</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Total</Title>
@@ -3056,6 +3174,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -3063,11 +3182,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Water demand, uptake (mm/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -3110,6 +3235,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -3117,11 +3243,17 @@ namespace Models
           <Type>Left</Type>
           <Title>N demand, uptake (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -3184,6 +3316,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -3191,11 +3324,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil mineral N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>SoilNO3</Title>
@@ -3238,6 +3377,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -3245,14 +3385,23 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil organic N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Right</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>HumusN</Title>
@@ -3335,6 +3484,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -3342,6 +3492,8 @@ namespace Models
     <Input>
       <Name>Observed</Name>
     </Input>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>Test3</Name>
@@ -3470,9 +3622,6 @@ namespace Models
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
@@ -3483,10 +3632,21 @@ namespace Models
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>AgPasture</PoolName>
+            <ResidueType>grass</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>40</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>AgPasture</PoolName>
         <type>grass</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>40</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -3497,6 +3657,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -3680,69 +3841,6 @@ namespace Models
         </Analysis>
         <Water>
           <Name>Water</Name>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>200</double>
-            <double>150</double>
-            <double>250</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1.3</double>
-            <double>1.33</double>
-            <double>1.01</double>
-            <double>0.54</double>
-            <double>0.31</double>
-            <double>0.31</double>
-            <double>0.31</double>
-          </BD>
-          <AirDry>
-            <double>0.075</double>
-            <double>0.12</double>
-            <double>0.075</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </AirDry>
-          <LL15>
-            <double>0.15</double>
-            <double>0.133</double>
-            <double>0.075</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </LL15>
-          <DUL>
-            <double>0.36</double>
-            <double>0.33</double>
-            <double>0.24</double>
-            <double>0.08</double>
-            <double>0.035</double>
-            <double>0.03</double>
-            <double>0.03</double>
-          </DUL>
-          <SAT>
-            <double>0.45</double>
-            <double>0.428</double>
-            <double>0.3</double>
-            <double>0.172</double>
-            <double>0.11</double>
-            <double>0.11</double>
-            <double>0.11</double>
-          </SAT>
-          <KS>
-            <double>5000</double>
-            <double>5000</double>
-            <double>5000</double>
-            <double>10000</double>
-            <double>17500</double>
-            <double>20000</double>
-            <double>20000</double>
-          </KS>
           <SoilCrop>
             <Name>ryegrass_clover</Name>
             <LL>
@@ -3983,6 +4081,69 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>200</double>
+            <double>150</double>
+            <double>250</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.3</double>
+            <double>1.33</double>
+            <double>1.01</double>
+            <double>0.54</double>
+            <double>0.31</double>
+            <double>0.31</double>
+            <double>0.31</double>
+          </BD>
+          <AirDry>
+            <double>0.075</double>
+            <double>0.12</double>
+            <double>0.075</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </AirDry>
+          <LL15>
+            <double>0.15</double>
+            <double>0.133</double>
+            <double>0.075</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </LL15>
+          <DUL>
+            <double>0.36</double>
+            <double>0.33</double>
+            <double>0.24</double>
+            <double>0.08</double>
+            <double>0.035</double>
+            <double>0.03</double>
+            <double>0.03</double>
+          </DUL>
+          <SAT>
+            <double>0.45</double>
+            <double>0.428</double>
+            <double>0.3</double>
+            <double>0.172</double>
+            <double>0.11</double>
+            <double>0.11</double>
+            <double>0.11</double>
+          </SAT>
+          <KS>
+            <double>5000</double>
+            <double>5000</double>
+            <double>5000</double>
+            <double>10000</double>
+            <double>17500</double>
+            <double>20000</double>
+            <double>20000</double>
+          </KS>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -4033,6 +4194,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -4042,15 +4208,9 @@ namespace Models
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -4341,42 +4501,42 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[AgPasture].SwardName</string>
-          <string>[AgPasture].SpeciesName</string>
-          <string>[AgPasture].TotalPlantWt</string>
-          <string>[AgPasture].AboveGroundWt</string>
-          <string>[AgPasture].StandingPlantWt</string>
-          <string>[AgPasture].BelowGroundWt</string>
-          <string>[AgPasture].HarvestableWt</string>
-          <string>[AgPasture].SpeciesTotalWt</string>
-          <string>[AgPasture].SpeciesAboveGroundWt</string>
-          <string>[AgPasture].HarvestWt</string>
-          <string>[AgPasture].SpeciesHarvestWt</string>
-          <string>[AgPasture].LAI_total</string>
-          <string>[AgPasture].LAI_green</string>
-          <string>[AgPasture].LAI_dead</string>
-          <string>[AgPasture].PlantPotentialGrowthWt</string>
-          <string>[AgPasture].PlantGrowthNoNLimit</string>
-          <string>[AgPasture].PlantGrowthWt</string>
-          <string>[AgPasture].HerbageGrowthWt</string>
-          <string>[AgPasture].LitterDepositionWt</string>
-          <string>[AgPasture].RootSenescenceWt</string>
-          <string>[AgPasture].WaterDemand</string>
-          <string>[AgPasture].WaterSupply</string>
-          <string>[AgPasture].WaterUptake</string>
-          <string>[AgPasture].TotalPlantN</string>
-          <string>[AgPasture].NitrogenDemand</string>
-          <string>[AgPasture].PlantFixedN</string>
-          <string>[AgPasture].NitrogenUptake</string>
-          <string>[AgPasture].LitterDepositionN</string>
-          <string>[AgPasture].RootSenescenceN</string>
-          <string>[AgPasture].GLFtemp</string>
-          <string>[AgPasture].GLFwater</string>
-          <string>[AgPasture].GLFn</string>
-          <string>[AgPasture].GLFnConcentration</string>
-          <string>[AgPasture].GLFrgr</string>
-          <string>[Agpasture].GPP</string>
-          <string>[Agpasture].NitrogenSupply</string>
+          <string>AgPasture.SwardName</string>
+          <string>AgPasture.SpeciesName</string>
+          <string>AgPasture.TotalPlantWt</string>
+          <string>AgPasture.AboveGroundWt</string>
+          <string>AgPasture.StandingPlantWt</string>
+          <string>AgPasture.BelowGroundWt</string>
+          <string>AgPasture.HarvestableWt</string>
+          <string>AgPasture.SpeciesTotalWt</string>
+          <string>AgPasture.SpeciesAboveGroundWt</string>
+          <string>AgPasture.HarvestWt</string>
+          <string>AgPasture.SpeciesHarvestWt</string>
+          <string>AgPasture.LAI_total</string>
+          <string>AgPasture.LAI_green</string>
+          <string>AgPasture.LAI_dead</string>
+          <string>AgPasture.PlantPotentialGrowthWt</string>
+          <string>AgPasture.PlantGrowthNoNLimit</string>
+          <string>AgPasture.PlantGrowthWt</string>
+          <string>AgPasture.HerbageGrowthWt</string>
+          <string>AgPasture.LitterDepositionWt</string>
+          <string>AgPasture.RootSenescenceWt</string>
+          <string>AgPasture.WaterDemand</string>
+          <string>AgPasture.WaterSupply</string>
+          <string>AgPasture.WaterUptake</string>
+          <string>AgPasture.TotalPlantN</string>
+          <string>AgPasture.NitrogenDemand</string>
+          <string>AgPasture.PlantFixedN</string>
+          <string>AgPasture.NitrogenUptake</string>
+          <string>AgPasture.LitterDepositionN</string>
+          <string>AgPasture.RootSenescenceN</string>
+          <string>AgPasture.GLFtemp</string>
+          <string>AgPasture.GLFwater</string>
+          <string>AgPasture.GLFn</string>
+          <string>AgPasture.GLFnConcentration</string>
+          <string>AgPasture.GLFrgr</string>
+          <string>AgPasture.GPP</string>
+          <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
@@ -4397,11 +4557,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -4484,6 +4650,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -4491,11 +4658,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -4598,6 +4771,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -4605,11 +4779,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>DMcut</Title>
@@ -4632,6 +4812,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -4639,11 +4820,17 @@ namespace Models
           <Type>Left</Type>
           <Title>growth rate (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Potential</Title>
@@ -4726,6 +4913,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -4733,11 +4921,17 @@ namespace Models
           <Type>Left</Type>
           <Title>LAI</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Total</Title>
@@ -4800,6 +4994,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -4807,11 +5002,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Water demand, uptake (mm/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -4854,6 +5055,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -4861,11 +5063,17 @@ namespace Models
           <Type>Left</Type>
           <Title>N demand, uptake (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -4928,6 +5136,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -4935,11 +5144,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil mineral N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>SoilNO3</Title>
@@ -4982,6 +5197,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -4989,14 +5205,23 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil organic N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Right</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>HumusN</Title>
@@ -5079,6 +5304,7 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -5086,6 +5312,8 @@ namespace Models
     <Input>
       <Name>Observed</Name>
     </Input>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

@@ -696,7 +696,7 @@ namespace UserInterface.Presenters
             
             if (model != null && model.Parent != null)
             {
-                Model firstModel = model.Parent.Children[0];
+                IModel firstModel = model.Parent.Children[0];
                 if (model != firstModel)
                 {
                     CommandHistory.Add(new Commands.MoveModelUpDownCommand(this.view, model, up: true));
@@ -715,7 +715,7 @@ namespace UserInterface.Presenters
 
             if (model != null && model.Parent != null)
             {
-                Model lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
+                IModel lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
                 if (model != lastModel)
                 {
                     CommandHistory.Add(new Commands.MoveModelUpDownCommand(this.view, model, up: false));

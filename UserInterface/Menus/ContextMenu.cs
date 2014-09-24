@@ -245,24 +245,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for adding a factor value
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add factor value",
-                     AppliesTo = new Type[] { typeof(Factor),
-                                              typeof(FactorValue) })]
-        public void AddFactorValue(object sender, EventArgs e)
-        {
-            Model factor = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-            if (factor != null)
-            {
-                AddModelCommand command = new AddModelCommand("<FactorValue/>", factor);
-                this.explorerPresenter.CommandHistory.Add(command, true);
-            }
-        }
-
-        /// <summary>
         /// Event handler for adding a factor
         /// </summary>
         /// <param name="sender">Sender of the event</param>

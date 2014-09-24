@@ -72,6 +72,7 @@ namespace Models.PMF.OldPlant
 
         public bool AutoHarvest { get; set; }
 
+        [XmlIgnore]
         public SowPlant2Type SowingData;
 
         public string CropType { get; set; }
@@ -314,7 +315,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return WaterDemand;
+                return Root.SWUptake;
             }
         }
 
@@ -979,7 +980,7 @@ namespace Models.PMF.OldPlant
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.UptakeInfo> GetPotSWUptake(List<Soils.UptakeInfo> info)
+        public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
         {
             return info;
         }

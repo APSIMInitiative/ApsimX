@@ -215,7 +215,7 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Maximum surface storage capacity of soil")]
+        [Description("Maximum water storage on soil surface")]
         public double max_pond         //! maximum surface storage capacity of soil  //sv- used to store water from runoff on the surface.
         {
             get { return _max_pond; }
@@ -267,40 +267,40 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Description("Stage 2 drying coefficient during summer")]
-        public double SummerCona = Double.NaN;
+        public double SummerCona { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
         [Description("Upper limit of stage 1 soil evaporation during summer")]
-        public double SummerU = Double.NaN;
+        public double SummerU { get; set; }
 
         [Description("Date for start of summer evaporation (dd-mmm)")]
-        public string SummerDate = "not_read";       //! Date for start of summer evaporation (dd-mmm)
+        public string SummerDate { get; set; }       //! Date for start of summer evaporation (dd-mmm)
 
         //winter
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Description("Stage 2 drying coefficient during winter")]
-        public double WinterCona = Double.NaN;
+        public double WinterCona { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         [Description("Upper limit of stage 1 soil evaporation during winter")]
-        public double WinterU = Double.NaN;
+        public double WinterU { get; set; }
 
         [Description("Date for start of winter evaporation (dd-mmm)")]
-        public string WinterDate = "not_read";       //! Date for start of winter evaporation (dd-mmm)
+        public string WinterDate { get; set; }       //! Date for start of winter evaporation (dd-mmm)
 
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Description("Diffusivity constant for soil testure")]
-        public double DiffusConst = 40.0;     //! diffusivity constant for soil testure
+        public double DiffusConst { get; set; }     //! diffusivity constant for soil testure
 
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Description("Slope for diffusivity/soil water content relationship")]
-        public double DiffusSlope = 16.0;     //! slope for diffusivity/soil water content relationship
+        public double DiffusSlope { get; set; }     //! slope for diffusivity/soil water content relationship
 
         [Description("Bare soil albedo")]
-        public double Salb;           //! bare soil albedo (unitless)
+        public double Salb { get; set; }           //! bare soil albedo (unitless)
 
         private double _cn2_bare = 73.0;
 
@@ -4130,6 +4130,18 @@ namespace Models.Soils
 
 
         #region Clock Event Handlers
+
+        public SoilWater()
+        {
+            SummerCona = Double.NaN;
+            SummerU = Double.NaN;
+            SummerDate = "not_read"; 
+            WinterCona = Double.NaN;
+            WinterU = Double.NaN;
+            WinterDate = "not_read";      
+            DiffusConst = 40.0;     
+            DiffusSlope = 16.0;     
+        }
 
         [EventSubscribe("Loaded")]
         private void OnLoaded()

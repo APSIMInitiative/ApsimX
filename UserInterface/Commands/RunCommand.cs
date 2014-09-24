@@ -30,20 +30,6 @@ namespace UserInterface.Commands
 
             JobManager = new Utility.JobManager();
             JobManager.OnComplete += OnComplete;
-            if (!(ModelClicked is Simulation) && !(ModelClicked is Experiment) && !(ModelClicked is Simulations))
-            {
-                Model simulation = Apsim.Find(ModelClicked, typeof(Simulation));
-                if (simulation == null)
-                {
-                    simulation = Apsim.Find(ModelClicked, typeof(Experiment));
-                }
-                if (simulation == null)
-                {
-                    simulation = Apsim.Find(ModelClicked, typeof(Simulations));
-                }
-                ModelClicked = simulation;
-            }
-
         }
 
         /// <summary>
@@ -61,24 +47,6 @@ namespace UserInterface.Commands
             if (ModelClicked is Simulations)
             {
                 Simulations.SimulationToRun = null;  // signal that we want to run all simulations.
-            }
-            else if (ModelClicked is Simulation)
-            {
-                Simulation simulation = ModelClicked as Simulation;
-                try
-                {
-                    simulation.Run(null, null);
-                    OnComplete(null, new Utility.JobManager.JobCompleteArgs() { PercentComplete = 100 });
-                }
-                catch (Exception err)
-                {
-                    OnComplete(null, new Utility.JobManager.JobCompleteArgs() { ErrorMessage = err.Message, PercentComplete = 100 });
-                }
-
-                object[] args = new object[] { this, new EventArgs() };
-                foreach (Model model in Apsim.ChildrenRecursively(Simulations))
-                    Apsim.CallEventHandler(model, "AllCompleted", args);
-                return;
             }
             else
                 Simulations.SimulationToRun = ModelClicked;
@@ -105,9 +73,7 @@ namespace UserInterface.Commands
             {
                 Timer.Stop();
 
-                if (JobManager.SomeHadErrors)
-                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete with errors", Models.DataStore.ErrorLevel.Error);
-                else
+                if (!JobManager.SomeHadErrors)
                     ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
                         + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
 

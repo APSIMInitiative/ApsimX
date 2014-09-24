@@ -72,7 +72,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.Factorial.Experiment))]
         [XmlElement(typeof(Models.Factorial.Factors))]
         [XmlElement(typeof(Models.Factorial.Factor))]
-        [XmlElement(typeof(Models.Factorial.FactorValue))]
         [XmlElement(typeof(Memo))]
         [XmlElement(typeof(Folder))]
         [XmlElement(typeof(Soils.Water))]
