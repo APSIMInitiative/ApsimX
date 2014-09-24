@@ -376,38 +376,26 @@ namespace UserInterface.Views
         /// <param name="Message"></param>
         public void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel)
         {
-
             StatusWindow.Visible = Message != null;
-            StatusWindow.Select(StatusWindow.TextLength, 0);
-
-            // Output the date.
-            StatusWindow.SelectionColor = Color.Black;
-            StatusWindow.SelectedText = DateTime.Now.ToString() + ":";
-
+            
             // Output the message
-            StatusWindow.Select(StatusWindow.TextLength, 0);
-
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
             {
-                StatusWindow.SelectionColor = Color.Red;
+                StatusWindow.ForeColor = Color.Red;
             }
             else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
             {
-                StatusWindow.SelectionColor = Color.Brown;
+                StatusWindow.ForeColor = Color.Brown;
             }
             else
             {
-                StatusWindow.SelectionColor = Color.Blue;
+                StatusWindow.ForeColor = Color.Blue;
             }
-            Message = "\n" + Message.TrimEnd("\n".ToCharArray());
+            Message = Message.TrimEnd("\n".ToCharArray());
             Message = Message.Replace("\n", "\n                      ");
             Message += "\n";
-
-            StatusWindow.SelectedText = Message;
-            StatusWindow.ScrollToCaret();
-            //StatusWindow.Select(0, Message.Length);
-
-            //Application.DoEvents();
+            StatusWindow.Text = Message;
+            this.toolTip1.SetToolTip(this.StatusWindow, Message);
         }
 
         /// <summary>
@@ -721,7 +709,7 @@ namespace UserInterface.Views
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            StatusWindow.Clear();
+            //StatusWindow.Clear();
         }
 
         /// <summary>
