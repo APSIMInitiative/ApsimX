@@ -737,24 +737,26 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Toggle the enable or disable a series.
+        /// Enable or disable a series.
         /// </summary>
         /// <param name="seriesIndex">series index</param>
-        public void ToggleEnableSeries(int seriesIndex)
+        /// <param name="enable">Enable the series?</param>
+        public void EnableSeries(int seriesIndex, bool enable)
         {
             LineSeries series = this.plot1.Model.Series[seriesIndex] as LineSeries;
             if (series != null)
             {
-                if (series.Tag == null)
+                if (enable && series.Tag != null)
+                {
+                    series.Color = (OxyColor)series.Tag;
+                    series.Tag = null;
+                }
+                else if (!enable && series.Tag == null)
                 {
                     series.Tag = series.Color;
                     series.Color = OxyColors.Transparent;
                 }
-                else
-                {
-                    series.Color = (OxyColor) series.Tag;
-                    series.Tag = null;
-                }
+
                 this.plot1.Refresh();
             }
         }

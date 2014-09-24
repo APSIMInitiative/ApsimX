@@ -204,10 +204,11 @@ namespace UserInterface.Interfaces
         void AddContextAction(string menuText, System.EventHandler onClick);
 
         /// <summary>
-        /// Toggle the enable or disable a series.
+        /// Enable or disable a series.
         /// </summary>
         /// <param name="seriesIndex">series index</param>
-        void ToggleEnableSeries(int seriesIndex);
+        /// <param name="enable">Enable the series?</param>
+        void EnableSeries(int seriesIndex, bool enable);
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.

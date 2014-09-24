@@ -89,9 +89,14 @@ namespace Models.Graph
         public LegendPositionType LegendPosition { get; set; }
 
         /// <summary>
-        /// Show an overall regression line and stats for all series?
+        /// Gets or sets a value indicating whether an overall regression line and stats for all series?
         /// </summary>
         public bool ShowRegressionLine { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of raw grpah series that should be disabled.
+        /// </summary>
+        public List<string> DisabledSeries { get; set; }
 
         /// <summary>
         /// Gets an instance of the data store. Creates it if it doesn't exist.

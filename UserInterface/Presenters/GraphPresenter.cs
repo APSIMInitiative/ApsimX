@@ -96,6 +96,20 @@ namespace UserInterface.Presenters
                 //Format the footer
                 GraphView.FormatCaption(Graph.Caption);
 
+                // Tell the graph view about any disabled series 
+                for (int i = 0; i < seriesMetadata.Count; i++)
+                {
+                    if (this.Graph.DisabledSeries.Contains(seriesMetadata[i].Title))
+                        this.GraphView.EnableSeries(i, enable: false);
+                }
+
+                // Remove series titles out of the graph disabled series list when
+                // they are no longer valid i.e. not on the graph.
+                IEnumerable<string> validSeriesTitles = this.seriesMetadata.Select(s => s.Title);
+                List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.Graph.DisabledSeries));
+                this.Graph.DisabledSeries.Clear();
+                this.Graph.DisabledSeries.AddRange(seriesTitlesToKeep);
+
                 GraphView.Refresh();
             }
         }
@@ -425,8 +439,18 @@ namespace UserInterface.Presenters
         {
             if (e.controlKeyPressed)
             {
-                this.GraphView.ToggleEnableSeries(e.seriesIndex);
-
+                string seriesTitle = this.seriesMetadata[e.seriesIndex].Title;
+                bool isDisabled = this.Graph.DisabledSeries.Contains(seriesTitle);
+                if (isDisabled)
+                {
+                    this.GraphView.EnableSeries(e.seriesIndex, enable: true);
+                    this.Graph.DisabledSeries.Remove(seriesTitle);
+                }
+                else
+                {
+                    this.GraphView.EnableSeries(e.seriesIndex, enable: false);
+                    this.Graph.DisabledSeries.Add(seriesTitle);
+                }
             }
             else
             {
