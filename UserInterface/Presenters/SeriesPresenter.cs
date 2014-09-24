@@ -96,6 +96,7 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.SeriesLineTypeChanged += OnSeriesLineTypeChanged;
             this.seriesView.SeriesEditor.SeriesMarkerTypeChanged += OnSeriesMarkerTypeChanged;
             this.seriesView.SeriesEditor.ColourChanged += OnColourChanged;
+            this.seriesView.SeriesEditor.OverallRegressionChanged += OnOverallRegressionChanged;
             this.seriesView.SeriesEditor.RegressionChanged += OnRegressionChanged;
             this.seriesView.SeriesEditor.XOnTopChanged += OnXOnTopChanged;
             this.seriesView.SeriesEditor.YOnRightChanged += OnYOnRightChanged;
@@ -104,7 +105,6 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.X2Changed += OnX2Changed;
             this.seriesView.SeriesEditor.Y2Changed += OnY2Changed;
             this.seriesView.SeriesEditor.ShowInLegendChanged += OnShowInLegendChanged;
-            this.seriesView.SeriesEditor.SplitOnChanged += OnSplitChanged;
         }
 
         /// <summary>
@@ -123,6 +123,7 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.SeriesLineTypeChanged -= OnSeriesLineTypeChanged;
             this.seriesView.SeriesEditor.SeriesMarkerTypeChanged -= OnSeriesMarkerTypeChanged;
             this.seriesView.SeriesEditor.ColourChanged -= OnColourChanged;
+            this.seriesView.SeriesEditor.OverallRegressionChanged -= OnOverallRegressionChanged;
             this.seriesView.SeriesEditor.RegressionChanged -= OnRegressionChanged;
             this.seriesView.SeriesEditor.XOnTopChanged -= OnXOnTopChanged;
             this.seriesView.SeriesEditor.YOnRightChanged -= OnYOnRightChanged;
@@ -131,7 +132,6 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.X2Changed -= OnX2Changed;
             this.seriesView.SeriesEditor.Y2Changed -= OnY2Changed;
             this.seriesView.SeriesEditor.ShowInLegendChanged -= OnShowInLegendChanged;
-            this.seriesView.SeriesEditor.SplitOnChanged -= OnSplitChanged;
         }
 
         /// <summary>
@@ -306,6 +306,17 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Overall regression checkbox has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnOverallRegressionChanged(object sender, EventArgs e)
+        {
+            Commands.ChangeProperty command = new Commands.ChangeProperty(this.graph, "ShowRegressionLine", this.seriesView.SeriesEditor.OverallRegression);
+            this.explorerPresenter.CommandHistory.Add(command);
+        }
+
+        /// <summary>
         /// Regression checkbox has been changed by the user.
         /// </summary>
         /// <param name="sender">Event sender</param>
@@ -441,19 +452,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// User has changed the separate series checkbox
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnSplitChanged(object sender, EventArgs e)
-        {
-            if (this.dataStore != null)
-            {
-                this.SetModelProperty("SplitOn", this.seriesView.SeriesEditor.SplitOn);
-            }
-        }
-
         #endregion
 
         /// <summary>
@@ -489,6 +487,8 @@ namespace UserInterface.Presenters
 
                     this.seriesView.EditorVisible = true;
 
+                    this.seriesView.SeriesEditor.OverallRegression = this.graph.ShowRegressionLine;
+
                     this.seriesView.SeriesEditor.SeriesType = series.Type.ToString();
                     this.seriesView.SeriesEditor.SeriesLineType = series.Line.ToString();
                     this.seriesView.SeriesEditor.SeriesMarkerType = series.Marker.ToString();
@@ -496,7 +496,6 @@ namespace UserInterface.Presenters
                     this.seriesView.SeriesEditor.Regression = series.ShowRegressionLine;
                     this.seriesView.SeriesEditor.XOnTop = series.XAxis == Axis.AxisType.Top;
                     this.seriesView.SeriesEditor.YOnRight = series.YAxis == Axis.AxisType.Right;
-                    this.seriesView.SeriesEditor.SplitOn = series.SplitOn;
                     this.seriesView.SeriesEditor.ShowInLegend = series.ShowInLegend;
 
                     // Populate the editor with a list of data sources.

@@ -221,7 +221,7 @@ namespace Models.Graph
         public GraphValues Y2 { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether a regression line should be shown
+        /// Gets or sets a value indicating whether a regression line should be shown for this series.
         /// </summary>
         public bool ShowRegressionLine { get; set; }
 

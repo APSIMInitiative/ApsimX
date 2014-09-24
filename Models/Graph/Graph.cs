@@ -89,6 +89,11 @@ namespace Models.Graph
         public LegendPositionType LegendPosition { get; set; }
 
         /// <summary>
+        /// Show an overall regression line and stats for all series?
+        /// </summary>
+        public bool ShowRegressionLine { get; set; }
+
+        /// <summary>
         /// Gets an instance of the data store. Creates it if it doesn't exist.
         /// </summary>
         public DataStore DataStore

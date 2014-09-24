@@ -310,6 +310,11 @@
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -319,11 +324,6 @@
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -1017,6 +1017,11 @@
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -1026,11 +1031,6 @@
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -1700,6 +1700,11 @@
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -1709,11 +1714,6 @@
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -2367,6 +2367,11 @@
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -2376,11 +2381,6 @@
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -2759,6 +2759,7 @@
             <SplitOn>Simulation</SplitOn>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
         </Graph>
         <Operations>
           <Name>FertiliserRule</Name>
@@ -2778,146 +2779,6 @@
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Graph>
-    <Name>Graph</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Date</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Leaf live wt</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Series>
-      <Title>1-Nov, 0N</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16744448</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Plant.Leaf.Live.Wt</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>1-Nov, 20N</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16727808</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Plant.Leaf.Live.Wt</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>1-Nov, 60N</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-8323200</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Plant.Leaf.Live.Wt</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>20-Dec, 0N</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Plant.Leaf.Live.Wt</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>20-Dec, 20N</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-8224001</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Plant.Leaf.Live.Wt</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <Series>
-      <Title>20-Dec, 60N</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16711681</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Plant.Leaf.Live.Wt</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
-    </Series>
-    <LegendPosition>TopLeft</LegendPosition>
-  </Graph>
   <Tests>
     <Name>Tests</Name>
     <Test>
