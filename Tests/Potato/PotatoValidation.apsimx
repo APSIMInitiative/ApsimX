@@ -395,7 +395,6 @@
             <CN2Bare>0</CN2Bare>
             <CNRed>-9E-05</CNRed>
             <CNCov>0</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -4292,7 +4291,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -8193,7 +8191,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -12082,7 +12079,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -16022,7 +16018,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -20126,7 +20121,6 @@ namespace Models
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
-            <WaterTable>NaN</WaterTable>
             <Thickness>
               <double>100</double>
               <double>200</double>
