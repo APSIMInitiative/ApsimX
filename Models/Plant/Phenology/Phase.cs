@@ -9,24 +9,25 @@ using System.IO;
 
 namespace Models.PMF.Phen
 {
-	/// <summary>
-	/// The base phase function in phenology. 
-	/// </summary>
-	/// \warning Do not use this function in \ref Models.PMF.Phen.Phenology "Phenology" function.
-	/// \pre All Phase functions have to be the children of \ref Models.PMF.Phen.Phenology "Phenology" function.
-	/// \param End The stage name of phase ending, which should be the same as the Start name 
-	/// in previous phase except the first phase.
-	/// \param Start The stage name of phase starting, which should be the same as the End name.
-	/// in next phase except the last phase.
-	/// \param ThermalTime Optional. The daily thermal time.
-	/// \param Stress Optional. The environmental stress factors.
-	/// \retval TTinPhase The cumulated thermal time in current phase (&deg;Cd).
-	/// \retval TTForToday The thermal time for today in current phase (&deg;Cd).
-	/// \retval FractionComplete The complete fraction in current phase (from 0 to 1).
-	/// <remarks>
-	/// This is a base function in phenology. \ref Models.PMF.Phen.Phenology "Phenology" function
-	/// will call \a DoTimeStep to calculate phenology development.
-	/// </remarks>
+	/*! <summary>
+	The base phase function in phenology. 
+	</summary>
+	\warning Do not use this function in \ref Models.PMF.Phen.Phenology "Phenology" function.
+	\pre All Phase functions have to be the children of \ref Models.PMF.Phen.Phenology "Phenology" function.
+	\param End The stage name of phase ending, which should be the same as the Start name 
+	in previous phase except the first phase.
+	\param Start The stage name of phase starting, which should be the same as the End name.
+	in next phase except the last phase.
+	\param ThermalTime Optional. The daily thermal time.
+	\param Stress Optional. The environmental stress factors.
+	\retval TTinPhase The cumulated thermal time in current phase (&deg;Cd).
+	\retval TTForToday The thermal time for today in current phase (&deg;Cd).
+	\retval FractionComplete The complete fraction in current phase (from 0 to 1).
+	<remarks>
+	This is a base function in phenology. \ref Models.PMF.Phen.Phenology "Phenology" function
+	will call \a DoTimeStep to calculate phenology development.
+	</remarks>
+	*/
     [Serializable]
     abstract public class Phase : Model
     {
