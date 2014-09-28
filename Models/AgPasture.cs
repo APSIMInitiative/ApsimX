@@ -300,7 +300,7 @@ namespace Models
                     growthEfficiency[sp] = value[sp];
             }
         }
-        
+
         private double[] lightExtentionCoeff = new double[] { 0.5, 0.8, 0.6 };
         /// <summary>
         /// 
@@ -351,7 +351,7 @@ namespace Models
                     growthTmin[sp] = value[sp];
             }
         }
-        
+
         private double[] growthTmax = new double[] { 32.0, 32.0, 40.0 };
         /// <summary>
         /// 
@@ -385,7 +385,7 @@ namespace Models
                     growthTopt[sp] = value[sp];
             }
         }
-       
+
         private double[] growthTq = new double[] { 2.0, 2.0, 1.2 };
         /// <summary>
         /// 
@@ -402,7 +402,7 @@ namespace Models
                     growthTq[sp] = value[sp];
             }
         }
-        
+
         private double[] massFluxTmin = new double[] { 2.0, 2.0, 5.0 };
         /// <summary>
         /// 
@@ -1312,7 +1312,7 @@ namespace Models
                 else return "out";
             }
         }
-        
+
         [Description("Plant development stage number")]
         [Units("")]
         public int Stage
@@ -1332,7 +1332,7 @@ namespace Models
                 return cropStage;
             }
         }
-        
+
         [Description("Plant development stage name")]
         [Units("")]
         public string StageName
@@ -1377,14 +1377,14 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total dry matter weight of plants below ground")]
         [Units("kgDM/ha")]
         public double BelowGroundWt
         {
             get { return p_rootMass; }
         }
-        
+
         [Description("Total dry matter weight of standing plants parts")]
         [Units("kgDM/ha")]
         public double StandingPlantWt
@@ -1417,7 +1417,7 @@ namespace Models
         {
             get { return p_deadDM; }
         }
-        
+
         [Description("Total dry matter weight of plant's leaves")]
         [Units("kgDM/ha")]
         public double LeafWt
@@ -1430,7 +1430,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Total dry matter weight of plant's leaves alive")]
         [Units("kgDM/ha")]
         public double LeafLiveWt
@@ -1443,7 +1443,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total dry matter weight of plant's leaves dead")]
         [Units("kgDM/ha")]
         public double LeafDeadWt
@@ -1482,7 +1482,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total dry matter weight of plant's stems dead")]
         [Units("kgDM/ha")]
         public double StemDeadWt
@@ -1508,7 +1508,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Total dry matter weight of plant's roots")]
         [Units("kgDM/ha")]
         public double RootWt
@@ -1528,14 +1528,14 @@ namespace Models
         {
             get { return p_dGrowthPot; }
         }
-        
+
         [Description("Potential plant growth, correct for temperature and water")]
         [Units("kgDM/ha")]
         public double PlantGrowthNoNLimit
         {
             get { return p_dGrowthW; }
         }
-        
+
         [Description("Actual plant growth (before littering)")]
         [Units("kgDM/ha")]
         public double PlantGrowthWt
@@ -1718,7 +1718,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average N concentration of standing plants")]
         [Units("kgN/kgDM")]
         public double StandingPlantNConc
@@ -1749,7 +1749,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total amount of N in dead plants above ground")]
         [Units("kgN/ha")]
         public double AboveGroundDeadN
@@ -1894,7 +1894,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average herbage digestibility")]
         [Units("0-1")]
         public double HerbageDigestibility
@@ -1910,14 +1910,14 @@ namespace Models
                 return digest;
             }
         }
-        
+
         [Description("Average digestibility of harvested material")]
         [Units("0-1")]
         public double DefoliatedDigestibility
         {
             get { return p_harvestDigest; }
         }
-        
+
         [Description("Average ME of herbage")]
         [Units("(MJ/ha)")]
         public double HerbageME
@@ -1974,7 +1974,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Amount of N deposited as litter onto soil surface")]
         [Units("kgN/ha")]
         public double LitterDepositionN
@@ -2094,7 +2094,7 @@ namespace Models
         {
             get { return p_gfn; }
         }
-        
+
         [Description("Plant growth limiting factor due to plant N concentration")]
         [Units("0-1")]
         public double GLFnConcentration
@@ -2107,7 +2107,7 @@ namespace Models
                 return (result / AboveGroundWt);
             }
         }
-        
+
         [Description("Dry matter allocated to roots")]
         [Units("kgDM/ha")]
         public double DMToRoots
@@ -2122,7 +2122,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter allocated to shoot")]
         [Units("kgDM/ha")]
         public double DMToShoot
@@ -2137,7 +2137,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Fraction of growth allocated to roots")]
         [Units("0-1")]
         public double FractionGrowthToRoot
@@ -2281,7 +2281,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter of plant pools at stage 3 (mature)")]
         [Units("kgN/ha")]
         public double PlantStage3Wt
@@ -2294,7 +2294,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter of plant pools at stage 4 (senescent)")]
         [Units("kgN/ha")]
         public double PlantStage4Wt
@@ -2320,7 +2320,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N content of plant pools at stage 2 (developing)")]
         [Units("kgN/ha")]
         public double PlantStage2N
@@ -2333,7 +2333,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N content of plant pools at stage 3 (mature)")]
         [Units("kgN/ha")]
         public double PlantStage3N
@@ -2346,7 +2346,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N content of plant pools at stage 4 (senescent)")]
         [Units("kgN/ha")]
         public double PlantStage4N
@@ -2370,7 +2370,7 @@ namespace Models
             }
 
         }
-        
+
         [Description("Vapour pressure deficit")]
         [Units("kPa")]
         public double VPD_out              // VPD effect on Growth Interpolation Set
@@ -2410,7 +2410,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total leaf area index, for each species")]
         [Units("m^2/m^2")]
         public double[] SpeciesTotalLAI
@@ -2436,7 +2436,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of plants above ground, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesAboveGroundWt
@@ -2449,7 +2449,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of plants below ground, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesBelowGroundWt
@@ -2462,7 +2462,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of standing herbage, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingWt
@@ -2475,7 +2475,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of live standing plants parts for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingLiveWt
@@ -2488,7 +2488,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of dead standing plants parts for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingDeadWt
@@ -2514,7 +2514,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemWt
@@ -2527,7 +2527,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stolons for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonWt
@@ -2540,7 +2540,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of roots for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRootWt
@@ -2566,7 +2566,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount of standing herbage, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStandingN
@@ -2592,7 +2592,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in the plant's stems, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemN
@@ -2605,7 +2605,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in the plant's stolons, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonN
@@ -2618,7 +2618,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in the plant's roots, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRootsN
@@ -2650,7 +2650,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average N concentration in stems, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemNConc
@@ -2669,7 +2669,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average N concentration in stolons, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonNConc
@@ -2687,7 +2687,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average N concentration in roots, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesRootNConc
@@ -2716,7 +2716,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of leaves at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage2Wt
@@ -2729,7 +2729,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of leaves at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage3Wt
@@ -2742,7 +2742,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of leaves at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage4Wt
@@ -2755,7 +2755,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage1Wt
@@ -2768,7 +2768,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage2Wt
@@ -2781,7 +2781,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage3Wt
@@ -2794,7 +2794,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage4Wt
@@ -2807,7 +2807,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Dry matter weight of stolons at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage1Wt
@@ -2820,7 +2820,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stolons at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage2Wt
@@ -2833,7 +2833,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stolons at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage3Wt
@@ -2859,7 +2859,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in leaves at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage2N
@@ -2872,7 +2872,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in leaves at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage3N
@@ -2885,7 +2885,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in leaves at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage4N
@@ -2898,7 +2898,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stems at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage1N
@@ -2911,7 +2911,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("N amount in stems at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage2N
@@ -2924,7 +2924,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stems at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage3N
@@ -2937,7 +2937,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stems at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage4N
@@ -2950,7 +2950,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stolons at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage1N
@@ -2963,7 +2963,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stolons at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage2N
@@ -2976,7 +2976,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stolons at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage3N
@@ -3002,7 +3002,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of leaves at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage2NConc
@@ -3015,7 +3015,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of leaves at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage3NConc
@@ -3028,7 +3028,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of leaves at stage 4 (dead) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage4NConc
@@ -3041,7 +3041,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stems at stage 1 (young) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage1NConc
@@ -3054,7 +3054,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stems at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage2NConc
@@ -3067,7 +3067,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stems at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage3NConc
@@ -3080,7 +3080,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stems at stage 4 (dead) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage4NConc
@@ -3093,7 +3093,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stolons at stage 1 (young) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage1NConc
@@ -3106,7 +3106,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stolons at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage2NConc
@@ -3119,7 +3119,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stolons at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage3NConc
@@ -3145,7 +3145,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Litter amount deposited onto soil surface, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesLitterWt
@@ -3158,7 +3158,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Amount of senesced roots added to soil FOM, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesRootSenescedWt
@@ -3185,7 +3185,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Amount of plant dry matter removed by harvest, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesHarvestWt
@@ -3238,7 +3238,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Rate of turnover for dead DM, for each species")]
         [Units("0-1")]
         public double[] SpeciesDeadDMTurnoverRate
@@ -3253,7 +3253,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Rate of DM turnover for stolons, for each species")]
         [Units("0-1")]
         public double[] SpeciesStolonDMTurnoverRate
@@ -3268,7 +3268,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Rate of DM turnover for roots, for each species")]
         [Units("0-1")]
         public double[] SpeciesRootDMTurnoverRate
@@ -3398,7 +3398,7 @@ namespace Models
                 double[] result = new double[SP.Length];
                 for (int s = 0; s < numSpecies; s++)
                 {
-                    result[s] += SP[s].newGrowthN;
+                    result[s] = SP[s].newGrowthN;
                 }
                 return result;
             }
@@ -3414,14 +3414,14 @@ namespace Models
                 for (int s = 0; s < numSpecies; s++)
                 {
                     if (SP[s].dGrowth > 0)
-                        result[s] += SP[s].newGrowthN / SP[s].dGrowth;
+                        result[s] = SP[s].newGrowthN / SP[s].dGrowth;
                     else
                         result[s] = 0.0;
                 }
                 return result;
             }
         }
-        
+
         [Description("Amount of N uptake, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesUptakeN
@@ -3451,7 +3451,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Amount of N from senesced roots added to soil FOM, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesSenescedN
@@ -3492,7 +3492,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Growth limiting factor due to temperature, for each species")]
         [Units("0-1")]
         public double[] SpeciesGLFT
@@ -3530,7 +3530,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Potential C assimilation, corrected for extreme temperatures")]
         [Units("kgC/ha")]
         public double[] SpeciesPotCarbonAssimilation
@@ -3568,7 +3568,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Net primary productivity")]
         [Units("kgDM/ha")]
         public double NPP
@@ -3582,7 +3582,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Net above-ground primary productivity")]
         [Units("kgDM/ha")]
         public double NAPP
@@ -4128,7 +4128,7 @@ namespace Models
                 HaveInitialised = true;
             }
 
-            for (int s = 0;s<numSpecies;s++)
+            for (int s = 0; s < numSpecies; s++)
                 SP[s].DailyRefresh();
 
             DoNewCanopyEvent();
@@ -4408,8 +4408,6 @@ namespace Models
         [EventSubscribe("Graze")]
         private void OnGraze(GrazeType GZ)
         {
-            Summary.WriteMessage(this, "Agpasture.OnGraze");
-            //Console.WriteLine("");
             Graze(GZ.type, GZ.amount);
         }
 
@@ -4870,7 +4868,7 @@ namespace Models
             }
             if (sumProportion > 0)
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = result[layer] / sumProportion;
+                    result[layer] = result[layer] * Soil.Thickness[layer] / sumProportion;
             else
                 throw new Exception("Could not calculate root distribution");
             return result;
@@ -5396,7 +5394,7 @@ namespace Models
         internal double dNrootSen;	 //N in dRootSen
 
         internal double fShoot;		 //actual fraction of dGrowth to shoot
- 
+
         // transfer coefficients 
         public double gama = 0.0;	// from tissue 1 to 2, then 3 then 4
         public double gamas = 0.0;	// for stolons
@@ -5670,7 +5668,7 @@ namespace Models
             //digestDefoliated = (1-deadFrac) * digestLive + deadFrac * digestDead;
             digestDefoliated = calcDigestability(); //because the defoliateion of different parts is in proportion to biomass
 
- 
+
             // 1)Removing without preference   Mar2011: using different pRest for maintain a 'dmgreenmin'
             dmleaf1 = pRest_green * dmleaf1;
             dmleaf2 = pRest_green * dmleaf2;
@@ -5766,7 +5764,7 @@ namespace Models
 
             if (Math.Abs((dmgreen + dmdead) - dmshoot) > 0.001)
                 throw new Exception("Loss of mass balance of shoot plant dry matter");
-  
+
             dmtotal = dmshoot + dmroot;
 
             //N
@@ -6797,7 +6795,7 @@ namespace Models
         // Tissue turnover rate's response to temperature (eq 4.15f)
         // Tissue turnover: Tmin=5, Topt=20 - same for C3 & C4 plants ?
         public double GFTempTissue()
-        {            
+        {
             double gftt = 0.0;		//default as T < massFluxTmin
             if (Tmean > massFluxTmin && Tmean <= massFluxTopt)
             {
