@@ -113,6 +113,8 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
+    <Compile Include="AgPasture\AgPasture1.cs" />
+    <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\Apsim.cs" />
