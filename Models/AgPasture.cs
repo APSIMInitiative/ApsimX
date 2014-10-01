@@ -220,20 +220,6 @@ namespace Models
             }
         }
 
-        private double[] minimumGreenWt = new double[] { 300.0, 100.0, 100.0 };
-        [Description("Minimum above ground green DM")]
-        public double[] MinimumGreenWt
-        {
-            get { return minimumGreenWt; }
-            set
-            {
-                int NSp = value.Length;
-                minimumGreenWt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    minimumGreenWt[sp] = value[sp];
-            }
-        }
-
         private double[] iniRootDepth = new double[] { 750.0, 350.0, 950.0 };
         [Description("Initial depth for roots")]
         public double[] InitialRootDepth
@@ -250,7 +236,7 @@ namespace Models
 
         // * Parameters that may be set via manager -----------------------------------------------
 
-        private double[] maxPhotosynthesisRate = new double[] { 1.0, 1.0, 1.0 };
+        private double[] maxPhotosynthesisRate = new double[] { 1.0, 1.0, 1.2 };
         /// <summary>
         /// 
         /// </summary>
@@ -300,7 +286,7 @@ namespace Models
                     growthEfficiency[sp] = value[sp];
             }
         }
-        
+
         private double[] lightExtentionCoeff = new double[] { 0.5, 0.8, 0.6 };
         /// <summary>
         /// 
@@ -315,23 +301,6 @@ namespace Models
                 lightExtentionCoeff = new double[NSp];
                 for (int sp = 0; sp < NSp; sp++)
                     lightExtentionCoeff[sp] = value[sp];
-            }
-        }
-
-        private double[] maxAssimilationRate = new double[] { 330.0, 330.0, 330.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MaxAssimilationRate
-        {
-            get { return maxAssimilationRate; }
-            set
-            {
-                int NSp = value.Length;
-                maxAssimilationRate = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    maxAssimilationRate[sp] = value[sp];
             }
         }
 
@@ -351,7 +320,7 @@ namespace Models
                     growthTmin[sp] = value[sp];
             }
         }
-        
+
         private double[] growthTmax = new double[] { 32.0, 32.0, 40.0 };
         /// <summary>
         /// 
@@ -369,7 +338,7 @@ namespace Models
             }
         }
 
-        private double[] growthTopt = new double[] { 20.0, 20.0, 20.0 };
+        private double[] growthTopt = new double[] { 20.0, 20.0, 22.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -385,8 +354,8 @@ namespace Models
                     growthTopt[sp] = value[sp];
             }
         }
-       
-        private double[] growthTq = new double[] { 2.0, 2.0, 1.2 };
+
+        private double[] growthTq = new double[] { 1.75, 1.75, 2.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -402,76 +371,8 @@ namespace Models
                     growthTq[sp] = value[sp];
             }
         }
-        
-        private double[] massFluxTmin = new double[] { 2.0, 2.0, 5.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxTmin
-        {
-            get { return massFluxTmin; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxTmin = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxTmin[sp] = value[sp];
-            }
-        }
 
-        private double[] massFluxTopt = new double[] { 20.0, 20.0, 20.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxTopt
-        {
-            get { return massFluxTopt; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxTopt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxTopt[sp] = value[sp];
-            }
-        }
-
-        private double[] massFluxW0 = new double[] { 2.0, 2.0, 2.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxW0
-        {
-            get { return massFluxW0; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxW0 = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxW0[sp] = value[sp];
-            }
-        }
-
-        private double[] massFluxWopt = new double[] { 0.5, 0.5, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxWopt
-        {
-            get { return massFluxWopt; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxWopt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxWopt[sp] = value[sp];
-            }
-        }
-
-        private double[] heatOnsetT = new double[] { 60.0, 60.0, 60.0 };
+        private double[] heatOnsetT = new double[] { 28.0, 28.0, 40.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -488,7 +389,7 @@ namespace Models
             }
         }
 
-        private double[] heatFullT = new double[] { 70.0, 70.0, 70.0 };
+        private double[] heatFullT = new double[] { 35.0, 35.0, 50.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -505,7 +406,7 @@ namespace Models
             }
         }
 
-        private double[] heatSumT = new double[] { 50.0, 50.0, 50.0 };
+        private double[] heatSumT = new double[] { 30.0, 30.0, 50.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -522,7 +423,7 @@ namespace Models
             }
         }
 
-        private double[] coldOnsetT = new double[] { -20.0, -20.0, -20.0 };
+        private double[] coldOnsetT = new double[] { 0.0, 0.0, 8.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -539,7 +440,7 @@ namespace Models
             }
         }
 
-        private double[] coldFullT = new double[] { -30.0, -30.0, -30.0 };
+        private double[] coldFullT = new double[] { -3.0, -3.0, 3.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -556,7 +457,7 @@ namespace Models
             }
         }
 
-        private double[] coldSumT = new double[] { 20.0, 20.0, 20.0 };
+        private double[] coldSumT = new double[] { 20.0, 20.0, 50.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -675,7 +576,7 @@ namespace Models
             }
         }
 
-        private double[] turnoverRateLive2Dead = new double[] { 0.05, 0.05, 0.05 };
+        private double[] turnoverRateLive2Dead = new double[] { 0.025, 0.025, 0.025 };
         /// <summary>
         /// 
         /// </summary>
@@ -723,6 +624,74 @@ namespace Models
                 turnoverRateRootSenescence = new double[NSp];
                 for (int sp = 0; sp < NSp; sp++)
                     turnoverRateRootSenescence[sp] = value[sp];
+            }
+        }
+
+        private double[] massFluxTmin = new double[] { 2.0, 3.0, 7.5 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MassFluxTmin
+        {
+            get { return massFluxTmin; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxTmin = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxTmin[sp] = value[sp];
+            }
+        }
+
+        private double[] massFluxTopt = new double[] { 20.0, 20.0, 22.0 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MassFluxTopt
+        {
+            get { return massFluxTopt; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxTopt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxTopt[sp] = value[sp];
+            }
+        }
+
+        private double[] massFluxW0 = new double[] { 2.0, 2.0, 2.0 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MassFluxW0
+        {
+            get { return massFluxW0; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxW0 = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxW0[sp] = value[sp];
+            }
+        }
+
+        private double[] massFluxWopt = new double[] { 0.5, 0.5, 0.5 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MassFluxWopt
+        {
+            get { return massFluxWopt; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxWopt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxWopt[sp] = value[sp];
             }
         }
 
@@ -777,6 +746,20 @@ namespace Models
             }
         }
 
+        private double[] minimumGreenWt = new double[] { 300.0, 100.0, 100.0 };
+        [Description("Minimum above ground green DM")]
+        public double[] MinimumGreenWt
+        {
+            get { return minimumGreenWt; }
+            set
+            {
+                int NSp = value.Length;
+                minimumGreenWt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    minimumGreenWt[sp] = value[sp];
+            }
+        }
+
         private double[] minimumDeadWt = new double[] { 0.0, 0.0, 0.0 };
         /// <summary>
         /// 
@@ -794,6 +777,34 @@ namespace Models
             }
         }
 
+        private double[] preferenceForGreenDM = new double[] { 1.0, 1.0, 1.0 };
+        [XmlIgnore]
+        public double[] PreferenceForGreenDM
+        {
+            get { return preferenceForGreenDM; }
+            set
+            {
+                int NSp = value.Length;
+                preferenceForGreenDM = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    preferenceForGreenDM[sp] = value[sp];
+            }
+        }
+
+        private double[] preferenceForDeadDM = new double[] { 1.0, 1.0, 1.0 };
+        [XmlIgnore]
+        public double[] PreferenceForDeadDM
+        {
+            get { return preferenceForDeadDM; }
+            set
+            {
+                int NSp = value.Length;
+                preferenceForDeadDM = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    preferenceForDeadDM[sp] = value[sp];
+            }
+        }
+        
         private double[] leafNopt = new double[] { 4.0, 4.5, 3.0 };
         /// <summary>
         /// 
@@ -828,7 +839,7 @@ namespace Models
             }
         }
 
-        private double[] leafNmin = new double[] { 1.2, 2.5, 0.8 };
+        private double[] leafNmin = new double[] { 1.2, 2.0, 0.5 };
         /// <summary>
         /// 
         /// </summary>
@@ -862,7 +873,7 @@ namespace Models
             }
         }
 
-        private double[] relativeNStolons = new double[] { 0.5, 0.5, 0.5 };
+        private double[] relativeNStolons = new double[] { 0.0, 0.5, 0.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -964,23 +975,6 @@ namespace Models
             }
         }
 
-        private double[] dillutionCoefN = new double[] { 0.5, 1.0, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] DillutionCoefN
-        {
-            get { return dillutionCoefN; }
-            set
-            {
-                int NSp = value.Length;
-                dillutionCoefN = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    dillutionCoefN[sp] = value[sp];
-            }
-        }
-
         private double[] kappa2Remob = new double[] { 0.0, 0.0, 0.0 };
         /// <summary>
         /// 
@@ -1028,6 +1022,23 @@ namespace Models
                 kappa4Remob = new double[NSp];
                 for (int sp = 0; sp < NSp; sp++)
                     kappa4Remob[sp] = value[sp];
+            }
+        }
+
+        private double[] dillutionCoefN = new double[] { 0.5, 1.0, 0.5 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] DillutionCoefN
+        {
+            get { return dillutionCoefN; }
+            set
+            {
+                int NSp = value.Length;
+                dillutionCoefN = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    dillutionCoefN[sp] = value[sp];
             }
         }
 
@@ -1099,7 +1110,7 @@ namespace Models
             }
         }
 
-        private double[] offsetCO2EffectOnPhotosynthesis = new double[] { 700.0, 700.0, 700.0 };
+        private double[] offsetCO2EffectOnPhotosynthesis = new double[] { 700.0, 700.0, 150.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -1167,33 +1178,6 @@ namespace Models
             }
         }
 
-        private double[] preferenceForGreenDM = new double[] { 1.0, 1.0, 1.0 };
-        [XmlIgnore]
-        public double[] PreferenceForGreenDM
-        {
-            get { return preferenceForGreenDM; }
-            set
-            {
-                int NSp = value.Length;
-                preferenceForGreenDM = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    preferenceForGreenDM[sp] = value[sp];
-            }
-        }
-
-        private double[] preferenceForDeadDM = new double[] { 1.0, 1.0, 1.0 };
-        [XmlIgnore]
-        public double[] PreferenceForDeadDM
-        {
-            get { return preferenceForDeadDM; }
-            set
-            {
-                int NSp = value.Length;
-                preferenceForDeadDM = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    preferenceForDeadDM[sp] = value[sp];
-            }
-        }
 
         // * Other parameters (changed via manager) -----------------------------------------------
 
@@ -1251,16 +1235,17 @@ namespace Models
         public double[] initialDMFractions_legume = new double[] { 0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12 };
 
         [XmlIgnore]
-        public LinearInterpolation FVPDFunction = new LinearInterpolation
-        {
-            X = new double[3] { 0.0, 10.0, 50.0 },
-            Y = new double[3] { 1.0, 1.0, 1.0 }
-        };
-        [XmlIgnore]
         public LinearInterpolation HeightMassFN = new LinearInterpolation
         {
             X = new double[5] { 0, 1000, 2000, 3000, 4000 },
             Y = new double[5] { 0, 25, 75, 150, 250 }
+        };
+
+        [XmlIgnore]
+        public LinearInterpolation FVPDFunction = new LinearInterpolation
+        {
+            X = new double[3] { 0.0, 10.0, 50.0 },
+            Y = new double[3] { 1.0, 1.0, 1.0 }
         };
 
         #endregion
@@ -1312,7 +1297,7 @@ namespace Models
                 else return "out";
             }
         }
-        
+
         [Description("Plant development stage number")]
         [Units("")]
         public int Stage
@@ -1332,7 +1317,7 @@ namespace Models
                 return cropStage;
             }
         }
-        
+
         [Description("Plant development stage name")]
         [Units("")]
         public string StageName
@@ -1377,14 +1362,14 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total dry matter weight of plants below ground")]
         [Units("kgDM/ha")]
         public double BelowGroundWt
         {
             get { return p_rootMass; }
         }
-        
+
         [Description("Total dry matter weight of standing plants parts")]
         [Units("kgDM/ha")]
         public double StandingPlantWt
@@ -1417,7 +1402,7 @@ namespace Models
         {
             get { return p_deadDM; }
         }
-        
+
         [Description("Total dry matter weight of plant's leaves")]
         [Units("kgDM/ha")]
         public double LeafWt
@@ -1430,7 +1415,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Total dry matter weight of plant's leaves alive")]
         [Units("kgDM/ha")]
         public double LeafLiveWt
@@ -1443,7 +1428,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total dry matter weight of plant's leaves dead")]
         [Units("kgDM/ha")]
         public double LeafDeadWt
@@ -1482,7 +1467,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total dry matter weight of plant's stems dead")]
         [Units("kgDM/ha")]
         public double StemDeadWt
@@ -1508,7 +1493,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Total dry matter weight of plant's roots")]
         [Units("kgDM/ha")]
         public double RootWt
@@ -1528,14 +1513,14 @@ namespace Models
         {
             get { return p_dGrowthPot; }
         }
-        
+
         [Description("Potential plant growth, correct for temperature and water")]
         [Units("kgDM/ha")]
         public double PlantGrowthNoNLimit
         {
             get { return p_dGrowthW; }
         }
-        
+
         [Description("Actual plant growth (before littering)")]
         [Units("kgDM/ha")]
         public double PlantGrowthWt
@@ -1718,7 +1703,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average N concentration of standing plants")]
         [Units("kgN/kgDM")]
         public double StandingPlantNConc
@@ -1749,7 +1734,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total amount of N in dead plants above ground")]
         [Units("kgN/ha")]
         public double AboveGroundDeadN
@@ -1894,7 +1879,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average herbage digestibility")]
         [Units("0-1")]
         public double HerbageDigestibility
@@ -1910,14 +1895,14 @@ namespace Models
                 return digest;
             }
         }
-        
+
         [Description("Average digestibility of harvested material")]
         [Units("0-1")]
         public double DefoliatedDigestibility
         {
             get { return p_harvestDigest; }
         }
-        
+
         [Description("Average ME of herbage")]
         [Units("(MJ/ha)")]
         public double HerbageME
@@ -1974,7 +1959,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Amount of N deposited as litter onto soil surface")]
         [Units("kgN/ha")]
         public double LitterDepositionN
@@ -2094,7 +2079,7 @@ namespace Models
         {
             get { return p_gfn; }
         }
-        
+
         [Description("Plant growth limiting factor due to plant N concentration")]
         [Units("0-1")]
         public double GLFnConcentration
@@ -2107,7 +2092,7 @@ namespace Models
                 return (result / AboveGroundWt);
             }
         }
-        
+
         [Description("Dry matter allocated to roots")]
         [Units("kgDM/ha")]
         public double DMToRoots
@@ -2122,7 +2107,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter allocated to shoot")]
         [Units("kgDM/ha")]
         public double DMToShoot
@@ -2137,7 +2122,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Fraction of growth allocated to roots")]
         [Units("0-1")]
         public double FractionGrowthToRoot
@@ -2281,7 +2266,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter of plant pools at stage 3 (mature)")]
         [Units("kgN/ha")]
         public double PlantStage3Wt
@@ -2294,7 +2279,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter of plant pools at stage 4 (senescent)")]
         [Units("kgN/ha")]
         public double PlantStage4Wt
@@ -2320,7 +2305,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N content of plant pools at stage 2 (developing)")]
         [Units("kgN/ha")]
         public double PlantStage2N
@@ -2333,7 +2318,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N content of plant pools at stage 3 (mature)")]
         [Units("kgN/ha")]
         public double PlantStage3N
@@ -2346,7 +2331,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N content of plant pools at stage 4 (senescent)")]
         [Units("kgN/ha")]
         public double PlantStage4N
@@ -2370,7 +2355,7 @@ namespace Models
             }
 
         }
-        
+
         [Description("Vapour pressure deficit")]
         [Units("kPa")]
         public double VPD_out              // VPD effect on Growth Interpolation Set
@@ -2410,7 +2395,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Total leaf area index, for each species")]
         [Units("m^2/m^2")]
         public double[] SpeciesTotalLAI
@@ -2436,7 +2421,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of plants above ground, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesAboveGroundWt
@@ -2449,7 +2434,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of plants below ground, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesBelowGroundWt
@@ -2462,7 +2447,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of standing herbage, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingWt
@@ -2475,7 +2460,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of live standing plants parts for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingLiveWt
@@ -2488,7 +2473,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of dead standing plants parts for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingDeadWt
@@ -2514,7 +2499,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemWt
@@ -2527,7 +2512,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stolons for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonWt
@@ -2540,7 +2525,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of roots for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRootWt
@@ -2566,7 +2551,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount of standing herbage, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStandingN
@@ -2592,7 +2577,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in the plant's stems, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemN
@@ -2605,7 +2590,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in the plant's stolons, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonN
@@ -2618,7 +2603,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in the plant's roots, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRootsN
@@ -2650,7 +2635,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average N concentration in stems, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemNConc
@@ -2669,7 +2654,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average N concentration in stolons, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonNConc
@@ -2687,7 +2672,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Average N concentration in roots, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesRootNConc
@@ -2716,7 +2701,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of leaves at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage2Wt
@@ -2729,7 +2714,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of leaves at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage3Wt
@@ -2742,7 +2727,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of leaves at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage4Wt
@@ -2755,7 +2740,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage1Wt
@@ -2768,7 +2753,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage2Wt
@@ -2781,7 +2766,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage3Wt
@@ -2794,7 +2779,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stems at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage4Wt
@@ -2807,7 +2792,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Dry matter weight of stolons at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage1Wt
@@ -2820,7 +2805,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stolons at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage2Wt
@@ -2833,7 +2818,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Dry matter weight of stolons at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage3Wt
@@ -2859,7 +2844,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in leaves at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage2N
@@ -2872,7 +2857,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in leaves at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage3N
@@ -2885,7 +2870,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in leaves at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage4N
@@ -2898,7 +2883,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stems at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage1N
@@ -2911,7 +2896,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("N amount in stems at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage2N
@@ -2924,7 +2909,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stems at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage3N
@@ -2937,7 +2922,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stems at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage4N
@@ -2950,7 +2935,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stolons at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage1N
@@ -2963,7 +2948,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stolons at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage2N
@@ -2976,7 +2961,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N amount in stolons at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage3N
@@ -3002,7 +2987,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of leaves at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage2NConc
@@ -3015,7 +3000,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of leaves at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage3NConc
@@ -3028,7 +3013,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of leaves at stage 4 (dead) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage4NConc
@@ -3041,7 +3026,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stems at stage 1 (young) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage1NConc
@@ -3054,7 +3039,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stems at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage2NConc
@@ -3067,7 +3052,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stems at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage3NConc
@@ -3080,7 +3065,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stems at stage 4 (dead) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage4NConc
@@ -3093,7 +3078,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stolons at stage 1 (young) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage1NConc
@@ -3106,7 +3091,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stolons at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage2NConc
@@ -3119,7 +3104,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("N concentration of stolons at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage3NConc
@@ -3145,7 +3130,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Litter amount deposited onto soil surface, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesLitterWt
@@ -3158,7 +3143,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Amount of senesced roots added to soil FOM, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesRootSenescedWt
@@ -3185,7 +3170,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Amount of plant dry matter removed by harvest, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesHarvestWt
@@ -3238,7 +3223,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Rate of turnover for dead DM, for each species")]
         [Units("0-1")]
         public double[] SpeciesDeadDMTurnoverRate
@@ -3253,7 +3238,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Rate of DM turnover for stolons, for each species")]
         [Units("0-1")]
         public double[] SpeciesStolonDMTurnoverRate
@@ -3268,7 +3253,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Rate of DM turnover for roots, for each species")]
         [Units("0-1")]
         public double[] SpeciesRootDMTurnoverRate
@@ -3398,7 +3383,7 @@ namespace Models
                 double[] result = new double[SP.Length];
                 for (int s = 0; s < numSpecies; s++)
                 {
-                    result[s] += SP[s].newGrowthN;
+                    result[s] = SP[s].newGrowthN;
                 }
                 return result;
             }
@@ -3414,14 +3399,14 @@ namespace Models
                 for (int s = 0; s < numSpecies; s++)
                 {
                     if (SP[s].dGrowth > 0)
-                        result[s] += SP[s].newGrowthN / SP[s].dGrowth;
+                        result[s] = SP[s].newGrowthN / SP[s].dGrowth;
                     else
                         result[s] = 0.0;
                 }
                 return result;
             }
         }
-        
+
         [Description("Amount of N uptake, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesUptakeN
@@ -3451,7 +3436,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Amount of N from senesced roots added to soil FOM, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesSenescedN
@@ -3492,7 +3477,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Growth limiting factor due to temperature, for each species")]
         [Units("0-1")]
         public double[] SpeciesGLFT
@@ -3530,7 +3515,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Potential C assimilation, corrected for extreme temperatures")]
         [Units("kgC/ha")]
         public double[] SpeciesPotCarbonAssimilation
@@ -3568,7 +3553,7 @@ namespace Models
                 return result;
             }
         }
-       
+
         [Description("Net primary productivity")]
         [Units("kgDM/ha")]
         public double NPP
@@ -3582,7 +3567,7 @@ namespace Models
                 return result;
             }
         }
-        
+
         [Description("Net above-ground primary productivity")]
         [Units("kgDM/ha")]
         public double NAPP
@@ -3782,31 +3767,30 @@ namespace Models
                 SP[s].dmroot = iniDMshoot[s] * maxRootFraction[s] / (1 + maxRootFraction[s]);
             SP[s].rootDepth = iniRootDepth[s];
 
-            SP[s].Pm = MaxPhotosynthesisRate[s];
-            SP[s].maintRespiration = MaintenanceRespirationCoef[s];
-            SP[s].growthEfficiency = GrowthEfficiency[s];
-            SP[s].lightExtCoeff = LightExtentionCoeff[s];
-            SP[s].maxAssimiRate = MaxAssimilationRate[s];
-            SP[s].growthTmin = GrowthTmin[s];
-            SP[s].growthTmax = GrowthTmax[s];
-            SP[s].growthTopt = GrowthTopt[s];
-            SP[s].growthTq = GrowthTq[s];
-            SP[s].massFluxTmin = MassFluxTmin[s];
-            SP[s].massFluxTopt = MassFluxTopt[s];
-            SP[s].massFluxW0 = MassFluxW0[s];
+            SP[s].Pm = maxPhotosynthesisRate[s];
+            SP[s].maintRespiration = maintenanceRespirationCoef[s];
+            SP[s].growthEfficiency = growthEfficiency[s];
+            SP[s].lightExtCoeff = lightExtentionCoeff[s];
+            SP[s].growthTmin = growthTmin[s];
+            SP[s].growthTmax = growthTmax[s];
+            SP[s].growthTopt = growthTopt[s];
+            SP[s].growthTq = growthTq[s];
+            SP[s].massFluxTmin = massFluxTmin[s];
+            SP[s].massFluxTopt = massFluxTopt[s];
+            SP[s].massFluxW0 = massFluxW0[s];
             SP[s].massFluxWopt = MassFluxWopt[s];
-            SP[s].heatOnsetT = HeatOnsetT[s];
-            SP[s].heatFullT = HeatFullT[s];
-            SP[s].heatSumT = HeatSumT[s];
-            SP[s].coldOnsetT = ColdOnsetT[s];
-            SP[s].coldFullT = ColdFullT[s];
-            SP[s].coldSumT = ColdSumT[s];
-            SP[s].SLA = SpecificLeafArea[s];
-            SP[s].SRL = SpecificRootLength[s];
-            SP[s].maxSRratio = (1 - MaxRootFraction[s]) / MaxRootFraction[s];
-            SP[s].allocationSeasonF = AllocationSeasonF[s];
-            SP[s].fLeaf = FracToLeaf[s];
-            SP[s].fStolon = FracToStolon[s];
+            SP[s].heatOnsetT = heatOnsetT[s];
+            SP[s].heatFullT = heatFullT[s];
+            SP[s].heatSumT = heatSumT[s];
+            SP[s].coldOnsetT = coldOnsetT[s];
+            SP[s].coldFullT = coldFullT[s];
+            SP[s].coldSumT = coldSumT[s];
+            SP[s].SLA = specificLeafArea[s];
+            SP[s].SRL = specificRootLength[s];
+            SP[s].maxSRratio = (1 - maxRootFraction[s]) / maxRootFraction[s];
+            SP[s].allocationSeasonF = allocationSeasonF[s];
+            SP[s].fLeaf = fracToLeaf[s];
+            SP[s].fStolon = fracToStolon[s];
             SP[s].rateLive2Dead = TurnoverRateLive2Dead[s];
             SP[s].rateDead2Litter = TurnoverRateDead2Litter[s];
             SP[s].rateRootSen = TurnoverRateRootSenescence[s];
@@ -3831,7 +3815,7 @@ namespace Models
             SP[s].Kappa4 = Kappa4Remob[s];
             SP[s].gfGen = GlfGeneric[s];
             SP[s].referenceCO2 = ReferenceCO2[s];
-            SP[s].CO2PmaxScale = OffsetCO2EffectOnPhotosynthesis[s];
+            SP[s].CO2PmaxScale = offsetCO2EffectOnPhotosynthesis[s];
             SP[s].CO2NScale = OffsetCO2EffectOnNuptake[s];
             SP[s].CO2NMin = MinimumCO2EffectOnNuptake[s];
             SP[s].CO2NCurvature = ExponentCO2EffectOnNuptake[s];
@@ -4128,7 +4112,7 @@ namespace Models
                 HaveInitialised = true;
             }
 
-            for (int s = 0;s<numSpecies;s++)
+            for (int s = 0; s < numSpecies; s++)
                 SP[s].DailyRefresh();
 
             DoNewCanopyEvent();
@@ -4408,8 +4392,6 @@ namespace Models
         [EventSubscribe("Graze")]
         private void OnGraze(GrazeType GZ)
         {
-            Summary.WriteMessage(this, "Agpasture.OnGraze");
-            //Console.WriteLine("");
             Graze(GZ.type, GZ.amount);
         }
 
@@ -4870,7 +4852,7 @@ namespace Models
             }
             if (sumProportion > 0)
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = result[layer] / sumProportion;
+                    result[layer] = result[layer] * Soil.Thickness[layer] / sumProportion;
             else
                 throw new Exception("Could not calculate root distribution");
             return result;
@@ -5396,7 +5378,7 @@ namespace Models
         internal double dNrootSen;	 //N in dRootSen
 
         internal double fShoot;		 //actual fraction of dGrowth to shoot
- 
+
         // transfer coefficients 
         public double gama = 0.0;	// from tissue 1 to 2, then 3 then 4
         public double gamas = 0.0;	// for stolons
@@ -5670,7 +5652,7 @@ namespace Models
             //digestDefoliated = (1-deadFrac) * digestLive + deadFrac * digestDead;
             digestDefoliated = calcDigestability(); //because the defoliateion of different parts is in proportion to biomass
 
- 
+
             // 1)Removing without preference   Mar2011: using different pRest for maintain a 'dmgreenmin'
             dmleaf1 = pRest_green * dmleaf1;
             dmleaf2 = pRest_green * dmleaf2;
@@ -5766,7 +5748,7 @@ namespace Models
 
             if (Math.Abs((dmgreen + dmdead) - dmshoot) > 0.001)
                 throw new Exception("Loss of mass balance of shoot plant dry matter");
-  
+
             dmtotal = dmshoot + dmroot;
 
             //N
@@ -6797,7 +6779,7 @@ namespace Models
         // Tissue turnover rate's response to temperature (eq 4.15f)
         // Tissue turnover: Tmin=5, Topt=20 - same for C3 & C4 plants ?
         public double GFTempTissue()
-        {            
+        {
             double gftt = 0.0;		//default as T < massFluxTmin
             if (Tmean > massFluxTmin && Tmean <= massFluxTopt)
             {

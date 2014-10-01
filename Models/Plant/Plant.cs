@@ -70,12 +70,14 @@ namespace Models.PMF
         public String crop_type = "";
     }
 
-	/// <summary>
-	/// </summary>
-	/// \param CropType The crop type defined in the Plant function.
-	/// <remarks>
-	/// 
-	/// </remarks>
+	/*! <summary>
+	The root function of plant model framework.
+	</summary>
+	\param CropType The crop type defined in the Plant function.
+	<remarks>
+	
+	</remarks>
+	*/
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop2
     {

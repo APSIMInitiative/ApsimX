@@ -50,7 +50,33 @@ namespace Models.PMF.Organs
         public double Fixation { get; set; }
     }
     #endregion
-
+	/*!
+	<summary>
+	The base model of organ
+	</summary>
+	\param Live The live biomass of organ (g), which is a model inherited from Biomass model.
+	\param Dead The dead biomass of organ (g), which is a model inherited from Biomass model.
+	<remarks>
+	The biomass pool is split into three components, i.e.
+	- non-structural
+	- structural
+	- metabolic
+	PFM considers four types of biomass supply, i.e.
+	- fixation
+	- reallocation
+	- uptake
+	- retranslocation
+	PFM considers eight types of biomass allocation, i.e.
+	- structural
+	- non-structural
+	- metabolic
+	- retranslocation
+	- reallocation
+	- respired
+	- uptake
+	- fixation
+	</remarks>
+	 */
     [Serializable]
     abstract public class Organ : Model
     {
