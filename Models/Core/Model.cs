@@ -63,7 +63,7 @@ namespace Models.Core
         [XmlElement(typeof(Arbitrator.Arbitrator))]
         [XmlElement(typeof(ArbitratorGod.ArbitratorGod))]
         [XmlElement(typeof(Operations))]
-        [XmlElement(typeof(Report))]
+        [XmlElement(typeof(Models.Report.Report))]
         [XmlElement(typeof(Summary))]
         [XmlElement(typeof(NullSummary))]
         [XmlElement(typeof(Tests))]
