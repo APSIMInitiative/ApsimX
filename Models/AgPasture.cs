@@ -220,20 +220,6 @@ namespace Models
             }
         }
 
-        private double[] minimumGreenWt = new double[] { 300.0, 100.0, 100.0 };
-        [Description("Minimum above ground green DM")]
-        public double[] MinimumGreenWt
-        {
-            get { return minimumGreenWt; }
-            set
-            {
-                int NSp = value.Length;
-                minimumGreenWt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    minimumGreenWt[sp] = value[sp];
-            }
-        }
-
         private double[] iniRootDepth = new double[] { 750.0, 350.0, 950.0 };
         [Description("Initial depth for roots")]
         public double[] InitialRootDepth
@@ -250,7 +236,7 @@ namespace Models
 
         // * Parameters that may be set via manager -----------------------------------------------
 
-        private double[] maxPhotosynthesisRate = new double[] { 1.0, 1.0, 1.0 };
+        private double[] maxPhotosynthesisRate = new double[] { 1.0, 1.0, 1.2 };
         /// <summary>
         /// 
         /// </summary>
@@ -318,23 +304,6 @@ namespace Models
             }
         }
 
-        private double[] maxAssimilationRate = new double[] { 330.0, 330.0, 330.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MaxAssimilationRate
-        {
-            get { return maxAssimilationRate; }
-            set
-            {
-                int NSp = value.Length;
-                maxAssimilationRate = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    maxAssimilationRate[sp] = value[sp];
-            }
-        }
-
         private double[] growthTmin = new double[] { 2.0, 4.0, 10.0 };
         /// <summary>
         /// 
@@ -369,7 +338,7 @@ namespace Models
             }
         }
 
-        private double[] growthTopt = new double[] { 20.0, 20.0, 20.0 };
+        private double[] growthTopt = new double[] { 20.0, 20.0, 22.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -386,7 +355,7 @@ namespace Models
             }
         }
 
-        private double[] growthTq = new double[] { 2.0, 2.0, 1.2 };
+        private double[] growthTq = new double[] { 1.75, 1.75, 2.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -403,75 +372,7 @@ namespace Models
             }
         }
 
-        private double[] massFluxTmin = new double[] { 2.0, 2.0, 5.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxTmin
-        {
-            get { return massFluxTmin; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxTmin = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxTmin[sp] = value[sp];
-            }
-        }
-
-        private double[] massFluxTopt = new double[] { 20.0, 20.0, 20.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxTopt
-        {
-            get { return massFluxTopt; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxTopt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxTopt[sp] = value[sp];
-            }
-        }
-
-        private double[] massFluxW0 = new double[] { 2.0, 2.0, 2.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxW0
-        {
-            get { return massFluxW0; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxW0 = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxW0[sp] = value[sp];
-            }
-        }
-
-        private double[] massFluxWopt = new double[] { 0.5, 0.5, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxWopt
-        {
-            get { return massFluxWopt; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxWopt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxWopt[sp] = value[sp];
-            }
-        }
-
-        private double[] heatOnsetT = new double[] { 60.0, 60.0, 60.0 };
+        private double[] heatOnsetT = new double[] { 28.0, 28.0, 40.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -488,7 +389,7 @@ namespace Models
             }
         }
 
-        private double[] heatFullT = new double[] { 70.0, 70.0, 70.0 };
+        private double[] heatFullT = new double[] { 35.0, 35.0, 50.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -505,7 +406,7 @@ namespace Models
             }
         }
 
-        private double[] heatSumT = new double[] { 50.0, 50.0, 50.0 };
+        private double[] heatSumT = new double[] { 30.0, 30.0, 50.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -522,7 +423,7 @@ namespace Models
             }
         }
 
-        private double[] coldOnsetT = new double[] { -20.0, -20.0, -20.0 };
+        private double[] coldOnsetT = new double[] { 0.0, 0.0, 8.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -539,7 +440,7 @@ namespace Models
             }
         }
 
-        private double[] coldFullT = new double[] { -30.0, -30.0, -30.0 };
+        private double[] coldFullT = new double[] { -3.0, -3.0, 3.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -556,7 +457,7 @@ namespace Models
             }
         }
 
-        private double[] coldSumT = new double[] { 20.0, 20.0, 20.0 };
+        private double[] coldSumT = new double[] { 20.0, 20.0, 50.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -675,7 +576,7 @@ namespace Models
             }
         }
 
-        private double[] turnoverRateLive2Dead = new double[] { 0.05, 0.05, 0.05 };
+        private double[] turnoverRateLive2Dead = new double[] { 0.025, 0.025, 0.025 };
         /// <summary>
         /// 
         /// </summary>
@@ -723,6 +624,74 @@ namespace Models
                 turnoverRateRootSenescence = new double[NSp];
                 for (int sp = 0; sp < NSp; sp++)
                     turnoverRateRootSenescence[sp] = value[sp];
+            }
+        }
+
+        private double[] massFluxTmin = new double[] { 2.0, 3.0, 7.5 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MassFluxTmin
+        {
+            get { return massFluxTmin; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxTmin = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxTmin[sp] = value[sp];
+            }
+        }
+
+        private double[] massFluxTopt = new double[] { 20.0, 20.0, 22.0 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MassFluxTopt
+        {
+            get { return massFluxTopt; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxTopt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxTopt[sp] = value[sp];
+            }
+        }
+
+        private double[] massFluxW0 = new double[] { 2.0, 2.0, 2.0 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MassFluxW0
+        {
+            get { return massFluxW0; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxW0 = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxW0[sp] = value[sp];
+            }
+        }
+
+        private double[] massFluxWopt = new double[] { 0.5, 0.5, 0.5 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] MassFluxWopt
+        {
+            get { return massFluxWopt; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxWopt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxWopt[sp] = value[sp];
             }
         }
 
@@ -777,6 +746,20 @@ namespace Models
             }
         }
 
+        private double[] minimumGreenWt = new double[] { 300.0, 100.0, 100.0 };
+        [Description("Minimum above ground green DM")]
+        public double[] MinimumGreenWt
+        {
+            get { return minimumGreenWt; }
+            set
+            {
+                int NSp = value.Length;
+                minimumGreenWt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    minimumGreenWt[sp] = value[sp];
+            }
+        }
+
         private double[] minimumDeadWt = new double[] { 0.0, 0.0, 0.0 };
         /// <summary>
         /// 
@@ -794,6 +777,34 @@ namespace Models
             }
         }
 
+        private double[] preferenceForGreenDM = new double[] { 1.0, 1.0, 1.0 };
+        [XmlIgnore]
+        public double[] PreferenceForGreenDM
+        {
+            get { return preferenceForGreenDM; }
+            set
+            {
+                int NSp = value.Length;
+                preferenceForGreenDM = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    preferenceForGreenDM[sp] = value[sp];
+            }
+        }
+
+        private double[] preferenceForDeadDM = new double[] { 1.0, 1.0, 1.0 };
+        [XmlIgnore]
+        public double[] PreferenceForDeadDM
+        {
+            get { return preferenceForDeadDM; }
+            set
+            {
+                int NSp = value.Length;
+                preferenceForDeadDM = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    preferenceForDeadDM[sp] = value[sp];
+            }
+        }
+        
         private double[] leafNopt = new double[] { 4.0, 4.5, 3.0 };
         /// <summary>
         /// 
@@ -828,7 +839,7 @@ namespace Models
             }
         }
 
-        private double[] leafNmin = new double[] { 1.2, 2.5, 0.8 };
+        private double[] leafNmin = new double[] { 1.2, 2.0, 0.5 };
         /// <summary>
         /// 
         /// </summary>
@@ -862,7 +873,7 @@ namespace Models
             }
         }
 
-        private double[] relativeNStolons = new double[] { 0.5, 0.5, 0.5 };
+        private double[] relativeNStolons = new double[] { 0.0, 0.5, 0.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -964,23 +975,6 @@ namespace Models
             }
         }
 
-        private double[] dillutionCoefN = new double[] { 0.5, 1.0, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] DillutionCoefN
-        {
-            get { return dillutionCoefN; }
-            set
-            {
-                int NSp = value.Length;
-                dillutionCoefN = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    dillutionCoefN[sp] = value[sp];
-            }
-        }
-
         private double[] kappa2Remob = new double[] { 0.0, 0.0, 0.0 };
         /// <summary>
         /// 
@@ -1028,6 +1022,23 @@ namespace Models
                 kappa4Remob = new double[NSp];
                 for (int sp = 0; sp < NSp; sp++)
                     kappa4Remob[sp] = value[sp];
+            }
+        }
+
+        private double[] dillutionCoefN = new double[] { 0.5, 1.0, 0.5 };
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public double[] DillutionCoefN
+        {
+            get { return dillutionCoefN; }
+            set
+            {
+                int NSp = value.Length;
+                dillutionCoefN = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    dillutionCoefN[sp] = value[sp];
             }
         }
 
@@ -1099,7 +1110,7 @@ namespace Models
             }
         }
 
-        private double[] offsetCO2EffectOnPhotosynthesis = new double[] { 700.0, 700.0, 700.0 };
+        private double[] offsetCO2EffectOnPhotosynthesis = new double[] { 700.0, 700.0, 150.0 };
         /// <summary>
         /// 
         /// </summary>
@@ -1167,33 +1178,6 @@ namespace Models
             }
         }
 
-        private double[] preferenceForGreenDM = new double[] { 1.0, 1.0, 1.0 };
-        [XmlIgnore]
-        public double[] PreferenceForGreenDM
-        {
-            get { return preferenceForGreenDM; }
-            set
-            {
-                int NSp = value.Length;
-                preferenceForGreenDM = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    preferenceForGreenDM[sp] = value[sp];
-            }
-        }
-
-        private double[] preferenceForDeadDM = new double[] { 1.0, 1.0, 1.0 };
-        [XmlIgnore]
-        public double[] PreferenceForDeadDM
-        {
-            get { return preferenceForDeadDM; }
-            set
-            {
-                int NSp = value.Length;
-                preferenceForDeadDM = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    preferenceForDeadDM[sp] = value[sp];
-            }
-        }
 
         // * Other parameters (changed via manager) -----------------------------------------------
 
@@ -1251,16 +1235,17 @@ namespace Models
         public double[] initialDMFractions_legume = new double[] { 0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12 };
 
         [XmlIgnore]
-        public LinearInterpolation FVPDFunction = new LinearInterpolation
-        {
-            X = new double[3] { 0.0, 10.0, 50.0 },
-            Y = new double[3] { 1.0, 1.0, 1.0 }
-        };
-        [XmlIgnore]
         public LinearInterpolation HeightMassFN = new LinearInterpolation
         {
             X = new double[5] { 0, 1000, 2000, 3000, 4000 },
             Y = new double[5] { 0, 25, 75, 150, 250 }
+        };
+
+        [XmlIgnore]
+        public LinearInterpolation FVPDFunction = new LinearInterpolation
+        {
+            X = new double[3] { 0.0, 10.0, 50.0 },
+            Y = new double[3] { 1.0, 1.0, 1.0 }
         };
 
         #endregion
@@ -3782,31 +3767,30 @@ namespace Models
                 SP[s].dmroot = iniDMshoot[s] * maxRootFraction[s] / (1 + maxRootFraction[s]);
             SP[s].rootDepth = iniRootDepth[s];
 
-            SP[s].Pm = MaxPhotosynthesisRate[s];
-            SP[s].maintRespiration = MaintenanceRespirationCoef[s];
-            SP[s].growthEfficiency = GrowthEfficiency[s];
-            SP[s].lightExtCoeff = LightExtentionCoeff[s];
-            SP[s].maxAssimiRate = MaxAssimilationRate[s];
-            SP[s].growthTmin = GrowthTmin[s];
-            SP[s].growthTmax = GrowthTmax[s];
-            SP[s].growthTopt = GrowthTopt[s];
-            SP[s].growthTq = GrowthTq[s];
-            SP[s].massFluxTmin = MassFluxTmin[s];
-            SP[s].massFluxTopt = MassFluxTopt[s];
-            SP[s].massFluxW0 = MassFluxW0[s];
+            SP[s].Pm = maxPhotosynthesisRate[s];
+            SP[s].maintRespiration = maintenanceRespirationCoef[s];
+            SP[s].growthEfficiency = growthEfficiency[s];
+            SP[s].lightExtCoeff = lightExtentionCoeff[s];
+            SP[s].growthTmin = growthTmin[s];
+            SP[s].growthTmax = growthTmax[s];
+            SP[s].growthTopt = growthTopt[s];
+            SP[s].growthTq = growthTq[s];
+            SP[s].massFluxTmin = massFluxTmin[s];
+            SP[s].massFluxTopt = massFluxTopt[s];
+            SP[s].massFluxW0 = massFluxW0[s];
             SP[s].massFluxWopt = MassFluxWopt[s];
-            SP[s].heatOnsetT = HeatOnsetT[s];
-            SP[s].heatFullT = HeatFullT[s];
-            SP[s].heatSumT = HeatSumT[s];
-            SP[s].coldOnsetT = ColdOnsetT[s];
-            SP[s].coldFullT = ColdFullT[s];
-            SP[s].coldSumT = ColdSumT[s];
-            SP[s].SLA = SpecificLeafArea[s];
-            SP[s].SRL = SpecificRootLength[s];
-            SP[s].maxSRratio = (1 - MaxRootFraction[s]) / MaxRootFraction[s];
-            SP[s].allocationSeasonF = AllocationSeasonF[s];
-            SP[s].fLeaf = FracToLeaf[s];
-            SP[s].fStolon = FracToStolon[s];
+            SP[s].heatOnsetT = heatOnsetT[s];
+            SP[s].heatFullT = heatFullT[s];
+            SP[s].heatSumT = heatSumT[s];
+            SP[s].coldOnsetT = coldOnsetT[s];
+            SP[s].coldFullT = coldFullT[s];
+            SP[s].coldSumT = coldSumT[s];
+            SP[s].SLA = specificLeafArea[s];
+            SP[s].SRL = specificRootLength[s];
+            SP[s].maxSRratio = (1 - maxRootFraction[s]) / maxRootFraction[s];
+            SP[s].allocationSeasonF = allocationSeasonF[s];
+            SP[s].fLeaf = fracToLeaf[s];
+            SP[s].fStolon = fracToStolon[s];
             SP[s].rateLive2Dead = TurnoverRateLive2Dead[s];
             SP[s].rateDead2Litter = TurnoverRateDead2Litter[s];
             SP[s].rateRootSen = TurnoverRateRootSenescence[s];
@@ -3831,7 +3815,7 @@ namespace Models
             SP[s].Kappa4 = Kappa4Remob[s];
             SP[s].gfGen = GlfGeneric[s];
             SP[s].referenceCO2 = ReferenceCO2[s];
-            SP[s].CO2PmaxScale = OffsetCO2EffectOnPhotosynthesis[s];
+            SP[s].CO2PmaxScale = offsetCO2EffectOnPhotosynthesis[s];
             SP[s].CO2NScale = OffsetCO2EffectOnNuptake[s];
             SP[s].CO2NMin = MinimumCO2EffectOnNuptake[s];
             SP[s].CO2NCurvature = ExponentCO2EffectOnNuptake[s];
