@@ -19,14 +19,14 @@ namespace Models.PMF.Phen
         /*! <summary>
     Perform daily increase of phenology.
     </summary>
-    \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" function 
+    \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
     should be included as the last child of 
-    \ref Models.PMF.Phen.Phenology "Phenology" function
-    \pre A Models.Clock "Clock" function has to exist.
+    \ref Models.PMF.Phen.Phenology "Phenology" model
+    \pre A Models.Clock "Clock" model has to exist.
     \retval CurrentPhaseName The current phase name.
     \retval CurrentStageName The current stage name. 
     Return name of parameter \p Start of 
-    \ref Models.PMF.Phen.Phase "Phase" function 
+    \ref Models.PMF.Phen.Phase "Phase" model 
     on the day of phase starting, or ? in other days.
     \retval Stage A one based stage number (start from 1).
     \retval DaysAfterSowing The day after sowing. 
@@ -34,23 +34,50 @@ namespace Models.PMF.Phen
     <remarks>
     Generally, the plant phenology is divided into \f$N_{p}\f$ 
     phases (i.e. \ref Models.PMF.Phen.Phase "Phase" functions) and stages 
-    (children number of Phenology function, only count 
-    \ref Models.PMF.Phen.Phase "Phase" functions).
-    Any functions inherited from \ref Models.PMF.Phen.Phase "Phase" function 
-    could be used as children of Phenology function, except the last phase,
-    which should be the \ref Models.PMF.Phen.EndPhase "EndPhase" function.
+    (children number of Phenology model, only count 
+    \ref Models.PMF.Phen.Phase "Phase" models).
+    Any models inherited from \ref Models.PMF.Phen.Phase "Phase" models 
+    could be used as children of Phenology model, except the last phase,
+    which should be the \ref Models.PMF.Phen.EndPhase "EndPhase" model.
     
     The stage names are defined by the \p Start and \p End parameters 
-    in each \ref Models.PMF.Phen.Phase "Phase" function. Consequently,
+    in each \ref Models.PMF.Phen.Phase "Phase" model. Consequently,
     The parameter value of \p Start should equal to the parameter value
-    of \p End of previous \ref Models.PMF.Phen.Phase "Phase" function,
+    of \p End of previous \ref Models.PMF.Phen.Phase "Phase" model,
     except for the first phase. The parameter value of \p End 
     should equal to the parameter value of \p Start of next 
     \ref Models.PMF.Phen.Phase "Phase" function, except for the last phase. 
-    
     The equality of stage and phase number raise from the last phase,
-    which is \ref Models.PMF.Phen.EndPhase "EndPhase" function and the 
-    \t End stage is unused.
+    which is \ref Models.PMF.Phen.EndPhase "EndPhase" model and the 
+    \t End stage is unused. 
+	
+	For example, the wheat phenology model defines 9 stages from sowing to maturity.
+	See the diagram below for definitions of stages and phases, 
+	and models used for each phase.
+	
+	\startuml
+	Sowing -> Germination : Germinating
+	Germination -> Emergence : Emerging
+	Emergence ->  TerminalSpikelet : Vegetative
+	TerminalSpikelet-> FlagLeaf : FloralInitiation\nToFlagLeaf
+	FlagLeaf -> Flowering : Spike\nDevelopment
+	Flowering -> StartGrainFill: Grain\nDevelopment
+	StartGrainFill -> EndGrainFill : GrainFilling
+	EndGrainFill -> Maturity : Maturing
+	Maturity -> Unused: ReadyFor\nHarvesting
+
+	note over Sowing, Germination : GerminatingPhase
+	note over Germination, Emergence : EmergingPhase
+	note over Emergence, TerminalSpikelet : GenericPhase
+	note over TerminalSpikelet, FlagLeaf : LeafAppearancePhase
+	note over FlagLeaf, Flowering : GenericPhase
+	note over Flowering, StartGrainFill: GenericPhase
+	note over StartGrainFill, EndGrainFill : GenericPhase
+	note over EndGrainFill, Maturity : GenericPhase
+	note over Maturity, Unused: EndPhase
+	\enduml
+
+    
     
     On commencing simulation and sowing
     ----------------

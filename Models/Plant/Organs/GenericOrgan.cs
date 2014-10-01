@@ -8,6 +8,22 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
+	/*! 
+	<summary>
+	Model of generic organ 
+	</summary>
+	\param SenescenceRateFunction Rate of organ senescence 
+		(Optional, default 0 if this parameter does not exist, i.e no senescence).
+	\param StructuralFraction Fraction of organ structural component 
+		(Optional, default 1 if this parameter does not exist, i.e all biomass is structural).
+	\param InitialWtFunction Initial weight of organ 
+		(Optional, default 0 if this parameter does not exist, i.e. no initial weight).
+	\param InitialStructuralFraction Fraction of initial weight of organ 
+		(Optional, default 1 if this parameter does not exist, i.e. all initial biomass is structural).
+	\retval LiveFWt The live fresh weight (g m<sup>-2</sup>)
+	<remarks>
+	</remarks>
+	 */
     [Serializable]
     public class GenericOrgan : BaseOrgan
     {
