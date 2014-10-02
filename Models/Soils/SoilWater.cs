@@ -1217,10 +1217,10 @@ namespace Models.Soils
         private void soilwat2_get_crop_variables()
         {
             List<IModel> models = Apsim.FindAll(paddock, typeof(ICrop));
-        
+
+            NumberOfCrops = 0;
             foreach (Model m in models)
             {
-                NumberOfCrops = 0;
                 Array.Resize(ref cover_green, NumberOfCrops + 1);
                 Array.Resize(ref cover_tot, NumberOfCrops + 1);
                 Array.Resize(ref canopy_height, NumberOfCrops + 1);

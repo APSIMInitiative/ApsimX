@@ -4852,7 +4852,7 @@ namespace Models
             }
             if (sumProportion > 0)
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = result[layer] * Soil.Thickness[layer] / sumProportion;
+                    result[layer] = result[layer] / sumProportion;
             else
                 throw new Exception("Could not calculate root distribution");
             return result;
@@ -5924,7 +5924,7 @@ namespace Models
             //IL:  irridance on the top of canopy, with unit: J/(m^2 LAI)/(m^2 ground)/second.  PAR = 0.5*Radn; 1 MJ = 10^6 J
 
             //IL1 = 1.33333 * 0.5 * PIntRadn / (PCoverGreen*coverRF) * PLightExtCoeff * 1000000 / tau;
-            IL1 = 1.33333 * 0.5 * PlantInterceptedRadn * PlantLightExtCoeff * 1000000 / tau;					//ignore putting 2 species seperately for now
+            IL1 = 1.33333 * 0.5 * PlantInterceptedRadn * 1000000 * PlantLightExtCoeff / tau;					//ignore putting 2 species seperately for now
             double IL2 = IL1 / 2;					  //IL for early & late period of a day
 
             //Photosynthesis per LAI under full irridance at the top of the canopy
@@ -5932,7 +5932,7 @@ namespace Models
                          - Math.Sqrt((alfa * IL1 + Pm_day) * (alfa * IL1 + Pm_day) - 4 * theta * alfa * IL1 * Pm_day));
             double Pl2 = (0.5 / theta) * (alfa * IL2 + Pm_mean
                          - Math.Sqrt((alfa * IL2 + Pm_mean) * (alfa * IL2 + Pm_mean) - 4 * theta * alfa * IL2 * Pm_mean));
-
+            
             //Upscaling from 'per LAI' to 'per ground area'
             double carbon_m2 = 0.000001 * CD2C * 0.5 * tau * (Pl1 + Pl2) * PlantCoverGreen * intRadnFrac / lightExtCoeff;
             //tau: per second => per day; 0.000001: mg/m^2=> kg/m^2_ground/day;
@@ -6103,8 +6103,8 @@ namespace Models
 
             double toRoot = dGrowthW * (1.0 - fShoot);
             double toStol = dGrowthW * fShoot * fStolon;
-            double toLeaf = dGrowthW * fShoot * (1.0 - fStolon) * fLeaf;
-            double toStem = dGrowthW * fShoot * (1.0 - fStolon) * (1.0 - fLeaf);
+            double toLeaf = dGrowthW * fShoot * fLeaf;
+            double toStem = dGrowthW * fShoot * (1.0 - fStolon - fLeaf);
 
             //N demand for new growth (kg/ha)
             NdemandOpt = toRoot * NcrootOpt + toStol * NcstolOpt + toLeaf * NcleafOpt + toStem * NcstemOpt;
