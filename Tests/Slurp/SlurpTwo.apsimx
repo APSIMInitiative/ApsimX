@@ -150,6 +150,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -159,11 +164,6 @@
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
@@ -396,7 +396,6 @@ namespace Models
 	{
 		[Link] Clock Clock;
 		[Link] Slurp Slurp;
-		[Link] Report Report;
 		[Link] Summary Summary;
 		[Link] Zone zone;			
 		
@@ -441,7 +440,6 @@ namespace Models
 	{
 		[Link] Clock Clock;
 		[Link] Slurp Slurp;
-		[Link] Report Report;
 		[Link] Summary Summary;
 		[Link] Soils.Soil Soil;
 
@@ -644,6 +642,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -802,6 +802,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -811,11 +816,6 @@ namespace Models
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
@@ -1080,8 +1080,6 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock Clock;
-		[Link] Report ReportWater;
-		[Link] Report ReportNitrogen;
 		[Link] Summary Summary;
 		[Link] Soils.Soil Soil;
 
@@ -1332,6 +1330,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>GraphNitrogen2</Name>
@@ -1459,6 +1459,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>

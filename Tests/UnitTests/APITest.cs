@@ -165,7 +165,7 @@ namespace UnitTests
 
             // Make sure we can get a link to a local model from Field1
             Assert.AreEqual(Apsim.Find(field1, "Field1Report").Name, "Field1Report");
-            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Report)).Name, "Field1Report");
+            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Report.Report)).Name, "Field1Report");
 
             // Make sure we can get a link to a model in top level zone from Field1
             Assert.AreEqual(Apsim.Find(field1, "WeatherFile").Name, "WeatherFile");
@@ -178,7 +178,7 @@ namespace UnitTests
             // Make sure we can get a link to a model in a child field.
             Zone field2 = this.simulation.Children[4] as Zone;
             Assert.IsNotNull(Apsim.Find(field2, "Field2SubZoneReport"));
-            Assert.IsNotNull(Apsim.Find(field2, typeof(Models.Report)));
+            Assert.IsNotNull(Apsim.Find(field2, typeof(Models.Report.Report)));
 
             // Make sure we can get a link from a child, child zone to the top level zone.
             Zone field2SubZone = field2.Children[3] as Zone;

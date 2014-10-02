@@ -10,6 +10,7 @@ using System.Data;
 using System.IO;
 using UserInterface.Interfaces;
 using UserInterface.EventArguments;
+using Models.Report;
 
 namespace UserInterface.Presenters
 {
@@ -63,7 +64,7 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
-            object o = Report.Get(e.ObjectName);
+            object o = Apsim.Get(Report, e.ObjectName);
 
             if (o != null)
             {
@@ -76,7 +77,7 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnNeedEventNames(object Sender, NeedContextItemsArgs e)
         {
-            object o = Report.Get(e.ObjectName);
+            object o = Apsim.Get(Report, e.ObjectName);
 
             if (o != null)
             {
