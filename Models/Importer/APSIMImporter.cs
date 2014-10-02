@@ -795,7 +795,7 @@ namespace Importer
         /// <returns>The new component node</returns>
         private XmlNode ImportOutputFile(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            Models.Report myreport = new Models.Report();
+            Models.Report.Report myreport = new Models.Report.Report();
 
             // compNode/variables array
             List<XmlNode> nodes = new List<XmlNode>();

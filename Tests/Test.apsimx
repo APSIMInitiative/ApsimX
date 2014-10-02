@@ -36,10 +36,10 @@
           <string>[Soil].SoilNitrogen.no3</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.sw[1:3] as SWTop3Layers</string>
-          <string>(sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
-          <string>([WeatherFile].Rain / 25.4) as RainInches</string>
-          <string>([Soil].SoilWater.sw - [Soil].SoilWater.ll15) as ESW</string>
-          <string>(sum([Soil].SoilWater.sw - [Soil].SoilWater.ll15)) as TotalESW</string>
+          <string>evaluate sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
+          <string>evaluate [WeatherFile].Rain / 25.4 as RainInches</string>
+          <string>evaluate [Soil].SoilWater.sw - [Soil].SoilWater.ll15 as ESW</string>
+          <string>evaluate sum([Soil].SoilWater.sw - [Soil].SoilWater.ll15) as TotalESW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -303,6 +303,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -312,15 +317,9 @@
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -823,6 +822,8 @@
       <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Memo>
     <Name>Memo</Name>

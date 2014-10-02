@@ -26,12 +26,6 @@
       <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
-    <Input>
-      <Name>Input</Name>
-      <FileNames>
-        <string>..\..\..\apsim\Tests\Validation\Wheat\Files\Wheat_APS14_LucN200.out</string>
-      </FileNames>
-    </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -856,6 +850,7 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -898,6 +893,7 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -2414,6 +2410,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -3493,6 +3490,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>LAI</Name>
@@ -3534,6 +3532,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -4690,6 +4689,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>LAI</Name>
@@ -4731,6 +4731,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -6415,6 +6416,7 @@ public class Script : Model
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -6475,6 +6477,7 @@ public class Script : Model
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Experiment>
       <Name>RainShelter</Name>
@@ -8206,6 +8209,7 @@ public class Script : Model
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Biomass</Name>
@@ -8266,6 +8270,7 @@ public class Script : Model
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Biomass1</Name>
@@ -8326,6 +8331,7 @@ public class Script : Model
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Experiment>
   </Experiment>
@@ -9472,6 +9478,7 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>TotalSW</Name>
@@ -9512,6 +9519,7 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -10772,6 +10780,7 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -11958,6 +11967,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -14006,6 +14016,7 @@ private void OnDoManagement(object sender, EventArgs e)
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>Biomass</Name>
@@ -14047,6 +14058,7 @@ private void OnDoManagement(object sender, EventArgs e)
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>BiomassN</Name>
@@ -14088,6 +14100,7 @@ private void OnDoManagement(object sender, EventArgs e)
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>GrainNumber</Name>
@@ -14129,6 +14142,7 @@ private void OnDoManagement(object sender, EventArgs e)
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Tests>
     <Name>Tests</Name>
