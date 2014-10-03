@@ -598,17 +598,17 @@ namespace Models
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>Evaluate (Slurp1.demandWater + Slurp2.demandWater) as demandWater</string>
-            <string>Evaluate sum(Slurp1.uptakeWater[1:4] + Slurp2.uptakeWater[1:4]) as UptakeWater</string>
-            <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
+            <string>(Slurp1.demandWater + Slurp2.demandWater) as demandWater</string>
+            <string>sum(Slurp1.uptakeWater[1:4] + Slurp2.uptakeWater[1:4]) as UptakeWater</string>
+            <string>sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
             <string>[Diffs].Script.diffSWDepUptake as deltaSWDep</string>
-            <string>Evaluate (Slurp1.demandNitrogen + Slurp2.demandNitrogen) as demandNitrogen</string>
-            <string>Evaluate sum(Slurp1.uptakeNitrogen[1:4] + Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
-            <string>Evaluate sum(Slurp1.uptakeNitrogenPropNO3[1:4] + Slurp2.uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
-            <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
+            <string>(Slurp1.demandNitrogen + Slurp2.demandNitrogen) as demandNitrogen</string>
+            <string>sum(Slurp1.uptakeNitrogen[1:4] + Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
+            <string>sum(Slurp1.uptakeNitrogenPropNO3[1:4] + Slurp2.uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
+            <string>(sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
             <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
-            <string>Evaluate sum(Slurp1.uptakeNitrogen[1:4]) as UptakeNitrogen1</string>
-            <string>Evaluate sum(Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen2</string>
+            <string>sum(Slurp1.uptakeNitrogen[1:4]) as UptakeNitrogen1</string>
+            <string>sum(Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen2</string>
             <string>Slurp1.demandNitrogen as demandNitrogen1</string>
             <string>Slurp2.demandNitrogen as demandNitrogen2</string>
           </VariableNames>

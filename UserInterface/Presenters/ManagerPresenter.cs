@@ -75,7 +75,7 @@ namespace UserInterface.Presenters
             if (typeName != string.Empty)
             {
                 Type atype = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
-                e.AllItems.AddRange(NeedContextItemsArgs.ExamineTypeForContextItems(atype, true, true));
+                e.AllItems.AddRange(NeedContextItemsArgs.ExamineTypeForContextItems(atype, true, true, false));
             }
         }
 

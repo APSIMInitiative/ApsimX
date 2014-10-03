@@ -2760,6 +2760,7 @@
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
           <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
         </Graph>
         <Operations>
           <Name>FertiliserRule</Name>

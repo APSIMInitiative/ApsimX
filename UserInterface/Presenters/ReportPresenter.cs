@@ -40,6 +40,7 @@ namespace UserInterface.Presenters
 
             Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
             DataStore = new DataStore(Report);
+            this.View.VariableList.SetSyntaxHighlighter("Report");
 
             PopulateDataGrid();
         }
@@ -68,7 +69,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true));
+                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true, true));
             }
         }
 
@@ -81,8 +82,7 @@ namespace UserInterface.Presenters
 
             if (o != null)
             {
-                foreach (EventInfo Event in o.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-                    e.Items.Add(Event.Name);
+                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, false, false, true));
             }
         }
 

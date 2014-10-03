@@ -25,12 +25,14 @@ namespace Models
         public DateTime EndDate { get; set; }
 
         // Public events that we're going to publish.
+        public event EventHandler StartOfSimulation;
         public event EventHandler StartOfDay;
         public event EventHandler StartOfMonth;
         public event EventHandler StartOfYear;
         public event EventHandler EndOfDay;
         public event EventHandler EndOfMonth;
         public event EventHandler EndOfYear;
+        public event EventHandler EndOfSimulation;
 
         public event EventHandler DoWeather;
         public event EventHandler DoDailyInitialisation;
@@ -77,6 +79,9 @@ namespace Models
             if (DoInitialSummary != null)
                 DoInitialSummary.Invoke(this, args);
 
+            if (StartOfSimulation != null)
+                StartOfSimulation.Invoke(this, args);
+
             while (Today <= EndDate)
             {
                 // If this is being run on a background worker thread then check for cancellation
@@ -85,7 +90,6 @@ namespace Models
                     Summary.WriteMessage(this, "Simulation cancelled");
                     return;
                 }
-                
 
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
@@ -93,15 +97,14 @@ namespace Models
                 if (DoDailyInitialisation != null)
                     DoDailyInitialisation.Invoke(this, args);
 
+                if (StartOfDay != null)
+                    StartOfDay.Invoke(this, args);
+
                 if (Today.Day == 1 && StartOfMonth != null)
-                {
                     StartOfMonth.Invoke(this, args);
-                }
 
                 if (Today.DayOfYear == 1 && StartOfYear != null)
-                {
                     StartOfYear.Invoke(this, args);
-                }
 
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
@@ -145,22 +148,24 @@ namespace Models
                 if (DoManagementCalculations != null)
                     DoManagementCalculations.Invoke(this, args);
 
-                if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
-                {
-                    EndOfMonth.Invoke(this, args);
-                }
+
+                if (Today == EndDate && EndOfSimulation != null)
+                    EndOfSimulation.Invoke(this, args);
 
                 if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
-                {
                     EndOfYear.Invoke(this, args);
-                }
+
+                if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
+                    EndOfMonth.Invoke(this, args);
+
+                if (EndOfDay != null)
+                    EndOfDay.Invoke(this, args);
 
                 if (DoReport != null)
                     DoReport.Invoke(this, args);
 
                 Today = Today.AddDays(1);
             }
-
 
             Summary.WriteMessage(this, "Simulation terminated normally");
         }

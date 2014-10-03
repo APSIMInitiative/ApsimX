@@ -247,6 +247,7 @@ namespace Models.Core
                     }
                     if (values.Length == 1)
                     {
+                        return values.GetValue(0);
                     }
 
                     return values;

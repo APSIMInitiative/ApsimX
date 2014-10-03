@@ -988,11 +988,11 @@ namespace Models
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
+          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
+          <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
           <string>[SurfaceOrganicMatter].surfaceom_n</string>
         </VariableNames>
         <EventNames>
@@ -2770,11 +2770,11 @@ namespace Models
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
+          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
+          <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -4558,11 +4558,11 @@ namespace Models
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
+          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
+          <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
           <string>[SurfaceOrganicMatter].surfaceom_n</string>
         </VariableNames>
         <EventNames>

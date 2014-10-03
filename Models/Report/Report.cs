@@ -8,76 +8,68 @@ namespace Models.Report
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Reflection;
     using Models.Core;
 
+    /// <summary>
+    /// A report class for writing output to the data store.
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
     public class Report : Model
     {
+        /// <summary>
+        /// The columns to write to the data store.
+        /// </summary>
+        private List<ReportColumn> columns = null;
 
-
-        // privates
-        private List<ReportColumn> Members = null;
-
+        /// <summary>
+        /// A reference to the simulation
+        /// </summary>
         [Link]
-        public Simulation Simulation = null;
+        private Simulation simulation = null;
 
-        // Properties read in.
+        /// <summary>
+        /// Gets or sets variable names for outputting
+        /// </summary>
         [Summary]
         [Description("Output variables")]
-        public string[] VariableNames {get; set;}
+        public string[] VariableNames { get; set; }
 
+        /// <summary>
+        /// Gets or sets event names for outputting
+        /// </summary>
         [Summary]
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
         /// <summary>
-        /// An event handler to allow us to initialise ourselves.
+        /// An event handler to allow us to initialize ourselves.
         /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<string> eventNames = new List<string>();
-            for (int i = 0; i < EventNames.Length; i++ )
+            for (int i = 0; i < this.EventNames.Length; i++)
             {
-                if (EventNames[i] != "")
-                {
-                    eventNames.Add(EventNames[i].Trim());
-                    Apsim.Subscribe(this, EventNames[i].Trim(), OnReport);
-                }
+                if (this.EventNames[i] != string.Empty)
+                    eventNames.Add(this.EventNames[i].Trim());
             }
-            EventNames = eventNames.ToArray();
+
+            this.EventNames = eventNames.ToArray();
 
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
-            for (int i = 0; i < VariableNames.Length; i++)
+            for (int i = 0; i < this.VariableNames.Length; i++)
             {
-                bool isDuplicate = Utility.String.IndexOfCaseInsensitive(variableNames, VariableNames[i].Trim()) != -1;
-                if (!isDuplicate && VariableNames[i] != "")
-                    variableNames.Add(VariableNames[i].Trim());
+                bool isDuplicate = Utility.String.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
+                if (!isDuplicate && this.VariableNames[i] != string.Empty)
+                    variableNames.Add(this.VariableNames[i].Trim());
             }
-            VariableNames = variableNames.ToArray();
-            FindVariableMembers();
-        }
-
-        /// <summary>
-        /// Event handler for the report event.
-        /// </summary>
-        public void OnReport(object sender, EventArgs e)
-        {
-            foreach (ReportColumn Variable in Members)
-                Variable.StoreValue();
-        }
-
-        /// <summary>
-        /// Public method to allow reporting from scripts.
-        /// </summary>
-        public void DoReport()
-        {
-            foreach (ReportColumn Variable in Members)
-                Variable.StoreValue();
+            this.VariableNames = variableNames.ToArray();
+            this.FindVariableMembers();
         }
 
         /// <summary>
@@ -85,59 +77,46 @@ namespace Models.Report
         /// </summary>
         private void FindVariableMembers()
         {
-            Members = new List<ReportColumn>();
+            this.columns = new List<ReportColumn>();
 
-            List<string> Names = new List<string>();
-            List<Type> Types = new List<Type>();
-            foreach (string FullVariableName in VariableNames)
+            foreach (string fullVariableName in this.VariableNames)
             {
-                if (FullVariableName != "")
-                    Members.Add(ReportColumn.Create(FullVariableName, this));
+                if (fullVariableName != string.Empty)
+                    this.columns.Add(ReportColumn.Create(fullVariableName, this, this.EventNames));
             }
         }
 
         /// <summary>
         /// Simulation has completed - write the report table.
         /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (Simulation != null)
+            // Get rid of old data in .db
+            DataStore dataStore = new DataStore(this);
+            dataStore.DeleteOldContentInTable(this.simulation.Name, this.Name);
+
+            // Write and store a table in the DataStore
+            if (this.columns != null && this.columns.Count > 0)
             {
-                // Get rid of old data in .db
-                DataStore DataStore = new DataStore(this);
-                DataStore.DeleteOldContentInTable(Simulation.Name, Name);
+                DataTable table = new DataTable();
 
-                // Write and store a table in the DataStore
-                if (Members != null && Members.Count > 0)
-                {
-                    DataTable table = new DataTable();
+                foreach (ReportColumn variable in this.columns)
+                    variable.AddColumnsToTable(table);
 
-                    foreach (ReportColumn Variable in Members)
-                        Variable.AddColumnsToTable(table);
+                foreach (ReportColumn variable in this.columns)
+                    variable.AddRowsToTable(table);
 
-                    foreach (ReportColumn Variable in Members)
-                        Variable.AddRowsToTable(table);
+                dataStore.WriteTable(this.simulation.Name, this.Name, table);
 
-                    DataStore.WriteTable(Simulation.Name, Name, table);
-
-                    Members.Clear();
-                    Members = null;
-                }
-
-                UnsubscribeAllEventHandlers();
-                DataStore.Disconnect();
-                DataStore = null;
+                this.columns.Clear();
+                this.columns = null;
             }
+            
+            dataStore.Disconnect();
+            dataStore = null;
         }
-
-        private void UnsubscribeAllEventHandlers()
-        {
-            // Unsubscribe to all events.
-            foreach (string Event in EventNames)
-                if ( (Event != null) && (Event != "") )
-                    Apsim.Unsubscribe(this, Event, OnReport);
-        }
-
     }
 }

@@ -9308,7 +9308,7 @@ public class Script : Model
             <string>Wheat.NStress.Photo</string>
             <string>Wheat.NStress.Expansion</string>
             <string>Wheat.Total.Wt</string>
-            <string>Evaluate sum([Soil].SoilWater.sw_dep) as TotalSW</string>
+            <string>sum([Soil].SoilWater.sw_dep) as TotalSW</string>
             <string />
           </VariableNames>
           <EventNames>

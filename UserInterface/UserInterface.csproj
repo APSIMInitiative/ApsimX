@@ -425,7 +425,8 @@
     <None Include="Resources\StandardToolbox.apsimx">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Resources\Test.xshd" />
+    <None Include="Resources\SyntaxHighlighting\Report.xshd" />
+    <None Include="Resources\SyntaxHighlighting\Test.xshd" />
     <None Include="Resources\undo.png" />
   </ItemGroup>
   <ItemGroup>

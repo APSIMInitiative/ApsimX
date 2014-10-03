@@ -292,8 +292,10 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName.Trim() == "Simulation")
             {
-                e.Items.Add("All");
-                e.Items.AddRange(dataStore.SimulationNames);
+                e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "All" });
+
+                foreach (string simulationName in dataStore.SimulationNames)
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = simulationName });
             }
             else if (e.ObjectName.Trim() == "Test")
             {
@@ -303,7 +305,9 @@ namespace UserInterface.Presenters
                     DataTable data = dataStore.GetData("*", tableName);
                     if (data != null)
                     {
-                        e.Items.AddRange(Utility.DataTable.GetColumnNames(data));
+                        foreach (string columnName in Utility.DataTable.GetColumnNames(data))
+                            e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = columnName });
+
                     }
                 }
             }
@@ -313,14 +317,14 @@ namespace UserInterface.Presenters
                 string testName = this.GetWordFromLine(this.view.Editor.CurrentLineNumber, "Test:", false);
                 if (simulationName != null && testName != null)
                 {
-                    e.Items.Add("=");
-                    e.Items.Add("<");
-                    e.Items.Add(">");
-                    e.Items.Add("AllPositive");
-                    e.Items.Add("between");
-                    e.Items.Add("mean=");
-                    e.Items.Add("tolerance=");
-                    e.Items.Add("CompareToInput=");
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "=" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "<" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = ">" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "AllPositive" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "between" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "mean=" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "tolerance=" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "CompareToInput=" });
                 }
             }
         }
