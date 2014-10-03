@@ -8,31 +8,59 @@ using System.Linq;
 
 namespace Models
 {
+    /// <summary>
+    /// A class for holding fertiliser types
+    /// </summary>
     [Serializable]
     public class FertiliserType
     {
+        /// <summary>Gets or sets the name.</summary>
+        /// <value>The name.</value>
         public string Name { get; set; }
+        /// <summary>Gets or sets the description.</summary>
+        /// <value>The description.</value>
         public string Description { get; set; }
+        /// <summary>Gets or sets the fraction n o3.</summary>
+        /// <value>The fraction n o3.</value>
         public double FractionNO3 { get; set; }
+        /// <summary>Gets or sets the fraction n h4.</summary>
+        /// <value>The fraction n h4.</value>
         public double FractionNH4 { get; set; }
+        /// <summary>Gets or sets the fraction urea.</summary>
+        /// <value>The fraction urea.</value>
         public double FractionUrea { get; set; }
+        /// <summary>Gets or sets the fraction rock p.</summary>
+        /// <value>The fraction rock p.</value>
         public double FractionRockP { get; set;}
+        /// <summary>Gets or sets the fraction banded p.</summary>
+        /// <value>The fraction banded p.</value>
         public double FractionBandedP{get;set;}
+        /// <summary>Gets or sets the fraction labile p.</summary>
+        /// <value>The fraction labile p.</value>
         public double FractionLabileP{get;set;}
+        /// <summary>Gets or sets the fraction ca.</summary>
+        /// <value>The fraction ca.</value>
         public double FractionCa { get; set; }
     }
-        [Serializable]
-
+    /// <summary>
+    /// The fertiliser model
+    /// </summary>
+    [Serializable]
     public class Fertiliser : Model
     {
         // Links
+        /// <summary>The soil</summary>
         [Link] private Soil Soil = null;
+        /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
 
         // Parameters
+        /// <summary>Gets or sets the definitions.</summary>
+        /// <value>The definitions.</value>
         [XmlIgnore]
         public List<FertiliserType> Definitions { get; set; }
 
+        /// <summary>Adds the definitions.</summary>
         private void AddDefinitions()
         {
             Definitions = new List<FertiliserType>();
@@ -55,18 +83,27 @@ namespace Models
 
 
         // Events we're going to send.
+        /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
+        /// <summary>Gets the nitrogen applied.</summary>
+        /// <value>The nitrogen applied.</value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double NitrogenApplied { get ; private set; }
 
-        public enum Types { CalciteCA, CalciteFine, Dolomite, NO3N, NH4N, NH4NO3N, 
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum Types { CalciteCA, CalciteFine, Dolomite, NO3N, NH4N, NH4NO3N,
+        /// <summary>The dap</summary>
                             DAP, MAP, UreaN, UreaNO3, Urea, NH4SO4N, RockP, BandedP, BroadcastP };
 
-        /// <summary>
-        /// Apply fertiliser.
-        /// </summary>
+        /// <summary>Apply fertiliser.</summary>
+        /// <param name="Amount">The amount.</param>
+        /// <param name="Type">The type.</param>
+        /// <param name="Depth">The depth.</param>
+        /// <exception cref="ApsimXException">Cannot find fertiliser type ' + Type + '</exception>
         public void Apply(double Amount, Types Type, double Depth = 0.0)
         {
             if (Amount > 0 && NitrogenChanged != null)
@@ -105,15 +142,18 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// prepare event handler from Clock.
-        /// </summary>
+        /// <summary>prepare event handler from Clock.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             NitrogenApplied = 0;
         }
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -124,6 +164,9 @@ namespace Models
         /// <summary>
         /// Utility function for determining the layer where 'depth' is located in the 'Thickness' array.
         /// </summary>
+        /// <param name="depth">The depth.</param>
+        /// <param name="thickness">The thickness.</param>
+        /// <returns></returns>
         private int GetLayerDepth(double depth, double[] thickness)
         {
             double cum = 0.0;

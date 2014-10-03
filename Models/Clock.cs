@@ -4,73 +4,110 @@ using Models.Core;
 
 namespace Models
 {
+    /// <summary>
+    /// The clock model
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Simulation))]
     public class Clock : Model
     {
+        /// <summary>The arguments</summary>
         private EventArgs args = new EventArgs();
 
         // Links
+        /// <summary>The summary</summary>
         [Link]
         private ISummary Summary = null;
 
+        /// <summary>Gets or sets the start date.</summary>
+        /// <value>The start date.</value>
         [Summary]
         [Description("The start date of the simulation")]
         public DateTime StartDate { get; set; }
 
+        /// <summary>Gets or sets the end date.</summary>
+        /// <value>The end date.</value>
         [Summary]
         [Description("The end date of the simulation")]
         public DateTime EndDate { get; set; }
 
         // Public events that we're going to publish.
+        /// <summary>Occurs when [start of simulation].</summary>
         public event EventHandler StartOfSimulation;
+        /// <summary>Occurs when [start of day].</summary>
         public event EventHandler StartOfDay;
+        /// <summary>Occurs when [start of month].</summary>
         public event EventHandler StartOfMonth;
+        /// <summary>Occurs when [start of year].</summary>
         public event EventHandler StartOfYear;
+        /// <summary>Occurs when [end of day].</summary>
         public event EventHandler EndOfDay;
+        /// <summary>Occurs when [end of month].</summary>
         public event EventHandler EndOfMonth;
+        /// <summary>Occurs when [end of year].</summary>
         public event EventHandler EndOfYear;
+        /// <summary>Occurs when [end of simulation].</summary>
         public event EventHandler EndOfSimulation;
 
+        /// <summary>Occurs when [do weather].</summary>
         public event EventHandler DoWeather;
+        /// <summary>Occurs when [do daily initialisation].</summary>
         public event EventHandler DoDailyInitialisation;
+        /// <summary>Occurs when [do initial summary].</summary>
         public event EventHandler DoInitialSummary;
+        /// <summary>Occurs when [do management].</summary>
         public event EventHandler DoManagement;
+        /// <summary>Occurs when [do energy arbitration].</summary>
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
+        /// <summary>Occurs when [do canopy].</summary>
         public event EventHandler DoCanopy;                            //This will be removed when comms are better sorted  do not use  MicroClimate only
+        /// <summary>Occurs when [do canopy energy balance].</summary>
         public event EventHandler DoCanopyEnergyBalance;               //This will be removed when comms are better sorted  do not use  MicroClimate only
+        /// <summary>Occurs when [do soil water movement].</summary>
         public event EventHandler DoSoilWaterMovement;                                //Soil module
         //DoSoilTemperature will be here
         //DoSoilNutrientDynamics will be here
+        /// <summary>Occurs when [do soil organic matter].</summary>
         public event EventHandler DoSoilOrganicMatter;                                 //SurfaceOM
+        /// <summary>Occurs when [do surface organic matter decomposition].</summary>
         public event EventHandler DoSurfaceOrganicMatterDecomposition;                 //SurfaceOM
+        /// <summary>Occurs when [do water arbitration].</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
+        /// <summary>Occurs when [do potential plant growth].</summary>
         public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant
+        /// <summary>Occurs when [do nutrient arbitration].</summary>
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
+        /// <summary>Occurs when [do actual plant growth].</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
+        /// <summary>Occurs when [do plant growth].</summary>
         public event EventHandler DoPlantGrowth;                       //This will be removed when comms are better sorted  do not use  MicroClimate only
-        public event EventHandler DoUpdate;                
+        /// <summary>Occurs when [do update].</summary>
+        public event EventHandler DoUpdate;
+        /// <summary>Occurs when [do management calculations].</summary>
         public event EventHandler DoManagementCalculations;
+        /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
 
         // Public properties available to other models.
+        /// <summary>Gets the today.</summary>
+        /// <value>The today.</value>
         [XmlIgnore]
         public DateTime Today { get; private set; }
 
-        /// <summary>
-        /// An event handler to allow us to initialise ourselves.
-        /// </summary>
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Today = StartDate;
         }
 
-        /// <summary>
-        /// An event handler to signal start of a simulation.
-        /// </summary>
+        /// <summary>An event handler to signal start of a simulation.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
         private void OnDoCommence(object sender, EventArgs e)
         {

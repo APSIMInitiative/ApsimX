@@ -10,10 +10,15 @@ using System.IO;
 
 namespace Models.PMF.Phen
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class PhaseChangedType
     {
+        /// <summary>The old phase name</summary>
         public String OldPhaseName = "";
+        /// <summary>The new phase name</summary>
         public String NewPhaseName = "";
     }
         /*! <summary>
@@ -101,50 +106,73 @@ namespace Models.PMF.Phen
     
     </remarks>
 	*/
+    /// <summary>
+    /// A phenology model
+    /// </summary>
     [Serializable]
     public class Phenology : Model
     {
         #region Links
+        /// <summary>The summary</summary>
         [Link]
         private ISummary Summary = null;
+        /// <summary>The clock</summary>
         [Link]
         private Clock Clock = null;
+        /// <summary>The rewind due to biomass removed</summary>
         [Link(IsOptional = true)]
         private Function RewindDueToBiomassRemoved = null;
+        /// <summary>The above ground period</summary>
         [Link(IsOptional = true)]
         private Function AboveGroundPeriod = null;
 
         #endregion
 
         #region Events
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void PhaseChangedDelegate(PhaseChangedType Data);
+        /// <summary>Occurs when [phase changed].</summary>
         public event PhaseChangedDelegate PhaseChanged;
+        /// <summary>Occurs when [growth stage].</summary>
         public event NullTypeDelegate GrowthStage;
         #endregion
 
         #region Parameters
+        /// <summary>The stage code</summary>
         [Link] public Function StageCode = null;
+        /// <summary>The thermal time</summary>
         [Link] public Function ThermalTime = null;
 
+        /// <summary>The phases</summary>
         private List<Phase> Phases;
 
         #endregion
 
         #region States
+        /// <summary>The current phase index</summary>
         private int CurrentPhaseIndex;
+        /// <summary>The _ accumulated tt</summary>
         private double _AccumulatedTT = 0;
+        /// <summary>The currently on first day of phase</summary>
         private string CurrentlyOnFirstDayOfPhase = "";
+        /// <summary>The just initialised</summary>
         private bool JustInitialised = true;
+        /// <summary>The fraction biomass removed</summary>
         private double FractionBiomassRemoved = 0;
+        /// <summary>The sow date</summary>
         private DateTime SowDate = DateTime.MinValue;
+        /// <summary>The emerged</summary>
         public bool Emerged = false;
 
         [XmlIgnore]
-        /// <summary>
-        /// A one based stage number.
-        /// </summary>
+        /// <summary>A one based stage number.</summary>
+        /// <value>The stage.</value>
         public double Stage { get; set;}
 
+        /// <summary>Clears this instance.</summary>
         public void Clear()
         {
             Stage = 1;
@@ -162,9 +190,9 @@ namespace Models.PMF.Phen
         #endregion
 
         #region Outputs
-        /// <summary>
-        /// This property is used to retrieve or set the current phase name.
-        /// </summary>
+        /// <summary>This property is used to retrieve or set the current phase name.</summary>
+        /// <value>The name of the current phase.</value>
+        /// <exception cref="System.Exception">Cannot jump to phenology phase:  + value + . Phase not found.</exception>
         
         [XmlIgnore]
         public string CurrentPhaseName
@@ -185,9 +213,8 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>
-        /// Return current stage name.
-        /// </summary>
+        /// <summary>Return current stage name.</summary>
+        /// <value>The name of the current stage.</value>
         
         public string CurrentStageName
         {
@@ -200,7 +227,9 @@ namespace Models.PMF.Phen
             }
         }
 
-        
+
+        /// <summary>Gets the fraction in current phase.</summary>
+        /// <value>The fraction in current phase.</value>
         public double FractionInCurrentPhase
         {
             get
@@ -209,6 +238,8 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>Gets the days after sowing.</summary>
+        /// <value>The days after sowing.</value>
         public int DaysAfterSowing
         {
             get
@@ -222,13 +253,9 @@ namespace Models.PMF.Phen
 
         #endregion
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         public Phenology() { }
-        /// <summary>
-        /// Initialize the phase list of phenology. 
-        /// </summary>
+        /// <summary>Initialize the phase list of phenology.</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
@@ -237,17 +264,22 @@ namespace Models.PMF.Phen
                 Phases.Add(phase);
         }
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
         }
 
+        /// <summary>Called when [sow].</summary>
         public void OnSow()
         {
             Clear();
         }
 
+        /// <summary>Called when [harvest].</summary>
         public void OnHarvest()
         {
             //Jump phenology to the end
@@ -261,9 +293,9 @@ namespace Models.PMF.Phen
             CurrentPhaseName = Phases[EndPhase - 1].Name;
         }
 
-        /// <summary>
-        /// Look for a particular phase and return it's index or -1 if not found.
-        /// </summary>
+        /// <summary>Look for a particular phase and return it's index or -1 if not found.</summary>
+        /// <param name="Name">The name.</param>
+        /// <returns></returns>
         public int IndexOfPhase(string Name)
         {
             for (int P = 0; P < Phases.Count; P++)
@@ -274,9 +306,10 @@ namespace Models.PMF.Phen
 
         /// <summary>
         /// Perform our daily timestep function. Get the current phase to do its
-        /// development for the day. If TT is leftover after Phase is progressed, 
+        /// development for the day. If TT is leftover after Phase is progressed,
         /// and the timestep for the subsequent phase is calculated using leftover TT
         /// </summary>
+        /// <exception cref="System.Exception">Cannot transition to the next phase. No more phases exist</exception>
         public void DoTimeStep()
         {
             // If this is the first time through here then setup some variables.
@@ -317,9 +350,13 @@ namespace Models.PMF.Phen
             Util.Debug("Phenology.CurrentStage=%f", Stage);
         }
 
-        /// <summary>
-        /// A utility property to return the current phase.
-        /// </summary>
+        /// <summary>A utility property to return the current phase.</summary>
+        /// <value>The current phase.</value>
+        /// <exception cref="System.Exception">
+        /// Cannot jump to phenology phase:  + value + . Phase not found.
+        /// or
+        /// Cannot goto phase:  + GotoP.PhaseNameToGoto + . Phase not found.
+        /// </exception>
         [XmlIgnore]
         public Phase CurrentPhase
         {
@@ -370,18 +407,22 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>
-        /// A utility function to return true if the simulation is on the first day of the 
+        /// A utility function to return true if the simulation is on the first day of the
         /// specified stage.
         /// </summary>
+        /// <param name="StageName">Name of the stage.</param>
+        /// <returns></returns>
         public bool OnDayOf(String StageName)
         {
             return (StageName.Equals(CurrentlyOnFirstDayOfPhase, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
-        /// A utility function to return true if the simulation is currently in the 
+        /// A utility function to return true if the simulation is currently in the
         /// specified phase.
         /// </summary>
+        /// <param name="PhaseName">Name of the phase.</param>
+        /// <returns></returns>
         public bool InPhase(String PhaseName)
         {
             return CurrentPhase.Name.ToLower() == PhaseName.ToLower();
@@ -391,6 +432,10 @@ namespace Models.PMF.Phen
         /// A utility function to return true if the simulation is currently between
         /// the specified start and end stages.
         /// </summary>
+        /// <param name="Start">The start.</param>
+        /// <param name="End">The end.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot test between stages  + Start +   + End</exception>
         public bool Between(String Start, String End)
         {
             string StartFractionSt = Utility.String.SplitOffBracketedValue(ref Start, '(', ')');
@@ -424,6 +469,9 @@ namespace Models.PMF.Phen
         /// A utility function to return the phenological phase that starts with
         /// the specified start stage name.
         /// </summary>
+        /// <param name="Start">The start.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Unable to find phase starting with  + Start</exception>
         public Phase PhaseStartingWith(String Start)
         {
             foreach (Phase P in Phases)
@@ -436,6 +484,9 @@ namespace Models.PMF.Phen
         /// A utility function to return the phenological phase that ends with
         /// the specified start stage name.
         /// </summary>
+        /// <param name="End">The end.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Unable to find phase ending with  + End</exception>
         public Phase PhaseEndingWith(String End)
         {
             foreach (Phase P in Phases)
@@ -444,9 +495,9 @@ namespace Models.PMF.Phen
             throw new Exception("Unable to find phase ending with " + End);
         }
 
-        /// <summary>
-        /// A utility function to return true if a phenological phase is valid.
-        /// </summary>
+        /// <summary>A utility function to return true if a phenological phase is valid.</summary>
+        /// <param name="Start">The start.</param>
+        /// <returns></returns>
         public bool IsValidPhase(String Start)
         {
             foreach (Phase P in Phases)
@@ -455,9 +506,9 @@ namespace Models.PMF.Phen
             return false;
         }
 
-        /// <summary>
-        /// A utility function to return true if a phenological phase is valid.
-        /// </summary>
+        /// <summary>A utility function to return true if a phenological phase is valid.</summary>
+        /// <param name="PhaseName">Name of the phase.</param>
+        /// <returns></returns>
         public bool IsValidPhase2(String PhaseName)
         {
             foreach (Phase P in Phases)
@@ -466,9 +517,8 @@ namespace Models.PMF.Phen
             return false;
         }
 
-        /// <summary>
-        /// Write phenology info to summary file.
-        /// </summary>
+        /// <summary>Write phenology info to summary file.</summary>
+        /// <param name="writer">The writer.</param>
         internal void WriteSummary(TextWriter writer)
         {
             writer.WriteLine("   Phases:");
@@ -476,9 +526,8 @@ namespace Models.PMF.Phen
                 P.WriteSummary(writer);
         }
 
-        /// <summary>
-        /// Respond to a remove biomass event.
-        /// </summary>
+        /// <summary>Respond to a remove biomass event.</summary>
+        /// <param name="removeBiomPheno">The remove biom pheno.</param>
         internal void OnRemoveBiomass(double removeBiomPheno)
         {
             string existingStage = CurrentStageName;
@@ -544,6 +593,9 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>Gets the tt in above ground phase.</summary>
+        /// <value>The tt in above ground phase.</value>
+        /// <exception cref="System.Exception">Cannot find Phenology.AboveGroundPeriod function in xml file</exception>
         private double TTInAboveGroundPhase
         {
             get

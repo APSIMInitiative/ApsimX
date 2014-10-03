@@ -6,12 +6,18 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// A function that adds values from child functions
+    /// </summary>
     [Serializable]
     [Description("Add the values of all child functions")]
     public class AddFunction : Function
     {
+        /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
         public override double Value
         {
             get

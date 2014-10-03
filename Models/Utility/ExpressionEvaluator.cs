@@ -19,23 +19,43 @@ using System.Collections.Generic;
 namespace Utility
 {
     /// <summary>
-    /// </summary>
     /// 
+    /// </summary>
     public enum ExpressionType { Variable, Value, Operator, EvalFunction, Result, Bracket, Comma, Error }
+    /// <summary>
+    /// 
+    /// </summary>
     public struct Symbol
     {
+        /// <summary>The m_name</summary>
         public string m_name;
+        /// <summary>The m_value</summary>
         public double m_value;
+        /// <summary>The m_values</summary>
         public double[] m_values;
+        /// <summary>The m_type</summary>
         public ExpressionType m_type;
+        /// <summary>Returns a <see cref="System.String" /> that represents this instance.</summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return m_name;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="args">The arguments.</param>
+    /// <returns></returns>
     public delegate Symbol EvaluateFunctionDelegate(string name, params Object[] args);
+    /// <summary>
+    /// An expression evaluator
+    /// </summary>
     public class ExpressionEvaluator
     {
+        /// <summary>Gets the result.</summary>
+        /// <value>The result.</value>
         public double Result
         {
             get
@@ -44,6 +64,8 @@ namespace Utility
             }
         }
 
+        /// <summary>Gets the results.</summary>
+        /// <value>The results.</value>
         public double[] Results
         {
             get
@@ -52,6 +74,8 @@ namespace Utility
             }
         }
 
+        /// <summary>Gets the equation.</summary>
+        /// <value>The equation.</value>
         public ArrayList Equation
         {
             get
@@ -59,6 +83,8 @@ namespace Utility
                 return (ArrayList)m_equation.Clone();
             }
         }
+        /// <summary>Gets the postfix.</summary>
+        /// <value>The postfix.</value>
         public ArrayList Postfix
         {
             get
@@ -67,6 +93,8 @@ namespace Utility
             }
         }
 
+        /// <summary>Sets the default function evaluation.</summary>
+        /// <value>The default function evaluation.</value>
         public EvaluateFunctionDelegate DefaultFunctionEvaluation
         {
             set
@@ -75,6 +103,8 @@ namespace Utility
             }
         }
 
+        /// <summary>Gets a value indicating whether this <see cref="ExpressionEvaluator"/> is error.</summary>
+        /// <value><c>true</c> if error; otherwise, <c>false</c>.</value>
         public bool Error
         {
             get
@@ -83,6 +113,8 @@ namespace Utility
             }
         }
 
+        /// <summary>Gets the error description.</summary>
+        /// <value>The error description.</value>
         public string ErrorDescription
         {
             get
@@ -91,6 +123,8 @@ namespace Utility
             }
         }
 
+        /// <summary>Gets or sets the variables.</summary>
+        /// <value>The variables.</value>
         public ArrayList Variables
         {
             get
@@ -121,9 +155,12 @@ namespace Utility
             }
         }
 
+        /// <summary>Initializes a new instance of the <see cref="ExpressionEvaluator"/> class.</summary>
         public ExpressionEvaluator()
         { }
 
+        /// <summary>Parses the specified equation.</summary>
+        /// <param name="equation">The equation.</param>
         public void Parse(string equation)
         {
             int state = 1;
@@ -276,6 +313,7 @@ namespace Utility
             }
         }
 
+        /// <summary>Infix2s the postfix.</summary>
         public void Infix2Postfix()
         {
             Symbol tpSym;
@@ -323,6 +361,7 @@ namespace Utility
             }
         }
 
+        /// <summary>Evaluates the postfix.</summary>
         public void EvaluatePostfix()
         {
             Symbol tpSym1, tpSym2, tpResult;
@@ -404,6 +443,9 @@ namespace Utility
             }
         }
 
+        /// <summary>Precedences the specified sym.</summary>
+        /// <param name="sym">The sym.</param>
+        /// <returns></returns>
         protected int Precedence(Symbol sym)
         {
             switch (sym.m_type)
@@ -430,6 +472,11 @@ namespace Utility
             return -1;
         }
 
+        /// <summary>Evaluates the specified sym1.</summary>
+        /// <param name="sym1">The sym1.</param>
+        /// <param name="opr">The opr.</param>
+        /// <param name="sym2">The sym2.</param>
+        /// <returns></returns>
         protected Symbol Evaluate(Symbol sym1, Symbol opr, Symbol sym2)
         {
             Symbol result;
@@ -487,6 +534,10 @@ namespace Utility
             return result;
         }
 
+        /// <summary>Evaluates the function.</summary>
+        /// <param name="name">The name.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
         protected Symbol EvaluateFunction(string name, params Object[] args)
         {
             Symbol result;
@@ -812,12 +863,19 @@ namespace Utility
             return result;
         }
 
+        /// <summary>The M_B error</summary>
         protected bool m_bError = false;
+        /// <summary>The M_S error description</summary>
         protected string m_sErrorDescription = "None";
+        /// <summary>The m_result</summary>
         protected double m_result = 0;
+        /// <summary>The m_results</summary>
         protected double[] m_results = null;
+        /// <summary>The m_equation</summary>
         protected ArrayList m_equation = new ArrayList();
+        /// <summary>The m_postfix</summary>
         protected ArrayList m_postfix = new ArrayList();
+        /// <summary>The m_default function evaluation</summary>
         protected EvaluateFunctionDelegate m_defaultFunctionEvaluation;
     }
 }

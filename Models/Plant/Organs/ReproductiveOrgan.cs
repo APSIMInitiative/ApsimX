@@ -7,41 +7,63 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// The reproductive organ
+    /// </summary>
     [Serializable]
     public class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
 
         #region Parameter Input Classes
+        /// <summary>The plant</summary>
         [Link]
         protected Plant Plant = null;
+        /// <summary>The phenology</summary>
         [Link]
         protected Phenology Phenology = null;
+        /// <summary>The water content</summary>
         [Link] Function WaterContent = null;
+        /// <summary>The filling rate</summary>
         [Link] Function FillingRate = null;
+        /// <summary>The number function</summary>
         [Link] Function NumberFunction = null;
+        /// <summary>The n filling rate</summary>
         [Link] Function NFillingRate = null;
         //[Link] Function MaxNConcDailyGrowth = null;
+        /// <summary>The nitrogen demand switch</summary>
         [Link] Function NitrogenDemandSwitch = null;
+        /// <summary>The maximum n conc</summary>
         [Link] Function MaximumNConc = null;
+        /// <summary>The minimum n conc</summary>
         [Link] Function MinimumNConc = null;
+        /// <summary>The dm demand function</summary>
         [Link] Function DMDemandFunction = null;
         #endregion
 
         #region Class Fields
+        /// <summary>The maximum size</summary>
         public double MaximumSize = 0;
+        /// <summary>The ripe stage</summary>
         public string RipeStage = "";
+        /// <summary>The _ ready for harvest</summary>
         protected bool _ReadyForHarvest = false;
+        /// <summary>The daily growth</summary>
         protected double DailyGrowth = 0;
+        /// <summary>The potential dm allocation</summary>
         private double PotentialDMAllocation = 0;
         #endregion
 
         #region Class Properties
-        
+
+        /// <summary>The number</summary>
         [Units("/m^2")]
         public double Number = 0;
-        
+
+        /// <summary>Gets the live f wt.</summary>
+        /// <value>The live f wt.</value>
         [Units("g/m^2")]
         public double LiveFWt
         {
@@ -53,7 +75,9 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
-        
+
+        /// <summary>Gets the size.</summary>
+        /// <value>The size.</value>
         [Units("g")]
         private double Size
         {
@@ -65,7 +89,9 @@ namespace Models.PMF.Organs
                     return 0;
             }
         }
-        
+
+        /// <summary>Gets the size of the f.</summary>
+        /// <value>The size of the f.</value>
         [Units("g")]
         private double FSize
         {
@@ -82,7 +108,9 @@ namespace Models.PMF.Organs
                     return 0;
             }
         }
-        
+
+        /// <summary>Gets the ready for harvest.</summary>
+        /// <value>The ready for harvest.</value>
         public int ReadyForHarvest
         {
             get
@@ -96,6 +124,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
+        /// <summary>Called when [harvest].</summary>
         public override void OnHarvest()
         {
             if (Harvesting != null)
@@ -116,8 +145,10 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Event handlers
-        
+
+        /// <summary>Occurs when [harvesting].</summary>
         public event NullTypeDelegate Harvesting;
+        /// <summary>Called when [cut].</summary>
         public override void OnCut()
         {
             Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
@@ -130,12 +161,15 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator methods
+        /// <summary>Does the actual growth.</summary>
         public override void DoActualGrowth()
         {
             base.DoActualGrowth();
             if (Phenology.OnDayOf(RipeStage))
                 _ReadyForHarvest = true;
         }
+        /// <summary>Gets or sets the dm demand.</summary>
+        /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
         {
             get
@@ -161,6 +195,9 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = Demand };
             }
         }
+        /// <summary>Sets the dm potential allocation.</summary>
+        /// <value>The dm potential allocation.</value>
+        /// <exception cref="System.Exception">Invalid allocation of potential DM in + Name</exception>
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -172,8 +209,12 @@ namespace Models.PMF.Organs
                 PotentialDMAllocation = value.Structural;
             }
         }
+        /// <summary>Sets the dm allocation.</summary>
+        /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         { set { Live.StructuralWt += value.Structural; DailyGrowth = value.Structural; } }
+        /// <summary>Gets or sets the n demand.</summary>
+        /// <value>The n demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -187,6 +228,8 @@ namespace Models.PMF.Organs
             }
 
         }
+        /// <summary>Sets the n allocation.</summary>
+        /// <value>The n allocation.</value>
         public override BiomassAllocationType NAllocation
         {
             set
@@ -194,6 +237,8 @@ namespace Models.PMF.Organs
                 Live.StructuralN += value.Structural;
             }
         }
+        /// <summary>Gets or sets the maximum nconc.</summary>
+        /// <value>The maximum nconc.</value>
         public override double MaxNconc
         {
             get
@@ -201,6 +246,8 @@ namespace Models.PMF.Organs
                 return MaximumNConc.Value;
             }
         }
+        /// <summary>Gets or sets the minimum nconc.</summary>
+        /// <value>The minimum nconc.</value>
         public override double MinNconc
         {
             get

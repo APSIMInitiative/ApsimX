@@ -11,177 +11,304 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// A leaf organ for Plant15
+    /// </summary>
     [Serializable]
     public class Leaf1 : BaseOrgan1, AboveGround
     {
         #region Parameters read from XML file and links to other functions.
+        /// <summary>The plant</summary>
         [Link]
         Plant15 Plant = null;
 
+        /// <summary>The stem</summary>
         [Link]
         public Stem1 Stem;
 
+        /// <summary>The environment</summary>
         [Link]
         Environment Environment = null;
 
+        /// <summary>The photosynthesis</summary>
         [Link]
         RUEModel1 Photosynthesis = null;
 
+        /// <summary>The population</summary>
         [Link]
         Population1 Population = null;
 
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The te modifier</summary>
         [Link] Function TEModifier = null;
+        /// <summary>The n conc critical modifier</summary>
         [Link] Function NConcCriticalModifier = null;
+        /// <summary>The te</summary>
         [Link] Function TE = null;
+        /// <summary>The leaf size</summary>
         [Link] Function LeafSize = null;
+        /// <summary>The sw stress</summary>
         [Link] SWStress SWStress = null;
+        /// <summary>The n stress</summary>
         [Link] NStress NStress = null;
+        /// <summary>The p stress</summary>
         [Link] PStress PStress = null;
 
 
+        /// <summary>The plant spatial</summary>
         [Link]
         PlantSpatial1 PlantSpatial = null;
 
+        /// <summary>The sla maximum</summary>
         [Link] Function SLAMax = null;
+        /// <summary>The leaf number fraction</summary>
         [Link] Function LeafNumberFraction = null;
+        /// <summary>The extinction coefficient</summary>
         [Link] Function ExtinctionCoefficient = null;
+        /// <summary>The extinction coefficient dead</summary>
         [Link] Function ExtinctionCoefficientDead = null;
+        /// <summary>The n concentration critical</summary>
         [Link] Function NConcentrationCritical = null;
+        /// <summary>The n concentration minimum</summary>
         [Link] Function NConcentrationMinimum = null;
+        /// <summary>The n concentration maximum</summary>
         [Link] Function NConcentrationMaximum = null;
 
+        /// <summary>The met data</summary>
         [Link]
         WeatherFile MetData = null;
 
+        /// <summary>Gets or sets the node number correction.</summary>
+        /// <value>The node number correction.</value>
         public double NodeNumberCorrection { get; set; }
 
+        /// <summary>Gets or sets the sla minimum.</summary>
+        /// <value>The sla minimum.</value>
         public double SLAMin { get; set; }
 
+        /// <summary>Gets or sets the fraction leaf senescence rate.</summary>
+        /// <value>The fraction leaf senescence rate.</value>
         public double FractionLeafSenescenceRate { get; set; }
 
+        /// <summary>Gets or sets the node senescence rate.</summary>
+        /// <value>The node senescence rate.</value>
         public double NodeSenescenceRate { get; set; }
 
+        /// <summary>Gets or sets the n fact leaf senescence rate.</summary>
+        /// <value>The n fact leaf senescence rate.</value>
         public double NFactLeafSenescenceRate { get; set; }
 
+        /// <summary>Gets or sets the minimum tpla.</summary>
+        /// <value>The minimum tpla.</value>
         public double MinTPLA { get; set; }
 
+        /// <summary>Gets or sets the n deficit uptake fraction.</summary>
+        /// <value>The n deficit uptake fraction.</value>
         public double NDeficitUptakeFraction { get; set; }
 
+        /// <summary>The node formation period</summary>
         [Link]
         Function NodeFormationPeriod = null;
 
+        /// <summary>The node appearance rate</summary>
         [Link]
         Function NodeAppearanceRate = null;
 
+        /// <summary>The leaves per node</summary>
         [Link]
         LinearInterpolationFunction LeavesPerNode = null;
 
+        /// <summary>The leaf senescence period</summary>
         [Link]
         Function LeafSenescencePeriod = null;
 
+        /// <summary>The leaf senescence frost</summary>
         [Link]
         Function LeafSenescenceFrost = null;
 
+        /// <summary>The dm senescence fraction</summary>
         [Link]
         Function DMSenescenceFraction = null;
 
+        /// <summary>The total live</summary>
         [Link]
         CompositeBiomass TotalLive = null;
 
+        /// <summary>The growth structural fraction stage</summary>
         [Link]
         Function GrowthStructuralFractionStage = null;
 
+        /// <summary>Gets or sets the initial wt.</summary>
+        /// <value>The initial wt.</value>
         public double InitialWt { get; set; }
 
+        /// <summary>Gets or sets the initial n concentration.</summary>
+        /// <value>The initial n concentration.</value>
         public double InitialNConcentration { get; set; }
 
+        /// <summary>Gets or sets the initial tpla.</summary>
+        /// <value>The initial tpla.</value>
         public double InitialTPLA { get; set; }
 
+        /// <summary>Gets or sets the initial leaf number.</summary>
+        /// <value>The initial leaf number.</value>
         public double InitialLeafNumber { get; set; }
 
+        /// <summary>Gets or sets the lai sen light.</summary>
+        /// <value>The lai sen light.</value>
         public double LAISenLight { get; set; }
 
+        /// <summary>Gets or sets the sen light slope.</summary>
+        /// <value>The sen light slope.</value>
         public double SenLightSlope { get; set; }
 
+        /// <summary>Gets or sets the sen rate water.</summary>
+        /// <value>The sen rate water.</value>
         public double SenRateWater { get; set; }
 
+        /// <summary>Gets or sets the n senescence concentration.</summary>
+        /// <value>The n senescence concentration.</value>
         public double NSenescenceConcentration { get; set; }
 
+        /// <summary>Gets or sets the senescence detachment fraction.</summary>
+        /// <value>The senescence detachment fraction.</value>
         public double SenescenceDetachmentFraction { get; set; }
         #endregion
 
         #region Variables we need from other modules
+        /// <summary>The c o2</summary>
         double CO2 = 350;             // The TEModifier and NConcCriticalModifier function's use this.
         #endregion
 
         #region Private variables
+        /// <summary>The dlt_dm_pot_rue</summary>
         public double dlt_dm_pot_rue;
+        /// <summary>The dlt_n_senesced_retrans</summary>
         public double dlt_n_senesced_retrans;           // plant N retranslocated to/from (+/-) senesced part to/from <<somewhere else??>> (g/m^2)
+        /// <summary>The dlt_n_senesced_trans</summary>
         public double dlt_n_senesced_trans;
+        /// <summary>The dlt_height</summary>
         public double dlt_height;                       // growth upwards (mm)
+        /// <summary>The dlt_width</summary>
         public double dlt_width;                        // growth outwards (mm)
+        /// <summary>The width</summary>
         public double width = 0;
+        /// <summary>The _ n demand</summary>
         private double _NDemand = 0;
+        /// <summary>The _ soil n demand</summary>
         private double _SoilNDemand = 0;
+        /// <summary>The n maximum</summary>
         private double NMax = 0;
+        /// <summary>The sw_demand_te</summary>
         private double sw_demand_te = 0;
+        /// <summary>The sw_demand</summary>
         private double sw_demand = 0;
+        /// <summary>The n_conc_crit</summary>
         private double n_conc_crit = 0;
+        /// <summary>The n_conc_max</summary>
         private double n_conc_max = 0;
+        /// <summary>The n_conc_min</summary>
         private double n_conc_min = 0;
+        /// <summary>The radiation intercepted green</summary>
         private double radiationInterceptedGreen;
+        /// <summary>The _ leaves per node</summary>
         private double _LeavesPerNode = 0;
+        /// <summary>The _ lai</summary>
         private double _LAI = 0;
+        /// <summary>The _ slai</summary>
         private double _SLAI = 0;
+        /// <summary>The DLT lai</summary>
         private double dltLAI;
+        /// <summary>The DLT slai</summary>
         private double dltSLAI;
+        /// <summary>The DLT la i_pot</summary>
         private double dltLAI_pot;
+        /// <summary>The DLT la i_stressed</summary>
         private double dltLAI_stressed;
+        /// <summary>The DLT la i_carbon</summary>
         private double dltLAI_carbon;
+        /// <summary>The DLT sla i_detached</summary>
         private double dltSLAI_detached;
+        /// <summary>The DLT sla i_age</summary>
         private double dltSLAI_age;
+        /// <summary>The DLT sla i_light</summary>
         private double dltSLAI_light;
+        /// <summary>The DLT sla i_water</summary>
         private double dltSLAI_water;
+        /// <summary>The DLT sla i_frost</summary>
         private double dltSLAI_frost;
+        /// <summary>The DLT leaf no</summary>
         private double dltLeafNo;
+        /// <summary>The DLT leaf no pot</summary>
         private double dltLeafNoPot;
+        /// <summary>The DLT leaf no sen</summary>
         private double dltLeafNoSen;
+        /// <summary>The DLT node no pot</summary>
         private double dltNodeNoPot;
+        /// <summary>The external sw demand</summary>
         private bool ExternalSWDemand = false;
+        /// <summary>The transp eff</summary>
         private double transpEff;
 
+        /// <summary>Gets or sets the node no.</summary>
+        /// <value>The node no.</value>
         [XmlIgnore]
         public double NodeNo { get; set; }
+        /// <summary>The leaf no</summary>
         private double[] LeafNo;
 
+        /// <summary>The leaf no sen</summary>
         private double[] LeafNoSen;
+        /// <summary>The DLT node no</summary>
         private double dltNodeNo;
+        /// <summary>The leaf area</summary>
         private double[] LeafArea;
+        /// <summary>The max_node</summary>
         private const int max_node = 25;
         #endregion
 
         #region Public interface defined by Organ1
 
+        /// <summary>Gets or sets the senescing.</summary>
+        /// <value>The senescing.</value>
         [XmlIgnore]
         public override Biomass Senescing { get; protected set; }
+        /// <summary>Gets or sets the retranslocation.</summary>
+        /// <value>The retranslocation.</value>
         [XmlIgnore]
         public override Biomass Retranslocation { get; protected set; }
+        /// <summary>Gets or sets the growth.</summary>
+        /// <value>The growth.</value>
         [XmlIgnore]
         public override Biomass Growth { get; protected set; }
+        /// <summary>Gets or sets the detaching.</summary>
+        /// <value>The detaching.</value>
         [XmlIgnore]
         public override Biomass Detaching { get; protected set; }
+        /// <summary>Gets or sets the green removed.</summary>
+        /// <value>The green removed.</value>
         [XmlIgnore]
         public override Biomass GreenRemoved { get; protected set; }
+        /// <summary>Gets or sets the senesced removed.</summary>
+        /// <value>The senesced removed.</value>
         [XmlIgnore]
         public override Biomass SenescedRemoved { get; protected set; }
 
         // Soil water
+        /// <summary>Gets the sw supply.</summary>
+        /// <value>The sw supply.</value>
         public override double SWSupply { get { return 0; } }
+        /// <summary>Gets the sw demand.</summary>
+        /// <value>The sw demand.</value>
         public override double SWDemand { get { return sw_demand; } }
+        /// <summary>Gets the sw uptake.</summary>
+        /// <value>The sw uptake.</value>
         public override double SWUptake { get { return 0; } }
+        /// <summary>Does the sw demand.</summary>
+        /// <param name="Supply">The supply.</param>
         public override void DoSWDemand(double Supply)
         {
             if (ExternalSWDemand == true)
@@ -221,9 +348,13 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.sw_demand=%f", sw_demand);
             Util.Debug("Leaf.transpEff=%f", transpEff);
         }
+        /// <summary>Does the sw uptake.</summary>
+        /// <param name="SWDemand">The sw demand.</param>
         public override void DoSWUptake(double SWDemand) { }
 
         // dry matter
+        /// <summary>Gets the dm supply.</summary>
+        /// <value>The dm supply.</value>
         public override double DMSupply
         {
             get
@@ -234,6 +365,8 @@ namespace Models.PMF.OldPlant
                     return 0.0;
             }
         }
+        /// <summary>Gets the dm retrans supply.</summary>
+        /// <value>The dm retrans supply.</value>
         public override double DMRetransSupply
         {
             get
@@ -241,7 +374,11 @@ namespace Models.PMF.OldPlant
                 return Utility.Math.Constrain(Live.NonStructuralWt, 0.0, double.MaxValue);
             }
         }
+        /// <summary>Gets the DLT dm pot rue.</summary>
+        /// <value>The DLT dm pot rue.</value>
         public override double dltDmPotRue { get { return dlt_dm_pot_rue; } }
+        /// <summary>Gets the dm green demand.</summary>
+        /// <value>The dm green demand.</value>
         public override double DMGreenDemand
         {
             get
@@ -250,9 +387,18 @@ namespace Models.PMF.OldPlant
                 return Utility.Math.Divide(dltLAI_stressed, SLAMin * Conversions.smm2sm, 0.0);
             }
         }
+        /// <summary>Gets the dm demand differential.</summary>
+        /// <value>The dm demand differential.</value>
         public override double DMDemandDifferential { get { return 0; } }
+        /// <summary>Does the dm demand.</summary>
+        /// <param name="DMSupply">The dm supply.</param>
         public override void DoDMDemand(double DMSupply) { }
+        /// <summary>Does the dm retranslocate.</summary>
+        /// <param name="dlt_dm_retrans_to_fruit">The dlt_dm_retrans_to_fruit.</param>
+        /// <param name="demand_differential_begin">The demand_differential_begin.</param>
         public override void DoDmRetranslocate(double dlt_dm_retrans_to_fruit, double demand_differential_begin) { }
+        /// <summary>Gives the dm green.</summary>
+        /// <param name="Delta">The delta.</param>
         public override void GiveDmGreen(double Delta)
         {
             Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
@@ -260,6 +406,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Leaf.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
+        /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
             double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
@@ -270,6 +417,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.Senescing.NonStructuralWt=%f", Senescing.NonStructuralWt);
 
         }
+        /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
             dltSLAI_detached = SLAI * SenescenceDetachmentFraction;
@@ -296,6 +444,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("Leaf.Detaching.N=%f", Detaching.N);
         }
+        /// <summary>Removes the biomass.</summary>
         public override void RemoveBiomass()
         {
             double chop_fr_green = Utility.Math.Divide(GreenRemoved.Wt, Live.Wt, 0.0);
@@ -333,10 +482,20 @@ namespace Models.PMF.OldPlant
         }
 
         // nitrogen
+        /// <summary>Gets the n demand.</summary>
+        /// <value>The n demand.</value>
         public override double NDemand { get { return _NDemand; } }
+        /// <summary>Gets the n supply.</summary>
+        /// <value>The n supply.</value>
         public override double NSupply { get { return 0; } }
+        /// <summary>Gets the n uptake.</summary>
+        /// <value>The n uptake.</value>
         public override double NUptake { get { return 0; } }
+        /// <summary>Gets the soil n demand.</summary>
+        /// <value>The soil n demand.</value>
         public override double SoilNDemand { get { return _SoilNDemand; } }
+        /// <summary>Gets the n capacity.</summary>
+        /// <value>The n capacity.</value>
         public override double NCapacity
         {
             get
@@ -344,7 +503,11 @@ namespace Models.PMF.OldPlant
                 return Utility.Math.Constrain(NMax - NDemand, 0.0, double.MaxValue);
             }
         }
+        /// <summary>Gets the n demand differential.</summary>
+        /// <value>The n demand differential.</value>
         public override double NDemandDifferential { get { return Utility.Math.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
+        /// <summary>Gets the available retranslocate n.</summary>
+        /// <value>The available retranslocate n.</value>
         public override double AvailableRetranslocateN
         {
             get
@@ -355,7 +518,11 @@ namespace Models.PMF.OldPlant
                 return (N_avail * n_retrans_fraction);
             }
         }
+        /// <summary>Gets the DLT n senesced retrans.</summary>
+        /// <value>The DLT n senesced retrans.</value>
         public override double DltNSenescedRetrans { get { return dlt_n_senesced_retrans; } }
+        /// <summary>Does the n demand.</summary>
+        /// <param name="IncludeRetransloation">if set to <c>true</c> [include retransloation].</param>
         public override void DoNDemand(bool IncludeRetransloation)
         {
 
@@ -376,6 +543,8 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.NDemand=%f", _NDemand);
             Util.Debug("Leaf.NMax=%f", NMax);
         }
+        /// <summary>Does the n demand1 pot.</summary>
+        /// <param name="dltDmPotRue">The DLT dm pot rue.</param>
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
@@ -388,13 +557,18 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.NDemand=%f", _NDemand);
             Util.Debug("Leaf.NMax=%f", NMax);
         }
+        /// <summary>Does the soil n demand.</summary>
         public override void DoSoilNDemand()
         {
             _SoilNDemand = NDemand - dlt_n_senesced_retrans;
             _SoilNDemand = Utility.Math.Constrain(_SoilNDemand, 0.0, double.MaxValue);
             Util.Debug("Leaf.SoilNDemand=%f", _SoilNDemand);
         }
+        /// <summary>Does the n supply.</summary>
         public override void DoNSupply() { }
+        /// <summary>Does the n retranslocate.</summary>
+        /// <param name="NSupply">The n supply.</param>
+        /// <param name="GrainNDemand">The grain n demand.</param>
         public override void DoNRetranslocate(double NSupply, double GrainNDemand)
         {
             if (GrainNDemand >= NSupply)
@@ -411,6 +585,7 @@ namespace Models.PMF.OldPlant
             }
             Util.Debug("Leaf.Retranslocation.N=%f", Retranslocation.N);
         }
+        /// <summary>Does the n senescence.</summary>
         public override void DoNSenescence()
         {
             double green_n_conc = Utility.Math.Divide(Live.N, Live.Wt, 0.0);
@@ -426,19 +601,29 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.SenescingN=%f", SenescingN);
             Util.Debug("Leaf.dlt.n_senesced_trans=%f", dlt_n_senesced_trans);
         }
+        /// <summary>Does the n senesced retranslocation.</summary>
+        /// <param name="navail">The navail.</param>
+        /// <param name="n_demand_tot">The n_demand_tot.</param>
         public override void DoNSenescedRetranslocation(double navail, double n_demand_tot)
         {
             dlt_n_senesced_retrans = navail * Utility.Math.Divide(NDemand, n_demand_tot, 0.0);
             Util.Debug("Leaf.dlt.n_senesced_retrans=%f", dlt_n_senesced_retrans);
         }
+        /// <summary>Does the n partition.</summary>
+        /// <param name="GrowthN">The growth n.</param>
         public override void DoNPartition(double GrowthN)
         {
             Growth.StructuralN = GrowthN;
         }
+        /// <summary>Does the n fix retranslocate.</summary>
+        /// <param name="NFixUptake">The n fix uptake.</param>
+        /// <param name="nFixDemandTotal">The n fix demand total.</param>
         public override void DoNFixRetranslocate(double NFixUptake, double nFixDemandTotal)
         {
             Growth.StructuralN += NFixUptake * Utility.Math.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
         }
+        /// <summary>Does the n conccentration limits.</summary>
+        /// <exception cref="System.Exception">nconc_crit < nconc_min!. What's happened to CO2??</exception>
         public override void DoNConccentrationLimits()
         {
             n_conc_crit = NConcentrationCritical.Value;
@@ -453,27 +638,39 @@ namespace Models.PMF.OldPlant
             if (n_conc_crit <= n_conc_min)
                 throw new Exception("nconc_crit < nconc_min!. What's happened to CO2??");
         }
+        /// <summary>Zeroes the DLT n senesced trans.</summary>
         public override void ZeroDltNSenescedTrans()
         {
             dlt_n_senesced_trans = 0;
         }
+        /// <summary>Does the n uptake.</summary>
+        /// <param name="PotNFix">The pot n fix.</param>
         public override void DoNUptake(double PotNFix) { }
 
         // cover
+        /// <summary>Gets or sets the cover green.</summary>
+        /// <value>The cover green.</value>
         [XmlIgnore]
         public override double CoverGreen { get; protected set; } // Required by soilwat for E0 calculation.
+        /// <summary>Gets or sets the cover sen.</summary>
+        /// <value>The cover sen.</value>
         [XmlIgnore]
         public override double CoverSen { get; protected set; }
+        /// <summary>Does the potential rue.</summary>
         public override void DoPotentialRUE()
         {
             dlt_dm_pot_rue = Photosynthesis.PotentialDM(radiationInterceptedGreen);
             Util.Debug("Leaf.dlt.dm_pot_rue=%f", dlt_dm_pot_rue);
         }
+        /// <summary>Intercepts the radiation.</summary>
+        /// <param name="incomingSolarRadiation">The incoming solar radiation.</param>
+        /// <returns></returns>
         public override double interceptRadiation(double incomingSolarRadiation)
         {
             radiationInterceptedGreen = CoverGreen * incomingSolarRadiation;
             return CoverTotal * incomingSolarRadiation;
         }
+        /// <summary>Does the cover.</summary>
         public override void DoCover()
         {
             CoverGreen = CalculateCover(LAI, ExtinctionCoefficient.Value, PlantSpatial.CanopyFactor);
@@ -483,6 +680,7 @@ namespace Models.PMF.OldPlant
         }
 
         // update
+        /// <summary>Updates this instance.</summary>
         public override void Update()
         {
             double TotalDltNSenescedRetrans = 0;
@@ -565,9 +763,17 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Public interface specific to Leaf
+        /// <summary>Gets the n crit.</summary>
+        /// <value>The n crit.</value>
         public double NCrit { get { return n_conc_crit * Live.Wt; } }
+        /// <summary>Gets the n minimum.</summary>
+        /// <value>The n minimum.</value>
         public double NMin { get { return n_conc_min * Live.Wt; } }
+        /// <summary>Gets the n senesced trans.</summary>
+        /// <value>The n senesced trans.</value>
         public double NSenescedTrans { get { return dlt_n_senesced_trans; } }
+        /// <summary>Gets the cover total.</summary>
+        /// <value>The cover total.</value>
         public double CoverTotal
         {
             get
@@ -577,18 +783,29 @@ namespace Models.PMF.OldPlant
                      * (1.0 - CoverSen));
             }
         }
+        /// <summary>Gets the lai.</summary>
+        /// <value>The lai.</value>
         [Units("m^2/m^2")]
         public double LAI { get { return _LAI; } }
+        /// <summary>Gets the slai.</summary>
+        /// <value>The slai.</value>
         [Units("m^2/m^2")]
         public double SLAI { get { return _SLAI; } }
+        /// <summary>Gets the lai total.</summary>
+        /// <value>The lai total.</value>
         [Units("m^2/m^2")]
         public double LAITotal { get { return LAI + SLAI; } }
+        /// <summary>Gets the leaf number.</summary>
+        /// <value>The leaf number.</value>
         public double LeafNumber { get { return Utility.Math.Sum(LeafNo); } }
+        /// <summary>Gets the leaf number dead.</summary>
+        /// <value>The leaf number dead.</value>
         public double LeafNumberDead { get { return Utility.Math.Sum(LeafNoSen); } }
+        /// <summary>Gets the node number now.</summary>
+        /// <value>The node number now.</value>
          public double NodeNumberNow { get { return NodeNo + NodeNumberCorrection; } }
-        /// <summary>
-        /// Ratio of actual to potential lai
-        /// </summary>
+         /// <summary>Ratio of actual to potential lai</summary>
+         /// <value>The lai ratio.</value>
         public double LAIRatio
         {
             get
@@ -596,7 +813,10 @@ namespace Models.PMF.OldPlant
                 return Utility.Math.Divide(dltLAI, dltLAI_stressed, 0.0);
             }
         }
+        /// <summary>Gets the fraction canopy senescing.</summary>
+        /// <value>The fraction canopy senescing.</value>
         public double FractionCanopySenescing { get { return Utility.Math.Divide(dltSLAI, _LAI + dltLAI, 0.0); } }
+        /// <summary>Does the canopy expansion.</summary>
         public void DoCanopyExpansion()
         {
             dltNodeNoPot = 0.0;
@@ -633,6 +853,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.dltLAI_pot=%f", dltLAI_pot);
             Util.Debug("Leaf.dltLAI_stressed=%f", dltLAI_stressed);
         }
+        /// <summary>Actuals this instance.</summary>
         internal void Actual()
         {
             // maximum daily increase in leaf area
@@ -657,6 +878,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.dltLeafNo=%f", dltLeafNo);
             Util.Debug("Leaf.dltNodeNo=%f", dltNodeNo);
         }
+        /// <summary>Leafs the death.</summary>
         internal void LeafDeath()
         {
             double leaf_no_sen_now;                       // total number of dead leaves yesterday
@@ -697,9 +919,7 @@ namespace Models.PMF.OldPlant
             }
             Util.Debug("Leaf.dltLeafNoSen=%f", dltLeafNoSen);
         }
-        /// <summary>
-        /// Calculate todays leaf area senescence
-        /// </summary>
+        /// <summary>Calculate todays leaf area senescence</summary>
         internal void LeafAreaSenescence()
         {
             dltSLAI_age = LeafAreaSenescenceAge();
@@ -717,6 +937,10 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="System.Exception">CO2 isn't at the default level, and model:  + Plant.Name +  has no CO2 parameterisations.</exception>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -733,6 +957,9 @@ namespace Models.PMF.OldPlant
                 throw new Exception("CO2 isn't at the default level, and model: " + Plant.Name + " has no CO2 parameterisations.");
         }
 
+        /// <summary>Called when [prepare].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         public override void OnPrepare(object sender, EventArgs e)
         {
             if (LeafNo == null)
@@ -772,6 +999,9 @@ namespace Models.PMF.OldPlant
             dltNodeNoPot = 0.0;
         }
 
+        /// <summary>Called when [harvest].</summary>
+        /// <param name="Harvest">The harvest.</param>
+        /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnHarvest(HarvestType Harvest, BiomassRemovedType BiomassRemoved)
         {
             double dm_init = Utility.Math.Constrain(InitialWt * Population.Density, double.MinValue, Live.Wt);
@@ -800,6 +1030,8 @@ namespace Models.PMF.OldPlant
             InitialiseAreas();
         }
 
+        /// <summary>Called when [end crop].</summary>
+        /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnEndCrop(BiomassRemovedType BiomassRemoved)
         {
             int i = Util.IncreaseSizeOfBiomassRemoved(BiomassRemoved);
@@ -813,6 +1045,8 @@ namespace Models.PMF.OldPlant
             Live.Clear();
         }
 
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="PhenologyChange">The phenology change.</param>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(PhaseChangedType PhenologyChange)
         {
@@ -828,6 +1062,7 @@ namespace Models.PMF.OldPlant
 
         #region Private functionality
 
+        /// <summary>Initialises the areas.</summary>
         private void InitialiseAreas()
         {
             // Initialise leaf areas to a newly emerged state.
@@ -860,6 +1095,8 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.InitLAI=%f", LAI);
             Util.Debug("Leaf.InitSLAI=%f", SLAI);
         }
+        /// <summary>Gets the respiration.</summary>
+        /// <value>The respiration.</value>
         private double Respiration
         {
             get
@@ -875,6 +1112,11 @@ namespace Models.PMF.OldPlant
                 return Live.Wt * MaintenanceCoefficient * fTempEf * nfac;
             }
         }
+        /// <summary>Calculates the cover.</summary>
+        /// <param name="LAI">The lai.</param>
+        /// <param name="ExtinctionCoefficient">The extinction coefficient.</param>
+        /// <param name="CanopyFactor">The canopy factor.</param>
+        /// <returns></returns>
         private static double CalculateCover(double LAI, double ExtinctionCoefficient, double CanopyFactor)
         {
             if (LAI > 0.0)
@@ -894,9 +1136,12 @@ namespace Models.PMF.OldPlant
             else
                 return 0.0;
         }
-        /// <summary>
-        /// Derives number of leaves to result in given cumulative area
-        /// </summary>
+        /// <summary>Derives number of leaves to result in given cumulative area</summary>
+        /// <param name="g_leaf_area">The g_leaf_area.</param>
+        /// <param name="g_leaf_no">The g_leaf_no.</param>
+        /// <param name="NumNodes">The number nodes.</param>
+        /// <param name="pla">The pla.</param>
+        /// <returns></returns>
         private double LeafNumberFromArea(double[] g_leaf_area, double[] g_leaf_no, int NumNodes, double pla)
         {
             int node_no = 1 + Util.GetCumulativeIndex(pla, g_leaf_area, NumNodes);
@@ -917,6 +1162,7 @@ namespace Models.PMF.OldPlant
         /// Calculate the leaf senescence
         /// due to normal phenological (phasic, age) development
         /// </summary>
+        /// <returns></returns>
         private double LeafAreaSenescenceAge()
         {
             // get highest leaf no. senescing today
@@ -944,9 +1190,8 @@ namespace Models.PMF.OldPlant
             return 0.0;
         }
 
-        /// <summary>
-        /// Return the lai that would senesce on the current day due to shading
-        /// </summary>
+        /// <summary>Return the lai that would senesce on the current day due to shading</summary>
+        /// <returns></returns>
         private double LeafAreaSenescenceLight()
         {
             // this doesnt account for other growing crops
@@ -965,9 +1210,8 @@ namespace Models.PMF.OldPlant
             return Utility.Math.Constrain(_LAI * slai_light_fac, 0.0, max_sen);
         }
 
-        /// <summary>
-        /// Return the lai that would senesce on the current day due to water stress
-        /// </summary>
+        /// <summary>Return the lai that would senesce on the current day due to water stress</summary>
+        /// <returns></returns>
         private double LeafAreaSenescenceWater()
         {
             // drought stress factor
@@ -982,6 +1226,7 @@ namespace Models.PMF.OldPlant
         /// Return the lai that would senesce on the
         /// current day from low temperatures
         /// </summary>
+        /// <returns></returns>
         private double LeafAreaSenescencFrost()
         {
             double dlt_slai_low_temp = LeafSenescenceFrost.Value * _LAI;
@@ -991,9 +1236,9 @@ namespace Models.PMF.OldPlant
         }
 
 
-        /// <summary>
-        /// Remove detachment from leaf area record
-        /// </summary>
+        /// <summary>Remove detachment from leaf area record</summary>
+        /// <param name="dlt_slai_detached">The dlt_slai_detached.</param>
+        /// <param name="dlt_lai_removed">The dlt_lai_removed.</param>
         void RemoveDetachment(double dlt_slai_detached, double dlt_lai_removed)
         {
             // Remove detachment from leaf area record from bottom upwards
@@ -1051,8 +1296,12 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Grazing
+        /// <summary>Gets the available to animal.</summary>
+        /// <value>The available to animal.</value>
         public override AvailableToAnimalelementType[] AvailableToAnimal
         { get { return Util.AvailableToAnimal(Plant.Name, this.Name, 0.0, Live, Dead); } }
+        /// <summary>Sets the removed by animal.</summary>
+        /// <value>The removed by animal.</value>
         public override RemovedByAnimalType RemovedByAnimal
         {
             set

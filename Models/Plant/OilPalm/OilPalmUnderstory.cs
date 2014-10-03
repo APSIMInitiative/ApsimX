@@ -9,51 +9,80 @@ using System.Collections;
 
 namespace Models.PMF.OilPalm
 {
+    /// <summary>
+    /// A model of oil palm understory
+    /// </summary>
     public class OilPalmUnderstory: Model
     {
-       
+
+        /// <summary>The plant_status</summary>
         public string plant_status = "out";
-        
+
+        /// <summary>The crop_ type</summary>
         public string Crop_Type = "OilPalmUnderstory";
         
         //double height = 300.0;
         
         //double cover_tot = 0.0;
-        
+
+        /// <summary>The cover_green</summary>
         double cover_green = 0.0;
-        
+
+        /// <summary>The root depth</summary>
         double RootDepth = 300.0;
+        /// <summary>The soil wat</summary>
         [Link]
         Soils.SoilWater SoilWat = null;
+        /// <summary>The soil n</summary>
         [Link]
         Soils.SoilNitrogen SoilN = null;
+        /// <summary>The met data</summary>
         [Link]
         WeatherFile MetData = null;
 
+        /// <summary>The kl</summary>
         double kl = 0.04;
-               
+
+        /// <summary>The pot sw uptake</summary>
         double[] PotSWUptake;
-        
+
+        /// <summary>The sw uptake</summary>
         double[] SWUptake;
-        
+
+        /// <summary>The pep</summary>
         double PEP = 0.0;
-        
+
+        /// <summary>The ep</summary>
         double EP = 0.0;
-        
+
+        /// <summary>The DLT dm</summary>
         double DltDM = 0.0;
-        
+
+        /// <summary>The fw</summary>
         double FW = 0.0;
 
         //double[] sw_dep;
+        /// <summary>The pot n uptake</summary>
         double[] PotNUptake;
+        /// <summary>The n uptake</summary>
         double[] NUptake;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
+        /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
+        /// <summary>Gets or sets the n fixation.</summary>
+        /// <value>The n fixation.</value>
         public double NFixation { get; set; }
 
         // The following event handler will be called once at the beginning of the simulation
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -63,13 +92,18 @@ namespace Models.PMF.OilPalm
             NUptake = new double[SoilWat.ll15_dep.Length];
             PotNUptake = new double[SoilWat.ll15_dep.Length];
         }
-        
+
+        /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
-        
+
+        /// <summary>Occurs when [new crop].</summary>
         public event NewCropDelegate NewCrop;
-        
+
+        /// <summary>Occurs when [sowing].</summary>
         public event NullTypeDelegate Sowing;
 
+        /// <summary>Called when [sow].</summary>
+        /// <param name="Sow">The sow.</param>
         [EventSubscribe("Sow")]
         private void OnSow(SowPlant2Type Sow)
         {
@@ -88,6 +122,9 @@ namespace Models.PMF.OilPalm
 
         }
 
+        /// <summary>Called when [do plant growth].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)
         {
@@ -109,6 +146,7 @@ namespace Models.PMF.OilPalm
 
         }
 
+        /// <summary>Does the growth.</summary>
         private void DoGrowth()
         {
             double OPCover = (double)Apsim.Get(this, "OilPalm.cover_green");
@@ -117,6 +155,7 @@ namespace Models.PMF.OilPalm
 
         }
 
+        /// <summary>Does the water balance.</summary>
         private void DoWaterBalance()
         {
             double OPCover = (double)Apsim.Get(this, "OilPalm.cover_green");
@@ -149,6 +188,7 @@ namespace Models.PMF.OilPalm
 
         }
 
+        /// <summary>Does the n balance.</summary>
         private void DoNBalance()
         {
             Soils.NitrogenChangedType NUptakeType = new Soils.NitrogenChangedType();
@@ -181,6 +221,10 @@ namespace Models.PMF.OilPalm
 
 
 
+        /// <summary>Roots the proportion.</summary>
+        /// <param name="layer">The layer.</param>
+        /// <param name="root_depth">The root_depth.</param>
+        /// <returns></returns>
         private double RootProportion(int layer, double root_depth)
         {
             double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
@@ -196,6 +240,10 @@ namespace Models.PMF.OilPalm
 
             return depth_of_root_in_layer / SoilWat.dlayer[layer];
         }
+        /// <summary>Layers the index.</summary>
+        /// <param name="depth">The depth.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Depth deeper than bottom of soil profile</exception>
         private int LayerIndex(double depth)
         {
             double CumDepth = 0;

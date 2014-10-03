@@ -27,18 +27,30 @@ namespace Models.PMF
 	structural, non-structural and metabolic. 
 	</remarks>
 	 */
+    /// <summary>
+    /// A biomass class
+    /// </summary>
     [Serializable]
     [XmlInclude(typeof(CompositeBiomass))]
     public class Biomass: Model
     {
+        /// <summary>The _ structural wt</summary>
         protected double _StructuralWt = 0;
+        /// <summary>The _ non structural wt</summary>
         protected double _NonStructuralWt = 0;
+        /// <summary>The _ structural n</summary>
         protected double _StructuralN = 0;
+        /// <summary>The _ non structural n</summary>
         protected double _NonStructuralN = 0;
+        /// <summary>The _ potential dm allocation</summary>
         protected double _PotentialDMAllocation = 0;
+        /// <summary>The _ metabolic wt</summary>
         protected double _MetabolicWt = 0;
+        /// <summary>The _ metabolic n</summary>
         protected double _MetabolicN = 0;
 
+        /// <summary>Gets or sets the non structural n.</summary>
+        /// <value>The non structural n.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         virtual public double NonStructuralN
@@ -51,6 +63,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets or sets the structural n.</summary>
+        /// <value>The structural n.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         virtual public double StructuralN
@@ -62,6 +76,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets or sets the non structural wt.</summary>
+        /// <value>The non structural wt.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         virtual public double NonStructuralWt
@@ -73,6 +89,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets or sets the structural wt.</summary>
+        /// <value>The structural wt.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         virtual public double StructuralWt
@@ -84,6 +102,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets or sets the potential dm allocation.</summary>
+        /// <value>The potential dm allocation.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         public double PotentialDMAllocation
@@ -95,6 +115,8 @@ namespace Models.PMF
             }
         } //FIXME  This was only added because it was the only way I could get potential DM allocation values into a root layer array.  need to pull back to the root module
 
+        /// <summary>Gets or sets the metabolic wt.</summary>
+        /// <value>The metabolic wt.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         virtual public double MetabolicWt
@@ -106,6 +128,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets or sets the metabolic n.</summary>
+        /// <value>The metabolic n.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         virtual public double MetabolicN
@@ -117,6 +141,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the wt.</summary>
+        /// <value>The wt.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         virtual public double Wt
@@ -127,6 +153,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the n.</summary>
+        /// <value>The n.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         virtual public double N
@@ -137,6 +165,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the n conc.</summary>
+        /// <value>The n conc.</value>
         [XmlIgnore]
         [Units("g/g")]
         public double NConc
@@ -151,7 +181,9 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-        
+
+        /// <summary>Gets the structural n conc.</summary>
+        /// <value>The structural n conc.</value>
         [Units("g/g")]
         public double StructuralNConc
         {
@@ -163,7 +195,9 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-        
+
+        /// <summary>Gets the non structural n conc.</summary>
+        /// <value>The non structural n conc.</value>
         [Units("g/g")]
         public double NonStructuralNConc
         {
@@ -175,7 +209,9 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-        
+
+        /// <summary>Gets the metabolic n conc.</summary>
+        /// <value>The metabolic n conc.</value>
         [Units("g/g")]
         public double MetabolicNConc
         {
@@ -187,8 +223,11 @@ namespace Models.PMF
                     return 0.0;
             }
         }
+        /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
         public Biomass() { }
 
+        /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
+        /// <param name="from">From.</param>
         public Biomass(Biomass from)
         {
             _StructuralWt = from.StructuralWt;
@@ -199,6 +238,7 @@ namespace Models.PMF
             _MetabolicN = from.MetabolicN;
         }
 
+        /// <summary>Clears this instance.</summary>
         virtual public void Clear()
         {
             _StructuralWt = 0;
@@ -208,6 +248,8 @@ namespace Models.PMF
             _NonStructuralN = 0;
             _MetabolicN = 0;
         }
+        /// <summary>Adds the specified a.</summary>
+        /// <param name="a">a.</param>
         public void Add(Biomass a)
         {
             _StructuralWt += a._StructuralWt;
@@ -217,6 +259,8 @@ namespace Models.PMF
             _NonStructuralN += a._NonStructuralN;
             _MetabolicN += a._MetabolicN;
         }
+        /// <summary>Sets to.</summary>
+        /// <param name="a">a.</param>
         public void SetTo(Biomass a)
         {
             _StructuralWt = a.StructuralWt;
@@ -226,6 +270,10 @@ namespace Models.PMF
             _NonStructuralN = a.NonStructuralN;
             _MetabolicN = a.MetabolicN;
         }
+        /// <summary>Implements the operator +.</summary>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>The result of the operator.</returns>
         public static Biomass operator +(Biomass a, Biomass b)
         {
             return new Biomass
@@ -239,6 +287,10 @@ namespace Models.PMF
             };
 
         }
+        /// <summary>Implements the operator -.</summary>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>The result of the operator.</returns>
         public static Biomass operator -(Biomass a, Biomass b)
         {
             return new Biomass
@@ -252,6 +304,10 @@ namespace Models.PMF
             };
 
         }
+        /// <summary>Implements the operator *.</summary>
+        /// <param name="a">a.</param>
+        /// <param name="Fraction">The fraction.</param>
+        /// <returns>The result of the operator.</returns>
         public static Biomass operator *(Biomass a, double Fraction)
         {
             return new Biomass
@@ -266,8 +322,13 @@ namespace Models.PMF
 
         }
 
+        /// <summary>The _ empty</summary>
         private static Biomass _Empty = new Biomass();
+        /// <summary>Gets the none.</summary>
+        /// <value>The none.</value>
         public static Biomass None { get { return _Empty; } }
+        /// <summary>Gets a value indicating whether this instance is empty.</summary>
+        /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
         public bool IsEmpty
         {
             get

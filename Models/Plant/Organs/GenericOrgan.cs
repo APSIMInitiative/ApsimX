@@ -24,63 +24,93 @@ namespace Models.PMF.Organs
 	<remarks>
 	</remarks>
 	 */
+    /// <summary>
+    /// Model of generic organ 
+    /// </summary>
     [Serializable]
     public class GenericOrgan : BaseOrgan
     {
         #region Class Dependency Links and Structures
+        /// <summary>The plant</summary>
         [Link]
         protected Plant Plant = null;
         #endregion
 
         #region Class Structures
+        /// <summary>The start live</summary>
         private Biomass StartLive = new Biomass();
         #endregion
 
         #region Class Parameter Function Links
+        /// <summary>The senescence rate function</summary>
         [Link(IsOptional = true)]
         Function SenescenceRateFunction = null;
+        /// <summary>The detachment rate function</summary>
         [Link(IsOptional = true)]
         Function DetachmentRateFunction = null;
 
+        /// <summary>The n reallocation factor</summary>
         [Link(IsOptional = true)]
         Function NReallocationFactor = null;
+        /// <summary>The n retranslocation factor</summary>
         [Link(IsOptional = true)]
         Function NRetranslocationFactor = null;
+        /// <summary>The nitrogen demand switch</summary>
         [Link(IsOptional = true)]
         Function NitrogenDemandSwitch = null;
+        /// <summary>The dm retranslocation factor</summary>
         [Link(IsOptional = true)]
         Function DMRetranslocationFactor = null;
+        /// <summary>The structural fraction</summary>
         [Link(IsOptional = true)] 
         Function StructuralFraction = null;
+        /// <summary>The dm demand function</summary>
         [Link(IsOptional = true)]
         Function DMDemandFunction = null;
+        /// <summary>The initial wt function</summary>
         [Link(IsOptional = true)]
         Function InitialWtFunction = null;
+        /// <summary>The initial structural fraction</summary>
         [Link(IsOptional = true)]
         Function InitialStructuralFraction = null;
+        /// <summary>The dry matter content</summary>
         [Link(IsOptional = true)]
         Function DryMatterContent = null;
+        /// <summary>The maximum n conc</summary>
         [Link(IsOptional = true)]
         Function MaximumNConc = null;
+        /// <summary>The minimum n conc</summary>
         [Link(IsOptional = true)]
         Function MinimumNConc = null;  
         #endregion
 
         #region States
+        /// <summary>The senescence rate</summary>
         private double SenescenceRate = 0;
+        /// <summary>The _ structural fraction</summary>
         private double _StructuralFraction = 1;
+        /// <summary>The start n retranslocation supply</summary>
         private double StartNRetranslocationSupply = 0;
+        /// <summary>The start n reallocation supply</summary>
         private double StartNReallocationSupply = 0;
+        /// <summary>The potential dm allocation</summary>
         protected double PotentialDMAllocation = 0;
+        /// <summary>The potential structural dm allocation</summary>
         protected double PotentialStructuralDMAllocation = 0;
+        /// <summary>The potential metabolic dm allocation</summary>
         protected double PotentialMetabolicDMAllocation = 0;
+        /// <summary>The structural dm demand</summary>
         protected double StructuralDMDemand = 0;
+        /// <summary>The non structural dm demand</summary>
         protected double NonStructuralDMDemand = 0;
+        /// <summary>The initial wt</summary>
         protected double InitialWt = 0;
+        /// <summary>The initialize stut fraction</summary>
         private double InitStutFraction = 1;
 
         //4public event BiomassRemovedDelegate BiomassRemoved;
 
+        /// <summary>Clears this instance.</summary>
         public override void Clear()
         {
             base.Clear();
@@ -100,13 +130,16 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Class properties
-        
+
+        /// <summary>Gets or sets the live f wt.</summary>
+        /// <value>The live f wt.</value>
         [XmlIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
         #endregion
 
         #region Organ functions
+        /// <summary>Does the potential dm.</summary>
         public override void DoPotentialDM()
         {
             SenescenceRate = 0;
@@ -136,6 +169,7 @@ namespace Models.PMF.Organs
             StartNRetranslocationSupply = NSupply.Retranslocation;
 
         }
+        /// <summary>Does the actual growth.</summary>
         public override void DoActualGrowth()
         {
             base.DoActualGrowth();
@@ -197,7 +231,9 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator methods
-        
+
+        /// <summary>Gets or sets the dm demand.</summary>
+        /// <value>The dm demand.</value>
         [Units("g/m^2")]
         public override BiomassPoolType DMDemand
         {
@@ -210,6 +246,9 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = StructuralDMDemand, NonStructural = NonStructuralDMDemand };
             }
         }
+        /// <summary>Sets the dm potential allocation.</summary>
+        /// <value>The dm potential allocation.</value>
+        /// <exception cref="System.Exception">Invalid allocation of potential DM in  + Name</exception>
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -223,6 +262,8 @@ namespace Models.PMF.Organs
                 PotentialDMAllocation = value.Structural + value.Metabolic;
             }
         }
+        /// <summary>Gets or sets the dm supply.</summary>
+        /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply
         {
             get
@@ -235,6 +276,8 @@ namespace Models.PMF.Organs
             Reallocation = 0};
             }
         }
+        /// <summary>Gets or sets the n demand.</summary>
+        /// <value>The n demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -249,6 +292,8 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = StructuralNDemand, NonStructural = NonStructuralNDemand };
             }
         }
+        /// <summary>Gets or sets the n supply.</summary>
+        /// <value>The n supply.</value>
         public override BiomassSupplyType NSupply
         {
             get
@@ -271,6 +316,15 @@ namespace Models.PMF.Organs
             return Supply;
             }
         }
+        /// <summary>Sets the dm allocation.</summary>
+        /// <value>The dm allocation.</value>
+        /// <exception cref="System.Exception">
+        /// -ve NonStructuralDM Allocation to  + Name
+        /// or
+        /// StructuralDM Allocation to  + Name +  is in excess of its Capacity
+        /// or
+        /// Retranslocation exceeds nonstructural biomass in organ:  + Name
+        /// </exception>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -291,6 +345,17 @@ namespace Models.PMF.Organs
                 Live.NonStructuralWt -= value.Retranslocation;
             }
         }
+        /// <summary>Sets the n allocation.</summary>
+        /// <value>The n allocation.</value>
+        /// <exception cref="System.Exception">
+        /// N Retranslocation exceeds nonstructural nitrogen in organ:  + Name
+        /// or
+        /// -ve N Retranslocation requested from  + Name
+        /// or
+        /// N Reallocation exceeds nonstructural nitrogen in organ:  + Name
+        /// or
+        /// -ve N Reallocation requested from  + Name
+        /// </exception>
         public override BiomassAllocationType NAllocation
         {
             set
@@ -319,6 +384,8 @@ namespace Models.PMF.Organs
 
             }
         }
+        /// <summary>Gets or sets the maximum nconc.</summary>
+        /// <value>The maximum nconc.</value>
         public override double MaxNconc
         {
             get
@@ -326,6 +393,8 @@ namespace Models.PMF.Organs
                 return MaximumNConc.Value;
             }
         }
+        /// <summary>Gets or sets the minimum nconc.</summary>
+        /// <value>The minimum nconc.</value>
         public override double MinNconc
         {
             get
@@ -336,6 +405,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Events and Event Handlers
+        /// <summary>Called when [harvest].</summary>
           public override void OnHarvest() 
           { 
             Live.Clear();

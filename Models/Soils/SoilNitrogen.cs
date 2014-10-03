@@ -10,125 +10,221 @@ using Models.SurfaceOM;
 namespace Models.Soils
 {
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class FOMType
     {
+        /// <summary>The amount</summary>
         public double amount;
+        /// <summary>The c</summary>
         public double C;
+        /// <summary>The n</summary>
         public double N;
+        /// <summary>The p</summary>
         public double P;
+        /// <summary>The ash alk</summary>
         public double AshAlk;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class FOMPoolType
     {
+        /// <summary>The layer</summary>
         public FOMPoolLayerType[] Layer;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class FOMPoolLayerType
     {
+        /// <summary>The thickness</summary>
         public double thickness;
+        /// <summary>The no3</summary>
         public double no3;
+        /// <summary>The NH4</summary>
         public double nh4;
+        /// <summary>The po4</summary>
         public double po4;
+        /// <summary>The pool</summary>
         public FOMType[] Pool;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class FOMLayerType
     {
+        /// <summary>The type</summary>
         public string Type = "";
+        /// <summary>The layer</summary>
         public FOMLayerLayerType[] Layer;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class SurfaceOrganicMatterDecompPoolType
     {
+        /// <summary>The name</summary>
         public string Name = "";
+        /// <summary>The organic matter type</summary>
         public string OrganicMatterType = "";
+        /// <summary>The fom</summary>
         public FOMType FOM;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class SurfaceOrganicMatterDecompType
     {
 
+        /// <summary>The pool</summary>
         public SurfaceOrganicMatterDecompPoolType[] Pool;
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public struct FOMdecompData
     {
         // lists with values from FOM decompostion
+        /// <summary>The dlt_c_hum</summary>
         public double[] dlt_c_hum;
+        /// <summary>The dlt_c_biom</summary>
         public double[] dlt_c_biom;
+        /// <summary>The dlt_c_atm</summary>
         public double[] dlt_c_atm;
+        /// <summary>The dlt_fom_n</summary>
         public double[] dlt_fom_n;
+        /// <summary>The dlt_n_min</summary>
         public double dlt_n_min;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class ExternalMassFlowType
     {
+        /// <summary>The pool class</summary>
         public string PoolClass = "";
+        /// <summary>The flow type</summary>
         public string FlowType = "";
+        /// <summary>The c</summary>
         public double C;
+        /// <summary>The n</summary>
         public double N;
+        /// <summary>The p</summary>
         public double P;
+        /// <summary>The dm</summary>
         public double DM;
+        /// <summary>The sw</summary>
         public double SW;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class NewSoluteType
     {
+        /// <summary>The owner full path</summary>
         public string OwnerFullPath;
+        /// <summary>The solutes</summary>
         public string[] solutes;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class NitrogenChangedType
     {
+        /// <summary>The sender</summary>
         public string Sender = "";
+        /// <summary>The sender type</summary>
         public string SenderType = "";
+        /// <summary>The delta n o3</summary>
         public double[] DeltaNO3;
+        /// <summary>The delta n h4</summary>
         public double[] DeltaNH4;
+        /// <summary>The delta urea</summary>
         public double[] DeltaUrea;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Data">The data.</param>
     public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MergeSoilCNPatchType
     {
+        /// <summary>The sender</summary>
         public string Sender = "";
+        /// <summary>The affected patches_nm</summary>
         public string[] AffectedPatches_nm;
+        /// <summary>The affected patches_id</summary>
         public int[] AffectedPatches_id;
+        /// <summary>The merge all</summary>
         public bool MergeAll;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class FOMLayerLayerType
     {
+        /// <summary>The fom</summary>
         public FOMType FOM;
+        /// <summary>The CNR</summary>
         public double CNR;
+        /// <summary>The labile p</summary>
         public double LabileP;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class AddUrineType
     {
+        /// <summary>The urinations</summary>
         public double Urinations;
+        /// <summary>The volume per urination</summary>
         public double VolumePerUrination;
+        /// <summary>The area per urination</summary>
         public double AreaPerUrination;
+        /// <summary>The eccentricity</summary>
         public double Eccentricity;
+        /// <summary>The urea</summary>
         public double Urea;
+        /// <summary>The pox</summary>
         public double POX;
+        /// <summary>The s o4</summary>
         public double SO4;
+        /// <summary>The ash alk</summary>
         public double AshAlk;
     }
 
 
     /// <summary>
     /// Initially ported from Fortran SoilN model by Eric Zurcher Sept/Oct-2010.
-    /// Code tidied up by RCichota on Aug/Sep-2012: mostly modifying how some variables are handled (substitute 'get's by [input]), added regions 
-    /// to ease access, updated error messages, moved all soilTemp code to a separate class (the idea is to eliminate it in the future), also added 
+    /// Code tidied up by RCichota on Aug/Sep-2012: mostly modifying how some variables are handled (substitute 'get's by [input]), added regions
+    /// to ease access, updated error messages, moved all soilTemp code to a separate class (the idea is to eliminate it in the future), also added
     /// some of the constants to xml.
     /// Changes on Sep/Oct-2012 by RCichota, add patch capability: move all code for soil C and N to a separate class (SoilCNPatch), allow several
-    /// instances to be initialised, modified inputs to handle the partitioning of incoming N, also modified outputs to sum up the pools from the 
+    /// instances to be initialised, modified inputs to handle the partitioning of incoming N, also modified outputs to sum up the pools from the
     /// several instances (patches)
     /// </summary>
     [Serializable]
     public partial class SoilNitrogen : Model
     {
+        /// <summary>The surface organic matter</summary>
         [Link]
         private SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
+        /// <summary>Initializes a new instance of the <see cref="SoilNitrogen"/> class.</summary>
         public SoilNitrogen()
         {
             Patch = new List<soilCNPatch>();
@@ -145,19 +241,23 @@ namespace Models.Soils
         /// <summary>
         /// Event to communicate other modules of C and/or N changes to/from outside the simulation
         /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void ExternalMassFlowDelegate(ExternalMassFlowType Data);
+        /// <summary>Occurs when [external mass flow].</summary>
         public event ExternalMassFlowDelegate ExternalMassFlow;
 
         /// <summary>
         /// Event to communicate other modules that solutes have been added to the simulation (owned by SoilNitrogen)
         /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void NewSoluteDelegate(NewSoluteType Data);
+        /// <summary>Occurs when [new solute].</summary>
         public event NewSoluteDelegate NewSolute;
 
-        /// <summary>
-        /// Event to comunicate other modules (SurfaceOM) that residues have been decomposed
-        /// </summary>
+        /// <summary>Event to comunicate other modules (SurfaceOM) that residues have been decomposed</summary>
+        /// <param name="Data">The data.</param>
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
+        /// <summary>Occurs when [actual residue decomposition calculated].</summary>
         public event SurfaceOrganicMatterDecompDelegate ActualResidueDecompositionCalculated;
 
         #endregion
@@ -165,9 +265,9 @@ namespace Models.Soils
         #region Setup events handlers and methods
 
 
-        /// <summary>
-        /// Performs the initial checks and setup
-        /// </summary>
+        /// <summary>Performs the initial checks and setup</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -230,9 +330,7 @@ namespace Models.Soils
             AdvertiseMySolutes();
         }
 
-        /// <summary>
-        /// Reset the state values to those set during the initialisation
-        /// </summary>
+        /// <summary>Reset the state values to those set during the initialisation</summary>
         public void Reset()
         {
 
@@ -274,9 +372,14 @@ namespace Models.Soils
             inReset = false;
         }
 
-        /// <summary>
-        /// Check general initialisation parameters, and let user know of some settings
-        /// </summary>
+        /// <summary>Check general initialisation parameters, and let user know of some settings</summary>
+        /// <exception cref="System.Exception">
+        /// Number of \fract_carb\ different to \fom_type\
+        /// or
+        /// Number of \fract_cell\ different to \fom_type\
+        /// or
+        /// Number of \fract_lign\ different to \fom_type\
+        /// </exception>
         private void CheckParams()
         {
 
@@ -329,9 +432,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Do the initial setup and calculations - this is also used onReset
-        /// </summary>
+        /// <summary>Do the initial setup and calculations - this is also used onReset</summary>
         private void InitCalc()
         {
 
@@ -421,10 +522,8 @@ namespace Models.Soils
             initDone = true;
         }
 
-        /// <summary>
-        /// Set the size of all public arrays (with nLayers)
-        /// </summary>
-        /// <param name="nLayers"></param>
+        /// <summary>Set the size of all public arrays (with nLayers)</summary>
+        /// <param name="nLayers">The n layers.</param>
         private void ResizeLayerArrays(int nLayers)
         {
             // Note: this doesn't clear the existing values
@@ -435,9 +534,7 @@ namespace Models.Soils
             Array.Resize(ref no3_min, nLayers);
         }
 
-        /// <summary>
-        /// Notify any interested module about this module's ownership of solute information.
-        /// </summary>
+        /// <summary>Notify any interested module about this module's ownership of solute information.</summary>
         private void AdvertiseMySolutes()
         {
 
@@ -461,9 +558,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Stores the total amounts of C an N
-        /// </summary>
+        /// <summary>Stores the total amounts of C an N</summary>
         private void SaveState()
         {
             // +  Note: needed for both NEW and OLD sysbal component
@@ -472,9 +567,7 @@ namespace Models.Soils
             dailyInitialC = SumDoubleArray(carbon_tot);
         }
 
-        /// <summary>
-        /// Calculates variations in C an N, and publishes MassFlows to APSIM
-        /// </summary>
+        /// <summary>Calculates variations in C an N, and publishes MassFlows to APSIM</summary>
         private void DeltaState()
         {
 
@@ -494,6 +587,8 @@ namespace Models.Soils
         /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
@@ -533,10 +628,9 @@ namespace Models.Soils
                 SendActualResidueDecompositionCalculated();
         }
 
-        /// <summary>
-        /// Performs every-day calculations - before begining of day tasks 
-        /// </summary>
-        /// <param name="time">Today's time</param>
+        /// <summary>Performs every-day calculations - before begining of day tasks</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
@@ -549,9 +643,9 @@ namespace Models.Soils
             SaveState();
         }
 
-        /// <summary>
-        /// Performs every-day calculations - end of day processes
-        /// </summary>
+        /// <summary>Performs every-day calculations - end of day processes</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoUpdate")]
         private void OnDoUpdate(object sender, EventArgs e)
         {
@@ -575,9 +669,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Send back to SurfaceOM the information about residue decomposition
-        /// </summary>
+        /// <summary>Send back to SurfaceOM the information about residue decomposition</summary>
         private void SendActualResidueDecompositionCalculated()
         {
             // Note:
@@ -620,9 +712,8 @@ namespace Models.Soils
 
         #region Frequent and sporadic processes
 
-        /// <summary>
-        /// Partition the given FOM C and N into fractions in each layer (one FOM)
-        /// </summary>
+        /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
+        /// <param name="inFOMdata">The in fo mdata.</param>
         [EventSubscribe("IncorpFOM")]
         private void OnIncorpFOM(FOMLayerType inFOMdata)
         {
@@ -634,9 +725,8 @@ namespace Models.Soils
             fom_type = Patch[0].fom_type;
         }
 
-        /// <summary>
-        /// Partition the given FOM C and N into fractions in each layer (FOM pools)
-        /// </summary>
+        /// <summary>Partition the given FOM C and N into fractions in each layer (FOM pools)</summary>
+        /// <param name="inFOMPoolData">The in fom pool data.</param>
         [EventSubscribe("IncorpFOMPool")]
         private void OnIncorpFOMPool(FOMPoolType inFOMPoolData)
         {
@@ -646,9 +736,8 @@ namespace Models.Soils
                 aPatch.OnIncorpFOMPool(inFOMPoolData);
         }
 
-        /// <summary>
-        /// Gets the changes in mineral N made by other modules
-        /// </summary>
+        /// <summary>Gets the changes in mineral N made by other modules</summary>
+        /// <param name="NitrogenChanges">The nitrogen changes.</param>
         [EventSubscribe("NitrogenChanged")]
         private void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
         {
@@ -708,9 +797,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Get the information about urine being added
-        /// </summary>
+        /// <summary>Get the information about urine being added</summary>
         /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>
         [EventSubscribe("AddUrine")]
         private void OnAddUrine(AddUrineType UrineAdded)
@@ -743,9 +830,7 @@ namespace Models.Soils
                     Patch[k].dlt_urea = newUrea;
         }
 
-        /// <summary>
-        /// Gets and handles the information about new patch and add it to patch list
-        /// </summary>
+        /// <summary>Gets and handles the information about new patch and add it to patch list</summary>
         /// <param name="PatchtoAdd">Patch data</param>
         [EventSubscribe("AddSoilCNPatc")]
         private void OnAddSoilCNPatch(AddSoilCNPatchType PatchtoAdd)
@@ -810,9 +895,7 @@ namespace Models.Soils
         }
 
 
-        /// <summary>
-        /// Gets the list of patches that will be merge into one, as defined by user
-        /// </summary>
+        /// <summary>Gets the list of patches that will be merge into one, as defined by user</summary>
         /// <param name="MergeCNPatch">The list of CNPatches to merge</param>
         [EventSubscribe("MergeSoilCNPatc")]
         private void OnMergeSoilCNPatch(MergeSoilCNPatchType MergeCNPatch)
@@ -830,9 +913,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Comunicate other components that N amount in the soil has changed
-        /// </summary>
+        /// <summary>Comunicate other components that N amount in the soil has changed</summary>
         /// <param name="dltN">N changes</param>
         private void SendExternalMassFlowN(double dltN)
         {
@@ -847,9 +928,7 @@ namespace Models.Soils
                 ExternalMassFlow.Invoke(massBalanceChange);
         }
 
-        /// <summary>
-        /// Comunicate other components that C amount in the soil has changed
-        /// </summary>
+        /// <summary>Comunicate other components that C amount in the soil has changed</summary>
         /// <param name="dltC">C changes</param>
         private void SendExternalMassFlowC(double dltC)
         {
@@ -869,11 +948,10 @@ namespace Models.Soils
 
         #region Auxiliary functions
 
-        /// <summary>
-        /// Conversion factor: kg/ha to ppm (mg/kg)
-        /// </summary>
+        /// <summary>Conversion factor: kg/ha to ppm (mg/kg)</summary>
         /// <param name="Layer">layer to calculate</param>
         /// <returns>conversion factor</returns>
+        /// <exception cref="System.Exception"> Error on computing convertion factor, kg/ha to ppm. Value for dlayer or bulk density not valid</exception>
         private double convFactor_kgha2ppm(int Layer)
         {
             if (bd == null || dlayer == null || bd.Length == 0 || dlayer.Length == 0)
@@ -884,9 +962,7 @@ namespace Models.Soils
             return Utility.Math.Divide(100.0, bd[Layer] * dlayer[Layer], 0.0);
         }
 
-        /// <summary>
-        /// Check whether there is any considerable values in the array
-        /// </summary>
+        /// <summary>Check whether there is any considerable values in the array</summary>
         /// <param name="anArray">The array to analyse</param>
         /// <param name="Lowerue">The minimum considerable value</param>
         /// <returns>True if there is any value greater than the minimum, false otherwise</returns>
@@ -907,9 +983,7 @@ namespace Models.Soils
             return result;
         }
 
-        /// <summary>
-        /// Calculate the sum of all values of an array of doubles
-        /// </summary>
+        /// <summary>Calculate the sum of all values of an array of doubles</summary>
         /// <param name="anArray">The array of values</param>
         /// <returns>The sum</returns>
         private double SumDoubleArray(double[] anArray)
@@ -923,9 +997,7 @@ namespace Models.Soils
             return result;
         }
 
-        /// <summary>
-        /// Find the index at which the cumulative amount is equal or greater than 'sum'
-        /// </summary>
+        /// <summary>Find the index at which the cumulative amount is equal or greater than 'sum'</summary>
         /// <param name="sumTarget">The target value</param>
         /// <param name="anArray">The array to analyse</param>
         /// <returns>The index of the array item at which the sum is equal or greater than the target</returns>

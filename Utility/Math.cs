@@ -1050,7 +1050,7 @@ namespace Utility
         /// <summary>
         /// Return true if all specified strings can be converted to a double.
         /// </summary>
-        /// <param name="StringValue"></param>
+        /// <param name="Values"></param>
         /// <returns></returns>
         static public bool IsNumerical(string[] Values)
         {
@@ -1307,25 +1307,53 @@ namespace Utility
         /// </summary>
         public class Stats
         {
+            /// <summary>Gets the residual.</summary>
+            /// <value>The residual.</value>
             public double Residual { get { return PredictedMean - ObservedMean; } }
+            /// <summary>Gets the s ds.</summary>
+            /// <value>The s ds.</value>
             public double SDs { get { return System.Math.Sqrt((1.0 / Count) * Y_YSquared); } }
+            /// <summary>Gets the s dm.</summary>
+            /// <value>The s dm.</value>
             public double SDm { get { return System.Math.Sqrt((1.0 / Count) * X_XSquared); } }
+            /// <summary>Gets the r.</summary>
+            /// <value>The r.</value>
             public double r { get { return (1.0 / Count) * Y_YxX_X / (SDs * SDm); } }
+            /// <summary>Gets the r2.</summary>
+            /// <value>The r2.</value>
             public double R2 { get { return System.Math.Pow(r, 2); } }
+            /// <summary>Gets the LCS.</summary>
+            /// <value>The LCS.</value>
             public double LCS { get { return 2.0 * SDs * SDm * (1.0 - r); } }
+            /// <summary>Gets the SDSD.</summary>
+            /// <value>The SDSD.</value>
             public double SDSD { get { return System.Math.Pow(SDs - SDm, 2.0); } }
+            /// <summary>Gets the sb.</summary>
+            /// <value>The sb.</value>
             public double SB { get { return System.Math.Pow(PredictedMean - ObservedMean, 2); } }
+            /// <summary>Gets the MSD.</summary>
+            /// <value>The MSD.</value>
             public double MSD { get { return SB + SDSD + LCS; } }
+            /// <summary>Gets the RMSD.</summary>
+            /// <value>The RMSD.</value>
             public double RMSD { get { return System.Math.Sqrt(MSD); } }
+            /// <summary>Gets the percent.</summary>
+            /// <value>The percent.</value>
             public double Percent { get { return (RMSD / ObservedMean)*100; } }
 
 
             // Low level pre calculations.
+            /// <summary>The observed mean</summary>
             public double ObservedMean;
+            /// <summary>The predicted mean</summary>
             public double PredictedMean;
+            /// <summary>The x_ x squared</summary>
             public double X_XSquared; // sum of (observed - observedmean) ^ 2
+            /// <summary>The y_ y squared</summary>
             public double Y_YSquared; // sum of (predicted - predictedmean) ^ 2
+            /// <summary>The y_ yx x_ x</summary>
             public double Y_YxX_X;    // sum of (predicted - predictedmean) * (observed - observedmean)
+            /// <summary>The count</summary>
             public int Count;
         }
 

@@ -51,33 +51,30 @@
 
         /// <summary>
         /// Number of pools into which carbon is grouped.
-        /// Currently there are three, indexed as follows: 
-        ///  0 = carbohydrate
-        ///  1 = cellulose
-        ///  2 = lignin.
+        /// Currently there are three, indexed as follows:
+        /// 0 = carbohydrate
+        /// 1 = cellulose
+        /// 2 = lignin.
         /// </summary>
         private static int maxFr = 3;
+        /// <summary>Type carrying information about the CNP composition of an organic matter fraction</summary>
         /// ================================================================
-
         /// ====================================================================
-
-        
-        // dsg 190803  The following two "types" have been defined within the code because,
-        //             dean"s datatypes.f90 generator cannot yet properly generate the;
-        //             type definition from datatypes.interface for a structures within a;
-        //             structure.
-        /// <summary>
-        /// Type carrying information about the CNP composition of an organic matter fraction
-        /// </summary>
         [Serializable]
         public class OMFractionType
         {
+            /// <summary>The amount</summary>
             public double amount;
+            /// <summary>The c</summary>
             public double C;
+            /// <summary>The n</summary>
             public double N;
+            /// <summary>The p</summary>
             public double P;
+            /// <summary>The ash alk</summary>
             public double AshAlk;
 
+            /// <summary>Initializes a new instance of the <see cref="OMFractionType"/> class.</summary>
             public OMFractionType()
             {
                 amount = 0;
@@ -88,18 +85,30 @@
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         class SurfOrganicMatterType
         {
+            /// <summary>The name</summary>
             public string name;
+            /// <summary>The organic matter type</summary>
             public string OrganicMatterType;
+            /// <summary>The pot decomp rate</summary>
             public double PotDecompRate;
+            /// <summary>The no3</summary>
             public double no3;
+            /// <summary>The NH4</summary>
             public double nh4;
+            /// <summary>The po4</summary>
             public double po4;
+            /// <summary>The standing</summary>
             public OMFractionType[] Standing;
+            /// <summary>The lying</summary>
             public OMFractionType[] Lying;
 
+            /// <summary>Initializes a new instance of the <see cref="SurfOrganicMatterType"/> class.</summary>
             public SurfOrganicMatterType()
             {
                 name = null;
@@ -118,6 +127,9 @@
                 }
             }
 
+            /// <summary>Initializes a new instance of the <see cref="SurfOrganicMatterType"/> class.</summary>
+            /// <param name="name">The name.</param>
+            /// <param name="type">The type.</param>
             public SurfOrganicMatterType(string name, string type)
                 : this()
             {
@@ -127,23 +139,39 @@
 
         }
 
+        /// <summary>The surf om</summary>
         private List<SurfOrganicMatterType> SurfOM;
+        /// <summary>The met data</summary>
         private Models.WeatherFile.NewMetType MetData;
 
+        /// <summary>The number surfom</summary>
         private int numSurfom = 0;
 
+        /// <summary>The irrig</summary>
         private double irrig;
+        /// <summary>The eos</summary>
         private double eos;
+        /// <summary>The cumeos</summary>
         private double cumeos;
+        /// <summary>The dlayer</summary>
         private double[] dlayer;
+        /// <summary>The phosphorus aware</summary>
         private bool phosphorusAware;
+        /// <summary>The old som state</summary>
         private OMFractionType oldSOMState;
+        /// <summary>The daily initial c</summary>
         private double DailyInitialC;
+        /// <summary>The daily initial n</summary>
         private double DailyInitialN;
 
+        /// <summary>Gets or sets the report additions.</summary>
+        /// <value>The report additions.</value>
         public string ReportAdditions { get; set; }
+        /// <summary>Gets or sets the report removals.</summary>
+        /// <value>The report removals.</value>
         public string ReportRemovals { get; set; }
 
+        /// <summary>Initializes a new instance of the <see cref="SurfaceOrganicMatter"/> class.</summary>
         public SurfaceOrganicMatter()
             : base()
         {
@@ -165,8 +193,14 @@
             Pools = new List<Pool>();
         }
 
+        /// <summary>Gets or sets the residue types.</summary>
+        /// <value>The residue types.</value>
         public ResidueTypesList ResidueTypes { get; set; }
+        /// <summary>Gets or sets the tillage types.</summary>
+        /// <value>The tillage types.</value>
         public TillageTypesList TillageTypes { get; set; }
+        /// <summary>Gets or sets the pools.</summary>
+        /// <value>The pools.</value>
         public List<Pool> Pools { get; set; }
 
         #region exposed properties
@@ -178,6 +212,8 @@
         // representation needs to be retained a while longer. Once the GUI has been extended, and existing
         // simulations have been converted, this stuff can (and should) be removed.
 
+        /// <summary>Gets or sets the name of the pool.</summary>
+        /// <value>The name of the pool.</value>
         [Summary]
         [Description("Pool name")]
         [Units("")]
@@ -209,6 +245,8 @@
             }
         }
 
+        /// <summary>Gets or sets the type.</summary>
+        /// <value>The type.</value>
         [Summary]
         [Description("Pool type")]
         [Units("")]
@@ -241,6 +279,8 @@
             }
         }
 
+        /// <summary>Gets or sets the mass.</summary>
+        /// <value>The mass.</value>
         [Summary]
         [Description("Mass")]
         [Units("kg/ha")]
@@ -273,6 +313,8 @@
             }
         }
 
+        /// <summary>Gets or sets the standing_fraction.</summary>
+        /// <value>The standing_fraction.</value>
         [Summary]
         [Description("Standing fraction")]
         [Units("0-1")]
@@ -307,6 +349,8 @@
             }
         }
 
+        /// <summary>Gets or sets the CPR.</summary>
+        /// <value>The CPR.</value>
         [Summary]
         [Description("CPR")]
         [Units("")]
@@ -341,6 +385,8 @@
             }
         }
 
+        /// <summary>Gets or sets the CNR.</summary>
+        /// <value>The CNR.</value>
         [Summary]
         [Description("CNR")]
         [Units("")]
@@ -377,90 +423,89 @@
 
         #region Params
 
-        /// <summary>
-        /// critical residue weight below which Thorburn"s cover factor equals one
-        /// </summary>
+        /// <summary>critical residue weight below which Thorburn"s cover factor equals one</summary>
+        /// <value>The critical residue weight.</value>
         [Units("")]
         public double CriticalResidueWeight { get; set; }
 
-        /// <summary>
-        /// temperature at which decomp reaches optimum (oC)
-        /// </summary>
+        /// <summary>temperature at which decomp reaches optimum (oC)</summary>
+        /// <value>The optimum decomp temporary.</value>
         [Units("oC")]
         public double OptimumDecompTemp { get; set; }
 
-        /// <summary>
-        /// cumeos at which decomp rate becomes zero. (mm H2O)
-        /// </summary>
+        /// <summary>cumeos at which decomp rate becomes zero. (mm H2O)</summary>
+        /// <value>The maximum cumulative eos.</value>
         [Units("")]
         public double MaxCumulativeEOS { get; set; }
 
-        /// <summary>
-        /// Coefficient to determine the magnitude of C:N effects on decomposition of residue
-        /// </summary>
+        /// <summary>Coefficient to determine the magnitude of C:N effects on decomposition of residue</summary>
+        /// <value>The cn ratio decomp coeff.</value>
         [Units("")]
         public double CNRatioDecompCoeff { get; set; }
 
-        /// <summary>
-        /// C:N above which decomposition rate of residue declines
-        /// </summary>
+        /// <summary>C:N above which decomposition rate of residue declines</summary>
+        /// <value>The cn ratio decomp threshold.</value>
         [Units("")]
         public double CNRatioDecompThreshold { get; set; }
 
-        /// <summary>
-        /// total amount of "leaching" rain to remove all soluble N from surfom
-        /// </summary>
+        /// <summary>total amount of "leaching" rain to remove all soluble N from surfom</summary>
+        /// <value>The total leach rain.</value>
         [Units("")]
         public double TotalLeachRain { get; set; }
 
-        /// <summary>
-        /// threshold rainfall amount for leaching to occur
-        /// </summary>
+        /// <summary>threshold rainfall amount for leaching to occur</summary>
+        /// <value>The minimum rain to leach.</value>
         [Units("")]
         public double MinRainToLeach { get; set; }
 
         /// <summary>
         /// critical minimum org C below which potential decomposition rate is 100% (to avoid numerical imprecision)
         /// </summary>
+        /// <value>The critical minimum organic c.</value>
         [Units("")]
         public double CriticalMinimumOrganicC { get; set; }
 
-        /// <summary>
-        /// Default C:P ratio
-        /// </summary>
+        /// <summary>Default C:P ratio</summary>
+        /// <value>The default cp ratio.</value>
         [Units("")]
         public double DefaultCPRatio { get; set; }
 
-        /// <summary>
-        /// Default standing fraction for initial residue pools
-        /// </summary>
+        /// <summary>Default standing fraction for initial residue pools</summary>
+        /// <value>The default standing fraction.</value>
         [Units("")]
         public double DefaultStandingFraction { get; set; }
 
-        /// <summary>
-        /// extinction coefficient for standing residues
-        /// </summary>
+        /// <summary>extinction coefficient for standing residues</summary>
+        /// <value>The standing extinct coeff.</value>
         [Units("")]
         public double StandingExtinctCoeff { get; set; }
 
-        /// <summary>
-        /// fraction of incoming faeces to add
-        /// </summary>
+        /// <summary>fraction of incoming faeces to add</summary>
+        /// <value>The fraction faeces added.</value>
         [Bounds(Lower = 0.0, Upper = 0.0)]
         [Units("0-1")]
         public double FractionFaecesAdded { get; set; }
 
+        /// <summary>The cf_contrib</summary>
         private int[] cf_contrib = new int[0];               // determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)
 
+        /// <summary>The c_fract</summary>
         private double[] C_fract = new double[0];            // Fraction of Carbon in plant material (0-1)
 
+        /// <summary>The fr pool c</summary>
         private double[,] frPoolC = new double[maxFr, 0];  // carbohydrate fraction in fom C pool (0-1)
+        /// <summary>The fr pool n</summary>
         private double[,] frPoolN = new double[maxFr, 0];  // carbohydrate fraction in fom N pool (0-1)
+        /// <summary>The fr pool p</summary>
         private double[,] frPoolP = new double[maxFr, 0];  // carbohydrate fraction in fom P pool (0-1)
 
+        /// <summary>The NH4PPM</summary>
         private double[] nh4ppm = new double[0];             // ammonium component of residue (ppm)
+        /// <summary>The no3ppm</summary>
         private double[] no3ppm = new double[0];             // nitrate component of residue (ppm)
+        /// <summary>The po4ppm</summary>
         private double[] po4ppm = new double[0];             // ammonium component of residue (ppm)
+        /// <summary>The specific_area</summary>
         private double[] specific_area = new double[0];      // specific area of residue (ha/kg)
 
         #endregion
@@ -469,98 +514,103 @@
 
         // [Units("mm")]
         // double eos = double.NaN;
+        /// <summary>The pond active</summary>
         [Units("")]
         public string PondActive = null;
 
+        /// <summary>The labile_p</summary>
         [Units("")]
         public double[] labile_p = null;
         #endregion
 
         #region Outputs
 
-        /// <summary>
-        /// Total mass of all surface organic materials
-        /// </summary>
+        /// <summary>Total mass of all surface organic materials</summary>
+        /// <value>The surfaceom_wt.</value>
         [Units("kg/ha")]
         public double surfaceom_wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
 
+        /// <summary>Gets the carbonbalance.</summary>
+        /// <value>The carbonbalance.</value>
         [Units("kg/ha")]
         public double carbonbalance { get { return 0 - (surfaceom_c - DailyInitialC); } }
 
+        /// <summary>Gets the nitrogenbalance.</summary>
+        /// <value>The nitrogenbalance.</value>
         [Units("kg/ha")]
         public double nitrogenbalance { get { return 0 - (surfaceom_n - DailyInitialN); } }
 
-        /// <summary>
-        /// Total mass of all surface organic carbon
-        /// </summary>
+        /// <summary>Total mass of all surface organic carbon</summary>
+        /// <value>The surfaceom_c.</value>
         [Summary]
         [Description("Carbon content")]
         [Units("kg/ha")]
         public double surfaceom_c { get { return SumSurfOMStandingLying(SurfOM, x => x.C); } }
 
-        /// <summary>
-        /// Total mass of all surface organic nitrogen
-        /// </summary>
+        /// <summary>Total mass of all surface organic nitrogen</summary>
+        /// <value>The surfaceom_n.</value>
         [Summary]
         [Description("Nitrogen content")]
         [Units("kg/ha")]
         public double surfaceom_n { get { return SumSurfOMStandingLying(SurfOM, x => x.N); } }
 
-        /// <summary>
-        /// Total mass of all surface organic phosphor
-        /// </summary>
+        /// <summary>Total mass of all surface organic phosphor</summary>
+        /// <value>The surfaceom_p.</value>
         [Summary]
         [Description("Phosphorus content")]
         [Units("kg/ha")]
         public double surfaceom_p { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
 
+        /// <summary>Gets the surfaceom_ashalk.</summary>
+        /// <value>The surfaceom_ashalk.</value>
         [Units("")]
         public double surfaceom_ashalk { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
 
-        /// <summary>
-        /// Total mass of nitrate
-        /// </summary>
+        /// <summary>Total mass of nitrate</summary>
+        /// <value>The surfaceom_no3.</value>
         [Units("kg/ha")]
         public double surfaceom_no3 { get { return SumSurfOM(SurfOM, x => x.no3); } }
 
-        /// <summary>
-        /// Total mass of ammonium
-        /// </summary>
+        /// <summary>Total mass of ammonium</summary>
+        /// <value>The surfaceom_nh4.</value>
         [Units("kg/ha")]
         public double surfaceom_nh4 { get { return SumSurfOM(SurfOM, x => x.nh4); } }
 
-        /// <summary>
-        /// Total mass of labile phosphorus
-        /// </summary>
+        /// <summary>Total mass of labile phosphorus</summary>
+        /// <value>The surfaceom_labile_p.</value>
         [Units("kg/ha")]
         public double surfaceom_labile_p { get { return SumSurfOM(SurfOM, x => x.po4); } }
 
-        /// <summary>
-        /// Fraction of ground covered by all surface OMs
-        /// </summary>
+        /// <summary>Fraction of ground covered by all surface OMs</summary>
+        /// <value>The surfaceom_cover.</value>
         [Description("Fraction of ground covered by all surface OMs")]
         [Units("m^2/m^2")]
         public double surfaceom_cover { get { return CoverTotal(); } }
 
-        /// <summary>
-        /// Temperature factor for decomposition
-        /// </summary>
+        /// <summary>Temperature factor for decomposition</summary>
+        /// <value>The tf.</value>
         [Units("0-1")]
         public double tf { get { return TemperatureFactor(); } }
 
-        /// <summary>
-        /// Contact factor for decomposition
-        /// </summary>
+        /// <summary>Contact factor for decomposition</summary>
+        /// <value>The cf.</value>
         [Units("0-1")]
         public double cf { get { return ContactFactor(); } }
 
+        /// <summary>Gets the wf.</summary>
+        /// <value>The wf.</value>
         [Units("0-1")]
         public double wf { get { return MoistureFactor(); } }
 
+        /// <summary>The _leaching_fr</summary>
         private double _leaching_fr;
+        /// <summary>Gets the leaching_fr.</summary>
+        /// <value>The leaching_fr.</value>
         [Units("")]
         public double leaching_fr { get { return _leaching_fr; } }
 
+        /// <summary>Gets the surface_organic_matter.</summary>
+        /// <value>The surface_organic_matter.</value>
         [Units("")]
         public int surface_organic_matter 
         { 
@@ -571,21 +621,17 @@
             } 
         }
 
-        /// <summary>
-        /// Mass of organic matter named wheat
-        /// </summary>
+        /// <summary>Mass of organic matter named wheat</summary>
+        /// <value>The surfaceom_wt_rice.</value>
         [Units("")]
         public double surfaceom_wt_rice { get { return ResidueMass("rice", x => x.amount); } }
 
-        /// <summary>
-        /// Mass of organic matter named algae
-        /// </summary>
+        /// <summary>Mass of organic matter named algae</summary>
+        /// <value>The surfaceom_wt_algae.</value>
         [Units("")]
         public double surfaceom_wt_algae { get { return ResidueMass("algae", x => x.amount); } }
 
-        /// <summary>
-        /// Get the weight of the given SOM pool
-        /// </summary>
+        /// <summary>Get the weight of the given SOM pool</summary>
         /// <param name="pool">Name of the pool to get the weight from.</param>
         /// <returns>The weight of the given pool</returns>
         public double GetWeightFromPool(string pool)
@@ -595,9 +641,8 @@
                 SumOMFractionType(SomType.Lying, y => y.amount);
         }
 
-        /// <summary>
-        /// Mass of organic matter in all pools
-        /// </summary>
+        /// <summary>Mass of organic matter in all pools</summary>
+        /// <value>The surfaceom_wt_all.</value>
         [Units("kg/ha")]
         public double[] surfaceom_wt_all
         {
@@ -609,9 +654,8 @@
             }
         }
 
-        /// <summary>
-        /// Mass of organic carbon in all pools
-        /// </summary>
+        /// <summary>Mass of organic carbon in all pools</summary>
+        /// <value>The surfaceom_c_all.</value>
         [Units("kg/ha")]
         public double[] surfaceom_c_all
         {
@@ -623,9 +667,8 @@
             }
         }
 
-        /// <summary>
-        /// Mass of organic nitrogen in all pools
-        /// </summary>
+        /// <summary>Mass of organic nitrogen in all pools</summary>
+        /// <value>The surfaceom_n_all.</value>
         [Units("kg/ha")]
         public double[] surfaceom_n_all
         {
@@ -637,9 +680,8 @@
             }
         }
 
-        /// <summary>
-        /// Mass of organic phosphor in all pools
-        /// </summary>
+        /// <summary>Mass of organic phosphor in all pools</summary>
+        /// <value>The surfaceom_p_all.</value>
         [Units("kg/ha")]
         public double[] surfaceom_p_all
         {
@@ -651,6 +693,8 @@
             }
         }
 
+        /// <summary>Gets the surfaceom_ashalk_all.</summary>
+        /// <value>The surfaceom_ashalk_all.</value>
         [Units("")]
         public double[] surfaceom_ashalk_all
         {
@@ -662,9 +706,8 @@
             }
         }
 
-        /// <summary>
-        /// Mass of nitrate in all pools
-        /// </summary>
+        /// <summary>Mass of nitrate in all pools</summary>
+        /// <value>The surfaceom_no3_all.</value>
         [Units("")]
         public double[] surfaceom_no3_all
         {
@@ -674,9 +717,8 @@
             }
         }
 
-        /// <summary>
-        /// Mass of ammonium in all pools
-        /// </summary>
+        /// <summary>Mass of ammonium in all pools</summary>
+        /// <value>The surfaceom_nh4_all.</value>
         [Units("")]
         public double[] surfaceom_nh4_all
         {
@@ -686,9 +728,8 @@
             }
         }
 
-        /// <summary>
-        /// Mass of labile phosphorus in all pools
-        /// </summary>
+        /// <summary>Mass of labile phosphorus in all pools</summary>
+        /// <value>The surfaceom_labile_p_all.</value>
         [Units("")]
         public double[] surfaceom_labile_p_all
         {
@@ -698,9 +739,8 @@
             }
         }
 
-        /// <summary>
-        /// Potential organic C decomposition in all pools
-        /// </summary>
+        /// <summary>Potential organic C decomposition in all pools</summary>
+        /// <value>The pot_c_decomp_all.</value>
         [Units("")]
         public double[] pot_c_decomp_all
         {
@@ -713,9 +753,8 @@
             }
         }
 
-        /// <summary>
-        /// Potential organic N decomposition in all pools
-        /// </summary>
+        /// <summary>Potential organic N decomposition in all pools</summary>
+        /// <value>The pot_n_decomp_all.</value>
         [Units("")]
         public double[] pot_n_decomp_all
         {
@@ -728,9 +767,8 @@
             }
         }
 
-        /// <summary>
-        /// Potential organic P decomposition in all pools
-        /// </summary>
+        /// <summary>Potential organic P decomposition in all pools</summary>
+        /// <value>The pot_p_decomp_all.</value>
         [Units("")]
         public double[] pot_p_decomp_all
         {
@@ -743,9 +781,8 @@
             }
         }
 
-        /// <summary>
-        /// Fraction of all pools which is inert, ie not in contact with the ground
-        /// </summary>
+        /// <summary>Fraction of all pools which is inert, ie not in contact with the ground</summary>
+        /// <value>The standing_fr_all.</value>
         [Units("")]
         public double[] standing_fr_all
         {
@@ -755,9 +792,8 @@
             }
         }
 
-        /// <summary>
-        /// Fraction of ground covered by all pools
-        /// </summary>
+        /// <summary>Fraction of ground covered by all pools</summary>
+        /// <value>The surfaceom_cover_all.</value>
         [Units("m^2/m^2")]
         public double[] surfaceom_cover_all
         {
@@ -771,9 +807,8 @@
             }
         }
 
-        /// <summary>
-        /// C:N ratio factor for decomposition for all pools
-        /// </summary>
+        /// <summary>C:N ratio factor for decomposition for all pools</summary>
+        /// <value>The cnrf_all.</value>
         [Units("")]
         public double[] cnrf_all
         {
@@ -791,6 +826,8 @@
 
         #endregion
 
+        /// <summary>Called when [deserialised].</summary>
+        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
         [EventSubscribe("Deserialised")]
         private void OnDeserialised(bool xmlSerialisation)
         {
@@ -820,12 +857,14 @@
             }
         }
 
+        /// <summary>The saved residues</summary>
         private ResidueType[] savedResidues;
 
         /// <summary>
         /// We're about to be serialised. Remove residue types from out list
         /// that were obtained from the XML resource so they are not included
         /// </summary>
+        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
         [EventSubscribe("Serialising")]
         private void OnSerialising(bool xmlSerialisation)
         {
@@ -841,9 +880,10 @@
         }
 
         /// <summary>
-        /// Serialisation has completed. Reinstate the full list of 
+        /// Serialisation has completed. Reinstate the full list of
         /// residue types
         /// </summary>
+        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
         [EventSubscribe("Serialised")]
         private void OnSerialised(bool xmlSerialisation)
         {
@@ -856,34 +896,65 @@
 
         #region supporting classes
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         public class ResidueType : Model
         {
+            /// <summary>Gets or sets the fom_type.</summary>
+            /// <value>The fom_type.</value>
             public string fom_type { get; set; }
+            /// <summary>Gets or sets the derived_from.</summary>
+            /// <value>The derived_from.</value>
             public string derived_from { get; set; } // No logic for this implemented currently
+            /// <summary>Gets or sets the fraction_ c.</summary>
+            /// <value>The fraction_ c.</value>
             public double fraction_C { get; set; }
+            /// <summary>Gets or sets the po4ppm.</summary>
+            /// <value>The po4ppm.</value>
             public double po4ppm { get; set; }
+            /// <summary>Gets or sets the NH4PPM.</summary>
+            /// <value>The NH4PPM.</value>
             public double nh4ppm { get; set; }
+            /// <summary>Gets or sets the no3ppm.</summary>
+            /// <value>The no3ppm.</value>
             public double no3ppm { get; set; }
+            /// <summary>Gets or sets the specific_area.</summary>
+            /// <value>The specific_area.</value>
             public double specific_area { get; set; }
+            /// <summary>Gets or sets the cf_contrib.</summary>
+            /// <value>The cf_contrib.</value>
             public int cf_contrib { get; set; }
+            /// <summary>Gets or sets the pot_decomp_rate.</summary>
+            /// <value>The pot_decomp_rate.</value>
             public double pot_decomp_rate { get; set; }
+            /// <summary>Gets or sets the FR_C.</summary>
+            /// <value>The FR_C.</value>
             public double[] fr_c { get; set; }
+            /// <summary>Gets or sets the FR_N.</summary>
+            /// <value>The FR_N.</value>
             public double[] fr_n { get; set; }
+            /// <summary>Gets or sets the FR_P.</summary>
+            /// <value>The FR_P.</value>
             public double[] fr_p { get; set; }
 
+            /// <summary>Initializes a new instance of the <see cref="ResidueType"/> class.</summary>
             public ResidueType()
             {
                 fom_type = "inert";
                 InitialiseWithNulls();
             }
 
+            /// <summary>Initializes a new instance of the <see cref="ResidueType"/> class.</summary>
+            /// <param name="fomType">Type of the fom.</param>
             public ResidueType(string fomType)
             {
                 fom_type = fomType;
                 InitialiseWithNulls();
             }
 
+            /// <summary>Initialises the with nulls.</summary>
             private void InitialiseWithNulls()
             {
                 fraction_C = double.NaN;
@@ -899,14 +970,22 @@
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         public class ResidueTypesList : Model
         {
+            /// <summary>Gets or sets the residues.</summary>
+            /// <value>The residues.</value>
             [XmlElement("ResidueType")]
             public List<ResidueType> residues { get; set; }
 
+            /// <summary>Gets or sets the load from resource.</summary>
+            /// <value>The load from resource.</value>
             public string LoadFromResource { get; set; }
 
+            /// <summary>Fills all derived.</summary>
             public void FillAllDerived()
             {
                 for (int i = 0; i < residues.Count; i++)
@@ -915,11 +994,8 @@
                 }
             }
 
-            /// <summary>
-            /// Fills in field values for a residue type from a base type
-            /// </summary>
-            /// <param name="i">List index of the residue type to be filled in</param>
-            /// </param>
+            /// <summary>Fills the derived.</summary>
+            /// <param name="i">The i.</param>
             public void FillDerived(int i)
             {
                 ResidueType residue = residues[i];
@@ -978,6 +1054,7 @@
                 }
             }
 
+            /// <summary>Initializes a new instance of the <see cref="ResidueTypesList"/> class.</summary>
             public ResidueTypesList()
             {
                 if (residues == null)
@@ -987,6 +1064,10 @@
                 LoadFromResource = "ResidueTypes";
             }
 
+            /// <summary>Gets the residue.</summary>
+            /// <param name="name">The name.</param>
+            /// <returns></returns>
+            /// <exception cref="ApsimXException">Could not find residue name  + name</exception>
             public ResidueType getResidue(string name)
             {
                 if (residues != null)
@@ -999,11 +1080,19 @@
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         public class TillageTypesList : Model
         {
+            /// <summary>Gets or sets the type of the tillage.</summary>
+            /// <value>The type of the tillage.</value>
             public List<TillageType> TillageType { get; set; }
 
+            /// <summary>Gets the tillage data.</summary>
+            /// <param name="Name">The name.</param>
+            /// <returns></returns>
             public TillageType GetTillageData(string Name)
             {
                 foreach (TillageType tillageType in TillageType)
@@ -1015,19 +1104,32 @@
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         public class Pool
         {
+            /// <summary>Gets or sets the name of the pool.</summary>
+            /// <value>The name of the pool.</value>
             public string PoolName { get; set; }
+            /// <summary>Gets or sets the type of the residue.</summary>
+            /// <value>The type of the residue.</value>
             public string ResidueType { get; set; }
+            /// <summary>Gets or sets the mass.</summary>
+            /// <value>The mass.</value>
             public double Mass { get; set; }
+            /// <summary>Gets or sets the cn ratio.</summary>
+            /// <value>The cn ratio.</value>
             public double CNRatio { get; set; }
+            /// <summary>Gets or sets the cp ratio.</summary>
+            /// <value>The cp ratio.</value>
             public double CPRatio { get; set; }
+            /// <summary>Gets or sets the standing fraction.</summary>
+            /// <value>The standing fraction.</value>
             public double StandingFraction { get; set; }
 
-            /// <summary>
-            /// Constructor provides initial values
-            /// </summary>
+            /// <summary>Constructor provides initial values</summary>
             public Pool()
             {
                 PoolName = string.Empty;
@@ -1039,10 +1141,16 @@
             }
         }
 
+        /// <summary>The acceptable error</summary>
         private const double acceptableErr = 1e-4;
 
         #region Math Operations
 
+        /// <summary>Bounds the specified tobound.</summary>
+        /// <param name="tobound">The tobound.</param>
+        /// <param name="lower">The lower.</param>
+        /// <param name="upper">The upper.</param>
+        /// <returns></returns>
         private int Bound(int tobound, int lower, int upper)
         {
             return Math.Max(Math.Min(tobound, upper), lower);
@@ -1050,14 +1158,14 @@
 
         /// <summary>
         /// "cover1" and "cover2" are numbers between 0 and 1 which
-        ///     indicate what fraction of sunlight is intercepted by the
-        ///     foliage of plants.  This function returns a number between
-        ///     0 and 1 indicating the fraction of sunlight intercepted
-        ///     when "cover1" is combined with "cover2", i.e. both sets of
-        ///     plants are present.
+        /// indicate what fraction of sunlight is intercepted by the
+        /// foliage of plants.  This function returns a number between
+        /// 0 and 1 indicating the fraction of sunlight intercepted
+        /// when "cover1" is combined with "cover2", i.e. both sets of
+        /// plants are present.
         /// </summary>
-        /// <param name="cover1"></param>
-        /// <param name="cover2"></param>
+        /// <param name="cover1">The cover1.</param>
+        /// <param name="cover2">The cover2.</param>
         /// <returns></returns>
         private double AddCover(double cover1, double cover2)
         {
@@ -1065,45 +1173,35 @@
             return 1.0 - bare;
         }
 
+        /// <summary>The apsim bound warning error</summary>
         private const string ApsimBoundWarningError =
     @"'{0}' out of bounds!
      {1} < {2} < {3} evaluates 'FALSE'";
 
+        /// <summary>Bound_check_real_vars the specified value.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="lower">The lower.</param>
+        /// <param name="upper">The upper.</param>
+        /// <param name="vname">The vname.</param>
         private void Bound_check_real_var(double value, double lower, double upper, string vname)
         {
             if (Utility.Math.IsLessThan(value, lower) || Utility.Math.IsGreaterThan(value, upper))
                 summary.WriteWarning(this, string.Format(ApsimBoundWarningError, vname, lower, value, upper));
         }
 
+        /// <summary>Reals_are_equals the specified first.</summary>
+        /// <param name="first">The first.</param>
+        /// <param name="second">The second.</param>
+        /// <returns></returns>
         private bool reals_are_equal(double first, double second)
         {
             return Math.Abs(first - second) < 2 * double.Epsilon;
         }
 
-        /// <summary>
-        /// <para>+ Purpose</para>
-        /// <para>
-        /// Find the first element of an array where a given value
-        /// is contained with the cumulative sum_of of the elements.
-        /// If sum_of is not reached by the end of the array, then it
-        /// is ok to set it to the last element. This will take
-        /// account of the case of the number of levels being 0.
-        /// </para>
-        /// <para>Definition</para>
-        /// <para>
-        /// Returns ndx where ndx is the smallest value in the range
-        /// 0..array.Length such that the sum of "array"(j), j=0..ndx is
-        /// greater than or equal to "cum_sum".  If there is no such
-        /// value of ndx, then the index of the last element will be returned.
-        /// <para>
-        /// <para>Mission Statement</para>
-        /// <para>
-        /// Find index for cumulative %2 = %1
-        /// </para>
-        /// </summary>
-        /// <param name="cum_sum">sum_of to be found</param>
-        /// <param name="array">array to be searched</param>
-        /// <returns>Index for a 0-based array</returns>
+        /// <summary>Gets the cumulative index real.</summary>
+        /// <param name="cum_sum">The cum_sum.</param>
+        /// <param name="array">The array.</param>
+        /// <returns></returns>
         private int GetCumulativeIndexReal(double cum_sum, double[] array)
         {
             int sizeOf = array.Length - 1;
@@ -1116,6 +1214,10 @@
 
         #endregion
 
+        /// <summary>To the array.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="str">The string.</param>
+        /// <returns></returns>
         protected T[] ToArray<T>(string str)
         {
             string[] temp;
@@ -1137,6 +1239,9 @@
             return result;
         }
 
+        /// <summary>Sum2s the d array.</summary>
+        /// <param name="_2Darray">The _2 darray.</param>
+        /// <returns></returns>
         double Sum2DArray(double[,] _2Darray)
         {
             double result = 0;
@@ -1148,26 +1253,47 @@
             return result;
         }
 
+        /// <summary>Sums the surf om standing lying.</summary>
+        /// <param name="var">The variable.</param>
+        /// <param name="func">The function.</param>
+        /// <returns></returns>
         double SumSurfOMStandingLying(List<SurfOrganicMatterType> var, Func<OMFractionType, double> func)
         {
             return var.Sum<SurfOrganicMatterType>(x => SumSurfOMStandingLying(x, func));
         }
 
+        /// <summary>Sums the surf om standing lying.</summary>
+        /// <param name="var">The variable.</param>
+        /// <param name="func">The function.</param>
+        /// <returns></returns>
         double SumSurfOMStandingLying(SurfOrganicMatterType var, Func<OMFractionType, double> func)
         {
             return var.Lying.Sum<OMFractionType>(func) + var.Standing.Sum<OMFractionType>(func);
         }
 
+        /// <summary>Sums the surf om.</summary>
+        /// <param name="var">The variable.</param>
+        /// <param name="func">The function.</param>
+        /// <returns></returns>
         double SumSurfOM(List<SurfOrganicMatterType> var, Func<SurfOrganicMatterType, double> func)
         {
             return var.Sum<SurfOrganicMatterType>(func);
         }
 
+        /// <summary>Sums the type of the om fraction.</summary>
+        /// <param name="var">The variable.</param>
+        /// <param name="func">The function.</param>
+        /// <returns></returns>
         double SumOMFractionType(OMFractionType[] var, Func<OMFractionType, double> func)
         {
             return var.Sum<OMFractionType>(func);
         }
 
+        /// <summary>Residues the mass.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="func">The function.</param>
+        /// <returns></returns>
+        /// <exception cref="ApsimXException">No organic matter called  + type +  present</exception>
         double ResidueMass(string type, Func<OMFractionType, double> func)
         {
             int SOMNo = GetResidueNumber(type);
@@ -1179,9 +1305,7 @@
 
         #endregion
 
-        /// <summary>
-        /// Initialise residue module
-        /// </summary>
+        /// <summary>Initialise residue module</summary>
         private void SurfomReset()
         {
             // Save State;
@@ -1193,11 +1317,13 @@
             DeltaState();
         }
 
+        /// <summary>Saves the state.</summary>
         private void SaveState()
         {
             oldSOMState = SurfomTotalState();
         }
 
+        /// <summary>Deltas the state.</summary>
         private void DeltaState()
         {
             // Local Variables;
@@ -1227,102 +1353,182 @@
 
         #region published events
 
+        /// <summary>Occurs when [external mass flow].</summary>
         public event Models.Soils.SoilNitrogen.ExternalMassFlowDelegate ExternalMassFlow;
+        /// <summary>Publishes the external mass flow.</summary>
+        /// <param name="massBalanceChange">The mass balance change.</param>
         private void PublishExternalMassFlow(ExternalMassFlowType massBalanceChange)
         {
             if (ExternalMassFlow != null)
                 ExternalMassFlow.Invoke(massBalanceChange);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
+        /// <summary>Occurs when [potential residue decomposition calculated].</summary>
         public event SurfaceOrganicMatterDecompDelegate PotentialResidueDecompositionCalculated;
 
+        /// <summary>Publishes the surface organic matter decomp.</summary>
+        /// <param name="SOMDecomp">The som decomp.</param>
         private void PublishSurfaceOrganicMatterDecomp(SurfaceOrganicMatterDecompType SOMDecomp)
         {
             if (PotentialResidueDecompositionCalculated != null)
                 PotentialResidueDecompositionCalculated.Invoke(SOMDecomp);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void FOMPoolDelegate(FOMPoolType Data);
 
+        /// <summary>Occurs when [incorp fom pool].</summary>
         public event FOMPoolDelegate IncorpFOMPool;
 
+        /// <summary>Publishes the fom pool.</summary>
+        /// <param name="data">The data.</param>
         private void PublishFOMPool(FOMPoolType data)
         {
             if (IncorpFOMPool != null)
                 IncorpFOMPool.Invoke(data);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class SurfaceOrganicMatterPoolType
         {
+            /// <summary>The name</summary>
             public string Name = string.Empty;
+            /// <summary>The organic matter type</summary>
             public string OrganicMatterType = string.Empty;
+            /// <summary>The pot decomp rate</summary>
             public double PotDecompRate;
+            /// <summary>The no3</summary>
             public double no3;
+            /// <summary>The NH4</summary>
             public double nh4;
+            /// <summary>The po4</summary>
             public double po4;
+            /// <summary>The standing fraction</summary>
             public FOMType[] StandingFraction;
+            /// <summary>The lying fraction</summary>
             public FOMType[] LyingFraction;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class SurfaceOrganicMatterType
         {
+            /// <summary>The pool</summary>
             public SurfaceOrganicMatterPoolType[] Pool;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void SurfaceOrganicMatterDelegate(SurfaceOrganicMatterType Data);
 
+        /// <summary>Occurs when [surface organic matter state].</summary>
         public event SurfaceOrganicMatterDelegate SurfaceOrganicMatterState;
 
+        /// <summary>Publish_s the surface organic matter.</summary>
+        /// <param name="SOM">The som.</param>
         private void publish_SurfaceOrganicMatter(SurfaceOrganicMatterType SOM)
         {
             if (SurfaceOrganicMatterState != null)
                 SurfaceOrganicMatterState.Invoke(SOM);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class ResidueRemovedType
         {
+            /// <summary>The residue_removed_action</summary>
             public string residue_removed_action = string.Empty;
+            /// <summary>The dlt_residue_fraction</summary>
             public double dlt_residue_fraction;
+            /// <summary>The residue_incorp_fraction</summary>
             public double[] residue_incorp_fraction;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class ResidueAddedType
         {
+            /// <summary>The residue_type</summary>
             public string residue_type = string.Empty;
+            /// <summary>The dm_type</summary>
             public string dm_type = string.Empty;
+            /// <summary>The dlt_residue_wt</summary>
             public double dlt_residue_wt;
+            /// <summary>The DLT_DM_N</summary>
             public double dlt_dm_n;
+            /// <summary>The DLT_DM_P</summary>
             public double dlt_dm_p;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void Residue_addedDelegate(ResidueAddedType Data);
 
+        /// <summary>Occurs when [residue_added].</summary>
         public event Residue_addedDelegate Residue_added;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void Residue_removedDelegate(ResidueRemovedType Data);
 
+        /// <summary>Occurs when [residue_removed].</summary>
         public event Residue_removedDelegate Residue_removed;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class SurfaceOMRemovedType
         {
+            /// <summary>The surface o m_type</summary>
             public string SurfaceOM_type = string.Empty;
+            /// <summary>The surface o m_dm_type</summary>
             public string SurfaceOM_dm_type = string.Empty;
+            /// <summary>The DLT_ surface o M_WT</summary>
             public double dlt_SurfaceOM_wt;
+            /// <summary>The surface o M_DLT_DM_N</summary>
             public double SurfaceOM_dlt_dm_n;
+            /// <summary>The surface o M_DLT_DM_P</summary>
             public double SurfaceOM_dlt_dm_p;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void SurfaceOM_removedDelegate(SurfaceOMRemovedType Data);
 
+        /// <summary>Occurs when [surface o m_removed].</summary>
         public event SurfaceOM_removedDelegate SurfaceOM_removed;
 
+        /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
         #endregion
 
         #region event handlers
 
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
@@ -1333,23 +1539,39 @@
             }
         }
 
+        /// <summary>The initialised</summary>
         bool initialised = false;
 
+        /// <summary>Called when [tillage].</summary>
+        /// <param name="data">The data.</param>
         public void OnTillage(TillageType data)
         {
             Tillage(data);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class Add_surfaceomType
         {
+            /// <summary>The name</summary>
             public string name = string.Empty;
+            /// <summary>The type</summary>
             public string type = string.Empty;
+            /// <summary>The mass</summary>
             public double mass;
+            /// <summary>The n</summary>
             public double n;
+            /// <summary>The CNR</summary>
             public double cnr;
+            /// <summary>The p</summary>
             public double p;
+            /// <summary>The CPR</summary>
             public double cpr;
         }
+        /// <summary>Incorporates the specified fraction.</summary>
+        /// <param name="fraction">The fraction.</param>
+        /// <param name="depth">The depth.</param>
         public void Incorporate(double fraction, double depth)
         {
             TillageType data = new TillageType();
@@ -1359,6 +1581,11 @@
             Tillage(data);
         }
 
+        /// <summary>Adds the specified type.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="N">The n.</param>
+        /// <param name="name">The name.</param>
         public void Add(string type, double mass, double N, string name = null)
         {
             Add_surfaceomType data = new Add_surfaceomType();
@@ -1374,6 +1601,9 @@
             AddSurfom(data);
         }
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -1395,6 +1625,7 @@
             OnReset();
         }
 
+        /// <summary>Called when [reset].</summary>
         [EventSubscribe("Reset")]
         private void OnReset()
         {
@@ -1402,12 +1633,17 @@
             SurfomReset();
         }
 
+        /// <summary>Called when [remove_surface om].</summary>
+        /// <param name="SOM">The som.</param>
         [EventSubscribe("RemoveSurfaceOM")]
         private void OnRemove_surfaceOM(SurfaceOrganicMatterType SOM)
         {
             RemoveSurfom(SOM);
         }
 
+        /// <summary>Called when [new weather data available].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
@@ -1415,30 +1651,38 @@
         }
 
         [EventSubscribe("Irrigated")]
-        /// <summary>
-        /// Get irrigation information from an Irrigated event.
-        /// </summary>
+        /// <summary>Get irrigation information from an Irrigated event.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The data.</param>
         private void OnIrrigated(object sender, IrrigationApplicationType data)
         {
             // now increment internal irrigation log;
             irrig += data.Amount;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class CropChoppedType
         {
+            /// <summary>The crop_type</summary>
             public string crop_type = string.Empty;
+            /// <summary>The dm_type</summary>
             public string[] dm_type;
+            /// <summary>The dlt_crop_dm</summary>
             public double[] dlt_crop_dm;
+            /// <summary>The DLT_DM_N</summary>
             public double[] dlt_dm_n;
+            /// <summary>The DLT_DM_P</summary>
             public double[] dlt_dm_p;
+            /// <summary>The fraction_to_residue</summary>
             public double[] fraction_to_residue;
         }
 
 
         [EventSubscribe("CropChopped")]
-        /// <summary>
-        /// Get information on surfom added from the crops
-        /// </summary>
+        /// <summary>Get information on surfom added from the crops</summary>
+        /// <param name="data">The data.</param>
         private void OnCrop_chopped(CropChoppedType data)
         {
             double surfom_added = 0;    // amount of residue added (kg/ha)
@@ -1469,64 +1713,86 @@
             }
         }
 
+        /// <summary>Called when [biomass removed].</summary>
+        /// <param name="BiomassRemoved">The biomass removed.</param>
         [EventSubscribe("BiomassRemoved")]
         private void OnBiomassRemoved(BiomassRemovedType BiomassRemoved)
         {
             SurfOMOnBiomassRemoved(BiomassRemoved);
         }
 
-        /// <summary>
-        /// Return the potential residue decomposition for today.
-        /// </summary>
+        /// <summary>Return the potential residue decomposition for today.</summary>
+        /// <returns></returns>
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
             GetOtherVariables();
             return Process();
         }
 
-        /// <summary>
-        /// Actual surface organic matter decomposition. Calculated by SoilNitrogen.
-        /// </summary>
+        /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
+        /// <value>The actual som decomp.</value>
         [XmlIgnore]
         public SurfaceOrganicMatterDecompType ActualSOMDecomp { get; set; }
 
-        /// <summary>
-        /// Do the daily residue decomposition for today.
-        /// </summary>
+        /// <summary>Do the daily residue decomposition for today.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
             DecomposeSurfom(ActualSOMDecomp);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class AddFaecesType
         {
+            /// <summary>The defaecations</summary>
             public double Defaecations;
+            /// <summary>The volume per defaecation</summary>
             public double VolumePerDefaecation;
+            /// <summary>The area per defaecation</summary>
             public double AreaPerDefaecation;
+            /// <summary>The eccentricity</summary>
             public double Eccentricity;
+            /// <summary>The om weight</summary>
             public double OMWeight;
+            /// <summary>The omn</summary>
             public double OMN;
+            /// <summary>The omp</summary>
             public double OMP;
+            /// <summary>The oms</summary>
             public double OMS;
+            /// <summary>The om ash alk</summary>
             public double OMAshAlk;
+            /// <summary>The n o3 n</summary>
             public double NO3N;
+            /// <summary>The n h4 n</summary>
             public double NH4N;
+            /// <summary>The poxp</summary>
             public double POXP;
+            /// <summary>The s o4 s</summary>
             public double SO4S;
         }
 
+        /// <summary>Called when [add faeces].</summary>
+        /// <param name="data">The data.</param>
         [EventSubscribe("AddFaeces")]
         private void OnAddFaeces(AddFaecesType data) { AddFaeces(data); }
 
         #endregion
 
+        /// <summary>Sends the external mass flow.</summary>
+        /// <param name="massBalanceChange">The mass balance change.</param>
         private void SendExternalMassFlow(ExternalMassFlowType massBalanceChange)
         {
             massBalanceChange.PoolClass = "surface";
             PublishExternalMassFlow(massBalanceChange);
         }
 
+        /// <summary>Surfoms the total state.</summary>
+        /// <returns></returns>
         private OMFractionType SurfomTotalState()
         {
             OMFractionType SOMstate = new OMFractionType();
@@ -1549,9 +1815,7 @@
             return SOMstate;
         }
 
-        /// <summary>
-        /// Set all variables in this module to zero.
-        /// </summary>
+        /// <summary>Set all variables in this module to zero.</summary>
         private void ZeroVariables()
         {
             cumeos = 0;
@@ -1562,9 +1826,7 @@
             phosphorusAware = false;
         }
 
-        /// <summary>
-        /// Get the values of variables from other modules
-        /// </summary>
+        /// <summary>Get the values of variables from other modules</summary>
         private void GetOtherVariables()
         {
             eos = soil.SoilWater.eos;
@@ -1573,6 +1835,7 @@
             CheckPond();
         }
 
+        /// <summary>Checks the pond.</summary>
         private void CheckPond()
         {
             if (PondActive == null || PondActive.Length < 1)
@@ -1715,10 +1978,8 @@
         }
 
 
-        /// <summary>
-        /// Get the solutes number
-        /// </summary>
-        /// <param name="surfomname"></param>
+        /// <summary>Get the solutes number</summary>
+        /// <param name="surfomname">The surfomname.</param>
         /// <returns></returns>
         private int GetResidueNumber(string surfomname)
         {
@@ -1736,11 +1997,13 @@
 
         /// <summary>
         /// Performs manure decomposition taking into account environmental;
-        ///  and manure factors (independant to soil N but N balance can modify;
-        ///  actual decomposition rates if desired by N model - this is possible;
-        ///  because pools are not updated until end of time step - see post routine)
+        /// and manure factors (independant to soil N but N balance can modify;
+        /// actual decomposition rates if desired by N model - this is possible;
+        /// because pools are not updated until end of time step - see post routine)
         /// </summary>
-        /// <returns>pool decompositions for all residues</returns>
+        /// <param name="c_pot_decomp">The c_pot_decomp.</param>
+        /// <param name="n_pot_decomp">The n_pot_decomp.</param>
+        /// <param name="p_pot_decomp">The p_pot_decomp.</param>
         private void PotDecomp(out double[] c_pot_decomp, out double[] n_pot_decomp, out double[] p_pot_decomp)
         {
             // (these pools are not updated until end of time step - see post routine)
@@ -1786,10 +2049,10 @@
         /// <summary>
         /// Calculate temperature factor for manure decomposition (0-1).
         /// <para>
-        ///  Notes;
-        ///  The temperature factor is a simple function of the square of daily
-        ///  average temperature.  The user only needs to give an optimum temperature
-        ///  and the code will back calculate the necessary coefficient at compile time.
+        /// Notes;
+        /// The temperature factor is a simple function of the square of daily
+        /// average temperature.  The user only needs to give an optimum temperature
+        /// and the code will back calculate the necessary coefficient at compile time.
         /// </para>
         /// </summary>
         /// <returns>temperature factor</returns>
@@ -1808,9 +2071,7 @@
                 return 0;
         }
 
-        /// <summary>
-        /// Calculate manure/soil contact factor for manure decomposition (0-1).
-        /// </summary>
+        /// <summary>Calculate manure/soil contact factor for manure decomposition (0-1).</summary>
         /// <returns></returns>
         private double ContactFactor()
         {
@@ -1829,9 +2090,7 @@
                 return Utility.Math.Bound(Utility.Math.Divide(CriticalResidueWeight, effSurfomMass, 0.0), 0, 1);
         }
 
-        /// <summary>
-        /// Calculate C:N factor for decomposition (0-1).
-        /// </summary>
+        /// <summary>Calculate C:N factor for decomposition (0-1).</summary>
         /// <param name="residue">residue number</param>
         /// <returns>C:N factor for decomposition(0-1)</returns>
         private double CNRatioFactor(int residue)
@@ -1864,9 +2123,7 @@
             }
         }
 
-        /// <summary>
-        /// Calculate moisture factor for manure decomposition (0-1).
-        /// </summary>
+        /// <summary>Calculate moisture factor for manure decomposition (0-1).</summary>
         /// <returns></returns>
         private double MoistureFactor()
         {
@@ -1903,9 +2160,7 @@
             }
         }
 
-        /// <summary>
-        /// Calculate total cover
-        /// </summary>
+        /// <summary>Calculate total cover</summary>
         /// <returns></returns>
         private double CoverTotal()
         {
@@ -1917,9 +2172,8 @@
             return combinedCover;
         }
 
-        /// <summary>
-        /// Perform actions for current day.
-        /// </summary>
+        /// <summary>Perform actions for current day.</summary>
+        /// <returns></returns>
         private SurfaceOrganicMatterDecompType Process()
         {
             double leachRain = 0; // "leaching" rainfall (if rain>10mm)
@@ -1943,8 +2197,8 @@
         /// Calculates variables required for today"s decomposition and;
         /// leaching factors.
         /// </summary>
-        /// <param name="cumeos"></param>
-        /// <param name="leachRain"></param>
+        /// <param name="cumeos">The cumeos.</param>
+        /// <param name="leachRain">The leach rain.</param>
         private void SetVars(out double cumeos, out double leachRain)
         {
             double precip = MetData.Rain + irrig;  // daily precipitation (rain + irrigation) (mm H2O)
@@ -1979,7 +2233,8 @@
         /// Remove mineral N and P from surfom with leaching rainfall and;
         /// pass to Soil N and Soil P modules.
         /// </summary>
-        /// <param name="leachRain"></param>
+        /// <param name="leachRain">The leach rain.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
         private void Leach(double leachRain)
         {
 
@@ -2028,9 +2283,8 @@
 
         }
 
-        /// <summary>
-        /// Notify other modules of the potential to decompose.
-        /// </summary>
+        /// <summary>Notify other modules of the potential to decompose.</summary>
+        /// <returns></returns>
         private SurfaceOrganicMatterDecompType SendPotDecompEvent()
         {
 
@@ -2068,9 +2322,8 @@
             return SOMDecomp;
         }
 
-        /// <summary>
-        /// send current status.
-        /// </summary>
+        /// <summary>send current status.</summary>
+        /// <returns></returns>
         private SurfaceOrganicMatterType respond2get_SurfaceOrganicMatter()
         {
 
@@ -2121,10 +2374,10 @@
             return SOM;
         }
 
-        /// <summary>
-        /// Calculates surfom removal as a result of remove_surfom message
-        /// </summary>
-        /// <param name="SOM"></param>
+        /// <summary>Calculates surfom removal as a result of remove_surfom message</summary>
+        /// <param name="SOM">The som.</param>
+        /// <exception cref="ApsimXException">Attempting to remove more dm from  + SOM.Pool[som_index].Name +  lying Surface Organic Matter pool  + pool +  than available + Environment.NewLine
+        ///                                 + Removing  + SOM.Pool[SOMNo].LyingFraction[pool].amount +  (kg/ha)  + from  + SurfOM[SOMNo].Lying[pool].amount +  (kg/ha) available.</exception>
         private void RemoveSurfom(SurfaceOrganicMatterType SOM)
         {
             // - Implementation Section ----------------------------------
@@ -2222,6 +2475,13 @@
             }
         }
 
+        /// <summary>Decomposes the surfom.</summary>
+        /// <param name="SOMDecomp">The som decomp.</param>
+        /// <exception cref="ApsimXException">
+        /// SurfaceOM - C decomposition exceeds potential rate
+        /// or
+        /// SurfaceOM - N decomposition exceeds potential rate
+        /// </exception>
         private void DecomposeSurfom(SurfaceOrganicMatterDecompType SOMDecomp)
         {
             // Local Variables;
@@ -2289,9 +2549,7 @@
             }
         }
 
-        /// <summary>
-        /// Performs updating of pools due to surfom decomposition
-        /// </summary>
+        /// <summary>Performs updating of pools due to surfom decomposition</summary>
         /// <param name="C_decomp">C to be decomposed</param>
         /// <param name="N_decomp">N to be decomposed</param>
         /// <param name="P_decomp">P to be decomposed</param>
@@ -2320,9 +2578,9 @@
                 SurfOM[residue].Lying[i].P = SurfOM[residue].Lying[i].P * (1.0 - Fdecomp);
         }
 
-        /// <summary>
-        /// Calculates surfom incorporation as a result of tillage operations.
-        /// </summary>
+        /// <summary>Calculates surfom incorporation as a result of tillage operations.</summary>
+        /// <param name="data">The data.</param>
+        /// <exception cref="ApsimXException">Cannot find info for tillage:-  + data.Name</exception>
         private void Tillage(TillageType data)
         {
             /*
@@ -2366,15 +2624,15 @@
 
         /// <summary>
         /// Calculate surfom incorporation as a result of tillage and update;
-        ///  residue and N pools.
-        ///  <para>
-        ///  Notes;
-        ///  I do not like updating the pools here but we need to be able to handle;
-        ///  the case of multiple tillage events per day.</para>
+        /// residue and N pools.
+        /// <para>
+        /// Notes;
+        /// I do not like updating the pools here but we need to be able to handle;
+        /// the case of multiple tillage events per day.</para>
         /// </summary>
-        /// <param name="actionType"></param>
-        /// <param name="fIncorp"></param>
-        /// <param name="tillageDepth"></param>
+        /// <param name="actionType">Type of the action.</param>
+        /// <param name="fIncorp">The f incorp.</param>
+        /// <param name="tillageDepth">The tillage depth.</param>
         private void Incorp(string actionType, double fIncorp, double tillageDepth)
         // ================================================================
         {
@@ -2519,9 +2777,10 @@
             }
         }
 
-        /// <summary
-        /// Adds a new element to the SurfOM list, resizing the relevant arrays
-        /// <summary>
+        /// <summary>Adds the new surf om.</summary>
+        /// <param name="newName">The new name.</param>
+        /// <param name="newType">The new type.</param>
+        /// <returns></returns>
         private int AddNewSurfOM(string newName, string newType)
         {
             if (SurfOM == null)
@@ -2545,9 +2804,9 @@
 
             return SOMNo;
         }
-         
-        /// Calculates surfom addition as a result of add_surfom message
-        /// </summary>
+
+        /// <summary>Adds the surfom.</summary>
+        /// <param name="data">The data.</param>
         private void AddSurfom(Add_surfaceomType data)
         {
 
@@ -2721,8 +2980,14 @@
         /// <summary>
         /// Reads type-specific residue constants from ini-file and places them in c. constants;
         /// </summary>
-        /// <param name="surfomType"></param>
-        /// <param name="i"></param>
+        /// <param name="surfom_type">The surfom_type.</param>
+        /// <param name="i">The i.</param>
+        /// <param name="pot_decomp_rate">The pot_decomp_rate.</param>
+        /// <exception cref="ApsimXException">
+        /// Cannot find residue type description for ' + surfom_type + '
+        /// or
+        /// Error reading in fr_c/n/p values, inconsistent array lengths
+        /// </exception>
         private void ReadTypeSpecificConstants(string surfom_type, int i, out double pot_decomp_rate)
         {
             ResidueType thistype = ResidueTypes.getResidue(surfom_type);
@@ -2762,7 +3027,7 @@
         /// <para>This residue model keeps track of the total residue area and so we can
         /// substitute this value (area residue/unit area) for the product_of Am * M.</para>
         /// </summary>
-        /// <param name="SOMindex"></param>
+        /// <param name="SOMindex">The so mindex.</param>
         /// <returns></returns>
         private double Cover(int SOMindex)
         {
@@ -2790,18 +3055,14 @@
             return F_Cover;
         }
 
-        /// <summary>
-        /// Check that soil phosphorus is in system
-        /// </summary>
+        /// <summary>Check that soil phosphorus is in system</summary>
         private void SetPhosphorusAware()
         {
             phosphorusAware = labile_p != null;
         }
 
-        /// <summary>
-        /// Get information on surfom added from the crops
-        /// </summary>
-        /// <param name="BiomassRemoved"></param>
+        /// <summary>Get information on surfom added from the crops</summary>
+        /// <param name="BiomassRemoved">The biomass removed.</param>
         private void SurfOMOnBiomassRemoved(BiomassRemovedType BiomassRemoved)
         {
             double
@@ -2829,6 +3090,11 @@
             }
         }
 
+        /// <summary>Adds the surface om.</summary>
+        /// <param name="surfomAdded">The surfom added.</param>
+        /// <param name="surfomNAdded">The surfom n added.</param>
+        /// <param name="surfomPAdded">The surfom p added.</param>
+        /// <param name="cropType">Type of the crop.</param>
         private void AddSurfaceOM(double surfomAdded, double surfomNAdded, double surfomPAdded, string cropType)
         {
             int SOMNo;      // system number of the surface organic matter added;
@@ -2870,14 +3136,12 @@
             SendResAddedEvent(SurfOM[SOMNo].OrganicMatterType, SurfOM[SOMNo].OrganicMatterType, surfomAdded, surfomNAdded, surfomPAdded);
         }
 
-        /// <summary>
-        /// Notify other modules of residue added to residue pool.
-        /// </summary>
-        /// <param name="residueType"></param>
-        /// <param name="dmType"></param>
-        /// <param name="dltResidueWt"></param>
-        /// <param name="dltResidueNWt"></param>
-        /// <param name="dltResiduePWt"></param>
+        /// <summary>Notify other modules of residue added to residue pool.</summary>
+        /// <param name="residueType">Type of the residue.</param>
+        /// <param name="dmType">Type of the dm.</param>
+        /// <param name="dltResidueWt">The DLT residue wt.</param>
+        /// <param name="dltResidueNWt">The DLT residue n wt.</param>
+        /// <param name="dltResiduePWt">The DLT residue p wt.</param>
         private void SendResAddedEvent(string residueType, string dmType, double dltResidueWt, double dltResidueNWt, double dltResiduePWt)
         {
             if (Residue_added != null)
@@ -2895,13 +3159,11 @@
             }
         }
 
-        /// <summary>
-        /// Notify other modules of residue removed from residue pool
-        /// </summary>
-        /// <param name="residueRemovedAction"></param>
-        /// <param name="dltResidueFraction"></param>
-        /// <param name="residueIncorpFraction"></param>
-        /// <param name="deepestLayer"></param>
+        /// <summary>Notify other modules of residue removed from residue pool</summary>
+        /// <param name="residueRemovedAction">The residue removed action.</param>
+        /// <param name="dltResidueFraction">The DLT residue fraction.</param>
+        /// <param name="residueIncorpFraction">The residue incorp fraction.</param>
+        /// <param name="deepestLayer">The deepest layer.</param>
         private void SendResRemovedEvent(string residueRemovedAction, double dltResidueFraction, double[] residueIncorpFraction, int deepestLayer)
         {
             if (Residue_removed != null)
@@ -2917,14 +3179,12 @@
             }
         }
 
-        /// <summary>
-        /// Notify other modules of residue added to residue pool
-        /// </summary>
-        /// <param name="residueType"></param>
-        /// <param name="dmType"></param>
-        /// <param name="dltResidueWt"></param>
-        /// <param name="dltResidueNWt"></param>
-        /// <param name="dltResiduePWt"></param>
+        /// <summary>Notify other modules of residue added to residue pool</summary>
+        /// <param name="residueType">Type of the residue.</param>
+        /// <param name="dmType">Type of the dm.</param>
+        /// <param name="dltResidueWt">The DLT residue wt.</param>
+        /// <param name="dltResidueNWt">The DLT residue n wt.</param>
+        /// <param name="dltResiduePWt">The DLT residue p wt.</param>
         private void SendSOMRemovedEvent(string residueType, string dmType, double dltResidueWt, double dltResidueNWt, double dltResiduePWt)
         {
             if (SurfaceOM_removed != null)
@@ -2942,6 +3202,12 @@
             }
         }
 
+        /// <summary>Resize2s the d array.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="original">The original.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
         protected T[,] Resize2DArray<T>(T[,] original, int x, int y)
         {
             T[,] newArray = new T[x, y];

@@ -7,25 +7,34 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// An organ arbitrator model
+    /// </summary>
     [Serializable]
     public class OrganArbitrator : Model
     {
         #region Class Members
         // Input paramaters
 
+        /// <summary>The plant</summary>
         [Link]
         public Plant Plant = null;
 
+        /// <summary>The clock</summary>
         [Link]
         public Clock Clock = null;
 
+        /// <summary>The n arbitration option</summary>
         [Description("Select method used for Arbitration")]
         public string NArbitrationOption = "";
+        /// <summary>The dm arbitration option</summary>
         [Description("Select method used for DMArbitration")]
         public string DMArbitrationOption = "";
+        /// <summary>The nutrient drivers</summary>
         [Description("List of nutrients that the arbitrator will consider")]
         public string[] NutrientDrivers = null;
 
+        /// <summary>Called when [initialize].</summary>
         [EventSubscribe("Initialised")]
         private void OnInit()
         {
@@ -34,63 +43,154 @@ namespace Models.PMF
             KAware = Array.Exists(NutrientDrivers, element => element == "Potasium");
         }
 
+        /// <summary>Ors the specified p.</summary>
+        /// <param name="p">if set to <c>true</c> [p].</param>
+        /// <exception cref="System.NotImplementedException"></exception>
         private void Or(bool p)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         public class BiomassArbitrationType
         {
             //Biomass Demand Variables
+            /// <summary>Gets or sets the structural demand.</summary>
+            /// <value>The structural demand.</value>
             public double[] StructuralDemand { get; set; }
+            /// <summary>Gets or sets the total structural demand.</summary>
+            /// <value>The total structural demand.</value>
             public double TotalStructuralDemand { get; set; }
+            /// <summary>Gets or sets the metabolic demand.</summary>
+            /// <value>The metabolic demand.</value>
             public double[] MetabolicDemand { get; set; }
+            /// <summary>Gets or sets the total metabolic demand.</summary>
+            /// <value>The total metabolic demand.</value>
             public double TotalMetabolicDemand { get; set; }
+            /// <summary>Gets or sets the non structural demand.</summary>
+            /// <value>The non structural demand.</value>
             public double[] NonStructuralDemand { get; set; }
+            /// <summary>Gets or sets the total non structural demand.</summary>
+            /// <value>The total non structural demand.</value>
             public double TotalNonStructuralDemand { get; set; }
+            /// <summary>Gets or sets the total demand.</summary>
+            /// <value>The total demand.</value>
             public double[] TotalDemand { get; set; }
+            /// <summary>Gets or sets the relative structural demand.</summary>
+            /// <value>The relative structural demand.</value>
             public double[] RelativeStructuralDemand { get; set; }
+            /// <summary>Gets or sets the relative metabolic demand.</summary>
+            /// <value>The relative metabolic demand.</value>
             public double[] RelativeMetabolicDemand { get; set; }
+            /// <summary>Gets or sets the relative non structural demand.</summary>
+            /// <value>The relative non structural demand.</value>
             public double[] RelativeNonStructuralDemand { get; set; }
+            /// <summary>Gets or sets the total plant demand.</summary>
+            /// <value>The total plant demand.</value>
             public double TotalPlantDemand { get; set; }
             //Biomass Supply Variables
+            /// <summary>Gets or sets the reallocation supply.</summary>
+            /// <value>The reallocation supply.</value>
             public double[] ReallocationSupply { get; set; }
+            /// <summary>Gets or sets the total reallocation supply.</summary>
+            /// <value>The total reallocation supply.</value>
             public double TotalReallocationSupply { get; set; }
+            /// <summary>Gets or sets the uptake supply.</summary>
+            /// <value>The uptake supply.</value>
             public double[] UptakeSupply { get; set; }
+            /// <summary>Gets or sets the total uptake supply.</summary>
+            /// <value>The total uptake supply.</value>
             public double TotalUptakeSupply { get; set; }
+            /// <summary>Gets or sets the fixation supply.</summary>
+            /// <value>The fixation supply.</value>
             public double[] FixationSupply { get; set; }
+            /// <summary>Gets or sets the total fixation supply.</summary>
+            /// <value>The total fixation supply.</value>
             public double TotalFixationSupply { get; set; }
+            /// <summary>Gets or sets the retranslocation supply.</summary>
+            /// <value>The retranslocation supply.</value>
             public double[] RetranslocationSupply { get; set; }
+            /// <summary>Gets or sets the total retranslocation supply.</summary>
+            /// <value>The total retranslocation supply.</value>
             public double TotalRetranslocationSupply { get; set; }
             //Biomass Allocation Variables
+            /// <summary>Gets or sets the reallocation.</summary>
+            /// <value>The reallocation.</value>
             public double[] Reallocation { get; set; }
+            /// <summary>Gets or sets the total reallocation.</summary>
+            /// <value>The total reallocation.</value>
             public double TotalReallocation { get; set; }
+            /// <summary>Gets or sets the uptake.</summary>
+            /// <value>The uptake.</value>
             public double[] Uptake { get; set; }
+            /// <summary>Gets or sets the fixation.</summary>
+            /// <value>The fixation.</value>
             public double[] Fixation { get; set; }
+            /// <summary>Gets or sets the retranslocation.</summary>
+            /// <value>The retranslocation.</value>
             public double[] Retranslocation { get; set; }
+            /// <summary>Gets or sets the total retranslocation.</summary>
+            /// <value>The total retranslocation.</value>
             public double TotalRetranslocation { get; set; }
+            /// <summary>Gets or sets the respiration.</summary>
+            /// <value>The respiration.</value>
             public double[] Respiration { get; set; }
+            /// <summary>Gets or sets the total respiration.</summary>
+            /// <value>The total respiration.</value>
             public double TotalRespiration { get; set; }
+            /// <summary>Gets or sets the constrained growth.</summary>
+            /// <value>The constrained growth.</value>
             public double[] ConstrainedGrowth { get; set; }
+            /// <summary>Gets or sets the structural allocation.</summary>
+            /// <value>The structural allocation.</value>
             public double[] StructuralAllocation { get; set; }
+            /// <summary>Gets or sets the total structural allocation.</summary>
+            /// <value>The total structural allocation.</value>
             public double TotalStructuralAllocation { get; set; }
+            /// <summary>Gets or sets the metabolic allocation.</summary>
+            /// <value>The metabolic allocation.</value>
             public double[] MetabolicAllocation { get; set; }
+            /// <summary>Gets or sets the total metabolic allocation.</summary>
+            /// <value>The total metabolic allocation.</value>
             public double TotalMetabolicAllocation { get; set; }
+            /// <summary>Gets or sets the non structural allocation.</summary>
+            /// <value>The non structural allocation.</value>
             public double[] NonStructuralAllocation { get; set; }
+            /// <summary>Gets or sets the total non structural allocation.</summary>
+            /// <value>The total non structural allocation.</value>
             public double TotalNonStructuralAllocation { get; set; }
+            /// <summary>Gets or sets the total allocation.</summary>
+            /// <value>The total allocation.</value>
             public double[] TotalAllocation { get; set; }
+            /// <summary>Gets or sets the total allocated.</summary>
+            /// <value>The total allocated.</value>
             public double TotalAllocated { get; set; }
+            /// <summary>Gets or sets the not allocated.</summary>
+            /// <value>The not allocated.</value>
             public double NotAllocated { get; set; }
+            /// <summary>Gets or sets the sink limitation.</summary>
+            /// <value>The sink limitation.</value>
             public double SinkLimitation { get; set; }
             //Error checking variables
+            /// <summary>Gets or sets the start.</summary>
+            /// <value>The start.</value>
             public double Start { get; set; }
+            /// <summary>Gets or sets the end.</summary>
+            /// <value>The end.</value>
             public double End { get; set; }
+            /// <summary>Gets or sets the balance error.</summary>
+            /// <value>The balance error.</value>
             public double BalanceError { get; set; }
             //Constructor for Array variables
+            /// <summary>Initializes a new instance of the <see cref="BiomassArbitrationType"/> class.</summary>
             public BiomassArbitrationType()
             { }
 
+            /// <summary>Initializes a new instance of the <see cref="BiomassArbitrationType"/> class.</summary>
+            /// <param name="Size">The size.</param>
             public BiomassArbitrationType(int Size)
             {
                 StructuralDemand = new double[Size];
@@ -117,13 +217,17 @@ namespace Models.PMF
             }
         }
 
-        
+
+        /// <summary>The dm</summary>
         private BiomassArbitrationType DM = null;
+        /// <summary>The n</summary>
         private BiomassArbitrationType N = null;
         //private BiomassArbitrationType P = null;
         //private BiomassArbitrationType K = null;
 
-        
+
+        /// <summary>Gets the dm supply.</summary>
+        /// <value>The dm supply.</value>
         public double DMSupply
         {
             get
@@ -131,7 +235,9 @@ namespace Models.PMF
                 return DM.TotalFixationSupply;
             }
         }
-        
+
+        /// <summary>Gets the n demand.</summary>
+        /// <value>The n demand.</value>
         public double NDemand
         {
             get
@@ -151,7 +257,9 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-        
+
+        /// <summary>Gets the delta wt.</summary>
+        /// <value>The delta wt.</value>
         public double DeltaWt
         {
             get
@@ -161,15 +269,19 @@ namespace Models.PMF
         }
 
         //FixME Currently all models are N aware but none are P or K aware.  More programming is needed to make this work! 
+        /// <summary>The n aware</summary>
         [XmlIgnore]
         public bool NAware = true;
+        /// <summary>The p aware</summary>
         [XmlIgnore]
         public bool PAware = false;
+        /// <summary>The k aware</summary>
         [XmlIgnore]
         public bool KAware = false;
 
         #endregion
 
+        /// <summary>Clears this instance.</summary>
         public void Clear()
         {
             DM = null;
@@ -177,6 +289,8 @@ namespace Models.PMF
         }
 
 
+        /// <summary>Does the water limited dm allocations.</summary>
+        /// <param name="Organs">The organs.</param>
         public void DoWaterLimitedDMAllocations(Organ[] Organs)
         {
             //Work out how much each organ will grow in the absence of nutrient stress, and how much DM they can supply.
@@ -187,21 +301,29 @@ namespace Models.PMF
             DoRetranslocation(Organs, DM, DMArbitrationOption);
             SendPotentialDMAllocations(Organs);
         }
+        /// <summary>Does the nutrient demand set up.</summary>
+        /// <param name="Organs">The organs.</param>
         public void DoNutrientDemandSetUp(Organ[] Organs)
         {
                 DoNutrientSetUp(Organs, ref N);
                 DoReAllocation(Organs, N, NArbitrationOption);
         }
+        /// <summary>Sets the nutrient uptake.</summary>
+        /// <param name="Organs">The organs.</param>
         public void SetNutrientUptake(Organ[] Organs)
         {
                 DoNutrientUptakeSetUp(Organs, ref N);
         }
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="Organs">The organs.</param>
         public void DoNutrientAllocations(Organ[] Organs)
         {
                 DoUptake(Organs, N, NArbitrationOption);
                 DoRetranslocation(Organs, N, NArbitrationOption);
                 DoFixation(Organs, N, NArbitrationOption);
         }
+        /// <summary>Does the nutrient limited growth.</summary>
+        /// <param name="Organs">The organs.</param>
         public void DoNutrientLimitedGrowth(Organ[] Organs)
         {
             //Work out how much DM can be assimilated by each organ based on the most limiting nutrient
@@ -211,6 +333,8 @@ namespace Models.PMF
        }
 
         #region Arbitration step functions
+        /// <summary>Does the dm setup.</summary>
+        /// <param name="Organs">The organs.</param>
         virtual public void DoDMSetup(Organ[] Organs)
         {
             //Creat Drymatter variable class
@@ -272,6 +396,9 @@ namespace Models.PMF
                     DM.RelativeNonStructuralDemand[i] = DM.NonStructuralDemand[i] / DM.TotalNonStructuralDemand;
             }
         }
+        /// <summary>Sends the potential dm allocations.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <exception cref="System.Exception">Mass Balance Error in Photosynthesis DM Allocation</exception>
         virtual public void SendPotentialDMAllocations(Organ[] Organs)
         {
             //  Allocate to meet Organs demands
@@ -296,6 +423,9 @@ namespace Models.PMF
                 };
             }
         }
+        /// <summary>Does the nutrient set up.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="BAT">The bat.</param>
         virtual public void DoNutrientSetUp(Organ[] Organs, ref BiomassArbitrationType BAT)
         {
             //Creat Biomass variable class
@@ -358,6 +488,9 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Does the nutrient uptake set up.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="BAT">The bat.</param>
         virtual public void DoNutrientUptakeSetUp(Organ[] Organs, ref BiomassArbitrationType BAT)
         {
             //Creat Biomass variable class
@@ -372,6 +505,10 @@ namespace Models.PMF
             BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
         }
 
+        /// <summary>Does the re allocation.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="BAT">The bat.</param>
+        /// <param name="Option">The option.</param>
         virtual public void DoReAllocation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassReallocated = 0;
@@ -396,6 +533,10 @@ namespace Models.PMF
                 }
             }
         }
+        /// <summary>Does the uptake.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="BAT">The bat.</param>
+        /// <param name="Option">The option.</param>
         virtual public void DoUptake(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassTakenUp = 0;
@@ -420,6 +561,10 @@ namespace Models.PMF
                 }
             }
         }
+        /// <summary>Does the retranslocation.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="BAT">The bat.</param>
+        /// <param name="Option">The option.</param>
         virtual public void DoRetranslocation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassRetranslocated = 0;
@@ -444,6 +589,11 @@ namespace Models.PMF
                 }
             }
         }
+        /// <summary>Does the fixation.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="BAT">The bat.</param>
+        /// <param name="Option">The option.</param>
+        /// <exception cref="System.Exception">Crop is trying to Fix excessive amounts of BAT.  Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic</exception>
         virtual public void DoFixation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassFixed = 0;
@@ -532,6 +682,8 @@ namespace Models.PMF
                 }
             }
         }
+        /// <summary>Sends the dm allocations.</summary>
+        /// <param name="Organs">The organs.</param>
         virtual public void SendDMAllocations(Organ[] Organs)
         {
             for (int i = 0; i < Organs.Length; i++)
@@ -576,6 +728,19 @@ namespace Models.PMF
                 };
             }
         }
+        /// <summary>Sends the nutrient allocations.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <exception cref="System.Exception">
+        /// -ve N Allocation
+        /// or
+        /// N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply
+        /// or
+        /// N Mass balance violated!!!!  Daily Plant N increment is greater than N demand
+        /// or
+        /// DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than Photosynthetic DM supply
+        /// or
+        /// DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and NonStructural DM capacity
+        /// </exception>
         virtual public void SendNutrientAllocations(Organ[] Organs)
         {
             // Send N allocations to all Plant Organs
@@ -624,6 +789,11 @@ namespace Models.PMF
         #endregion
 
         #region Arbitrator generic allocation functions
+        /// <summary>Relatives the allocation.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="TotalSupply">The total supply.</param>
+        /// <param name="TotalAllocated">The total allocated.</param>
+        /// <param name="BAT">The bat.</param>
         private void RelativeAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
@@ -656,6 +826,11 @@ namespace Models.PMF
                 }
             }
         }
+        /// <summary>Priorities the allocation.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="TotalSupply">The total supply.</param>
+        /// <param name="TotalAllocated">The total allocated.</param>
+        /// <param name="BAT">The bat.</param>
         private void PriorityAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
@@ -688,6 +863,11 @@ namespace Models.PMF
                 }
             }
         }
+        /// <summary>Prioritythens the relative allocation.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <param name="TotalSupply">The total supply.</param>
+        /// <param name="TotalAllocated">The total allocated.</param>
+        /// <param name="BAT">The bat.</param>
         private void PrioritythenRelativeAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;

@@ -13,73 +13,124 @@ using System.IO;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class HarvestType
     {
+        /// <summary>The plants</summary>
         public Double Plants;
+        /// <summary>The remove</summary>
         public Double Remove;
+        /// <summary>The height</summary>
         public Double Height;
+        /// <summary>The report</summary>
         public String Report = "";
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class RemovedByAnimalType
     {
+        /// <summary>The element</summary>
         public RemovedByAnimalelementType[] element;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class RemovedByAnimalelementType
     {
+        /// <summary>The cohort identifier</summary>
         public String CohortID = "";
+        /// <summary>The organ</summary>
         public String Organ = "";
+        /// <summary>The age identifier</summary>
         public String AgeID = "";
+        /// <summary>The bottom</summary>
         public Double Bottom;
+        /// <summary>The top</summary>
         public Double Top;
+        /// <summary>The chem</summary>
         public String Chem = "";
+        /// <summary>The weight removed</summary>
         public Double WeightRemoved;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class AvailableToAnimalelementType
     {
+        /// <summary>The cohort identifier</summary>
         public String CohortID = "";
+        /// <summary>The organ</summary>
         public String Organ = "";
+        /// <summary>The age identifier</summary>
         public String AgeID = "";
+        /// <summary>The bottom</summary>
         public Double Bottom;
+        /// <summary>The top</summary>
         public Double Top;
+        /// <summary>The chem</summary>
         public String Chem = "";
+        /// <summary>The weight</summary>
         public Double Weight;
+        /// <summary>The n</summary>
         public Double N;
+        /// <summary>The p</summary>
         public Double P;
+        /// <summary>The s</summary>
         public Double S;
+        /// <summary>The ash alk</summary>
         public Double AshAlk;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class AvailableToAnimalType
     {
+        /// <summary>The element</summary>
         public AvailableToAnimalelementType[] element;
     }
 
 
+    /// <summary>
+    /// The generic plant15 crop model
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Plant15 : ModelCollectionFromResource, ICrop
     {
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [automatic harvest].
+        /// </summary>
+        /// <value><c>true</c> if [automatic harvest]; otherwise, <c>false</c>.</value>
         public bool AutoHarvest { get; set; }
 
+        /// <summary>The sowing data</summary>
         [XmlIgnore]
         public SowPlant2Type SowingData;
 
+        /// <summary>
+        /// MicroClimate will get 'CropType' and use it to look up
+        /// canopy properties for this crop.
+        /// </summary>
         public string CropType { get; set; }
 
-        /// <summary>
-        /// Root system information
-        /// </summary>
+        /// <summary>Root system information</summary>
         [XmlIgnore]
         public Soils.RootSystem RootSystem
         {
@@ -92,14 +143,14 @@ namespace Models.PMF.OldPlant
                 rootSystem = value;
             }
         }
+        /// <summary>The root system</summary>
         private Soils.RootSystem rootSystem;
 
 
+        /// <summary>The cultivar definition</summary>
         private Cultivar cultivarDefinition;
 
-        /// <summary>
-        /// Gets a list of cultivar names
-        /// </summary>
+        /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
         {
             get
@@ -120,13 +171,17 @@ namespace Models.PMF.OldPlant
         }
 
         #region Event handlers and publishers
-        
+
+        /// <summary>Occurs when [new crop].</summary>
         public event NewCropDelegate NewCrop;
 
+        /// <summary>Occurs when [sowing].</summary>
         public event EventHandler Sowing;
-        
+
+        /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
+        /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
@@ -144,6 +199,12 @@ namespace Models.PMF.OldPlant
 
         }
 
+        /// <summary>Sows the specified population.</summary>
+        /// <param name="population">The population.</param>
+        /// <param name="cultivar">The cultivar.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="rowSpacing">The row spacing.</param>
+        /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
         public void Sow(double population, string cultivar, double depth, double rowSpacing)
         {
             SowingData = new SowPlant2Type();
@@ -182,83 +243,117 @@ namespace Models.PMF.OldPlant
 
         #region Plant1 functionality
 
+        /// <summary>The n stress</summary>
         [Link]
         NStress NStress = null;
 
+        /// <summary>The radiation partitioning</summary>
         [Link]
         RadiationPartitioning RadiationPartitioning = null;
 
+        /// <summary>The n fix rate</summary>
         [Link]
         Function NFixRate = null;
 
+        /// <summary>The above ground live</summary>
         [Link]
         CompositeBiomass AboveGroundLive = null;
 
+        /// <summary>The above ground</summary>
         [Link]
         CompositeBiomass AboveGround = null;
 
+        /// <summary>The below ground</summary>
         [Link]
         CompositeBiomass BelowGround = null;
 
+        /// <summary>The total live</summary>
         [Link]
         public CompositeBiomass TotalLive = null;
 
+        /// <summary>The sw stress</summary>
         [Link]
         SWStress SWStress = null;
 
+        /// <summary>The temporary stress</summary>
         [Link]
         Function TempStress = null;
 
+        /// <summary>The root</summary>
         [Link]
         Root1 Root = null;
 
+        /// <summary>The stem</summary>
         [Link]
         Stem1 Stem = null;
 
+        /// <summary>The leaf</summary>
         [Link]
         Leaf1 Leaf = null;
 
+        /// <summary>The pod</summary>
         [Link]
         Pod Pod = null;
 
+        /// <summary>The grain</summary>
         [Link]
         Grain Grain = null;
 
+        /// <summary>The population</summary>
         [Link]
         Population1 Population = null;
 
+        /// <summary>The plant spatial</summary>
         [Link]
         PlantSpatial1 PlantSpatial = null;
 
+        /// <summary>The arbitrator1</summary>
         [Link]
         GenericArbitratorXY Arbitrator1 = null;
 
+        /// <summary>Gets or sets the eo crop factor.</summary>
+        /// <value>The eo crop factor.</value>
         [XmlIgnore]
         public double EOCropFactor { get; set; }
 
+        /// <summary>Gets or sets the n supply preference.</summary>
+        /// <value>The n supply preference.</value>
         [XmlIgnore]
         public string NSupplyPreference { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [do retranslocation before n demand].
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if [do retranslocation before n demand]; otherwise, <c>false</c>.
+        /// </value>
         [XmlIgnore]
         public bool DoRetranslocationBeforeNDemand { get; set; }
 
         //[Input]
         //double EO = 0;
+        /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
 
         //[Input]
         //public DateTime Today; // for debugging.
+        /// <summary>The clock</summary>
         [Link]
         Clock Clock = null;
-        
+
+        /// <summary>Occurs when [new canopy].</summary>
         public event NewCanopyDelegate NewCanopy;
 
-        
+
+        /// <summary>Occurs when [crop ending].</summary>
         public event NewCropDelegate CropEnding;
-        
+
+        /// <summary>Occurs when [harvesting].</summary>
         public event EventHandler Harvesting;
 
+        /// <summary>Gets the cover_green.</summary>
+        /// <value>The cover_green.</value>
         public double cover_green 
         { 
             get 
@@ -269,7 +364,9 @@ namespace Models.PMF.OldPlant
                 return green_cover;
             }
         }
-         
+
+        /// <summary>Gets the cover_tot.</summary>
+        /// <value>The cover_tot.</value>
         public double cover_tot
         {
             get
@@ -281,9 +378,13 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>Gets the height.</summary>
+        /// <value>The height.</value>
         public double height
         { get { return Stem.Height; } }
 
+        /// <summary>Gets the plant_status.</summary>
+        /// <value>The plant_status.</value>
         public string plant_status
         {
             get
@@ -296,7 +397,9 @@ namespace Models.PMF.OldPlant
         }
 
         // Used by SWIM
-        
+
+        /// <summary>Gets the water demand.</summary>
+        /// <value>The water demand.</value>
         [Units("mm")]
         public double WaterDemand
         {
@@ -309,7 +412,9 @@ namespace Models.PMF.OldPlant
             }
         }
 
-        
+
+        /// <summary>Gets the ep.</summary>
+        /// <value>The ep.</value>
         [Units("mm")]
         public double EP
         {
@@ -319,24 +424,26 @@ namespace Models.PMF.OldPlant
             }
         }
 
-        /// <summary>
-        /// MicroClimate supplies PotentialEP
-        /// </summary>
+        /// <summary>MicroClimate supplies PotentialEP</summary>
         [XmlIgnore]
         public double PotentialEP { get; set; }
 
-        /// <summary>
-        /// MicroClimate supplies LightProfile
-        /// </summary>
+        /// <summary>MicroClimate supplies LightProfile</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        
+
+        /// <summary>Gets the biomass.</summary>
+        /// <value>The biomass.</value>
         [Units("kg/ha")]
         public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha
 
+        /// <summary>Gets or sets the organ1s.</summary>
+        /// <value>The organ1s.</value>
         [XmlIgnore]
         public List<Organ1> Organ1s { get; set; }
-        
+
+        /// <summary>Gets the tops.</summary>
+        /// <value>The tops.</value>
         [XmlIgnore]
         public List<Organ1> Tops
         {
@@ -351,13 +458,21 @@ namespace Models.PMF.OldPlant
                 return tops;
             }
         }
+        /// <summary>The ext_n_demand</summary>
         private double ext_n_demand;
+        /// <summary>The average stress message</summary>
         private string AverageStressMessage;
+        /// <summary>The flowering date</summary>
         private DateTime FloweringDate;
+        /// <summary>The maturity date</summary>
         private DateTime MaturityDate;
+        /// <summary>The lai maximum</summary>
         private double LAIMax = 0;
+        /// <summary>The phenology event today</summary>
         private bool PhenologyEventToday = false;
 
+        /// <summary>Gets the tops sw demand.</summary>
+        /// <value>The tops sw demand.</value>
         public double TopsSWDemand
         {
             get
@@ -368,6 +483,8 @@ namespace Models.PMF.OldPlant
                 return SWDemand;
             }
         }
+        /// <summary>Gets the tops live wt.</summary>
+        /// <value>The tops live wt.</value>
         private double TopsLiveWt
         {
             get
@@ -378,6 +495,8 @@ namespace Models.PMF.OldPlant
                 return SWDemand;
             }
         }
+        /// <summary>Gets the sw supply demand ratio.</summary>
+        /// <value>The sw supply demand ratio.</value>
         public double SWSupplyDemandRatio
         {
             get
@@ -394,6 +513,10 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>
+        /// Crop specific relative growth stress factor (0-1). MicroClimate
+        /// uses this to calculate the crop canopy conductance
+        /// </summary>
         public double FRGR
         {
             get
@@ -403,9 +526,9 @@ namespace Models.PMF.OldPlant
             }
         }
 
-        /// <summary>
-        /// Old PLANT1 compat. eventhandler. Not used in Plant2
-        /// </summary>
+        /// <summary>Old PLANT1 compat. eventhandler. Not used in Plant2</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnPrepare(object sender, EventArgs e)
         {
             if (SowingData != null)
@@ -433,9 +556,9 @@ namespace Models.PMF.OldPlant
             }
         }
 
-        /// <summary>
-        ///  Old PLANT1 compat. process eventhandler.
-        /// </summary>
+        /// <summary>Old PLANT1 compat. process eventhandler.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)
         {
@@ -555,6 +678,8 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="Data">The data.</param>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(PhaseChangedType Data)
         {
@@ -575,11 +700,13 @@ namespace Models.PMF.OldPlant
                 MaturityDate = Clock.Today;
         }
 
+        /// <summary>Checks the bounds.</summary>
         private void CheckBounds()
         {
             //throw new NotImplementedException();
         }
 
+        /// <summary>Updates this instance.</summary>
         private void Update()
         {
             foreach (Organ1 Organ in Organ1s)
@@ -606,9 +733,12 @@ namespace Models.PMF.OldPlant
             DoBiomassRemoved();
         }
 
+        /// <summary>Provides canopy data to SoilWater.</summary>
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        /// <summary>The local canopy data</summary>
         NewCanopyType LocalCanopyData = new NewCanopyType();
 
+        /// <summary>Updates the canopy.</summary>
         private void UpdateCanopy()
         {
             // PUBLISH New_Canopy event
@@ -637,6 +767,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("NewCanopy.cover_tot=%f", LocalCanopyData.cover_tot);
         }
 
+        /// <summary>Does the biomass removed.</summary>
         private void DoBiomassRemoved()
         {
             List<Biomass> Detaching = new List<Biomass>();
@@ -670,10 +801,11 @@ namespace Models.PMF.OldPlant
 
 
         /// <summary>
-        ///  Calculate an approximate nitrogen demand for today's growth.
-        ///   The estimate basically = n to fill the plant up to maximum
-        ///   nitrogen concentration.
+        /// Calculate an approximate nitrogen demand for today's growth.
+        /// The estimate basically = n to fill the plant up to maximum
+        /// nitrogen concentration.
         /// </summary>
+        /// <exception cref="System.Exception">bad n supply preference</exception>
         void DoNDemandEstimate()
         {
             // Assume that the distribution of plant
@@ -712,9 +844,13 @@ namespace Models.PMF.OldPlant
         }
 
 
-        /// <summary>
-        /// Event handler for the Harvest event - normally comes from Manager.
-        /// </summary>
+        /// <summary>Event handler for the Harvest event - normally comes from Manager.</summary>
+        /// <param name="Harvest">The harvest.</param>
+        /// <exception cref="System.Exception">
+        /// Harvest remove fraction needs to be between 0 and 1
+        /// or
+        /// Harvest height needs to be between 0 and 1000
+        /// </exception>
         public void OnHarvest(HarvestType Harvest)
         {
             //WriteHarvestReport();
@@ -756,6 +892,7 @@ namespace Models.PMF.OldPlant
                 Organ.OnHarvest(Harvest, BiomassRemovedData);
         }
 
+        /// <summary>Called when [end crop].</summary>
         public void OnEndCrop()
         {
             NewCropType Crop = new NewCropType();
@@ -787,10 +924,9 @@ namespace Models.PMF.OldPlant
 
             cultivarDefinition.Unapply();
         }
-        
-        /// <summary>
-        /// Write a sowing report to summary file.
-        /// </summary>
+
+        /// <summary>Write a sowing report to summary file.</summary>
+        /// <param name="Sow">The sow.</param>
         void WriteSowReport(SowPlant2Type Sow)
         {
             StringWriter summary = new StringWriter();
@@ -821,9 +957,8 @@ namespace Models.PMF.OldPlant
             Summary.WriteMessage(this, summary.ToString());
         }
 
-        /// <summary>
-        ///  Write a biomass removed report.
-        /// </summary>
+        /// <summary>Write a biomass removed report.</summary>
+        /// <param name="Data">The data.</param>
         void WriteBiomassRemovedReport(BiomassRemovedType Data)
         {
             double dm_residue = 0.0;
@@ -893,7 +1028,9 @@ namespace Models.PMF.OldPlant
 
         #region Grazing
 
-        
+
+        /// <summary>Gets the available to animal.</summary>
+        /// <value>The available to animal.</value>
         public AvailableToAnimalType AvailableToAnimal
         {
             get
@@ -912,6 +1049,8 @@ namespace Models.PMF.OldPlant
         }
 
 
+        /// <summary>Gets or sets the removed by animal.</summary>
+        /// <value>The removed by animal.</value>
         [XmlIgnore]
         public RemovedByAnimalType RemovedByAnimal
         {
@@ -975,9 +1114,7 @@ namespace Models.PMF.OldPlant
 
         #endregion
 
-        /// <summary>
-        /// Placeholder for SoilArbitrator
-        /// </summary>
+        /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
         public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
@@ -985,9 +1122,8 @@ namespace Models.PMF.OldPlant
             return info;
         }
 
-        /// <summary>
-        /// A property to return all cultivar definitions.
-        /// </summary>
+        /// <summary>A property to return all cultivar definitions.</summary>
+        /// <value>The cultivars.</value>
         private List<Cultivar> Cultivars
         {
             get

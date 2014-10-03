@@ -13,7 +13,7 @@ namespace Models.Soils
 {
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
-    /// the methods in this class that return double[] always return using the 
+    /// the methods in this class that return double[] always return using the
     /// "Standard layer structure" i.e. the layer structure as defined by the Water child object.
     /// method. Mapping will occur to achieve this if necessary.
     /// To obtain the "raw", unmapped, values use the child classes e.g. SoilWater, Analysis and Sample.
@@ -23,101 +23,158 @@ namespace Models.Soils
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Soil : Model
     {
+        /// <summary>The path fixed</summary>
         private static bool PathFixed = false;
 
+        /// <summary>Gets or sets the record number.</summary>
+        /// <value>The record number.</value>
         [Summary]
         [Description("Record number")]
         public int RecordNumber { get; set; }
 
+        /// <summary>Gets or sets the asc order.</summary>
+        /// <value>The asc order.</value>
         [Summary]
         [Description("Australian Soil Classification Order")]
         public string ASCOrder { get; set; }
 
+        /// <summary>Gets or sets the asc sub order.</summary>
+        /// <value>The asc sub order.</value>
         [Summary]
         [Description("Australian Soil Classification Sub-Order")]
         public string ASCSubOrder { get; set; }
 
+        /// <summary>Gets or sets the type of the soil.</summary>
+        /// <value>The type of the soil.</value>
         [Summary]
         [Description("Soil texture or other descriptor")]
         public string SoilType { get; set; }
 
+        /// <summary>Gets or sets the name of the local.</summary>
+        /// <value>The name of the local.</value>
         [Summary]
         [Description("Local name")]
         public string LocalName { get; set; }
 
+        /// <summary>Gets or sets the site.</summary>
+        /// <value>The site.</value>
         [Summary]
         [Description("Site")]
         public string Site { get; set; }
 
+        /// <summary>Gets or sets the nearest town.</summary>
+        /// <value>The nearest town.</value>
         [Summary]
         [Description("Nearest town")]
         public string NearestTown { get; set; }
 
+        /// <summary>Gets or sets the region.</summary>
+        /// <value>The region.</value>
         [Summary]
         [Description("Region")]
         public string Region { get; set; }
 
+        /// <summary>Gets or sets the state.</summary>
+        /// <value>The state.</value>
         [Summary]
         [Description("State")]
         public string State { get; set; }
 
+        /// <summary>Gets or sets the country.</summary>
+        /// <value>The country.</value>
         [Summary]
         [Description("Country")]
         public string Country { get; set; }
 
+        /// <summary>Gets or sets the natural vegetation.</summary>
+        /// <value>The natural vegetation.</value>
         [Summary]
         [Description("Natural vegetation")]
         public string NaturalVegetation { get; set; }
 
+        /// <summary>Gets or sets the apsoil number.</summary>
+        /// <value>The apsoil number.</value>
         [Summary]
         [Description("APSoil number")]
         public string ApsoilNumber { get; set; }
 
+        /// <summary>Gets or sets the latitude.</summary>
+        /// <value>The latitude.</value>
         [Summary]
         [Description("Latitude (WGS84)")]
         public double Latitude { get; set; }
 
+        /// <summary>Gets or sets the longitude.</summary>
+        /// <value>The longitude.</value>
         [Summary]
         [Description("Longitude (WGS84)")]
         public double Longitude { get; set; }
 
+        /// <summary>Gets or sets the location accuracy.</summary>
+        /// <value>The location accuracy.</value>
         [Summary]
         [Description("Location accuracy")]
         public string LocationAccuracy { get; set; }
 
+        /// <summary>Gets or sets the data source.</summary>
+        /// <value>The data source.</value>
         [Summary]
         [Description("Data source")]
         public string DataSource { get; set; }
 
+        /// <summary>Gets or sets the comments.</summary>
+        /// <value>The comments.</value>
         [Summary]
         [Description("Comments")]
         public string Comments { get; set; }
 
+        /// <summary>Gets the water.</summary>
+        /// <value>The water.</value>
         [XmlIgnore] public Water Water { get; private set; }
+        /// <summary>Gets the soil water.</summary>
+        /// <value>The soil water.</value>
         [XmlIgnore] public SoilWater SoilWater { get; private set; }
+        /// <summary>Gets the soil organic matter.</summary>
+        /// <value>The soil organic matter.</value>
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
+        /// <summary>Gets the soil nitrogen.</summary>
+        /// <value>The soil nitrogen.</value>
         [XmlIgnore] public SoilNitrogen SoilNitrogen { get; private set; }
+        /// <summary>Gets the analysis.</summary>
+        /// <value>The analysis.</value>
         [XmlIgnore] public Analysis Analysis { get; private set; }
+        /// <summary>Gets the initial water.</summary>
+        /// <value>The initial water.</value>
         [XmlIgnore] public InitialWater InitialWater { get; private set; }
+        /// <summary>Gets the phosphorus.</summary>
+        /// <value>The phosphorus.</value>
         [XmlIgnore] public Phosphorus Phosphorus { get; private set; }
+        /// <summary>Gets the swim.</summary>
+        /// <value>The swim.</value>
         [XmlIgnore] public Swim3 Swim { get; private set; }
+        /// <summary>Gets the layer structure.</summary>
+        /// <value>The layer structure.</value>
         [XmlIgnore] public LayerStructure LayerStructure { get; private set; }
+        /// <summary>Gets the soil temperature.</summary>
+        /// <value>The soil temperature.</value>
         [XmlIgnore] public SoilTemperature SoilTemperature { get; private set; }
+        /// <summary>Gets the soil temperature2.</summary>
+        /// <value>The soil temperature2.</value>
         [XmlIgnore] public SoilTemperature2 SoilTemperature2 { get; private set; }
 
+        /// <summary>Gets the samples.</summary>
+        /// <value>The samples.</value>
         [XmlIgnore] public List<Sample> Samples { get; private set; }
-        
-        /// <summary>
-        /// Constructor
-        /// </summary>
+
+        /// <summary>Constructor</summary>
         public Soil()
         {
             Name = "Soil";                
         }
 
-        /// <summary>
-        /// Create a soil object from the XML passed in.
-        /// </summary>
+        /// <summary>Create a soil object from the XML passed in.</summary>
+        /// <param name="Xml">The XML.</param>
+        /// <returns></returns>
         public static Soil Create(string Xml)
         {
             FixTempPathForSerializer();
@@ -126,21 +183,23 @@ namespace Models.Soils
             return x.Deserialize(F) as Soil;
         }
 
+        /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
             FindChildren();
         }
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             FindChildren();
         }
 
-        /// <summary>
-        /// Find our children.
-        /// </summary>
+        /// <summary>Find our children.</summary>
         private void FindChildren()
         {
             Water = Apsim.Child(this, typeof(Water)) as Water;
@@ -163,7 +222,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// The condor cluster execute nodes in Toowoomba (and elsewhere?) do not have permission 
+        /// The condor cluster execute nodes in Toowoomba (and elsewhere?) do not have permission
         /// to write in the temp folder (c:\windows\temp). XmlSerializer needs to create files in
         /// the temp folder. The code below works around this. This code should be put somewhere
         /// else - but where? YieldProphet uses a manager2 component to create a soil object so
@@ -185,9 +244,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Write soil to XML
-        /// </summary>
+        /// <summary>Write soil to XML</summary>
+        /// <returns></returns>
         public string ToXml()
         {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
@@ -209,9 +267,8 @@ namespace Models.Soils
 
         #region Water
 
-        /// <summary>
-        /// Return the thicknesses to run APSIM.
-        /// </summary>
+        /// <summary>Return the thicknesses to run APSIM.</summary>
+        /// <value>The thickness.</value>
         public double[] Thickness 
         {
             get
@@ -223,8 +280,12 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the depth mid points.</summary>
+        /// <value>The depth mid points.</value>
         public double[] DepthMidPoints { get { return Soil.ToMidPoints(Thickness); } }
 
+        /// <summary>Gets the depth.</summary>
+        /// <value>The depth.</value>
         [Description("Depth")]
         public string[] Depth
         {
@@ -234,14 +295,12 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Bulk density at standard thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
+        /// <value>The bd.</value>
         internal double[] BD { get { return Map(Water.BD, Water.Thickness, Thickness, MapType.Concentration, Water.BD.Last()); } }
 
-        /// <summary>
-        /// Soil water at standard thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Soil water at standard thickness. Units: mm/mm</summary>
+        /// <value>The sw.</value>
         public double[] SW
         {
             get
@@ -250,9 +309,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Calculate and return SW relative to the Water node thicknesses.
-        /// </summary>
+        /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
+        /// <value>The sw at water thickness.</value>
         public double[] SWAtWaterThickness
         {
             get
@@ -273,34 +331,28 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Return AirDry at standard thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
+        /// <value>The air dry.</value>
         public double[] AirDry { get { return Map(Water.AirDry, Water.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// Return lower limit at standard thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
+        /// <value>The l L15.</value>
         public double[] LL15 { get { return Map(Water.LL15, Water.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// Return drained upper limit at standard thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
+        /// <value>The dul.</value>
         public double[] DUL { get { return Map(Water.DUL, Water.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// Return saturation at standard thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
+        /// <value>The sat.</value>
         public double[] SAT { get { return Map(Water.SAT, Water.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// KS at standard thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>KS at standard thickness. Units: mm/mm</summary>
+        /// <value>The ks.</value>
         internal double[] KS { get { return Map(Water.KS, Water.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// SWCON at standard thickness. Units: 0-1
-        /// </summary>
+        /// <summary>SWCON at standard thickness. Units: 0-1</summary>
+        /// <value>The swcon.</value>
         internal double[] SWCON 
         { 
             get 
@@ -310,9 +362,8 @@ namespace Models.Soils
             } 
         }
 
-        /// <summary>
-        /// Return the plant available water CAPACITY at standard thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return the plant available water CAPACITY at standard thickness. Units: mm/mm</summary>
+        /// <value>The pawc.</value>
         public double[] PAWC
         {
             get
@@ -324,9 +375,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Gets unavailable water at standard thickness. Units:mm
-        /// </summary>
+        /// <summary>Gets unavailable water at standard thickness. Units:mm</summary>
+        /// <value>The unavailablemm.</value>
         [Description("Unavailable LL15")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
@@ -338,9 +388,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Gets available water at standard thickness (SW-LL15). Units:mm
-        /// </summary>
+        /// <summary>Gets available water at standard thickness (SW-LL15). Units:mm</summary>
+        /// <value>The paw totalmm.</value>
         [Description("Available SW-LL15")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
@@ -359,6 +408,7 @@ namespace Models.Soils
         /// <summary>
         /// Gets the maximum plant available water CAPACITY at standard thickness (DUL-LL15). Units: mm
         /// </summary>
+        /// <value>The paw CMM.</value>
         [Description("Max. available\r\nPAWC DUL-LL15")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
@@ -370,9 +420,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Gets the drainable water at standard thickness (SAT-DUL). Units: mm
-        /// </summary>
+        /// <summary>Gets the drainable water at standard thickness (SAT-DUL). Units: mm</summary>
+        /// <value>The drainablemm.</value>
         [Description("Drainable\r\nPAWC SAT-DUL")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
@@ -384,9 +433,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Plant available water at standard thickness. Units:mm/mm
-        /// </summary>
+        /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
+        /// <value>The paw.</value>
         public double[] PAW
         {
             get
@@ -400,9 +448,8 @@ namespace Models.Soils
 
 
 
-        /// <summary>
-        /// Return the plant available water CAPACITY at water node thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
+        /// <value>The pawc at water thickness.</value>
         public double[] PAWCAtWaterThickness
         {
             get
@@ -414,9 +461,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Return the plant available water CAPACITY at water node thickenss. Units: mm
-        /// </summary>
+        /// <summary>Return the plant available water CAPACITY at water node thickenss. Units: mm</summary>
+        /// <value>The paw CMM at water thickness.</value>
         public double[] PAWCmmAtWaterThickness
         {
             get
@@ -425,9 +471,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Plant available water at standard thickness at water node thickness. Units:mm/mm
-        /// </summary>
+        /// <summary>Plant available water at standard thickness at water node thickness. Units:mm/mm</summary>
+        /// <value>The paw at water thickness.</value>
         public double[] PAWAtWaterThickness
         {
             get
@@ -442,15 +487,15 @@ namespace Models.Soils
 
         #region Crops
 
-        /// <summary>
-        /// A list of crop names.
-        /// </summary>
+        /// <summary>A list of crop names.</summary>
+        /// <value>The crop names.</value>
         [XmlIgnore]
         public string[] CropNames { get { return Water.CropNames; } }
 
-        /// <summary>
-        /// Return a specific crop to caller. Will throw if crop doesn't exist.
-        /// </summary>
+        /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Soil could not find crop:  + CropName</exception>
         public ISoilCrop Crop(string CropName) 
         {
             ISoilCrop MeasuredCrop = Water.Crop(CropName); 
@@ -513,9 +558,9 @@ namespace Models.Soils
         //    return Utility.Math.Multiply(PAWCrop(CropName), Thickness);
         //}
 
-        /// <summary>
-        /// Return the plant available water CAPACITY at water node thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         public double[] PAWCCropAtWaterThickness(string CropName)
         {
             return CalcPAWC(Water.Thickness,
@@ -527,6 +572,8 @@ namespace Models.Soils
         /// <summary>
         /// Plant available water for the specified crop at water node thickness. Will throw if crop not found. Units: mm/mm
         /// </summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         public double[] PAWCropAtWaterThickness(string CropName)
         {
             return CalcPAWC(Water.Thickness,
@@ -538,6 +585,8 @@ namespace Models.Soils
         /// <summary>
         /// Plant available water for the specified crop at water node thickness. Will throw if crop not found. Units: mm
         /// </summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         public double[] PAWmmAtWaterThickness(string CropName)
         {
             return Utility.Math.Multiply(PAWCropAtWaterThickness(CropName), Water.Thickness);
@@ -545,57 +594,100 @@ namespace Models.Soils
         #endregion
 
         #region Predicted Crops
+        /// <summary>The black vertosol crop list</summary>
         static string[] BlackVertosolCropList = new string[] { "Wheat", "Sorghum", "Cotton" };
+        /// <summary>The grey vertosol crop list</summary>
         static string[] GreyVertosolCropList = new string[] { "Wheat", "Sorghum", "Cotton" };
+        /// <summary>The predicted thickness</summary>
         static double[] PredictedThickness  = new double[] { 150, 150, 300, 300, 300, 300, 300 };
+        /// <summary>The predicted xf</summary>
         static double[] PredictedXF = new double[] { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
+        /// <summary>The wheat kl</summary>
         static double[] WheatKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
+        /// <summary>The sorghum kl</summary>
         static double[] SorghumKL = new double[] { 0.07, 0.07, 0.07, 0.05, 0.05, 0.04, 0.03 };
+        /// <summary>The barley kl</summary>
         static double[] BarleyKL = new double[] { 0.07, 0.07, 0.07, 0.05, 0.05, 0.03, 0.02 };
+        /// <summary>The chickpea kl</summary>
         static double[] ChickpeaKL = new double[] { 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06 };
+        /// <summary>The mungbean kl</summary>
         static double[] MungbeanKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.00, 0.00 };
+        /// <summary>The cotton kl</summary>
         static double[] CottonKL = new double[] { 0.10, 0.10, 0.10, 0.10, 0.09, 0.07, 0.05 };
+        /// <summary>The canola kl</summary>
         static double[] CanolaKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
+        /// <summary>The pigeon pea kl</summary>
         static double[] PigeonPeaKL = new double[] { 0.06, 0.06, 0.06, 0.05, 0.04, 0.02, 0.01 };
+        /// <summary>The maize kl</summary>
         static double[] MaizeKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
+        /// <summary>The cowpea kl</summary>
         static double[] CowpeaKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
+        /// <summary>The sunflower kl</summary>
         static double[] SunflowerKL = new double[] { 0.01, 0.01, 0.08, 0.06, 0.04, 0.02, 0.01 };
+        /// <summary>The fababean kl</summary>
         static double[] FababeanKL = new double[] { 0.08, 0.08, 0.08, 0.08, 0.06, 0.04, 0.03 };
+        /// <summary>The lucerne kl</summary>
         static double[] LucerneKL = new double[] { 0.01, 0.01, 0.01, 0.01, 0.09, 0.09, 0.09 };
+        /// <summary>The perennial kl</summary>
         static double[] PerennialKL = new double[] { 0.01, 0.01, 0.01, 0.01, 0.09, 0.07, 0.05 };
 
+        /// <summary>
+        /// 
+        /// </summary>
         class BlackVertosol
         {
+            /// <summary>The cotton a</summary>
             internal static double[] CottonA = new double[] { 0.832, 0.868, 0.951, 0.988, 1.043, 1.095, 1.151 };
+            /// <summary>The sorghum a</summary>
             internal static double[] SorghumA = new double[] { 0.699, 0.802, 0.853, 0.907, 0.954, 1.003, 1.035 };
+            /// <summary>The wheat a</summary>
             internal static double[] WheatA = new double[] { 0.124, 0.049, 0.024, 0.029, 0.146, 0.246, 0.406 };
 
+            /// <summary>The cotton b</summary>
             internal static double CottonB = -0.0070;
+            /// <summary>The sorghum b</summary>
             internal static double SorghumB = -0.0038;
+            /// <summary>The wheat b</summary>
             internal static double WheatB = 0.0116;
 
         }
+        /// <summary>
+        /// 
+        /// </summary>
         class GreyVertosol
         {
+            /// <summary>The cotton a</summary>
             internal static double[] CottonA = new double[] { 0.853, 0.851, 0.883, 0.953, 1.022, 1.125, 1.186 };
+            /// <summary>The sorghum a</summary>
             internal static double[] SorghumA = new double[] { 0.818, 0.864, 0.882, 0.938, 1.103, 1.096, 1.172 };
+            /// <summary>The wheat a</summary>
             internal static double[] WheatA = new double[] { 0.660, 0.655, 0.701, 0.745, 0.845, 0.933, 1.084 };
+            /// <summary>The barley a</summary>
             internal static double[] BarleyA = new double[] { 0.847, 0.866, 0.835, 0.872, 0.981, 1.036, 1.152 };
+            /// <summary>The chickpea a</summary>
             internal static double[] ChickpeaA = new double[] { 0.435, 0.452, 0.481, 0.595, 0.668, 0.737, 0.875 };
+            /// <summary>The fababean a</summary>
             internal static double[] FababeanA = new double[] { 0.467, 0.451, 0.396, 0.336, 0.190, 0.134, 0.084 };
+            /// <summary>The mungbean a</summary>
             internal static double[] MungbeanA = new double[] { 0.779, 0.770, 0.834, 0.990, 1.008, 1.144, 1.150 };
+            /// <summary>The cotton b</summary>
             internal static double CottonB = -0.0082;
+            /// <summary>The sorghum b</summary>
             internal static double SorghumB = -0.007;
+            /// <summary>The wheat b</summary>
             internal static double WheatB = -0.0032;
+            /// <summary>The barley b</summary>
             internal static double BarleyB = -0.0051;
+            /// <summary>The chickpea b</summary>
             internal static double ChickpeaB = 0.0029;
+            /// <summary>The fababean b</summary>
             internal static double FababeanB = 0.02455;
+            /// <summary>The mungbean b</summary>
             internal static double MungbeanB = -0.0034;
         }
 
-        /// <summary>
-        /// Return a list of predicted crop names or an empty string[] if none found.
-        /// </summary>
+        /// <summary>Return a list of predicted crop names or an empty string[] if none found.</summary>
+        /// <value>The predicted crop names.</value>
         public string[] PredictedCropNames
         {
             get
@@ -611,9 +703,9 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Return a predicted SoilCrop for the specified crop name or null if not found.
-        /// </summary>
+        /// <summary>Return a predicted SoilCrop for the specified crop name or null if not found.</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         private ISoilCrop PredictedCrop(string CropName)
         {
             double[] A = null;
@@ -712,9 +804,10 @@ namespace Models.Soils
             return soilCrop as ISoilCrop;
         }
 
-        /// <summary>
-        /// Calculate and return a predicted LL from the specified A and B values.
-        /// </summary>
+        /// <summary>Calculate and return a predicted LL from the specified A and B values.</summary>
+        /// <param name="A">a.</param>
+        /// <param name="B">The b.</param>
+        /// <returns></returns>
         private double[] PredictedLL(double[] A, double B)
         {
             double[] DepthCentre = ToMidPoints(PredictedThickness);
@@ -745,9 +838,8 @@ namespace Models.Soils
         #endregion
 
         #region Soil organic matter
-        /// <summary>
-        /// Organic carbon. Units: %
-        /// </summary>
+        /// <summary>Organic carbon. Units: %</summary>
+        /// <value>The oc.</value>
         public double[] OC
         {
             get
@@ -766,9 +858,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// FBiom. Units: 0-1
-        /// </summary>
+        /// <summary>FBiom. Units: 0-1</summary>
+        /// <value>The f biom.</value>
         public double[] FBiom
         {
             get
@@ -779,9 +870,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// FInert. Units: 0-1
-        /// </summary>
+        /// <summary>FInert. Units: 0-1</summary>
+        /// <value>The f inert.</value>
         public double[] FInert
         {
             get
@@ -794,14 +884,12 @@ namespace Models.Soils
         #endregion
 
         #region Analysis
-        /// <summary>
-        /// Rocks. Units: %
-        /// </summary>
+        /// <summary>Rocks. Units: %</summary>
+        /// <value>The rocks.</value>
         public double[] Rocks { get { return Map(Analysis.Rocks, Analysis.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// Particle size sand
-        /// </summary>
+        /// <summary>Particle size sand</summary>
+        /// <value>The particle size sand.</value>
         public double[] ParticleSizeSand
         {
             get
@@ -812,9 +900,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Particle size silt
-        /// </summary>
+        /// <summary>Particle size silt</summary>
+        /// <value>The particle size silt.</value>
         public double[] ParticleSizeSilt
         {
             get
@@ -825,9 +912,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Particle size silt
-        /// </summary>
+        /// <summary>Particle size silt</summary>
+        /// <value>The particle size clay.</value>
         public double[] ParticleSizeClay
         {
             get
@@ -841,9 +927,10 @@ namespace Models.Soils
 
         #region Sample
 
-        /// <summary>
-        /// Find the specified sample. Will throw if not found.
-        /// </summary>
+        /// <summary>Find the specified sample. Will throw if not found.</summary>
+        /// <param name="SampleName">Name of the sample.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot find soil sample named:  + SampleName</exception>
         public Sample FindSample(string SampleName)
         {
             foreach (Sample Sample in Samples)
@@ -852,9 +939,8 @@ namespace Models.Soils
             throw new Exception("Cannot find soil sample named: " + SampleName);
         }
 
-        /// <summary>
-        /// Nitrate (ppm).
-        /// </summary>
+        /// <summary>Nitrate (ppm).</summary>
+        /// <value>The n o3.</value>
         public double[] NO3
         {
             get
@@ -872,9 +958,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Nitrate (ppm).
-        /// </summary>
+        /// <summary>Nitrate (ppm).</summary>
+        /// <value>The n h4.</value>
         public double[] NH4
         {
             get
@@ -892,9 +977,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Cloride from either a sample or from Analysis. Units: mg/kg
-        /// </summary>
+        /// <summary>Cloride from either a sample or from Analysis. Units: mg/kg</summary>
+        /// <value>The cl.</value>
         public double[] Cl
         {
             get
@@ -913,9 +997,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// ESP from either a sample or from Analysis. Units: %
-        /// </summary>
+        /// <summary>ESP from either a sample or from Analysis. Units: %</summary>
+        /// <value>The esp.</value>
         public double[] ESP
         {
             get
@@ -934,9 +1017,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// EC from either a sample or from Analysis. Units: 1:5 dS/m
-        /// </summary>
+        /// <summary>EC from either a sample or from Analysis. Units: 1:5 dS/m</summary>
+        /// <value>The ec.</value>
         public double[] EC
         {
             get
@@ -955,9 +1037,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// PH from either a sample or from Analysis. Units: 1:5 Water
-        /// </summary>
+        /// <summary>PH from either a sample or from Analysis. Units: 1:5 Water</summary>
+        /// <value>The ph.</value>
         public double[] PH
         {
             get
@@ -979,9 +1060,8 @@ namespace Models.Soils
         #endregion
 
         #region Phosphorus
-        /// <summary>
-        /// LabileP at standard thickness
-        /// </summary>
+        /// <summary>LabileP at standard thickness</summary>
+        /// <value>The labile p.</value>
         public double[] LabileP
         {
             get
@@ -991,9 +1071,8 @@ namespace Models.Soils
                 return Map(Phosphorus.LabileP, Phosphorus.Thickness, Thickness, MapType.Concentration);
             }
         }
-        /// <summary>
-        /// Sorption at standard thickness
-        /// </summary>
+        /// <summary>Sorption at standard thickness</summary>
+        /// <value>The sorption.</value>
         public double[] Sorption
         {
             get
@@ -1004,9 +1083,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// BandedP at standard thickness
-        /// </summary>
+        /// <summary>BandedP at standard thickness</summary>
+        /// <value>The banded p.</value>
         public double[] BandedP
         {
             get
@@ -1017,9 +1095,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// RockP at standard thickness
-        /// </summary>
+        /// <summary>RockP at standard thickness</summary>
+        /// <value>The rock p.</value>
         public double[] RockP
         {
             get
@@ -1034,9 +1111,8 @@ namespace Models.Soils
         #endregion
 
         #region SWIM
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NO3Exco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.NO3Exco at standard thickness</summary>
+        /// <value>The n o3 exco.</value>
         public double[] NO3Exco
         {
             get
@@ -1047,9 +1123,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NO3FIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.NO3FIP at standard thickness</summary>
+        /// <value>The n o3 fip.</value>
         public double[] NO3FIP
         {
             get
@@ -1060,9 +1135,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NH4Exco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.NH4Exco at standard thickness</summary>
+        /// <value>The n h4 exco.</value>
         public double[] NH4Exco
         {
             get
@@ -1073,9 +1147,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NH4FIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.NH4FIP at standard thickness</summary>
+        /// <value>The n h4 fip.</value>
         public double[] NH4FIP
         {
             get
@@ -1086,9 +1159,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.UreaExco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.UreaExco at standard thickness</summary>
+        /// <value>The urea exco.</value>
         public double[] UreaExco
         {
             get
@@ -1099,9 +1171,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.UreaFIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.UreaFIP at standard thickness</summary>
+        /// <value>The urea fip.</value>
         public double[] UreaFIP
         {
             get
@@ -1112,9 +1183,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.ClExco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.ClExco at standard thickness</summary>
+        /// <value>The cl exco.</value>
         public double[] ClExco
         {
             get
@@ -1125,9 +1195,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.ClFIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.ClFIP at standard thickness</summary>
+        /// <value>The cl fip.</value>
         public double[] ClFIP
         {
             get
@@ -1138,9 +1207,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.TracerExco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.TracerExco at standard thickness</summary>
+        /// <value>The tracer exco.</value>
         public double[] TracerExco
         {
             get
@@ -1151,9 +1219,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.TracerFIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.TracerFIP at standard thickness</summary>
+        /// <value>The tracer fip.</value>
         public double[] TracerFIP
         {
             get
@@ -1167,9 +1234,8 @@ namespace Models.Soils
 
 
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.MineralisationInhibitorExco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.MineralisationInhibitorExco at standard thickness</summary>
+        /// <value>The mineralisation inhibitor exco.</value>
         public double[] MineralisationInhibitorExco
         {
             get
@@ -1180,9 +1246,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.MineralisationInhibitorFIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.MineralisationInhibitorFIP at standard thickness</summary>
+        /// <value>The mineralisation inhibitor fip.</value>
         public double[] MineralisationInhibitorFIP
         {
             get
@@ -1193,9 +1258,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.UreaseInhibitorExco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.UreaseInhibitorExco at standard thickness</summary>
+        /// <value>The urease inhibitor exco.</value>
         public double[] UreaseInhibitorExco
         {
             get
@@ -1206,9 +1270,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.UreaseInhibitorFIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.UreaseInhibitorFIP at standard thickness</summary>
+        /// <value>The urease inhibitor fip.</value>
         public double[] UreaseInhibitorFIP
         {
             get
@@ -1219,9 +1282,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NitrificationInhibitorExco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.NitrificationInhibitorExco at standard thickness</summary>
+        /// <value>The nitrification inhibitor exco.</value>
         public double[] NitrificationInhibitorExco
         {
             get
@@ -1232,9 +1294,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NitrificationInhibitorFIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.NitrificationInhibitorFIP at standard thickness</summary>
+        /// <value>The nitrification inhibitor fip.</value>
         public double[] NitrificationInhibitorFIP
         {
             get
@@ -1245,9 +1306,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.DenitrificationInhibitorExco at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.DenitrificationInhibitorExco at standard thickness</summary>
+        /// <value>The denitrification inhibitor exco.</value>
         public double[] DenitrificationInhibitorExco
         {
             get
@@ -1258,9 +1318,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Swim.SwimSoluteParameters.DenitrificationInhibitorFIP at standard thickness
-        /// </summary>
+        /// <summary>Swim.SwimSoluteParameters.DenitrificationInhibitorFIP at standard thickness</summary>
+        /// <value>The denitrification inhibitor fip.</value>
         public double[] DenitrificationInhibitorFIP
         {
             get
@@ -1275,6 +1334,8 @@ namespace Models.Soils
 
         #region Soil Temperature
 
+        /// <summary>Gets the boundary layer conductance.</summary>
+        /// <value>The boundary layer conductance.</value>
         public double BoundaryLayerConductance
         {
             get
@@ -1288,6 +1349,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the initial soil temperature.</summary>
+        /// <value>The initial soil temperature.</value>
         public double[] InitialSoilTemperature
         {
             get
@@ -1302,6 +1365,8 @@ namespace Models.Soils
         #endregion
 
         #region Soil Temperature2
+        /// <summary>Gets the maximum t time default.</summary>
+        /// <value>The maximum t time default.</value>
         public double MaxTTimeDefault
         {
             get
@@ -1313,6 +1378,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the boundary layer conductance source.</summary>
+        /// <value>The boundary layer conductance source.</value>
         public string BoundaryLayerConductanceSource
         {
             get
@@ -1324,6 +1391,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the boundary layer conductance iterations.</summary>
+        /// <value>The boundary layer conductance iterations.</value>
         public int BoundaryLayerConductanceIterations
         {
             get
@@ -1335,6 +1404,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the net radiation source.</summary>
+        /// <value>The net radiation source.</value>
         public string NetRadiationSource
         {
             get
@@ -1346,6 +1417,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the default wind speed.</summary>
+        /// <value>The default wind speed.</value>
         public double DefaultWindSpeed
         {
             get
@@ -1357,6 +1430,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the default altitude.</summary>
+        /// <value>The default altitude.</value>
         public double DefaultAltitude
         {
             get
@@ -1368,6 +1443,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the default height of the instrument.</summary>
+        /// <value>The default height of the instrument.</value>
         public double DefaultInstrumentHeight
         {
             get
@@ -1379,6 +1456,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the height of the bare soil.</summary>
+        /// <value>The height of the bare soil.</value>
         public double BareSoilHeight
         {
             get
@@ -1392,41 +1471,44 @@ namespace Models.Soils
         #endregion
 
         #region Mapping
-        /// <summary>
-        /// Bulk density - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>Bulk density - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         internal double[] BDMapped(double[] ToThickness)
         {
             return Map(Water.BD, Water.Thickness, ToThickness, MapType.Concentration, Water.BD.Last());
         }
 
-        /// <summary>
-        /// AirDry - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         public double[] AirDryMapped(double[] ToThickness)
         {
             return Map(Water.AirDry, Water.Thickness, ToThickness, MapType.Concentration, Water.AirDry.Last());
         }
 
-        /// <summary>
-        /// Lower limit 15 bar - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>Lower limit 15 bar - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         public double[] LL15Mapped(double[] ToThickness)
         {
             return Map(Water.LL15, Water.Thickness, ToThickness, MapType.Concentration, Water.LL15.Last());
         }
 
-        /// <summary>
-        /// Drained upper limit - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>Drained upper limit - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         public double[] DULMapped(double[] ToThickness)
         {
             return Map(Water.DUL, Water.Thickness, ToThickness, MapType.Concentration, Water.DUL.Last());
         }
 
-        /// <summary>
-        /// SW - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>SW - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="Values">The values.</param>
+        /// <param name="Thicknesses">The thicknesses.</param>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot find crop lower limit or LL15 in soil</exception>
         public double[] SWMapped(double[] Values, double[] Thicknesses, double[] ToThickness)
         {
             if (Thicknesses == ToThickness)
@@ -1465,9 +1547,10 @@ namespace Models.Soils
             return Map(Values, Thicknesses, ToThickness, MapType.Concentration);
         }
 
-        /// <summary>
-        /// Crop lower limit mapped. Units: mm/mm
-        /// </summary>
+        /// <summary>Crop lower limit mapped. Units: mm/mm</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         internal double[] LLMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
@@ -1487,9 +1570,10 @@ namespace Models.Soils
             return Values;
         }
 
-        /// <summary>
-        /// Crop XF mapped. Units: 0-1
-        /// </summary>
+        /// <summary>Crop XF mapped. Units: 0-1</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         internal double[] XFMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
@@ -1498,10 +1582,17 @@ namespace Models.Soils
             return Map(SoilCrop.XF, Water.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
         }
 
-        private enum MapType { Mass, Concentration, UseBD }
         /// <summary>
-        /// Map soil variables from one layer structure to another.
+        /// 
         /// </summary>
+        private enum MapType { Mass, Concentration, UseBD }
+        /// <summary>Map soil variables from one layer structure to another.</summary>
+        /// <param name="FValues">The f values.</param>
+        /// <param name="FThickness">The f thickness.</param>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <param name="MapType">Type of the map.</param>
+        /// <param name="DefaultValueForBelowProfile">The default value for below profile.</param>
+        /// <returns></returns>
         private double[] Map(double[] FValues, double[] FThickness,
                              double[] ToThickness, MapType MapType,
                              double DefaultValueForBelowProfile = double.NaN)
@@ -1604,13 +1695,11 @@ namespace Models.Soils
 
         // <param name="units">The units of the associated field or property</param>
 
-        /// <summary>
-        /// Overlay sample values onto soil values.
-        /// </summary>
-        /// <param name="SampleValues"></param>
-        /// <param name="SampleThickness"></param>
-        /// <param name="SoilValues"></param>
-        /// <param name="SoilThickness"></param>
+        /// <summary>Overlay sample values onto soil values.</summary>
+        /// <param name="SampleValues">The sample values.</param>
+        /// <param name="SampleThickness">The sample thickness.</param>
+        /// <param name="SoilValues">The soil values.</param>
+        /// <param name="SoilThickness">The soil thickness.</param>
         /// <returns></returns>
         private static bool OverlaySampleOnTo(double[] SampleValues, double[] SampleThickness,
                                                ref double[] SoilValues, ref double[] SoilThickness)
@@ -1628,9 +1717,11 @@ namespace Models.Soils
         }
 
 
-        /// <summary>
-        /// Takes values from SoilValues and puts them at the bottom of SampleValues.  
-        /// </summary>
+        /// <summary>Takes values from SoilValues and puts them at the bottom of SampleValues.</summary>
+        /// <param name="SampleValues">The sample values.</param>
+        /// <param name="SampleThickness">The sample thickness.</param>
+        /// <param name="SoilValues">The soil values.</param>
+        /// <param name="SoilThickness">The soil thickness.</param>
         private static void InFillValues(ref double[] SampleValues, ref double[] SampleThickness,
                                          double[] SoilValues, double[] SoilThickness)
         {
@@ -1695,10 +1786,9 @@ namespace Models.Soils
         #endregion
 
         #region Utility
-        /// <summary>
-        /// Convert an array of thickness (mm) to depth strings (cm)
-        //    e.g. "0-10", "10-30"
-        /// </summary>
+        /// <summary>Convert an array of thickness (mm) to depth strings (cm)</summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <returns></returns>
         static public string[] ToDepthStrings(double[] Thickness)
         {
             if (Thickness == null)
@@ -1722,10 +1812,14 @@ namespace Models.Soils
         }
         /// <summary>
         /// Convert an array of depth strings (cm) to thickness (mm) e.g.
-        ///     "0-10", "10-30" 
-        /// To 
-        ///     100, 200
+        /// "0-10", "10-30"
+        /// To
+        /// 100, 200
         /// </summary>
+        /// <param name="DepthStrings">The depth strings.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Invalid layer string:  + DepthStrings[i] +
+        ///                                   . String must be of the form: 10-30</exception>
         static public double[] ToThickness(string[] DepthStrings)
         {
             double[] Thickness = new double[DepthStrings.Length];
@@ -1747,6 +1841,9 @@ namespace Models.Soils
             }
             return Thickness;
         }
+        /// <summary>To the mid points.</summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <returns></returns>
         static public double[] ToMidPoints(double[] Thickness)
         {
             //-------------------------------------------------------------------------
@@ -1763,6 +1860,9 @@ namespace Models.Soils
             }
             return MidPoints;
         }
+        /// <summary>To the cum thickness.</summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <returns></returns>
         static public double[] ToCumThickness(double[] Thickness)
         {
             // ------------------------------------------------
@@ -1777,6 +1877,9 @@ namespace Models.Soils
             }
             return CumThickness;
         }
+        /// <summary>Codes to meta data.</summary>
+        /// <param name="Codes">The codes.</param>
+        /// <returns></returns>
         static public string[] CodeToMetaData(string[] Codes)
         {
             string[] Metadata = new string[Codes.Length];
@@ -1807,6 +1910,11 @@ namespace Models.Soils
         /// <summary>
         /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
         /// </summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <param name="LL">The ll.</param>
+        /// <param name="DUL">The dul.</param>
+        /// <param name="XF">The xf.</param>
+        /// <returns></returns>
         public static double[] CalcPAWC(double[] Thickness, double[] LL, double[] DUL, double[] XF)
         {
             double[] PAWC = new double[Thickness.Length];
@@ -1832,9 +1940,9 @@ namespace Models.Soils
             return PAWC;
         }
 
-        /// <summary>
-        /// Return the last value that isn't a missing value.
-        /// </summary>
+        /// <summary>Return the last value that isn't a missing value.</summary>
+        /// <param name="Values">The values.</param>
+        /// <returns></returns>
         private double LastValue(double[] Values)
         {
             if (Values == null) return double.NaN;
@@ -1852,6 +1960,9 @@ namespace Models.Soils
         /// This is a port of the soilwat2_check_profile routine. Returns a blank string if
         /// no errors were found.
         /// </summary>
+        /// <param name="IgnoreStartingWaterN">if set to <c>true</c> [ignore starting water n].</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot find OC values in soil</exception>
         public string Check(bool IgnoreStartingWaterN)
         {
             const double min_sw = 0.0;
