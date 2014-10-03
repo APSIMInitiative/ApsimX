@@ -67,7 +67,9 @@ namespace Models.PMF.Phen
                 throw new Exception("Cannot find target for phase: " + Name);
             return Target.Value;
         }
-        // Return proportion of TT unused
+        /// <summary>Return proportion of TT unused</summary>
+        /// <param name="PropOfDayToUse">The property of day to use.</param>
+        /// <returns></returns>
         public override double AddTT(double PropOfDayToUse)
         {
             _TTinPhase += ThermalTime.Value * PropOfDayToUse;

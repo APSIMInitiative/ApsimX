@@ -12,7 +12,6 @@ namespace Models.Arbitrator
 
     /// <summary>
     /// Vals u-beaut (VS - please note that DH wrote that) soil arbitrator
-    /// 
     /// TODO - convert to god-level
     /// TODO - need to figure out how to get multi-zone root systems into this - structure there to do the uptake but note comments in code related to needs
     /// TODO - alternate uptake methods
@@ -24,21 +23,27 @@ namespace Models.Arbitrator
     public class Arbitrator : Model
     {
 
+        /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
 
+        /// <summary>The weather</summary>
         [Link]
         WeatherFile Weather = null;
 
+        /// <summary>The summary</summary>
         [Link]
         Summary Summary = null;
 
+        /// <summary>The clock</summary>
         [Link]
         Clock Clock = null;
 
+        /// <summary>The zone</summary>
         [Link]
         Zone zone = null;
 
+        /// <summary>The plants</summary>
         List<ICrop2> plants;
 
         #region // initial definitions
@@ -46,9 +51,12 @@ namespace Models.Arbitrator
         /// <summary>
         /// This will hold a range of arbitration methods for testing - will eventually settle on one standard method
         /// </summary>
+        /// <value>The arbitration method.</value>
         [Description("Arbitration method: old / new - use old - new only for testing")]
         public string ArbitrationMethod { get; set; }
-        
+
+        /// <summary>Gets or sets the nutrient uptake method.</summary>
+        /// <value>The nutrient uptake method.</value>
         [Description("Potential nutrient uptake method: 1=where the roots are; 2=PMF concentration based; 3=OilPalm amount based")]
         public int NutrientUptakeMethod { get; set; }
 
@@ -74,10 +82,19 @@ namespace Models.Arbitrator
         
         // these only (I think) used by the routines that Hamish using for testing - marked for deletion
         double[,] potentialSupplyWaterPlantLayer;
+        /// <summary>The uptake water plant layer</summary>
         double[,] uptakeWaterPlantLayer;
+        /// <summary>The potential supply nitrogen plant layer</summary>
         double[,] potentialSupplyNitrogenPlantLayer;
+        /// <summary>
+        /// The potential supply property n o3 plant layer
+        /// </summary>
         double[,] potentialSupplyPropNO3PlantLayer;
+        /// <summary>The uptake nitrogen plant layer</summary>
         double[,] uptakeNitrogenPlantLayer;
+        /// <summary>
+        /// The uptake nitrogen property n o3 plant layer
+        /// </summary>
         double[,] uptakeNitrogenPropNO3PlantLayer;
 
         // soil water evaporation stuff
@@ -87,45 +104,36 @@ namespace Models.Arbitrator
         /// The NitrogenChangedDelegate is for the Arbitrator to set the change in nitrate and ammonium in SoilNitrogen
         /// Eventually this should be changes to a set rather than an event
         /// </summary>
-        /// <param name="Data"></param>
+        /// <param name="Data">The data.</param>
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
-        /// <summary>
-        /// To publish the nitrogen change event
-        /// </summary>
+        /// <summary>To publish the nitrogen change event</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
+        /// <summary>
+        /// 
+        /// </summary>
         class CanopyProps
         {
-            /// <summary>
-            /// Grean leaf area index (m2/m2)
-            /// </summary>
+            /// <summary>Grean leaf area index (m2/m2)</summary>
             public double laiGreen;
-            /// <summary>
-            /// Total leaf area index (m2/m2)
-            /// </summary>
+            /// <summary>Total leaf area index (m2/m2)</summary>
             public double laiTotal;
         }
         //public CanopyProps[,] myCanopy;
 
         // new Arbitration parameters from here
 
-        /// <summary>
-        /// Soil water demand (mm) from each of the plants being arbitrated
-        /// </summary>
+        /// <summary>Soil water demand (mm) from each of the plants being arbitrated</summary>
         double[] demandWater;
 
-        /// <summary>
-        /// Nitrogen demand (mm) from each of the plants being arbitrated
-        /// </summary>
+        /// <summary>Nitrogen demand (mm) from each of the plants being arbitrated</summary>
         double[] demandNitrogen;
-        
-        /// <summary>
-        /// The number of zones under consideration
-        /// </summary>
-        int zones;  
+
+        /// <summary>The number of zones under consideration</summary>
+        int zones;
 
         /// <summary>
-        /// The number of lower bounds of uptake under consideration.  
+        /// The number of lower bounds of uptake under consideration.
         /// As the uptake method implemented for nitrogen is the second order method this is currently only caluclated for water and comes from the crop lower limit
         /// </summary>
         int bounds;
@@ -133,7 +141,7 @@ namespace Models.Arbitrator
         /// <summary>
         /// The number of pools that can saatify the demand.  Not relevant for water.  For nitrogen is nitrate and ammonium.
         /// </summary>
-        int forms;  
+        int forms;
 
         /// <summary>
         /// rootExploration is 3D array [plant, layer, zone] and holds the relative presence (0-1) of roots in each of the physical areas (layer, zone) for each plant
@@ -166,54 +174,55 @@ namespace Models.Arbitrator
         double[, , , ,] resource;
 
         /// <summary>
-        /// extractable (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form for each plant that would be 
+        /// extractable (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form for each plant that would be
         /// available to the plant if it were the only plant in the simulation.  It is not limited by the plant's demand for the resource.
         /// the dimensions are [plant, layer, zone, bound, form]
         /// </summary>
         double[, , , ,] extractable;
 
         /// <summary>
-        /// demand (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form for each plant that would be 
+        /// demand (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form for each plant that would be
         /// extracted by the plant if it were the only plant in the simulation.  It is extractable constrained by demandWater or demandNitrogen
         /// the dimensions are [plant, layer, zone, bound, form]
         /// </summary>
         double[, , , ,] demand;
 
         /// <summary>
-        /// demandForResource (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form that is demanded across all plants 
+        /// demandForResource (mm or kgN/ha) is the amount of water or nitrogen in each layer and zone, bound and form that is demanded across all plants
         /// the dimensions are [not_used, layer, zone, bound, form]
         /// </summary>
         double[, , , ,] demandForResource;
 
         /// <summary>
-        /// totalForResource (mm or kgN/ha) is the sum of resource in each layer and zone, bound and form that is demanded across all plants 
+        /// totalForResource (mm or kgN/ha) is the sum of resource in each layer and zone, bound and form that is demanded across all plants
         /// the dimensions are [not_used, layer, zone, bound, form]
         /// </summary>
         double[, , , ,] totalForResource;
-        
+
         /// <summary>
-        /// uptake (mm or kgN/ha) is the amount of water or nitrogen taken up in each layer and zone, bound and form for each plant 
+        /// uptake (mm or kgN/ha) is the amount of water or nitrogen taken up in each layer and zone, bound and form for each plant
         /// the dimensions are [plant, layer, zone, bound, form]
         /// </summary>
         double[, , , ,] uptake;
 
         /// <summary>
-        /// extractableByPlant (mm or kgN/ha) is the sum of water or nitrogen taken in extractable for each plant 
+        /// extractableByPlant (mm or kgN/ha) is the sum of water or nitrogen taken in extractable for each plant
         /// the dimensions are [plant]
         /// </summary>
         double[] extractableByPlant;
 
-        /// <summary>
-        /// This is "water" or "nitrogen" and holds the resource that is being arbitrated
-        /// </summary>
+        /// <summary>This is "water" or "nitrogen" and holds the resource that is being arbitrated</summary>
         string resourceToArbitrate;
 
 #endregion  // defintions
-          
+
 
         /// <summary>
         /// Runs at the start of the simulation, here only reads the aribtration method to be used
         /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="System.Exception">Invalid AribtrationMethod selected</exception>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -268,12 +277,10 @@ namespace Models.Arbitrator
             uptake = new double[plants.Count, Soil.SoilWater.dlayer.Length, zones, bounds, forms];
             extractableByPlant = new double[plants.Count];
         }
-        
-        /// <summary>
-        /// Zero variables at the start of each day
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
+        /// <summary>Zero variables at the start of each day</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDailyInitialisation(object sender, EventArgs e)
         {
@@ -281,11 +288,9 @@ namespace Models.Arbitrator
             ZeroHamishVariables();  // get rid of this when Hamish is done
         }
 
-        /// <summary>
-        /// Do the arbitration between the plants for water
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <summary>Do the arbitration between the plants for water</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e)
         {
@@ -309,10 +314,10 @@ namespace Models.Arbitrator
 
         /// <summary>
         /// Do the arbitration between the plants for nutrients
-        /// This is only set up for nitrogen at the moment but is designed to be extended to other nutrients 
+        /// This is only set up for nitrogen at the moment but is designed to be extended to other nutrients
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoNutrientArbitration")]
         private void OnDoNutrientArbitration(object sender, EventArgs e)
         {
@@ -333,13 +338,13 @@ namespace Models.Arbitrator
                 Old_OnDoNutrientArbitration();
             }
         }
-        
+
         /// <summary>
         /// Calculate the results of the competition between the plants for light and calculate the soil water demadn by the plants and or soil water evaporation
         /// Not currently implemented
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoEnergyArbitration")]
         private void OnDoEnergyArbitration(object sender, EventArgs e)
         {
@@ -369,9 +374,7 @@ namespace Models.Arbitrator
             //}
         }
 
-        /// <summary>
-        /// Zero the values at the start of each day
-        /// </summary>
+        /// <summary>Zero the values at the start of each day</summary>
         private void ZeroDailyVariables()
         {
             Utility.Math.Zero(demandWater);
@@ -393,9 +396,7 @@ namespace Models.Arbitrator
 
         }
 
-        /// <summary>
-        /// Zero the values that are needed for each set of arbitration calculations
-        /// </summary>
+        /// <summary>Zero the values that are needed for each set of arbitration calculations</summary>
         private void ZeroCalculationVariables()
         {
             Utility.Math.Zero(resource);
@@ -412,7 +413,7 @@ namespace Models.Arbitrator
         /// This does not need to be done each day unless LL becomes dynamic
         /// Leave here for now but could be moved either to OnSimulationCommencing or test for bounds and only do when null
         /// </summary>
-        /// <param name="resourceToArbitrate"></param>
+        /// <param name="resourceToArbitrate">The resource to arbitrate.</param>
         private void CalculateLowerBounds(string resourceToArbitrate)
         {
             // set up the bounds here  
@@ -464,7 +465,7 @@ namespace Models.Arbitrator
         /// <summary>
         /// Calculate the amount of the water or nitrogen that is assessible by each of the plants by layer-zone and bound-form
         /// </summary>
-        /// <param name="resourceToArbitrate"></param>
+        /// <param name="resourceToArbitrate">The resource to arbitrate.</param>
         private void CalculateResource(string resourceToArbitrate)
         {
 
@@ -508,9 +509,9 @@ namespace Models.Arbitrator
         }
 
         /// <summary>
-        /// Calculate the amount that the plant could potentially exctract if it was the only plant in the simulation and demand > resource
+        /// Calculate the amount that the plant could potentially exctract if it was the only plant in the simulation and demand &gt; resource
         /// </summary>
-        /// <param name="resourceToArbitrate"></param>
+        /// <param name="resourceToArbitrate">The resource to arbitrate.</param>
         private void CalculateExtractable(string resourceToArbitrate)
         {
             // calculate extractable 
@@ -567,7 +568,7 @@ namespace Models.Arbitrator
         /// Distribute the satisfyable (if this was a solo plant) across layers, zones, bounds and forms
         /// It was useful to seperate Extractable from Demand during development but could be amalgamated easily
         /// </summary>
-        /// <param name="resourceToArbitrate"></param>
+        /// <param name="resourceToArbitrate">The resource to arbitrate.</param>
         private void CalculateDemand(string resourceToArbitrate)
         {
             // calculate demand distributed over layers etc
@@ -605,10 +606,8 @@ namespace Models.Arbitrator
 
         }
 
-        /// <summary>
-        /// Calculate the uptake for each plant across the layers, zones, bounds, and forms
-        /// </summary>
-        /// <param name="resourceToArbitrate"></param>
+        /// <summary>Calculate the uptake for each plant across the layers, zones, bounds, and forms</summary>
+        /// <param name="resourceToArbitrate">The resource to arbitrate.</param>
         private void CalculateUptake(string resourceToArbitrate)
         {
             // calculate uptake distributed over layers etc - for now bounds and forms = 1
@@ -635,7 +634,7 @@ namespace Models.Arbitrator
         /// <summary>
         /// Send the water uptake arrays back to the plants and send the change in water storage back to the soil
         /// </summary>
-        /// <param name="resourceToArbitrate"></param>
+        /// <param name="resourceToArbitrate">The resource to arbitrate.</param>
         private void SetWaterUptake(string resourceToArbitrate)
         {
             double[] dltSWdep = new double[Soil.SoilWater.dlayer.Length];   // to hold the changes in soil water depth
@@ -663,7 +662,7 @@ namespace Models.Arbitrator
         /// <summary>
         /// Send the nitrogen uptake arrays back to the plants and send the change in nitrogen back to the soil
         /// </summary>
-        /// <param name="resourceToArbitrate"></param>
+        /// <param name="resourceToArbitrate">The resource to arbitrate.</param>
         private void SetNitrogenUptake(string resourceToArbitrate)
         {
             NitrogenChangedType NUptakeType = new NitrogenChangedType();
@@ -712,6 +711,7 @@ namespace Models.Arbitrator
 
         }
 
+        /// <summary>Old_s the on do water arbitration.</summary>
         private void Old_OnDoWaterArbitration()
         {
             //ToDO
@@ -783,6 +783,8 @@ namespace Models.Arbitrator
             Soil.SoilWater.dlt_sw_dep = dltSWdep;
         }
 
+        /// <summary>Old_s the on do nutrient arbitration.</summary>
+        /// <exception cref="System.Exception">Invalid potential uptake method selected</exception>
         private void Old_OnDoNutrientArbitration()
         {
             // use i for the plant loop and j for the layer loop
@@ -928,6 +930,7 @@ namespace Models.Arbitrator
 
         }
 
+        /// <summary>Zeroes the hamish variables.</summary>
         private void ZeroHamishVariables()
         {
             Utility.Math.Zero(potentialSupplyWaterPlantLayer);

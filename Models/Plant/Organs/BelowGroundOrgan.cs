@@ -5,13 +5,19 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// A below ground organ
+    /// </summary>
     [Serializable]
     public class BelowGroundOrgan : GenericOrgan, BelowGround, Reproductive
     {
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
-        
+
+        /// <summary>Occurs when [harvesting].</summary>
         public event NullTypeDelegate Harvesting;
+        /// <summary>Called when [harvest].</summary>
         public override void OnHarvest()
         {
             Harvesting.Invoke();

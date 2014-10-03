@@ -194,9 +194,16 @@ namespace Models.Soils
 
         // Support for PH units.
         /// <summary>
-        /// 
+        /// An enumerated type for ph units
         /// </summary>
-        public enum PHUnitsEnum { Water, CaCl2 }
+        public enum PHUnitsEnum 
+        {
+            /// <summary>water</summary>
+            Water,
+
+            /// <summary>CaCl2</summary>
+            CaCl2 
+        }
         /// <summary>Gets or sets the ph units.</summary>
         /// <value>The ph units.</value>
         public PHUnitsEnum PHUnits { get; set; }

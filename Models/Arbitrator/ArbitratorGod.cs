@@ -41,12 +41,6 @@ namespace Models.ArbitratorGod
 
         //ICrop2[] plants;
 
-        /// <summary>
-        /// Reference to the soil in the Zone for convienience.
-        /// </summary>
-        //public Soil Soil;
-
-
         #region // initial definitions
 
         /// <summary>

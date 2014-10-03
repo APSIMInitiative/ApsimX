@@ -1,18 +1,4 @@
-﻿///<author>Emad Barsoum</author>
-///<email>ebarsoum@msn.com</email>
-///<date>March 23, 2002</date>
-///<copyright>
-///This code is Copyright to Emad Barsoum, it can be used or changed for free without removing the header
-///information which is the author name, email and date or refer to this information if any change made. 
-///</copyright>
-///<summary>
-///This class <c>EvalFunction</c> use the transformation from infix notation to postfix notation to evalute most
-///Mathematic expression, it support most operators (+,-,*,/,%,^), functions from 0 to any number of parameters
-///and also a user defined function by using delegate, also it support variables in the expression, it will
-///generate a symbol table that can be updated at run time.
-///</summary>
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -49,9 +35,19 @@ namespace Utility
     /// <param name="args">The arguments.</param>
     /// <returns></returns>
     public delegate Symbol EvaluateFunctionDelegate(string name, params Object[] args);
-    /// <summary>
-    /// An expression evaluator
-    /// </summary>
+    ///<author>Emad Barsoum</author>
+    ///<email>ebarsoum@msn.com</email>
+    ///<date>March 23, 2002</date>
+    ///<copyright>
+    ///This code is Copyright to Emad Barsoum, it can be used or changed for free without removing the header
+    ///information which is the author name, email and date or refer to this information if any change made. 
+    ///</copyright>
+    ///<summary>
+    ///This class <c>EvalFunction</c> use the transformation from infix notation to postfix notation to evalute most
+    ///Mathematic expression, it support most operators (+,-,*,/,%,^), functions from 0 to any number of parameters
+    ///and also a user defined function by using delegate, also it support variables in the expression, it will
+    ///generate a symbol table that can be updated at run time.
+    ///</summary>
     public class ExpressionEvaluator
     {
         /// <summary>Gets the result.</summary>

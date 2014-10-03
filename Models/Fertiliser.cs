@@ -95,9 +95,39 @@ namespace Models
         /// <summary>
         /// 
         /// </summary>
-        public enum Types { CalciteCA, CalciteFine, Dolomite, NO3N, NH4N, NH4NO3N,
-        /// <summary>The dap</summary>
-                            DAP, MAP, UreaN, UreaNO3, Urea, NH4SO4N, RockP, BandedP, BroadcastP };
+        public enum Types 
+        {
+            /// <summary>The calcite ca</summary>
+            CalciteCA,
+            /// <summary>The calcite fine</summary>
+            CalciteFine,
+            /// <summary>The dolomite</summary>
+            Dolomite,
+            /// <summary>The n o3 n</summary>
+            NO3N,
+            /// <summary>The n h4 n</summary>
+            NH4N,
+            /// <summary>The n h4 n o3 n</summary>
+            NH4NO3N,
+            /// <summary>The dap</summary>
+            DAP,
+            /// <summary>The map</summary>
+            MAP,
+            /// <summary>The urea n</summary>
+            UreaN,
+            /// <summary>The urea n o3</summary>
+            UreaNO3,
+            /// <summary>The urea</summary>
+            Urea,
+            /// <summary>The n h4 s o4 n</summary>
+            NH4SO4N,
+            /// <summary>The rock p</summary>
+            RockP,
+            /// <summary>The banded p</summary>
+            BandedP,
+            /// <summary>The broadcast p</summary>
+            BroadcastP 
+        };
 
         /// <summary>Apply fertiliser.</summary>
         /// <param name="Amount">The amount.</param>

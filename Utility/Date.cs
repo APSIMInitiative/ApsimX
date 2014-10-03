@@ -179,7 +179,7 @@ namespace Utility
         /// <param name="ddMMM_start">The start date - a string containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <param name="today">The date to check</param>
         /// <param name="ddMMM_end">The end date - a string containing 'day of month' and at least the first 3 letters of a month's name</param>
-        /// <returns><paramref name="ddMMM_start"/> &lt;&eq; <paramref name="today"/> &lt;&eq; <paramref name="ddMMM_end"/></returns>
+        /// <returns>true if within date window</returns>
         public static bool WithinDates(string ddMMM_start, DateTime today, string ddMMM_end)
         {
             DateTime
@@ -204,7 +204,7 @@ namespace Utility
         /// <param name="start">The start date</param>
         /// <param name="today">The date to check</param>
         /// <param name="end">The end date</param>
-        /// <returns><paramref name="start"/> &lt;&eq; <paramref name="today"/> &lt;&eq; <paramref name="end"/></returns>
+        /// <returns>true if within date window</returns>
         public static bool WithinDates(DateTime start, DateTime today, DateTime end)
         {
             return today.CompareTo(start) >= 0 && today.CompareTo(end) <= 0;
@@ -251,6 +251,8 @@ namespace Utility
         /// Converts a Julian Day Number to Day of year. 
         /// </summary>
         /// <param name="JDN"> Julian day number.</param>
+        /// <param name="dyoyr">Day of year</param>
+        /// <param name="year">Year</param>
         /// <returns>Date time value.</returns>
         public static void JulianDayNumberToDayOfYear(int JDN, out int dyoyr, out int year)
         {
