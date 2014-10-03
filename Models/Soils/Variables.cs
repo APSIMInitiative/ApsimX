@@ -271,14 +271,14 @@ namespace Models.Soils
         /// Absolute threshold value to trigger a warning message when negative values are detected
         /// </summary>
         [XmlIgnore]
-        public double WarningThreshold = 0.0;
+        public double WarningThreshold = -0.000000001;
 
         /// <summary>
         /// Absolute threshold value to trigger a fatal error when negative values are detected
         /// </summary>
 
         [XmlIgnore]
-        public double FatalThreshold = 0.0;
+        public double FatalThreshold = -0.00001;
 
         #endregion
 

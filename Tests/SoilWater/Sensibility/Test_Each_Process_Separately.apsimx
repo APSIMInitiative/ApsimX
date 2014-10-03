@@ -309,23 +309,23 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0334172069194854</double>
-            <double>0.88684622912438249</double>
-            <double>0.88864483128485849</double>
-            <double>0.88949567045642886</double>
-            <double>0.76982785636157947</double>
-            <double>0.44991999536596339</double>
-            <double>0.26996427746236185</double>
-            <double>0.2199724015062417</double>
-            <double>0.15998244433468359</double>
-            <double>0.12998624110174206</double>
-            <double>0.11998637401102774</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -356,17 +356,17 @@
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -832,23 +832,23 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.86200391721761394</double>
-            <double>0.78893271010918842</double>
-            <double>0.84328566026740448</double>
-            <double>0.86747997529352339</double>
-            <double>0.76085666183182943</double>
-            <double>0.44472978276012481</double>
-            <double>0.26706129554750724</double>
-            <double>0.21756996473754411</double>
-            <double>0.15835113319866206</double>
-            <double>0.12862993658754054</double>
-            <double>0.11886505030047656</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -879,17 +879,17 @@
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -1355,23 +1355,23 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.93641407974538193</double>
-            <double>0.83318566302478525</double>
-            <double>0.86334045922939406</double>
-            <double>0.87760440254907934</double>
-            <double>0.764884916995543</double>
-            <double>0.44728760869389833</double>
-            <double>0.26847203095916544</double>
-            <double>0.21879178037196984</double>
-            <double>0.15914602419461285</double>
-            <double>0.12932815236147807</double>
-            <double>0.11939638753785062</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -1402,17 +1402,17 @@
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -1910,23 +1910,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0321043593961112</double>
-            <double>0.88311812362193887</double>
-            <double>0.88703710392703128</double>
-            <double>0.88878155520042568</double>
-            <double>0.76952368726319853</double>
-            <double>0.44974343120373678</double>
-            <double>0.26985916274117694</double>
-            <double>0.21988741160509945</double>
-            <double>0.15992111673955498</double>
-            <double>0.12993665997696177</double>
-            <double>0.11994064054328442</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -1957,17 +1957,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -2442,23 +2442,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0371134022328363</double>
-            <double>0.88905961100948394</double>
-            <double>0.889820903177376</double>
-            <double>0.88995308656653616</double>
-            <double>0.76999397590168861</double>
-            <double>0.45000053413299684</double>
-            <double>0.27000300563380691</double>
-            <double>0.22000157234688778</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -2489,17 +2489,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -3003,23 +3003,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0349252457347158</double>
-            <double>0.88928630837107792</double>
-            <double>0.88984649145221484</double>
-            <double>0.8899605979776698</double>
-            <double>0.76999812967412851</double>
-            <double>0.45000220774690652</double>
-            <double>0.27000296766164378</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -3050,17 +3050,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -4084,23 +4084,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0367149320893714</double>
-            <double>0.88847207601241518</double>
-            <double>0.88934214063751</double>
-            <double>0.88976813986471548</double>
-            <double>0.76993034521714676</double>
-            <double>0.44997044356956795</double>
-            <double>0.26998896194025396</double>
-            <double>0.21999037062701127</double>
-            <double>0.15999380401244132</double>
-            <double>0.12999464017178353</double>
-            <double>0.11999383620304074</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -4131,17 +4131,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -4636,23 +4636,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0321989998541827</double>
-            <double>0.88311812362193887</double>
-            <double>0.88703710392703128</double>
-            <double>0.88878155520042568</double>
-            <double>0.76952368726319853</double>
-            <double>0.44974343120373678</double>
-            <double>0.26985916274117694</double>
-            <double>0.21988741160509945</double>
-            <double>0.15992111673955498</double>
-            <double>0.12993665997696177</double>
-            <double>0.11994064054328442</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -4683,17 +4683,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -5166,23 +5166,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.94983418152123689</double>
-            <double>0.83316027578526064</double>
-            <double>0.86331478213110191</double>
-            <double>0.87758479994141436</double>
-            <double>0.76486683661813681</double>
-            <double>0.4471158804970447</double>
-            <double>0.26833084519700223</double>
-            <double>0.21867673919239619</double>
-            <double>0.15906209280434527</double>
-            <double>0.1292759028405269</double>
-            <double>0.11937629522405582</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -5213,17 +5213,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -5688,23 +5688,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.93640725451900453</double>
-            <double>0.8331773286800902</double>
-            <double>0.86333106682858474</double>
-            <double>0.87759069432695147</double>
-            <double>0.7648752294188782</double>
-            <double>0.44690140872919476</double>
-            <double>0.26846442858745884</double>
-            <double>0.21879010111572214</double>
-            <double>0.15913977903183577</double>
-            <double>0.12932905544688167</double>
-            <double>0.11938730190923744</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -5735,17 +5735,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -6261,23 +6261,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.93639286062822413</double>
-            <double>0.83315946686788322</double>
-            <double>0.8633204624431684</double>
-            <double>0.877594610223639</double>
-            <double>0.76487065887413741</double>
-            <double>0.4471159895174347</double>
-            <double>0.26832749302276643</double>
-            <double>0.21867330083129269</double>
-            <double>0.15906036695949544</double>
-            <double>0.12925228932998575</double>
-            <double>0.1193216421887628</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -6308,17 +6308,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -6823,23 +6823,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -6870,17 +6870,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -9167,23 +9167,23 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.0396928223542268</double>
-              <double>0.88987671070166685</double>
-              <double>0.88994830359327048</double>
-              <double>0.88998458827512383</double>
-              <double>0.76999684858193318</double>
-              <double>0.4499991414507078</double>
-              <double>0.26999996349746436</double>
-              <double>0.21999976662642334</double>
-              <double>0.15999982809193492</double>
-              <double>0.12999978749363253</double>
-              <double>0.11999972346997288</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
             <RootCN>40</RootCN>
-            <RootWt>200</RootWt>
+            <RootWt>0</RootWt>
             <SoilCN>12.5</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -9214,17 +9214,17 @@ namespace Models
               <string>270-300</string>
             </Depth>
             <OC>
-              <double>1.04</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.77</double>
-              <double>0.45</double>
-              <double>0.27</double>
-              <double>0.22</double>
-              <double>0.16</double>
-              <double>0.13</double>
-              <double>0.12</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </OC>
             <FBiom>
               <double>0.025</double>
@@ -9824,23 +9824,23 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.04</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.77</double>
-              <double>0.45</double>
-              <double>0.27</double>
-              <double>0.22</double>
-              <double>0.16</double>
-              <double>0.13</double>
-              <double>0.12</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
             <RootCN>40</RootCN>
-            <RootWt>200</RootWt>
+            <RootWt>0</RootWt>
             <SoilCN>12.5</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -9871,17 +9871,17 @@ namespace Models
               <string>270-300</string>
             </Depth>
             <OC>
-              <double>1.04</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.77</double>
-              <double>0.45</double>
-              <double>0.27</double>
-              <double>0.22</double>
-              <double>0.16</double>
-              <double>0.13</double>
-              <double>0.12</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </OC>
             <FBiom>
               <double>0.025</double>
@@ -10395,23 +10395,23 @@ namespace Models
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>1.04</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.77</double>
-                <double>0.45</double>
-                <double>0.27</double>
-                <double>0.21998861105525369</double>
-                <double>0.15999678007283424</double>
-                <double>0.12999669561082616</double>
-                <double>0.11999557529780172</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <RootCN>40</RootCN>
-              <RootWt>200</RootWt>
+              <RootWt>0</RootWt>
               <SoilCN>12.5</SoilCN>
               <EnrACoeff>7.4</EnrACoeff>
               <EnrBCoeff>0.2</EnrBCoeff>
@@ -10442,17 +10442,17 @@ namespace Models
                 <string>270-300</string>
               </Depth>
               <OC>
-                <double>1.04</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.77</double>
-                <double>0.45</double>
-                <double>0.27</double>
-                <double>0.22</double>
-                <double>0.16</double>
-                <double>0.13</double>
-                <double>0.12</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </OC>
               <FBiom>
                 <double>0.025</double>
@@ -10951,23 +10951,23 @@ namespace Models
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>1.0396994796860686</double>
-                <double>0.88987655314192382</double>
-                <double>0.889948748615076</double>
-                <double>0.88998345838565129</double>
-                <double>0.76999545464013164</double>
-                <double>0.44999815902516993</double>
-                <double>0.26999939974164372</double>
-                <double>0.2199993461808106</double>
-                <double>0.15999954551439785</double>
-                <double>0.12999956632637746</double>
-                <double>0.11999947002907839</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <RootCN>40</RootCN>
-              <RootWt>200</RootWt>
+              <RootWt>0</RootWt>
               <SoilCN>12.5</SoilCN>
               <EnrACoeff>7.4</EnrACoeff>
               <EnrBCoeff>0.2</EnrBCoeff>
@@ -10998,17 +10998,17 @@ namespace Models
                 <string>270-300</string>
               </Depth>
               <OC>
-                <double>1.04</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.77</double>
-                <double>0.45</double>
-                <double>0.27</double>
-                <double>0.22</double>
-                <double>0.16</double>
-                <double>0.13</double>
-                <double>0.12</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </OC>
               <FBiom>
                 <double>0.025</double>

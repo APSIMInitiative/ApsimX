@@ -696,6 +696,11 @@ namespace Models
                 CropType.Albedo = 0.15;
                 CropType.R50 = 100;
             }
+            else if (Type.Equals("Pasture") || Type.Equals("Legume") || Type.Equals("Forage"))
+            { // added by rcichota when spliting species in agpasture, still setting all parameters the same, will change in the future
+                CropType.Albedo = 0.26;
+                CropType.Gsmax = 0.011;
+            }
 
             ComponentData.Add(CropType);
         }
@@ -1112,6 +1117,8 @@ namespace Models
                     // MJ/J
                     netRadiation = Math.Max(0.0, netRadiation);
 
+                    if (j == 39) 
+                        netRadiation += 0.0;
                     componentData.PETr[i] = CalcPETr(netRadiation * dryleaffraction, mint, maxt, air_pressure, componentData.Ga[i], componentData.Gc[i]);
 
                     componentData.PETa[i] = CalcPETa(mint, maxt, vp, air_pressure, dayLength * dryleaffraction, componentData.Ga[i], componentData.Gc[i]);
