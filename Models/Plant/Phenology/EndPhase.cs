@@ -7,7 +7,7 @@ namespace Models.PMF.Phen
 {
 
     /// <summary>The end phase in phenology</summary>
-	[Serializable]
+    [Serializable]
     public class EndPhase : Phase
     {
         /// <summary>The _ cumulative value</summary>

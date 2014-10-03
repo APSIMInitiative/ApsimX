@@ -50,7 +50,7 @@ namespace Models.PMF.Functions
                     // from senthold's archive:
                     //1    2    3         4.5     5       6
                     //eme  ej   eveg(fl)  anth    sgf   mat
-                    //10   30   43 	     65      70     9
+                    //10   30   43          65      70     9
 
                     // from CropMod
                     //                 sow ger eme  juv    fi   flag    fl st_gf end_gf mat hv_rpe end_crop

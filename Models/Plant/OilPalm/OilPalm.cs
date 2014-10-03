@@ -1683,7 +1683,7 @@ namespace Models.PMF.OilPalm
         /// <param name="lat">The lat.</param>
         /// <param name="day">The day.</param>
         /// <returns></returns>
-        private double Q0(double lat, int day) 						// (PFR)
+        private double Q0(double lat, int day)                         // (PFR)
         {
             double DEC = (23.45 * Math.Sin(2.0 * 3.14159265 / 365.25 * (day - 79.25)));
             double DECr = (DEC * 2.0 * 3.14159265 / 360.0);

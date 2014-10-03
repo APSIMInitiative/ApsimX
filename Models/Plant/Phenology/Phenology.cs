@@ -55,32 +55,32 @@ namespace Models.PMF.Phen
     The equality of stage and phase number raise from the last phase,
     which is \ref Models.PMF.Phen.EndPhase "EndPhase" model and the 
     \t End stage is unused. 
-	
-	For example, the wheat phenology model defines 9 stages from sowing to maturity.
-	See the diagram below for definitions of stages and phases, 
-	and models used for each phase.
-	
-	\startuml
-	Sowing -> Germination : Germinating
-	Germination -> Emergence : Emerging
-	Emergence ->  TerminalSpikelet : Vegetative
-	TerminalSpikelet-> FlagLeaf : FloralInitiation\nToFlagLeaf
-	FlagLeaf -> Flowering : Spike\nDevelopment
-	Flowering -> StartGrainFill: Grain\nDevelopment
-	StartGrainFill -> EndGrainFill : GrainFilling
-	EndGrainFill -> Maturity : Maturing
-	Maturity -> Unused: ReadyFor\nHarvesting
+    
+    For example, the wheat phenology model defines 9 stages from sowing to maturity.
+    See the diagram below for definitions of stages and phases, 
+    and models used for each phase.
+    
+    \startuml
+    Sowing -> Germination : Germinating
+    Germination -> Emergence : Emerging
+    Emergence ->  TerminalSpikelet : Vegetative
+    TerminalSpikelet-> FlagLeaf : FloralInitiation\nToFlagLeaf
+    FlagLeaf -> Flowering : Spike\nDevelopment
+    Flowering -> StartGrainFill: Grain\nDevelopment
+    StartGrainFill -> EndGrainFill : GrainFilling
+    EndGrainFill -> Maturity : Maturing
+    Maturity -> Unused: ReadyFor\nHarvesting
 
-	note over Sowing, Germination : GerminatingPhase
-	note over Germination, Emergence : EmergingPhase
-	note over Emergence, TerminalSpikelet : GenericPhase
-	note over TerminalSpikelet, FlagLeaf : LeafAppearancePhase
-	note over FlagLeaf, Flowering : GenericPhase
-	note over Flowering, StartGrainFill: GenericPhase
-	note over StartGrainFill, EndGrainFill : GenericPhase
-	note over EndGrainFill, Maturity : GenericPhase
-	note over Maturity, Unused: EndPhase
-	\enduml
+    note over Sowing, Germination : GerminatingPhase
+    note over Germination, Emergence : EmergingPhase
+    note over Emergence, TerminalSpikelet : GenericPhase
+    note over TerminalSpikelet, FlagLeaf : LeafAppearancePhase
+    note over FlagLeaf, Flowering : GenericPhase
+    note over Flowering, StartGrainFill: GenericPhase
+    note over StartGrainFill, EndGrainFill : GenericPhase
+    note over EndGrainFill, Maturity : GenericPhase
+    note over Maturity, Unused: EndPhase
+    \enduml
 
     
     
@@ -102,10 +102,10 @@ namespace Models.PMF.Phen
     phase to do its development for the day. If thermal time is leftover after 
     Phase is progressed, and the time step for the subsequent phase is calculated 
     using leftover thermal time.
-	
+    
     
     </remarks>
-	*/
+    */
     /// <summary>
     /// A phenology model
     /// </summary>

@@ -9,8 +9,8 @@ namespace Models.PMF.Functions
     /// <summary>
     /// Multiplies the values of the children of this node
     /// </summary>
-	/// \pre All children have to contain a public function "Value"
-	/// \retval Product of value of all children of this node. Return 1 if no child.
+    /// \pre All children have to contain a public function "Value"
+    /// \retval Product of value of all children of this node. Return 1 if no child.
     /// <remarks>
     /// </remarks>
     [Serializable]

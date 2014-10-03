@@ -6,17 +6,17 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
-	/// <summary>
+    /// <summary>
     /// The day length for a specified day and location
     /// </summary>
-	/// 
-	/// \pre A \ref Models.WeatherFile function has to exist.
-	/// \pre A \ref Models.Clock function has to be existed to retrieve day of year
-	/// \param Twilight The interval between sunrise or sunset and the time when the true centre of the sun is below the horizon as a specified angle.
-	/// \retval The day length of a specified day and location. Variable "photoperiod" will be returned if simulation environment has a variable called ClimateControl.PhotoPeriod.
+    /// 
+    /// \pre A \ref Models.WeatherFile function has to exist.
+    /// \pre A \ref Models.Clock function has to be existed to retrieve day of year
+    /// \param Twilight The interval between sunrise or sunset and the time when the true centre of the sun is below the horizon as a specified angle.
+    /// \retval The day length of a specified day and location. Variable "photoperiod" will be returned if simulation environment has a variable called ClimateControl.PhotoPeriod.
     /// <remarks>
     /// The day length is calculated with \ref Utility.Math.DayLength.
-	/// </remarks>
+    /// </remarks>
     [Serializable]
     [Description("Returns the value of todays photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead")]
     public class PhotoperiodFunction : Function
