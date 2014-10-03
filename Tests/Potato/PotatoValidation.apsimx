@@ -18,21 +18,15 @@
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>Observed\potato_observations.txt</string>
-      </FileNames>
+      <FileName>Observed\potato_observations.txt</FileName>
     </Input>
     <Input>
       <Name>InputRadInd</Name>
-      <FileNames>
-        <string>Observed\Potato_radint_observations.txt</string>
-      </FileNames>
+      <FileName>Observed\Potato_radint_observations.txt</FileName>
     </Input>
     <Input>
       <Name>InputNodeNo</Name>
-      <FileNames>
-        <string>Observed\cultivar_nodenumber.txt</string>
-      </FileNames>
+      <FileName>Observed\cultivar_nodenumber.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>

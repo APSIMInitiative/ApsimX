@@ -5,7 +5,7 @@
     <Name>Test</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
-      <FileName>..\WeatherFiles\lincoln.met</FileName>
+      <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -762,9 +762,6 @@
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
-    <Input>
-      <Name>Observed</Name>
-    </Input>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>

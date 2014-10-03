@@ -5,9 +5,7 @@
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>EucalyptusValidationData.txt</string>
-      </FileNames>
+      <FileName>EucalyptusValidationData.txt</FileName>
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>

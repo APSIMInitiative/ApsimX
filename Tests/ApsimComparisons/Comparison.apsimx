@@ -885,9 +885,7 @@ namespace Models
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>Apsim.out</string>
-      </FileNames>
+      <FileName>Apsim.out</FileName>
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>

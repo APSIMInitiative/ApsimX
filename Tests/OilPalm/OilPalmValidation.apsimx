@@ -4967,9 +4967,7 @@ namespace Models
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>observed.prn</string>
-      </FileNames>
+      <FileName>observed.prn</FileName>
     </Input>
     <PredictedObserved>
       <Name>POMonthly</Name>

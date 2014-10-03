@@ -18,9 +18,7 @@
     </PredictedObserved>
     <Input>
       <Name>NZObservations</Name>
-      <FileNames>
-        <string>RainShelterBiomass.txt</string>
-      </FileNames>
+      <FileName>RainShelterBiomass.txt</FileName>
     </Input>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>

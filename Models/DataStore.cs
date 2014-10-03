@@ -593,7 +593,8 @@ namespace Models
                 if (Filename == null)
                 {
                     Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                    Filename = Path.ChangeExtension(simulations.FileName, ".db");
+                    if (simulations != null)
+                        Filename = Path.ChangeExtension(simulations.FileName, ".db");
                 }
 
                 if (Filename != null && 

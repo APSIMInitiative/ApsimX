@@ -11304,123 +11304,83 @@ namespace Models
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>OLD_Outputs\Saturated Flow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Saturated Flow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_unsaturated</Name>
-      <FileNames>
-        <string>OLD_Outputs\Unsaturated Flow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Unsaturated Flow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_runoff</Name>
-      <FileNames>
-        <string>OLD_Outputs\Runoff Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Runoff Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_soil_evap</Name>
-      <FileNames>
-        <string>OLD_Outputs\Soil Evaporation Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Soil Evaporation Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_ponding</Name>
-      <FileNames>
-        <string>OLD_Outputs\Ponding Only using KS (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Ponding Only using KS (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_ponding_soil_evap</Name>
-      <FileNames>
-        <string>OLD_Outputs\Ponding with Soil Evap (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Ponding with Soil Evap (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_watertable_calc</Name>
-      <FileNames>
-        <string>OLD_Outputs\WaterTable Calculation (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\WaterTable Calculation (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_lateral_outflow</Name>
-      <FileNames>
-        <string>OLD_Outputs\Lateral Outflow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Lateral Outflow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_soil_evap_surfaceom</Name>
-      <FileNames>
-        <string>OLD_Outputs\Soil Evaporation with SurfaceOM (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Soil Evaporation with SurfaceOM (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_runoff_surfaceom</Name>
-      <FileNames>
-        <string>OLD_Outputs\Runoff with SurfaceOM (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Runoff with SurfaceOM (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_runoff_tillage_event</Name>
-      <FileNames>
-        <string>OLD_Outputs\Runoff after Tillage Event (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Runoff after Tillage Event (OLD).out</FileName>
     </Input>
     <Input>
       <Name>new_runoff_irrigation</Name>
-      <FileNames>
-        <string>OLD_Outputs\Runoff with Irrigation (NEW).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Runoff with Irrigation (NEW).out</FileName>
     </Input>
     <Input>
       <Name>new_subsurface_irrigation</Name>
-      <FileNames>
-        <string>OLD_Outputs\Subsurface Irrigation (NEW).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Subsurface Irrigation (NEW).out</FileName>
     </Input>
     <Input>
       <Name>old_solute_saturated</Name>
-      <FileNames>
-        <string>OLD_Outputs\Solute - Saturated Flow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Solute - Saturated Flow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_solute_unsaturated</Name>
-      <FileNames>
-        <string>OLD_Outputs\Solute - Unsaturated Flow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Solute - Unsaturated Flow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_solute_irrigation</Name>
-      <FileNames>
-        <string>OLD_Outputs\Solute - Irrigation (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Solute - Irrigation (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_setable_vars_erosion</Name>
-      <FileNames>
-        <string>OLD_Outputs\Setable Variables - Erosion (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Setable Variables - Erosion (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_setable_vars_runoff</Name>
-      <FileNames>
-        <string>OLD_Outputs\Setable Variables - Runoff (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Setable Variables - Runoff (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_watertable_fixed_depth</Name>
-      <FileNames>
-        <string>OLD_Outputs\WaterTable - Set to a fixed depth (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\WaterTable - Set to a fixed depth (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_setable_vars_water</Name>
-      <FileNames>
-        <string>OLD_Outputs\Setable Variables - Water (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Setable Variables - Water (OLD).out</FileName>
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
