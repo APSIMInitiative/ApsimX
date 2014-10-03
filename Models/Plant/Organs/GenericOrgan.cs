@@ -20,13 +20,15 @@ namespace Models.PMF.Organs
 		(Optional, default 0 if this parameter does not exist, i.e. no initial weight).
 	\param InitialStructuralFraction Fraction of initial weight of organ 
 		(Optional, default 1 if this parameter does not exist, i.e. all initial biomass is structural).
+	\param NReallocationFactor Factor of nitrogen reallocation  
+		(0-1; Optional, default 0 if this parameter does not exist, i.e. no nitrogen reallocation).
+	\param NRetranslocationFactor Factor of nitrogen retranslocation  
+		(0-1; Optional, default 0 if this parameter does not exist, i.e. no nitrogen retranslocation).
+	\param MinimumNConc Minimum nitrogen concentration.
 	\retval LiveFWt The live fresh weight (g m<sup>-2</sup>)
 	<remarks>
 	</remarks>
 	 */
-    /// <summary>
-    /// Model of generic organ 
-    /// </summary>
     [Serializable]
     public class GenericOrgan : BaseOrgan
     {

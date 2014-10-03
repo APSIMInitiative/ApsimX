@@ -128,9 +128,6 @@ namespace Models.PMF.Organs
 	- fixation
 	</remarks>
 	 */
-    /// <summary>
-    /// 
-    /// </summary>
     [Serializable]
     abstract public class Organ : Model
     {
