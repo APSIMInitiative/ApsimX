@@ -965,11 +965,9 @@ namespace Models.AgPasture1
 
         /// <summary>Generic growth limiting factor [0-1]</summary>
         private double glfGeneric = 1.0;
-        /// <summary>Generic growth limiting factor [0-1]</summary>
-        /// <value>The GLF generic.</value>
-        /// <remarks>
-        /// This factor is applied at same level as N, so it can be considered a nutrient effect
-        /// </remarks>
+        /// <summary>Gets or sets a generic growth limiting factor (arbitrary limitation).</summary>
+        /// <value>The generic growth limiting factor.</value>
+        /// <remarks> This factor is applied at same level as N, so it can be considered a nutrient limitation effect </remarks>
         [Description("Generic growth limiting factor [0-1]:")]
         [Units("0-1")]
         public double GlfGeneric
@@ -2462,15 +2460,6 @@ namespace Models.AgPasture1
             get { return glfWater; }
         }
 
-        /// <summary>Gets the generic growth limiting factor (arbitrary limitation).</summary>
-        /// <value>The generic growth limiting factor.</value>
-        [Description("Generic growth limiting factor")]
-        [Units("0-1")]
-        public double GlfGeneric
-        {
-            get { return glfGeneric; }
-        }
-
         // TODO: verify that this is really needed
         /// <summary>Gets the vapour pressure deficit factor.</summary>
         /// <value>The vapour pressure deficit factor.</value>
@@ -3875,7 +3864,7 @@ namespace Models.AgPasture1
                 Nstolon2 += dDM_in * Utility.Math.Divide(prevState.Nstolon1, prevState.dmStolon1, 0.0)
                           - dDM_out * Utility.Math.Divide(prevState.Nstolon2, prevState.dmStolon2, 0.0);
                 dDM_in = dDM_out;
-                dDM_out = gama * prevState.dmStolon3;
+                dDM_out = gamaS * prevState.dmStolon3;
                 dmStolon3 += dDM_in - dDM_out;
                 Nstolon3 += dDM_in * Utility.Math.Divide(prevState.Nstolon2, prevState.dmStolon2, 0.0)
                           - dDM_out * Utility.Math.Divide(prevState.Nstolon3, prevState.dmStolon3, 0.0);
@@ -3886,9 +3875,9 @@ namespace Models.AgPasture1
                 if (dDM_in < 0.0)
                     throw new Exception("Loss of mass balance on C remobilisation - stolon");
                 dLitter += dDM_in;
-                dNlitter += dDM_in * NcStolonMin;
+                dNlitter += dDM_in * NcStolonMin + 0.5 * dDM_in * (Utility.Math.Divide(prevState.Nstolon3, prevState.dmStolon3, 0.0) - NcStolonMin);
                 dGrowthShoot -= dDM_out;
-                NRemobl += dDM_in * (Utility.Math.Divide(prevState.Nstolon3, prevState.dmStolon3, 0.0) - NcStolonMin);
+                NRemobl += 0.5* dDM_in * (Utility.Math.Divide(prevState.Nstolon3, prevState.dmStolon3, 0.0) - NcStolonMin);
                 ChRemobl += ChRemobSugar + ChRemobProtein;
 
                 dRootSen = gamaR * prevState.dmRoot;
@@ -3898,10 +3887,10 @@ namespace Models.AgPasture1
                 dRootSen -= ChRemobSugar + ChRemobProtein;
                 if (dRootSen < 0.0)
                     throw new Exception("Loss of mass balance on C remobilisation - root");
-                dNrootSen = dRootSen * NcRootMin;
+                dNrootSen = dRootSen * NcRootMin + 0.5 * dRootSen * (Utility.Math.Divide(prevState.Nroot, prevState.dmRoot, 0.0) - NcRootMin);
                 Nroot -= dRootSen * Utility.Math.Divide(prevState.Nroot, dmRoot, 0.0);
                 dGrowthRoot -= dRootSen;
-                NRemobl += dRootSen * (Utility.Math.Divide(prevState.Nroot, prevState.dmRoot, 0.0) - NcRootMin);
+                NRemobl += 0.5 * dRootSen * (Utility.Math.Divide(prevState.Nroot, prevState.dmRoot, 0.0) - NcRootMin);
                 ChRemobl += ChRemobSugar + ChRemobProtein;
 
                 // Remobilised C to be used in tomorrow's growth (converted from carbohydrates to C)

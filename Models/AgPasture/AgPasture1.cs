@@ -615,7 +615,7 @@ namespace Models.AgPasture1
         /// <value>The potential C assimilation, in DM equivalent.</value>
         [Description("Gross potential plant growth (potential C assimilation)")]
         [Units("kgDM/ha")]
-        public double PlantGrossPotentialGrowthWt
+        public double GrossPotentialGrowthWt
         {
             get { return mySward.Sum(mySpecies => mySpecies.GrossPotentialGrowthWt); }
         }
@@ -624,7 +624,7 @@ namespace Models.AgPasture1
         /// <value>The loss of C due to respiration, in DM equivalent.</value>
         [Description("Respiration rate (DM lost via respiration)")]
         [Units("kgDM/ha")]
-        public double PlantRespirationWt
+        public double RespirationWt
         {
             get { return mySward.Sum(mySpecies => mySpecies.RespirationWt); }
         }
@@ -633,7 +633,7 @@ namespace Models.AgPasture1
         /// <value>The C remobilised, in DM equivalent.</value>
         [Description("C remobilisation (DM remobilised from old tissue to new growth)")]
         [Units("kgDM/ha")]
-        public double PlantRemobilisationWt
+        public double RemobilisationWt
         {
             get { return mySward.Sum(mySpecies => mySpecies.RemobilisationWt); }
         }
@@ -642,7 +642,7 @@ namespace Models.AgPasture1
         /// <value>The potential growth rate after respiration and remobilisation.</value>
         [Description("Net potential plant growth")]
         [Units("kgDM/ha")]
-        public double PlantNetPotentialGrowthWt
+        public double NetPotentialGrowthWt
         {
             get { return mySward.Sum(mySpecies => mySpecies.NetPotentialGrowthWt); }
         }
@@ -651,7 +651,7 @@ namespace Models.AgPasture1
         /// <value>The potential growth after water stress.</value>
         [Description("Potential growth rate after water stress")]
         [Units("kgDM/ha")]
-        public double PlantPotGrowthWt_Wstress
+        public double PotGrowthWt_Wstress
         {
             get { return mySward.Sum(mySpecies => mySpecies.PotGrowthWt_Wstress); }
         }
@@ -660,7 +660,7 @@ namespace Models.AgPasture1
         /// <value>The actual growth rate, after nutrient limitations.</value>
         [Description("Actual plant growth (before littering)")]
         [Units("kgDM/ha")]
-        public double PlantActualGrowthWt
+        public double ActualGrowthWt
         {
             get { return mySward.Sum(mySpecies => mySpecies.ActualGrowthWt); }
         }
@@ -669,7 +669,7 @@ namespace Models.AgPasture1
         /// <value>The effective growth rate, after senescence.</value>
         [Description("Effective growth rate, after turnover")]
         [Units("kgDM/ha")]
-        public double PlantEffectiveGrowthWt
+        public double EffectiveGrowthWt
         {
             get { return mySward.Sum(mySpecies => mySpecies.EffectiveGrowthWt); }
         }
@@ -911,9 +911,9 @@ namespace Models.AgPasture1
         /// <value>The N concentration of new grown tissue.</value>
         [Description("Nitrogen concentration in new growth")]
         [Units("kgN/kgDM")]
-        public double PlantGrowthNconc
+        public double GrowthNconc
         {
-            get { return PlantActualGrowthN / PlantActualGrowthWt; }
+            get { return ActualGrowthN / ActualGrowthWt; }
         }
         
         # endregion
@@ -1033,7 +1033,7 @@ namespace Models.AgPasture1
         /// <value>The actual growth N amount.</value>
         [Description("Nitrogen amount in new growth")]
         [Units("kgN/ha")]
-        public double PlantActualGrowthN
+        public double ActualGrowthN
         {
             get { return mySward.Sum(mySpecies => mySpecies.ActualGrowthN); }
         }
@@ -1066,7 +1066,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double FractionGrowthToRoot
         {
-            get { return DMToRoots / PlantActualGrowthWt; }
+            get { return DMToRoots / ActualGrowthWt; }
         }
 
         /// <summary>Gets the fraction of new growth allocated to shoot.</summary>
@@ -1075,7 +1075,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double FractionGrowthToShoot
         {
-            get { return DMToShoot / PlantActualGrowthWt; }
+            get { return DMToShoot / ActualGrowthWt; }
         }
 
         #endregion
@@ -1319,7 +1319,7 @@ namespace Models.AgPasture1
             get { return mySward.Sum(mySpecies => mySpecies.GlfNConcentration * mySpecies.AboveGrounLivedWt) / AboveGroundLiveWt; }
         }
 
-        /// <summary>Gets the growth limiting factor due to temperature.</summary>
+        /// <summary>Gets the average growth limiting factor due to temperature.</summary>
         /// <value>The growth limiting factor due to temperature.</value>
         [Description("Average plant growth limiting factor due to temperature")]
         [Units("0-1")]
@@ -1328,7 +1328,7 @@ namespace Models.AgPasture1
             get { return mySward.Sum(mySpecies => mySpecies.GlfTemperature * mySpecies.AboveGrounLivedWt) / AboveGroundLiveWt; }
         }
 
-        /// <summary>Gets the growth limiting factor due to water availability.</summary>
+        /// <summary>Gets the average growth limiting factor due to water availability.</summary>
         /// <value>The growth limiting factor due to water.</value>
         [Description("Average plant growth limiting factor due to water deficit")]
         [Units("0-1")]
@@ -1337,7 +1337,7 @@ namespace Models.AgPasture1
             get { return Math.Max(0.0, Math.Min(1.0, WaterUptake.Sum() / WaterDemand)); }
         }
 
-        /// <summary>Gets the generic growth limiting factor (arbitrary limitation).</summary>
+        /// <summary>Gets the average generic growth limiting factor (arbitrary limitation).</summary>
         /// <value>The generic growth limiting factor.</value>
         [Description("Average generic plant growth limiting factor, used for other factors")]
         [Units("0-1")]
@@ -1921,7 +1921,7 @@ namespace Models.AgPasture1
                 if (useAltNUptake == "no")
                 {
                     // simple way, all N in the root zone is available
-                    layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
+                    layerFraction = 1.0; //TODO: shold be this: mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
                     soilNH4Available[layer] = Soil.SoilNitrogen.nh4[layer] * layerFraction;
                     soilNO3Available[layer] = Soil.SoilNitrogen.no3[layer] * layerFraction;
                 }
@@ -2020,12 +2020,13 @@ namespace Models.AgPasture1
                     mySpecies.mySoilNUptake = new double[nLayers];
 
                     // partition between mySpecies as function of their demand only
-                    speciesFraction = mySpecies.DemandSoilN / swardSoilNdemand;
+                    if (swardSoilNdemand > 0.0)
+                        speciesFraction = mySpecies.DemandSoilN / swardSoilNdemand;
                     //speciesFraction = mySpecies.RequiredNOptimum * (1 - mySpecies.MinimumNFixation) / swardNdemand;
 
                     for (int layer = 0; layer <= RootFrontier; layer++)
                     {
-                        layerFraction = mySward.Max(aSpecies => aSpecies.LayerFractionWithRoots(layer));
+                        layerFraction = 1.0; // TODO: mySward.Max(aSpecies => aSpecies.LayerFractionWithRoots(layer));
                         mySpecies.mySoilNUptake[layer] = (Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.no3[layer]) * layerFraction * uptakeFraction * speciesFraction;
                         NTakenUp.DeltaNH4[layer] -= Soil.SoilNitrogen.nh4[layer] * layerFraction * uptakeFraction * speciesFraction;
                         NTakenUp.DeltaNO3[layer] -= Soil.SoilNitrogen.no3[layer] * layerFraction * uptakeFraction * speciesFraction;
