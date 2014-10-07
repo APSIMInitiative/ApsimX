@@ -75,6 +75,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Models\AssemblyVersion.cs">
+      <Link>AssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="..\Utility\ColumnXYSeries.cs">
       <Link>Utility\ColumnXYSeries.cs</Link>
     </Compile>

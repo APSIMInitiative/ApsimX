@@ -1,0 +1,32 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#
+var major = 0;
+var minor = 0;
+var build = 0;
+var revision = "0";
+
+if (Environment.GetEnvironmentVariable("GIT_COMMIT") != null)
+{
+    major = DateTime.Today.Year;
+    minor = DateTime.Today.Month;
+    build = DateTime.Today.Day;
+    revision = Environment.GetEnvironmentVariable("GIT_COMMIT"); 
+    revision = revision == null ? "" : revision;
+}
+#>
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+using System.Reflection;
+[assembly: AssemblyTitle("APSIM <#=revision#>")]
+[assembly: AssemblyVersion("<#=major#>.<#=minor#>.<#=build#>.0")]
+[assembly: AssemblyFileVersion("<#=major#>.<#=minor#>.<#=build#>.0")]
+ 

@@ -19,6 +19,7 @@ namespace UserInterface.Views
     using EventArguments;
     using Interfaces;
     using Views;
+    using System.Reflection;
 
     /// <summary>
     /// An ExplorerView is a "Windows Explorer" like control that displays a virtual tree control on the left
@@ -338,8 +339,33 @@ namespace UserInterface.Views
                     Button.TextImageRelation = TextImageRelation.ImageAboveText;
                 }
                 ToolStrip.Visible = ToolStrip.Items.Count > 0;
+
+
+                // Add in version information as a label.
+                Version version = new Version(Application.ProductVersion);
+                ToolStripLabel label = new ToolStripLabel();
+                label.ForeColor = Color.Gray;
+                label.Alignment = ToolStripItemAlignment.Right;
+                label.Text = "Custom Build";
+                
+                // Get assembly title.
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    AssemblyTitleAttribute titleAttribute = attributes[0] as AssemblyTitleAttribute;
+                    string[] titleBits = titleAttribute.Title.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (titleBits.Length == 2 && titleBits[1] != "0")
+                    {
+                        label.Text = "Official Build";
+                        label.ToolTipText = "Version: " + version.Major + "." + version.Minor + "." + version.Build;
+                        label.ToolTipText += "\nGIT hash: " + titleBits[1];
+                    }
+                }
+                   
+                ToolStrip.Items.Add(label);
             }
         }
+
 
         #endregion
 
