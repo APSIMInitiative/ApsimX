@@ -757,7 +757,7 @@ namespace Importer
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
-        private XmlNode ImportSoil(XmlNode compNode, XmlNode destParent, XmlNode newNode)
+        public XmlNode ImportSoil(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
             //Models.Soils.Soil mysoil = new Models.Soils.Soil();
 
