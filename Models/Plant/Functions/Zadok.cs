@@ -8,16 +8,23 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// Zadok model
+    /// </summary>
     [Serializable]
     public class Zadok : Model
     {
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The leaf</summary>
         [Link]
         Leaf1 Leaf = null;
 
-        
+
+        /// <summary>Gets the stage.</summary>
+        /// <value>The stage.</value>
         public double Stage
         {
             get

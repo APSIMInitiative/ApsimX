@@ -7,7 +7,32 @@ namespace Utility
     /// <summary>
     /// 
     /// </summary>
-    public enum ExpressionType { Variable, Value, Operator, EvalFunction, Result, Bracket, Comma, Error }
+    public enum ExpressionType 
+    {
+        /// <summary>The variable</summary>
+        Variable,
+
+        /// <summary>The value</summary>
+        Value,
+
+        /// <summary>The operator</summary>
+        Operator,
+
+        /// <summary>The eval function</summary>
+        EvalFunction,
+
+        /// <summary>The result</summary>
+        Result,
+
+        /// <summary>The bracket</summary>
+        Bracket,
+
+        /// <summary>The comma</summary>
+        Comma,
+
+        /// <summary>The error</summary>
+        Error 
+    }
     /// <summary>
     /// 
     /// </summary>

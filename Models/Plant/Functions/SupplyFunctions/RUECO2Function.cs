@@ -6,18 +6,32 @@ using Models.Core;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
+    /// <summary>
+    /// This model calculates CO2 Impact on RUE using the approach of Reyenga, Howden, Meinke, Mckeon (1999) Modelling global change impact on wheat cropping in south-east Queensland, Australia. Enivironmental Modelling and Software 14:297-306
+    /// </summary>
     [Serializable]
     [Description("This model calculates CO2 Impact on RUE using the approach of <br>Reyenga, Howden, Meinke, Mckeon (1999) <br>Modelling global change impact on wheat cropping in south-east Queensland, Australia. <br>Enivironmental Modelling & Software 14:297-306")]
     public class RUECO2Function : Function
     {
+        /// <summary>The photosynthetic pathway</summary>
         public String PhotosyntheticPathway = "";
 
         //[Input]
         //public NewMetType MetData;
 
+        /// <summary>The c o2</summary>
         double CO2 = 350;  // If CO2 is not supplied we default to 350 ppm
 
-        
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.Exception">
+        /// Average daily temperature too high for RUE CO2 Function
+        /// or
+        /// CO2 concentration too low for RUE CO2 Function
+        /// or
+        /// Unknown photosynthetic pathway in RUECO2Function
+        /// </exception>
         public override double Value
         {
             get

@@ -13,11 +13,14 @@ namespace Utility
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
 
+    /// <summary>
+    /// Utility class with reflection functions
+    /// </summary>
     public class Reflection
     {
         /// <summary>
         /// Returns true if the specified type T is of type TypeName
-        /// <summary>
+        /// </summary>
         public static bool IsOfType(Type T, string TypeName)
         {
             while (T != null)

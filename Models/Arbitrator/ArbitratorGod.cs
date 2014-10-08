@@ -25,16 +25,7 @@ namespace Models.ArbitratorGod
     {
 
         [Link]
-        Simulation Simulation;
-
-        [Link]
-        WeatherFile Weather = null;
-
-        [Link]
-        Summary Summary = null;
-
-        [Link]
-        Clock Clock = null;
+        Simulation Simulation = null;
 
         //[Link]
         //Zone mypaddock;
@@ -49,12 +40,14 @@ namespace Models.ArbitratorGod
         [Description("Arbitration method: old / new - use old - new only for testing")]
         public string ArbitrationMethod { get; set; }
 
+        /// <summary>Gets or sets the nutrient uptake method.</summary>
+        /// <value>The nutrient uptake method.</value>
         [Description("Potential nutrient uptake method: 1=where the roots are; 2=PMF concentration based; 3=OilPalm amount based")]
         public int NutrientUptakeMethod { get; set; }
 
-        /// <summary>
-        /// Potential nutrient supply in layers (kgN/ha/layer) - this is the potential (demand-limited) supply if this was the only plant in the simualtion
-        /// </summary>
+        ///// <summary>
+        ///// Potential nutrient supply in layers (kgN/ha/layer) - this is the potential (demand-limited) supply if this was the only plant in the simualtion
+        ///// </summary>
         //[XmlIgnore]
         //[Description("Potential nutrient supply in layers for the first plant")]
         //public double[] Plant1potentialSupplyNitrogenPlantLayer
@@ -73,12 +66,12 @@ namespace Models.ArbitratorGod
 
 
         // these only (I think) used by the routines that Hamish using for testing - marked for deletion
-        double[,] potentialSupplyWaterPlantLayer;
-        double[,] uptakeWaterPlantLayer;
-        double[,] potentialSupplyNitrogenPlantLayer;
-        double[,] potentialSupplyPropNO3PlantLayer;
-        double[,] uptakeNitrogenPlantLayer;
-        double[,] uptakeNitrogenPropNO3PlantLayer;
+        //double[,] potentialSupplyWaterPlantLayer;
+        //double[,] uptakeWaterPlantLayer;
+        //double[,] potentialSupplyNitrogenPlantLayer;
+        //double[,] potentialSupplyPropNO3PlantLayer;
+        //double[,] uptakeNitrogenPlantLayer;
+        //double[,] uptakeNitrogenPropNO3PlantLayer;
 
         // soil water evaporation stuff
         //public double ArbitEOS { get; set; }  //
@@ -94,17 +87,17 @@ namespace Models.ArbitratorGod
         /// </summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
-        class CanopyProps
-        {
-            /// <summary>
-            /// Grean leaf area index (m2/m2)
-            /// </summary>
-            public double laiGreen;
-            /// <summary>
-            /// Total leaf area index (m2/m2)
-            /// </summary>
-            public double laiTotal;
-        }
+        //class CanopyProps
+        //{
+        //    /// <summary>
+        //    /// Grean leaf area index (m2/m2)
+        //    /// </summary>
+        //    public double laiGreen;
+        //    /// <summary>
+        //    /// Total leaf area index (m2/m2)
+        //    /// </summary>
+        //    public double laiTotal;
+        //}
         //public CanopyProps[,] myCanopy;
 
         // new Arbitration parameters from here
@@ -203,10 +196,10 @@ namespace Models.ArbitratorGod
         /// </summary>
         double[] extractableByPlant;
 
-        /// <summary>
-        /// This is "water" or "nitrogen" and holds the resource that is being arbitrated
-        /// </summary>
-        string resourceToArbitrate;
+        ///// <summary>
+        ///// This is "water" or "nitrogen" and holds the resource that is being arbitrated
+        ///// </summary>
+        ////string resourceToArbitrate;
 
         /// <summary>
         /// used as a counter for zones

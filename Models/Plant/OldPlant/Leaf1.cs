@@ -623,7 +623,6 @@ namespace Models.PMF.OldPlant
             Growth.StructuralN += NFixUptake * Utility.Math.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
         }
         /// <summary>Does the n conccentration limits.</summary>
-        /// <exception cref="System.Exception">nconc_crit < nconc_min!. What's happened to CO2??</exception>
         public override void DoNConccentrationLimits()
         {
             n_conc_crit = NConcentrationCritical.Value;

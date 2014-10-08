@@ -34,10 +34,6 @@ namespace Models
         [Link]
         private WeatherFile MetData = null;
 
-        /// <summary>The summary</summary>
-        [Link]
-        private ISummary Summary = null;
-
         //Events
         /// <summary>
         /// 
@@ -4075,8 +4071,6 @@ namespace Models
         private double p_dNRootSen;	   //daily root senescence
 
         //p_... variables are pasture states at a given time (day)
-        /// <summary>The P_F shoot</summary>
-        private double p_fShoot;		  //actual fraction of dGrowth to shoot
         /// <summary>The p_height</summary>
         private double p_height;		  // Canopy height (mm)
         /// <summary>The p_green lai</summary>

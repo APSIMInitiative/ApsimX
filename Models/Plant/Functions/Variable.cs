@@ -15,9 +15,12 @@ namespace Models.PMF.Functions
     [Description("Returns the value of a nominated internal Plant numerical variable")]
     public class VariableReference : Function
     {
+        /// <summary>The variable name</summary>
         public string VariableName = "";
 
-        
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
         public override double Value
         {
             get

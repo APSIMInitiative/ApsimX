@@ -257,8 +257,6 @@ namespace Models.Soils
         /// <summary>Event to comunicate other modules (SurfaceOM) that residues have been decomposed</summary>
         /// <param name="Data">The data.</param>
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
-        /// <summary>Occurs when [actual residue decomposition calculated].</summary>
-        public event SurfaceOrganicMatterDecompDelegate ActualResidueDecompositionCalculated;
 
         #endregion
 

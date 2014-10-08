@@ -33,9 +33,6 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link]
         public Phenology Phenology = null;
-        /// <summary>The clock</summary>
-        [Link]
-        public Clock Clock = null;
         #endregion
 
         #region Structures

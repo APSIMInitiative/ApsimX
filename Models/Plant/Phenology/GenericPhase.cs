@@ -21,9 +21,6 @@ namespace Models.PMF.Phen
     [Serializable]
     public class GenericPhase : Phase
     {
-        [Link]
-        ISummary Summary = null;
-
         [Link(IsOptional=true)]
         private Function Target = null;
 

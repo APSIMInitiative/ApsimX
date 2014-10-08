@@ -27,17 +27,9 @@ namespace Models.Arbitrator
         [Link]
         Soils.Soil Soil = null;
 
-        /// <summary>The weather</summary>
-        [Link]
-        WeatherFile Weather = null;
-
         /// <summary>The summary</summary>
         [Link]
         Summary Summary = null;
-
-        /// <summary>The clock</summary>
-        [Link]
-        Clock Clock = null;
 
         /// <summary>The zone</summary>
         [Link]
@@ -114,10 +106,8 @@ namespace Models.Arbitrator
         /// </summary>
         class CanopyProps
         {
-            /// <summary>Grean leaf area index (m2/m2)</summary>
-            public double laiGreen;
-            /// <summary>Total leaf area index (m2/m2)</summary>
-            public double laiTotal;
+            //public double laiGreen;
+            //public double laiTotal;
         }
         //public CanopyProps[,] myCanopy;
 
@@ -211,8 +201,8 @@ namespace Models.Arbitrator
         /// </summary>
         double[] extractableByPlant;
 
-        /// <summary>This is "water" or "nitrogen" and holds the resource that is being arbitrated</summary>
-        string resourceToArbitrate;
+        // <summary>This is "water" or "nitrogen" and holds the resource that is being arbitrated</summary>
+        //string resourceToArbitrate;
 
 #endregion  // defintions
 

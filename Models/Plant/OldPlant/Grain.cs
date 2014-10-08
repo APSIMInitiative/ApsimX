@@ -18,10 +18,6 @@ namespace Models.PMF.OldPlant
     [Serializable]
     public class Grain : BaseOrgan1, AboveGround, Reproductive
     {
-        /// <summary>The summary</summary>
-        [Link]
-        ISummary Summary = null;
-
         #region Parameters read from XML file and links to other functions.
 
         /// <summary>The plant</summary>

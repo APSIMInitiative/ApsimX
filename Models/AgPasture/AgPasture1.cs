@@ -24,10 +24,6 @@ namespace Models.AgPasture1
 
         //- Links  ----------------------------------------------------------------------------------------------------
         
-        /// <summary>Link to APSIM's Clock (time information)</summary>
-        [Link]
-        private Clock clock = null;
-
         /// <summary>Link to APSIM's WeatherFile (meteorological information)</summary>
         [Link]
         private WeatherFile MetData = null;
@@ -35,10 +31,6 @@ namespace Models.AgPasture1
         /// <summary>Link to the Soil (soil layers and other information)</summary>
         [Link]
         private Soils.Soil Soil = null;
-
-        /// <summary>Link to the SummaryFile (to add info to the simulation log)</summary>
-        [Link]
-        private ISummary Summary = null;
 
         //- Events  ---------------------------------------------------------------------------------------------------
 
@@ -1477,8 +1469,6 @@ namespace Models.AgPasture1
         private double swardNdemand = 0.0;
         /// <summary>The soil N demand for the whole sward</summary>
         private double swardSoilNdemand = 0.0;
-        /// <summary>The N uptake for the whole sward</summary>
-        private double[] swardNUptake;
         /// <summary>The total N uptake for the whole sward</summary>
         private double swardSoilNUptake = 0.0;
         /// <summary>The remobilised N in the whole sward</summary>

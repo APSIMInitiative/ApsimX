@@ -14,37 +14,45 @@ using Models.SurfaceOM;
 namespace Models.Soils
 {
 
-    ///<summary>
+    /// <summary>
     /// .NET port of the Fortran SoilWat model
     /// Ported by Shaun Verrall Mar 2011
     /// Extended by Eric Zurcher Mar 2012
-    ///</summary>
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class SoilWater : Model
     {
         #region Links
+        /// <summary>The clock</summary>
         [Link]
         private Clock Clock = null;
 
         //[Link]
+        /// <summary>The soil wat tillage type</summary>
         private SoilWatTillageType SoilWatTillageType = null;
 
+        /// <summary>The paddock</summary>
         [Link]
-        Simulation paddock;
+        Simulation paddock = null;
 
+        /// <summary>The weather</summary>
         [Link]
-        WeatherFile Weather;
+        WeatherFile Weather = null;
 
+        /// <summary>The soil</summary>
         [Link]
         private Soil Soil = null;
 
+        /// <summary>The water</summary>
         [Link]
         private Water Water = null;
 
+        /// <summary>The summary</summary>
         [Link] ISummary Summary = null;
 
+        /// <summary>The surface om</summary>
         [Link]
         SurfaceOrganicMatter SurfaceOM = null;
 
@@ -52,136 +60,165 @@ namespace Models.Soils
 
         #region Constants
 
+        /// <summary>The precision_sw_dep</summary>
         private const double precision_sw_dep = 1.0e-3; //!Precision for sw dep (mm)
+        /// <summary>The ritchie_method</summary>
         private const int ritchie_method = 1;
+        /// <summary>The MM2M</summary>
         private const double mm2m = 1.0 / 1000.0;      //! conversion of mm to m
+        /// <summary>The SM2SMM</summary>
         private const double sm2smm = 1000000.0;       //! conversion of square metres to square mm
+        /// <summary>The error_margin</summary>
         private const double error_margin = 0.0001;
 
         #endregion
 
         #region Module Constants (from SIM file but it gets from INI file)
 
+        /// <summary>The min_crit_temp</summary>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("oC")]
         [Description("Temperature below which eeq decreases")]
         public double min_crit_temp = 5.0;             //! temperature below which eeq decreases (oC)
 
 
+        /// <summary>The max_crit_temp</summary>
         [Bounds(Lower = 0.0, Upper = 50.0)]
         [Units("oC")]
         [Description("Temperature above which eeq increases")]
         public double max_crit_temp = 35.0;             //! temperature above which eeq increases (oC)
 
 
+        /// <summary>The max_albedo</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Maximum bare ground soil albedo")]
         public double max_albedo = 0.23;                //! maximum bare ground soil albedo (0-1)
 
 
+        /// <summary>The a_to_evap_fact</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Factor to convert 'A' to coefficient in Adam's type residue effect on Eos")]
         public double A_to_evap_fact = 0.44;            //! factor to convert "A" to coefficient in Adam's type residue effect on Eos
 
 
+        /// <summary>The canopy_eos_coef</summary>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("0-10")]
         [Description("Coefficient in cover Eos reduction equation")]
         public double canopy_eos_coef = 1.7;           //! coef in cover Eos reduction eqn
 
 
+        /// <summary>The sw_top_crit</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Critical sw ratio in top layer below which stage 2 evaporation occurs")]
         public double sw_top_crit = 0.9;               //! critical sw ratio in top layer below which stage 2 evaporation occurs
 
 
+        /// <summary>The sumes1_max</summary>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
         [Description("Upper limit of sumes1")]
         public double sumes1_max = 100;                //! upper limit of sumes1
 
 
+        /// <summary>The sumes2_max</summary>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
         [Description("Upper limit of sumes2")]
         public double sumes2_max = 25;                //! upper limit of sumes2
 
 
+        /// <summary>The solute_flow_eff</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Efficiency of moving solute with unsaturated flow")]
         public double[] solute_flow_eff = new double[] { 1.0 };          //sv- Unsaturated Flow   //! efficiency of moving solute with flow (0-1)
+        /// <summary>The num_solute_flow</summary>
         private int num_solute_flow;   //bound_check_real_array() gives this a value in soilwat2_read_constants()
 
 
+        /// <summary>The solute_flux_eff</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Efficiency of moving solute with flux (saturated flow)")]
         public double[] solute_flux_eff = new double[] { 1.0 };         //sv- Drainage (Saturated Flow)   //! efficiency of moving solute with flux (0-1) 
+        /// <summary>The num_solute_flux</summary>
         private int num_solute_flux; //bound_check_real_array() gives this a value in soilwat2_read_constants()
 
 
+        /// <summary>The gravity_gradient</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Gradient due to hydraulic differentials")]
         public double gravity_gradient = 0.00002;          //! gradient due to hydraulic differentials (0-1)
 
 
+        /// <summary>The specific_bd</summary>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("g/cm^3")]
         [Description("Specific bulk density")]
         public double specific_bd = 2.65;               //! specific bulk density (g/cc)
 
 
+        /// <summary>The hydrol_effective_depth</summary>
         [Bounds(Lower = 1.0, Upper = 1000.0)]
         [Units("mm")]
         [Description("Hydrologically effective depth for runoff")]
         public double hydrol_effective_depth = 450;    //! hydrologically effective depth for runoff (mm)
 
 
+        /// <summary>The mobile_solutes</summary>
         [Description("Names of all possible mobile solutes")]
         public string[] mobile_solutes = new string[] {"no3", "urea", "cl", "br", "org_n", "org_c_pool1", "org_c_pool2", 
                                                    "org_c_pool3"};     //! names of all possible mobile solutes
 
 
+        /// <summary>The immobile_solutes</summary>
         [Description("Names of all possible immobile solutes")]
         public string[] immobile_solutes = new string[] { "nh4" };   //! names of all possible immobile solutes
 
 
+        /// <summary>The canopy_fact</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Canopy factors for cover runoff effect")]
         public double[] canopy_fact = new double[] { 1, 1, 0, 0 };        //! canopy factors for cover runoff effect ()
 
 
+        /// <summary>The canopy_fact_height</summary>
         [Bounds(Lower = 0.0, Upper = 100000.0)]
         [Units("mm")]
         [Description("Heights for canopy factors")]
         public double[] canopy_fact_height = new double[] { 0, 600, 1800, 30000 }; //! heights for canopy factors (mm)
 
 
+        /// <summary>The canopy_fact_default</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Default canopy factor in absence of height")]
         public double canopy_fact_default = 0.5;       //! default canopy factor in absence of height ()
 
 
+        /// <summary>The act_evap_method</summary>
         [Description("Actual soil evaporation model being used")]
         public string act_evap_method = "ritchie";           //! actual soil evaporation model being used //sv- hard wired to "ritchie" in the init event handler. 
+        /// <summary>The evap_method</summary>
         private int evap_method;               //sv- integer representation of act_evap_method   
 
 
         //On SendIrrigated Event
         //**********************
         //Irrigation Runoff
+        /// <summary>The irrigation_will_runoff</summary>
         [Bounds(Lower = 0, Upper = 100)]
         [Description("Irrigation will runoff (0 no runoff [default], 1 runoff like rain")]
         public bool irrigation_will_runoff = false;
 
         //Irrigation Layer
+        /// <summary>The irrigation_layer</summary>
         [Bounds(Lower = 0, Upper = 100)]
         [Description("Number of soil layer to which irrigation water is applied (where top layer == 1)")]
         public int irrigation_layer = 0;      //! number of soil layer to which irrigation water is applied
@@ -191,11 +228,15 @@ namespace Models.Soils
 
         #region Soil "Property" (NOT layered): (Constants & Starting Values from SIM file), and the Outputs
 
+        /// <summary>The obsrunoff_name</summary>
         [Description("System variable name of external observed runoff source")]
         public string obsrunoff_name = "";    //! system name of observed runoff
 
+        /// <summary>The _eo_source</summary>
         private string _eo_source = "";
 
+        /// <summary>Gets or sets the eo_source.</summary>
+        /// <value>The eo_source.</value>
         [Description("System variable name of external eo source")]
         public string eo_source      //! system variable name of external eo source
         {
@@ -209,10 +250,13 @@ namespace Models.Soils
         //sv- end of initial sw section
 
 
- 
 
+
+        /// <summary>The _max_pond</summary>
         private double _max_pond = 0.0;
 
+        /// <summary>Gets or sets the max_pond.</summary>
+        /// <value>The max_pond.</value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
         [Description("Maximum water storage on soil surface")]
@@ -233,6 +277,7 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>The _u</summary>
         [Bounds(Lower = 0.0001, Upper = 1.0)]
         [Units("0-1")]
 
@@ -243,6 +288,8 @@ namespace Models.Soils
         //same evap for summer and winter
         private double _u = 6.0;
 
+        /// <summary>Gets or sets the u.</summary>
+        /// <value>The u.</value>
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
         [Description("Upper limit of stage 1 soil evaporation")]
@@ -252,8 +299,11 @@ namespace Models.Soils
             set { _u = value; }
         }
 
+        /// <summary>The _cona</summary>
         private double _cona = 3.0;
 
+        /// <summary>Gets or sets the cona.</summary>
+        /// <value>The cona.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Description("Stage 2 drying coefficient")]
         private double cona         //! stage 2 drying coefficient
@@ -265,45 +315,66 @@ namespace Models.Soils
         //different evap for summer and winter
         //summer
 
+        /// <summary>Gets or sets the summer cona.</summary>
+        /// <value>The summer cona.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Description("Stage 2 drying coefficient during summer")]
         public double SummerCona { get; set; }
 
+        /// <summary>Gets or sets the summer u.</summary>
+        /// <value>The summer u.</value>
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
         [Description("Upper limit of stage 1 soil evaporation during summer")]
         public double SummerU { get; set; }
 
+        /// <summary>Gets or sets the summer date.</summary>
+        /// <value>The summer date.</value>
         [Description("Date for start of summer evaporation (dd-mmm)")]
         public string SummerDate { get; set; }       //! Date for start of summer evaporation (dd-mmm)
 
         //winter
 
+        /// <summary>Gets or sets the winter cona.</summary>
+        /// <value>The winter cona.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Description("Stage 2 drying coefficient during winter")]
         public double WinterCona { get; set; }
 
+        /// <summary>Gets or sets the winter u.</summary>
+        /// <value>The winter u.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         [Description("Upper limit of stage 1 soil evaporation during winter")]
         public double WinterU { get; set; }
 
+        /// <summary>Gets or sets the winter date.</summary>
+        /// <value>The winter date.</value>
         [Description("Date for start of winter evaporation (dd-mmm)")]
         public string WinterDate { get; set; }       //! Date for start of winter evaporation (dd-mmm)
 
+        /// <summary>Gets or sets the diffus constant.</summary>
+        /// <value>The diffus constant.</value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Description("Diffusivity constant for soil testure")]
         public double DiffusConst { get; set; }     //! diffusivity constant for soil testure
 
+        /// <summary>Gets or sets the diffus slope.</summary>
+        /// <value>The diffus slope.</value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Description("Slope for diffusivity/soil water content relationship")]
         public double DiffusSlope { get; set; }     //! slope for diffusivity/soil water content relationship
 
+        /// <summary>Gets or sets the salb.</summary>
+        /// <value>The salb.</value>
         [Description("Bare soil albedo")]
         public double Salb { get; set; }           //! bare soil albedo (unitless)
 
+        /// <summary>The _cn2_bare</summary>
         private double _cn2_bare = 73.0;
 
+        /// <summary>Gets or sets the c n2 bare.</summary>
+        /// <value>The c n2 bare.</value>
         [Bounds(Lower = 1.0, Upper = 100.0)]
         [Description("Curve number input used to calculate daily runoff")]
         public double CN2Bare         //! curve number input used to calculate daily runoff
@@ -321,8 +392,11 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>The _cn_red</summary>
         private double _cn_red = 20.0;
 
+        /// <summary>Gets or sets the cn red.</summary>
+        /// <value>The cn red.</value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Description("Maximum reduction in cn2_bare due to cover")]
         public double CNRed           //! maximum reduction in cn2_bare due to cover
@@ -340,8 +414,11 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>The _cn_cov</summary>
         private double _cn_cov = 0.8;
 
+        /// <summary>Gets or sets the cn cov.</summary>
+        /// <value>The cn cov.</value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Cover at which cn_red occurs")]
@@ -366,16 +443,19 @@ namespace Models.Soils
 
         //sv- Lateral flow properties  //sv- also from Lateral_read_param()
 
+        /// <summary>The slope</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Slope")]
         public double slope = Double.NaN;
 
+        /// <summary>The discharge_width</summary>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m")]
         [Description("Basal width of discharge area")]
         public double discharge_width = Double.NaN;  //! basal width of discharge area (m)
 
+        /// <summary>The catchment_area</summary>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m^2")]
         [Description("Area over which lateral flow is occuring")]
@@ -388,23 +468,20 @@ namespace Models.Soils
         //sv- PURE OUTPUTS
 
 
-        /// <summary>
-        /// Total es
-        /// </summary>
+        /// <summary>Total es</summary>
+        /// <value>The es.</value>
         [Units("mm")]
         public double es                      //! total es
         { get { return Utility.Math.Sum(es_layers); } }
 
-        /// <summary>
-        /// Daily effective rainfall
-        /// </summary>
+        /// <summary>Daily effective rainfall</summary>
+        /// <value>The eff_rain.</value>
         [Units("mm")]
         private double eff_rain                  //! daily effective rainfall (mm)
         { get { return rain + runon - runoff - drain; } }
 
-        /// <summary>
-        /// Potential extractable sw in profile
-        /// </summary>
+        /// <summary>Potential extractable sw in profile</summary>
+        /// <value>The esw.</value>
         [Units("mm")]
         public double esw                       //! potential extractable sw in profile  
         {
@@ -420,84 +497,73 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Effective total cover (0-1)
-        /// </summary>
+        /// <summary>Effective total cover (0-1)</summary>
         private double cover_surface_runoff;     //! effective total cover (0-1)   //residue cover + cover from any crops (tall or short)
 
-        /// <summary>
-        /// time after which 2nd-stage soil evaporation begins
-        /// </summary>
+        /// <summary>time after which 2nd-stage soil evaporation begins</summary>
         [Units("d")]
         private double t;                        //! time after 2nd-stage soil evaporation begins (d)
 
-        /// <summary>
-        /// Effective potential evapotranspiration
-        /// </summary>
+        /// <summary>Effective potential evapotranspiration</summary>
+        /// <value>The eo.</value>
         [XmlIgnore]
         [Units("mm")]
         public double eo { get; set; }                       //! effective potential evapotranspiration (mm)
 
-        /// <summary>
-        /// Pot sevap after modification for green cover & residue wt
-        /// </summary>
+        /// <summary>The eos</summary>
         [XmlIgnore]
         [Units("mm")]
         public double eos;                      //! pot sevap after modification for green cover & residue wt
 
 
-        /// <summary>
-        /// New cn2 after modification for crop cover & residue cover
-        /// </summary>
+        /// <summary>The cn2_new</summary>
         private double cn2_new;                  //! New cn2  after modification for crop cover & residue cover
 
-        /// <summary>
-        /// Drainage rate from bottom layer
-        /// </summary>
+        /// <summary>Drainage rate from bottom layer</summary>
+        /// <value>The drain.</value>
         [XmlIgnore]
         [Units("mm")]
         public double drain {get; set;}         //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
 
-        /// <summary>
-        /// Drainage rate from bottom layer
-        /// </summary>
+        /// <summary>Drainage rate from bottom layer</summary>
+        /// <value>The leach n o3.</value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double LeachNO3 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
 
-        /// <summary>
-        /// Drainage rate from bottom layer
-        /// </summary>
+        /// <summary>Drainage rate from bottom layer</summary>
+        /// <value>The leach n h4.</value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double LeachNH4 { get; set; }         //! Leaching from bottom layer (kg/ha) // 
 
-        /// <summary>
-        /// Drainage rate from bottom layer
-        /// </summary>
+        /// <summary>Drainage rate from bottom layer</summary>
+        /// <value>The leach urea.</value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double LeachUrea { get; set; }         //! Leaching from bottom layer (kg/ha) // 
 
 
+        /// <summary>Gets or sets the infiltration.</summary>
+        /// <value>The infiltration.</value>
         [XmlIgnore]
         [Units("mm")]
         public double infiltration { get; set; }     //! infiltration (mm)
 
+        /// <summary>Gets or sets the runoff.</summary>
+        /// <value>The runoff.</value>
         [XmlIgnore]
         [Units("mm")]
         public double runoff { get; set; }           //! runoff (mm)
-        
-        /// <summary>
-        /// Evaporation from the surface of the pond
-        /// </summary>
+
+        /// <summary>Evaporation from the surface of the pond</summary>
+        /// <value>The pond_evap.</value>
         [XmlIgnore]
         [Units("mm")]
         public double pond_evap { get; set; }       //! evaporation from the surface of the pond (mm)
 
-        /// <summary>
-        /// Surface water ponding depth
-        /// </summary>
+        /// <summary>Surface water ponding depth</summary>
+        /// <value>The pond.</value>
         [XmlIgnore]
         [Units("mm")]
         public double pond { get; set; }           //! surface water ponding depth
@@ -513,8 +579,11 @@ namespace Models.Soils
         //It is always is an output because a water table can always build up. (See soilwat_water_table())
         //Sometimes it is an input when the user specifies a set command in a manager because they want to set the water_table at a specific height on a given day. (see SetWaterTable())
 
+        /// <summary>The _water_table</summary>
         private double _water_table = Double.NaN;
 
+        /// <summary>Gets or sets the water_table.</summary>
+        /// <value>The water_table.</value>
         [Units("mm")]
         [Description("Water table depth (depth below the ground surface of the first saturated layer)")]
         private double water_table     //! water table depth (depth below the ground surface of the first saturated layer)
@@ -525,7 +594,10 @@ namespace Models.Soils
 
 
         //end of soilwat2_set_my_variable()
+        /// <summary>The water table initial</summary>
         private double WaterTableInitial = double.NaN;
+        /// <summary>Gets or sets the water table.</summary>
+        /// <value>The water table.</value>
         [XmlIgnore]
         public double WaterTable
         {
@@ -551,9 +623,11 @@ namespace Models.Soils
 
         //Has the soilwat_init() been done? If so, let the fractional soil arrays (eg. sw, sat, dul etc) check the profile
         //layers when a "set" occurs. If not, save reset values so they can be applied if a reset event is sent.
+        /// <summary>The initialize done</summary>
         bool initDone = false;
         //If doing a reset, we don't want to check profile layer data until ALL the various values have been reset. This flag
         //tells us whether we're doing a reset; if so, we can skip checking.
+        /// <summary>The in reset</summary>
         bool inReset = false;
 
         //SIM file gets them from .APSIM file
@@ -561,7 +635,10 @@ namespace Models.Soils
         //Soilwat2Parameters   //sv- also from soilwat2_soil_profile_param()
 
 
+        /// <summary>The _dlayer</summary>
         private double[] _dlayer = null;
+        /// <summary>Gets or sets the dlayer.</summary>
+        /// <value>The dlayer.</value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
@@ -624,6 +701,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the sat.</summary>
+        /// <value>The sat.</value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
@@ -660,6 +739,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the dul.</summary>
+        /// <value>The dul.</value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
@@ -697,7 +778,10 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>The numvals_sw</summary>
         private int numvals_sw = 0;                        //! number of values returned for sw 
+        /// <summary>Gets or sets the sw.</summary>
+        /// <value>The sw.</value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
 #if COMPARISON
     [Units("mm/mm")]
@@ -750,6 +834,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the LL15.</summary>
+        /// <value>The LL15.</value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
 #if COMPARISON
     [Units("mm/mm")]
@@ -790,6 +876,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the air_dry.</summary>
+        /// <value>The air_dry.</value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
 #if COMPARISON
     [Units("mm/mm")]
@@ -837,8 +925,12 @@ namespace Models.Soils
         // be mapped into a standardised layer structure. The 4 variables below (Thickness, SWCON, MWCON and KLAT) 
         // may be in a different layer structure.
 
+        /// <summary>Gets or sets the thickness.</summary>
+        /// <value>The thickness.</value>
         public double[] Thickness { get; set; }     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
+        /// <summary>Gets or sets the depth.</summary>
+        /// <value>The depth.</value>
         [XmlIgnore]
         [Units("cm")]
         [Description("Depth")]
@@ -854,11 +946,15 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the swcon.</summary>
+        /// <value>The swcon.</value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
         [Description("SWCON")]
         public double[] SWCON { get; set; }     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
+        /// <summary>Gets or sets the klat.</summary>
+        /// <value>The klat.</value>
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
         [Units("mm/d")]
         [Description("KLAT")]
@@ -866,13 +962,16 @@ namespace Models.Soils
 
         #endregion
 
+        /// <summary>The using_ks</summary>
         [Description("Flag to determine if Ks has been chosen for use")]
         private bool using_ks;       //! flag to determine if Ks has been chosen for use. //sv- set in soilwat2_init() by checking if mwcon exists
 
+        /// <summary>The ks</summary>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm/d")]
         private double[] ks = null;        //! saturated conductivity (mm/d)
 
+        /// <summary>The bd</summary>
         [XmlIgnore]
         [Bounds(Lower = 0.01, Upper = 3.0)]
         [Units("g/cm^3")]
@@ -881,7 +980,10 @@ namespace Models.Soils
 
         //sv- Lateral Flow profile   //sv- also from Lateral_read_param()
 
+        /// <summary>The _sat_dep</summary>
         private double[] _sat_dep;
+        /// <summary>Gets or sets the sat_dep.</summary>
+        /// <value>The sat_dep.</value>
         [Units("mm")]
         [XmlIgnore]
         public double[] sat_dep   // sat * dlayer //see soilwat2_init() for initialisation
@@ -900,7 +1002,10 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>The _dul_dep</summary>
         private double[] _dul_dep;
+        /// <summary>Gets or sets the dul_dep.</summary>
+        /// <value>The dul_dep.</value>
         [Units("mm")]
         [XmlIgnore]
         public double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
@@ -919,8 +1024,11 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>The _sw_dep</summary>
         private double[] _sw_dep;
 
+        /// <summary>Gets or sets the sw_dep.</summary>
+        /// <value>The sw_dep.</value>
         [XmlIgnore]
         [Units("mm")]
         public double[] sw_dep    // sw * dlayer //see soilwat2_init() for initialisation
@@ -944,7 +1052,10 @@ namespace Models.Soils
         }
 
 
+        /// <summary>The _ll15_dep</summary>
         private double[] _ll15_dep;
+        /// <summary>Gets or sets the ll15_dep.</summary>
+        /// <value>The ll15_dep.</value>
         [Units("mm")]
         [XmlIgnore]
         public double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
@@ -964,7 +1075,10 @@ namespace Models.Soils
         }
 
 
+        /// <summary>The _air_dry_dep</summary>
         private double[] _air_dry_dep;
+        /// <summary>Gets or sets the air_dry_dep.</summary>
+        /// <value>The air_dry_dep.</value>
         [XmlIgnore]
         [Units("mm")]
         public double[] air_dry_dep  // air_dry * dlayer //see soilwat2_init() for initialisation
@@ -984,6 +1098,8 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Gets the SWS.</summary>
+        /// <value>The SWS.</value>
         [Units("mm/mm")]
         private double[] sws       //TODO: this appears to just be an output variable and is identical to sw. I think it should be removed.   //! temporary soil water array used in water_table calculation
         {
@@ -997,14 +1113,18 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>The flow</summary>
         [XmlIgnore]
         [Units("mm")]
         public double[] flow;        //sv- Unsaturated Flow //! depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)
 
+        /// <summary>The flux</summary>
         [XmlIgnore]
         [Units("mm")]
         public double[] flux;       //sv- Drainage (Saturated Flow) //! initially, water moving downward into layer i (mm), then water moving downward out of layer i (mm)
 
+        /// <summary>Gets the flow_water.</summary>
+        /// <value>The flow_water.</value>
         [XmlIgnore]
         [Units("mm")]
         public double[] flow_water         //flow_water[layer] = flux[layer] - flow[layer] 
@@ -1020,6 +1140,8 @@ namespace Models.Soils
         }
 
         //private double[] _flow2;
+        /// <summary>Gets or sets the flow2.</summary>
+        /// <value>The flow2.</value>
         [XmlIgnore]
         [Units("mm")]
         public double[] flow2
@@ -1035,6 +1157,8 @@ namespace Models.Soils
         }
         
        // private double[] _flux2;
+        /// <summary>Gets or sets the flux2.</summary>
+        /// <value>The flux2.</value>
         [XmlIgnore]
         [Units("mm")]
         public double[] flux2
@@ -1056,6 +1180,7 @@ namespace Models.Soils
         //Lateral Flow profile     //sv- also from Lateral_Send_my_variable()
 
 
+        /// <summary>The outflow_lat</summary>
         [Units("mm")]
         [XmlIgnore]
         public double[] outflow_lat;   //! outflowing lateral water   //lateral outflow
@@ -1070,6 +1195,8 @@ namespace Models.Soils
         //These are the sets for ficticious variables that actually set other variables.
 
 
+        /// <summary>Sets the dlt_dlayer.</summary>
+        /// <value>The dlt_dlayer.</value>
         [Units("mm")]
         public double[] dlt_dlayer
         {
@@ -1120,6 +1247,8 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Sets the DLT_SW.</summary>
+        /// <value>The DLT_SW.</value>
         [Units("mm")]
         public double[] dlt_sw
         {
@@ -1136,6 +1265,8 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Sets the dlt_sw_dep.</summary>
+        /// <value>The dlt_sw_dep.</value>
         [Units("mm")]
         public double[] dlt_sw_dep
         {
@@ -1172,6 +1303,7 @@ namespace Models.Soils
         //from met module
         //Runon is specified in a met file or sparse data file
         //[Input(IsOptional = true)]
+        /// <summary>The runon</summary>
         [Units("mm/d")]
         private double runon = 0.0;      //! external run-on of H2O (mm/d)
 
@@ -1183,6 +1315,7 @@ namespace Models.Soils
         //used in runoff(as part of TotalInterception parameter) and in infilitration
 
         //[Input(IsOptional = true)]
+        /// <summary>The interception</summary>
         [Units("mm")]
         private double interception = 0.0;      //! canopy interception loss (mm)
 
@@ -1190,6 +1323,7 @@ namespace Models.Soils
         //used in runoff(as part of TotalInterception parameter) and in infilitration
 
         //[Input(IsOptional = true)]
+        /// <summary>The residueinterception</summary>
         [XmlIgnore]
         [Units("mm")]
         public double residueinterception = 0.0;     //residue interception loss (mm)
@@ -1202,6 +1336,7 @@ namespace Models.Soils
         //from met module
         //Inflow is specified in a met file or sparse data file
         //[Input(IsOptional = true)]
+        /// <summary>The inflow_lat</summary>
         [Units("mm")]
         private double[] inflow_lat;       //! inflowing lateral water
 
@@ -1214,6 +1349,7 @@ namespace Models.Soils
         #region Get Variables from other Modules (if need to do stuff AFTER inputting)
 
 
+        /// <summary>Soilwat2_get_crop_variableses this instance.</summary>
         private void soilwat2_get_crop_variables()
         {
             List<IModel> models = Apsim.FindAll(paddock, typeof(ICrop));
@@ -1269,6 +1405,7 @@ namespace Models.Soils
 
 
 
+        /// <summary>Soilwat2_get_solute_variableses this instance.</summary>
         private void soilwat2_get_solute_variables()
         {
             //for the number of solutes that was read in by OnNewSolute event handler)
@@ -1292,6 +1429,7 @@ namespace Models.Soils
 
         //this is called in the On Process event handler
         //it just calls all the methods above.
+        /// <summary>Soilwat2_get_other_variableses this instance.</summary>
         private void soilwat2_get_other_variables()
         {
 
@@ -1306,6 +1444,9 @@ namespace Models.Soils
 
         #region Set Variables in other Modules (Solute model mainly)
 
+        /// <summary>To the float array.</summary>
+        /// <param name="D">The d.</param>
+        /// <returns></returns>
         private float[] ToFloatArray(double[] D)
         {
             float[] f = new float[D.Length];
@@ -1315,6 +1456,8 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Sets the module solutes.</summary>
+        /// <exception cref="System.NotImplementedException">Cannot do a set for solute:  + solutes[solnum].name</exception>
         private void SetModuleSolutes()
         {
             //taken from soilwat2_set_other_variables()
@@ -1356,6 +1499,7 @@ namespace Models.Soils
         }
 
         //this is called in the On Process event handler
+        /// <summary>Soilwat2_set_other_variableses this instance.</summary>
         private void soilwat2_set_other_variables()
         {
 
@@ -1390,40 +1534,58 @@ namespace Models.Soils
 
         //MET
         //sv- These met variables get assigned by the OnNewMet Event Handler
+        /// <summary>The rain</summary>
         private double rain;         //! precipitation (mm/d)
+        /// <summary>The radn</summary>
         private double radn;         //! solar radiation (mj/m^2/day)
+        /// <summary>The mint</summary>
         private double mint;         //! minimum air temperature (oC)
+        /// <summary>The maxt</summary>
         private double maxt;         //! maximum air temperature (oC)
 
         //RUNOFF
         //r double      cover_surface_runoff;
         //r double runoff;
         //who put this in? double      eff_rain; 
+        /// <summary>The runoff_pot</summary>
         private double runoff_pot;       //! potential runoff with no pond(mm)
         //private double obsrunoff;         //! observed runoff (mm)
 
         //GET CROP VARIABLES
         //private int[]       crop_module = new int[max_crops];             //! list of modules replying 
+        /// <summary>The cover_tot</summary>
         private double[] cover_tot = null;     //! total canopy cover of crops (0-1)
+        /// <summary>The cover_green</summary>
         private double[] cover_green = null;   //! green canopy cover of crops (0-1)
+        /// <summary>The canopy_height</summary>
         private double[] canopy_height = null; //! canopy heights of each crop (mm)
+        /// <summary>The number of crops</summary>
         private int NumberOfCrops = 0;                //! number of crops ()
 
         //TILLAGE EVENT
+        /// <summary>The tillage_cn_red</summary>
         private double tillage_cn_red;   //! reduction in CN due to tillage ()   //can either come from the manager module or from the sim file
+        /// <summary>The tillage_cn_rain</summary>
         private double tillage_cn_rain;  //! cumulative rainfall below which tillage reduces CN (mm) //can either come from the manager module orh the sim file
+        /// <summary>The tillage_rain_sum</summary>
         private double tillage_rain_sum; //! cumulative rainfall for tillage CN reduction (mm)
 
         //EVAPORATION
+        /// <summary>The year</summary>
         private int year;         //! year
+        /// <summary>The day</summary>
         private int day;          //! day of year
+        /// <summary>The sumes1</summary>
         private double sumes1;       //! cumulative soil evaporation in stage 1 (mm)
+        /// <summary>The sumes2</summary>
         private double sumes2;       //! cumulative soil evaporation in stage 2 (mm)
         //r double      t;
         //private double eo_system;         //! eo from somewhere else in the system //sv- see eo_source
         //r double eo;
+        /// <summary>The real_eo</summary>
         private double real_eo;                  //! potential evapotranspiration (mm) 
         //r double eos;
+        /// <summary>The es_layers</summary>
         private double[] es_layers = null;     //! actual soil evaporation (mm)
 
 
@@ -1433,26 +1595,43 @@ namespace Models.Soils
 
         //SOLUTES
         //OnNewSolute
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         private class Solute
         {
+            /// <summary>The name</summary>
             public string name = "";        // Name of the solute
+            /// <summary>The owner name</summary>
             public string ownerName = "";    // FQN of the component handling this solute
+            /// <summary>The mobility</summary>
             public bool mobility = false;      // Is the solute mobile?
+            /// <summary>The amount</summary>
             public double[] amount;    // amount of solute in each layer (kg/ha)
+            /// <summary>The leach</summary>
             public double[] leach;     // amount leached from each layer (kg/ha)
+            /// <summary>Up</summary>
             public double[] up;        // amount "upped" from each layer (kg/ha)
+            /// <summary>The delta</summary>
             public double[] delta;     // change in solute in each layer (kg/ha)
+            /// <summary>The rain_conc</summary>
             public double rain_conc;   // concentration entering via rainfall (ppm)
+            /// <summary>The irrigation</summary>
             public double irrigation;  // amount of solute in irrigation water (kg/ha)
+            /// <summary>The get_flow_id</summary>
             public int get_flow_id = 0;    // registration ID for getting flow values
+            /// <summary>The get_leach_id</summary>
             public int get_leach_id = 0;    // registration ID for getting leach value
         };
 
+        /// <summary>The solutes</summary>
         private Solute[] solutes = null;
+        /// <summary>The num_solutes</summary>
         int num_solutes = 0;
 
         //IRRIGATION
+        /// <summary>The irrigation</summary>
         [XmlIgnore]
         public double irrigation;       //! irrigation (mm)                                                 
 
@@ -1461,6 +1640,7 @@ namespace Models.Soils
         //r double water_table;
         //r double[] sws;
 
+        /// <summary>The old sw dep</summary>
         private double oldSWDep;
 
 
@@ -1476,12 +1656,16 @@ namespace Models.Soils
         //Soil Property
         //initial starting soil water 
         //runoff
+        /// <summary>The reset_cn2_bare</summary>
         double reset_cn2_bare, reset_cn_red, reset_cn_cov;
         //ponding 
+        /// <summary>The reset_max_pond</summary>
         double reset_max_pond;
 
         //Soil Profile
+        /// <summary>The reset_numvals_sw</summary>
         int reset_numvals_sw;         //used in soilwat2_set_default()
+        /// <summary>The reset_dlayer</summary>
         double[] reset_dlayer, reset_sat, reset_dul, reset_sw, reset_ll15, reset_air_dry;
 
 
@@ -1494,6 +1678,7 @@ namespace Models.Soils
         #region Functions to Zero Variables
 
 
+        /// <summary>Soilwat2_zero_variableses this instance.</summary>
         private void soilwat2_zero_variables()
         {
 
@@ -1582,6 +1767,7 @@ namespace Models.Soils
         //TODO: this is used by the soilwat2_set_my_variables(). This allows other modules to set soilwat's variables.
         // this is implememented in .NET by declaring a Property with Gets and Sets and making it an INPUT tag. Nb. that i think you have to use a local variable as a go between as well. See SoilNitrogen [Input] tags with get and set. Or maybet it is  tags.
         */
+        /// <summary>Soilwat2_zero_default_variableses this instance.</summary>
         private void soilwat2_zero_default_variables()
         {
 
@@ -1593,6 +1779,7 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_zero_daily_variableses this instance.</summary>
         private void soilwat2_zero_daily_variables()
         {
 
@@ -1632,12 +1819,15 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Lateral_zero_daily_variableses this instance.</summary>
         private void Lateral_zero_daily_variables()
         {
             ZeroArray(ref outflow_lat);
         }
 
 
+        /// <summary>Zeroes the array.</summary>
+        /// <param name="A">a.</param>
         private void ZeroArray(ref double[] A)
         {
             if (A != null)
@@ -1654,11 +1844,18 @@ namespace Models.Soils
 
         #region Bounds checking and warning functions
 
+        /// <summary>Issues the warning.</summary>
+        /// <param name="warningText">The warning text.</param>
         private void IssueWarning(string warningText)
         {
             Summary.WriteWarning(this, warningText);
         }
 
+        /// <summary>Bounds the specified a.</summary>
+        /// <param name="A">a.</param>
+        /// <param name="Lower">The lower.</param>
+        /// <param name="Upper">The upper.</param>
+        /// <returns></returns>
         private double bound(double A, double Lower, double Upper)
         {
             //force A to stay between the Lower and the Upper. Set A to the Upper or Lower if it exceeds them.
@@ -1674,6 +1871,11 @@ namespace Models.Soils
 
 
         // Unlike u_bound and l_bound, this does not force the variable to be between the bounds. It just warns the user in the summary file.
+        /// <summary>Bound_check_real_vars the specified variable.</summary>
+        /// <param name="Variable">The variable.</param>
+        /// <param name="LowerBound">The lower bound.</param>
+        /// <param name="UpperBound">The upper bound.</param>
+        /// <param name="VariableName">Name of the variable.</param>
         protected void bound_check_real_var(double Variable, double LowerBound, double UpperBound, string VariableName)
         {
             string warningMsg;
@@ -1689,6 +1891,12 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Bound_check_real_arrays the specified a.</summary>
+        /// <param name="A">a.</param>
+        /// <param name="LowerBound">The lower bound.</param>
+        /// <param name="UpperBound">The upper bound.</param>
+        /// <param name="ArrayName">Name of the array.</param>
+        /// <param name="ElementToStopChecking">The element to stop checking.</param>
         protected void bound_check_real_array(double[] A, double LowerBound, double UpperBound, string ArrayName, int ElementToStopChecking)
         {
             for (int i = 0; i < ElementToStopChecking; i++)
@@ -1711,6 +1919,10 @@ namespace Models.Soils
         //so perhaps I can comment it out and turn "insoil" just into a normal variable that is a [Param].
         //TODO: see if I can comment out the soilwat2_set_default() as per the comments above.
 
+        /// <summary>Root_proportions the specified layer.</summary>
+        /// <param name="Layer">The layer.</param>
+        /// <param name="RootDepth">The root depth.</param>
+        /// <returns></returns>
         private double root_proportion(int Layer, double RootDepth)
         {
 
@@ -1748,6 +1960,8 @@ namespace Models.Soils
 
         //All the following function are used ONLY in soilwat2_init() no where else.
 
+        /// <summary>Soilwat2_read_constantses this instance.</summary>
+        /// <exception cref="System.Exception">No. of canopy_fact coeffs do not match the no. of canopy_fact_height coeffs.</exception>
         private void soilwat2_read_constants()
         {
 
@@ -1808,6 +2022,12 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_soil_property_params this instance.</summary>
+        /// <exception cref="System.Exception">
+        /// A single value for u OR BOTH values for summeru and winteru must be specified
+        /// or
+        /// A single value for cona OR BOTH values for summercona and wintercona must be specified
+        /// </exception>
         private void soilwat2_soil_property_param()
         {
 
@@ -1930,6 +2150,7 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_soil_profile_params this instance.</summary>
         private void soilwat2_soil_profile_param()
         {
 
@@ -1987,6 +2208,8 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_evap_inits this instance.</summary>
+        /// <exception cref="System.Exception">Tried to initialise unknown evaporation method</exception>
         private void soilwat2_evap_init()
         {
 
@@ -2035,6 +2258,7 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Lateral_inits this instance.</summary>
         private void Lateral_init()
         {
 
@@ -2077,6 +2301,8 @@ namespace Models.Soils
         #region Check a given layer for Errors
 
 
+        /// <summary>Soilwat2_layer_checks the specified layer.</summary>
+        /// <param name="layer">The layer.</param>
         private void soilwat2_layer_check(int layer)
         {
 
@@ -2115,6 +2341,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Soilwat2_check_profiles the specified layer.</summary>
+        /// <param name="layer">The layer.</param>
         private void soilwat2_check_profile(int layer)
         {
             //*+  Purpose
@@ -2277,6 +2505,9 @@ namespace Models.Soils
 
         #region Soil Science Functions
 
+        /// <summary>Finds the layer no.</summary>
+        /// <param name="Depth">The depth.</param>
+        /// <returns></returns>
         private int FindLayerNo(double Depth)
         {
             // Find the soil layer in which the indicated depth is located
@@ -2296,6 +2527,11 @@ namespace Models.Soils
         #region Runoff
 
 
+        /// <summary>Soilwat2_runoffs the specified rain.</summary>
+        /// <param name="Rain">The rain.</param>
+        /// <param name="Runon">The runon.</param>
+        /// <param name="TotalInterception">The total interception.</param>
+        /// <param name="Runoff">The runoff.</param>
         private void soilwat2_runoff(double Rain, double Runon, double TotalInterception, ref double Runoff)
         {
             Runoff = 0.0;  //zero the return parameter
@@ -2334,6 +2570,11 @@ namespace Models.Soils
 
 
 
+        /// <summary>Soilwat2_scs_runoffs the specified rain.</summary>
+        /// <param name="Rain">The rain.</param>
+        /// <param name="Runon">The runon.</param>
+        /// <param name="TotalInterception">The total interception.</param>
+        /// <param name="Runoff">The runoff.</param>
         private void soilwat2_scs_runoff(double Rain, double Runon, double TotalInterception, ref double Runoff)
         {
             double cn;                                 //! scs curve number
@@ -2402,6 +2643,10 @@ namespace Models.Soils
             bound_check_real_var(Runoff, 0.0, (Rain + Runon - TotalInterception), "runoff");
         }
 
+        /// <summary>Add_covers the specified cover1.</summary>
+        /// <param name="cover1">The cover1.</param>
+        /// <param name="cover2">The cover2.</param>
+        /// <returns></returns>
         private double add_cover(double cover1, double cover2)
         {
             //!+ Sub-Program Arguments
@@ -2431,6 +2676,7 @@ namespace Models.Soils
 
 
 
+        /// <summary>Soilwat2_cover_surface_runoffs this instance.</summary>
         private void soilwat2_cover_surface_runoff()
         {
 
@@ -2483,6 +2729,8 @@ namespace Models.Soils
 
 
 
+        /// <summary>Soilwat2_runoff_depth_factors the specified runoff_wf.</summary>
+        /// <param name="runoff_wf">The runoff_wf.</param>
         private void soilwat2_runoff_depth_factor(ref double[] runoff_wf)
         {
 
@@ -2541,6 +2789,10 @@ namespace Models.Soils
 
         #region Tillage
 
+        /// <summary>Soilwat2_tillage_addrains the specified rain.</summary>
+        /// <param name="Rain">The rain.</param>
+        /// <param name="Runon">The runon.</param>
+        /// <param name="TotalInterception">The total interception.</param>
         private void soilwat2_tillage_addrain(double Rain, double Runon, double TotalInterception)
         {
 
@@ -2582,6 +2834,7 @@ namespace Models.Soils
 
         #region Infiltration
 
+        /// <summary>Soilwat2_infiltrations this instance.</summary>
         private void soilwat2_infiltration()
         {
 
@@ -2629,6 +2882,7 @@ namespace Models.Soils
 
         #region Evaporation
 
+        /// <summary>Soilwat2_pot_evapotranspirations this instance.</summary>
         private void soilwat2_pot_evapotranspiration()
         {
             //*+  Purpose
@@ -2654,6 +2908,7 @@ namespace Models.Soils
 #endif
         }
 
+        /// <summary>Soilwat2_pot_evapotranspiration_effectives this instance.</summary>
         private void soilwat2_pot_evapotranspiration_effective()
         {
             //*+  Notes
@@ -2684,6 +2939,7 @@ namespace Models.Soils
 
         }
 
+        /// <summary>Soilwat2_priestly_taylors this instance.</summary>
         private void soilwat2_priestly_taylor()
         {
             double albedo;           //! albedo taking into account plant material
@@ -2713,6 +2969,8 @@ namespace Models.Soils
 
 
 
+        /// <summary>Soilwat2_eeq_facs this instance.</summary>
+        /// <returns></returns>
         private double soilwat2_eeq_fac()
         {
             //*+  Mission Statement
@@ -2741,6 +2999,7 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_evaporations this instance.</summary>
         private void soilwat2_evaporation()
         {
             //eos   -> ! (output) potential soil evap after modification for crop cover & residue_wt
@@ -2762,6 +3021,7 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_pot_soil_evaporations this instance.</summary>
         private void soilwat2_pot_soil_evaporation()
         {
             //eos -> ! (output) potential soil evap after modification for crop cover & residue_w
@@ -2827,6 +3087,9 @@ namespace Models.Soils
 
 
 
+        /// <summary>Soilwat2_soil_evaporations the specified eos_max.</summary>
+        /// <param name="Eos_max">The eos_max.</param>
+        /// <exception cref="System.Exception">Undefined evaporation method</exception>
         private void soilwat2_soil_evaporation(double Eos_max)
         {
             //es        -> ! (input) upper limit of soil evaporation (mm/day)
@@ -2859,6 +3122,8 @@ namespace Models.Soils
 
         }
 
+        /// <summary>Soilwat2_ritchie_evaporations the specified eos_max.</summary>
+        /// <param name="Eos_max">The eos_max.</param>
         private void soilwat2_ritchie_evaporation(double Eos_max)
         {
             //es        -> ! (output) actual evaporation (mm)
@@ -2985,6 +3250,8 @@ namespace Models.Soils
 
         #region Drainage (Saturated Flow)
 
+        /// <summary>Soilwat2_drainages the specified extra runoff.</summary>
+        /// <param name="ExtraRunoff">The extra runoff.</param>
         private void soilwat2_drainage(ref double ExtraRunoff)
         {
 
@@ -3115,6 +3382,8 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_drainage_olds the specified extra runoff.</summary>
+        /// <param name="ExtraRunoff">The extra runoff.</param>
         private void soilwat2_drainage_old(ref double ExtraRunoff)
         {
             //flux         -> (output) water moving out of
@@ -3207,6 +3476,7 @@ namespace Models.Soils
 
         #region Unsaturated Flow
 
+        /// <summary>Soilwat2_unsat_flows this instance.</summary>
         private void soilwat2_unsat_flow()
         {
 
@@ -3379,6 +3649,9 @@ namespace Models.Soils
 
         //sv- solute movement during Drainage (Saturated Flow)
 
+        /// <summary>Soilwat2_solute_fluxes the specified solute_out.</summary>
+        /// <param name="solute_out">The solute_out.</param>
+        /// <param name="solute_kg">The solute_kg.</param>
         private void soilwat2_solute_flux(ref double[] solute_out, double[] solute_kg)
         {
 
@@ -3440,6 +3713,9 @@ namespace Models.Soils
 
         //sv- solute movement during Unsaturated Flow
 
+        /// <summary>Soilwat2_solute_flows the specified solute_up.</summary>
+        /// <param name="solute_up">The solute_up.</param>
+        /// <param name="solute_kg">The solute_kg.</param>
         private void soilwat2_solute_flow(ref double[] solute_up, double[] solute_kg)
         {
 
@@ -3591,6 +3867,7 @@ namespace Models.Soils
 
 
 
+        /// <summary>Soilwat2_irrig_solutes this instance.</summary>
         private void soilwat2_irrig_solute()
         {
             //*+  Mission Statement
@@ -3652,6 +3929,9 @@ namespace Models.Soils
 
         */
 
+        /// <summary>Moves down real.</summary>
+        /// <param name="DownAmount">Down amount.</param>
+        /// <param name="A">a.</param>
         private void MoveDownReal(double[] DownAmount, ref double[] A)
         {
 
@@ -3698,6 +3978,7 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Soilwat2_move_solute_downs this instance.</summary>
         private void soilwat2_move_solute_down()
         {
 
@@ -3731,6 +4012,9 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Moves up real.</summary>
+        /// <param name="UpAmount">Up amount.</param>
+        /// <param name="A">a.</param>
         private void MoveUpReal(double[] UpAmount, ref double[] A)
         {
             //move_up_real(leach, temp_solute, num_layers);
@@ -3787,6 +4071,7 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Soilwat2_move_solute_ups this instance.</summary>
         private void soilwat2_move_solute_up()
         {
 
@@ -3817,6 +4102,8 @@ namespace Models.Soils
 
         #region Water Table
 
+        /// <summary>Soilwat_water_tables this instance.</summary>
+        /// <returns></returns>
         private double soilwat_water_table()
         {
             //*+  Purpose
@@ -3948,6 +4235,8 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Sets the water table.</summary>
+        /// <param name="WaterTable">The water table.</param>
         private void SetWaterTable(double WaterTable)
         {
             if (!double.IsNaN(WaterTable))
@@ -4000,6 +4289,7 @@ namespace Models.Soils
         #region Lateral Flow
 
 
+        /// <summary>Lateral_processes this instance.</summary>
         private void Lateral_process()
         {
 
@@ -4075,6 +4365,7 @@ namespace Models.Soils
         
 
         //Init2, Reset, UserInit
+        /// <summary>Soilwat2_inits this instance.</summary>
         private void soilwat2_init()
         {
             //*+  Purpose
@@ -4101,12 +4392,14 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_save_states this instance.</summary>
         private void soilwat2_save_state()
         {
             oldSWDep = soilwat2_total_sw_dep();
         }
 
 
+        /// <summary>Soilwat2_delta_states this instance.</summary>
         private void soilwat2_delta_state()
         {
             double dltSWDep;
@@ -4118,6 +4411,8 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Soilwat2_total_sw_deps this instance.</summary>
+        /// <returns></returns>
         private double soilwat2_total_sw_dep()
         {
             //only used above in save_state and delta_state
@@ -4131,6 +4426,7 @@ namespace Models.Soils
 
         #region Clock Event Handlers
 
+        /// <summary>Initializes a new instance of the <see cref="SoilWater"/> class.</summary>
         public SoilWater()
         {
             SummerCona = Double.NaN;
@@ -4143,18 +4439,23 @@ namespace Models.Soils
             DiffusSlope = 16.0;     
         }
 
+        /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
             //Initialise();
         }
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Initialise();
         }
 
+        /// <summary>Initialises this instance.</summary>
         private void Initialise()
         {
             soilwat2_zero_variables();
@@ -4220,6 +4521,9 @@ namespace Models.Soils
             flow2 = new double[_dlayer.Length]; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
         }
 
+        /// <summary>Called when [do soil water movement].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
@@ -4426,6 +4730,9 @@ namespace Models.Soils
 
         #region Met, Irrig, Solute, Plants Event Handlers
 
+        /// <summary>Called when [new weather data available].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
@@ -4455,6 +4762,9 @@ namespace Models.Soils
 
         //ToDo: Need to work out what the NewSolute event will be.
 
+        /// <summary>Called when [new solute].</summary>
+        /// <param name="newsolute">The newsolute.</param>
+        /// <exception cref="System.Exception">No solute mobility information for  + name +  , please specify as mobile or immobile in the SoilWater ini file.</exception>
         [EventSubscribe("NewSolute")]
         private void OnNewSolute(NewSoluteType newsolute)
         {
@@ -4498,6 +4808,10 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Positions the in character array.</summary>
+        /// <param name="Name">The name.</param>
+        /// <param name="NameList">The name list.</param>
+        /// <returns></returns>
         private int PositionInCharArray(string Name, string[] NameList)
         {
             //!+ Purpose
@@ -4509,6 +4823,9 @@ namespace Models.Soils
             return -1;  // Not found
         }
 
+        /// <summary>Called when [irrigated].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="Irrigated">The irrigated.</param>
         [EventSubscribe("Irrigated")]
         private void OnIrrigated(object sender, Models.Soils.IrrigationApplicationType Irrigated)
         {
@@ -4565,6 +4882,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Called when [water changed].</summary>
+        /// <param name="WaterChanged">The water changed.</param>
         [EventSubscribe("WaterChanged")]
         private void OnWaterChanged(WaterChangedType WaterChanged)
         {
@@ -4594,6 +4913,7 @@ namespace Models.Soils
 
         #region Manager Event Handlers
 
+        /// <summary>Resets this instance.</summary>
         public void Reset()
         {
             Summary.WriteMessage(this, "Resetting Soil Water Balance");
@@ -4614,6 +4934,9 @@ namespace Models.Soils
         //OnUserInit is no longer supported. It has been replaced by the OnReset() above.
 
 
+        /// <summary>Tillages the specified tillage.</summary>
+        /// <param name="Tillage">The tillage.</param>
+        /// <exception cref="System.Exception"></exception>
         public void Tillage(TillageType Tillage)
         {
             //*     ===========================================================
@@ -4699,6 +5022,8 @@ namespace Models.Soils
 
         #region Functions used to Publish Events sent by this module
 
+        /// <summary>Soilwat2_s the external mass flow.</summary>
+        /// <param name="sw_dep_delta_sum">The sw_dep_delta_sum.</param>
         private void soilwat2_ExternalMassFlow(double sw_dep_delta_sum)
         {
 
@@ -4744,13 +5069,18 @@ namespace Models.Soils
 
         //Events
         //public event ExternalMassFlowDelegate ExternalMassFlow;
+        /// <summary>Occurs when [runoff].</summary>
         public event RunoffEventDelegate Runoff;
+        /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
         #endregion
 
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class SoilWatTillageType
     {
@@ -4781,6 +5111,9 @@ namespace Models.Soils
        //             tillage_types.Add(xnc.Name, strToArr(xnc.FirstChild.Value));
        // }
 
+        /// <summary>Gets the tillage data.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public TillageType GetTillageData(string name)
         {
        //     throw new NotImplementedException("SoilWatTillageType not implemented");

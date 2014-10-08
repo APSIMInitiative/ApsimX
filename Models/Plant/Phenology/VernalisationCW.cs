@@ -57,37 +57,59 @@ namespace Models.PMF.Phen
     where \f$L_{P}\f$ is the day length (h) from \ref Models.PMF.Functions.PhotoperiodFunction.
     </remarks>
     */
+    /// <summary>
+    /// Vernalisation model
+    /// </summary>
     [Serializable]
     public class VernalisationCW : Model
     {
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The photoperiod</summary>
         [Link]
         Function Photoperiod = null;
 
+        /// <summary>The weather</summary>
         [Link]
         WeatherFile Weather = null;
 
+        /// <summary>Gets or sets the photop eff.</summary>
+        /// <value>The photop eff.</value>
         [XmlIgnore]
         public double PhotopEff { get; set; }
+        /// <summary>Gets or sets the vern eff.</summary>
+        /// <value>The vern eff.</value>
         [XmlIgnore]
         public double VernEff { get; set; }
+        /// <summary>The snow</summary>
         private const double Snow = 0.0;
+        /// <summary>The maxt</summary>
         private double Maxt = 0;
+        /// <summary>The mint</summary>
         private double Mint = 0;
+        /// <summary>Gets or sets the vern sens.</summary>
+        /// <value>The vern sens.</value>
         public double VernSens { get; set; }
+        /// <summary>Gets or sets the photop sens.</summary>
+        /// <value>The photop sens.</value>
         public double PhotopSens { get; set; }
+        /// <summary>The start stage for effects</summary>
         public string StartStageForEffects = "";
+        /// <summary>The end stage for effects</summary>
         public string EndStageForEffects = "";
+        /// <summary>The start stage for cumulative vd</summary>
         public string StartStageForCumulativeVD = "";
+        /// <summary>The end stage for cumulative vd</summary>
         public string EndStageForCumulativeVD = "";
-        
+
+        /// <summary>The cumulative vd</summary>
         private double CumulativeVD = 0;
 
-        /// <summary>
-        /// Trap the NewWeatherDataAvailable event.
-        /// </summary>
+        /// <summary>Trap the NewWeatherDataAvailable event.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
@@ -96,9 +118,9 @@ namespace Models.PMF.Phen
             Vernalisation(Weather.MetData.Maxt, Weather.MetData.Mint);
         }
 
-        /// <summary>
-        /// Initialise everything
-        /// </summary>
+        /// <summary>Initialise everything</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -107,9 +129,9 @@ namespace Models.PMF.Phen
             PhotopEff = 1;
         }
 
-        /// <summary>
-        /// Do our vernalisation
-        /// </summary>
+        /// <summary>Do our vernalisation</summary>
+        /// <param name="Maxt">The maxt.</param>
+        /// <param name="Mint">The mint.</param>
         public void Vernalisation(double Maxt, double Mint)
         {
             double DeltaCumulativeVD = VernalisationDays(Maxt, Mint, CrownTemperature, 0.0, CumulativeVD);
@@ -122,9 +144,8 @@ namespace Models.PMF.Phen
             CumulativeVD += DeltaCumulativeVD;
         }
 
-        /// <summary>
-        /// Crown temperature from nwheat
-        /// </summary>
+        /// <summary>Crown temperature from nwheat</summary>
+        /// <value>The crown temperature.</value>
         
         public double CrownTemperature
         {
@@ -148,9 +169,13 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>
-        /// Calculate daily vernalisation and accumulate to g_cumvd
-        /// </summary>
+        /// <summary>Calculate daily vernalisation and accumulate to g_cumvd</summary>
+        /// <param name="MaxT">The maximum t.</param>
+        /// <param name="MinT">The minimum t.</param>
+        /// <param name="CrownTemperature">The crown temperature.</param>
+        /// <param name="Snow">The snow.</param>
+        /// <param name="CumulativeVD">The cumulative vd.</param>
+        /// <returns></returns>
         private double VernalisationDays(double MaxT, double MinT, double CrownTemperature, double Snow, double CumulativeVD)
         {
             // Nwheat originally had the following if logic for determining whether
@@ -183,9 +208,12 @@ namespace Models.PMF.Phen
             return DeltaCumulativeVD;
         }
 
-        /// <summary>
-        /// Vernalisation factor
-        /// </summary>
+        /// <summary>Vernalisation factor</summary>
+        /// <param name="vern_sens">The vern_sens.</param>
+        /// <param name="CumulativeVD">The cumulative vd.</param>
+        /// <param name="DeltaCumulativeVD">The delta cumulative vd.</param>
+        /// <param name="MaxVernalisationRequirement">The maximum vernalisation requirement.</param>
+        /// <returns></returns>
         private double VernalisationEffect(double vern_sens, double CumulativeVD, double DeltaCumulativeVD, double MaxVernalisationRequirement)
         {
             double vfac;                // vernalization factor
@@ -202,9 +230,10 @@ namespace Models.PMF.Phen
             return vern_effect;
         }
 
-        /// <summary>
-        /// Photoperiod factor
-        /// </summary>
+        /// <summary>Photoperiod factor</summary>
+        /// <param name="Photoperiod">The photoperiod.</param>
+        /// <param name="photop_sens">The photop_sens.</param>
+        /// <returns></returns>
         private double PhotoperiodEffect(double Photoperiod, double photop_sens)
         {
             double photop_eff = 1.0;

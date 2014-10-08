@@ -97,7 +97,14 @@ namespace Models.Soils
         /// <summary>
         /// 
         /// </summary>
-        public enum OCUnitsEnum { Total, WalkleyBlack }
+        public enum OCUnitsEnum 
+        {
+            /// <summary>The total</summary>
+            Total,
+
+            /// <summary>The walkley black</summary>
+            WalkleyBlack 
+        }
         /// <summary>Gets or sets the oc units.</summary>
         /// <value>The oc units.</value>
         public OCUnitsEnum OCUnits { get; set; }

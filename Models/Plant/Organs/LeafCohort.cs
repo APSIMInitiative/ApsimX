@@ -740,7 +740,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Returns a clone of this object</summary>
         /// <returns></returns>
-        public new virtual LeafCohort Clone()
+        public virtual LeafCohort Clone()
         {
             LeafCohort NewLeaf = (LeafCohort)this.MemberwiseClone();
             NewLeaf.Live = new Biomass();
@@ -918,7 +918,7 @@ namespace Models.PMF.Organs
                 //Growing leaf area after DM allocated
                 double DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation) * SpecificLeafAreaMax;  //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
                 double DeltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
-                LiveArea += DeltaActualArea; /// Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
+                LiveArea += DeltaActualArea; // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
 
                 //Senessing leaf area
                 double AreaSenescing = LiveArea * SenescedFrac;

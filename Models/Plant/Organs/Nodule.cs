@@ -6,29 +6,42 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// Nodule organ
+    /// </summary>
     [Serializable]
     public class Nodule : GenericOrgan, BelowGround
     {
         #region Paramater Input Classes
+        /// <summary>The fixation metabolic cost</summary>
         [Link]
         Function FixationMetabolicCost = null;
+        /// <summary>The specific nitrogenase activity</summary>
         [Link]
         Function SpecificNitrogenaseActivity = null;
+        /// <summary>The ft</summary>
         [Link]
         Function FT = null;
+        /// <summary>The fw</summary>
         [Link]
         Function FW = null;
+        /// <summary>The f wlog</summary>
         [Link]
         Function FWlog = null;
         #endregion
 
         #region Class Fields
+        /// <summary>The respired wt</summary>
         public double RespiredWt = 0;
+        /// <summary>The property fixation demand</summary>
         public double PropFixationDemand = 0;
+        /// <summary>The _ n fixed</summary>
         public double _NFixed = 0;
         #endregion
 
         #region Arbitrator methods
+        /// <summary>Gets or sets the n fixation cost.</summary>
+        /// <value>The n fixation cost.</value>
         public override double NFixationCost
         {
             get
@@ -36,6 +49,8 @@ namespace Models.PMF.Organs
                 return FixationMetabolicCost.Value;
             }
         }
+        /// <summary>Sets the n allocation.</summary>
+        /// <value>The n allocation.</value>
         public override BiomassAllocationType NAllocation
         {
             set
@@ -45,6 +60,8 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the respired wt fixation.</summary>
+        /// <value>The respired wt fixation.</value>
         public double RespiredWtFixation
         {
             get
@@ -52,6 +69,8 @@ namespace Models.PMF.Organs
                 return RespiredWt;
             }
         }
+        /// <summary>Gets or sets the n supply.</summary>
+        /// <value>The n supply.</value>
         public override BiomassSupplyType NSupply
         {
             get
@@ -65,6 +84,8 @@ namespace Models.PMF.Organs
                 return Supply;
             }
         }
+        /// <summary>Sets the dm allocation.</summary>
+        /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -75,6 +96,8 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the n fixed.</summary>
+        /// <value>The n fixed.</value>
         public double NFixed
         {
             get

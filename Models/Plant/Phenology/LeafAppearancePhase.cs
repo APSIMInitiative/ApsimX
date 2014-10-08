@@ -6,23 +6,30 @@ using Models.PMF.Organs;
 
 namespace Models.PMF.Phen
 {
+    /// <summary>
+    /// Leaf appearance phenological phase
+    /// </summary>
     [Serializable]
     public class LeafAppearancePhase : Phase
     {
+        /// <summary>The leaf</summary>
         [Link]
         Leaf Leaf = null;
 
+        /// <summary>The structure</summary>
         [Link]
         Structure Structure = null;
 
+        /// <summary>The cohort no at start</summary>
         private double CohortNoAtStart;
+        /// <summary>The first</summary>
         private bool First = true;
+        /// <summary>The remaining leaves</summary>
         private double RemainingLeaves = 0;
+        /// <summary>The fraction complete yesterday</summary>
         private double FractionCompleteYesterday = 0;
 
-        /// <summary>
-        /// Reset phase
-        /// </summary>
+        /// <summary>Reset phase</summary>
         public override void ResetPhase()
         {
             base.ResetPhase();
@@ -32,9 +39,9 @@ namespace Models.PMF.Phen
             First = true;
         }
 
-        /// <summary>
-        /// Do our timestep development
-        /// </summary>
+        /// <summary>Do our timestep development</summary>
+        /// <param name="PropOfDayToUse">The property of day to use.</param>
+        /// <returns></returns>
         public override double DoTimeStep(double PropOfDayToUse)
         {
             base.DoTimeStep(PropOfDayToUse);
@@ -54,6 +61,9 @@ namespace Models.PMF.Phen
         }
 
         // Return proportion of TT unused
+        /// <summary>Adds the tt.</summary>
+        /// <param name="PropOfDayToUse">The property of day to use.</param>
+        /// <returns></returns>
         public override double AddTT(double PropOfDayToUse)
         {
             base.AddTT(PropOfDayToUse);
@@ -71,9 +81,8 @@ namespace Models.PMF.Phen
                 return 0;
         }
 
-        /// <summary>
-        /// Return a fraction of phase complete.
-        /// </summary>
+        /// <summary>Return a fraction of phase complete.</summary>
+        /// <value>The fraction complete.</value>
         public override double FractionComplete
         {
             get

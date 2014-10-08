@@ -19,9 +19,7 @@ namespace Models.PMF.Organs
         /// <summary>The plant</summary>
         [Link]
         Plant Plant = null;
-        /// <summary>The structure</summary>
-        [Link(IsOptional = true)]
-        Structure structure = null;
+
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;

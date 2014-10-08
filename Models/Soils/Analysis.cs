@@ -241,12 +241,20 @@ namespace Models.Soils
         
         // Support for Boron units.
         /// <summary>
-        /// 
+        /// Boron units
         /// </summary>
-        public enum BoronUnitsEnum { HotWater, HotCaCl2 }
+        public enum BoronUnitsEnum 
+        {
+            /// <summary>hot water</summary>
+            HotWater,
+
+            /// <summary>hot ca CL2</summary>
+            HotCaCl2 
+        }
         /// <summary>Gets or sets the boron units.</summary>
         /// <value>The boron units.</value>
         public BoronUnitsEnum BoronUnits { get; set; }
+
         /// <summary>Borons the units to string.</summary>
         /// <param name="Units">The units.</param>
         /// <returns></returns>

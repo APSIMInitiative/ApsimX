@@ -29,6 +29,10 @@ namespace Models.PMF.Organs
     <remarks>
     </remarks>
      */
+
+    /// <summary>
+    /// Model of generic organ
+    /// </summary>
     [Serializable]
     public class GenericOrgan : BaseOrgan
     {

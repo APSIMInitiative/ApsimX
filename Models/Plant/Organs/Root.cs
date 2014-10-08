@@ -805,9 +805,6 @@ namespace Models.PMF.Organs
         /// <summary>Occurs when [incorp fom].</summary>
         public event FOMLayerDelegate IncorpFOM;
 
-        /// <summary>Occurs when [water changed].</summary>
-        public event WaterChangedDelegate WaterChanged;
-
         /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
         #endregion

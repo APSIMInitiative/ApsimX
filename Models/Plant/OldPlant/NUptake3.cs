@@ -8,25 +8,52 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// N uptake - version 3
+    /// </summary>
     [Serializable]
     public class NUptake3 : Model
     {
+        /// <summary>The root</summary>
         [Link]
         Root1 Root = null;
 
+        /// <summary>The n stress period</summary>
         [Link]
         Function NStressPeriod = null;
 
+        /// <summary>Gets or sets the kno3.</summary>
+        /// <value>The kno3.</value>
         public double kno3 { get; set; }
 
+        /// <summary>Gets or sets the KNH4.</summary>
+        /// <value>The KNH4.</value>
         public double knh4 { get; set; }
 
+        /// <summary>Gets or sets the no3ppm_min.</summary>
+        /// <value>The no3ppm_min.</value>
         public double no3ppm_min { get; set; }
 
+        /// <summary>Gets or sets the nh4ppm_min.</summary>
+        /// <value>The nh4ppm_min.</value>
         public double nh4ppm_min { get; set; }
 
+        /// <summary>Gets or sets the total_n_uptake_max.</summary>
+        /// <value>The total_n_uptake_max.</value>
         public double total_n_uptake_max { get; set; }
 
+        /// <summary>Does the n uptake.</summary>
+        /// <param name="RootDepth">The root depth.</param>
+        /// <param name="no3gsm">The no3gsm.</param>
+        /// <param name="nh4gsm">The NH4GSM.</param>
+        /// <param name="bd">The bd.</param>
+        /// <param name="dlayer">The dlayer.</param>
+        /// <param name="sw_avail">The sw_avail.</param>
+        /// <param name="sw_avail_pot">The sw_avail_pot.</param>
+        /// <param name="no3gsm_min">The no3gsm_min.</param>
+        /// <param name="nh4gsm_min">The nh4gsm_min.</param>
+        /// <param name="no3gsm_uptake_pot">The no3gsm_uptake_pot.</param>
+        /// <param name="nh4gsm_uptake_pot">The nh4gsm_uptake_pot.</param>
         public void DoNUptake(double RootDepth, double[] no3gsm, double[] nh4gsm,
                               double[] bd, double[] dlayer, double[] sw_avail, double[] sw_avail_pot,
                               double[] no3gsm_min, double[] nh4gsm_min,

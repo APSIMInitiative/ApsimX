@@ -1650,10 +1650,10 @@
             MetData = weather.MetData;
         }
 
-        [EventSubscribe("Irrigated")]
         /// <summary>Get irrigation information from an Irrigated event.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The data.</param>
+        [EventSubscribe("Irrigated")]
         private void OnIrrigated(object sender, IrrigationApplicationType data)
         {
             // now increment internal irrigation log;
@@ -1680,9 +1680,9 @@
         }
 
 
-        [EventSubscribe("CropChopped")]
         /// <summary>Get information on surfom added from the crops</summary>
         /// <param name="data">The data.</param>
+        [EventSubscribe("CropChopped")]
         private void OnCrop_chopped(CropChoppedType data)
         {
             double surfom_added = 0;    // amount of residue added (kg/ha)
@@ -2865,8 +2865,8 @@
 
                 // APSIM THING
                 if (surfomPAdded == 0)
-                    /// If no P info provided, and no cpr info provided {
-                    /// use default cpr and throw warning error to notify user;
+                    // If no P info provided, and no cpr info provided {
+                    // use default cpr and throw warning error to notify user;
                     if (surfomCPrAdded == 0)
                     {
                         surfomPAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], DefaultCPRatio, 0.0);
@@ -2885,7 +2885,7 @@
                 SurfOM[SOMNo].po4 += surfomPO4Added;
 
                 if (surfomMassAdded > 0.0)
-                    /// Assume all residue added is in the LYING pool, ie No STANDING component;
+                    // Assume all residue added is in the LYING pool, ie No STANDING component;
                     for (int i = 0; i < maxFr; i++)
                     {
                         SurfOM[SOMNo].Lying[i].amount += surfomMassAdded * frPoolC[i, SOMNo];
@@ -2920,7 +2920,7 @@
                         SurfOM[SOMNo].Standing[i].AshAlk = 0.0;
                     }
                 }
-                /// Report Additions;
+                // Report Additions;
                 if (ReportAdditions == "yes")
                     summary.WriteMessage(this, string.Format(
     @"Added SurfaceOM
@@ -3116,7 +3116,7 @@
             {
                 SOMNo = AddNewSurfOM(cropType, cropType);
             }
-            /// else THIS ADDITION IS AN EXISTING COMPONENT OF THE SURFOM SYSTEM;
+            // else THIS ADDITION IS AN EXISTING COMPONENT OF THE SURFOM SYSTEM;
 
             // convert the ppm figures into kg/ha;
             SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * surfomAdded;

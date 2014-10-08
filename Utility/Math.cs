@@ -373,9 +373,9 @@ namespace Utility
         /// <summary>
         /// Ensure that all values in dValues are within the specified lower and upper limits.
         /// </summary>
-        /// <param name="dValue"></param>
-        /// <param name="dLowerLimit"></param>
-        /// <param name="dUpperLimit"></param>
+        /// <param name="dValues"></param>
+        /// <param name="dLowerLimits"></param>
+        /// <param name="dUpperLimits"></param>
         /// <returns></returns>
         static public double[] Constrain(double[] dValues, double[] dLowerLimits, double[] dUpperLimits)
         {
@@ -404,7 +404,7 @@ namespace Utility
         /// <summary>
         /// Round all values in Values to the specified number of decimal places.
         /// </summary>
-        /// <param name="Value"></param>
+        /// <param name="Values"></param>
         /// <param name="NumDecPlaces"></param>
         /// <returns></returns>
         static public double[] Round(double[] Values, int NumDecPlaces)
@@ -711,9 +711,6 @@ namespace Utility
         /// <returns></returns>
         static public RegrStats CalcRegressionStats(IEnumerable X, IEnumerable Y)
         {
-            /// <summary>
-            ///    Calculate regression stats.   
-            /// </summary>
             RegrStats stats = new RegrStats();
             double SumX = 0;
             double SumY = 0;
@@ -839,12 +836,12 @@ namespace Utility
         /// \parblock 
         /// Angle to measure time between such as twilight (deg).
         /// angular distance between 90 deg and end of twilight - altitude of sun. +ve up, -ve down.
-        /// Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6&deg;. e.g SunAngle = -6&deg;
-        /// Nautical twilight : 12&deg;
-        /// Astronomical twilight : 18&deg;
+        /// Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6deg;. e.g SunAngle = -6deg;
+        /// Nautical twilight : 12deg;
+        /// Astronomical twilight : 18deg;
         /// \endparblock
-        /// \param Latitude Latitude to calculate the day length (&deg;)
-        /// \return Day length in hours between the specified sun angle from 90&deg; in am and pm.
+        /// \param Latitude Latitude to calculate the day length (deg;)
+        /// \return Day length in hours between the specified sun angle from 90deg; in am and pm.
         static public double DayLength(double DayOfYear, double SunAngle, double Latitude)
         {
             //+ Constant Values
@@ -1077,7 +1074,7 @@ namespace Utility
         /// <summary>
         /// Return true if all specified strings can be converted to a double given the US culture
         /// </summary>
-        /// <param name="StringValue"></param>
+        /// <param name="Values"></param>
         /// <returns></returns>
         static public bool IsNumericalenUS(string[] Values)
         {

@@ -11,9 +11,9 @@ namespace Models.PMF.Phen
     /// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 
     /// provide the sowing depth (\f$D_{seed}\f$).
     /// \param ShootLag An initial period of fixed thermal time during 
-    /// which shoot elongation is slow (the "lag" phase, \f$T_{lag}\f$, &deg;Cd)
+    /// which shoot elongation is slow (the "lag" phase, \f$T_{lag}\f$, deg;Cd)
     /// \param ShootRate The rate of shoot elongation (\f$r_{e}\f$, 
-    /// &deg;Cd mm<sup>-1</sup>) towards the soil surface is 
+    /// deg;Cd mm<sup>-1</sup>) towards the soil surface is 
     /// linearly related to air temperature.
     /// <remarks>
     /// The thermal time target in the emerging phase includes 

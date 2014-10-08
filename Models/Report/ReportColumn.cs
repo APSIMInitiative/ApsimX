@@ -100,10 +100,10 @@ namespace Models.Report
         /// </summary>
         private string aggregationFunction;
 
-        /// <summary>
-        /// Units as specified in the descriptor.
-        /// </summary>
-        private string units;
+        ///// <summary>
+        ///// Units as specified in the descriptor.
+        ///// </summary>
+        //private string units;
 
         /// <summary>
         /// The date when an aggregation value was last stored

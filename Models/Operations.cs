@@ -9,12 +9,21 @@ using System.Xml.Serialization;
 
 namespace Models
 {
+    /// <summary>
+    /// Operations model
+    /// </summary>
     [Serializable]
     public class Operation
     {
+        /// <summary>Gets or sets the date.</summary>
+        /// <value>The date.</value>
         public DateTime Date { get; set; }
+        /// <summary>Gets or sets the action.</summary>
+        /// <value>The action.</value>
         public string Action { get; set; }
 
+        /// <summary>Gets the action model.</summary>
+        /// <returns></returns>
         public string GetActionModel()
         {
             int PosPeriod = Action.IndexOf('.');
@@ -27,23 +36,33 @@ namespace Models
 
     }
 
-    /// <summary>
-    /// This class encapsulates an operations schedule.
-    /// </summary>
+    /// <summary>This class encapsulates an operations schedule.</summary>
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.OperationsPresenter")]
     public class Operations : Model
     {
+        /// <summary>The clock</summary>
         [Link] Clock Clock = null;
 
-        
+
+        /// <summary>Gets or sets the schedule.</summary>
+        /// <value>The schedule.</value>
         [XmlElement("Operation")]
         public List<Operation> Schedule { get; set; }
 
-        /// <summary>
-        /// Simulation is commencing.
-        /// </summary>
+        /// <summary>Simulation is commencing.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">
+        /// Bad operations action found:  + operation.Action
+        /// or
+        /// Cannot find model:  + modelName
+        /// or
+        /// Cannot find method:  + methodName +  in model:  + modelName
+        /// or
+        /// Cannot find argument:  + argumentName +  in operation call:  + operation.Action
+        /// </exception>
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {

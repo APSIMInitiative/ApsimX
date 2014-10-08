@@ -71,10 +71,10 @@ namespace Models.Soils
     {
         /// <summary>The simulation</summary>
         [Link]
-        Simulation Simulation;
+        Simulation Simulation = null;
         /// <summary>The summary file</summary>
         [Link]
-        Summary SummaryFile;
+        Summary SummaryFile = null;
         /// <summary>The root systems</summary>
         List<RootSystem> RootSystems;
         /// <summary>The root zones</summary>

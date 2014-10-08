@@ -113,9 +113,6 @@ namespace Models.PMF.Phen
     public class Phenology : Model
     {
         #region Links
-        /// <summary>The summary</summary>
-        [Link]
-        private ISummary Summary = null;
         /// <summary>The clock</summary>
         [Link]
         private Clock Clock = null;
@@ -167,10 +164,9 @@ namespace Models.PMF.Phen
         /// <summary>The emerged</summary>
         public bool Emerged = false;
 
-        [XmlIgnore]
         /// <summary>A one based stage number.</summary>
-        /// <value>The stage.</value>
-        public double Stage { get; set;}
+        [XmlIgnore]
+        public double Stage { get; set; }
 
         /// <summary>Clears this instance.</summary>
         public void Clear()

@@ -94,7 +94,17 @@ namespace Models
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
         /// </summary>
-        public enum ErrorLevel { Information, Warning, Error };
+        public enum ErrorLevel 
+        {
+            /// <summary>Information</summary>
+            Information,
+
+            /// <summary>Warning</summary>
+            Warning,
+
+            /// <summary>Error</summary>
+            Error 
+        };
 
         /// <summary>
         /// A parameterless constructor purely for the XML serialiser. Other models

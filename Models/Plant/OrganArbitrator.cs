@@ -578,7 +578,7 @@ namespace Models.PMF
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
 
-                /// Then calculate how much N (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
+                // Then calculate how much N (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
                 for (int i = 0; i < Organs.Length; i++)
                 {
                     if (BAT.RetranslocationSupply[i] > 0.00000000001)

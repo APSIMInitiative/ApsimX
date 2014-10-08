@@ -11,27 +11,25 @@ namespace Models.Core
 
 
     //=========================================================================
-    /// <summary>
-    /// A generic system that can have children
-    /// </summary>
+    /// <summary>A generic system that can have children</summary>
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
     public class Zone : Model
     {
-        /// <summary>
-        /// Area of the zone.
-        /// </summary>
+        /// <summary>Area of the zone.</summary>
+        /// <value>The area.</value>
         [Description("Area of zone (ha)")]
         public double Area { get; set; }
 
+        /// <summary>Gets or sets the slope.</summary>
+        /// <value>The slope.</value>
         [Description("Slope (deg)")]
         public double Slope { get; set; }
 
 
-        /// <summary>
-        /// Gets an array of plant models that are in scope.
-        /// </summary>
+        /// <summary>Gets an array of plant models that are in scope.</summary>
+        /// <value>The plants.</value>
         [XmlIgnore]
         public List<ICrop2> Plants
         {
@@ -47,9 +45,7 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Gets the value of a variable or model.
-        /// </summary>
+        /// <summary>Gets the value of a variable or model.</summary>
         /// <param name="namePath">The name of the object to return</param>
         /// <returns>The found object or null if not found</returns>
         public object Get(string namePath)
@@ -57,9 +53,7 @@ namespace Models.Core
             return Locator().Get(namePath, this);
         }
 
-        /// <summary>
-        /// Get the underlying variable object for the given path.
-        /// </summary>
+        /// <summary>Get the underlying variable object for the given path.</summary>
         /// <param name="namePath">The name of the variable to return</param>
         /// <returns>The found object or null if not found</returns>
         public IVariable GetVariableObject(string namePath)
@@ -67,9 +61,7 @@ namespace Models.Core
             return Locator().GetInternal(namePath, this);
         }
 
-        /// <summary>
-        /// Sets the value of a variable. Will throw if variable doesn't exist.
-        /// </summary>
+        /// <summary>Sets the value of a variable. Will throw if variable doesn't exist.</summary>
         /// <param name="namePath">The name of the object to set</param>
         /// <param name="value">The value to set the property to</param>
         public void Set(string namePath, object value)
@@ -78,10 +70,7 @@ namespace Models.Core
         }
 
 
-        /// <summary>
-        /// Gets the locater model for the specified model.
-        /// </summary>
-        /// <param name="model">The model to find the locator for</param>
+        /// <summary>Gets the locater model for the specified model.</summary>
         /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
         private Locater Locator()
         {

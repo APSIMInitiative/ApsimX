@@ -35,10 +35,6 @@ namespace Models.AgPasture1
         [Link]
         private Soils.Soil Soil = null;
 
-        /// <summary>Link to the SummaryFile (to add info to the simulation log)</summary>
-        [Link]
-        private ISummary Summary = null;
-
         //- Events  ---------------------------------------------------------------------------------------------------
 
         /// <summary>Reference to a NewCrop event</summary>
@@ -2592,11 +2588,8 @@ namespace Models.AgPasture1
         private int daysEmgToAnth = 0;
         /// <summary>The phenologic stage (0= pre_emergence, 1= vegetative, 2= reproductive)</summary>
         private int phenoStage = 1;
-        /// <summary>The phenologic factor</summary>
-        private double phenoFactor = 1;
         /// <summary>The number of days from emergence</summary>
         private int daysfromEmergence = 0;
-        /// <summary>The number of days from anthesis</summary>
         private int daysfromAnthesis = 0;
 
         /// <summary>The daily variation in root depth</summary>
@@ -2722,8 +2715,6 @@ namespace Models.AgPasture1
 
         // N uptake process  ------------------------------------------------------------------------------------------
 
-        /// <summary>The amount of N demanded for new growth</summary>
-        private double myNitrogenDemand = 0.0;
         /// <summary>The amount of N in the soil available to the plant</summary>
         internal double[] mySoilAvailableN;
         /// <summary>The amount of NH4 in the soil available to the plant</summary>
@@ -3200,7 +3191,6 @@ namespace Models.AgPasture1
             glfN = 0.0;     // this ought to be one, but set to zero to mimick old AgPasture
             //glfTemp = 1.0;
             glfWater = 1.0;
-            phenoFactor = 1.0;
 
             Pgross = 0.0;           // potential daily C assimilation (maximum growth)
             dGrowthPot = 0.0;	    // potential daily growth (DM after Pgross is corrected for ...)
