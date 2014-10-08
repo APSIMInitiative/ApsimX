@@ -557,7 +557,30 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         [Units("mm")]
-        public double drain { get{return SoilObject.Drainage;} }   
+        public double drain { get{return SoilObject.Drainage;} }
+
+
+
+        /// <summary>Drainage rate from bottom layer</summary>
+        /// <value>The leach n o3.</value>
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double LeachNO3 { get { return SoilObject.LeachNO3; } }         //! Leaching from bottom layer (kg/ha) // 
+
+        /// <summary>Drainage rate from bottom layer</summary>
+        /// <value>The leach n h4.</value>
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double LeachNH4 { get { return SoilObject.LeachNH4; } }         //! Leaching from bottom layer (kg/ha) // 
+
+        /// <summary>Drainage rate from bottom layer</summary>
+        /// <value>The leach urea.</value>
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double LeachUrea { get { return SoilObject.LeachUrea; } }         //! Leaching from bottom layer (kg/ha) // 
+
+
+
 
         /// <summary>
         /// Infiltration into top layer

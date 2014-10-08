@@ -434,6 +434,43 @@ namespace Models.Soils.SoilWaterBackend
         public double DepthToWaterTable;
         public double Drainage;         //Drainage out of the bottom layer.   
 
+        /// <summary>Leaching from bottom layer (kg/ha) </summary>
+        /// <value>The leach n o3.</value>
+        public double LeachNO3 
+            {
+            get
+                {
+                Layer btm = GetBottomLayer();
+                SoluteInLayer sol = btm.GetASolute("no3");
+                return sol.leach;
+                }
+            }         
+
+        /// <summary>Leaching from bottom layer (kg/ha) </summary>
+        /// <value>The leach n h4.</value>
+        public double LeachNH4
+            {
+            get
+                {
+                Layer btm = GetBottomLayer();
+                SoluteInLayer sol = btm.GetASolute("nh4");
+                return sol.leach;
+                }
+            }  
+
+        /// <summary>Leaching from bottom layer (kg/ha) </summary>
+        /// <value>The leach urea.</value>
+        public double LeachUrea
+            {
+            get
+                {
+                Layer btm = GetBottomLayer();
+                SoluteInLayer sol = btm.GetASolute("urea");
+                return sol.leach;
+                }
+            }  
+
+
         public double esw
             {
             get
