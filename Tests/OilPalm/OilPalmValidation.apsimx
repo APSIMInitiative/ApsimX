@@ -427,7 +427,7 @@
           <Water>
             <Name>Water</Name>
             <SoilCropOilPalm>
-              <Name>OilPalm</Name>
+              <Name>OilPalmSoil</Name>
               <KL>
                 <double>0.06</double>
                 <double>0.04</double>
@@ -2102,7 +2102,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCropOilPalm>
-              <Name>OilPalm</Name>
+              <Name>OilPalmSoil</Name>
               <KL>
                 <double>0.04</double>
                 <double>0.04</double>
@@ -3799,7 +3799,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCropOilPalm>
-              <Name>OilPalm</Name>
+              <Name>OilPalmSoil</Name>
               <KL>
                 <double>0.03</double>
                 <double>0.02</double>

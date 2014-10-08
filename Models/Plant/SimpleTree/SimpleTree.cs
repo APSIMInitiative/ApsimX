@@ -131,7 +131,7 @@ namespace Models.PMF
             List<UptakeInfo> thisCrop = info.AsEnumerable().Where(x => x.Plant.Equals(this)).ToList();
             thisCrop = CalcSWSourceStrength(thisCrop);
 
-            double[] kl = (double[]) Apsim.Get(RootSystem.RootZones[0].Soil, "Water.SimpleTree.KL");
+            double[] kl = (double[]) Apsim.Get(RootSystem.RootZones[0].Soil, "Water.SimpleTreeSoil.KL");
 
             for (int i = 0; i < thisCrop.Count; i++)
             {
