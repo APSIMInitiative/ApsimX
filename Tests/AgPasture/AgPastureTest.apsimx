@@ -602,6 +602,49 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <SummerDate>1-Nov</SummerDate>
+          <SummerU>6</SummerU>
+          <SummerCona>3.5</SummerCona>
+          <WinterDate>1-apr</WinterDate>
+          <WinterU>2</WinterU>
+          <WinterCona>2</WinterCona>
+          <DiffusConst>88</DiffusConst>
+          <DiffusSlope>35</DiffusSlope>
+          <Salb>0.13</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>200</double>
+            <double>150</double>
+            <double>250</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.5</double>
+            <double>0.52</double>
+            <double>0.55</double>
+            <double>0.6</double>
+            <double>0.65</double>
+            <double>0.65</double>
+            <double>0.65</double>
+          </SWCON>
+          <KLAT>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KLAT>
           <min_crit_temp>5</min_crit_temp>
           <max_crit_temp>35</max_crit_temp>
           <max_albedo>0.23</max_albedo>
@@ -646,53 +689,10 @@ namespace Models
           </canopy_fact_height>
           <canopy_fact_default>0.5</canopy_fact_default>
           <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
           <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>3.5</SummerCona>
-          <SummerU>6</SummerU>
-          <SummerDate>1-Nov</SummerDate>
-          <WinterCona>2</WinterCona>
-          <WinterU>2</WinterU>
-          <WinterDate>1-apr</WinterDate>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35</DiffusSlope>
-          <Salb>0.13</Salb>
-          <CN2Bare>73</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>200</double>
-            <double>150</double>
-            <double>250</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <SWCON>
-            <double>0.5</double>
-            <double>0.52</double>
-            <double>0.55</double>
-            <double>0.6</double>
-            <double>0.65</double>
-            <double>0.65</double>
-            <double>0.65</double>
-          </SWCON>
-          <KLAT>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KLAT>
+          <irrigation_will_runoff>false</irrigation_will_runoff>
+          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -936,12 +936,12 @@ namespace Models
         <InitialDMRoot>
           <double>500</double>
         </InitialDMRoot>
-        <MinimumGreenWt>
-          <double>300</double>
-        </MinimumGreenWt>
         <InitialRootDepth>
           <double>750</double>
         </InitialRootDepth>
+        <MinimumGreenWt>
+          <double>300</double>
+        </MinimumGreenWt>
         <ExpoLinearDepthParam>0.1</ExpoLinearDepthParam>
         <ExpoLinearCurveParam>3</ExpoLinearCurveParam>
       </AgPasture>
@@ -2384,6 +2384,49 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <SummerDate>1-Nov</SummerDate>
+          <SummerU>6</SummerU>
+          <SummerCona>3.5</SummerCona>
+          <WinterDate>1-apr</WinterDate>
+          <WinterU>2</WinterU>
+          <WinterCona>2</WinterCona>
+          <DiffusConst>88</DiffusConst>
+          <DiffusSlope>35</DiffusSlope>
+          <Salb>0.13</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>200</double>
+            <double>150</double>
+            <double>250</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.5</double>
+            <double>0.52</double>
+            <double>0.55</double>
+            <double>0.6</double>
+            <double>0.65</double>
+            <double>0.65</double>
+            <double>0.65</double>
+          </SWCON>
+          <KLAT>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KLAT>
           <min_crit_temp>5</min_crit_temp>
           <max_crit_temp>35</max_crit_temp>
           <max_albedo>0.23</max_albedo>
@@ -2428,53 +2471,10 @@ namespace Models
           </canopy_fact_height>
           <canopy_fact_default>0.5</canopy_fact_default>
           <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
           <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>3.5</SummerCona>
-          <SummerU>6</SummerU>
-          <SummerDate>1-Nov</SummerDate>
-          <WinterCona>2</WinterCona>
-          <WinterU>2</WinterU>
-          <WinterDate>1-apr</WinterDate>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35</DiffusSlope>
-          <Salb>0.13</Salb>
-          <CN2Bare>73</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>200</double>
-            <double>150</double>
-            <double>250</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <SWCON>
-            <double>0.5</double>
-            <double>0.52</double>
-            <double>0.55</double>
-            <double>0.6</double>
-            <double>0.65</double>
-            <double>0.65</double>
-            <double>0.65</double>
-          </SWCON>
-          <KLAT>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KLAT>
+          <irrigation_will_runoff>false</irrigation_will_runoff>
+          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -2718,12 +2718,12 @@ namespace Models
         <InitialDMRoot>
           <double>500</double>
         </InitialDMRoot>
-        <MinimumGreenWt>
-          <double>300</double>
-        </MinimumGreenWt>
         <InitialRootDepth>
           <double>750</double>
         </InitialRootDepth>
+        <MinimumGreenWt>
+          <double>300</double>
+        </MinimumGreenWt>
         <ExpoLinearDepthParam>0.1</ExpoLinearDepthParam>
         <ExpoLinearCurveParam>3</ExpoLinearCurveParam>
       </AgPasture>
@@ -4165,6 +4165,49 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <SummerDate>1-Nov</SummerDate>
+          <SummerU>6</SummerU>
+          <SummerCona>3.5</SummerCona>
+          <WinterDate>1-apr</WinterDate>
+          <WinterU>2</WinterU>
+          <WinterCona>2</WinterCona>
+          <DiffusConst>88</DiffusConst>
+          <DiffusSlope>35</DiffusSlope>
+          <Salb>0.13</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>200</double>
+            <double>150</double>
+            <double>250</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.5</double>
+            <double>0.52</double>
+            <double>0.55</double>
+            <double>0.6</double>
+            <double>0.65</double>
+            <double>0.65</double>
+            <double>0.65</double>
+          </SWCON>
+          <KLAT>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KLAT>
           <min_crit_temp>5</min_crit_temp>
           <max_crit_temp>35</max_crit_temp>
           <max_albedo>0.23</max_albedo>
@@ -4209,53 +4252,10 @@ namespace Models
           </canopy_fact_height>
           <canopy_fact_default>0.5</canopy_fact_default>
           <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
           <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>3.5</SummerCona>
-          <SummerU>6</SummerU>
-          <SummerDate>1-Nov</SummerDate>
-          <WinterCona>2</WinterCona>
-          <WinterU>2</WinterU>
-          <WinterDate>1-apr</WinterDate>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35</DiffusSlope>
-          <Salb>0.13</Salb>
-          <CN2Bare>73</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>200</double>
-            <double>150</double>
-            <double>250</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <SWCON>
-            <double>0.5</double>
-            <double>0.52</double>
-            <double>0.55</double>
-            <double>0.6</double>
-            <double>0.65</double>
-            <double>0.65</double>
-            <double>0.65</double>
-          </SWCON>
-          <KLAT>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KLAT>
+          <irrigation_will_runoff>false</irrigation_will_runoff>
+          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -4504,14 +4504,14 @@ namespace Models
           <double>500</double>
           <double>250</double>
         </InitialDMRoot>
-        <MinimumGreenWt>
-          <double>300</double>
-          <double>100</double>
-        </MinimumGreenWt>
         <InitialRootDepth>
           <double>750</double>
           <double>350</double>
         </InitialRootDepth>
+        <MinimumGreenWt>
+          <double>300</double>
+          <double>100</double>
+        </MinimumGreenWt>
         <ExpoLinearDepthParam>0.1</ExpoLinearDepthParam>
         <ExpoLinearCurveParam>3</ExpoLinearCurveParam>
       </AgPasture>

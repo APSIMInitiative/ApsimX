@@ -457,7 +457,7 @@
           <canopy_fact_default>0.5</canopy_fact_default>
           <act_evap_method>ritchie</act_evap_method>
           <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>0</irrigation_layer>
+          <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
