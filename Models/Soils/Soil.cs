@@ -498,6 +498,9 @@ namespace Models.Soils
         /// <exception cref="System.Exception">Soil could not find crop:  + CropName</exception>
         public ISoilCrop Crop(string CropName) 
         {
+            if (!CropName.EndsWith("Soil"))
+                CropName += "Soil";
+
             ISoilCrop MeasuredCrop = Water.Crop(CropName); 
             if (MeasuredCrop != null)
                 return MeasuredCrop;

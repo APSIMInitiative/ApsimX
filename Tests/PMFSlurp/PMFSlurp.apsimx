@@ -89,7 +89,7 @@ namespace Models
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>PMFSlurp</Name>
+            <Name>PMFSlurpSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -116,7 +116,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>

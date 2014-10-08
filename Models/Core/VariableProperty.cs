@@ -99,9 +99,12 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.Object is SoilCrop)
+                if (this.Object is ISoilCrop)
                 {
-                    return (this.Object as SoilCrop).Name + " " + descriptionAttribute.ToString();
+                    string cropName = (this.Object as ISoilCrop).Name;
+                    if (cropName.EndsWith("Soil"))
+                        cropName = cropName.Replace("Soil", "");
+                    return cropName + " " + descriptionAttribute.ToString();
                 }
 
                 return descriptionAttribute.ToString();
@@ -346,7 +349,10 @@ namespace Models.Core
             {
                 if (this.Object is ISoilCrop)
                 {
-                    return (this.Object as ISoilCrop).Name;
+                    ISoilCrop soilCrop = this.Object as ISoilCrop;
+                    if (soilCrop.Name.EndsWith("Soil"))
+                        return soilCrop.Name.Substring(0, soilCrop.Name.Length - 4);
+                    return soilCrop.Name;
                 }
 
                 return null;

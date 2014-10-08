@@ -297,7 +297,7 @@ namespace Models
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>ryegrass_clover</Name>
+            <Name>ryegrass_cloverSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -327,7 +327,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>agpasture</Name>
+            <Name>agpastureSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -357,7 +357,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>ryegrass</Name>
+            <Name>ryegrassSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -387,7 +387,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>clover</Name>
+            <Name>cloverSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -417,7 +417,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>maize</Name>
+            <Name>maizeSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -447,7 +447,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>cotton</Name>
+            <Name>cottonSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>
@@ -477,7 +477,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>sorghum</Name>
+            <Name>sorghumSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>
@@ -507,7 +507,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>slurp</Name>
+            <Name>slurpSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>
@@ -2079,7 +2079,7 @@ namespace Models
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>ryegrass_clover</Name>
+            <Name>ryegrass_cloverSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -2109,7 +2109,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>agpasture</Name>
+            <Name>agpastureSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -2139,7 +2139,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>ryegrass</Name>
+            <Name>ryegrassSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -2169,7 +2169,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>clover</Name>
+            <Name>cloverSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -2199,7 +2199,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>maize</Name>
+            <Name>maizeSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -2229,7 +2229,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>cotton</Name>
+            <Name>cottonSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>
@@ -2259,7 +2259,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>sorghum</Name>
+            <Name>sorghumSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>
@@ -2289,7 +2289,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>slurp</Name>
+            <Name>slurpSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>
@@ -3860,7 +3860,7 @@ namespace Models
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>ryegrass_clover</Name>
+            <Name>ryegrass_cloverSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -3890,7 +3890,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>agpasture</Name>
+            <Name>agpastureSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -3920,7 +3920,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>ryegrass</Name>
+            <Name>ryegrassSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -3950,7 +3950,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>clover</Name>
+            <Name>cloverSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -3980,7 +3980,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>maize</Name>
+            <Name>maizeSoil</Name>
             <LL>
               <double>0.15</double>
               <double>0.13</double>
@@ -4010,7 +4010,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>cotton</Name>
+            <Name>cottonSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>
@@ -4040,7 +4040,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>sorghum</Name>
+            <Name>sorghumSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>
@@ -4070,7 +4070,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>slurp</Name>
+            <Name>slurpSoil</Name>
             <LL>
               <double>0.14</double>
               <double>0.14</double>

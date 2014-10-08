@@ -116,7 +116,7 @@
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Barley</Name>
+            <Name>BarleySoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -158,7 +158,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Chickpea</Name>
+            <Name>ChickpeaSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -200,7 +200,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Lucerne</Name>
+            <Name>LucerneSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -242,7 +242,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Maize</Name>
+            <Name>MaizeSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -284,7 +284,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Perennial Grass</Name>
+            <Name>Perennial GrassSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -326,7 +326,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Sorghum</Name>
+            <Name>SorghumSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -368,7 +368,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>

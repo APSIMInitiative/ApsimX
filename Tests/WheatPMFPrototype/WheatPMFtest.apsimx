@@ -53,7 +53,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>WheatPMFPrototype</Name>
+            <Name>WheatPMFPrototypeSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -80,7 +80,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>

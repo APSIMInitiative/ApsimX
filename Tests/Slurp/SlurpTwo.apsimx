@@ -38,7 +38,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>Slurp</Name>
+            <Name>SlurpSoil</Name>
             <LL>
               <double>0.3</double>
               <double>0.3</double>
@@ -669,7 +669,7 @@ namespace Models
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>Slurp1</Name>
+            <Name>Slurp1Soil</Name>
             <LL>
               <double>0.3</double>
               <double>0.3</double>
@@ -690,7 +690,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Slurp2</Name>
+            <Name>Slurp2Soil</Name>
             <LL>
               <double>0.3</double>
               <double>0.3</double>

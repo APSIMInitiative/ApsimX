@@ -208,7 +208,7 @@
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -4047,7 +4047,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -4074,7 +4074,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -7935,7 +7935,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -7962,7 +7962,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11787,7 +11787,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11814,7 +11814,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>potato2</Name>
+              <Name>potato2Soil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11841,7 +11841,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -15741,7 +15741,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -15768,7 +15768,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -19827,7 +19827,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>potato</Name>
+              <Name>potatoSoil</Name>
               <LL>
                 <double>0.06</double>
                 <double>0.06</double>

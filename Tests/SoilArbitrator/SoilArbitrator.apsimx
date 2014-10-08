@@ -113,7 +113,7 @@
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -155,7 +155,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -197,7 +197,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -777,7 +777,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -819,7 +819,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -861,7 +861,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -1441,7 +1441,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -1483,7 +1483,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -1525,7 +1525,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -2202,7 +2202,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -2244,7 +2244,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -2286,7 +2286,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -2951,7 +2951,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -2993,7 +2993,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -3035,7 +3035,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -3642,7 +3642,7 @@ namespace Models
           </SAT>
           <KS />
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -3684,7 +3684,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -3726,7 +3726,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -4400,7 +4400,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -4442,7 +4442,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -4484,7 +4484,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -5091,7 +5091,7 @@ namespace Models
           </SAT>
           <KS />
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -5133,7 +5133,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -5175,7 +5175,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -5756,7 +5756,7 @@ namespace Models
           </SAT>
           <KS />
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -5798,7 +5798,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -5840,7 +5840,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -6518,7 +6518,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -6560,7 +6560,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -6602,7 +6602,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -7302,7 +7302,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -7344,7 +7344,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -7386,7 +7386,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -8244,7 +8244,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -8286,7 +8286,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -8328,7 +8328,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -8972,7 +8972,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -9014,7 +9014,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -9056,7 +9056,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -9711,7 +9711,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -9753,7 +9753,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -9795,7 +9795,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -10409,7 +10409,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -10451,7 +10451,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -10493,7 +10493,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -11180,7 +11180,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -11222,7 +11222,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -11264,7 +11264,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -11908,7 +11908,7 @@ namespace Models
             <double>0.49</double>
           </SAT>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -11950,7 +11950,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>SimpleTree</Name>
+            <Name>SimpleTreeSoil</Name>
             <LL>
               <double>0.5</double>
               <double>0.5</double>
@@ -11992,7 +11992,7 @@ namespace Models
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>

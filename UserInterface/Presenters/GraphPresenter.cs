@@ -12,6 +12,7 @@ using UserInterface.Interfaces;
 using System.Data;
 using Models;
 using UserInterface.EventArguments;
+using Models.Soils;
 
 namespace UserInterface.Presenters
 {
@@ -175,6 +176,13 @@ namespace UserInterface.Presenters
         /// <param name="series">The series to use</param>
         private void FillSeriesInfoFromSeries(Series series)
         {
+            Simulation parentSimulation = Apsim.Parent(this.Graph, typeof(Simulation)) as Simulation;
+            if (this.Graph.Parent is Soil)
+            {
+                FillSeriesInfoFromRawSeries(series);
+                return;
+            }
+
             // See if graph is inside an experiment. If so then graph all series in experiment.
             Experiment parentExperiment = Apsim.Parent(this.Graph, typeof(Experiment)) as Experiment;
             if (parentExperiment != null)
@@ -184,7 +192,6 @@ namespace UserInterface.Presenters
             }
 
             // See if graph is inside a simulation. If so then graph the simulation.
-            Simulation parentSimulation = Apsim.Parent(this.Graph, typeof(Simulation)) as Simulation;
             if (parentSimulation != null)
             {
                 FillSeriesInfoFromSimulations(new string[] {parentSimulation.Name}, series);
@@ -231,10 +238,9 @@ namespace UserInterface.Presenters
                     seriesIndex: seriesIndex,
                     numSeries: simulationNames.Length);
 
-                if (simulationNames.Length == 1)
-                {
+                if (!(this.Graph.Parent is Soil) && simulationNames.Length == 1)
                     info.Title = series.Y.FieldName;
-                }
+
                 seriesMetadata.Add(info);
             }
         }
@@ -267,6 +273,24 @@ namespace UserInterface.Presenters
                 }
                 seriesMetadata.Add(info);
             }
+        }
+
+        /// <summary>
+        /// Fill series information list from just the raw series
+        /// </summary>
+        /// <param name="simulationNames">List of simulation names</param>
+        /// <param name="series">Associated series</param>
+        private void FillSeriesInfoFromRawSeries(Series series)
+        {
+            SeriesInfo info = new SeriesInfo(
+                graph: Graph,
+                dataStore: DataStore,
+                series: series,
+                title: series.Title,
+                filter: null,
+                seriesIndex: 1,
+                numSeries: 1);
+            seriesMetadata.Add(info);
         }
 
         /// <summary>

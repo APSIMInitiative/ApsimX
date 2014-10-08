@@ -224,7 +224,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -316,6 +316,16 @@ namespace Models
               <double>0.43</double>
               <double>0.43</double>
             </SAT>
+            <KS>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </KS>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
@@ -1019,7 +1029,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -1666,7 +1676,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -2727,7 +2737,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.03</double>
                 <double>0.03</double>
@@ -3762,7 +3772,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.03</double>
                 <double>0.03</double>
@@ -5853,7 +5863,7 @@ public class Script : Model
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.07</double>
@@ -7646,7 +7656,7 @@ public class Script : Model
             <Water>
               <Name>Water</Name>
               <SoilCrop>
-                <Name>Wheat</Name>
+                <Name>WheatSoil</Name>
                 <LL>
                   <double>0.08</double>
                   <double>0.07</double>
@@ -8805,7 +8815,7 @@ public class Script : Model
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.07</double>
@@ -9674,7 +9684,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.07</double>
                 <double>0.07</double>
@@ -10977,7 +10987,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.073</double>
                 <double>0.075</double>
@@ -11979,7 +11989,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.08</double>
@@ -12475,7 +12485,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.08</double>
@@ -13043,7 +13053,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.073</double>
                 <double>0.075</double>

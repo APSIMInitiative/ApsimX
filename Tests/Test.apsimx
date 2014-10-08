@@ -50,7 +50,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -92,7 +92,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Barley</Name>
+            <Name>BarleySoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -134,7 +134,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>

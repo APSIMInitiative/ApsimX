@@ -39,7 +39,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>Eucalyptus</Name>
+            <Name>EucalyptusSoil</Name>
             <LL>
               <double>0.1</double>
               <double>0.1</double>

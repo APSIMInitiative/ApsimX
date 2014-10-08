@@ -77,7 +77,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The parent zone of our model.
         /// </summary>
-        private Zone parentZone;
+        private IModel parentForGraph;
 
         /// <summary>
         /// When the user right clicks a column header, this field contains the index of that column
@@ -115,11 +115,11 @@ namespace UserInterface.Presenters
             }
             else
             {
-                this.parentZone = Apsim.Find(this.model, typeof(Zone)) as Zone;
-                if (this.parentZone != null)
+                parentForGraph = this.model.Parent as IModel;
+                if (this.parentForGraph != null)
                 {
-                    this.parentZone.Children.Add(this.graph);
-                    this.graph.Parent = this.parentZone;
+                    this.parentForGraph.Children.Add(this.graph);
+                    this.graph.Parent = this.parentForGraph;
                     this.view.ShowGraph(true);
                     int padding = (this.view as ProfileView).Width / 2 / 2;
                     this.view.Graph.LeftRightPadding = padding;
@@ -149,9 +149,9 @@ namespace UserInterface.Presenters
             this.view.ProfileGrid.ColumnHeaderClicked -= this.OnColumnHeaderClicked;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
        
-            if (this.parentZone != null && this.graph != null)
+            if (this.parentForGraph != null && this.graph != null)
             {
-                this.parentZone.Children.Remove(this.graph);
+                this.parentForGraph.Children.Remove(this.graph);
             }
         }
 
