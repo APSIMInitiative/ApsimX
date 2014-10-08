@@ -100,6 +100,8 @@ namespace Models
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                if (simulation == null)
+                    return null;
                 return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
             }
 

@@ -126,16 +126,18 @@ namespace UserInterface.Presenters
         {
             Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
 
-            if (simulation.Parent is Experiment)
+            if (simulation != null)
             {
-                Experiment experiment = simulation.Parent as Experiment;
-                string filter = "NAME IN " + "(" + Utility.String.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                View.DataGrid.DataSource = DataStore.GetFilteredData(Report.Name, filter);
-                View.DataGrid.AutoFilterOn = true;
+                if (simulation.Parent is Experiment)
+                {
+                    Experiment experiment = simulation.Parent as Experiment;
+                    string filter = "NAME IN " + "(" + Utility.String.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                    View.DataGrid.DataSource = DataStore.GetFilteredData(Report.Name, filter);
+                    View.DataGrid.AutoFilterOn = true;
+                }
+                else
+                    View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
             }
-            else
-                View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
-
             if (View.DataGrid.DataSource != null)
             {
                 // Make all numeric columns have a format of N3
