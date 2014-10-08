@@ -348,7 +348,7 @@ namespace UserInterface.Presenters
 
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
-            if (this.view.CurrentNodePath == ".Simulations")
+            if (this.view.CurrentNodePath == ".Standard toolbox")
             {
                 this.view.CurrentNodePath = Apsim.FullPath(allModels[0]);
                 return true;
