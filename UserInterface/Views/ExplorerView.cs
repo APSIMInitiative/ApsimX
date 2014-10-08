@@ -219,15 +219,24 @@ namespace UserInterface.Views
             int imageIndex = TreeImageList.Images.IndexOfKey(Description.ResourceNameForImage);
             if (imageIndex == -1)
             {
-                Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
-                if (Icon != null)
+                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                if (s != null)
                 {
-                    TreeImageList.Images.Add(Description.ResourceNameForImage, Icon);
-                    imageIndex = TreeImageList.Images.Count - 1;
+                    Bitmap Icon = new Bitmap(s);
+
+                    if (Icon != null)
+                    {
+                        TreeImageList.Images.Add(Description.ResourceNameForImage, Icon);
+                        imageIndex = TreeImageList.Images.Count - 1;
+                    }
+                }
+                else
+                {
+
                 }
             }
-            Node.ImageKey = Description.ResourceNameForImage;
-            Node.SelectedImageKey = Description.ResourceNameForImage;
+            Node.ImageIndex = imageIndex;
+            Node.SelectedImageIndex = imageIndex;
             if (Description.HasChildren)
             {
                 if (Node.Nodes.Count == 0)
@@ -334,7 +343,10 @@ namespace UserInterface.Views
                 ToolStrip.Items.Clear();
                 foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
                 {
-                    Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
+                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                    Bitmap Icon = null;
+                    if (s != null)
+                        Icon = new Bitmap(s);
                     ToolStripItem Button = ToolStrip.Items.Add(Description.Name, Icon, Description.OnClick);
                     Button.TextImageRelation = TextImageRelation.ImageAboveText;
                 }
@@ -574,7 +586,11 @@ namespace UserInterface.Views
                 PopupMenu.Items.Clear();
                 foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
                 {
-                    Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
+                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                    Bitmap Icon = null;
+                    if (s != null)
+                        Icon = new Bitmap(s);
+
                     ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
                     Button.TextImageRelation = TextImageRelation.ImageAboveText;
                     Button.Checked = Description.Checked;

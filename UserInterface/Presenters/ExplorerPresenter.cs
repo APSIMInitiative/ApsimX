@@ -469,7 +469,7 @@ namespace UserInterface.Presenters
                 {
                     MenuDescriptionArgs.Description desc = new MenuDescriptionArgs.Description();
                     desc.Name = mainMenuName.MenuName;
-                    desc.ResourceNameForImage = desc.Name.Replace(" ", string.Empty);
+                    desc.ResourceNameForImage = "UserInterface.Resources.MenuImages." + desc.Name + ".png";
 
                     EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
                     desc.OnClick = handler;
@@ -513,7 +513,7 @@ namespace UserInterface.Presenters
                     {
                         MenuDescriptionArgs.Description desc = new MenuDescriptionArgs.Description();
                         desc.Name = contextMenuAttr.MenuName;
-                        desc.ResourceNameForImage = desc.Name.Replace(" ", string.Empty);
+                        desc.ResourceNameForImage = "UserInterface.Resources.MenuImages." + desc.Name + ".png";
                         desc.ShortcutKey = contextMenuAttr.ShortcutKey;
 
                         // Check for an enabled method.
@@ -777,7 +777,16 @@ namespace UserInterface.Presenters
         {
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = model.Name;
-            description.ResourceNameForImage = model.GetType().Name + "16";
+
+            string imageFileName;
+            if (model is ModelCollectionFromResource)
+                imageFileName = (model as ModelCollectionFromResource).ResourceName;
+            else if (model.GetType().Name == "Plant" || model.GetType().Name == "OldPlant")
+                imageFileName = model.Name;
+            else
+                imageFileName = model.GetType().Name;
+
+            description.ResourceNameForImage = "UserInterface.Resources.TreeViewImages." + imageFileName + ".png";
             description.HasChildren = this.SomeChildrenVisible(model);
             return description;
         }
