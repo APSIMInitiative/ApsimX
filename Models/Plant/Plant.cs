@@ -165,8 +165,8 @@ namespace Models.PMF
         [Link(IsOptional = true)] public Phenology Phenology = null;
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
-//        /// <summary>The rue model</summary>
-//        [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
+        /// <summary>The rue model</summary>
+        [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         /// <summary>The structure</summary>
         [Link(IsOptional=true)] public Structure Structure = null;
         /// <summary>The soil</summary>

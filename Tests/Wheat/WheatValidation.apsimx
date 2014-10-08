@@ -316,16 +316,6 @@ namespace Models
               <double>0.43</double>
               <double>0.43</double>
             </SAT>
-            <KS>
-              <double>NaN</double>
-              <double>NaN</double>
-              <double>NaN</double>
-              <double>NaN</double>
-              <double>NaN</double>
-              <double>NaN</double>
-              <double>NaN</double>
-              <double>NaN</double>
-            </KS>
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
