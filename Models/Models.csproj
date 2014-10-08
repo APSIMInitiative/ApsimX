@@ -168,6 +168,11 @@
     <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
+    <Compile Include="Soils\SoilWaterBackend\SoilWaterDataTypes.cs" />
+    <Compile Include="Soils\SoilWaterBackend\SoilWaterEvap.cs" />
+    <Compile Include="Soils\SoilWaterBackend\SoilWaterRunoff.cs" />
+    <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
+    <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Soils\Variables.cs" />
     <Compile Include="Utility\JobManager.cs" />
     <Compile Include="Core\Variable.cs" />

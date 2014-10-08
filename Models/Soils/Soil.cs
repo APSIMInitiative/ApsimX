@@ -13,7 +13,7 @@ namespace Models.Soils
 {
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
-    /// the methods in this class that return double[] always return using the
+    /// the methods in this class that return double[] always return using the 
     /// "Standard layer structure" i.e. the layer structure as defined by the Water child object.
     /// method. Mapping will occur to achieve this if necessary.
     /// To obtain the "raw", unmapped, values use the child classes e.g. SoilWater, Analysis and Sample.
@@ -165,7 +165,7 @@ namespace Models.Soils
         /// <summary>Gets the samples.</summary>
         /// <value>The samples.</value>
         [XmlIgnore] public List<Sample> Samples { get; private set; }
-
+        
         /// <summary>Constructor</summary>
         public Soil()
         {
@@ -202,17 +202,17 @@ namespace Models.Soils
         /// <summary>Find our children.</summary>
         private void FindChildren()
         {
-            Water = Apsim.Child(this, typeof(Water)) as Water;
-            SoilWater = Apsim.Child(this, typeof(SoilWater)) as SoilWater;
-            SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
-            SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
-            Analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-            InitialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
-            Phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
-            Swim = Apsim.Child(this, typeof(Swim3)) as Swim3;
-            LayerStructure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
-            SoilTemperature = Apsim.Child(this, typeof(SoilTemperature)) as SoilTemperature;
-            SoilTemperature2 = Apsim.Child(this, typeof(SoilTemperature2)) as SoilTemperature2;
+        Water = Apsim.Child(this, typeof(Water)) as Water;
+        SoilWater = Apsim.Child(this, typeof(SoilWater)) as SoilWater;
+        SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+        SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
+        Analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+        InitialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
+        Phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
+        Swim = Apsim.Child(this, typeof(Swim3)) as Swim3;
+        LayerStructure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
+        SoilTemperature = Apsim.Child(this, typeof(SoilTemperature)) as SoilTemperature;
+        SoilTemperature2 = Apsim.Child(this, typeof(SoilTemperature2)) as SoilTemperature2;
 
             if (Samples == null)
                 Samples = new List<Sample>();
@@ -222,7 +222,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// The condor cluster execute nodes in Toowoomba (and elsewhere?) do not have permission
+        /// The condor cluster execute nodes in Toowoomba (and elsewhere?) do not have permission 
         /// to write in the temp folder (c:\windows\temp). XmlSerializer needs to create files in
         /// the temp folder. The code below works around this. This code should be put somewhere
         /// else - but where? YieldProphet uses a manager2 component to create a soil object so
@@ -362,6 +362,20 @@ namespace Models.Soils
             } 
         }
 
+        /// <summary>
+        /// KLAT at standard thickness. Units: 0-1
+        /// </summary>
+        internal double[] KLAT
+            {
+            get
+                {
+                if (SoilWater == null) return null;
+                return Map(SoilWater.KLAT, SoilWater.Thickness, Thickness, MapType.Concentration, 0);
+                }
+            }
+
+
+
         /// <summary>Return the plant available water CAPACITY at standard thickness. Units: mm/mm</summary>
         /// <value>The pawc.</value>
         public double[] PAWC
@@ -496,19 +510,19 @@ namespace Models.Soils
         /// <param name="CropName">Name of the crop.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Soil could not find crop:  + CropName</exception>
-        public ISoilCrop Crop(string CropName) 
-        {
+        public ISoilCrop Crop(string CropName)
+            {
             if (!CropName.EndsWith("Soil"))
                 CropName += "Soil";
 
-            ISoilCrop MeasuredCrop = Water.Crop(CropName); 
+            ISoilCrop MeasuredCrop = Water.Crop(CropName);
             if (MeasuredCrop != null)
                 return MeasuredCrop;
             ISoilCrop Predicted = PredictedCrop(CropName);
             if (Predicted != null)
                 return Predicted;
             throw new Exception("Soil could not find crop: " + CropName);
-        }
+            }
 
         ///// <summary>
         ///// Crop lower limit mapped. Units: mm/mm
@@ -1815,9 +1829,9 @@ namespace Models.Soils
         }
         /// <summary>
         /// Convert an array of depth strings (cm) to thickness (mm) e.g.
-        /// "0-10", "10-30"
-        /// To
-        /// 100, 200
+        ///     "0-10", "10-30" 
+        /// To 
+        ///     100, 200
         /// </summary>
         /// <param name="DepthStrings">The depth strings.</param>
         /// <returns></returns>
@@ -1983,7 +1997,7 @@ namespace Models.Soils
             {
                 SoilCrop soilCrop = this.Crop(Crop) as SoilCrop;
                 if (soilCrop != null)
-                {
+                    {
                     double[] LL = this.LLMapped(Crop, Water.Thickness);
                     double[] KL = soilCrop.KL;
                     double[] XF = soilCrop.XF;
@@ -1994,9 +2008,9 @@ namespace Models.Soils
                         Msg += "Values for LL, KL or XF are missing for crop " + Crop + "\r\n";
 
                     else
-                    {
-                        for (int layer = 0; layer != Water.Thickness.Length; layer++)
                         {
+                        for (int layer = 0; layer != Water.Thickness.Length; layer++)
+                            {
                             int RealLayerNumber = layer + 1;
 
                             if (KL[layer] == Utility.Math.MissingValue)
@@ -2030,9 +2044,9 @@ namespace Models.Soils
                                 Msg += Crop + " LL of " + LL[layer].ToString("f3")
                                              + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + Water.DUL[layer].ToString("f3")
                                            + "\r\n";
+                            }
                         }
                     }
-                }
             }
 
             // Check other profile variables.
