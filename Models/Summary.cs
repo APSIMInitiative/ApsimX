@@ -17,7 +17,7 @@ namespace Models
     /// It also provides an API for writing messages to the DataStore.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.HTMLView")]
+    [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     public class Summary : Model, ISummary
     {      

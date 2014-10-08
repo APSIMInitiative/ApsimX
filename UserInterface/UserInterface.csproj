@@ -191,6 +191,7 @@
     <Compile Include="Views\HTMLView.Designer.cs">
       <DependentUpon>HTMLView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Views\PredictedObservedView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -202,6 +203,12 @@
     </Compile>
     <Compile Include="Views\SeriesEditorView.Designer.cs">
       <DependentUpon>SeriesEditorView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SummaryView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\SummaryView.Designer.cs">
+      <DependentUpon>SummaryView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TestView.cs">
       <SubType>UserControl</SubType>
@@ -342,6 +349,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SeriesEditorView.resx">
       <DependentUpon>SeriesEditorView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SummaryView.resx">
+      <DependentUpon>SummaryView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TestView.resx">
       <DependentUpon>TestView.cs</DependentUpon>

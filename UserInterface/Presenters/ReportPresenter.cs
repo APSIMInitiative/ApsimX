@@ -11,6 +11,7 @@ using System.IO;
 using UserInterface.Interfaces;
 using UserInterface.EventArguments;
 using Models.Report;
+using Models.Factorial;
 
 namespace UserInterface.Presenters
 {
@@ -124,8 +125,16 @@ namespace UserInterface.Presenters
         private void PopulateDataGrid()
         {
             Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
-            
-            View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
+
+            if (simulation.Parent is Experiment)
+            {
+                Experiment experiment = simulation.Parent as Experiment;
+                string filter = "NAME IN " + "(" + Utility.String.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                View.DataGrid.DataSource = DataStore.GetFilteredData(Report.Name, filter);
+                View.DataGrid.AutoFilterOn = true;
+            }
+            else
+                View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
 
             if (View.DataGrid.DataSource != null)
             {
