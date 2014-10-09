@@ -747,7 +747,7 @@ namespace Models.Soils.SoilWaterBackend
             {
             layers.Sort();
 
-            for (int i = bottom; i <= top; i--)
+            for (int i = bottom; i >= top; i--)
                 {
                 yield return layers[i - 1];
                 }
@@ -777,7 +777,7 @@ namespace Models.Soils.SoilWaterBackend
         public IEnumerable XToTop(int X)
             {
             layers.Sort();
-            for (int i = X; i <= top; i--)
+            for (int i = X; i >= top; i--)
                 {
                 yield return layers[i - 1];
                 }
@@ -807,7 +807,7 @@ namespace Models.Soils.SoilWaterBackend
         public IEnumerable BottomToX(int X)
             {
             layers.Sort();
-            for (int i = X; i <= bottom; i++)
+            for (int i = bottom; i >= X; i--)
                 {
                 yield return layers[i - 1];
                 }
@@ -1521,7 +1521,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
             w_in = 0.0;
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
 
                 w_tot = lyr.sw_dep + w_in;
