@@ -6,6 +6,9 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// Leaf number potential
+    /// </summary>
     [Serializable]
     public class LeafNumberPotential3 : Model
     {
@@ -19,6 +22,7 @@ namespace Models.PMF.OldPlant
         //Function LeavesPerNode = null;
         //private double dltLeafNoPot;
 
+        /// <summary>Does the leaf number potential.</summary>
         void DoLeafNumberPotential()
         {
 

@@ -73,9 +73,7 @@ namespace UserInterface.Commands
             {
                 Timer.Stop();
 
-                if (JobManager.SomeHadErrors)
-                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete with errors", Models.DataStore.ErrorLevel.Error);
-                else
+                if (!JobManager.SomeHadErrors)
                     ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
                         + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
 

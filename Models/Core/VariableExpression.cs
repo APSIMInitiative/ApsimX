@@ -31,6 +31,7 @@ namespace Models.Core
         /// Initializes a new instance of the <see cref="VariableExpression" /> class.
         /// </summary>
         /// <param name="expression">The string expression</param>
+        /// <param name="model">The model</param>
         public VariableExpression(string expression, Model model)
         {
             this.expression = expression;

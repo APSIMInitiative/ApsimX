@@ -77,9 +77,6 @@ namespace Models
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
@@ -90,10 +87,21 @@ namespace Models
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>AgPasture</PoolName>
+            <ResidueType>grass</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>40</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>AgPasture</PoolName>
         <type>grass</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>40</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -104,6 +112,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -287,6 +296,246 @@ namespace Models
         </Analysis>
         <Water>
           <Name>Water</Name>
+          <SoilCrop>
+            <Name>ryegrass_cloverSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.07</double>
+              <double>0.04</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>agpastureSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.07</double>
+              <double>0.04</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>ryegrassSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.02</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>cloverSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.02</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>maizeSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>cottonSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.07</double>
+              <double>0.05</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>sorghumSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.03</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0.9</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>slurpSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -350,246 +599,6 @@ namespace Models
             <double>20000</double>
             <double>20000</double>
           </KS>
-          <SoilCrop>
-            <Name>ryegrass_clover</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.07</double>
-              <double>0.04</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>agpasture</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.07</double>
-              <double>0.04</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>ryegrass</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>clover</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>maize</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>cotton</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.07</double>
-              <double>0.05</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>sorghum</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.07</double>
-              <double>0.07</double>
-              <double>0.07</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.04</double>
-              <double>0.03</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0.9</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>slurp</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -640,6 +649,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -649,15 +663,9 @@ namespace Models
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -941,50 +949,50 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[AgPasture].SwardName</string>
-          <string>[AgPasture].SpeciesName</string>
-          <string>[AgPasture].TotalPlantWt</string>
-          <string>[AgPasture].AboveGroundWt</string>
-          <string>[AgPasture].StandingPlantWt</string>
-          <string>[AgPasture].BelowGroundWt</string>
-          <string>[AgPasture].HarvestableWt</string>
-          <string>[AgPasture].SpeciesTotalWt</string>
-          <string>[AgPasture].SpeciesAboveGroundWt</string>
-          <string>[AgPasture].HarvestWt</string>
-          <string>[AgPasture].SpeciesHarvestWt</string>
-          <string>[AgPasture].LAI_total</string>
-          <string>[AgPasture].LAI_green</string>
-          <string>[AgPasture].LAI_dead</string>
-          <string>[AgPasture].PlantPotentialGrowthWt</string>
-          <string>[AgPasture].PlantGrowthNoNLimit</string>
-          <string>[AgPasture].PlantGrowthWt</string>
-          <string>[AgPasture].HerbageGrowthWt</string>
-          <string>[AgPasture].LitterDepositionWt</string>
-          <string>[AgPasture].RootSenescenceWt</string>
-          <string>[AgPasture].WaterDemand</string>
-          <string>[AgPasture].WaterSupply</string>
-          <string>[AgPasture].WaterUptake</string>
-          <string>[AgPasture].TotalPlantN</string>
-          <string>[AgPasture].NitrogenDemand</string>
-          <string>[AgPasture].PlantFixedN</string>
-          <string>[AgPasture].NitrogenUptake</string>
-          <string>[AgPasture].LitterDepositionN</string>
-          <string>[AgPasture].RootSenescenceN</string>
-          <string>[AgPasture].GLFtemp</string>
-          <string>[AgPasture].GLFwater</string>
-          <string>[AgPasture].GLFn</string>
-          <string>[AgPasture].GLFnConcentration</string>
-          <string>[AgPasture].GLFrgr</string>
-          <string>[Agpasture].GPP</string>
-          <string>[Agpasture].NitrogenSupply</string>
+          <string>AgPasture.SwardName</string>
+          <string>AgPasture.SpeciesName</string>
+          <string>AgPasture.TotalPlantWt</string>
+          <string>AgPasture.AboveGroundWt</string>
+          <string>AgPasture.StandingPlantWt</string>
+          <string>AgPasture.BelowGroundWt</string>
+          <string>AgPasture.HarvestableWt</string>
+          <string>AgPasture.SpeciesTotalWt</string>
+          <string>AgPasture.SpeciesAboveGroundWt</string>
+          <string>AgPasture.HarvestWt</string>
+          <string>AgPasture.SpeciesHarvestWt</string>
+          <string>AgPasture.LAI_total</string>
+          <string>AgPasture.LAI_green</string>
+          <string>AgPasture.LAI_dead</string>
+          <string>AgPasture.PlantPotentialGrowthWt</string>
+          <string>AgPasture.PlantGrowthNoNLimit</string>
+          <string>AgPasture.PlantGrowthWt</string>
+          <string>AgPasture.HerbageGrowthWt</string>
+          <string>AgPasture.LitterDepositionWt</string>
+          <string>AgPasture.RootSenescenceWt</string>
+          <string>AgPasture.WaterDemand</string>
+          <string>AgPasture.WaterSupply</string>
+          <string>AgPasture.WaterUptake</string>
+          <string>AgPasture.TotalPlantN</string>
+          <string>AgPasture.NitrogenDemand</string>
+          <string>AgPasture.PlantFixedN</string>
+          <string>AgPasture.NitrogenUptake</string>
+          <string>AgPasture.LitterDepositionN</string>
+          <string>AgPasture.RootSenescenceN</string>
+          <string>AgPasture.GLFtemp</string>
+          <string>AgPasture.GLFwater</string>
+          <string>AgPasture.GLFn</string>
+          <string>AgPasture.GLFnConcentration</string>
+          <string>AgPasture.GLFrgr</string>
+          <string>AgPasture.GPP</string>
+          <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
+          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
+          <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
           <string>[SurfaceOrganicMatter].surfaceom_n</string>
         </VariableNames>
         <EventNames>
@@ -997,11 +1005,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -1084,6 +1098,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -1091,11 +1107,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -1158,6 +1180,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -1165,11 +1189,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>DMcut</Title>
@@ -1192,6 +1222,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -1199,11 +1231,17 @@ namespace Models
           <Type>Left</Type>
           <Title>growth rate (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Potential</Title>
@@ -1286,6 +1324,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -1293,11 +1333,17 @@ namespace Models
           <Type>Left</Type>
           <Title>LAI</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Total</Title>
@@ -1360,6 +1406,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -1367,11 +1415,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Water demand, uptake (mm/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -1414,6 +1468,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -1421,11 +1477,17 @@ namespace Models
           <Type>Left</Type>
           <Title>N demand, uptake (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -1488,6 +1550,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -1495,11 +1559,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil mineral N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>SoilNO3</Title>
@@ -1542,6 +1612,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -1549,14 +1621,23 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil organic N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Right</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>HumusN</Title>
@@ -1639,6 +1720,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -1646,6 +1729,8 @@ namespace Models
     <Input>
       <Name>Observed</Name>
     </Input>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>Test2</Name>
@@ -1774,9 +1859,6 @@ namespace Models
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
@@ -1787,10 +1869,21 @@ namespace Models
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>AgPasture</PoolName>
+            <ResidueType>grass</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>40</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>AgPasture</PoolName>
         <type>grass</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>40</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -1801,6 +1894,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -1984,6 +2078,246 @@ namespace Models
         </Analysis>
         <Water>
           <Name>Water</Name>
+          <SoilCrop>
+            <Name>ryegrass_cloverSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.07</double>
+              <double>0.04</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>agpastureSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.07</double>
+              <double>0.04</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>ryegrassSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.02</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>cloverSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.02</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>maizeSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>cottonSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.07</double>
+              <double>0.05</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>sorghumSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.03</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0.9</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>slurpSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -2047,246 +2381,6 @@ namespace Models
             <double>20000</double>
             <double>20000</double>
           </KS>
-          <SoilCrop>
-            <Name>ryegrass_clover</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.07</double>
-              <double>0.04</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>agpasture</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.07</double>
-              <double>0.04</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>ryegrass</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>clover</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>maize</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>cotton</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.07</double>
-              <double>0.05</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>sorghum</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.07</double>
-              <double>0.07</double>
-              <double>0.07</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.04</double>
-              <double>0.03</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0.9</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>slurp</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -2337,6 +2431,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -2346,15 +2445,9 @@ namespace Models
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -2638,50 +2731,50 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[AgPasture].SwardName</string>
-          <string>[AgPasture].SpeciesName</string>
-          <string>[AgPasture].TotalPlantWt</string>
-          <string>[AgPasture].AboveGroundWt</string>
-          <string>[AgPasture].StandingPlantWt</string>
-          <string>[AgPasture].BelowGroundWt</string>
-          <string>[AgPasture].HarvestableWt</string>
-          <string>[AgPasture].SpeciesTotalWt</string>
-          <string>[AgPasture].SpeciesAboveGroundWt</string>
-          <string>[AgPasture].HarvestWt</string>
-          <string>[AgPasture].SpeciesHarvestWt</string>
-          <string>[AgPasture].LAI_total</string>
-          <string>[AgPasture].LAI_green</string>
-          <string>[AgPasture].LAI_dead</string>
-          <string>[AgPasture].PlantPotentialGrowthWt</string>
-          <string>[AgPasture].PlantGrowthNoNLimit</string>
-          <string>[AgPasture].PlantGrowthWt</string>
-          <string>[AgPasture].HerbageGrowthWt</string>
-          <string>[AgPasture].LitterDepositionWt</string>
-          <string>[AgPasture].RootSenescenceWt</string>
-          <string>[AgPasture].WaterDemand</string>
-          <string>[AgPasture].WaterSupply</string>
-          <string>[AgPasture].WaterUptake</string>
-          <string>[AgPasture].TotalPlantN</string>
-          <string>[AgPasture].NitrogenDemand</string>
-          <string>[AgPasture].PlantFixedN</string>
-          <string>[AgPasture].NitrogenUptake</string>
-          <string>[AgPasture].LitterDepositionN</string>
-          <string>[AgPasture].RootSenescenceN</string>
-          <string>[AgPasture].GLFtemp</string>
-          <string>[AgPasture].GLFwater</string>
-          <string>[AgPasture].GLFn</string>
-          <string>[AgPasture].GLFnConcentration</string>
-          <string>[AgPasture].GLFrgr</string>
-          <string>[Agpasture].GPP</string>
-          <string>[Agpasture].NitrogenSupply</string>
+          <string>AgPasture.SwardName</string>
+          <string>AgPasture.SpeciesName</string>
+          <string>AgPasture.TotalPlantWt</string>
+          <string>AgPasture.AboveGroundWt</string>
+          <string>AgPasture.StandingPlantWt</string>
+          <string>AgPasture.BelowGroundWt</string>
+          <string>AgPasture.HarvestableWt</string>
+          <string>AgPasture.SpeciesTotalWt</string>
+          <string>AgPasture.SpeciesAboveGroundWt</string>
+          <string>AgPasture.HarvestWt</string>
+          <string>AgPasture.SpeciesHarvestWt</string>
+          <string>AgPasture.LAI_total</string>
+          <string>AgPasture.LAI_green</string>
+          <string>AgPasture.LAI_dead</string>
+          <string>AgPasture.PlantPotentialGrowthWt</string>
+          <string>AgPasture.PlantGrowthNoNLimit</string>
+          <string>AgPasture.PlantGrowthWt</string>
+          <string>AgPasture.HerbageGrowthWt</string>
+          <string>AgPasture.LitterDepositionWt</string>
+          <string>AgPasture.RootSenescenceWt</string>
+          <string>AgPasture.WaterDemand</string>
+          <string>AgPasture.WaterSupply</string>
+          <string>AgPasture.WaterUptake</string>
+          <string>AgPasture.TotalPlantN</string>
+          <string>AgPasture.NitrogenDemand</string>
+          <string>AgPasture.PlantFixedN</string>
+          <string>AgPasture.NitrogenUptake</string>
+          <string>AgPasture.LitterDepositionN</string>
+          <string>AgPasture.RootSenescenceN</string>
+          <string>AgPasture.GLFtemp</string>
+          <string>AgPasture.GLFwater</string>
+          <string>AgPasture.GLFn</string>
+          <string>AgPasture.GLFnConcentration</string>
+          <string>AgPasture.GLFrgr</string>
+          <string>AgPasture.GPP</string>
+          <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
+          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
+          <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2693,11 +2786,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -2780,6 +2879,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -2787,11 +2888,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -2854,6 +2961,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -2861,11 +2970,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>DMcut</Title>
@@ -2888,6 +3003,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -2895,11 +3012,17 @@ namespace Models
           <Type>Left</Type>
           <Title>growth rate (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Potential</Title>
@@ -2982,6 +3105,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -2989,11 +3114,17 @@ namespace Models
           <Type>Left</Type>
           <Title>LAI</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Total</Title>
@@ -3056,6 +3187,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -3063,11 +3196,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Water demand, uptake (mm/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -3110,6 +3249,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -3117,11 +3258,17 @@ namespace Models
           <Type>Left</Type>
           <Title>N demand, uptake (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -3184,6 +3331,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -3191,11 +3340,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil mineral N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>SoilNO3</Title>
@@ -3238,6 +3393,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -3245,14 +3402,23 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil organic N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Right</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>HumusN</Title>
@@ -3335,6 +3501,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -3342,6 +3510,8 @@ namespace Models
     <Input>
       <Name>Observed</Name>
     </Input>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <Simulation>
     <Name>Test3</Name>
@@ -3470,9 +3640,6 @@ namespace Models
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
-        <_standing_fraction>
-          <double>0</double>
-        </_standing_fraction>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
@@ -3483,10 +3650,21 @@ namespace Models
           <Name>TillageTypesList</Name>
           <TillageType />
         </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>AgPasture</PoolName>
+            <ResidueType>grass</ResidueType>
+            <Mass>1000</Mass>
+            <CNRatio>40</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
         <PoolName>AgPasture</PoolName>
         <type>grass</type>
         <mass>1000</mass>
         <standing_fraction>0</standing_fraction>
+        <cpr />
         <cnr>40</cnr>
         <CriticalResidueWeight>2000</CriticalResidueWeight>
         <OptimumDecompTemp>20</OptimumDecompTemp>
@@ -3497,6 +3675,7 @@ namespace Models
         <MinRainToLeach>10</MinRainToLeach>
         <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
         <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
@@ -3680,6 +3859,246 @@ namespace Models
         </Analysis>
         <Water>
           <Name>Water</Name>
+          <SoilCrop>
+            <Name>ryegrass_cloverSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.07</double>
+              <double>0.04</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>agpastureSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.07</double>
+              <double>0.04</double>
+              <double>0.01</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>ryegrassSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.02</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>cloverSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.02</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>maizeSoil</Name>
+            <LL>
+              <double>0.15</double>
+              <double>0.13</double>
+              <double>0.08</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>cottonSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.09</double>
+              <double>0.07</double>
+              <double>0.05</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>sorghumSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.04</double>
+              <double>0.03</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0.9</double>
+            </XF>
+          </SoilCrop>
+          <SoilCrop>
+            <Name>slurpSoil</Name>
+            <LL>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.03</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -3743,246 +4162,6 @@ namespace Models
             <double>20000</double>
             <double>20000</double>
           </KS>
-          <SoilCrop>
-            <Name>ryegrass_clover</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.07</double>
-              <double>0.04</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>agpasture</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.07</double>
-              <double>0.04</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>ryegrass</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>clover</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>maize</Name>
-            <LL>
-              <double>0.15</double>
-              <double>0.13</double>
-              <double>0.08</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </LL>
-            <KL>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>cotton</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.07</double>
-              <double>0.05</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>sorghum</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.07</double>
-              <double>0.07</double>
-              <double>0.07</double>
-              <double>0.05</double>
-              <double>0.05</double>
-              <double>0.04</double>
-              <double>0.03</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0.9</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>slurp</Name>
-            <LL>
-              <double>0.14</double>
-              <double>0.14</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-            </LL>
-            <KL>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -4033,6 +4212,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -4042,15 +4226,9 @@ namespace Models
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -4341,50 +4519,50 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[AgPasture].SwardName</string>
-          <string>[AgPasture].SpeciesName</string>
-          <string>[AgPasture].TotalPlantWt</string>
-          <string>[AgPasture].AboveGroundWt</string>
-          <string>[AgPasture].StandingPlantWt</string>
-          <string>[AgPasture].BelowGroundWt</string>
-          <string>[AgPasture].HarvestableWt</string>
-          <string>[AgPasture].SpeciesTotalWt</string>
-          <string>[AgPasture].SpeciesAboveGroundWt</string>
-          <string>[AgPasture].HarvestWt</string>
-          <string>[AgPasture].SpeciesHarvestWt</string>
-          <string>[AgPasture].LAI_total</string>
-          <string>[AgPasture].LAI_green</string>
-          <string>[AgPasture].LAI_dead</string>
-          <string>[AgPasture].PlantPotentialGrowthWt</string>
-          <string>[AgPasture].PlantGrowthNoNLimit</string>
-          <string>[AgPasture].PlantGrowthWt</string>
-          <string>[AgPasture].HerbageGrowthWt</string>
-          <string>[AgPasture].LitterDepositionWt</string>
-          <string>[AgPasture].RootSenescenceWt</string>
-          <string>[AgPasture].WaterDemand</string>
-          <string>[AgPasture].WaterSupply</string>
-          <string>[AgPasture].WaterUptake</string>
-          <string>[AgPasture].TotalPlantN</string>
-          <string>[AgPasture].NitrogenDemand</string>
-          <string>[AgPasture].PlantFixedN</string>
-          <string>[AgPasture].NitrogenUptake</string>
-          <string>[AgPasture].LitterDepositionN</string>
-          <string>[AgPasture].RootSenescenceN</string>
-          <string>[AgPasture].GLFtemp</string>
-          <string>[AgPasture].GLFwater</string>
-          <string>[AgPasture].GLFn</string>
-          <string>[AgPasture].GLFnConcentration</string>
-          <string>[AgPasture].GLFrgr</string>
-          <string>[Agpasture].GPP</string>
-          <string>[Agpasture].NitrogenSupply</string>
+          <string>AgPasture.SwardName</string>
+          <string>AgPasture.SpeciesName</string>
+          <string>AgPasture.TotalPlantWt</string>
+          <string>AgPasture.AboveGroundWt</string>
+          <string>AgPasture.StandingPlantWt</string>
+          <string>AgPasture.BelowGroundWt</string>
+          <string>AgPasture.HarvestableWt</string>
+          <string>AgPasture.SpeciesTotalWt</string>
+          <string>AgPasture.SpeciesAboveGroundWt</string>
+          <string>AgPasture.HarvestWt</string>
+          <string>AgPasture.SpeciesHarvestWt</string>
+          <string>AgPasture.LAI_total</string>
+          <string>AgPasture.LAI_green</string>
+          <string>AgPasture.LAI_dead</string>
+          <string>AgPasture.PlantPotentialGrowthWt</string>
+          <string>AgPasture.PlantGrowthNoNLimit</string>
+          <string>AgPasture.PlantGrowthWt</string>
+          <string>AgPasture.HerbageGrowthWt</string>
+          <string>AgPasture.LitterDepositionWt</string>
+          <string>AgPasture.RootSenescenceWt</string>
+          <string>AgPasture.WaterDemand</string>
+          <string>AgPasture.WaterSupply</string>
+          <string>AgPasture.WaterUptake</string>
+          <string>AgPasture.TotalPlantN</string>
+          <string>AgPasture.NitrogenDemand</string>
+          <string>AgPasture.PlantFixedN</string>
+          <string>AgPasture.NitrogenUptake</string>
+          <string>AgPasture.LitterDepositionN</string>
+          <string>AgPasture.RootSenescenceN</string>
+          <string>AgPasture.GLFtemp</string>
+          <string>AgPasture.GLFwater</string>
+          <string>AgPasture.GLFn</string>
+          <string>AgPasture.GLFnConcentration</string>
+          <string>AgPasture.GLFrgr</string>
+          <string>AgPasture.GPP</string>
+          <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
-          <string>Evaluate sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
+          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
+          <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
           <string>[SurfaceOrganicMatter].surfaceom_n</string>
         </VariableNames>
         <EventNames>
@@ -4397,11 +4575,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -4484,6 +4668,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -4491,11 +4677,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
@@ -4598,6 +4790,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -4605,11 +4799,17 @@ namespace Models
           <Type>Left</Type>
           <Title>DM (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>DMcut</Title>
@@ -4632,6 +4832,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -4639,11 +4841,17 @@ namespace Models
           <Type>Left</Type>
           <Title>growth rate (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Potential</Title>
@@ -4726,6 +4934,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -4733,11 +4943,17 @@ namespace Models
           <Type>Left</Type>
           <Title>LAI</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Total</Title>
@@ -4800,6 +5016,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -4807,11 +5025,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Water demand, uptake (mm/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -4854,6 +5078,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -4861,11 +5087,17 @@ namespace Models
           <Type>Left</Type>
           <Title>N demand, uptake (kg/ha/day)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Demand</Title>
@@ -4928,6 +5160,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -4935,11 +5169,17 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil mineral N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Top</Type>
           <Title>Volumetric water (mm/mm)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>SoilNO3</Title>
@@ -4982,6 +5222,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -4989,14 +5231,23 @@ namespace Models
           <Type>Left</Type>
           <Title>Soil organic N (kg/ha)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Right</Type>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>HumusN</Title>
@@ -5079,6 +5330,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -5086,6 +5339,8 @@ namespace Models
     <Input>
       <Name>Observed</Name>
     </Input>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

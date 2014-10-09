@@ -8,11 +8,16 @@ using Models.Core;
 
 namespace Models.Soils
 {
+    /// <summary>
+    /// A model for capturing water parameters
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class Water : Model
     {
+        /// <summary>Gets the soil.</summary>
+        /// <value>The soil.</value>
         private Soil soil
         {
             get
@@ -21,8 +26,11 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>The _ thickness</summary>
         private double[] _Thickness;
 
+        /// <summary>Gets or sets the thickness.</summary>
+        /// <value>The thickness.</value>
         public double[] Thickness
         {
             get
@@ -35,6 +43,8 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the depth.</summary>
+        /// <value>The depth.</value>
         [Summary]
         [XmlIgnore]
         [Units("cm")]
@@ -51,49 +61,75 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the bd.</summary>
+        /// <value>The bd.</value>
         [Summary]
         [Description("BD")]
         [Units("g/cc")]
         [Display(Format = "N2")]
         public double[] BD { get; set; }
 
+        /// <summary>Gets or sets the air dry.</summary>
+        /// <value>The air dry.</value>
         [Summary]
         [Description("Air dry")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] AirDry { get; set; }
 
+        /// <summary>Gets or sets the l L15.</summary>
+        /// <value>The l L15.</value>
         [Summary]
         [Description("LL15")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] LL15 { get; set; }
 
+        /// <summary>Gets or sets the dul.</summary>
+        /// <value>The dul.</value>
         [Summary]
         [Description("DUL")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] DUL { get; set; }
 
+        /// <summary>Gets or sets the sat.</summary>
+        /// <value>The sat.</value>
         [Summary]
         [Description("SAT")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] SAT { get; set; }
 
+        /// <summary>Gets or sets the ks.</summary>
+        /// <value>The ks.</value>
         [Summary]
         [Description("KS")]
         [Units("mm/day")]
         [Display(Format = "N1")]
         public double[] KS { get; set; }
 
+        /// <summary>Gets or sets the bd metadata.</summary>
+        /// <value>The bd metadata.</value>
         public string[] BDMetadata { get; set; }
+        /// <summary>Gets or sets the air dry metadata.</summary>
+        /// <value>The air dry metadata.</value>
         public string[] AirDryMetadata { get; set; }
+        /// <summary>Gets or sets the l L15 metadata.</summary>
+        /// <value>The l L15 metadata.</value>
         public string[] LL15Metadata { get; set; }
+        /// <summary>Gets or sets the dul metadata.</summary>
+        /// <value>The dul metadata.</value>
         public string[] DULMetadata { get; set; }
+        /// <summary>Gets or sets the sat metadata.</summary>
+        /// <value>The sat metadata.</value>
         public string[] SATMetadata { get; set; }
+        /// <summary>Gets or sets the ks metadata.</summary>
+        /// <value>The ks metadata.</value>
         public string[] KSMetadata { get; set; }
 
+        /// <summary>Gets the crops.</summary>
+        /// <value>The crops.</value>
         [Description("Soil crop parameterisations")]
         [XmlIgnore]
         public List<ISoilCrop> Crops
@@ -107,9 +143,9 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Return the specified crop to caller. Will return null if not found.
-        /// </summary>
+        /// <summary>Return the specified crop to caller. Will return null if not found.</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         public ISoilCrop Crop(string CropName)
         {
             return this.Children.Find(m => m.Name.Equals(CropName, StringComparison.CurrentCultureIgnoreCase)) as ISoilCrop;
@@ -119,6 +155,7 @@ namespace Models.Soils
         /// Get or set the names of crops. Note: When setting, the crops will be reorded to match
         /// the setting list of names. Also new crops will be added / deleted as required.
         /// </summary>
+        /// <value>The crop names.</value>
         [XmlIgnore]
         public string[] CropNames
         {
@@ -172,9 +209,9 @@ namespace Models.Soils
             //}
         }
 
-        /// <summary>
-        /// Return the specified crop to caller. Will return null if not found.
-        /// </summary>
+        /// <summary>Return the specified crop to caller. Will return null if not found.</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         private int FindCropIndex(string CropName)
         {
             for (int i = 0; i < Crops.Count; i++)

@@ -8,57 +8,96 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// The root organ
+    /// </summary>
     [Serializable]
     public class Root : BaseOrgan, BelowGround
     {
         #region Links
+        /// <summary>The plant</summary>
         [Link]
         Plant Plant = null;
-        
+
+        /// <summary>The arbitrator</summary>
         [Link]
         OrganArbitrator Arbitrator = null;
 
+        /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
         #endregion
         
         #region Parameters
+        /// <summary>Gets or sets the initial dm.</summary>
+        /// <value>The initial dm.</value>
         public double InitialDM { get; set; }
+        /// <summary>Gets or sets the length of the specific root.</summary>
+        /// <value>The length of the specific root.</value>
         public double SpecificRootLength { get; set; }
+        /// <summary>Gets or sets the kn o3.</summary>
+        /// <value>The kn o3.</value>
         public double KNO3 { get; set; }
+        /// <summary>Gets or sets the kn h4.</summary>
+        /// <value>The kn h4.</value>
         public double KNH4 { get; set; }
 
+        /// <summary>The nitrogen demand switch</summary>
         [Link] Function NitrogenDemandSwitch = null;
+        /// <summary>The senescence rate</summary>
         [Link(IsOptional=true)] Function SenescenceRate = null;
+        /// <summary>The temperature effect</summary>
         [Link] Function TemperatureEffect = null;
+        /// <summary>The root front velocity</summary>
         [Link] Function RootFrontVelocity = null;
+        /// <summary>The partition fraction</summary>
         [Link] Function PartitionFraction = null;
+        /// <summary>The maximum n conc</summary>
         [Link] Function MaximumNConc = null;
+        /// <summary>The maximum daily n uptake</summary>
         [Link] Function MaxDailyNUptake = null;
+        /// <summary>The minimum n conc</summary>
         [Link] Function MinimumNConc = null;
+        /// <summary>The kl modifier</summary>
         [Link] Function KLModifier = null;
         #endregion
 
         #region States
+        /// <summary>The kgha2gsm</summary>
         private const double kgha2gsm = 0.1;
+        /// <summary>The sw supply</summary>
         private double[] SWSupply = null;
+        /// <summary>The uptake</summary>
         private double[] Uptake = null;
+        /// <summary>The delta n h4</summary>
         private double[] DeltaNH4;
+        /// <summary>The delta n o3</summary>
         private double[] DeltaNO3;
+        /// <summary>The _ senescence rate</summary>
         private double _SenescenceRate = 0;
+        /// <summary>The _ nuptake</summary>
         private double _Nuptake = 0;
 
+        /// <summary>Gets or sets the layer live.</summary>
+        /// <value>The layer live.</value>
         [XmlIgnore]
         public Biomass[] LayerLive { get; set; }
+        /// <summary>Gets or sets the layer dead.</summary>
+        /// <value>The layer dead.</value>
         [XmlIgnore]
         public Biomass[] LayerDead { get; set; }
+        /// <summary>Gets or sets the length.</summary>
+        /// <value>The length.</value>
         [XmlIgnore]
         public double Length { get; set; }
 
+        /// <summary>Gets or sets the depth.</summary>
+        /// <value>The depth.</value>
         [XmlIgnore]
         [Units("mm")]
         public double Depth { get; set; }
 
+        /// <summary>Clears this instance.</summary>
         public override void Clear()
         {
             base.Clear();
@@ -98,10 +137,17 @@ namespace Models.PMF.Organs
         #endregion
         
         #region Class Properties
+        /// <summary>Gets a value indicating whether this instance is growing.</summary>
+        /// <value>
+        /// <c>true</c> if this instance is growing; otherwise, <c>false</c>.
+        /// </value>
         private bool isGrowing { get { return (Plant.PlantInGround && Plant.SowingData.Depth < this.Depth); } }
 
+        /// <summary>The soil crop</summary>
         private SoilCrop soilCrop;
 
+        /// <summary>Gets the n uptake.</summary>
+        /// <value>The n uptake.</value>
         [Units("kg/ha")]
         public double NUptake
         {
@@ -110,7 +156,9 @@ namespace Models.PMF.Organs
                 return _Nuptake / kgha2gsm;
             }
         }
-        
+
+        /// <summary>Gets the l ldep.</summary>
+        /// <value>The l ldep.</value>
         [Units("mm")]
         double[] LLdep
         {
@@ -122,7 +170,9 @@ namespace Models.PMF.Organs
                 return value;
             }
         }
-        
+
+        /// <summary>Gets the length density.</summary>
+        /// <value>The length density.</value>
         [Units("??mm/mm3")]
         double[] LengthDensity
         {
@@ -134,6 +184,8 @@ namespace Models.PMF.Organs
                 return value;
             }
         }
+        /// <summary>Gets the RLV.</summary>
+        /// <value>The RLV.</value>
         [Units("??km/mm3")]
         double[] rlv
         {
@@ -145,6 +197,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
+        /// <summary>Does the potential dm.</summary>
         public override void DoPotentialDM()
         {
             _SenescenceRate = 0;
@@ -180,6 +233,7 @@ namespace Models.PMF.Organs
                 Length += LengthDensity[layer];
         }
 
+        /// <summary>Does the actual growth.</summary>
         public override void DoActualGrowth()
         {
             base.DoActualGrowth();
@@ -232,6 +286,8 @@ namespace Models.PMF.Organs
             UpdateRootProperties();
         }
 
+        /// <summary>Does the water uptake.</summary>
+        /// <param name="Amount">The amount.</param>
         public override void DoWaterUptake(double Amount)
         {
             // Send the delta water back to SoilWat that we're going to uptake.
@@ -250,6 +306,10 @@ namespace Models.PMF.Organs
             //  if (WaterChanged != null)
           //      WaterChanged.Invoke(WaterUptake);
         }
+        /// <summary>Layers the index.</summary>
+        /// <param name="depth">The depth.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Depth deeper than bottom of soil profile</exception>
         private int LayerIndex(double depth)
         {
             double CumDepth = 0;
@@ -260,6 +320,10 @@ namespace Models.PMF.Organs
             }
             throw new Exception("Depth deeper than bottom of soil profile");
         }
+        /// <summary>Roots the proportion.</summary>
+        /// <param name="layer">The layer.</param>
+        /// <param name="root_depth">The root_depth.</param>
+        /// <returns></returns>
         private double RootProportion(int layer, double root_depth)
         {
             double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
@@ -275,6 +339,9 @@ namespace Models.PMF.Organs
 
             return depth_of_root_in_layer / Soil.SoilWater.dlayer[layer];
         }
+        /// <summary>Soils the n supply.</summary>
+        /// <param name="NO3Supply">The n o3 supply.</param>
+        /// <param name="NH4Supply">The n h4 supply.</param>
         private void SoilNSupply(double[] NO3Supply, double[] NH4Supply)
         {
             double[] no3ppm = new double[Soil.SoilWater.dlayer.Length];
@@ -299,6 +366,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        /// <summary>Updates the root properties.</summary>
         public void UpdateRootProperties()
         {
             //Plant.RootProperties.KL = Soil.KL(Plant.CropType);
@@ -327,6 +395,10 @@ namespace Models.PMF.Organs
             Plant.RootProperties.LowerLimitDep = LL_dep;
    
         }
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -336,6 +408,7 @@ namespace Models.PMF.Organs
             Clear();
         }
 
+        /// <summary>Called when [end crop].</summary>
         public override void OnEndCrop()
         {
             FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.SoilWater.dlayer.Length];
@@ -367,6 +440,8 @@ namespace Models.PMF.Organs
             base.OnEndCrop();
         }
 
+        /// <summary>Called when [sow].</summary>
+        /// <param name="Sow">The sow.</param>
         public override void OnSow(SowPlant2Type Sow)
         {
             //Fixme, this can be deleted when arbitrator calculates uptake ?????
@@ -394,6 +469,8 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator method calls
+        /// <summary>Gets or sets the dm demand.</summary>
+        /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
         {
             get
@@ -405,6 +482,13 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Sets the dm potential allocation.</summary>
+        /// <value>The dm potential allocation.</value>
+        /// <exception cref="System.Exception">
+        /// Invalid allocation of potential DM in + Name
+        /// or
+        /// Error trying to partition potential root biomass
+        /// </exception>
         public override BiomassPoolType DMPotentialAllocation
         {
             set
@@ -462,6 +546,9 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        /// <summary>Sets the dm allocation.</summary>
+        /// <value>The dm allocation.</value>
+        /// <exception cref="System.Exception">Error trying to partition root biomass</exception>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -517,7 +604,9 @@ namespace Models.PMF.Organs
                 }
             }
         }
-        
+
+        /// <summary>Gets or sets the n demand.</summary>
+        /// <value>The n demand.</value>
         [Units("g/m2")]
         public override BiomassPoolType NDemand
         {
@@ -538,6 +627,8 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets or sets the n supply.</summary>
+        /// <value>The n supply.</value>
         public override BiomassSupplyType NSupply
         {
             get
@@ -554,6 +645,15 @@ namespace Models.PMF.Organs
                     return new BiomassSupplyType();
             }
         }
+        /// <summary>Sets the n allocation.</summary>
+        /// <value>The n allocation.</value>
+        /// <exception cref="System.Exception">
+        /// Cannot Allocate N to roots in layers when demand is zero
+        /// or
+        /// Error in N Allocation:  + Name
+        /// or
+        /// Request for N uptake exceeds soil N supply
+        /// </exception>
         public override BiomassAllocationType NAllocation
         {
             set
@@ -621,6 +721,8 @@ namespace Models.PMF.Organs
 
             }
         }
+        /// <summary>Gets or sets the maximum nconc.</summary>
+        /// <value>The maximum nconc.</value>
         public override double MaxNconc
         {
             get
@@ -628,6 +730,8 @@ namespace Models.PMF.Organs
                 return MaximumNConc.Value;
             }
         }
+        /// <summary>Gets or sets the minimum nconc.</summary>
+        /// <value>The minimum nconc.</value>
         public override double MinNconc
         {
             get
@@ -636,10 +740,14 @@ namespace Models.PMF.Organs
             }
         }
 
-       
+
+        /// <summary>Gets or sets the water supply.</summary>
+        /// <value>The water supply.</value>
         [Units("mm")]
         public override double WaterSupply {get; set;}
-        
+
+        /// <summary>Gets or sets the water uptake.</summary>
+        /// <value>The water uptake.</value>
         [Units("mm")]
         public override double WaterUptake
         {
@@ -652,6 +760,9 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Event handlers
+        /// <summary>Called when [do water arbitration].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
                 [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e)
         {
@@ -665,8 +776,10 @@ namespace Models.PMF.Organs
 
                 WaterSupply = Utility.Math.Sum(SWSupply);
         }
-        
 
+
+                /// <summary>Called when [water uptakes calculated].</summary>
+                /// <param name="SoilWater">The soil water.</param>
         [EventSubscribe("WaterUptakesCalculated")]
         private void OnWaterUptakesCalculated(WaterUptakesCalculatedType SoilWater)
         {
@@ -688,11 +801,11 @@ namespace Models.PMF.Organs
                 }
             }
         }
-        
+
+        /// <summary>Occurs when [incorp fom].</summary>
         public event FOMLayerDelegate IncorpFOM;
-        
-        public event WaterChangedDelegate WaterChanged;
-        
+
+        /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
         #endregion
 

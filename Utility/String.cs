@@ -1,20 +1,26 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-
+// -----------------------------------------------------------------------
+// <copyright file="String.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+
     /// <summary>
     /// Static functions for string manipulation
     /// </summary>
     public class String
     {
-
-        public const int MaxStringLength = 50000;
-
-        // This function converts a C string to a vb string by returning everything 
-        // up to the null character 
+        /// <summary>
+        /// This function converts a C string to a vb string by returning everything 
+        /// up to the null character 
+        /// </summary>
+        /// <param name="Cstring"></param>
+        /// <returns></returns>
         public static string CStringToVBString(string Cstring)
         {
             string result;
@@ -31,11 +37,9 @@ namespace Utility
             return result;
         }
 
-
-
-        // ------------------------------------------------------- 
-        // A version of IndexOf that is case insensitive. 
-        // ------------------------------------------------------- 
+        /// <summary>
+        /// A version of IndexOf that is case insensitive. 
+        /// </summary>
         public static int IndexOfCaseInsensitive(string[] Values, string St)
         {
             string StLower = St.ToLower();
@@ -49,9 +53,9 @@ namespace Utility
             return -1;
         }
 
-        // ------------------------------------------------------- 
-        // A version of IndexOf that is case insensitive. 
-        // ------------------------------------------------------- 
+        /// <summary>
+        /// A version of IndexOf that is case insensitive. 
+        /// </summary>
         public static int IndexOfCaseInsensitive(StringCollection Values, string St)
         {
             string StLower = St.ToLower();
@@ -66,9 +70,9 @@ namespace Utility
 
         }
 
-        // ------------------------------------------------------- 
-        // A version of IndexOf that is case insensitive. 
-        // ------------------------------------------------------- 
+        /// <summary>
+        /// A version of IndexOf that is case insensitive. 
+        /// </summary> 
         public static int IndexOfCaseInsensitive(List<string> Values, string St)
         {
             string StLower = St.ToLower();
@@ -83,9 +87,9 @@ namespace Utility
 
         }
 
-        // ------------------------------------------------------- 
-        // A version of Array.Contains that is case insensitive. 
-        // ------------------------------------------------------- 
+        /// <summary>
+        /// A version of Array.Contains that is case insensitive. 
+        /// </summary>
         public static bool Contains(IEnumerable Values, string St)
         {
             foreach (string Value in Values)
@@ -93,21 +97,21 @@ namespace Utility
                     return true; 
             return false;
         }
-        // ------------------------------------------------------------------
-        // This method complements the string function IndexOfAny by
-        // providing a NOT version. Returns -1 if non of the specified
-        // characters are found in specified string.
-        // ------------------------------------------------------------------
+        /// <summary>
+        /// This method complements the string function IndexOfAny by
+        /// providing a NOT version. Returns -1 if non of the specified
+        /// characters are found in specified string.
+        /// </summary>
         public static int IndexNotOfAny(string Text, char[] Delimiters)
         {
             return IndexNotOfAny(Text, Delimiters, 0);
         }
 
-        // ------------------------------------------------------------------
-        // This method complements the string function IndexOfAny by
-        // providing a NOT version. Returns -1 if non of the specified
-        // characters are found in specified string.
-        // ------------------------------------------------------------------
+        /// <summary>
+        /// This method complements the string function IndexOfAny by
+        /// providing a NOT version. Returns -1 if non of the specified
+        /// characters are found in specified string.
+        /// </summary>
         public static int IndexNotOfAny(string Text, char[] Delimiters, int Pos)
         {
             string DelimitersString = new string(Delimiters);
@@ -118,10 +122,7 @@ namespace Utility
             }
             return -1;
         }
-
-
-
-        /// ------------------------------------------------------------------
+ 
         /// <summary>
         /// This method splits values on a comma but also honours double quotes
         /// ensuring something in double quotes is never split.
@@ -131,7 +132,6 @@ namespace Utility
         ///           words[2] = value3
         /// All values returned have been trimmed of spaces and double quotes.
         /// </summary>
-        // ------------------------------------------------------------------
         public static StringCollection SplitStringHonouringQuotes(string Text, string Delimiters)
         {
             StringCollection ReturnStrings = new StringCollection();
@@ -225,18 +225,21 @@ namespace Utility
             return ReturnStrings.ToArray();
         }
 
-
+        /// <summary>
+        /// Returns true if the 2 specified strings are equal
+        /// </summary>
+        /// <param name="St1"></param>
+        /// <param name="St2"></param>
+        /// <returns></returns>
         public static bool StringsAreEqual(string St1, string St2)
         {
             return St1.ToLower() == St2.ToLower();
         }
 
-
-
-        // -----------------------------------------------------
-        // Remove, and return everything after the specified
-        // delimiter from the specified string. 
-        // -----------------------------------------------------
+        /// <summary>
+        /// Remove, and return everything after the specified
+        /// delimiter from the specified string. 
+        /// </summary>
         public static string SplitOffAfterDelimiter(ref string St, string Delimiter)
         {
             string ReturnString = "";
@@ -249,13 +252,11 @@ namespace Utility
             return ReturnString;
         }
 
-
-
-        // ------------------------------------------------------------------
-        // Split off a bracketed value from the end of the specified string.
-        // The bracketed value is then returned, without the brackets,
-        // or blank if not found.
-        // ------------------------------------------------------------------
+        /// <summary>
+        /// Split off a bracketed value from the end of the specified string.
+        /// The bracketed value is then returned, without the brackets,
+        /// or blank if not found.
+        /// </summary>
         public static string SplitOffBracketedValue(ref string St, char OpenBracket, char CloseBracket)
         {
             string ReturnString = "";
@@ -285,31 +286,27 @@ namespace Utility
                 return St;
         }
 
-
-        // ------------------------------------------
-        // Return true if specified string is numeric
-        // ------------------------------------------
+        /// <summary>
+        /// Return true if specified string is numeric
+        /// </summary>
         public static bool IsNumeric(string St)
         {
             float Value;
             return Single.TryParse(St, out Value);
         }
 
-
-
-        // ------------------------------------------
-        // Return true if specified string is a date time.
-        // ------------------------------------------
+        /// <summary>
+        /// Return true if specified string is a date time.
+        /// </summary>
         public static bool IsDateTime(string St)
         {
             DateTime Value;
             return DateTime.TryParse(St, out Value);
         }
 
-
-        // -------------------------------------------------------
-        // Indent the specified string a certain number of spaces.
-        // -------------------------------------------------------
+        /// <summary>
+        /// Indent the specified string a certain number of spaces.
+        /// </summary>
         public static string IndentText(string St, int numChars)
         {
             if (St == null)
@@ -318,9 +315,9 @@ namespace Utility
             return space + St.Replace("\n", "\n" + space);
         }
 
-        // -------------------------------------------------------
-        // Indent the specified string a certain number of spaces.
-        // -------------------------------------------------------
+        /// <summary>
+        /// Indent the specified string a certain number of spaces.
+        /// </summary>
         public static string UnIndentText(string St, int numChars)
         {
             if (St.Length < numChars)
@@ -331,8 +328,11 @@ namespace Utility
             return returnString.Replace(space, "\r\n");
         }
 
-
-
+        /// <summary>
+        /// Return a string with double quotes around St
+        /// </summary>
+        /// <param name="St"></param>
+        /// <returns></returns>
         public static string DQuote(string St)
         {
             if (St.IndexOfAny(new char[] { ' ', '&', '<', '>', '(', ')', 
@@ -343,6 +343,12 @@ namespace Utility
             return St;
         }
 
+        /// <summary>
+        /// Return a type for the specified string
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="Units"></param>
+        /// <returns></returns>
         public static Type DetermineType(string Value, string Units)
         {
             Type ColumnType;
@@ -365,6 +371,12 @@ namespace Utility
             return ColumnType;
         }
 
+        /// <summary>
+        /// Create a string array containing the specified number of values.
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="NumValues"></param>
+        /// <returns></returns>
         public static string[] CreateStringArray(string Value, int NumValues)
         {
             string[] Arr = new string[NumValues];
@@ -373,7 +385,14 @@ namespace Utility
             return Arr;
         }
 
-
+        /// <summary>
+        /// Find the matching closing bracket.
+        /// </summary>
+        /// <param name="Contents"></param>
+        /// <param name="StartPos"></param>
+        /// <param name="OpenBracket"></param>
+        /// <param name="CloseBracket"></param>
+        /// <returns></returns>
         public static int FindMatchingClosingBracket(string Contents, int StartPos, char OpenBracket, char CloseBracket)
         {
             char[] CharSet = new char[2] { OpenBracket, CloseBracket };
@@ -569,8 +588,6 @@ namespace Utility
             return CommandLine;
         }
 
-
-
         /// <summary>
         /// Store all macros found in the command line arguments. Macros are keyword = value
         /// </summary>
@@ -586,6 +603,11 @@ namespace Utility
             return Options;
         }
 
+        /// <summary>
+        /// Convert the specified enum to a list of strings.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static string[] EnumToStrings(object obj)
         {
             List<string> items = new List<string>();
@@ -596,6 +618,5 @@ namespace Utility
 
             return items.ToArray();
         }
-
     }
 }

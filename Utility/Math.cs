@@ -1,54 +1,82 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-
+// -----------------------------------------------------------------------
+// <copyright file="Date.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Globalization;
+
     /// <summary>
     /// Various math utilities.
     /// </summary>
     public class Math
     {
+        /// <summary>
+        /// A constant tolerance used by many utilities.
+        /// </summary>
         private const double tolerance = 0.00001;
-        //------------------------------------------------
-        // Returns true if specified value is 'missing'
-        // -----------------------------------------------
+
+        /// <summary>
+        /// A constant double value denoting a missing value
+        /// </summary>
         public const double MissingValue = 999999;
 
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
+        /// <summary>
+        /// Return true if the true floating point numbers are equal
+        /// </summary>
         public static bool FloatsAreEqual(double value1, double value2)
         {
             return FloatsAreEqual(value1, value2, tolerance);
         }
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
+        
+        /// <summary>
+        /// Return true if the true floating point numbers are equal within the given tolerance
+        /// </summary>
         public static bool FloatsAreEqual(double value1, double value2, double tolerance)
         {
             return (System.Math.Abs(value1 - value2) < tolerance);
         }
+        
+        /// <summary>
+        /// Return true if the true if value 1 is greater than value 2
+        /// </summary>
         public static bool IsGreaterThan(double value1, double value2)
         {
             return value1 - value2 > tolerance;
         }
+        
+        /// <summary>
+        /// Return true if the true if value 1 is less than value 2
+        /// </summary>
         public static bool IsLessThan(double value1, double value2)
             {
             return value2 - value1 > tolerance;
             }
+       
+        /// <summary>
+        /// Round the specified value to zero if within the given tolerance
+        /// </summary>
         public static double RoundToZero(double value, double tolerance)
         {
             return (System.Math.Abs(value) <= tolerance) ? 0.0 : value;
         }
+        
+        /// <summary>
+        ///Round the specified value to zero if within 1x10e-15 of zero
+        /// </summary>
         public static double RoundToZero(double value)
         {
             return RoundToZero(value, 1.0e-15);
         }
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
+        
+        /// <summary>
+        /// Perform a stepwise multiply of the values in value 1 with the values in value2.
+        /// Returns an array of the same size as value 1 and value 2
+        /// </summary>
         public static double[] Multiply(double[] value1, double[] value2)
         {
             double[] results = new double[value1.Length];
@@ -65,9 +93,11 @@ namespace Utility
             }
             return results;
         }
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
+        
+        /// <summary>
+        /// Multiply all values in value 1 with the value2.
+        /// Returns an array of the same size as value 1
+        /// </summary>
         public static double[] Multiply_Value(double[] value1, double value2)
         {
             double[] results = null;
@@ -81,9 +111,11 @@ namespace Utility
             }
             return results;
         }
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
+        
+        /// <summary>
+        /// Perform a stepwise divide of the values in value 1 with the values in value2.
+        /// Returns an array of the same size as value 1 and value 2
+        /// </summary>
         public static double[] Divide(double[] value1, double[] value2)
         {
             double[] results = null;
@@ -106,9 +138,11 @@ namespace Utility
             }
             return results;
         }
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
+        
+        /// <summary>
+        /// Divide all values in value 1 with the value2.
+        /// Returns an array of the same size as value 1
+        /// </summary>
         public static double[] Divide_Value(double[] value1, double value2)
         {
             double[] results = new double[value1.Length];
@@ -130,27 +164,19 @@ namespace Utility
             return results;
         }
 
-
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
+        /// <summary>
+        /// Divide value1 by value2. On error, the value errVal will be returned.
+        /// </summary>
         public static double Divide(double value1, double value2, double errVal)
         {
             return (value2 == 0.0) ? errVal : value1 / value2;
         }
 
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
-        public static float DivideFloat(float value1, float value2, float errVal)
-        {
-            return (value2 == 0.0) ? errVal : value1 / value2;
-        }
-
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
-        public static double[] Add_Value(double[] value1, double value2)
+        /// <summary>
+        /// Add value2 to all values in value 1
+        /// Returns an array of the same size as value 1
+        /// </summary>
+        public static double[] AddValue(double[] value1, double value2)
         {
             double[] results = new double[value1.Length];
             for (int iIndex = 0; iIndex < value1.Length; iIndex++)
@@ -163,6 +189,10 @@ namespace Utility
             return results;
         }
 
+        /// <summary>
+        /// Perform a stepwise addition of the values in value 1 with the values in value2.
+        /// Returns an array of the same size as value 1 and value 2
+        /// </summary>
         public static double[] Add(double[] value1, double[] value2)
         {
             double[] results = null;
@@ -180,6 +210,10 @@ namespace Utility
             return results;
         }
 
+        /// <summary>
+        /// Perform a stepwise subtraction of the values in value 1 with the values in value2.
+        /// Returns an array of the same size as value 1 and value 2
+        /// </summary>
         public static double[] Subtract(double[] value1, double[] value2)
         {
             double[] results = null;
@@ -197,9 +231,10 @@ namespace Utility
             return results;
         }
 
-        //-------------------------------------------------------------------------
-        //
-        //-------------------------------------------------------------------------
+        /// <summary>
+        /// Subtract value2 from all values in value 1
+        /// Returns an array of the same size as value 1
+        /// </summary>
         public static double[] Subtract_Value(double[] value1, double value2)
         {
             double[] results = new double[value1.Length];
@@ -212,9 +247,9 @@ namespace Utility
             }
             return results;
         }
-        //-------------------------------------------------------------------------
-        // Sum an array of doubles 
-        //-------------------------------------------------------------------------
+        /// <summary>
+        /// Sum an array of doubles 
+        /// </summary>
         public static double Sum(IEnumerable Values)
         {
             double result = 0.0;
@@ -223,9 +258,9 @@ namespace Utility
             return result;
         }
 
-        //-------------------------------------------------------------------------
-        // Average an array of doubles 
-        //-------------------------------------------------------------------------
+        /// <summary>
+        /// Average an array of doubles 
+        /// </summary>
         public static double Average(IEnumerable Values)
         {
             double Sum = 0.0;
@@ -241,10 +276,10 @@ namespace Utility
                 return 0.0;
         }
 
-        //-------------------------------------------------------------------------
-        // Sum an array of numbers starting at startIndex up to (but not including) endIndex
-        // beginning with an initial value
-        //-------------------------------------------------------------------------
+        /// <summary>
+        /// Sum an array of numbers starting at startIndex up to (but not including) endIndex
+        /// beginning with an initial value
+        /// </summary>
         public static double Sum(IEnumerable Values, int iStartIndex, int iEndIndex,
                                 double dInitialValue)
         {
@@ -263,12 +298,12 @@ namespace Utility
 
             return result;
         }
-        //-------------------------------------------------------------------------
-        //Linearly interpolates a value y for a given value x and a given
-        //set of xy co-ordinates.
-        //When x lies outside the x range_of, y is set to the boundary condition.
-        //Returns true for Did_interpolate if interpolation was necessary.
-        //-------------------------------------------------------------------------
+        /// <summary>
+        ///Linearly interpolates a value y for a given value x and a given
+        ///set of xy co-ordinates.
+        ///When x lies outside the x range_of, y is set to the boundary condition.
+        ///Returns true for Did_interpolate if interpolation was necessary.
+        /// </summary>
         public static double LinearInterpReal(double dX, double[] dXCoordinate, double[] dYCoordinate, out bool bDidInterpolate)
         {
             bDidInterpolate = false;
@@ -321,6 +356,13 @@ namespace Utility
             return 0.0;
         }
 
+        /// <summary>
+        /// Ensure that dValue is within the specified lower and upper limits.
+        /// </summary>
+        /// <param name="dValue"></param>
+        /// <param name="dLowerLimit"></param>
+        /// <param name="dUpperLimit"></param>
+        /// <returns></returns>
         static public double Constrain(double dValue, double dLowerLimit, double dUpperLimit)
         {
             double dConstrainedValue = 0.0;
@@ -328,6 +370,13 @@ namespace Utility
             return dConstrainedValue;
         }
 
+        /// <summary>
+        /// Ensure that all values in dValues are within the specified lower and upper limits.
+        /// </summary>
+        /// <param name="dValues"></param>
+        /// <param name="dLowerLimits"></param>
+        /// <param name="dUpperLimits"></param>
+        /// <returns></returns>
         static public double[] Constrain(double[] dValues, double[] dLowerLimits, double[] dUpperLimits)
         {
             double[] Values = new double[dValues.Length];
@@ -336,21 +385,33 @@ namespace Utility
             return Values;
         }
 
+        /// <summary>
+        /// Round the specified number to the specified number of decimal places.
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="NumDecPlaces"></param>
+        /// <returns></returns>
         static public double Round(double Value, int NumDecPlaces)
-        // rounds properly rather than the System.Math.round function.
-        // e.g. 3.4 becomes 3.0
-        //      3.5 becomes 4.0
-        {
+         {
+             // rounds properly rather than the System.Math.round function.
+             // e.g. 3.4 becomes 3.0
+             //      3.5 becomes 4.0
             double Multiplier = System.Math.Pow(10.0, NumDecPlaces);  // gives 1 or 10 or 100 for decplaces=0, 1, or 2 etc
             Value = System.Math.Truncate(Value * Multiplier + 0.5);
             return Value / Multiplier;
         }
 
+        /// <summary>
+        /// Round all values in Values to the specified number of decimal places.
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <param name="NumDecPlaces"></param>
+        /// <returns></returns>
         static public double[] Round(double[] Values, int NumDecPlaces)
-        // rounds properly rather than the System.Math.round function.
-        // e.g. 3.4 becomes 3.0
-        //      3.5 becomes 4.0
         {
+            // rounds properly rather than the System.Math.round function.
+            // e.g. 3.4 becomes 3.0
+            //      3.5 becomes 4.0
             for (int i = 0; i != Values.Length; i++)
                 Values[i] = Round(Values[i], NumDecPlaces);
             return Values;
@@ -388,7 +449,6 @@ namespace Utility
                 }
             }
         }
-
 
         /// <summary>
         /// Zero the specified 3-D array.
@@ -435,7 +495,6 @@ namespace Utility
             }
         }
 
-
         /// <summary>
         /// Zero the specified 5-D array.
         /// </summary>
@@ -463,10 +522,9 @@ namespace Utility
             }
         }
 
-
-        // ---------------------------------------------
-        // Reverse the contents of the specified array.
-        // ---------------------------------------------
+        /// <summary>
+        /// Reverse the contents of the specified array.
+        /// </summary>
         static public double[] Reverse(double[] Values)
         {
             double[] ReturnValues = new double[Values.Length];
@@ -480,6 +538,11 @@ namespace Utility
             return ReturnValues;
         }
 
+        /// <summary>
+        /// Returns true if there are values in the specified array that aren't missing values.
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
         static public bool ValuesInArray(double[] Values)
         {
             if (Values != null)
@@ -492,6 +555,12 @@ namespace Utility
             }
             return false;
         }
+
+        /// <summary>
+        /// Returns true if there are non blank values in the specified array
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
         static public bool ValuesInArray(string[] Values)
         {
             if (Values != null)
@@ -504,9 +573,10 @@ namespace Utility
             }
             return false;
         }
-        // --------------------------------------------------
-        // Convert an array of strings to an array of doubles
-        // --------------------------------------------------
+
+        /// <summary>
+        /// Convert an array of strings to an array of doubles
+        /// </summary>
         static public double[] StringsToDoubles(IList Values)
         {
             double[] ReturnValues = new double[Values.Count];
@@ -521,9 +591,9 @@ namespace Utility
             return ReturnValues;
         }
 
-        // --------------------------------------------------
-        // Convert an array of strings to an array of integers
-        // --------------------------------------------------
+        /// <summary>
+        /// Convert an array of strings to an array of integers
+        /// </summary>
         static public int[] StringsToIntegers(IList Values)
         {
             int[] ReturnValues = new int[Values.Count];
@@ -538,6 +608,13 @@ namespace Utility
             return ReturnValues;
         }
 
+        /// <summary>
+        /// Return an array of numbers of the specified size that represents the
+        /// y axis on a probability distribution graph.
+        /// </summary>
+        /// <param name="NumPoints"></param>
+        /// <param name="Exceed"></param>
+        /// <returns></returns>
         static public double[] ProbabilityDistribution(int NumPoints, bool Exceed)
         {
             double[] Probability = new double[NumPoints];
@@ -550,30 +627,90 @@ namespace Utility
             return Probability;
         }
 
-
+        /// <summary>
+        /// A class encapsulating regression statistics.
+        /// </summary>
         public class RegrStats
         {
+            /// <summary>
+            /// Number of observations
+            /// </summary>
             public int n;
+
+            /// <summary>
+            /// The slope
+            /// </summary>
             public double m;
+
+            /// <summary>
+            /// The intercept
+            /// </summary>
             public double c;
+
+            /// <summary>
+            /// Standard error of the slope
+            /// </summary>
             public double SEslope;
+
+            /// <summary>
+            /// Standard error of the intercept
+            /// </summary>
             public double SEcoeff;
+
+            /// <summary>
+            /// The R squared
+            /// </summary>
             public double R2;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public double ADJR2;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public double R2YX;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public double VarRatio;
+
+            /// <summary>
+            /// The root mean squared deviation
+            /// </summary>
             public double RMSD;
-            public double NSE;        // Nash-Sutcliff efficiency
-            public double ME;         // Mean error
-            public double MAE;        // Mean Absolute Error
-            public double RSR;        // Root mean square error to Standard deviation Ratio
+
+            /// <summary>
+            /// Nash-Sutcliff efficiency
+            /// </summary>
+            public double NSE;        
+
+            /// <summary>
+            /// Mean error
+            /// </summary>
+            public double ME;
+
+            /// <summary>
+            /// Mean absolute error
+            /// </summary>
+            public double MAE;        
+
+            /// <summary>
+            /// Root mean square error to Standard deviation Ratio
+            /// </summary>
+            public double RSR;
         };
 
+        /// <summary>
+        /// Calculate regression statistics for the given x and y values.
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
+        /// <returns></returns>
         static public RegrStats CalcRegressionStats(IEnumerable X, IEnumerable Y)
         {
-            // ------------------------------------------------------------------
-            //    Calculate regression stats.   
-            // ------------------------------------------------------------------
             RegrStats stats = new RegrStats();
             double SumX = 0;
             double SumY = 0;
@@ -641,8 +778,7 @@ namespace Utility
             {
                 double xValue = Convert.ToDouble(xEnum.Current);
                 double yValue = Convert.ToDouble(yEnum.Current);
-                if (!double.IsNaN(xValue) && !double.IsNaN(yValue))
-                    SumOfSquaredSD += System.Math.Pow(xValue - Xbar, 2);
+                SumOfSquaredSD += System.Math.Pow(xValue - Xbar, 2);
             }
 
             CSSXY = SumXY - SumX * SumY / Num_points;     // Corrected SS for products
@@ -700,12 +836,12 @@ namespace Utility
         /// \parblock 
         /// Angle to measure time between such as twilight (deg).
         /// angular distance between 90 deg and end of twilight - altitude of sun. +ve up, -ve down.
-        /// Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6&deg;. e.g SunAngle = -6&deg;
-        /// Nautical twilight : 12&deg;
-        /// Astronomical twilight : 18&deg;
+        /// Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6deg;. e.g SunAngle = -6deg;
+        /// Nautical twilight : 12deg;
+        /// Astronomical twilight : 18deg;
         /// \endparblock
-        /// \param Latitude Latitude to calculate the day length (&deg;)
-        /// \return Day length in hours between the specified sun angle from 90&deg; in am and pm.
+        /// \param Latitude Latitude to calculate the day length (deg;)
+        /// \return Day length in hours between the specified sun angle from 90deg; in am and pm.
         static public double DayLength(double DayOfYear, double SunAngle, double Latitude)
         {
             //+ Constant Values
@@ -789,13 +925,13 @@ namespace Utility
             return hrlt;
         }
 
-        // ------------------------------------------------------------------
-        // Transfer of sign - from FORTRAN.
-        // The result is of the same type and kind as a. Its value is the abs(a) of a,
-        // if b is greater than or equal positive zero; and -abs(a), if b is less than
-        // or equal to negative zero.
-        // Example a = sign (30,-2) ! a is assigned the value -30
-        // ------------------------------------------------------------------
+        /// <summary>
+        /// Transfer of sign - from FORTRAN.
+        ///The result is of the same type and kind as a. Its value is the abs(a) of a,
+        ///if b is greater than or equal positive zero; and -abs(a), if b is less than
+        ///or equal to negative zero.
+        ///Example a = sign (30,-2) ! a is assigned the value -30
+        /// </summary>
         static public double Sign(double a, double b)
         {
             if (b >= 0)
@@ -804,6 +940,11 @@ namespace Utility
                 return -System.Math.Abs(a);
         }
 
+        /// <summary>
+        /// Return the minimum value
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
         public static double Min(IEnumerable Values)
         {
             double Minimum = 9999999;
@@ -815,6 +956,11 @@ namespace Utility
             return Minimum;
         }
 
+        /// <summary>
+        /// Return the maximum value
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
         public static double Max(IEnumerable Values)
         {
             double Maximum = -9999999;
@@ -826,12 +972,24 @@ namespace Utility
             return Maximum;
         }
 
-        // ------------------------------------------------------------------------
+        /// <summary>
+        /// Ensure that x is between x1 and x2.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="x1"></param>
+        /// <param name="x2"></param>
+        /// <returns></returns>
         public static double Bound(double x, double x1, double x2)
         {
             return System.Math.Min(System.Math.Max(x, x1), x2);
         }
 
+        /// <summary>
+        /// Create an array of values all containing 'Value'
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="NumValues"></param>
+        /// <returns></returns>
         public static double[] CreateArrayOfValues(double Value, int NumValues)
         {
             double[] Values = new double[NumValues];
@@ -840,10 +998,15 @@ namespace Utility
             return Values;
         }
 
+        /// <summary>
+        /// Return true if 'value1 is greater than value2 within the specified number of 
+        /// decimal places
+        /// </summary>
+        /// <param name="Value1"></param>
+        /// <param name="Value2"></param>
+        /// <param name="NumDecPlaces"></param>
+        /// <returns></returns>
         static public bool GreaterThan(double Value1, double Value2, int NumDecPlaces)
-        // rounds properly rather than the System.Math.round function.
-        // e.g. 3.4 becomes 3.0
-        //      3.5 becomes 4.0
         {
             double Multiplier = System.Math.Pow(10.0, NumDecPlaces);  // gives 1 or 10 or 100 for decplaces=0, 1, or 2 etc
             Value1 = System.Math.Truncate(Value1 * Multiplier + 0.5);
@@ -851,10 +1014,15 @@ namespace Utility
             return (Value1 > Value2);
         }
 
+        /// <summary>
+        /// Return true if 'value1 is less than value2 within the specified number of 
+        /// decimal places
+        /// </summary>
+        /// <param name="Value1"></param>
+        /// <param name="Value2"></param>
+        /// <param name="NumDecPlaces"></param>
+        /// <returns></returns>
         static public bool LessThan(double Value1, double Value2, int NumDecPlaces)
-        // rounds properly rather than the System.Math.round function.
-        // e.g. 3.4 becomes 3.0
-        //      3.5 becomes 4.0
         {
             double Multiplier = System.Math.Pow(10.0, NumDecPlaces);  // gives 1 or 10 or 100 for decplaces=0, 1, or 2 etc
             Value1 = System.Math.Truncate(Value1 * Multiplier + 0.5);
@@ -862,6 +1030,11 @@ namespace Utility
             return (Value1 < Value2);
         }
 
+        /// <summary>
+        /// Return true if the specified string can be converted to a double.
+        /// </summary>
+        /// <param name="StringValue"></param>
+        /// <returns></returns>
         static public bool IsNumerical(string StringValue)
         {
             double Value;
@@ -871,6 +1044,11 @@ namespace Utility
                 return true;
         }
 
+        /// <summary>
+        /// Return true if all specified strings can be converted to a double.
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
         static public bool IsNumerical(string[] Values)
         {
             foreach (string Value in Values)
@@ -879,16 +1057,11 @@ namespace Utility
             return true;
         }
 
-        static public bool ValuesAreNumerical(string[] Values)
-        {
-            for (int i = 0; i < Values.Length; i++)
-            {
-                if (!IsNumerical(Values[i]))
-                    return false;
-            }
-            return true;
-        }
-
+        /// <summary>
+        /// Return true the specified string can be converted to a double given the US culture
+        /// </summary>
+        /// <param name="StringValue"></param>
+        /// <returns></returns>
         static public bool IsNumericalenUS(string StringValue)
         {
             double Value;
@@ -897,7 +1070,13 @@ namespace Utility
             else
                 return true;
         }
-        static public bool ValuesAreNumericalenUS(string[] Values)
+
+        /// <summary>
+        /// Return true if all specified strings can be converted to a double given the US culture
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
+        static public bool IsNumericalenUS(string[] Values)
         {
             for (int i = 0; i < Values.Length; i++)
             {
@@ -907,6 +1086,11 @@ namespace Utility
             return true;
         }
 
+        /// <summary>
+        /// Return an array of values where the missing values have been removed.
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
         static public double[] RemoveMissingValuesFromBottom(double[] Values)
         {
             if (Values == null) return null;
@@ -924,6 +1108,13 @@ namespace Utility
                 ReturnValues[j] = Values[j];
             return ReturnValues;
         }
+
+        /// <summary>
+        /// Remove a value from the specified array.
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <param name="Index"></param>
+        /// <returns></returns>
         static public double[] RemoveValueAt(double[] Values, int Index)
         {
             List<double> NewValues = new List<double>();
@@ -935,6 +1126,12 @@ namespace Utility
             return NewValues.ToArray();
         }
 
+        /// <summary>
+        /// Convert the list of doubles to strings.
+        /// </summary>
+        /// <param name="DoubleValues"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
         public static string[] DoublesToStrings(IList DoubleValues, string format = null)
         {
             string[] Values = new string[DoubleValues.Count];
@@ -952,6 +1149,11 @@ namespace Utility
             return Values;
         }
 
+        /// <summary>
+        /// Convert the list of doubles to single precision floats.
+        /// </summary>
+        /// <param name="DoubleValues"></param>
+        /// <returns></returns>
         public static float[] DoublesToSingles(double[] DoubleValues)
         {
             float[] Values = new float[DoubleValues.Length];
@@ -959,8 +1161,19 @@ namespace Utility
                 Values[i] = Convert.ToSingle(DoubleValues[i]);
             return Values;
         }
+        
+        /// <summary>
+        /// Return x * x
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         public static double Sqr(double x) { return x * x; }
 
+        /// <summary>
+        /// Return Ln Gamma
+        /// </summary>
+        /// <param name="xx"></param>
+        /// <returns></returns>
         public static double LnGamma(double xx)
         {
             double x = xx - 1.0;
@@ -971,9 +1184,15 @@ namespace Utility
             return tmp + System.Math.Log(2.50662827465 * ser);
         }
 
-        // From http://rosettacode.org/wiki/Gamma_function#Java
+        /// <summary>
+        /// Return Gamma
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         public static double Gamma(double x)
         {
+            // From http://rosettacode.org/wiki/Gamma_function#Java
+        
             double[] p = {0.99999999999980993, 676.5203681218851, -1259.1392167224028,
                       771.32342877765313, -176.61502916214059, 12.507343278686905,
                       -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7};
@@ -991,7 +1210,12 @@ namespace Utility
             return System.Math.Sqrt(2 * System.Math.PI) * System.Math.Pow(t, x + 0.5) * System.Math.Exp(-t) * a;
         }
 
-
+        /// <summary>
+        /// Return true if the two lists are equal
+        /// </summary>
+        /// <param name="L1"></param>
+        /// <param name="L2"></param>
+        /// <returns></returns>
         static public bool AreEqual(IList<double> L1, IList<double> L2)
         {
             if (L1 == null && L2 == null)
@@ -1019,6 +1243,12 @@ namespace Utility
             return true;
         }
 
+        /// <summary>
+        /// Return true if the two lists are equal
+        /// </summary>
+        /// <param name="L1"></param>
+        /// <param name="L2"></param>
+        /// <returns></returns>
         static public bool AreEqual(IList<string> L1, IList<string> L2)
         {
             if (L1 == null && L2 == null)
@@ -1074,25 +1304,53 @@ namespace Utility
         /// </summary>
         public class Stats
         {
+            /// <summary>Gets the residual.</summary>
+            /// <value>The residual.</value>
             public double Residual { get { return PredictedMean - ObservedMean; } }
+            /// <summary>Gets the s ds.</summary>
+            /// <value>The s ds.</value>
             public double SDs { get { return System.Math.Sqrt((1.0 / Count) * Y_YSquared); } }
+            /// <summary>Gets the s dm.</summary>
+            /// <value>The s dm.</value>
             public double SDm { get { return System.Math.Sqrt((1.0 / Count) * X_XSquared); } }
+            /// <summary>Gets the r.</summary>
+            /// <value>The r.</value>
             public double r { get { return (1.0 / Count) * Y_YxX_X / (SDs * SDm); } }
+            /// <summary>Gets the r2.</summary>
+            /// <value>The r2.</value>
             public double R2 { get { return System.Math.Pow(r, 2); } }
+            /// <summary>Gets the LCS.</summary>
+            /// <value>The LCS.</value>
             public double LCS { get { return 2.0 * SDs * SDm * (1.0 - r); } }
+            /// <summary>Gets the SDSD.</summary>
+            /// <value>The SDSD.</value>
             public double SDSD { get { return System.Math.Pow(SDs - SDm, 2.0); } }
+            /// <summary>Gets the sb.</summary>
+            /// <value>The sb.</value>
             public double SB { get { return System.Math.Pow(PredictedMean - ObservedMean, 2); } }
+            /// <summary>Gets the MSD.</summary>
+            /// <value>The MSD.</value>
             public double MSD { get { return SB + SDSD + LCS; } }
+            /// <summary>Gets the RMSD.</summary>
+            /// <value>The RMSD.</value>
             public double RMSD { get { return System.Math.Sqrt(MSD); } }
+            /// <summary>Gets the percent.</summary>
+            /// <value>The percent.</value>
             public double Percent { get { return (RMSD / ObservedMean)*100; } }
 
 
             // Low level pre calculations.
+            /// <summary>The observed mean</summary>
             public double ObservedMean;
+            /// <summary>The predicted mean</summary>
             public double PredictedMean;
+            /// <summary>The x_ x squared</summary>
             public double X_XSquared; // sum of (observed - observedmean) ^ 2
+            /// <summary>The y_ y squared</summary>
             public double Y_YSquared; // sum of (predicted - predictedmean) ^ 2
+            /// <summary>The y_ yx x_ x</summary>
             public double Y_YxX_X;    // sum of (predicted - predictedmean) * (observed - observedmean)
+            /// <summary>The count</summary>
             public int Count;
         }
 
@@ -1118,7 +1376,5 @@ namespace Utility
            
             return stats;
         }
-
     }
-
 }

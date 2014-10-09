@@ -54,6 +54,11 @@ namespace UserInterface.Views
         public event EventHandler ColourChanged;
 
         /// <summary>
+        /// Invoked when the user changes the overall regression field
+        /// </summary>
+        public event EventHandler OverallRegressionChanged;
+
+        /// <summary>
         /// Invoked when the user changes the regression field
         /// </summary>
         public event EventHandler RegressionChanged;
@@ -97,11 +102,6 @@ namespace UserInterface.Views
         /// Invoked when the user changes the show in legend
         /// </summary>
         public event EventHandler ShowInLegendChanged;
-
-        /// <summary>
-        /// Invoked when the user changes the split on field
-        /// </summary>
-        public event EventHandler SplitOnChanged;
 
         /// <summary>
         /// Gets or sets the series type
@@ -171,9 +171,9 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether regression is turned on.
+        /// Gets or sets a value indicating whether overall regression is turned on.
         /// </summary>
-        public bool Regression
+        public bool OverallRegression
         {
             get
             {
@@ -183,6 +183,22 @@ namespace UserInterface.Views
             set
             {
                 checkBox3.Checked = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether regression is turned on.
+        /// </summary>
+        public bool Regression
+        {
+            get
+            {
+                return checkBox4.Checked;
+            }
+
+            set
+            {
+                checkBox4.Checked = value;
             }
         }
 
@@ -225,50 +241,12 @@ namespace UserInterface.Views
         {
             get
             {
-                return checkBox4.Checked;
+                return checkBox5.Checked;
             }
 
             set
             {
-                checkBox4.Checked = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the split on type e.g. Currently 'Experiment', 'Simulation' or null
-        /// </summary>
-        public string SplitOn
-        {
-            get
-            {
-                if (this.comboBox5.SelectedIndex == 0)
-                {
-                    return "Simulation";
-                }
-                else if (this.comboBox5.SelectedIndex == 1)
-                {
-                    return "Experiment";
-                }
-                else
-                {
-                    return "*";
-                }
-            }
-
-            set
-            {
-                if (value == "Simulation")
-                {
-                    this.comboBox5.SelectedIndex = 0;
-                }
-                else if (value == "Experiment")
-                {
-                    this.comboBox5.SelectedIndex = 1;
-                }
-                else
-                {
-                    this.comboBox5.SelectedIndex = 2;
-                }
+                checkBox5.Checked = value;
             }
         }
 
@@ -440,11 +418,22 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Regression has changed
+        /// Overall regression has changed.
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
         private void OnCheckBox3Changed(object sender, EventArgs e)
+        {
+            if (OverallRegressionChanged != null)
+                OverallRegressionChanged.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// Regression has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCheckBox4Changed(object sender, EventArgs e)
         {
             if (RegressionChanged != null)
                 RegressionChanged.Invoke(sender, e);
@@ -488,7 +477,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnCheckBox4Changed(object sender, EventArgs e)
+        private void OnCheckBox5Changed(object sender, EventArgs e)
         {
             if (ShowInLegendChanged != null)
             {
@@ -547,14 +536,6 @@ namespace UserInterface.Views
             if (Y2Changed != null)
             {
                 Y2Changed.Invoke(sender, e);
-            }
-        }
-
-        private void comboBox5_SelectedValueChanged(object sender, EventArgs e)
-        {
-            if (this.SplitOnChanged != null)
-            {
-                this.SplitOnChanged.Invoke(this, null);
             }
         }
     }

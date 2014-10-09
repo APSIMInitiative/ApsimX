@@ -16,10 +16,14 @@ namespace Models.PMF.Functions
     [Description("Returns the value of a nominated external APSIM numerical variable")]
     public class ExternalVariable : Function
     {
+        /// <summary>The variable name</summary>
         public string VariableName = "";
 
 
-        
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.Exception"></exception>
         public override double Value
         {
             get

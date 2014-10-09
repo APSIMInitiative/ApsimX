@@ -5,12 +5,12 @@
     <Name>Test</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
-      <FileName>..\WeatherFiles\lincoln.met</FileName>
+      <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1960-01-01T00:00:00</StartDate>
-      <EndDate>1960-06-01T00:00:00</EndDate>
+      <EndDate>1962-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -36,10 +36,10 @@
           <string>[Soil].SoilNitrogen.no3</string>
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.sw[1:3] as SWTop3Layers</string>
-          <string>(sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
-          <string>([WeatherFile].Rain / 25.4) as RainInches</string>
-          <string>([Soil].SoilWater.sw - [Soil].SoilWater.ll15) as ESW</string>
-          <string>(sum([Soil].SoilWater.sw - [Soil].SoilWater.ll15)) as TotalESW</string>
+          <string>sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
+          <string>[WeatherFile].Rain/25.4 as RainInches</string>
+          <string>[Soil].SoilWater.sw-[Soil].SoilWater.ll15 as ESW</string>
+          <string>sum([Soil].SoilWater.sw-[Soil].SoilWater.ll15) as TotalESW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -50,7 +50,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>Wheat</Name>
+            <Name>WheatSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -92,7 +92,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Barley</Name>
+            <Name>BarleySoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -134,7 +134,7 @@
             </XF>
           </SoilCrop>
           <SoilCrop>
-            <Name>Potato</Name>
+            <Name>PotatoSoil</Name>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -303,6 +303,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -312,15 +317,9 @@
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -748,12 +747,21 @@
           <Action>[Soil].SoilWater.Reset()</Action>
         </Operation>
       </Operations>
+      <Report>
+        <Name>Yearly</Name>
+        <VariableNames>
+          <string>[Clock].Today.Year</string>
+          <string>sum of [WeatherFile].Rain from 1-Apr to 1-Sep as RainAprToSepYearly</string>
+          <string>sum of [WeatherFile].Rain from 1-Apr-1960 to 1-Sep-1961 as RainAprToSepTwoYears</string>
+          <string>diff of [Soil].SoilNitrogen.carbon_tot[1] from [Clock].StartOfSimulation to [Clock].EndOfSimulation as ChangeInCarbon </string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].EndOfYear</string>
+        </EventNames>
+      </Report>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
-    <Input>
-      <Name>Observed</Name>
-    </Input>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
@@ -763,6 +771,27 @@
   </DataStore>
   <Tests>
     <Name>Tests</Name>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Yearly</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>RainAprToSepYearly</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Yearly</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>RainAprToSepTwoYears</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Yearly</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>ChangeInCarbon</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
   </Tests>
   <Graph>
     <Name>Graph</Name>
@@ -823,6 +852,8 @@
       <SplitOn>Simulation</SplitOn>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Memo>
     <Name>Memo</Name>

@@ -18,21 +18,15 @@
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>Observed\potato_observations.txt</string>
-      </FileNames>
+      <FileName>Observed\potato_observations.txt</FileName>
     </Input>
     <Input>
       <Name>InputRadInd</Name>
-      <FileNames>
-        <string>Observed\Potato_radint_observations.txt</string>
-      </FileNames>
+      <FileName>Observed\Potato_radint_observations.txt</FileName>
     </Input>
     <Input>
       <Name>InputNodeNo</Name>
-      <FileNames>
-        <string>Observed\cultivar_nodenumber.txt</string>
-      </FileNames>
+      <FileName>Observed\cultivar_nodenumber.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
@@ -214,7 +208,7 @@
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -4053,7 +4047,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -4080,7 +4074,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -7941,7 +7935,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -7968,7 +7962,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11793,7 +11787,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11820,7 +11814,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>potato2</Name>
+              <Name>potato2Soil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11847,7 +11841,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -15747,7 +15741,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -15774,7 +15768,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -19833,7 +19827,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>potato</Name>
+              <Name>potatoSoil</Name>
               <LL>
                 <double>0.06</double>
                 <double>0.06</double>

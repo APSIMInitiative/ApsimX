@@ -5,13 +5,19 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// A generic above ground organ
+    /// </summary>
     [Serializable]
     public class GenericAboveGroundOrgan : GenericOrgan, AboveGround
     {
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
 
         #region Event handlers
+        /// <summary>Called when [prune].</summary>
+        /// <param name="Prune">The prune.</param>
         [EventSubscribe("Prune")]
         private void OnPrune(PruneType Prune)
         {
@@ -20,6 +26,7 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
+        /// <summary>Called when [cut].</summary>
         public override void OnCut()
         {
             Summary.WriteMessage(this, "Cutting");

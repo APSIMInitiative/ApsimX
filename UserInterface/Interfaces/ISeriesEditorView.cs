@@ -35,6 +35,11 @@ namespace UserInterface.Interfaces
         event EventHandler ColourChanged;
 
         /// <summary>
+        /// Invoked when the user changes the overall regression field
+        /// </summary>
+        event EventHandler OverallRegressionChanged;
+
+        /// <summary>
         /// Invoked when the user changes the regression field
         /// </summary>
         event EventHandler RegressionChanged;
@@ -80,11 +85,6 @@ namespace UserInterface.Interfaces
         event EventHandler ShowInLegendChanged;
 
         /// <summary>
-        /// Invoked when the user changes the split on field
-        /// </summary>
-        event EventHandler SplitOnChanged;
-
-        /// <summary>
         /// Gets or sets the series type
         /// </summary>
         string SeriesType { get; set; }
@@ -103,6 +103,11 @@ namespace UserInterface.Interfaces
         /// Gets or sets the series color.
         /// </summary>
         Color Colour { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether overall regression is turned on.
+        /// </summary>
+        bool OverallRegression { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether regression is turned on.
@@ -143,11 +148,6 @@ namespace UserInterface.Interfaces
         /// Gets or sets a value indicating whether the series should be shown in the legend
         /// </summary>
         bool ShowInLegend { get; set; }
-
-        /// <summary>
-        /// Gets or sets the split on type e.g. Currently 'Experiment', 'Simulation' or null
-        /// </summary>
-        string SplitOn { get; set; }
 
         /// <summary>
         /// Gets or sets the selected data source name.

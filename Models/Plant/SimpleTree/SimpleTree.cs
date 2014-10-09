@@ -8,20 +8,20 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// A model of a simple tree
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SimpleTree : Model, ICrop
     {
-        /// <summary>
-        /// Required for MicroClimate
-        /// </summary>
+        /// <summary>Required for MicroClimate</summary>
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        /// <summary>The local canopy data</summary>
         NewCanopyType LocalCanopyData = new NewCanopyType();
 
-        /// <summary>
-        /// Root system information
-        /// </summary>
+        /// <summary>Root system information</summary>
         [XmlIgnore]
         public RootSystem RootSystem
         {
@@ -35,57 +35,46 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>
-        /// Cover live
-        /// </summary>
+        /// <summary>Cover live</summary>
+        /// <value>The cover live.</value>
         public double CoverLive { get; set; }
-        /// <summary>
-        /// plant_status
-        /// </summary>
+        /// <summary>plant_status</summary>
+        /// <value>The plant_status.</value>
         public string plant_status { get; set; }
         // Plant soil water demand
+        /// <summary>Gets or sets the sw_demand.</summary>
+        /// <value>The sw_demand.</value>
         [XmlIgnore]
         public double sw_demand { get; set; }
-        /// <summary>
-        /// A list of uptakes generated for the soil arbitrator
-        /// </summary>
+        /// <summary>A list of uptakes generated for the soil arbitrator</summary>
         [XmlIgnore]
         public List<UptakeInfo> Uptakes;
-        /// <summary>
-        /// The actual uptake of the plant
-        /// </summary>
+        /// <summary>The actual uptake of the plant</summary>
+        /// <value>The uptake.</value>
         [XmlIgnore]
         public double[] Uptake {get;set;}
 
-        private int NumPlots;
-        private double[] dlayer;
-        private string[] zoneList;
+        /// <summary>The root system</summary>
         [NonSerialized]
         private RootSystem rootSystem;
 
+        /// <summary>Gets or sets the zones.</summary>
+        /// <value>The zones.</value>
         [Units("mm/mm")]
         [Description("What zones will the roots be in? (comma seperated)")]
         public string zones { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         public SimpleTree()
         {
             Name = "SimpleTree";
         }
 
-        /// <summary>
-        /// Crop type
-        /// </summary>
+        /// <summary>Crop type</summary>
         public string CropType { get { return "SimpleTree"; } }
-        /// <summary>
-        /// Frogger. Used for MicroClimate I think? 
-        /// </summary>
-        public double FRGR { get { return 1; } } 
-        /// <summary>
-        /// Gets a list of cultivar names
-        /// </summary>
+        /// <summary>Frogger. Used for MicroClimate I think?</summary>
+        public double FRGR { get { return 1; } }
+        /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
         {
             get
@@ -94,21 +83,17 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>
-        /// MicroClimate supplies PotentialEP
-        /// </summary>
+        /// <summary>MicroClimate supplies PotentialEP</summary>
         [XmlIgnore]
         public double PotentialEP { get; set; }
 
-        /// <summary>
-        /// MicroClimate supplies LightProfile
-        /// </summary>
+        /// <summary>MicroClimate supplies LightProfile</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
-        /// <summary>
-        /// Simulation start
-        /// </summary>
+        /// <summary>Simulation start</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -127,27 +112,26 @@ namespace Models.PMF
             LocalCanopyData.cover_tot = CoverLive;
         }
 
-        /// <summary>
-        /// Run at start of day
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <summary>Run at start of day</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
            //GetPotSWUptake();
         }
 
-        /// <summary>
-        /// Calculate the potential sw uptake for today
-        /// </summary>
+        /// <summary>Calculate the potential sw uptake for today</summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
         public List<UptakeInfo> GetSWUptake(List<UptakeInfo> info)
         {
             //get the uptake information applicable to this crop
             List<UptakeInfo> thisCrop = info.AsEnumerable().Where(x => x.Plant.Equals(this)).ToList();
             thisCrop = CalcSWSourceStrength(thisCrop);
 
-            double[] kl = (double[]) Apsim.Get(RootSystem.RootZones[0].Soil, "Water.SimpleTree.KL");
+            double[] kl = (double[]) Apsim.Get(RootSystem.RootZones[0].Soil, "Water.SimpleTreeSoil.KL");
 
             for (int i = 0; i < thisCrop.Count; i++)
             {
@@ -214,9 +198,7 @@ namespace Models.PMF
             return info;
         }
 
-        /// <summary>
-        /// Calculate how far through the given layer the roots are
-        /// </summary>
+        /// <summary>Calculate how far through the given layer the roots are</summary>
         /// <param name="layer">The layer number to check.</param>
         /// <param name="root_depth">Depth of the roots.</param>
         /// <param name="dlayer">An array representing the thickness of the soil layers.</param>

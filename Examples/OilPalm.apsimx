@@ -5,7 +5,7 @@
     <Name>OilPalm</Name>
     <WeatherFile>
       <Name>WeatherFile</Name>
-      <FileName>WeatherFiles\Popondetta.met</FileName>
+      <FileName>%root%\Examples\WeatherFiles\Popondetta.met</FileName>
     </WeatherFile>
     <Clock>
       <Name>Clock</Name>
@@ -72,7 +72,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCropOilPalm>
-            <Name>OilPalm</Name>
+            <Name>OilPalmSoil</Name>
             <KL>
               <double>0.06</double>
               <double>0.04</double>
@@ -236,6 +236,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>5</SummerCona>
           <SummerU>5</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -245,11 +250,6 @@
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35.4</DiffusSlope>
           <Salb>0.18</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>68</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
@@ -969,6 +969,8 @@ namespace Models
         <SplitOn>*</SplitOn>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>AnnualFFB</Name>
@@ -1009,6 +1011,8 @@ namespace Models
         <SplitOn>*</SplitOn>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>AnnualBunchProduction</Name>
@@ -1049,6 +1053,8 @@ namespace Models
         <SplitOn>*</SplitOn>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>AnnualBunchSizes</Name>
@@ -1089,6 +1095,8 @@ namespace Models
         <SplitOn>*</SplitOn>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>AnnualInputs</Name>
@@ -1149,6 +1157,8 @@ namespace Models
         <SplitOn>*</SplitOn>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>

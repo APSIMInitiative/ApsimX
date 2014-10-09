@@ -1,8 +1,4 @@
 ﻿// <copyright file="Program.cs" company="Apsim"> The APSIM Initiative 2014. </copyright>
-
-/// <summary>
-/// Program Models.exe. The execution engine of apsim.
-/// </summary>
 namespace Models
 {
     using System;

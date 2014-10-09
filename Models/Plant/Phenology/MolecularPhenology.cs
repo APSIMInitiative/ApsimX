@@ -6,25 +6,35 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.Phen
 {
+    /// <summary>
+    /// Molecular phenology model
+    /// </summary>
     [Serializable]
     public class MolecularPhenology
     {
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The structure</summary>
         [Link]
         Structure Structure = null;
 
+        /// <summary>The plant</summary>
         [Link]
         Plant Plant = null;
 
         //[Link] Function ThermalTime = null;
         //[Link] Function PhotoperiodFunction = null;
+        /// <summary>The vrn1rate</summary>
         [Link] Function Vrn1rate = null;
+        /// <summary>The vrn2rate</summary>
         [Link] Function Vrn2rate = null;
+        /// <summary>The vrn3rate</summary>
         [Link] Function Vrn3rate = null;
 
-        
+
+        /// <summary>The accumulated vernalisation</summary>
         public double AccumulatedVernalisation = 0;
 
 
@@ -33,55 +43,77 @@ namespace Models.PMF.Phen
         //double AccumTt = 0;
         
         //double Vrn1Lag = 0;
-        
+
+        /// <summary>The VRN1</summary>
         double Vrn1 = 0;
-        
+
+        /// <summary>The VRN2</summary>
         double Vrn2 = 0;
-        
+
+        /// <summary>The VRN3</summary>
         double Vrn3 = 0;
-        
+
+        /// <summary>The VRN4</summary>
         double Vrn4 = 0;
-        
+
+        /// <summary>The VRN1 target</summary>
         double Vrn1Target = 0;
         
         //double Pp = 0;
-        
+
+        /// <summary>The tt</summary>
         double Tt = 0;
         
         //double MeanT = 0;
         
         //double HaunStageYesterday = 0;
-        
+
+        /// <summary>The delta haun stage</summary>
         double DeltaHaunStage = 0;
-        
+
+        /// <summary>The fihs</summary>
         double FIHS = 0;
-        
+
+        /// <summary>The TSHS</summary>
         double TSHS = 0;
-        
+
+        /// <summary>The FLN</summary>
         double FLN = 0;
         //
         //bool IsGerminated = false;
-        
+
+        /// <summary>The is pre vernalised</summary>
         bool IsPreVernalised = false;
-        
+
+        /// <summary>The is vernalised</summary>
         bool IsVernalised = false;
-        
+
+        /// <summary>The is induced</summary>
         bool IsInduced = false;
-        
+
+        /// <summary>The is reproductive</summary>
         bool IsReproductive = false;
 
+        /// <summary>The VRN rate at0</summary>
         public double VrnRateAt0 = 1.6;
+        /// <summary>The VRN rate at30</summary>
         public double VrnRateAt30 = 0.08;
+        /// <summary>The VRN rate curve</summary>
         public double VrnRateCurve = -0.19;
+        /// <summary>The base VRN1 target</summary>
         public double BaseVrn1Target = 0.74;
 
         //Event procedures
+        /// <summary>Called when [commencing].</summary>
         public void OnCommencing()
         {
             Vrn4 = 1.0;
             Vrn1Target = 0.74;
         }
 
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {

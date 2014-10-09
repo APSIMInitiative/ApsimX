@@ -12,6 +12,7 @@ using UserInterface.Interfaces;
 using System.Data;
 using Models;
 using UserInterface.EventArguments;
+using Models.Soils;
 
 namespace UserInterface.Presenters
 {
@@ -85,12 +86,7 @@ namespace UserInterface.Presenters
                     FormatAxis(A);
 
                 // Add any regression lines if necessary.
-                int seriesIndex = 0;
-                foreach (SeriesInfo seriesInfo in seriesMetadata)
-                {
-                    seriesInfo.AddRegressionLine(this.GraphView, seriesIndex);
-                    seriesIndex++;
-                }
+                AddRegressionLines();
 
                 // Format the legend.
                 GraphView.FormatLegend(Graph.LegendPosition);
@@ -101,9 +97,64 @@ namespace UserInterface.Presenters
                 //Format the footer
                 GraphView.FormatCaption(Graph.Caption);
 
+                // Tell the graph view about any disabled series 
+                for (int i = 0; i < seriesMetadata.Count; i++)
+                {
+                    if (this.Graph.DisabledSeries.Contains(seriesMetadata[i].Title))
+                        this.GraphView.EnableSeries(i, enable: false);
+                }
+
+                // Remove series titles out of the graph disabled series list when
+                // they are no longer valid i.e. not on the graph.
+                IEnumerable<string> validSeriesTitles = this.seriesMetadata.Select(s => s.Title);
+                List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.Graph.DisabledSeries));
+                this.Graph.DisabledSeries.Clear();
+                this.Graph.DisabledSeries.AddRange(seriesTitlesToKeep);
+
                 GraphView.Refresh();
             }
+        }
 
+        /// <summary>
+        /// Add in regression lines if necessary.
+        /// </summary>
+        private void AddRegressionLines()
+        {
+            int seriesIndex = 0;
+            if (this.Graph.ShowRegressionLine)
+            {
+                // Get all x and y values.
+                List<double> x = new List<double>();
+                List<double> y = new List<double>();
+                foreach (SeriesInfo seriesInfo in seriesMetadata)
+                {
+                    if (seriesInfo.X != null && seriesInfo.Y != null)
+                    {
+                        foreach (double value in seriesInfo.X)
+                            x.Add(value);
+                        foreach (double value in seriesInfo.Y)
+                            y.Add(value);
+                    }
+                }
+
+                Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(x, y);
+                AddRegressionToGraph(this.GraphView, stats, Axis.AxisType.Bottom, Axis.AxisType.Left,
+                                        Color.Black, seriesIndex);
+                seriesIndex++;
+            }
+
+            foreach (SeriesInfo seriesInfo in seriesMetadata)
+            {
+                if (seriesInfo.X != null && seriesInfo.Y != null && seriesInfo.series.ShowRegressionLine)
+                {
+                    Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(seriesInfo.X, seriesInfo.Y);
+                    if (stats != null)
+                    {
+                        AddRegressionToGraph(this.GraphView, stats, seriesInfo.series.XAxis, seriesInfo.series.YAxis, seriesInfo.Colour, seriesIndex);
+                        seriesIndex++;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -115,72 +166,131 @@ namespace UserInterface.Presenters
             foreach (Models.Graph.Series S in Graph.Series)
             {
                 if (S.X != null && S.Y != null)
-                {
-                    // We need to handle the case where the series needs to be duplicated
-                    // for each simulation or experiment in scope.
-                    bool duplicateForEachSimulation = S.SplitOn == "Simulation";
-                    bool duplicateForEachExperiment = S.SplitOn == "Experiment";
-                    if (duplicateForEachSimulation)
-                    {
-                        // get all simulation names in scope.
-                        string[] simulationNamesInScope = FindSimulationNamesInScope();
-
-                        foreach (string simulationName in simulationNamesInScope)
-                        {
-                            int seriesIndex = Array.IndexOf(simulationNamesInScope, simulationName);
-                            
-                            SeriesInfo info = new SeriesInfo(
-                                graph: Graph,
-                                dataStore: DataStore,
-                                series: S,
-                                title: simulationName, 
-                                filter: "Name = '" + simulationName + "'",
-                                seriesIndex: seriesIndex,
-                                numSeries: simulationNamesInScope.Length);
-
-                            if (simulationNamesInScope.Length == 1)
-                            {
-                                info.Title = S.Y.FieldName;
-                            }
-                            seriesMetadata.Add(info);
-                        }
-                    }
-                    else if (duplicateForEachExperiment)
-                    {
-                            
-                        // Find all experiments.
-                        Experiment[] experimentsInScope = FindExperimentsInScope();
-
-                        foreach (Experiment experiment in experimentsInScope)
-                        {
-                            int seriesIndex = Array.IndexOf(experimentsInScope, experiment);
-                                
-                            SeriesInfo info = new SeriesInfo(
-                                graph: Graph,
-                                dataStore: DataStore,
-                                series: S, 
-                                title: experiment.Name,
-                                filter: "NAME IN " +
-                                        "(" + Utility.String.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")",
-                                seriesIndex: seriesIndex,
-                                numSeries: experimentsInScope.Length);
-                            seriesMetadata.Add(info);
-                        }
-                    }
-                    else
-                    {
-                        SeriesInfo info = new SeriesInfo(
-                                graph: Graph,
-                                dataStore: DataStore,
-                                series: S,
-                                title: S.Title,
-                                filter: null,
-                                seriesIndex: 1,
-                                numSeries: 1);
-                        seriesMetadata.Add(info);
-                    }
-                }
+                    this.FillSeriesInfoFromSeries(S);
             }
+        }
+
+        /// <summary>
+        /// Fill series information list from the specified series.
+        /// </summary>
+        /// <param name="series">The series to use</param>
+        private void FillSeriesInfoFromSeries(Series series)
+        {
+            Simulation parentSimulation = Apsim.Parent(this.Graph, typeof(Simulation)) as Simulation;
+            if (this.Graph.Parent is Soil)
+            {
+                FillSeriesInfoFromRawSeries(series);
+                return;
+            }
+
+            // See if graph is inside an experiment. If so then graph all series in experiment.
+            Experiment parentExperiment = Apsim.Parent(this.Graph, typeof(Experiment)) as Experiment;
+            if (parentExperiment != null)
+            {
+                FillSeriesInfoFromSimulations(parentExperiment.Names(), series);
+                return;
+            }
+
+            // See if graph is inside a simulation. If so then graph the simulation.
+            if (parentSimulation != null)
+            {
+                FillSeriesInfoFromSimulations(new string[] {parentSimulation.Name}, series);
+                return;
+            }
+
+            // Must be at top level so look for experiments first.
+            IModel[] experiments = Apsim.FindAll(this.Graph, typeof(Experiment)).ToArray();
+            if (experiments.Length > 0)
+            {
+                FillSeriesInfoFromExperiments(experiments, series);
+                return;
+            }
+
+            // If we get this far then simply graph every simulation we can find.
+            IModel[] simulations = Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
+            if (simulations != null)
+            {
+                IEnumerable<string> simulationNames = simulations.Select(s => s.Name);
+                FillSeriesInfoFromSimulations(simulationNames.ToArray(), series);
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Fill series information list from a list of simulation names.
+        /// </summary>
+        /// <param name="simulationNames">List of simulation names</param>
+        /// <param name="series">Associated series</param>
+        private void FillSeriesInfoFromSimulations(string[] simulationNames, Series series)
+        {
+            foreach (string simulationName in simulationNames)
+            {
+                string filter = "Name = '" + simulationName + "'";
+
+                int seriesIndex = Array.IndexOf(simulationNames, simulationName);
+
+                SeriesInfo info = new SeriesInfo(
+                    graph: Graph,
+                    dataStore: DataStore,
+                    series: series,
+                    title: simulationName,
+                    filter: filter,
+                    seriesIndex: seriesIndex,
+                    numSeries: simulationNames.Length);
+
+                if (!(this.Graph.Parent is Soil) && simulationNames.Length == 1)
+                    info.Title = series.Y.FieldName;
+
+                seriesMetadata.Add(info);
+            }
+        }
+
+        /// <summary>
+        /// Fill series information list from a list of simulation names.
+        /// </summary>
+        /// <param name="simulationNames">List of simulation names</param>
+        /// <param name="series">Associated series</param>
+        private void FillSeriesInfoFromExperiments(IModel[] experiments, Series series)
+        {
+            foreach (Experiment experiment in experiments)
+            {
+                string filter = "NAME IN " + "(" + Utility.String.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+
+                int seriesIndex = Array.IndexOf(experiments, experiment);
+
+                SeriesInfo info = new SeriesInfo(
+                    graph: Graph,
+                    dataStore: DataStore,
+                    series: series,
+                    title: experiment.Name,
+                    filter: filter,
+                    seriesIndex: seriesIndex,
+                    numSeries: experiments.Length);
+
+                if (experiments.Length == 1)
+                {
+                    info.Title = series.Y.FieldName;
+                }
+                seriesMetadata.Add(info);
+            }
+        }
+
+        /// <summary>
+        /// Fill series information list from just the raw series
+        /// </summary>
+        /// <param name="simulationNames">List of simulation names</param>
+        /// <param name="series">Associated series</param>
+        private void FillSeriesInfoFromRawSeries(Series series)
+        {
+            SeriesInfo info = new SeriesInfo(
+                graph: Graph,
+                dataStore: DataStore,
+                series: series,
+                title: series.Title,
+                filter: null,
+                seriesIndex: 1,
+                numSeries: 1);
+            seriesMetadata.Add(info);
         }
 
         /// <summary>
@@ -215,74 +325,28 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Return a list of simulation names in scope.
+        /// Return a list of simulations or experiments in scope to graph
         /// </summary>
-        /// <returns></returns>
-        /// <param name="splitOn">The axis to format</param>
-        private string[] FindSimulationNamesInScope()
+        /// <returns>The list of simulations or experiments</returns>
+        private IModel[] FindSomethingToGraph()
         {
-            Type[] parentTypes = new Type[] { typeof(Simulation), /*typeof(Folder),*/ typeof(Experiment), typeof(Simulations) };
+            // See if graph is inside an experiment. If so return it.
+            IModel parentExperiment = Apsim.Parent(this.Graph, typeof(Experiment)) as Experiment;
+            if (parentExperiment != null)
+                return new IModel[] { parentExperiment };
 
-            Model parent = FindParent(parentTypes);
-            if (parent is Experiment)
-                return (parent as Experiment).Names();
-            else if (parent is Simulation)
-                return new string[1] { parent.Name };
-            //else if (parent is Folder)
-            //{
-            //    List<string> names = new List<string>();
-            //    foreach (Model model in parent.Children.AllRecursively)
-            //    {
-            //        if (model is Simulation)
-            //        {
-            //            names.Add(model.Name);
-            //        }
-            //        else if (model is Experiment)
-            //        {
-            //            names.AddRange((model as Experiment).Names());
-            //        }
-            //    }
-            //    return names.ToArray();
-            //}
-            else
-                return Graph.DataStore.SimulationNames;
-        }
+            // See if graph is inside a simulation. If so return it.
+            IModel parentSimulation = Apsim.Parent(this.Graph, typeof(Simulation)) as Simulation;
+            if (parentSimulation != null)
+                return new IModel[] { parentSimulation };
+            
+            // Must be at top level so look for experiments first.
+            IModel[] experiments = Apsim.FindAll(this.Graph, typeof(Experiment)).ToArray();
+            if (experiments.Length > 0)
+                return experiments;
 
-        /// <summary>
-        /// Find all experiments in scope
-        /// </summary>
-        /// <returns></returns>
-        private Experiment[] FindExperimentsInScope()
-        {
-            Type[] parentTypes = new Type[] { typeof(Experiment), typeof(Simulations) };
-            Model parent = FindParent(parentTypes);
-            if (parent is Experiment)
-            {
-                return new Experiment[] { parent as Experiment };
-            }
-            else
-            {
-                List<Experiment> experiments = new List<Experiment>();
-                foreach (Experiment experiment in Apsim.ChildrenRecursively(parent, typeof(Experiment)))
-                {
-                    experiments.Add(experiment);
-                }
-
-                return experiments.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Find a parent model of one of the specified types
-        /// </summary>
-        /// <param name="types">The types to look for</param>
-        /// <returns>The found parent model</returns>
-        private Model FindParent(Type[] types)
-        {
-            Model parent = Graph;
-            while (parent != null && Array.IndexOf(types, parent.GetType()) == -1)
-                parent = parent.Parent as Model;
-            return parent;
+            // If we get this far then simply graph every simulation we can find.
+            return Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
         }
 
         /// <summary>
@@ -399,8 +463,18 @@ namespace UserInterface.Presenters
         {
             if (e.controlKeyPressed)
             {
-                this.GraphView.ToggleEnableSeries(e.seriesIndex);
-
+                string seriesTitle = this.seriesMetadata[e.seriesIndex].Title;
+                bool isDisabled = this.Graph.DisabledSeries.Contains(seriesTitle);
+                if (isDisabled)
+                {
+                    this.GraphView.EnableSeries(e.seriesIndex, enable: true);
+                    this.Graph.DisabledSeries.Remove(seriesTitle);
+                }
+                else
+                {
+                    this.GraphView.EnableSeries(e.seriesIndex, enable: false);
+                    this.Graph.DisabledSeries.Add(seriesTitle);
+                }
             }
             else
             {
@@ -440,6 +514,62 @@ namespace UserInterface.Presenters
         {
             // Set the clipboard text.
             System.Windows.Forms.Clipboard.SetText(Apsim.Serialise(this.Graph));
+        }
+
+        /// <summary>
+        /// Add regression line and stats to graph
+        /// </summary>
+        /// <param name="graphView">The graph to add line and stats to</param>
+        /// <param name="stats">The regression stats</param>
+        /// <param name="xAxis">The associated x axis</param>
+        /// <param name="yAxis">The associated y axis</param>
+        /// <param name="colour">The color to use</param>
+        /// <param name="seriesIndex">The series index</param>
+        private static void AddRegressionToGraph(IGraphView graphView, 
+                                                 Utility.Math.RegrStats stats,
+                                                 Axis.AxisType xAxis, Axis.AxisType yAxis,
+                                                 Color colour,
+                                                 int seriesIndex)
+        {
+            if (stats != null)
+            {
+                double minimumX = graphView.AxisMinimum(xAxis);
+                double maximumX = graphView.AxisMaximum(xAxis);
+                double minimumY = graphView.AxisMinimum(yAxis);
+                double maximumY = graphView.AxisMaximum(yAxis);
+
+                double[] regressionX = new double[] { minimumX, maximumX };
+                double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
+                graphView.DrawLineAndMarkers("", regressionX, regressionY,
+                                             xAxis, yAxis, colour,
+                                             Series.LineType.Solid, Series.MarkerType.None);
+
+                // Show the 1:1 line
+                double lowestAxisScale = Math.Min(minimumX, minimumY);
+                double largestAxisScale = Math.Max(maximumX, maximumY);
+                double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };
+                graphView.DrawLineAndMarkers("", oneToOne, oneToOne,
+                                             xAxis, yAxis, colour,
+                                             Series.LineType.Dash, Series.MarkerType.None);
+
+                // Draw the equation.
+                double interval = (largestAxisScale - lowestAxisScale) / 13;
+                double yPosition = largestAxisScale - seriesIndex * interval;
+
+                string equation = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
+                                                "NSE = {3:F2}, ME = {4:F2}, MAE = {5:F2}\r\n" +
+                                                "RSR = {6:F2}, RMSD = {7:F2}",
+                                                new object[] {stats.m,
+                                                                          stats.c,
+                                                                          stats.R2,
+                                                                          stats.n,
+                                                                          stats.NSE,
+                                                                          stats.ME,
+                                                                          stats.MAE,
+                                                                          stats.RSR,
+                                                                          stats.RMSD});
+                graphView.DrawText(equation, lowestAxisScale, yPosition, xAxis, yAxis, colour);
+            }
         }
 
         /// <summary>
@@ -506,7 +636,7 @@ namespace UserInterface.Presenters
             /// <summary>
             /// The associated graph series.
             /// </summary>
-            private Series series;
+            public Series series { get; set; }
 
             /// <summary>
             /// Gets the series title.
@@ -668,66 +798,6 @@ namespace UserInterface.Presenters
                 }
 
                 return null;
-            }
-
-            /// <summary>
-            /// Add a regresion line, 1:1 line and regression stats to the graph.
-            /// </summary>
-            public void AddRegressionLine(IGraphView graphView, int seriesIndex)
-            {
-                if (series.ShowRegressionLine)
-                {
-                    IEnumerable x = X;
-                    IEnumerable y = Y;
-
-                    if (x != null && y != null)
-                    {
-                        Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(x, y);
-                        if (stats != null)
-                        {
-                            // Show the regression line.
-                            //double minimumX = Utility.Math.Min(x);
-                            //double maximumX = Utility.Math.Max(x);
-
-                            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom);
-                            double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
-                            double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
-                            double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
-
-                            double[] regressionX = new double[] { minimumX, maximumX };
-                            double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
-                            graphView.DrawLineAndMarkers("", regressionX, regressionY,
-                                                         series.XAxis, series.YAxis, Colour,
-                                                         Series.LineType.Solid, Series.MarkerType.None);
-
-                            // Show the 1:1 line
-                            double lowestAxisScale = Math.Min(minimumX, minimumY);
-                            double largestAxisScale = Math.Max(maximumX, maximumY);
-                            double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };
-                            graphView.DrawLineAndMarkers("", oneToOne, oneToOne,
-                                                         series.XAxis, series.YAxis, Colour,
-                                                         Series.LineType.Dash, Series.MarkerType.None);
-
-                            // Draw the equation.
-                            double interval = (largestAxisScale - lowestAxisScale) / 13;
-                            double yPosition = largestAxisScale - seriesIndex * interval;
-
-                            string equation = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
-                                                            "NSE = {3:F2}, ME = {4:F2}, MAE = {5:F2}\r\n" +
-                                                            "RSR = {6:F2}, RMSD = {7:F2}",
-                                                            new object[] {stats.m,
-                                                                          stats.c,
-                                                                          stats.R2,
-                                                                          stats.n,
-                                                                          stats.NSE,
-                                                                          stats.ME,
-                                                                          stats.MAE,
-                                                                          stats.RSR,
-                                                                          stats.RMSD});
-                            graphView.DrawText(equation, lowestAxisScale, yPosition, series.XAxis, series.YAxis, Colour);
-                        }
-                    }
-                }
             }
         }
     }

@@ -13,80 +13,144 @@ using System.IO;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// A root model for plant15
+    /// </summary>
     [Serializable]
     public class Root1 : BaseOrgan1, BelowGround
     {
 
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
 
         #region Parameters read from XML file and links to other functions.
+        /// <summary>The plant</summary>
         [Link]
         public Plant15 Plant;
 
+        /// <summary>The root advance factor temporary</summary>
         [Link] Function RootAdvanceFactorTemp = null;
+        /// <summary>The root advance factor water stress</summary>
         [Link] Function RootAdvanceFactorWaterStress = null;
+        /// <summary>The sw factor root depth</summary>
         [Link] Function SWFactorRootDepth = null;
+        /// <summary>The sw factor root length</summary>
         [Link] Function SWFactorRootLength = null;
+        /// <summary>The root depth rate</summary>
         [Link] Function RootDepthRate = null;
 
+        /// <summary>The population</summary>
         [Link]
         Population1 Population = null;
 
+        /// <summary>The relative root rate</summary>
         [Link] Function RelativeRootRate = null;
+        /// <summary>The dm senescence fraction</summary>
         [Link] Function DMSenescenceFraction = null;
+        /// <summary>The growth structural fraction stage</summary>
         [Link] Function GrowthStructuralFractionStage = null;
 
+        /// <summary>The n uptake function</summary>
         [Link]
         object NUptakeFunction = null;
 
+        /// <summary>The soil</summary>
         [Link]
         Soil Soil = null;
 
+        /// <summary>Gets or sets the n concentration critical.</summary>
+        /// <value>The n concentration critical.</value>
         public double NConcentrationCritical { get; set; }
 
+        /// <summary>Gets or sets the n concentration minimum.</summary>
+        /// <value>The n concentration minimum.</value>
         public double NConcentrationMinimum { get; set; }
 
+        /// <summary>Gets or sets the n concentration maximum.</summary>
+        /// <value>The n concentration maximum.</value>
         public double NConcentrationMaximum { get; set; }
 
+        /// <summary>Gets or sets the initial root depth.</summary>
+        /// <value>The initial root depth.</value>
         public double InitialRootDepth { get; set; }
 
+        /// <summary>Gets or sets the die back fraction.</summary>
+        /// <value>The die back fraction.</value>
         public double DieBackFraction { get; set; }
 
+        /// <summary>Gets or sets the cl.</summary>
+        /// <value>The cl.</value>
         public double[] cl { get; set; }
 
+        /// <summary>Gets or sets the ll.</summary>
+        /// <value>The ll.</value>
         public double[] ll { get; set; }
 
+        /// <summary>Gets or sets the kl.</summary>
+        /// <value>The kl.</value>
         public double[] kl { get; set; }
 
+        /// <summary>Gets or sets the xf.</summary>
+        /// <value>The xf.</value>
         public double[] xf { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [modify kl].
+        /// </summary>
+        /// <value><c>true</c> if [modify kl]; otherwise, <c>false</c>.</value>
         public bool ModifyKL { get; set; }
 
+        /// <summary>Gets or sets the cl a.</summary>
+        /// <value>The cl a.</value>
         public double ClA { get; set; }
 
+        /// <summary>Gets or sets the cl b.</summary>
+        /// <value>The cl b.</value>
         public double ClB { get; set; }
 
+        /// <summary>Gets or sets the espa.</summary>
+        /// <value>The espa.</value>
         public double ESPA { get; set; }
 
+        /// <summary>Gets or sets the espb.</summary>
+        /// <value>The espb.</value>
         public double ESPB { get; set; }
 
+        /// <summary>Gets or sets the eca.</summary>
+        /// <value>The eca.</value>
         public double ECA { get; set; }
 
+        /// <summary>Gets or sets the ecb.</summary>
+        /// <value>The ecb.</value>
         public double ECB { get; set; }
 
+        /// <summary>Gets or sets the n deficit uptake fraction.</summary>
+        /// <value>The n deficit uptake fraction.</value>
         public double NDeficitUptakeFraction { get; set; }
 
+        /// <summary>Gets or sets the n senescence concentration.</summary>
+        /// <value>The n senescence concentration.</value>
         public double NSenescenceConcentration { get; set; }
 
+        /// <summary>Gets or sets the n supply preference.</summary>
+        /// <value>The n supply preference.</value>
         public string NSupplyPreference { get; set; }
 
+        /// <summary>Gets or sets the senescence detachment fraction.</summary>
+        /// <value>The senescence detachment fraction.</value>
         public double SenescenceDetachmentFraction { get; set; }
 
+        /// <summary>Gets or sets the initial wt.</summary>
+        /// <value>The initial wt.</value>
         public double InitialWt { get; set; }
 
+        /// <summary>Gets or sets the initial n concentration.</summary>
+        /// <value>The initial n concentration.</value>
         public double InitialNConcentration { get; set; }
 
+        /// <summary>Gets or sets the length of the specific root.</summary>
+        /// <value>The length of the specific root.</value>
         public double SpecificRootLength { get; set; }
 
         #endregion
@@ -94,73 +158,129 @@ namespace Models.PMF.OldPlant
         #region Variables we need from other modules
         
         //Fixme, this needs to talk to swim
+        /// <summary>The swim3</summary>
         double swim3 = double.MinValue;
         #endregion
 
         #region Events we're going to publish at some point.
-        
+
+        /// <summary>Occurs when [incorp fom].</summary>
         public event FOMLayerDelegate IncorpFOM;
 
-        
+
+        /// <summary>Occurs when [water changed].</summary>
         public event WaterChangedDelegate WaterChanged;
 
-        
+
+        /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
         #endregion
 
         #region Private variables
+        /// <summary>The swim is present</summary>
         private bool SwimIsPresent = false;
+        /// <summary>The dlt_sw_dep</summary>
         private double[] dlt_sw_dep;
+        /// <summary>The sw_avail</summary>
         private double[] sw_avail;
+        /// <summary>The sw_avail_pot</summary>
         private double[] sw_avail_pot;
+        /// <summary>The sw_supply</summary>
         private double[] sw_supply;
+        /// <summary>The dlt_no3gsm</summary>
         private double[] dlt_no3gsm;
+        /// <summary>The DLT_NH4GSM</summary>
         private double[] dlt_nh4gsm;
+        /// <summary>The no3gsm_uptake_pot</summary>
         private double[] no3gsm_uptake_pot;
+        /// <summary>The nh4gsm_uptake_pot</summary>
         private double[] nh4gsm_uptake_pot;
+        /// <summary>The DLT root depth</summary>
         private double dltRootDepth;
+        /// <summary>The DLT root length</summary>
         private double[] dltRootLength;
+        /// <summary>The DLT root length senesced</summary>
         private double[] dltRootLengthSenesced;
+        /// <summary>The DLT root length dead</summary>
         private double[] dltRootLengthDead;
+        /// <summary>The ll_dep</summary>
         private double[] ll_dep;
+        /// <summary>The root length</summary>
         private double[] RootLength;
+        /// <summary>The no3gsm_min</summary>
         private double[] no3gsm_min;
+        /// <summary>The nh4gsm_min</summary>
         private double[] nh4gsm_min;
+        /// <summary>The have modified kl values</summary>
         private bool HaveModifiedKLValues = false;
+        /// <summary>The root length senesced</summary>
         private double[] RootLengthSenesced;
+        /// <summary>The dlt_n_senesced_retrans</summary>
         private double dlt_n_senesced_retrans;           // plant N retranslocated to/from (+/-) senesced part to/from <<somewhere else??>> (g/m^2)
+        /// <summary>The dlt_n_senesced_trans</summary>
         private double dlt_n_senesced_trans;
 
 
+        /// <summary>The _ dm green demand</summary>
         private double _DMGreenDemand;
+        /// <summary>The _ n demand</summary>
         private double _NDemand;
+        /// <summary>The _ soil n demand</summary>
         private double _SoilNDemand;
+        /// <summary>The n maximum</summary>
         private double NMax;
+        /// <summary>The sw_demand</summary>
         private double sw_demand;
+        /// <summary>The n_conc_crit</summary>
         private double n_conc_crit = 0;
+        /// <summary>The n_conc_max</summary>
         private double n_conc_max = 0;
+        /// <summary>The n_conc_min</summary>
         private double n_conc_min = 0;
         #endregion
 
         #region Public interface defined by Organ1
+        /// <summary>Gets or sets the senescing.</summary>
+        /// <value>The senescing.</value>
         [XmlIgnore]
         public override Biomass Senescing { get; protected set; }
+        /// <summary>Gets or sets the retranslocation.</summary>
+        /// <value>The retranslocation.</value>
         [XmlIgnore]
         public override Biomass Retranslocation { get; protected set; }
+        /// <summary>Gets or sets the growth.</summary>
+        /// <value>The growth.</value>
         [XmlIgnore]
         public override Biomass Growth { get; protected set; }
+        /// <summary>Gets or sets the detaching.</summary>
+        /// <value>The detaching.</value>
         [XmlIgnore]
         public override Biomass Detaching { get; protected set; }
+        /// <summary>Gets or sets the green removed.</summary>
+        /// <value>The green removed.</value>
         [XmlIgnore]
         public override Biomass GreenRemoved { get; protected set; }
+        /// <summary>Gets or sets the senesced removed.</summary>
+        /// <value>The senesced removed.</value>
         [XmlIgnore]
         public override Biomass SenescedRemoved { get; protected set; }
 
         // Soil water
+        /// <summary>Gets the sw supply.</summary>
+        /// <value>The sw supply.</value>
         public override double SWSupply { get { return Utility.Math.Sum(sw_supply); } }
+        /// <summary>Gets the sw demand.</summary>
+        /// <value>The sw demand.</value>
         public override double SWDemand { get { return sw_demand; } }
+        /// <summary>Gets the sw uptake.</summary>
+        /// <value>The sw uptake.</value>
         public override double SWUptake { get { return -Utility.Math.Sum(dlt_sw_dep); } }
+        /// <summary>Does the sw demand.</summary>
+        /// <param name="Supply">The supply.</param>
         public override void DoSWDemand(double Supply) { }
+        /// <summary>Does the sw uptake.</summary>
+        /// <param name="SWDemand">The sw demand.</param>
+        /// <exception cref="System.Exception">negative root growth??</exception>
         public override void DoSWUptake(double SWDemand)
         {
             // Firstly grow roots.
@@ -210,16 +330,33 @@ namespace Models.PMF.OldPlant
 
 
         // dry matter
+        /// <summary>Gets the dm supply.</summary>
+        /// <value>The dm supply.</value>
         public override double DMSupply { get { return 0.0; } }
+        /// <summary>Gets the dm retrans supply.</summary>
+        /// <value>The dm retrans supply.</value>
         public override double DMRetransSupply { get { return 0; } }
+        /// <summary>Gets the DLT dm pot rue.</summary>
+        /// <value>The DLT dm pot rue.</value>
         public override double dltDmPotRue { get { return 0.0; } }
+        /// <summary>Gets the dm green demand.</summary>
+        /// <value>The dm green demand.</value>
         public override double DMGreenDemand { get { return _DMGreenDemand; } }
+        /// <summary>Gets the dm demand differential.</summary>
+        /// <value>The dm demand differential.</value>
         public override double DMDemandDifferential { get { return 0; } }
+        /// <summary>Does the dm demand.</summary>
+        /// <param name="DMSupply">The dm supply.</param>
         public override void DoDMDemand(double DMSupply)
         {
             _DMGreenDemand = Math.Max(0.0, DMSupply);   //Just ask for all you can get for now - NIH.
         }
+        /// <summary>Does the dm retranslocate.</summary>
+        /// <param name="dlt_dm_retrans_to_fruit">The dlt_dm_retrans_to_fruit.</param>
+        /// <param name="demand_differential_begin">The demand_differential_begin.</param>
         public override void DoDmRetranslocate(double dlt_dm_retrans_to_fruit, double demand_differential_begin) { }
+        /// <summary>Gives the dm green.</summary>
+        /// <param name="Delta">The delta.</param>
         public override void GiveDmGreen(double Delta)
         {
             Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
@@ -227,6 +364,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Root.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
+        /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
             double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
@@ -236,12 +374,14 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.Senescing.StructuralWt=%f", Senescing.StructuralWt);
             Util.Debug("Root.Senescing.NonStructuralWt=%f", Senescing.NonStructuralWt);
         }
+        /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
             Detaching = Dead * SenescenceDetachmentFraction;
             Util.Debug("Root.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("Root.Detaching.N=%f", Detaching.N);
         }
+        /// <summary>Removes the biomass.</summary>
         public override void RemoveBiomass()
         {
             Live = Live - GreenRemoved;
@@ -249,9 +389,13 @@ namespace Models.PMF.OldPlant
         }
 
         // nitrogen
-        
+
+        /// <summary>Gets the n demand.</summary>
+        /// <value>The n demand.</value>
         public override double NDemand { get { return _NDemand; } }
-        
+
+        /// <summary>Gets the n supply.</summary>
+        /// <value>The n supply.</value>
         public override double NSupply
         {
             get
@@ -261,6 +405,8 @@ namespace Models.PMF.OldPlant
                        Utility.Math.Sum(nh4gsm_uptake_pot, 0, deepest_layer + 1, 0);
             }
         }
+        /// <summary>Gets the n uptake.</summary>
+        /// <value>The n uptake.</value>
         public override double NUptake
         {
             get
@@ -270,7 +416,11 @@ namespace Models.PMF.OldPlant
                         - Utility.Math.Sum(dlt_nh4gsm, 0, deepest_layer + 1, 0);
             }
         }
+        /// <summary>Gets the soil n demand.</summary>
+        /// <value>The soil n demand.</value>
         public override double SoilNDemand { get { return _SoilNDemand; } }
+        /// <summary>Gets the n capacity.</summary>
+        /// <value>The n capacity.</value>
         public override double NCapacity
         {
             get
@@ -278,7 +428,11 @@ namespace Models.PMF.OldPlant
                 return Utility.Math.Constrain(NMax - NDemand, 0.0, double.MaxValue);
             }
         }
+        /// <summary>Gets the n demand differential.</summary>
+        /// <value>The n demand differential.</value>
         public override double NDemandDifferential { get { return Utility.Math.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
+        /// <summary>Gets the available retranslocate n.</summary>
+        /// <value>The available retranslocate n.</value>
         public override double AvailableRetranslocateN
         {
             get
@@ -289,7 +443,11 @@ namespace Models.PMF.OldPlant
                 return (N_avail * n_retrans_fraction);
             }
         }
+        /// <summary>Gets the DLT n senesced retrans.</summary>
+        /// <value>The DLT n senesced retrans.</value>
         public override double DltNSenescedRetrans { get { return dlt_n_senesced_retrans; } }
+        /// <summary>Does the n demand.</summary>
+        /// <param name="IncludeRetransloation">if set to <c>true</c> [include retransloation].</param>
         public override void DoNDemand(bool IncludeRetransloation)
         {
 
@@ -310,6 +468,8 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.NDemand=%f", _NDemand);
             Util.Debug("Root.NMax=%f", NMax);
         }
+        /// <summary>Does the n demand1 pot.</summary>
+        /// <param name="dltDmPotRue">The DLT dm pot rue.</param>
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
@@ -322,12 +482,15 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.NDemand=%f", _NDemand);
             Util.Debug("Root.NMax=%f", NMax);
         }
+        /// <summary>Does the soil n demand.</summary>
         public override void DoSoilNDemand()
         {
             _SoilNDemand = NDemand - dlt_n_senesced_retrans;
             _SoilNDemand = Utility.Math.Constrain(_SoilNDemand, 0.0, double.MaxValue);
             Util.Debug("Root.SoilNDemand=%f", _SoilNDemand);
         }
+        /// <summary>Does the n supply.</summary>
+        /// <exception cref="System.NotImplementedException"></exception>
         public override void DoNSupply()
         {
             if (NUptakeFunction is NUptake3)
@@ -343,6 +506,9 @@ namespace Models.PMF.OldPlant
                 throw new NotImplementedException();
         }
 
+        /// <summary>Does the n retranslocate.</summary>
+        /// <param name="NSupply">The n supply.</param>
+        /// <param name="GrainNDemand">The grain n demand.</param>
         public override void DoNRetranslocate(double NSupply, double GrainNDemand)
         {
             if (GrainNDemand >= NSupply)
@@ -359,6 +525,7 @@ namespace Models.PMF.OldPlant
             }
             Util.Debug("Root.Retranslocation.N=%f", Retranslocation.N);
         }
+        /// <summary>Does the n senescence.</summary>
         public override void DoNSenescence()
         {
             double green_n_conc = Utility.Math.Divide(Live.N, Live.Wt, 0.0);
@@ -374,19 +541,28 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.SenescingN=%f", SenescingN);
             Util.Debug("Root.dlt.n_senesced_trans=%f", dlt_n_senesced_trans);
         }
+        /// <summary>Does the n senesced retranslocation.</summary>
+        /// <param name="navail">The navail.</param>
+        /// <param name="n_demand_tot">The n_demand_tot.</param>
         public override void DoNSenescedRetranslocation(double navail, double n_demand_tot)
         {
             dlt_n_senesced_retrans = navail * Utility.Math.Divide(NDemand, n_demand_tot, 0.0);
             Util.Debug("Root.dlt.n_senesced_retrans=%f", dlt_n_senesced_retrans);
         }
+        /// <summary>Does the n partition.</summary>
+        /// <param name="GrowthN">The growth n.</param>
         public override void DoNPartition(double GrowthN)
         {
             Growth.StructuralN = GrowthN;
         }
+        /// <summary>Does the n fix retranslocate.</summary>
+        /// <param name="NFixUptake">The n fix uptake.</param>
+        /// <param name="nFixDemandTotal">The n fix demand total.</param>
         public override void DoNFixRetranslocate(double NFixUptake, double nFixDemandTotal)
         {
             Growth.StructuralN += NFixUptake * Utility.Math.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
         }
+        /// <summary>Does the n conccentration limits.</summary>
         public override void DoNConccentrationLimits()
         {
             n_conc_crit = NConcentrationCritical;
@@ -396,10 +572,13 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.n_conc_min=%f", n_conc_min);
             Util.Debug("Root.n_conc_max=%f", n_conc_max);
         }
+        /// <summary>Zeroes the DLT n senesced trans.</summary>
         public override void ZeroDltNSenescedTrans()
         {
             dlt_n_senesced_trans = 0;
         }
+        /// <summary>Does the n uptake.</summary>
+        /// <param name="PotNFix">The pot n fix.</param>
         public override void DoNUptake(double PotNFix)
         {
             //if (SwimIsPresent)
@@ -453,15 +632,26 @@ namespace Models.PMF.OldPlant
 
 
         // cover
+        /// <summary>Gets or sets the cover green.</summary>
+        /// <value>The cover green.</value>
         [XmlIgnore]
         public override double CoverGreen { get { return 0; } protected set { } }
+        /// <summary>Gets or sets the cover sen.</summary>
+        /// <value>The cover sen.</value>
         [XmlIgnore]
         public override double CoverSen { get { return 0; } protected set { } }
+        /// <summary>Does the potential rue.</summary>
         public override void DoPotentialRUE() { }
+        /// <summary>Intercepts the radiation.</summary>
+        /// <param name="incomingSolarRadiation">The incoming solar radiation.</param>
+        /// <returns></returns>
         public override double interceptRadiation(double incomingSolarRadiation) { return 0; }
+        /// <summary>Does the cover.</summary>
         public override void DoCover() { }
 
         // update
+        /// <summary>Updates this instance.</summary>
+        /// <exception cref="System.Exception">Invalid root depth:  + RootDepth.ToString()</exception>
         public override void Update()
         {
             // send off detached roots before root structure is updated by plant death
@@ -521,10 +711,14 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Public interface specific to Root
+        /// <summary>Gets or sets the root depth.</summary>
+        /// <value>The root depth.</value>
         [XmlIgnore]
         [Units("mm")]
         public double RootDepth { get; set; }
 
+        /// <summary>Gets the root sw uptake.</summary>
+        /// <value>The root sw uptake.</value>
         [Units("mm")]
         public double[] RootSWUptake
         {
@@ -537,6 +731,8 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>Gets the sw avail ratio.</summary>
+        /// <value>The sw avail ratio.</value>
         public double SWAvailRatio
         {
             get
@@ -557,6 +753,8 @@ namespace Models.PMF.OldPlant
                     return 1.0;
             }
         }
+        /// <summary>Gets the wet root fraction.</summary>
+        /// <value>The wet root fraction.</value>
         public double WetRootFraction
         {
             get
@@ -574,6 +772,8 @@ namespace Models.PMF.OldPlant
                     return 0.0;
             }
         }
+        /// <summary>Gets the fasw layered.</summary>
+        /// <value>The fasw layered.</value>
         public double[] FASWLayered
         {
             get
@@ -587,6 +787,8 @@ namespace Models.PMF.OldPlant
                 return FASW;
             }
         }
+        /// <summary>Gets the fasw.</summary>
+        /// <value>The fasw.</value>
         public double FASW
         {
             get
@@ -612,14 +814,12 @@ namespace Models.PMF.OldPlant
                 return weighting_factor * fasw2 + (1.0 - weighting_factor) * fasw1;
             }
         }
-        /// <summary>
-        /// Root length density - needed by SWIM
-        /// </summary>
+        /// <summary>Root length density - needed by SWIM</summary>
+        /// <value>The root length density.</value>
         [Units("mm/mm^3")]
         public double[] RootLengthDensity { get { return Utility.Math.Divide(RootLength, Soil.SoilWater.dlayer); } }
-        /// <summary>
-        /// Calculate the extractable soil water in the root zone (mm).
-        /// </summary>
+        /// <summary>Calculate the extractable soil water in the root zone (mm).</summary>
+        /// <value>The esw in root zone.</value>
         internal double ESWInRootZone
         {
             get
@@ -632,9 +832,9 @@ namespace Models.PMF.OldPlant
             }
         }
 
-        /// <summary>
-        /// Return the index of the layer corresponding to the given depth
-        /// </summary>
+        /// <summary>Return the index of the layer corresponding to the given depth</summary>
+        /// <param name="depth">The depth.</param>
+        /// <returns></returns>
         internal int FindLayerNo(double depth)
         {
             int i;
@@ -701,9 +901,8 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.dltRootLengthSenesced=%f", Utility.Math.Sum(dltRootLengthSenesced));
         }
 
-        /// <summary>
-        /// Write a summary to the summary file.
-        /// </summary>
+        /// <summary>Write a summary to the summary file.</summary>
+        /// <param name="writer">The writer.</param>
         internal void WriteSummary(TextWriter writer)
         {
             writer.WriteLine();
@@ -737,9 +936,8 @@ namespace Models.PMF.OldPlant
                                             Conversions.fract2pcnt * Utility.Math.Divide(esw_tot, dep_tot, 0.0));
         }
 
-        /// <summary>
-        /// Remove biomass from the root system due to senescence or plant death
-        /// </summary>
+        /// <summary>Remove biomass from the root system due to senescence or plant death</summary>
+        /// <param name="Fraction">The fraction.</param>
         internal void RemoveBiomassFraction(double Fraction)
         {
             Biomass Dead;
@@ -761,6 +959,9 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -801,6 +1002,9 @@ namespace Models.PMF.OldPlant
             Util.ZeroArray(no3gsm_min);
             Util.ZeroArray(nh4gsm_min);
         }
+        /// <summary>Called when [prepare].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         public override void OnPrepare(object sender, EventArgs e)
         {
             Growth.Clear();
@@ -828,6 +1032,9 @@ namespace Models.PMF.OldPlant
             Util.ZeroArray(no3gsm_uptake_pot);
             Util.ZeroArray(nh4gsm_uptake_pot);
         }
+        /// <summary>Called when [harvest].</summary>
+        /// <param name="Harvest">The harvest.</param>
+        /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnHarvest(HarvestType Harvest, BiomassRemovedType BiomassRemoved)
         {
             Biomass Dead;
@@ -848,6 +1055,8 @@ namespace Models.PMF.OldPlant
             BiomassRemoved.dlt_dm_n[i] = 0.0F;
             BiomassRemoved.dlt_dm_p[i] = 0.0F;
         }
+        /// <summary>Called when [end crop].</summary>
+        /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnEndCrop(BiomassRemovedType BiomassRemoved)
         {
             DisposeDetachedMaterial(Live, RootLength);
@@ -856,6 +1065,8 @@ namespace Models.PMF.OldPlant
             Live.Clear();
         }
 
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="PhenologyChange">The phenology change.</param>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(PhaseChangedType PhenologyChange)
         {
@@ -887,9 +1098,9 @@ namespace Models.PMF.OldPlant
 
         #region Private functionality
 
-        /// <summary>
-        /// Dispose of detached material from dead & senesced roots into FOM pool
-        /// </summary>
+        /// <summary>Disposes the detached material.</summary>
+        /// <param name="BiomassToDisposeOf">The biomass to dispose of.</param>
+        /// <param name="RootLength">Length of the root.</param>
         private void DisposeDetachedMaterial(Biomass BiomassToDisposeOf, double[] RootLength)
         {
             if (BiomassToDisposeOf.Wt > 0.0)
@@ -932,10 +1143,12 @@ namespace Models.PMF.OldPlant
 
         /// <summary>
         /// Calculate a modified KL value as per:
-        ///    Hochman et. al. (2007) Simulating the effects of saline and sodic subsoils on wheat
-        ///       crops growing on Vertosols. Australian Journal of Agricultural Research, 58, 802–810
+        /// Hochman et. al. (2007) Simulating the effects of saline and sodic subsoils on wheat
+        /// crops growing on Vertosols. Australian Journal of Agricultural Research, 58, 802–810
         /// Will use one of CL, ESP and EC in that order to modified KL.
         /// </summary>
+        /// <param name="i">The i.</param>
+        /// <returns></returns>
         private double getModifiedKL(int i)
         {
             if (ModifyKL)
@@ -959,9 +1172,7 @@ namespace Models.PMF.OldPlant
                 return kl[i];
         }
 
-        /// <summary>
-        /// Return potential available soil water from each layer in the root zone.
-        /// </summary>
+        /// <summary>Return potential available soil water from each layer in the root zone.</summary>
         private void DoPotentialExtractableSW()
         {
             Util.ZeroArray(sw_avail_pot);
@@ -1019,9 +1230,8 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.sw_supply[deepest_layer]=%f", sw_supply[deepest_layer]);
         }
 
-        /// <summary>
-        /// Calculate todays daily water uptake by this root system
-        /// </summary>
+        /// <summary>Calculate todays daily water uptake by this root system</summary>
+        /// <param name="sw_demand">The sw_demand.</param>
         private void DoWaterUptakeInternal(double sw_demand)
         {
             int deepest_layer = FindLayerNo(RootDepth);
@@ -1060,13 +1270,16 @@ namespace Models.PMF.OldPlant
 
         /// <summary>
         /// Returns the proportion of layer that has roots in it (0-1).
-        ///     Each element of "dlayr" holds the height of  the
-        ///     corresponding soil layer.  The height of the top layer is
-        ///     held in "dlayr"(1), and the rest follow in sequence down
-        ///     into the soil profile.  Given a root depth of "root_depth",
-        ///     this function will return the proportion of "dlayr"("layer")
-        ///     which has roots in it  (a value in the range 0..1).
+        /// Each element of "dlayr" holds the height of  the
+        /// corresponding soil layer.  The height of the top layer is
+        /// held in "dlayr"(1), and the rest follow in sequence down
+        /// into the soil profile.  Given a root depth of "root_depth",
+        /// this function will return the proportion of "dlayr"("layer")
+        /// which has roots in it  (a value in the range 0..1).
         /// </summary>
+        /// <param name="layer">The layer.</param>
+        /// <param name="RootDepth">The root depth.</param>
+        /// <returns></returns>
         private double RootProportion(int layer, double RootDepth)
         {
             double depth_to_layer_bottom = Utility.Math.Sum(Soil.SoilWater.dlayer, 0, layer + 1, 0.0);
@@ -1080,6 +1293,9 @@ namespace Models.PMF.OldPlant
         /// Distribute root material over profile based upon root
         /// length distribution.
         /// </summary>
+        /// <param name="root_sum">The root_sum.</param>
+        /// <param name="RootLength">Length of the root.</param>
+        /// <returns></returns>
         private double[] RootDist(double root_sum, double[] RootLength)
         {
             int deepest_layer = FindLayerNo(RootDepth);
@@ -1092,9 +1308,9 @@ namespace Models.PMF.OldPlant
             return RootArray;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>WFPSs the specified layer.</summary>
+        /// <param name="layer">The layer.</param>
+        /// <returns></returns>
         private double WFPS(int layer)
         {
             double wfps = Utility.Math.Divide(Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer],
@@ -1102,9 +1318,7 @@ namespace Models.PMF.OldPlant
             return Utility.Math.Constrain(wfps, 0.0, 1.0);
         }
 
-        /// <summary>
-        /// Update the water and N balance.
-        /// </summary>
+        /// <summary>Update the water and N balance.</summary>
         private void UpdateWaterAndNBalance()
         {
             NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
@@ -1131,7 +1345,11 @@ namespace Models.PMF.OldPlant
 
 
         #region Grazing
+        /// <summary>Gets the available to animal.</summary>
+        /// <value>The available to animal.</value>
         public override AvailableToAnimalelementType[] AvailableToAnimal { get { return null; } }
+        /// <summary>Sets the removed by animal.</summary>
+        /// <value>The removed by animal.</value>
         public override RemovedByAnimalType RemovedByAnimal { set { } }
         #endregion
     }

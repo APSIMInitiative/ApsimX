@@ -8,14 +8,22 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// Linear interpolation function
+    /// </summary>
     [Serializable]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
     public class LinearInterpolationFunction : Function
     {
+        /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
+        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <value>The xy pairs.</value>
         public XYPairs XYPairs { get; set; }
+        /// <summary>The x property</summary>
         public string XProperty = "";
 
+        /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
@@ -33,6 +41,9 @@ namespace Models.PMF.Functions
             }
         }
 
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
         public override double Value
         {
             get
@@ -50,11 +61,17 @@ namespace Models.PMF.Functions
             }
         }
 
+        /// <summary>Values for x.</summary>
+        /// <param name="XValue">The x value.</param>
+        /// <returns></returns>
         public double ValueForX(double XValue)
         {
             return XYPairs.ValueIndexed(XValue);
         }
 
+        /// <summary>Gets the values.</summary>
+        /// <value>The values.</value>
+        /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
         public override double[] Values
         {
             get

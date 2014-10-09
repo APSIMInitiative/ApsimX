@@ -7,23 +7,20 @@ using System.IO;
 
 namespace Models.PMF.Phen
 {
-	/// <summary>
-	/// Generic phase in phenology
-	/// </summary>
-	/// \param Target The thermal time target in this phase.
-	/// <remarks>
-	/// Generic phase increments daily thermal time accumulated in this phase
-	/// to met the \p Target.
-	/// The remainder thermal time will pass into the first day of 
-	/// next phase by \ref Models.PMF.Phen.Phenology "Phenology" 
-	/// function if the phase target is met today.
-	/// </remarks>
+    /// <summary>
+    /// Generic phase in phenology
+    /// </summary>
+    /// \param Target The thermal time target in this phase.
+    /// <remarks>
+    /// Generic phase increments daily thermal time accumulated in this phase
+    /// to met the \p Target.
+    /// The remainder thermal time will pass into the first day of 
+    /// next phase by \ref Models.PMF.Phen.Phenology "Phenology" 
+    /// function if the phase target is met today.
+    /// </remarks>
     [Serializable]
     public class GenericPhase : Phase
     {
-        [Link]
-        ISummary Summary = null;
-
         [Link(IsOptional=true)]
         private Function Target = null;
 
@@ -67,7 +64,9 @@ namespace Models.PMF.Phen
                 throw new Exception("Cannot find target for phase: " + Name);
             return Target.Value;
         }
-        // Return proportion of TT unused
+        /// <summary>Return proportion of TT unused</summary>
+        /// <param name="PropOfDayToUse">The property of day to use.</param>
+        /// <returns></returns>
         public override double AddTT(double PropOfDayToUse)
         {
             _TTinPhase += ThermalTime.Value * PropOfDayToUse;

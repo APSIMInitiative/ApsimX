@@ -8,17 +8,25 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// Population model for old plant
+    /// </summary>
     [Serializable]
     public class Population1 : Model
     {
+        /// <summary>The plant</summary>
         [Link]
         Plant15 Plant = null;
 
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
 
+        /// <summary>The _ plants</summary>
         double _Plants;
 
+        /// <summary>Gets or sets the density.</summary>
+        /// <value>The density.</value>
         public double Density
         {
             get
@@ -31,50 +39,79 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>Called when [sow].</summary>
+        /// <param name="Sow">The sow.</param>
         public void OnSow(SowPlant2Type Sow)
         {
             _Plants = Sow.Population;
         }
 
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The sw stress</summary>
         [Link]
         SWStress SWStress = null;
 
+        /// <summary>The leaf</summary>
         [Link]
         Leaf1 Leaf = null;
 
+        /// <summary>The crop failure stress period</summary>
         [Link] Function CropFailureStressPeriod = null;
+        /// <summary>The death high temperature during emergence</summary>
         [Link] Function DeathHighTemperatureDuringEmergence = null;
 
+        /// <summary>Gets or sets the leaf number critical.</summary>
+        /// <value>The leaf number critical.</value>
         public double LeafNumberCritical { get; set; }
 
+        /// <summary>Gets or sets the tt emergence limit.</summary>
+        /// <value>The tt emergence limit.</value>
         public double TTEmergenceLimit { get; set; }
 
+        /// <summary>Gets or sets the days to germination limit.</summary>
+        /// <value>The days to germination limit.</value>
         public double DaysToGerminationLimit { get; set; }
 
+        /// <summary>Gets or sets the sw stress pheno limit.</summary>
+        /// <value>The sw stress pheno limit.</value>
         public double SWStressPhenoLimit { get; set; }
 
+        /// <summary>Gets or sets the sw stress photo limit.</summary>
+        /// <value>The sw stress photo limit.</value>
         public double SWStressPhotoLimit { get; set; }
 
+        /// <summary>Gets or sets the sw stress photo rate.</summary>
+        /// <value>The sw stress photo rate.</value>
         public double SWStressPhotoRate { get; set; }
 
+        /// <summary>The das</summary>
         private int das;
+        /// <summary>The dlt_plants_failure_germ</summary>
         private double dlt_plants_failure_germ;
+        /// <summary>The dlt_plants_failure_emergence</summary>
         private double dlt_plants_failure_emergence;
+        /// <summary>The dlt_plants_death_seedling</summary>
         private double dlt_plants_death_seedling;
+        /// <summary>The dlt_plants_failure_leaf_sen</summary>
         private double dlt_plants_failure_leaf_sen;
+        /// <summary>The dlt_plants_failure_phen_delay</summary>
         private double dlt_plants_failure_phen_delay;
+        /// <summary>The dlt_plants_death_drought</summary>
         private double dlt_plants_death_drought;
+        /// <summary>The dlt_plants</summary>
         private double dlt_plants;
+        /// <summary>The cum sw stress pheno</summary>
         private double CumSWStressPheno = 0;
+        /// <summary>The cum sw stress photo</summary>
         private double CumSWStressPhoto = 0;
+        /// <summary>The dlt_plants_death_external</summary>
         private double dlt_plants_death_external;
 
-        /// <summary>
-        /// This is only called from a Plant1 process method - not used in Plant2.
-        /// </summary>
+        /// <summary>This is only called from a Plant1 process method - not used in Plant2.</summary>
+        /// <returns></returns>
         internal bool PlantDeath()
         {
             das++;
@@ -129,6 +166,7 @@ namespace Models.PMF.OldPlant
             return false;
         }
 
+        /// <summary>Updates this instance.</summary>
         internal void Update()
         {
             if (CropFailureStressPeriod.Value == 1)
@@ -140,9 +178,8 @@ namespace Models.PMF.OldPlant
             Util.Debug("Population.Density=%f", Density);
         }
 
-        /// <summary>
-        /// Crop failure from lack of germination within a specific maximum number of days.
-        /// </summary>
+        /// <summary>Crop failure from lack of germination within a specific maximum number of days.</summary>
+        /// <returns></returns>
         private double CropFailureGermination()
         {
             if (das >= DaysToGerminationLimit)
@@ -159,6 +196,7 @@ namespace Models.PMF.OldPlant
         /// Crop failure from lack of emergence within a specific maximum
         /// thermal time sum from germination.
         /// </summary>
+        /// <returns></returns>
         private double CropFailureEmergence()
         {
             if (Phenology.CurrentPhase is GerminatingPhase && Phenology.CurrentPhase.TTinPhase > TTEmergenceLimit)
@@ -169,9 +207,8 @@ namespace Models.PMF.OldPlant
             return 0.0;
         }
 
-        /// <summary>
-        /// Determine plant death from prolonged phenology delay.
-        /// </summary>
+        /// <summary>Determine plant death from prolonged phenology delay.</summary>
+        /// <returns></returns>
         private double CropFailurePhenDelay()
         {
             if (CumSWStressPheno >= SWStressPhenoLimit)
@@ -182,9 +219,8 @@ namespace Models.PMF.OldPlant
             return 0.0;
         }
 
-        /// <summary>
-        /// Determine plant population death from leaf area senescing
-        /// </summary>
+        /// <summary>Determine plant population death from leaf area senescing</summary>
+        /// <returns></returns>
         private double CropFailureLeafSen()
         {
             double leaf_area = Utility.Math.Divide(Leaf.LAI, Density, 0.0); // leaf area per plant
@@ -197,9 +233,8 @@ namespace Models.PMF.OldPlant
             return 0.0;
         }
 
-        /// <summary>
-        /// Determine seedling death rate due to high soil temperatures during emergence.
-        /// </summary>
+        /// <summary>Determine seedling death rate due to high soil temperatures during emergence.</summary>
+        /// <returns></returns>
         private double DeathSeedling()
         {
             // Calculate fraction of plants killed by high temperature
@@ -216,9 +251,8 @@ namespace Models.PMF.OldPlant
             return dlt_plants;
         }
 
-        /// <summary>
-        /// Determine plant death rate due to drought
-        /// </summary>
+        /// <summary>Determine plant death rate due to drought</summary>
+        /// <returns></returns>
         private double DeathDrought()
         {
             double killfr;                                 // fraction of crop population to kill
@@ -240,9 +274,7 @@ namespace Models.PMF.OldPlant
             return dlt_plants;
         }
 
-        /// <summary>
-        /// Determine plant death rate due to a range of given processes
-        /// </summary>
+        /// <summary>Determine plant death rate due to a range of given processes</summary>
         private void DeathActual()
         {
             // dlt's are negative so take minimum.
@@ -258,6 +290,8 @@ namespace Models.PMF.OldPlant
         }
 
 
+        /// <summary>Gets the dying fraction plants.</summary>
+        /// <value>The dying fraction plants.</value>
         public double DyingFractionPlants
         {
             get
@@ -267,6 +301,8 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>Kills the crop.</summary>
+        /// <param name="KillFraction">The kill fraction.</param>
 public void KillCrop(double KillFraction)
 //=======================================================================================
 // Event Handler for Kill Crop Event

@@ -5,16 +5,23 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// An air temperature function
+    /// </summary>
     [Serializable]
     [Description("A value is calculated from the mean of 3-hourly estimates of air temperature calculated from daily max and min temperatures")]
     public class AirTemperatureFunction : Function
     {
         #region Class Data Members
+        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <value>The xy pairs.</value>
         public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
 
         #endregion
 
-        
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
         [Units("deg.day")]
         public override double Value
         {
@@ -24,6 +31,11 @@ namespace Models.PMF.Functions
                 return Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
             }
         }
+        /// <summary>Linint3hrlies the temporary.</summary>
+        /// <param name="tmax">The tmax.</param>
+        /// <param name="tmin">The tmin.</param>
+        /// <param name="ttFn">The tt function.</param>
+        /// <returns></returns>
         static public double Linint3hrlyTemp(double tmax, double tmin, XYPairs ttFn)
         {
             // --------------------------------------------------------------------------
@@ -49,6 +61,16 @@ namespace Models.PMF.Functions
             return tot / (double)num3hr;
         }
 
+        /// <summary>Temp_3hrs the specified tmax.</summary>
+        /// <param name="tmax">The tmax.</param>
+        /// <param name="tmin">The tmin.</param>
+        /// <param name="period">The period.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">
+        /// 3 hr. period number is below 1
+        /// or
+        /// 3 hr. period number is above 8
+        /// </exception>
         static private double temp_3hr(double tmax, double tmin, int period)
         {
             // --------------------------------------------------------------------------

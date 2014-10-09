@@ -29,6 +29,7 @@ namespace Models
         /// <summary>
         /// A reference to the text file reader object
         /// </summary>
+        [NonSerialized]
         private Utility.ApsimTextFile reader = null;
 
         /// <summary>
@@ -99,35 +100,15 @@ namespace Models
             get
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-
-               // return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
-                    
-                string fullFileName = this.FileName;
-                if (this.FileName != null && simulation != null && simulation.FileName != null && Path.GetFullPath(this.FileName) != this.FileName)
-                {
-                    //fullFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), this.FileName);
-                    if (!File.Exists(fullFileName))
-                    {
-                        fullFileName = Utility.PathUtils.GetAbsolutePath(fullFileName, simulation.FileName);
-                    }
-                }
-
-                return fullFileName;
+                if (simulation == null)
+                    return null;
+                return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
             }
 
             set
             {
-                this.FileName = Utility.PathUtils.OSFilePath(value);
-                this.reader = null; // ensure it is reopened
-                // try and convert to path relative to the Simulations.FileName or ApsimX install directory.
-                if (this.FileName != null)
-                {
-                    Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                    if (simulation != null && simulation.FileName != null)
-                    {
-                        this.FileName = Utility.PathUtils.GetRelativePath(value, simulation.FileName);
-                    }
-                }
+                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                this.FileName = Utility.PathUtils.GetRelativePath(value, simulation.FileName);
             }
         }
 

@@ -9,83 +9,93 @@ using Models.Core;
 
 namespace Models.Soils
 {
-    /// <summary>
-    /// A class representing a root system.
-    /// </summary>
+    /// <summary>A class representing a root system.</summary>
     [Serializable]
     public class RootSystem
     {
+        /// <summary>The crop</summary>
         public ICrop Crop;
+        /// <summary>The root zones</summary>
         public List<RootZone> RootZones;
+        /// <summary>Gets or sets the uptake.</summary>
+        /// <value>The uptake.</value>
         public double[] Uptake { get; set; }
 
 
     }
 
-    /// <summary>
-    /// A class representing a root zone in a field
-    /// </summary>
+    /// <summary>A class representing a root zone in a field</summary>
     public class RootZone
     {
-        /// <summary>
-        /// The parent root system
-        /// </summary>
+        /// <summary>The parent root system</summary>
         [NonSerialized]
         public RootSystem Parent;
-        /// <summary>
-        /// Name of the plant that owns this root zone.
-        /// </summary>
+        /// <summary>Name of the plant that owns this root zone.</summary>
         public string Name;
-        /// <summary>
-        /// The field/zone this root zone is in.
-        /// </summary>
+        /// <summary>The field/zone this root zone is in.</summary>
         public Zone Zone;
-        /// <summary>
-        /// Reference to the soil in the Zone for convienience.
-        /// </summary>
+        /// <summary>Reference to the soil in the Zone for convienience.</summary>
         public Soil Soil;
-        /// <summary>
-        /// Depth of the roots.
-        /// </summary>
+        /// <summary>Depth of the roots.</summary>
         public double RootDepth;
-        /// <summary>
-        /// Root length density
-        /// </summary>
+        /// <summary>Root length density</summary>
         public double RootLengthDensity;
-        /// <summary>
-        /// An array that holds the potential sw uptake per soil layer.
-        /// </summary>
+        /// <summary>An array that holds the potential sw uptake per soil layer.</summary>
         public double[] PotSWUptake;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class UptakeInfo
     {
+        /// <summary>The zone</summary>
         public Zone Zone;
+        /// <summary>The plant</summary>
         public ICrop Plant;
+        /// <summary>The sw dep</summary>
         public double[] SWDep;
+        /// <summary>The uptake</summary>
         public double[] Uptake;
+        /// <summary>The strength</summary>
         public double Strength;
     }
 
+    /// <summary>
+    /// A soil arbitrator model
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilArbitrator : Model
     {
+        /// <summary>The simulation</summary>
         [Link]
-        Simulation Simulation;
+        Simulation Simulation = null;
+        /// <summary>The summary file</summary>
         [Link]
-        Summary SummaryFile;
+        Summary SummaryFile = null;
+        /// <summary>The root systems</summary>
         List<RootSystem> RootSystems;
+        /// <summary>The root zones</summary>
         List<RootZone> RootZones;
+        /// <summary>The zones</summary>
         List<Zone> Zones;
 
         // Initialize IFormatProvider to print matrix/vector data (debug - allows matrices to be printed properly)
+        /// <summary>The format provider</summary>
         CultureInfo formatProvider = (CultureInfo)CultureInfo.InvariantCulture.Clone();
 
         /// <summary>
         /// The following event handler will be called once at the beginning of the simulation
         /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">
+        /// Could not find zone  + zone
+        /// or
+        /// Could not find soil in zone  + zone
+        /// </exception>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -129,6 +139,10 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Called when [do soil arbitration].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">Calculating Euler integration. Number of UptakeSums different to expected value of iterations.</exception>
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoSoilArbitration(object sender, EventArgs e)
         {
@@ -217,9 +231,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Calculate how deep roots are in a given layer as a proportion of the layer depth.
-        /// </summary>
+        /// <summary>Calculate how deep roots are in a given layer as a proportion of the layer depth.</summary>
         /// <param name="layer">Layer number</param>
         /// <param name="root_depth">Depth of the roots</param>
         /// <param name="dlayer">Array of layer depths</param>
@@ -240,12 +252,9 @@ namespace Models.Soils
             return depth_of_root_in_layer / dlayer[layer];
         }
 
-        /// <summary>
-        /// Calculate the deepest layer containing roots.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="root_depth"></param>
-        /// <param name="dlayer"></param>
+        /// <summary>Calculate the deepest layer containing roots.</summary>
+        /// <param name="root_depth">The root_depth.</param>
+        /// <param name="dlayer">The dlayer.</param>
         /// <returns>The index of the deepest layer containing roots</returns>
         private int CalcMaxRootLayer(double root_depth, double[] dlayer)
         {
@@ -260,6 +269,10 @@ namespace Models.Soils
             return dlayer.Length; //bottom layer
         }
 
+        /// <summary>Gets the root zones in current field.</summary>
+        /// <param name="rz">The rz.</param>
+        /// <param name="Name">The name.</param>
+        /// <returns></returns>
         private List<RootZone> GetRootZonesInCurrentField(List<RootZone> rz, string Name)
         {
             IEnumerable<RootZone> output = rz.AsEnumerable().Where(x => x.Zone.Name.Equals(Name));

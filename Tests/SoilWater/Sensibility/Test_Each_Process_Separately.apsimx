@@ -209,6 +209,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -218,11 +223,6 @@
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -309,23 +309,23 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0334172069194854</double>
-            <double>0.88684622912438249</double>
-            <double>0.88864483128485849</double>
-            <double>0.88949567045642886</double>
-            <double>0.76982785636157947</double>
-            <double>0.44991999536596339</double>
-            <double>0.26996427746236185</double>
-            <double>0.2199724015062417</double>
-            <double>0.15998244433468359</double>
-            <double>0.12998624110174206</double>
-            <double>0.11998637401102774</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -356,17 +356,17 @@
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -732,6 +732,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -741,11 +746,6 @@
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -832,23 +832,23 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.86200391721761394</double>
-            <double>0.78893271010918842</double>
-            <double>0.84328566026740448</double>
-            <double>0.86747997529352339</double>
-            <double>0.76085666183182943</double>
-            <double>0.44472978276012481</double>
-            <double>0.26706129554750724</double>
-            <double>0.21756996473754411</double>
-            <double>0.15835113319866206</double>
-            <double>0.12862993658754054</double>
-            <double>0.11886505030047656</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -879,17 +879,17 @@
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -971,7 +971,7 @@
           <string>[Clock].Today</string>
           <string>[WeatherFile].Rain as rain</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[Soil].SoilWater.es as es</string>
@@ -1255,6 +1255,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -1264,11 +1269,6 @@
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -1355,23 +1355,23 @@
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.93641407974538193</double>
-            <double>0.83318566302478525</double>
-            <double>0.86334045922939406</double>
-            <double>0.87760440254907934</double>
-            <double>0.764884916995543</double>
-            <double>0.44728760869389833</double>
-            <double>0.26847203095916544</double>
-            <double>0.21879178037196984</double>
-            <double>0.15914602419461285</double>
-            <double>0.12932815236147807</double>
-            <double>0.11939638753785062</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -1402,17 +1402,17 @@
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -1495,8 +1495,8 @@
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-          <string>[Soil].SoilWater.flux as flux</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.es as es</string>
         </VariableNames>
@@ -1810,6 +1810,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -1819,11 +1824,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -1910,23 +1910,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0321043593961112</double>
-            <double>0.88311812362193887</double>
-            <double>0.88703710392703128</double>
-            <double>0.88878155520042568</double>
-            <double>0.76952368726319853</double>
-            <double>0.44974343120373678</double>
-            <double>0.26985916274117694</double>
-            <double>0.21988741160509945</double>
-            <double>0.15992111673955498</double>
-            <double>0.12993665997696177</double>
-            <double>0.11994064054328442</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -1957,17 +1957,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -2047,7 +2047,7 @@ namespace Models
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
-          <string>[Soil].SoilWater.flux as flux</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[WeatherFile].Rain as rain</string>
@@ -2059,7 +2059,7 @@ namespace Models
           <string>[Soil].SoilWater.es as es</string>
           <string>[Soil].SoilWater.eo as eo</string>
           <string>[Soil].SoilWater.eos as eos</string>
-          <string>[Soil].SoilWater.sw_dep(1) as sw_top</string>
+          <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
           <string>[WeatherFile].Radn as radn</string>
           <string>[AvgTempCalculation].Script.avgTemp as avgTemp</string>
         </VariableNames>
@@ -2342,6 +2342,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -2351,11 +2356,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -2442,23 +2442,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0371134022328363</double>
-            <double>0.88905961100948394</double>
-            <double>0.889820903177376</double>
-            <double>0.88995308656653616</double>
-            <double>0.76999397590168861</double>
-            <double>0.45000053413299684</double>
-            <double>0.27000300563380691</double>
-            <double>0.22000157234688778</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -2489,17 +2489,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -2617,11 +2617,11 @@ namespace Models
           <string>[Soil].SoilWater.pond as pond</string>
           <string>[calculate total_pond].Script.total_pond as total_pond</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
-          <string>[Soil].SoilWater.sw_dep(1-3) as sw_top</string>
+          <string>[Soil].SoilWater.sw_dep[1:3] as sw_top</string>
           <string>[Soil].SoilWater.es as es</string>
           <string>[Soil].SoilWater.drain as drain</string>
-          <string>[Soil].SoilWater.flux as flux</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
         </VariableNames>
         <EventNames>
@@ -2903,6 +2903,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -2912,11 +2917,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -3003,23 +3003,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0349252457347158</double>
-            <double>0.88928630837107792</double>
-            <double>0.88984649145221484</double>
-            <double>0.8899605979776698</double>
-            <double>0.76999812967412851</double>
-            <double>0.45000220774690652</double>
-            <double>0.27000296766164378</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -3050,17 +3050,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -3180,10 +3180,10 @@ namespace Models
           <string>[Soil].SoilWater.pond as pond</string>
           <string>[calculate total_pond].Script.total_pond as total_pond</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
-          <string>[Soil].SoilWater.sw_dep(1-3) as sw_top</string>
+          <string>[Soil].SoilWater.sw_dep[1:3] as sw_top</string>
           <string>[Soil].SoilWater.drain as drain</string>
-          <string>[Soil].SoilWater.flux as flux</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
         </VariableNames>
         <EventNames>
@@ -3462,6 +3462,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -3471,11 +3476,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -3705,8 +3705,8 @@ namespace Models
           <string>[Soil].SoilWater.water_table as water_table</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.es as es</string>
-          <string>[Soil].SoilWater.flux as flux</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3984,6 +3984,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -3993,11 +3998,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -4084,23 +4084,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0367149320893714</double>
-            <double>0.88847207601241518</double>
-            <double>0.88934214063751</double>
-            <double>0.88976813986471548</double>
-            <double>0.76993034521714676</double>
-            <double>0.44997044356956795</double>
-            <double>0.26998896194025396</double>
-            <double>0.21999037062701127</double>
-            <double>0.15999380401244132</double>
-            <double>0.12999464017178353</double>
-            <double>0.11999383620304074</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -4131,17 +4131,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -4224,7 +4224,7 @@ namespace Models
           <string>[WeatherFile].Rain as rain</string>
           <string>[Soil].SoilWater.outflow_lat as outflow_lat</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-          <string>[Soil].SoilWater.flux as flux</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[Soil].SoilWater.es as es</string>
@@ -4536,6 +4536,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>6</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -4545,11 +4550,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -4636,23 +4636,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.0321989998541827</double>
-            <double>0.88311812362193887</double>
-            <double>0.88703710392703128</double>
-            <double>0.88878155520042568</double>
-            <double>0.76952368726319853</double>
-            <double>0.44974343120373678</double>
-            <double>0.26985916274117694</double>
-            <double>0.21988741160509945</double>
-            <double>0.15992111673955498</double>
-            <double>0.12993665997696177</double>
-            <double>0.11994064054328442</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -4683,17 +4683,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -4812,7 +4812,7 @@ namespace Models
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
-          <string>[Soil].SoilWater.flux as flux</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[WeatherFile].Rain as rain</string>
@@ -4825,7 +4825,7 @@ namespace Models
           <string>[Soil].SoilWater.es as es</string>
           <string>[Soil].SoilWater.eo as eo</string>
           <string>[Soil].SoilWater.eos as eos</string>
-          <string>[Soil].SoilWater.sw_dep(1) as sw_top</string>
+          <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
           <string>[WeatherFile].Radn as radn</string>
           <string>[AvgTempCalculation].Script.avgTemp as avgTemp</string>
         </VariableNames>
@@ -5066,6 +5066,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -5075,11 +5080,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
@@ -5166,23 +5166,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.94983418152123689</double>
-            <double>0.83316027578526064</double>
-            <double>0.86331478213110191</double>
-            <double>0.87758479994141436</double>
-            <double>0.76486683661813681</double>
-            <double>0.4471158804970447</double>
-            <double>0.26833084519700223</double>
-            <double>0.21867673919239619</double>
-            <double>0.15906209280434527</double>
-            <double>0.1292759028405269</double>
-            <double>0.11937629522405582</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -5213,17 +5213,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -5346,8 +5346,8 @@ namespace Models
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-          <string>[Soil].SoilWater.flux as flux</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.es as es</string>
         </VariableNames>
@@ -5588,6 +5588,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>0</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -5597,11 +5602,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -5688,23 +5688,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.93640725451900453</double>
-            <double>0.8331773286800902</double>
-            <double>0.86333106682858474</double>
-            <double>0.87759069432695147</double>
-            <double>0.7648752294188782</double>
-            <double>0.44690140872919476</double>
-            <double>0.26846442858745884</double>
-            <double>0.21879010111572214</double>
-            <double>0.15913977903183577</double>
-            <double>0.12932905544688167</double>
-            <double>0.11938730190923744</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -5735,17 +5735,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -5880,8 +5880,8 @@ namespace Models
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-          <string>[Soil].SoilWater.flux as flux</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.es as es</string>
         </VariableNames>
@@ -6161,6 +6161,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -6170,11 +6175,6 @@ namespace Models
           <DiffusConst>0</DiffusConst>
           <DiffusSlope>0</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>73</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -6261,23 +6261,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>0.93639286062822413</double>
-            <double>0.83315946686788322</double>
-            <double>0.8633204624431684</double>
-            <double>0.877594610223639</double>
-            <double>0.76487065887413741</double>
-            <double>0.4471159895174347</double>
-            <double>0.26832749302276643</double>
-            <double>0.21867330083129269</double>
-            <double>0.15906036695949544</double>
-            <double>0.12925228932998575</double>
-            <double>0.1193216421887628</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -6308,17 +6308,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -6439,8 +6439,8 @@ namespace Models
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-          <string>[Soil].SoilWater.flux as flux</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flux2 as flux</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.es as es</string>
         </VariableNames>
@@ -6723,6 +6723,11 @@ namespace Models
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>0</SummerCona>
           <SummerU>0</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -6732,11 +6737,6 @@ namespace Models
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>1</CN2Bare>
           <CNRed>0</CNRed>
           <CNCov>0</CNCov>
@@ -6823,23 +6823,23 @@ namespace Models
             <double>1</double>
           </wfpsN2N2O_y>
           <oc>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
           <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
+          <RootWt>0</RootWt>
           <SoilCN>12.5</SoilCN>
           <EnrACoeff>7.4</EnrACoeff>
           <EnrBCoeff>0.2</EnrBCoeff>
@@ -6870,17 +6870,17 @@ namespace Models
             <string>270-300</string>
           </Depth>
           <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
           </OC>
           <FBiom>
             <double>0.025</double>
@@ -7173,7 +7173,7 @@ namespace Models
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[WeatherFile].Rain as rain</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-          <string>[Soil].SoilWater.flow as flow</string>
+          <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[Soil].SoilWater.es as es</string>
@@ -7459,6 +7459,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>0</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>0</SummerCona>
             <SummerU>0</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -7468,11 +7473,6 @@ namespace Models
             <DiffusConst>0</DiffusConst>
             <DiffusSlope>0</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>1</CN2Bare>
             <CNRed>0</CNRed>
             <CNCov>0</CNCov>
@@ -7697,7 +7697,7 @@ namespace Models
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
             <string>[WeatherFile].Rain as rain</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-            <string>[Soil].SoilWater.flux as flux</string>
+            <string>[Soil].SoilWater.flux2 as flux</string>
             <string>[Soil].SoilWater.drain as drain</string>
             <string>[Soil].SoilWater.runoff as runoff</string>
             <string>[Soil].SoilWater.es as es</string>
@@ -7989,6 +7989,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>0</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>0</SummerCona>
             <SummerU>0</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -7998,11 +8003,6 @@ namespace Models
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>1</CN2Bare>
             <CNRed>0</CNRed>
             <CNCov>0</CNCov>
@@ -8227,7 +8227,7 @@ namespace Models
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
             <string>[WeatherFile].Rain as rain</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-            <string>[Soil].SoilWater.flux as flux</string>
+            <string>[Soil].SoilWater.flux2 as flux</string>
             <string>[Soil].SoilWater.drain as drain</string>
             <string>[Soil].SoilWater.runoff as runoff</string>
             <string>[Soil].SoilWater.es as es</string>
@@ -8521,6 +8521,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>0</SummerCona>
             <SummerU>0</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -8530,11 +8535,6 @@ namespace Models
             <DiffusConst>0</DiffusConst>
             <DiffusSlope>0</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -8774,16 +8774,16 @@ namespace Models
             <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
-            <string>[Soil].SoilWater.flux as flux</string>
-            <string>[Soil].SoilWater.flow as flow</string>
+            <string>[Soil].SoilWater.flux2 as flux</string>
+            <string>[Soil].SoilWater.flow2 as flow</string>
             <string>[Soil].SoilWater.drain as drain</string>
             <string>[Soil].SoilWater.es as es</string>
             <string>[Clock].Today</string>
             <string>Irrigation.irrigation</string>
-            <string>[Soil].SoilWater.sw_dep(1) as sw_top</string>
-            <string>[Soil].SoilNitrogen.no3(1) as no3_top</string>
-            <string>[Soil].SoilNitrogen.nh4(1) as nh4_top</string>
-            <string>cl(1) as cl_top</string>
+            <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
+            <string>[Soil].SoilNitrogen.no3[1] as no3_top</string>
+            <string>[Soil].SoilNitrogen.nh4[1] as nh4_top</string>
+            <string>cl[1] as cl_top</string>
             <string>[Soil].SoilNitrogen.no3 as no3</string>
             <string>[Soil].SoilNitrogen.nh4 as nh4</string>
             <string>cl</string>
@@ -9067,6 +9067,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>0</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>0</SummerCona>
             <SummerU>0</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -9076,11 +9081,6 @@ namespace Models
             <DiffusConst>0</DiffusConst>
             <DiffusSlope>0</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>1</CN2Bare>
             <CNRed>0</CNRed>
             <CNCov>0</CNCov>
@@ -9167,23 +9167,23 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.0396928223542268</double>
-              <double>0.88987671070166685</double>
-              <double>0.88994830359327048</double>
-              <double>0.88998458827512383</double>
-              <double>0.76999684858193318</double>
-              <double>0.4499991414507078</double>
-              <double>0.26999996349746436</double>
-              <double>0.21999976662642334</double>
-              <double>0.15999982809193492</double>
-              <double>0.12999978749363253</double>
-              <double>0.11999972346997288</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
             <RootCN>40</RootCN>
-            <RootWt>200</RootWt>
+            <RootWt>0</RootWt>
             <SoilCN>12.5</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -9214,17 +9214,17 @@ namespace Models
               <string>270-300</string>
             </Depth>
             <OC>
-              <double>1.04</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.77</double>
-              <double>0.45</double>
-              <double>0.27</double>
-              <double>0.22</double>
-              <double>0.16</double>
-              <double>0.13</double>
-              <double>0.12</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </OC>
             <FBiom>
               <double>0.025</double>
@@ -9724,6 +9724,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>0</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>0</SummerCona>
             <SummerU>0</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -9733,11 +9738,6 @@ namespace Models
             <DiffusConst>0</DiffusConst>
             <DiffusSlope>0</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>50</CN2Bare>
             <CNRed>30</CNRed>
             <CNCov>0.5</CNCov>
@@ -9824,23 +9824,23 @@ namespace Models
               <double>1</double>
             </wfpsN2N2O_y>
             <oc>
-              <double>1.04</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.77</double>
-              <double>0.45</double>
-              <double>0.27</double>
-              <double>0.22</double>
-              <double>0.16</double>
-              <double>0.13</double>
-              <double>0.12</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
             <RootCN>40</RootCN>
-            <RootWt>200</RootWt>
+            <RootWt>0</RootWt>
             <SoilCN>12.5</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -9871,17 +9871,17 @@ namespace Models
               <string>270-300</string>
             </Depth>
             <OC>
-              <double>1.04</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.89</double>
-              <double>0.77</double>
-              <double>0.45</double>
-              <double>0.27</double>
-              <double>0.22</double>
-              <double>0.16</double>
-              <double>0.13</double>
-              <double>0.12</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </OC>
             <FBiom>
               <double>0.025</double>
@@ -10295,6 +10295,11 @@ namespace Models
               <irrigation_will_runoff>false</irrigation_will_runoff>
               <irrigation_layer>0</irrigation_layer>
               <obsrunoff_name />
+              <slope>0</slope>
+              <discharge_width>0</discharge_width>
+              <catchment_area>0</catchment_area>
+              <eo_source />
+              <max_pond>0</max_pond>
               <SummerCona>0</SummerCona>
               <SummerU>0</SummerU>
               <SummerDate>1-Nov</SummerDate>
@@ -10304,11 +10309,6 @@ namespace Models
               <DiffusConst>0</DiffusConst>
               <DiffusSlope>0</DiffusSlope>
               <Salb>0.13</Salb>
-              <slope>0</slope>
-              <discharge_width>0</discharge_width>
-              <catchment_area>0</catchment_area>
-              <eo_source />
-              <max_pond>0</max_pond>
               <CN2Bare>1</CN2Bare>
               <CNRed>0</CNRed>
               <CNCov>0</CNCov>
@@ -10395,23 +10395,23 @@ namespace Models
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>1.04</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.77</double>
-                <double>0.45</double>
-                <double>0.27</double>
-                <double>0.21998861105525369</double>
-                <double>0.15999678007283424</double>
-                <double>0.12999669561082616</double>
-                <double>0.11999557529780172</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <RootCN>40</RootCN>
-              <RootWt>200</RootWt>
+              <RootWt>0</RootWt>
               <SoilCN>12.5</SoilCN>
               <EnrACoeff>7.4</EnrACoeff>
               <EnrBCoeff>0.2</EnrBCoeff>
@@ -10442,17 +10442,17 @@ namespace Models
                 <string>270-300</string>
               </Depth>
               <OC>
-                <double>1.04</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.77</double>
-                <double>0.45</double>
-                <double>0.27</double>
-                <double>0.22</double>
-                <double>0.16</double>
-                <double>0.13</double>
-                <double>0.12</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </OC>
               <FBiom>
                 <double>0.025</double>
@@ -10568,8 +10568,8 @@ namespace Models
               <string>[Soil].SoilWater.drain as drain</string>
               <string>[Soil].SoilWater.water_table as water_table</string>
               <string>[Soil].SoilWater.sw as sw</string>
-              <string>[Soil].SoilWater.flux as flux</string>
-              <string>[Soil].SoilWater.flow as flow</string>
+              <string>[Soil].SoilWater.flux2 as flux</string>
+              <string>[Soil].SoilWater.flow2 as flow</string>
               <string>[Soil].SoilWater.sw_dep as sw_dep</string>
             </VariableNames>
             <EventNames>
@@ -10851,6 +10851,11 @@ namespace Models
               <irrigation_will_runoff>false</irrigation_will_runoff>
               <irrigation_layer>0</irrigation_layer>
               <obsrunoff_name />
+              <slope>0</slope>
+              <discharge_width>0</discharge_width>
+              <catchment_area>0</catchment_area>
+              <eo_source />
+              <max_pond>0</max_pond>
               <SummerCona>0</SummerCona>
               <SummerU>0</SummerU>
               <SummerDate>1-Nov</SummerDate>
@@ -10860,11 +10865,6 @@ namespace Models
               <DiffusConst>0</DiffusConst>
               <DiffusSlope>0</DiffusSlope>
               <Salb>0.13</Salb>
-              <slope>0</slope>
-              <discharge_width>0</discharge_width>
-              <catchment_area>0</catchment_area>
-              <eo_source />
-              <max_pond>0</max_pond>
               <CN2Bare>1</CN2Bare>
               <CNRed>0</CNRed>
               <CNCov>0</CNCov>
@@ -10951,23 +10951,23 @@ namespace Models
                 <double>1</double>
               </wfpsN2N2O_y>
               <oc>
-                <double>1.0396994796860686</double>
-                <double>0.88987655314192382</double>
-                <double>0.889948748615076</double>
-                <double>0.88998345838565129</double>
-                <double>0.76999545464013164</double>
-                <double>0.44999815902516993</double>
-                <double>0.26999939974164372</double>
-                <double>0.2199993461808106</double>
-                <double>0.15999954551439785</double>
-                <double>0.12999956632637746</double>
-                <double>0.11999947002907839</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <RootCN>40</RootCN>
-              <RootWt>200</RootWt>
+              <RootWt>0</RootWt>
               <SoilCN>12.5</SoilCN>
               <EnrACoeff>7.4</EnrACoeff>
               <EnrBCoeff>0.2</EnrBCoeff>
@@ -10998,17 +10998,17 @@ namespace Models
                 <string>270-300</string>
               </Depth>
               <OC>
-                <double>1.04</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.89</double>
-                <double>0.77</double>
-                <double>0.45</double>
-                <double>0.27</double>
-                <double>0.22</double>
-                <double>0.16</double>
-                <double>0.13</double>
-                <double>0.12</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </OC>
               <FBiom>
                 <double>0.025</double>
@@ -11304,123 +11304,83 @@ namespace Models
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>OLD_Outputs\Saturated Flow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Saturated Flow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_unsaturated</Name>
-      <FileNames>
-        <string>OLD_Outputs\Unsaturated Flow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Unsaturated Flow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_runoff</Name>
-      <FileNames>
-        <string>OLD_Outputs\Runoff Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Runoff Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_soil_evap</Name>
-      <FileNames>
-        <string>OLD_Outputs\Soil Evaporation Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Soil Evaporation Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_ponding</Name>
-      <FileNames>
-        <string>OLD_Outputs\Ponding Only using KS (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Ponding Only using KS (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_ponding_soil_evap</Name>
-      <FileNames>
-        <string>OLD_Outputs\Ponding with Soil Evap (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Ponding with Soil Evap (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_watertable_calc</Name>
-      <FileNames>
-        <string>OLD_Outputs\WaterTable Calculation (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\WaterTable Calculation (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_lateral_outflow</Name>
-      <FileNames>
-        <string>OLD_Outputs\Lateral Outflow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Lateral Outflow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_soil_evap_surfaceom</Name>
-      <FileNames>
-        <string>OLD_Outputs\Soil Evaporation with SurfaceOM (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Soil Evaporation with SurfaceOM (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_runoff_surfaceom</Name>
-      <FileNames>
-        <string>OLD_Outputs\Runoff with SurfaceOM (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Runoff with SurfaceOM (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_runoff_tillage_event</Name>
-      <FileNames>
-        <string>OLD_Outputs\Runoff after Tillage Event (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Runoff after Tillage Event (OLD).out</FileName>
     </Input>
     <Input>
       <Name>new_runoff_irrigation</Name>
-      <FileNames>
-        <string>OLD_Outputs\Runoff with Irrigation (NEW).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Runoff with Irrigation (NEW).out</FileName>
     </Input>
     <Input>
       <Name>new_subsurface_irrigation</Name>
-      <FileNames>
-        <string>OLD_Outputs\Subsurface Irrigation (NEW).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Subsurface Irrigation (NEW).out</FileName>
     </Input>
     <Input>
       <Name>old_solute_saturated</Name>
-      <FileNames>
-        <string>OLD_Outputs\Solute - Saturated Flow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Solute - Saturated Flow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_solute_unsaturated</Name>
-      <FileNames>
-        <string>OLD_Outputs\Solute - Unsaturated Flow Only (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Solute - Unsaturated Flow Only (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_solute_irrigation</Name>
-      <FileNames>
-        <string>OLD_Outputs\Solute - Irrigation (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Solute - Irrigation (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_setable_vars_erosion</Name>
-      <FileNames>
-        <string>OLD_Outputs\Setable Variables - Erosion (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Setable Variables - Erosion (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_setable_vars_runoff</Name>
-      <FileNames>
-        <string>OLD_Outputs\Setable Variables - Runoff (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Setable Variables - Runoff (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_watertable_fixed_depth</Name>
-      <FileNames>
-        <string>OLD_Outputs\WaterTable - Set to a fixed depth (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\WaterTable - Set to a fixed depth (OLD).out</FileName>
     </Input>
     <Input>
       <Name>old_setable_vars_water</Name>
-      <FileNames>
-        <string>OLD_Outputs\Setable Variables - Water (OLD).out</string>
-      </FileNames>
+      <FileName>OLD_Outputs\Setable Variables - Water (OLD).out</FileName>
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>

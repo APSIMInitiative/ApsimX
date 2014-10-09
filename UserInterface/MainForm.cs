@@ -86,6 +86,13 @@ namespace UserInterface
 
             ResumeLayout();
 
+            // Look for version information to display.
+            Version version = new Version(Application.ProductVersion);
+            if (version.Major == 0)
+                this.Text = "APSIM (Custom Build)";
+            else
+                this.Text = "APSIM " + version.Major + "." + version.Minor;                
+
             // Look for a script specified on the command line.
             if (commandLineArguments != null && commandLineArguments.Length > 0 &&
                 commandLineArguments[0].EndsWith(".cs"))

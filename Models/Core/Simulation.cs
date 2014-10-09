@@ -9,27 +9,31 @@ using System.IO;
 
 namespace Models.Core 
 {
+    /// <summary>
+    /// A simulation model
+    /// </summary>
     [Serializable]
     public class Simulation : Zone, Utility.JobManager.IRunnable
     {
+        /// <summary>The _ is running</summary>
         private bool _IsRunning = false;
 
+        /// <summary>The timer</summary>
         [NonSerialized]
         private Stopwatch timer;
 
+        /// <summary>Occurs when [commencing].</summary>
         public event EventHandler Commencing;
 
+        /// <summary>Occurs when [completed].</summary>
         public event EventHandler Completed;
 
-        /// <summary>
-        /// A locater object for finding models and variables.
-        /// </summary>
+        /// <summary>A locater object for finding models and variables.</summary>
         [NonSerialized]
         private Locater locater;
 
-        /// <summary>
-        /// Cache to speed up scope lookups.
-        /// </summary>
+        /// <summary>Cache to speed up scope lookups.</summary>
+        /// <value>The locater.</value>
         public Locater Locater
         {
             get
@@ -43,39 +47,35 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Get a reference to the clock model.
-        /// </summary>
+        /// <summary>Get a reference to the clock model.</summary>
         [Link] private Clock Clock = null;
 
-        /// <summary>
-        /// To commence the simulation, this event will be invoked.
-        /// </summary>
+        /// <summary>To commence the simulation, this event will be invoked.</summary>
         public event EventHandler DoCommence;
 
-        /// <summary>
-        /// Return the filename that this simulation sits in.
-        /// </summary>
+        /// <summary>Return the filename that this simulation sits in.</summary>
+        /// <value>The name of the file.</value>
         [XmlIgnore]
         public string FileName { get; set; }
 
-        /// <summary>
-        /// Return true if the simulation is running.
-        /// </summary>
+        /// <summary>Return true if the simulation is running.</summary>
+        /// <value>
+        /// <c>true</c> if this instance is running; otherwise, <c>false</c>.
+        /// </value>
         public bool IsRunning { get { return _IsRunning; } }
 
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         public Simulation()
         {
             locater = new Locater();
         }
 
-        /// <summary>
-        /// Run the simulation. Will throw on error.
-        /// </summary>
+        /// <summary>Run the simulation. Will throw on error.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="System.Exception">
+        /// </exception>
         public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             try
@@ -128,9 +128,7 @@ namespace Models.Core
                 e.Result = this;
         }
 
-        /// <summary>
-        /// Startup the run.
-        /// </summary>
+        /// <summary>Startup the run.</summary>
         public void StartRun()
         {
             timer = new Stopwatch();
@@ -152,9 +150,9 @@ namespace Models.Core
                 Commencing.Invoke(this, new EventArgs());
         }
 
-        /// <summary>
-        /// Perform the run. Will throw if error occurs.
-        /// </summary>
+        /// <summary>Perform the run. Will throw if error occurs.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <exception cref="ApsimXException">Cannot invoke Commenced</exception>
         public void DoRun(object sender)
         {
             if (DoCommence != null)
@@ -163,9 +161,7 @@ namespace Models.Core
                 throw new ApsimXException(this, "Cannot invoke Commenced");
         }
 
-        /// <summary>
-        /// Cleanup after the run.
-        /// </summary>
+        /// <summary>Cleanup after the run.</summary>
         public void CleanupRun()
         {
             _IsRunning = false;

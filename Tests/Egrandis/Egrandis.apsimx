@@ -5,9 +5,7 @@
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>EucalyptusValidationData.txt</string>
-      </FileNames>
+      <FileName>EucalyptusValidationData.txt</FileName>
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
@@ -40,6 +38,39 @@
         </InitialWater>
         <Water>
           <Name>Water</Name>
+          <SoilCrop>
+            <Name>EucalyptusSoil</Name>
+            <LL>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+            </LL>
+            <KL>
+              <double>0.07</double>
+              <double>0.07</double>
+              <double>0.05</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.02</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
           <Thickness>
             <double>100</double>
             <double>300</double>
@@ -100,39 +131,6 @@
             <double>0.29</double>
             <double>0.29</double>
           </SAT>
-          <SoilCrop>
-            <Name>Eucalyptus</Name>
-            <LL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-            </LL>
-            <KL>
-              <double>0.07</double>
-              <double>0.07</double>
-              <double>0.05</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -183,6 +181,11 @@
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
           <obsrunoff_name />
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <eo_source />
+          <max_pond>0</max_pond>
           <SummerCona>3.5</SummerCona>
           <SummerU>4</SummerU>
           <SummerDate>1-Nov</SummerDate>
@@ -192,15 +195,9 @@
           <DiffusConst>88</DiffusConst>
           <DiffusSlope>35.4</DiffusSlope>
           <Salb>0.13</Salb>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
           <CN2Bare>65</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <WaterTable>NaN</WaterTable>
           <Thickness>
             <double>100</double>
             <double>300</double>
@@ -2650,67 +2647,67 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Eucalyptus].Phenology.CurrentPhaseName</string>
-          <string>[Eucalyptus].Phenology.StageCode.Value</string>
-          <string>[Eucalyptus].Root.NSupplyUptake</string>
+          <string>Eucalyptus.Phenology.CurrentPhaseName</string>
+          <string>Eucalyptus.Phenology.StageCode.Value</string>
+          <string>Eucalyptus.Root.NSupplyUptake</string>
           <string>[Soil].SoilWater.eo</string>
           <string>[Soil].SoilWater.es</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.runoff</string>
           <string>[Soil].SoilWater.pond</string>
-          <string>[Eucalyptus].Summariser.AboveGround.Wt</string>
-          <string>[Eucalyptus].Summariser.BelowGround.Wt</string>
-          <string>[Eucalyptus].Summariser.Total.Wt</string>
-          <string>[Eucalyptus].Leaf.Dead.Wt</string>
-          <string>[Eucalyptus].Leaf.Live.Wt</string>
-          <string>[Eucalyptus].Stem.Dead.Wt</string>
-          <string>[Eucalyptus].Stem.Live.Wt</string>
-          <string>[Eucalyptus].Root.Dead.Wt</string>
-          <string>[Eucalyptus].Root.Live.Wt</string>
-          <string>[Eucalyptus].Summariser.AboveGround.N</string>
-          <string>[Eucalyptus].Summariser.BelowGround.N</string>
-          <string>[Eucalyptus].Summariser.Total.N</string>
-          <string>[Eucalyptus].Summariser.TotalLive.N</string>
-          <string>[Eucalyptus].Summariser.TotalDead.N</string>
-          <string>[Eucalyptus].Leaf.Dead.N</string>
-          <string>[Eucalyptus].Leaf.Live.N</string>
-          <string>[Eucalyptus].Stem.Dead.N</string>
-          <string>[Eucalyptus].Stem.Live.N</string>
-          <string>[Eucalyptus].Root.Live.N</string>
-          <string>[Eucalyptus].Root.Dead.N</string>
-          <string>[Eucalyptus].Leaf.Live.NConc</string>
-          <string>[Eucalyptus].Leaf.Dead.NConc</string>
-          <string>[Eucalyptus].Stem.Live.NConc</string>
-          <string>[Eucalyptus].Root.Live.NConc</string>
-          <string>[Eucalyptus].Root.WaterSupply</string>
-          <string>[Eucalyptus].Root.WaterUptake</string>
-          <string>[Eucalyptus].Leaf.Transpiration</string>
-          <string>[Eucalyptus].Leaf.WaterDemand</string>
-          <string>[Eucalyptus].Root.Depth</string>
-          <string>[Eucalyptus].Leaf.CoverGreen</string>
-          <string>[Eucalyptus].Leaf.CoverTotal</string>
-          <string>[Eucalyptus].Leaf.CoverDead</string>
-          <string>[Eucalyptus].Leaf.LAI</string>
-          <string>[Eucalyptus].Leaf.LAIDead</string>
-          <string>[Eucalyptus].Leaf.Fn</string>
-          <string>[Eucalyptus].Leaf.Fw</string>
-          <string>[Eucalyptus].Leaf.Photosynthesis.FT.Value</string>
-          <string>[Eucalyptus].Leaf.Photosynthesis.FVPD.Value</string>
-          <string>[Eucalyptus].Stem.MinimumNConc.Value</string>
-          <string>[Eucalyptus].Root.MinimumNConc.Value</string>
-          <string>[Eucalyptus].Stem.MaximumNConc.Value</string>
-          <string>[Eucalyptus].Root.MaximumNConc.Value</string>
-          <string>[Eucalyptus].Summariser.TotalLive.Wt</string>
-          <string>[Eucalyptus].Stem.Live.StructuralWt</string>
-          <string>[Eucalyptus].Stem.Live.NonStructuralWt</string>
-          <string>[Eucalyptus].Leaf.SpecificArea</string>
-          <string>[Eucalyptus].Summariser.TotalDead.Wt</string>
+          <string>Eucalyptus.Summariser.AboveGround.Wt</string>
+          <string>Eucalyptus.Summariser.BelowGround.Wt</string>
+          <string>Eucalyptus.Summariser.Total.Wt</string>
+          <string>Eucalyptus.Leaf.Dead.Wt</string>
+          <string>Eucalyptus.Leaf.Live.Wt</string>
+          <string>Eucalyptus.Stem.Dead.Wt</string>
+          <string>Eucalyptus.Stem.Live.Wt</string>
+          <string>Eucalyptus.Root.Dead.Wt</string>
+          <string>Eucalyptus.Root.Live.Wt</string>
+          <string>Eucalyptus.Summariser.AboveGround.N</string>
+          <string>Eucalyptus.Summariser.BelowGround.N</string>
+          <string>Eucalyptus.Summariser.Total.N</string>
+          <string>Eucalyptus.Summariser.TotalLive.N</string>
+          <string>Eucalyptus.Summariser.TotalDead.N</string>
+          <string>Eucalyptus.Leaf.Dead.N</string>
+          <string>Eucalyptus.Leaf.Live.N</string>
+          <string>Eucalyptus.Stem.Dead.N</string>
+          <string>Eucalyptus.Stem.Live.N</string>
+          <string>Eucalyptus.Root.Live.N</string>
+          <string>Eucalyptus.Root.Dead.N</string>
+          <string>Eucalyptus.Leaf.Live.NConc</string>
+          <string>Eucalyptus.Leaf.Dead.NConc</string>
+          <string>Eucalyptus.Stem.Live.NConc</string>
+          <string>Eucalyptus.Root.Live.NConc</string>
+          <string>Eucalyptus.Root.WaterSupply</string>
+          <string>Eucalyptus.Root.WaterUptake</string>
+          <string>Eucalyptus.Leaf.Transpiration</string>
+          <string>Eucalyptus.Leaf.WaterDemand</string>
+          <string>Eucalyptus.Root.Depth</string>
+          <string>Eucalyptus.Leaf.CoverGreen</string>
+          <string>Eucalyptus.Leaf.CoverTotal</string>
+          <string>Eucalyptus.Leaf.CoverDead</string>
+          <string>Eucalyptus.Leaf.LAI</string>
+          <string>Eucalyptus.Leaf.LAIDead</string>
+          <string>Eucalyptus.Leaf.Fn</string>
+          <string>Eucalyptus.Leaf.Fw</string>
+          <string>Eucalyptus.Leaf.Photosynthesis.FT.Value</string>
+          <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value</string>
+          <string>Eucalyptus.Stem.MinimumNConc.Value</string>
+          <string>Eucalyptus.Root.MinimumNConc.Value</string>
+          <string>Eucalyptus.Stem.MaximumNConc.Value</string>
+          <string>Eucalyptus.Root.MaximumNConc.Value</string>
+          <string>Eucalyptus.Summariser.TotalLive.Wt</string>
+          <string>Eucalyptus.Stem.Live.StructuralWt</string>
+          <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
+          <string>Eucalyptus.Leaf.SpecificArea</string>
+          <string>Eucalyptus.Summariser.TotalDead.Wt</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.no3</string>
-          <string>[Eucalyptus].Arbitrator.NDemand</string>
-          <string>[Eucalyptus].Leaf.LAIFunction.SpecificLeafArea.Value</string>
-          <string>[Eucalyptus].Summariser.IndividualTreeLiveWt.Value</string>
-          <string>[Eucalyptus].Age.Value</string>
+          <string>Eucalyptus.Arbitrator.NDemand</string>
+          <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
+          <string>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</string>
+          <string>Eucalyptus.Age.Value</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2722,13 +2719,20 @@
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Y axis title</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
+          <Title>Series 0</Title>
           <Type>Line</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2741,13 +2745,14 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Phenology.StageCode.Value</FieldName>
+            <FieldName>Eucalyptus.Phenology.StageCode.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>RootDepth</Name>
@@ -2755,13 +2760,20 @@
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Y axis title</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
+          <Title>Series 0</Title>
           <Type>Line</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2774,13 +2786,14 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Root.Depth</FieldName>
+            <FieldName>Eucalyptus.Root.Depth</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -2788,13 +2801,20 @@
           <Type>Bottom</Type>
           <Title>Plantation Age (y)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>LAI</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
+          <Title>Series 0</Title>
           <Type>Line</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2803,11 +2823,11 @@
           <Line>Solid</Line>
           <X>
             <TableName>Report</TableName>
-            <FieldName>Plant.Age.Value</FieldName>
+            <FieldName>Eucalyptus.Age.Value</FieldName>
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.LAI</FieldName>
+            <FieldName>Eucalyptus.Leaf.LAI</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -2833,6 +2853,7 @@
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>Biomass</Name>
@@ -2840,11 +2861,17 @@
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Y axis title</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Leaf</Title>
@@ -2860,7 +2887,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.Live.Wt</FieldName>
+            <FieldName>Eucalyptus.Leaf.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -2880,7 +2907,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Stem.Live.Wt</FieldName>
+            <FieldName>Eucalyptus.Stem.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -2900,7 +2927,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Root.Live.Wt</FieldName>
+            <FieldName>Eucalyptus.Root.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -2920,13 +2947,14 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.Dead.Wt</FieldName>
+            <FieldName>Eucalyptus.Leaf.Dead.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>N Uptake</Name>
@@ -2934,11 +2962,17 @@
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Y axis title</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>N Uptake</Title>
@@ -2954,7 +2988,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Root.NSupplyUptake</FieldName>
+            <FieldName>Eucalyptus.Root.NSupplyUptake</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -2974,13 +3008,14 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Arbitrator.NDemand</FieldName>
+            <FieldName>Eucalyptus.Arbitrator.NDemand</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <SplitOn>Simulation</SplitOn>
         </Series>
-        <LegendPosition>TopLeft</LegendPosition>
+        <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>NO3</Name>
@@ -2988,11 +3023,17 @@
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Y axis title</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Type>Line</Type>
@@ -3052,6 +3093,7 @@
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>Plant N</Name>
@@ -3059,11 +3101,17 @@
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Y axis title</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Leaf</Title>
@@ -3079,7 +3127,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.Live.N</FieldName>
+            <FieldName>Eucalyptus.Leaf.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -3099,7 +3147,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Stem.Live.N</FieldName>
+            <FieldName>Eucalyptus.Stem.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -3119,13 +3167,14 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Root.Live.N</FieldName>
+            <FieldName>Eucalyptus.Root.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>SLA Function</Name>
@@ -3133,11 +3182,17 @@
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Y axis title</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>SLA</Title>
@@ -3153,13 +3208,14 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
+            <FieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>IndividualTreeLiveWt</Name>
@@ -3167,11 +3223,17 @@
           <Type>Bottom</Type>
           <Title>X axis title 2</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Y axis title</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>SLA</Title>
@@ -3187,13 +3249,14 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Summariser.IndividualTreeLiveWt.Value</FieldName>
+            <FieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Graph>
         <Name>AboveGroundWt</Name>
@@ -3201,11 +3264,17 @@
           <Type>Bottom</Type>
           <Title>Plantation Age (y)</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Axis>
           <Type>Left</Type>
           <Title>Above Ground Weight</Title>
           <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
         </Axis>
         <Series>
           <Title>Predicted</Title>
@@ -3217,11 +3286,11 @@
           <Line>Solid</Line>
           <X>
             <TableName>Report</TableName>
-            <FieldName>Plant.Age.Value</FieldName>
+            <FieldName>Eucalyptus.Age.Value</FieldName>
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Plant.Summariser.AboveGround.Wt</FieldName>
+            <FieldName>Eucalyptus.Summariser.AboveGround.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -3248,6 +3317,7 @@
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -3255,6 +3325,8 @@
     <Input>
       <Name>Input</Name>
     </Input>
+    <Area>0</Area>
+    <Slope>0</Slope>
   </Simulation>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

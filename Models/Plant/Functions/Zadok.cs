@@ -8,16 +8,23 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// Zadok model
+    /// </summary>
     [Serializable]
     public class Zadok : Model
     {
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The leaf</summary>
         [Link]
         Leaf1 Leaf = null;
 
-        
+
+        /// <summary>Gets the stage.</summary>
+        /// <value>The stage.</value>
         public double Stage
         {
             get
@@ -50,7 +57,7 @@ namespace Models.PMF.Functions
                     // from senthold's archive:
                     //1    2    3         4.5     5       6
                     //eme  ej   eveg(fl)  anth    sgf   mat
-                    //10   30   43 	     65      70     9
+                    //10   30   43          65      70     9
 
                     // from CropMod
                     //                 sow ger eme  juv    fi   flag    fl st_gf end_gf mat hv_rpe end_crop

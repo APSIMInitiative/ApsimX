@@ -6,16 +6,25 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// Radiation partitioning
+    /// </summary>
     [Serializable]
     public class RadiationPartitioning : Model
     {
+        /// <summary>Gets or sets the fract incident radn.</summary>
+        /// <value>The fract incident radn.</value>
         public double FractIncidentRadn { get; set; }
 
+        /// <summary>Gets or sets the radiation partitioning order.</summary>
+        /// <value>The radiation partitioning order.</value>
         public string[] RadiationPartitioningOrder { get; set; }
 
+        /// <summary>The met data</summary>
         [Link]
         WeatherFile MetData = null;
 
+        /// <summary>Does the radiation partition.</summary>
         public void DoRadiationPartition()
         {
             double incomingSolarRadiation = MetData.Radn * FractIncidentRadn;

@@ -157,7 +157,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Calculate the Jarvis & McNaughton decoupling coefficient, omega
+        /// Calculate the Jarvis and McNaughton decoupling coefficient, omega
         /// </summary>
         private double CalcOmega(double mint, double maxt, double airPressure, double aerodynamicCond, double canopyCond)
         {

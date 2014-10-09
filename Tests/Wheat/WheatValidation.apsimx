@@ -18,20 +18,12 @@
     </PredictedObserved>
     <Input>
       <Name>NZObservations</Name>
-      <FileNames>
-        <string>RainShelterBiomass.txt</string>
-      </FileNames>
+      <FileName>RainShelterBiomass.txt</FileName>
     </Input>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
-    <Input>
-      <Name>Input</Name>
-      <FileNames>
-        <string>..\..\..\apsim\Tests\Validation\Wheat\Files\Wheat_APS14_LucN200.out</string>
-      </FileNames>
-    </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -232,7 +224,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -374,6 +366,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3.5</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -383,11 +380,6 @@ namespace Models
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -851,10 +843,12 @@ namespace Models
           <FieldName>Wheat.Grain.Wt</FieldName>
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -876,7 +870,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title />
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -892,10 +886,12 @@ namespace Models
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -1023,7 +1019,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -1156,6 +1152,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3.5</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -1165,11 +1166,6 @@ namespace Models
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -1670,7 +1666,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -1812,6 +1808,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>0</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3.5</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -1821,11 +1822,6 @@ namespace Models
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -2391,6 +2387,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <Interval>NaN</Interval>
       </Axis>
       <Series>
+        <Title>Series 0</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2406,70 +2403,12 @@ private void OnDoManagement(object sender, EventArgs e)
           <FieldName>ExtraVariables.Script.TotalNH4</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>APS14Compare</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Observed Above Ground Wt</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Predicted Above Ground Wt</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Series 0</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Input</TableName>
-          <FieldName>Date</FieldName>
-        </X>
-        <Y>
-          <TableName>Input</TableName>
-          <FieldName>lai</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>*</SplitOn>
-      </Series>
-      <Series>
-        <Title>Series2</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.Leaf.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -2788,7 +2727,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.03</double>
                 <double>0.03</double>
@@ -2948,6 +2887,11 @@ private void OnDoManagement(object sender, EventArgs e)
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>2</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -2957,11 +2901,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -3468,6 +3407,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <Interval>NaN</Interval>
       </Axis>
       <Series>
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3487,6 +3427,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3506,6 +3447,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 2</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3525,6 +3467,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 3</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3540,10 +3483,12 @@ private void OnDoManagement(object sender, EventArgs e)
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>LAI</Name>
@@ -3564,6 +3509,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <Interval>NaN</Interval>
       </Axis>
       <Series>
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3576,70 +3522,15 @@ private void OnDoManagement(object sender, EventArgs e)
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Leaf1.LAI</FieldName>
+          <FieldName>Wheat.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Leaf1.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Leaf1.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Leaf1.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -3871,7 +3762,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.03</double>
                 <double>0.03</double>
@@ -4031,6 +3922,11 @@ private void OnDoManagement(object sender, EventArgs e)
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>2</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -4040,11 +3936,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -4715,6 +4606,7 @@ private void OnDoManagement(object sender, EventArgs e)
         <Interval>NaN</Interval>
       </Axis>
       <Series>
+        <Title>Series 0</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4727,13 +4619,14 @@ private void OnDoManagement(object sender, EventArgs e)
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Plant15.Biomass</FieldName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 1</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4746,13 +4639,14 @@ private void OnDoManagement(object sender, EventArgs e)
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Plant15.Biomass</FieldName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 2</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4765,13 +4659,14 @@ private void OnDoManagement(object sender, EventArgs e)
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Plant15.Biomass</FieldName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <Series>
+        <Title>Series 3</Title>
         <Type>Line</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -4784,13 +4679,15 @@ private void OnDoManagement(object sender, EventArgs e)
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Plant15.Biomass</FieldName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>LAI</Name>
@@ -4827,70 +4724,12 @@ private void OnDoManagement(object sender, EventArgs e)
           <FieldName>Wheat.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>LAI1</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Y axis title</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Series 0</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>ExtraVariables.Script.TotalNO3</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title>Series2</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>ExtraVariables.Script.TotalNH4</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -6014,7 +5853,7 @@ public class Script : Model
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.07</double>
@@ -6156,6 +5995,11 @@ public class Script : Model
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3</SummerCona>
             <SummerU>7</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -6165,11 +6009,6 @@ public class Script : Model
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.2</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>75</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -6574,6 +6413,8 @@ public class Script : Model
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -6633,65 +6474,8 @@ public class Script : Model
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>Biomass1</Name>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Leaf Area Index</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Predicted</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>0</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Outputfile</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Outputfile</TableName>
-          <FieldName>Wheat.Head.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title>Observed</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>0</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>NZObservations</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>NZObservations</TableName>
-          <FieldName>Wheat.Head.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Experiment>
       <Name>RainShelter</Name>
@@ -7862,7 +7646,7 @@ public class Script : Model
             <Water>
               <Name>Water</Name>
               <SoilCrop>
-                <Name>Wheat</Name>
+                <Name>WheatSoil</Name>
                 <LL>
                   <double>0.08</double>
                   <double>0.07</double>
@@ -8004,6 +7788,11 @@ public class Script : Model
               <irrigation_will_runoff>false</irrigation_will_runoff>
               <irrigation_layer>1</irrigation_layer>
               <obsrunoff_name />
+              <slope>0</slope>
+              <discharge_width>0</discharge_width>
+              <catchment_area>0</catchment_area>
+              <eo_source />
+              <max_pond>0</max_pond>
               <SummerCona>3</SummerCona>
               <SummerU>7</SummerU>
               <SummerDate>1-Nov</SummerDate>
@@ -8013,11 +7802,6 @@ public class Script : Model
               <DiffusConst>40</DiffusConst>
               <DiffusSlope>16</DiffusSlope>
               <Salb>0.2</Salb>
-              <slope>0</slope>
-              <discharge_width>0</discharge_width>
-              <catchment_area>0</catchment_area>
-              <eo_source />
-              <max_pond>0</max_pond>
               <CN2Bare>75</CN2Bare>
               <CNRed>20</CNRed>
               <CNCov>0.8</CNCov>
@@ -8422,6 +8206,8 @@ public class Script : Model
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Biomass</Name>
@@ -8481,6 +8267,8 @@ public class Script : Model
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Biomass1</Name>
@@ -8540,6 +8328,8 @@ public class Script : Model
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Experiment>
   </Experiment>
@@ -9015,7 +8805,7 @@ public class Script : Model
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.07</double>
@@ -9157,6 +8947,11 @@ public class Script : Model
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3</SummerCona>
             <SummerU>7</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -9166,11 +8961,6 @@ public class Script : Model
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.2</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>75</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -9516,7 +9306,7 @@ public class Script : Model
             <string>Wheat.NStress.Photo</string>
             <string>Wheat.NStress.Expansion</string>
             <string>Wheat.Total.Wt</string>
-            <string>Evaluate sum([Soil].SoilWater.sw_dep) as TotalSW</string>
+            <string>sum([Soil].SoilWater.sw_dep) as TotalSW</string>
             <string />
           </VariableNames>
           <EventNames>
@@ -9685,6 +9475,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>TotalSW</Name>
@@ -9724,65 +9516,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
-    </Graph>
-    <Graph>
-      <Name>Biomass1</Name>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Leaf Area Index</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Predicted</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>0</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Outputfile</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Outputfile</TableName>
-          <FieldName>Wheat.Head.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title>Observed</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>0</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>None</Line>
-        <X>
-          <TableName>NZObservations</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>NZObservations</TableName>
-          <FieldName>Wheat.Head.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -9939,7 +9674,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.07</double>
                 <double>0.07</double>
@@ -10162,6 +9897,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>0</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3</SummerCona>
             <SummerU>7.5</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -10171,11 +9911,6 @@ namespace Models
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>25</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -11042,6 +10777,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -11240,7 +10977,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.073</double>
                 <double>0.075</double>
@@ -11490,6 +11227,11 @@ namespace Models
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>2</SummerCona>
             <SummerU>2</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -11499,11 +11241,6 @@ namespace Models
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>72</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -12222,11 +11959,13 @@ private void OnDoManagement(object sender, EventArgs e)
           <TableName>Report</TableName>
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
-        <ShowRegressionLine>true</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -12240,7 +11979,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.08</double>
@@ -12400,6 +12139,11 @@ private void OnDoManagement(object sender, EventArgs e)
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>0</irrigation_layer>
             <obsrunoff_name />
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>2</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -12409,11 +12153,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>NaN</slope>
-            <discharge_width>NaN</discharge_width>
-            <catchment_area>NaN</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -12736,7 +12475,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.08</double>
@@ -12896,6 +12635,11 @@ private void OnDoManagement(object sender, EventArgs e)
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>0</irrigation_layer>
             <obsrunoff_name />
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>2</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -12905,11 +12649,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>NaN</slope>
-            <discharge_width>NaN</discharge_width>
-            <catchment_area>NaN</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -13304,7 +13043,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.073</double>
                 <double>0.075</double>
@@ -13554,6 +13293,11 @@ private void OnDoManagement(object sender, EventArgs e)
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>2</SummerCona>
             <SummerU>2</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -13563,11 +13307,6 @@ private void OnDoManagement(object sender, EventArgs e)
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>72</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -14269,31 +14008,13 @@ private void OnDoManagement(object sender, EventArgs e)
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Wheat.Grain.Wt</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.Wheat.Grain.Wt</FieldName>
-      </X>
-      <Y>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.Wheat.Grain.Wt</FieldName>
-      </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Experiment</SplitOn>
+      <SplitOn>*</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>Biomass</Name>
@@ -14329,31 +14050,13 @@ private void OnDoManagement(object sender, EventArgs e)
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Wheat.AboveGround.Wt</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.Wheat.AboveGround.Wt</FieldName>
-      </X>
-      <Y>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.Wheat.AboveGround.Wt</FieldName>
-      </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>BiomassN</Name>
@@ -14389,31 +14092,13 @@ private void OnDoManagement(object sender, EventArgs e)
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Wheat.AboveGround.N</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
       <SplitOn>*</SplitOn>
     </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.Wheat.AboveGround.N</FieldName>
-      </X>
-      <Y>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.Wheat.AboveGround.N</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Experiment</SplitOn>
-    </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>GrainNumber</Name>
@@ -14449,31 +14134,13 @@ private void OnDoManagement(object sender, EventArgs e)
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Wheat.Grain.GrainNo</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
       <SplitOn>*</SplitOn>
     </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.Wheat.Grain.GrainNo</FieldName>
-      </X>
-      <Y>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.Wheat.Grain.GrainNo</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Experiment</SplitOn>
-    </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Tests>
     <Name>Tests</Name>

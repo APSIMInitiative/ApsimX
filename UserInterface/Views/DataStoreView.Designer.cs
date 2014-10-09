@@ -212,7 +212,6 @@ namespace UserInterface.Views
             // htmlView1
             // 
             this.htmlView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.htmlView1.LabelText = "";
             this.htmlView1.Location = new System.Drawing.Point(4, 126);
             this.htmlView1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.htmlView1.MemoText = resources.GetString("htmlView1.MemoText");

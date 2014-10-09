@@ -5,15 +5,11 @@
     <Name>DataStore</Name>
     <Input>
       <Name>ObservedResidues</Name>
-      <FileNames>
-        <string>A_block_obs_residual.txt</string>
-      </FileNames>
+      <FileName>A_block_obs_residual.txt</FileName>
     </Input>
     <Input>
       <Name>ObservedSoilWater</Name>
-      <FileNames>
-        <string>a_block_obs_soilwater.txt</string>
-      </FileNames>
+      <FileName>a_block_obs_soilwater.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>

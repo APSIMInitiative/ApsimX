@@ -757,7 +757,7 @@ namespace Importer
         /// <param name="destParent"></param>
         /// <param name="newNode"></param>
         /// <returns></returns>
-        private XmlNode ImportSoil(XmlNode compNode, XmlNode destParent, XmlNode newNode)
+        public XmlNode ImportSoil(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
             //Models.Soils.Soil mysoil = new Models.Soils.Soil();
 
@@ -795,7 +795,7 @@ namespace Importer
         /// <returns>The new component node</returns>
         private XmlNode ImportOutputFile(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            Models.Report myreport = new Models.Report();
+            Models.Report.Report myreport = new Models.Report.Report();
 
             // compNode/variables array
             List<XmlNode> nodes = new List<XmlNode>();

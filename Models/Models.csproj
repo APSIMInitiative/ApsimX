@@ -113,8 +113,11 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
+    <Compile Include="AgPasture\AgPasture1.cs" />
+    <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
+    <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Core\Apsim.cs" />
     <Compile Include="Core\Attributes\BoundsAttribute.cs" />
     <Compile Include="Core\Attributes\SummaryAttribute.cs" />
@@ -159,6 +162,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
@@ -321,7 +325,7 @@
     <Compile Include="Utility\ExpressionEvaluator.cs" />
     <Compile Include="Utility\Met.cs" />
     <Compile Include="WeatherFile.cs" />
-    <Compile Include="Report.cs" />
+    <Compile Include="Report\Report.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
@@ -384,6 +388,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\WheatPMFPrototype.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

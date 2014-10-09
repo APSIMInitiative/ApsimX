@@ -10,6 +10,7 @@ namespace Models.PostSimulationTools
     using System.IO;
     using Excel;
     using Models.Core;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
@@ -22,8 +23,27 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
-        [Description("EXCEL file name")]
         public string FileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// </summary>
+        [XmlIgnore]
+        [Description("EXCEL file name")]
+        public string FullFileName
+        {
+            get
+            {
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                return Utility.PathUtils.GetAbsolutePath(this.FileName, simulations.FileName);
+            }
+
+            set
+            {
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                this.FileName = Utility.PathUtils.GetRelativePath(value, simulations.FileName);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the list of EXCEL sheet names to read from.
@@ -34,11 +54,11 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Gets the parent simulation or null if not found
         /// </summary>
-        private Simulations Simulations
+        private Simulation Simulation
         {
             get
             {
-                return Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                return Apsim.Parent(this, typeof(Simulation)) as Simulation;
             }
         }
 
@@ -48,8 +68,7 @@ namespace Models.PostSimulationTools
         /// <param name="dataStore">The data store to store the data</param>
         public void Run(DataStore dataStore)
         {
-            string fullFileName = Simulations.GetFullFileName(this.FileName);
-
+            string fullFileName = FullFileName;
             if (fullFileName != null && File.Exists(fullFileName))
             {
                 dataStore.DeleteTable(this.Name);

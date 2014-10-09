@@ -6,38 +6,80 @@ using Models.Core;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// Nitrogen stress model for plant
+    /// </summary>
     [Serializable]
     public class NStress : Model
     {
+        /// <summary>The leaf</summary>
         [Link]
         Leaf1 Leaf = null;
+        /// <summary>The stem</summary>
         [Link]
         Stem1 Stem = null;
+        /// <summary>Gets or sets the n_fact_photo.</summary>
+        /// <value>The n_fact_photo.</value>
         public double N_fact_photo { get; set; }
+        /// <summary>Gets or sets the n_fact_pheno.</summary>
+        /// <value>The n_fact_pheno.</value>
         public double N_fact_pheno { get; set; }
+        /// <summary>Gets or sets the n_fact_expansion.</summary>
+        /// <value>The n_fact_expansion.</value>
         public double N_fact_expansion { get; set; }
+        /// <summary>Gets or sets the n_fact_grain.</summary>
+        /// <value>The n_fact_grain.</value>
         public double N_fact_grain { get; set; }
 
+        /// <summary>Gets the photo stress.</summary>
+        /// <value>The photo stress.</value>
         public double PhotoStress { get { return 1 - photo; } }
+        /// <summary>Gets the pheno stress.</summary>
+        /// <value>The pheno stress.</value>
         public double PhenoStress { get { return 1 - pheno; } }
+        /// <summary>Gets the expansion stress.</summary>
+        /// <value>The expansion stress.</value>
         public double ExpansionStress { get { return 1 - expansion; } }
+        /// <summary>Gets the grain stress.</summary>
+        /// <value>The grain stress.</value>
         public double GrainStress { get { return 1 - grain; } }
 
+        /// <summary>The expansion</summary>
         private double expansion;
+        /// <summary>The pheno</summary>
         private double pheno;
+        /// <summary>The photo</summary>
         private double photo;
+        /// <summary>The grain</summary>
         private double grain;
+        /// <summary>The _ photo sum</summary>
         private double _PhotoSum;
+        /// <summary>The _ photo count</summary>
         private int _PhotoCount;
+        /// <summary>The _ grain sum</summary>
         private double _GrainSum;
+        /// <summary>The _ grain count</summary>
         private int _GrainCount;
+        /// <summary>Gets the photo.</summary>
+        /// <value>The photo.</value>
         public double Photo { get { return photo; } }
+        /// <summary>Gets the pheno.</summary>
+        /// <value>The pheno.</value>
         public double Pheno { get { return pheno; } }
+        /// <summary>Gets the photo average.</summary>
+        /// <value>The photo average.</value>
         public double PhotoAverage { get { return Utility.Math.Divide(_PhotoSum, _PhotoCount, 0); } }
+        /// <summary>Gets the expansion.</summary>
+        /// <value>The expansion.</value>
         public double Expansion { get { return expansion; } }
+        /// <summary>Gets the grain.</summary>
+        /// <value>The grain.</value>
         public double Grain { get { return grain; } }
+        /// <summary>Gets the grain average.</summary>
+        /// <value>The grain average.</value>
         public double GrainAverage { get { return Utility.Math.Divide(_GrainSum, _GrainCount, 0); } }
 
+        /// <summary>Does the plant n stress.</summary>
         public void DoPlantNStress()
         {
             // Expansion uses leaves only
@@ -53,6 +95,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("NStress.Expansion=%f", expansion);
         }
 
+        /// <summary>Updates this instance.</summary>
         internal void Update()
         {
             _PhotoSum += Photo;
@@ -62,6 +105,7 @@ namespace Models.PMF.OldPlant
             _GrainCount++;
         }
 
+        /// <summary>Resets the average.</summary>
         internal void ResetAverage()
         {
             _PhotoSum = 0;
@@ -70,6 +114,11 @@ namespace Models.PMF.OldPlant
             _GrainCount = 0;
         }
 
+        /// <summary>Crits the n factor.</summary>
+        /// <param name="Leaf">The leaf.</param>
+        /// <param name="Stem">The stem.</param>
+        /// <param name="multiplier">The multiplier.</param>
+        /// <returns></returns>
         private static double critNFactor(Leaf1 Leaf, Stem1 Stem, double multiplier)
         //=======================================================================================
         //   Calculate Nitrogen stress factor from a bunch of parts

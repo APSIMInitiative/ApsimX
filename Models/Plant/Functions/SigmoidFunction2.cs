@@ -6,18 +6,28 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)
+    /// </summary>
     [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)")]
     public class SigmoidFunction2 : Function
     {
+        /// <summary>The ymax</summary>
         [Link] Function Ymax = null;
+        /// <summary>The x value</summary>
         [Link] Function XValue = null;
 
+        /// <summary>The xo</summary>
         public double Xo = 1.0;
+        /// <summary>The b</summary>
         public double b = 1.0;
-        
 
-        
+
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.Exception">Error with values to Sigmoid function</exception>
         public override double Value
         {
             get

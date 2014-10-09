@@ -12,116 +12,204 @@ using System.IO;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// A grain organ for Plant15
+    /// </summary>
     [Serializable]
     public class Grain : BaseOrgan1, AboveGround, Reproductive
     {
-        [Link]
-        ISummary Summary = null;
-
         #region Parameters read from XML file and links to other functions.
 
+        /// <summary>The plant</summary>
         [Link]
         Plant15 Plant = null;
 
+        /// <summary>The sw stress</summary>
         [Link]
         SWStress SWStress = null;
 
+        /// <summary>The n stress</summary>
         [Link]
         NStress NStress = null;
 
+        /// <summary>The temporary stress</summary>
         [Link]
         Function TempStress = null;
 
+        /// <summary>The stem</summary>
         [Link]
         Stem1 Stem = null;
 
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The population</summary>
         [Link]
         Population1 Population = null;
 
+        /// <summary>The grain growth period</summary>
         [Link] Function GrainGrowthPeriod = null;
+        /// <summary>The reproductive period</summary>
         [Link] Function ReproductivePeriod = null;
+        /// <summary>The relative grain fill</summary>
         [Link] Function RelativeGrainFill = null;
+        /// <summary>The relative grain n fill</summary>
         [Link] Function RelativeGrainNFill = null;
+        /// <summary>The dm senescence fraction</summary>
         [Link] Function DMSenescenceFraction = null;
+        /// <summary>The n concentration critical</summary>
         [Link] Function NConcentrationCritical = null;
+        /// <summary>The n concentration minimum</summary>
         [Link] Function NConcentrationMinimum = null;
+        /// <summary>The n concentration maximum</summary>
         [Link] Function NConcentrationMaximum = null;
+        /// <summary>The growth structural fraction stage</summary>
         [Link] Function GrowthStructuralFractionStage = null;
 
+        /// <summary>Gets or sets the initial wt.</summary>
+        /// <value>The initial wt.</value>
         public double InitialWt { get; set; }
 
+        /// <summary>Gets or sets the initial n concentration.</summary>
+        /// <value>The initial n concentration.</value>
         public double InitialNConcentration { get; set; }
 
+        /// <summary>Gets or sets the grains per gram stem.</summary>
+        /// <value>The grains per gram stem.</value>
         public double GrainsPerGramStem { get; set; }
 
+        /// <summary>Gets or sets the potential grain filling rate.</summary>
+        /// <value>The potential grain filling rate.</value>
         public double PotentialGrainFillingRate { get; set; }
 
+        /// <summary>Gets or sets the potential grain growth rate.</summary>
+        /// <value>The potential grain growth rate.</value>
         public double PotentialGrainGrowthRate { get; set; }
 
+        /// <summary>Gets or sets the minimum grain n filling rate.</summary>
+        /// <value>The minimum grain n filling rate.</value>
         public double MinimumGrainNFillingRate { get; set; }
 
+        /// <summary>Gets or sets the critical grain filling rate.</summary>
+        /// <value>The critical grain filling rate.</value>
         public double CriticalGrainFillingRate { get; set; }
 
+        /// <summary>Gets or sets the grain maximum daily n conc.</summary>
+        /// <value>The grain maximum daily n conc.</value>
         public double GrainMaxDailyNConc { get; set; }
 
+        /// <summary>Gets or sets the potential grain n filling rate.</summary>
+        /// <value>The potential grain n filling rate.</value>
         public double PotentialGrainNFillingRate { get; set; }
 
+        /// <summary>Gets or sets the maximum size of the grain.</summary>
+        /// <value>The maximum size of the grain.</value>
         public double MaxGrainSize { get; set; }
 
+        /// <summary>Gets or sets the n senescence concentration.</summary>
+        /// <value>The n senescence concentration.</value>
         public double NSenescenceConcentration { get; set; }
 
+        /// <summary>Gets or sets the senescence detachment fraction.</summary>
+        /// <value>The senescence detachment fraction.</value>
         public double SenescenceDetachmentFraction { get; set; }
 
+        /// <summary>Gets or sets the water content fraction.</summary>
+        /// <value>The water content fraction.</value>
         public double WaterContentFraction { get; set; }
 
         #endregion
 
         #region Private variables
+        /// <summary>The dlt_dm_pot_rue</summary>
         public double dlt_dm_pot_rue;
+        /// <summary>The dlt_n_senesced_retrans</summary>
         public double dlt_n_senesced_retrans;           // plant N retranslocated to/from (+/-) senesced part to/from <<somewhere else??>> (g/m^2)
+        /// <summary>The dlt_n_senesced_trans</summary>
         public double dlt_n_senesced_trans;
+        /// <summary>The dlt_height</summary>
         public double dlt_height;                       // growth upwards (mm)
+        /// <summary>The dlt_width</summary>
         public double dlt_width;                        // growth outwards (mm)
+        /// <summary>The _ dm green demand</summary>
         private double _DMGreenDemand;
+        /// <summary>The _ n demand</summary>
         private double _NDemand;
+        /// <summary>The _ soil n demand</summary>
         private double _SoilNDemand;
+        /// <summary>The sw_demand</summary>
         private double sw_demand;
+        /// <summary>The n_conc_crit</summary>
         private double n_conc_crit = 0;
+        /// <summary>The n_conc_max</summary>
         private double n_conc_max = 0;
+        /// <summary>The n_conc_min</summary>
         private double n_conc_min = 0;
+        /// <summary>The DLT dm grain demand</summary>
         private double DltDMGrainDemand;
+        /// <summary>The n_grain_demand</summary>
         private double N_grain_demand;
         #endregion
 
         #region Public interface defined by Organ1
+        /// <summary>Gets or sets the senescing.</summary>
+        /// <value>The senescing.</value>
         [XmlIgnore]
         public override Biomass Senescing { get; protected set; }
+        /// <summary>Gets or sets the retranslocation.</summary>
+        /// <value>The retranslocation.</value>
         [XmlIgnore]
         public override Biomass Retranslocation { get; protected set; }
+        /// <summary>Gets or sets the growth.</summary>
+        /// <value>The growth.</value>
         [XmlIgnore]
         public override Biomass Growth { get; protected set; }
+        /// <summary>Gets or sets the detaching.</summary>
+        /// <value>The detaching.</value>
         [XmlIgnore]
         public override Biomass Detaching { get; protected set; }
+        /// <summary>Gets or sets the green removed.</summary>
+        /// <value>The green removed.</value>
         [XmlIgnore]
         public override Biomass GreenRemoved { get; protected set; }
+        /// <summary>Gets or sets the senesced removed.</summary>
+        /// <value>The senesced removed.</value>
         [XmlIgnore]
         public override Biomass SenescedRemoved { get; protected set; }
 
         // Soil water
+        /// <summary>Gets the sw supply.</summary>
+        /// <value>The sw supply.</value>
         public override double SWSupply { get { return 0; } }
+        /// <summary>Gets the sw demand.</summary>
+        /// <value>The sw demand.</value>
         public override double SWDemand { get { return sw_demand; } }
+        /// <summary>Gets the sw uptake.</summary>
+        /// <value>The sw uptake.</value>
         public override double SWUptake { get { return 0; } }
+        /// <summary>Does the sw demand.</summary>
+        /// <param name="Supply">The supply.</param>
         public override void DoSWDemand(double Supply) { }
+        /// <summary>Does the sw uptake.</summary>
+        /// <param name="SWDemand">The sw demand.</param>
         public override void DoSWUptake(double SWDemand) { }
 
         // dry matter
+        /// <summary>Gets the dm supply.</summary>
+        /// <value>The dm supply.</value>
         public override double DMSupply { get { return 0; } }
+        /// <summary>Gets the dm retrans supply.</summary>
+        /// <value>The dm retrans supply.</value>
         public override double DMRetransSupply { get { return 0; } }
+        /// <summary>Gets the DLT dm pot rue.</summary>
+        /// <value>The DLT dm pot rue.</value>
         public override double dltDmPotRue { get { return 0; } }
+        /// <summary>Gets the dm green demand.</summary>
+        /// <value>The dm green demand.</value>
         public override double DMGreenDemand { get { return _DMGreenDemand; } }
+        /// <summary>Gets the dm demand differential.</summary>
+        /// <value>The dm demand differential.</value>
         public override double DMDemandDifferential
         {
             get
@@ -129,12 +217,19 @@ namespace Models.PMF.OldPlant
                 return Utility.Math.Constrain(DMGreenDemand - Growth.Wt, 0.0, Double.MaxValue);
             }
         }
+        /// <summary>Does the dm demand.</summary>
+        /// <param name="DMSupply">The dm supply.</param>
         public override void DoDMDemand(double DMSupply) { }
+        /// <summary>Does the dm retranslocate.</summary>
+        /// <param name="DMAvail">The dm avail.</param>
+        /// <param name="DMDemandDifferentialTotal">The dm demand differential total.</param>
         public override void DoDmRetranslocate(double DMAvail, double DMDemandDifferentialTotal)
         {
             Retranslocation.NonStructuralWt = DMAvail * Utility.Math.Divide(DMDemandDifferential, DMDemandDifferentialTotal, 0.0);
             Util.Debug("meal.Retranslocation=%f", Retranslocation.NonStructuralWt);
         }
+        /// <summary>Gives the dm green.</summary>
+        /// <param name="Delta">The delta.</param>
         public override void GiveDmGreen(double Delta)
         {
             Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
@@ -142,6 +237,7 @@ namespace Models.PMF.OldPlant
             Util.Debug("meal.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("meal.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
+        /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
             double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
@@ -152,12 +248,14 @@ namespace Models.PMF.OldPlant
             Util.Debug("meal.Senescing.NonStructuralWt=%f", Senescing.NonStructuralWt);
 
         }
+        /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
         {
             Detaching = Dead * SenescenceDetachmentFraction;
             Util.Debug("meal.Detaching.Wt=%f", Detaching.Wt);
             Util.Debug("meal.Detaching.N=%f", Detaching.N);
         }
+        /// <summary>Removes the biomass.</summary>
         public override void RemoveBiomass()
         {
             Live = Live - GreenRemoved;
@@ -165,30 +263,55 @@ namespace Models.PMF.OldPlant
         }
 
         // nitrogen
+        /// <summary>Gets the n demand.</summary>
+        /// <value>The n demand.</value>
         public override double NDemand { get { return _NDemand; } }
+        /// <summary>Gets the n supply.</summary>
+        /// <value>The n supply.</value>
         public override double NSupply { get { return 0; } }
+        /// <summary>Gets the n uptake.</summary>
+        /// <value>The n uptake.</value>
         public override double NUptake { get { return 0; } }
+        /// <summary>Gets the soil n demand.</summary>
+        /// <value>The soil n demand.</value>
         public override double SoilNDemand { get { return _SoilNDemand; } }
+        /// <summary>Gets the n capacity.</summary>
+        /// <value>The n capacity.</value>
         public override double NCapacity { get { return 0.0; } }
+        /// <summary>Gets the n demand differential.</summary>
+        /// <value>The n demand differential.</value>
         public override double NDemandDifferential { get { return Utility.Math.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
+        /// <summary>Gets the available retranslocate n.</summary>
+        /// <value>The available retranslocate n.</value>
         public override double AvailableRetranslocateN { get { return 0.0; } }
+        /// <summary>Gets the DLT n senesced retrans.</summary>
+        /// <value>The DLT n senesced retrans.</value>
         public override double DltNSenescedRetrans { get { return dlt_n_senesced_retrans; } }
+        /// <summary>Does the n demand.</summary>
+        /// <param name="IncludeRetranslocation">if set to <c>true</c> [include retranslocation].</param>
         public override void DoNDemand(bool IncludeRetranslocation)
         {
             _NDemand = N_grain_demand;
             Util.Debug("Grain.NDemand=%f", _NDemand);
         }
+        /// <summary>Does the n demand1 pot.</summary>
+        /// <param name="dltDmPotRue">The DLT dm pot rue.</param>
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             // no n demand for grain
         }
+        /// <summary>Does the soil n demand.</summary>
         public override void DoSoilNDemand()
         {
             _SoilNDemand = NDemand - dlt_n_senesced_retrans;
             _SoilNDemand = Utility.Math.Constrain(_SoilNDemand, 0.0, double.MaxValue);
             Util.Debug("meal.SoilNDemand=%f", _SoilNDemand);
         }
+        /// <summary>Does the n supply.</summary>
         public override void DoNSupply() { }
+        /// <summary>Does the n retranslocate.</summary>
+        /// <param name="NSupply">The n supply.</param>
+        /// <param name="GrainNDemand">The grain n demand.</param>
         public override void DoNRetranslocate(double NSupply, double GrainNDemand)
         {
             if (GrainNDemand >= NSupply)
@@ -204,6 +327,7 @@ namespace Models.PMF.OldPlant
             }
             Util.Debug("meal.Retranslocation.N=%f", Retranslocation.N);
         }
+        /// <summary>Does the n senescence.</summary>
         public override void DoNSenescence()
         {
             double green_n_conc = Utility.Math.Divide(Live.N, Live.Wt, 0.0);
@@ -219,19 +343,28 @@ namespace Models.PMF.OldPlant
             Util.Debug("meal.SenescingN=%f", SenescingN);
             Util.Debug("meal.dlt.n_senesced_trans=%f", dlt_n_senesced_trans);
         }
+        /// <summary>Does the n senesced retranslocation.</summary>
+        /// <param name="navail">The navail.</param>
+        /// <param name="n_demand_tot">The n_demand_tot.</param>
         public override void DoNSenescedRetranslocation(double navail, double n_demand_tot)
         {
             dlt_n_senesced_retrans = navail * Utility.Math.Divide(NDemand, n_demand_tot, 0.0);
             Util.Debug("meal.dlt.n_senesced_retrans=%f", dlt_n_senesced_retrans);
         }
+        /// <summary>Does the n partition.</summary>
+        /// <param name="GrowthN">The growth n.</param>
         public override void DoNPartition(double GrowthN)
         {
             Growth.StructuralN = GrowthN;
         }
+        /// <summary>Does the n fix retranslocate.</summary>
+        /// <param name="NFixUptake">The n fix uptake.</param>
+        /// <param name="nFixDemandTotal">The n fix demand total.</param>
         public override void DoNFixRetranslocate(double NFixUptake, double nFixDemandTotal)
         {
             Growth.StructuralN += NFixUptake * Utility.Math.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
         }
+        /// <summary>Does the n conccentration limits.</summary>
         public override void DoNConccentrationLimits()
         {
             n_conc_crit = NConcentrationCritical.Value;
@@ -241,22 +374,35 @@ namespace Models.PMF.OldPlant
             Util.Debug("meal.n_conc_min=%f", n_conc_min);
             Util.Debug("meal.n_conc_max=%f", n_conc_max);
         }
+        /// <summary>Zeroes the DLT n senesced trans.</summary>
         public override void ZeroDltNSenescedTrans()
         {
             dlt_n_senesced_trans = 0;
         }
+        /// <summary>Does the n uptake.</summary>
+        /// <param name="PotNFix">The pot n fix.</param>
         public override void DoNUptake(double PotNFix) { }
 
         // cover
+        /// <summary>Gets or sets the cover green.</summary>
+        /// <value>The cover green.</value>
         [XmlIgnore]
         public override double CoverGreen { get { return 0; } protected set { } }
+        /// <summary>Gets or sets the cover sen.</summary>
+        /// <value>The cover sen.</value>
         [XmlIgnore]
         public override double CoverSen { get { return 0; } protected set { } }
+        /// <summary>Does the potential rue.</summary>
         public override void DoPotentialRUE() { }
+        /// <summary>Intercepts the radiation.</summary>
+        /// <param name="incomingSolarRadiation">The incoming solar radiation.</param>
+        /// <returns></returns>
         public override double interceptRadiation(double incomingSolarRadiation) { return 0; }
+        /// <summary>Does the cover.</summary>
         public override void DoCover() { }
 
         // update
+        /// <summary>Updates this instance.</summary>
         public override void Update()
         {
             Live = Live + Growth - Senescing;
@@ -290,13 +436,19 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Public interface specific to Grain
+        /// <summary>Gets the yield.</summary>
+        /// <value>The yield.</value>
         [Units("kg/ha")]
         public double Yield { get { return Live.Wt * 10; } }  // convert to kg/ha
 
+        /// <summary>Gets the grain no.</summary>
+        /// <value>The grain no.</value>
         [XmlIgnore]
         public double GrainNo { get; private set; }
 
-        
+
+        /// <summary>Gets the protein.</summary>
+        /// <value>The protein.</value>
         [Units("%")]
         public double Protein
         {
@@ -306,7 +458,9 @@ namespace Models.PMF.OldPlant
             }
         }
 
-        
+
+        /// <summary>Gets the n conc.</summary>
+        /// <value>The n conc.</value>
         [Units("%")]
         private double NConc
         {
@@ -318,13 +472,19 @@ namespace Models.PMF.OldPlant
             }
         }
 
-        
+
+        /// <summary>Gets the wt.</summary>
+        /// <value>The wt.</value>
         public double Wt { get { return Live.Wt; } }
 
-        
+
+        /// <summary>Gets the n.</summary>
+        /// <value>The n.</value>
         public double N { get { return Live.N; } }
 
-        
+
+        /// <summary>Gets the size.</summary>
+        /// <value>The size.</value>
         [Units("g")]
         public double Size
         {
@@ -336,13 +496,17 @@ namespace Models.PMF.OldPlant
             }
         }
 
+        /// <summary>Gets the n demand2.</summary>
+        /// <value>The n demand2.</value>
         internal double NDemand2 { get { return Utility.Math.Constrain(NDemand - dlt_n_senesced_retrans - Growth.N, 0.0, double.MaxValue); } }
+        /// <summary>Does the process bio demand.</summary>
         internal void doProcessBioDemand()
         {
             DoDMDemandStress();
             DoGrainNumber();
             DoDMDemandGrain();
         }
+        /// <summary>Does the grain number.</summary>
         private void DoGrainNumber()
         {
             if (Phenology.OnDayOf("emergence"))
@@ -361,6 +525,7 @@ namespace Models.PMF.OldPlant
             }
             Util.Debug("Grian.GrainNumber=%f", GrainNo);
         }
+        /// <summary>Does the dm demand stress.</summary>
         void DoDMDemandStress()
         {
             double RueReduction;          // Effect of non-optimal N and Temp conditions on RUE (0-1)
@@ -369,6 +534,7 @@ namespace Models.PMF.OldPlant
             double Dlt_dm_stress_max = SWStress.Photo * RueReduction;
             Util.Debug("Grain.Dlt_dm_stress_max=%f", Dlt_dm_stress_max);
         }
+        /// <summary>Does the dm demand grain.</summary>
         void DoDMDemandGrain()
         {
             if (GrainGrowthPeriod.Value == 1)
@@ -400,6 +566,8 @@ namespace Models.PMF.OldPlant
                 DltDMGrainDemand = 0.0;
             Util.Debug("Grain.Dlt_dm_grain_demand=%f", DltDMGrainDemand);
         }
+        /// <summary>Gets the DLT dm potential grain.</summary>
+        /// <value>The DLT dm potential grain.</value>
         public double DltDmPotentialGrain
         {
             get
@@ -407,6 +575,7 @@ namespace Models.PMF.OldPlant
                 return DltDMGrainDemand; // oilPart->removeEnergy(DltDMGrainDemand);
             }
         }
+        /// <summary>Does the n demand grain.</summary>
         internal void DoNDemandGrain()
         {
             double grain_growth;
@@ -451,6 +620,8 @@ namespace Models.PMF.OldPlant
             }
             Util.Debug("Grain.N_grain_demand=%f", N_grain_demand);
         }
+        /// <summary>Writes the cultivar information.</summary>
+        /// <param name="writer">The writer.</param>
         internal void WriteCultivarInfo(TextWriter writer)
         {
             string message = string.Format("grains_per_gram_stem           = {0,10:F1} (/g)\r\n" +
@@ -464,6 +635,9 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Event handlers
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -475,6 +649,9 @@ namespace Models.PMF.OldPlant
             SenescedRemoved = new Biomass();
         }
 
+        /// <summary>Called when [prepare].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         public override void OnPrepare(object sender, EventArgs e)
         {
             Growth.Clear();
@@ -495,6 +672,9 @@ namespace Models.PMF.OldPlant
             _SoilNDemand = 0.0;
             sw_demand = 0.0;
         }
+        /// <summary>Called when [harvest].</summary>
+        /// <param name="Harvest">The harvest.</param>
+        /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnHarvest(HarvestType Harvest, BiomassRemovedType BiomassRemoved)
         {
             int i = Util.IncreaseSizeOfBiomassRemoved(BiomassRemoved);
@@ -507,6 +687,8 @@ namespace Models.PMF.OldPlant
             Live.Clear();
             Dead.Clear();
         }
+        /// <summary>Called when [end crop].</summary>
+        /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnEndCrop(BiomassRemovedType BiomassRemoved)
         {
             int i = Util.IncreaseSizeOfBiomassRemoved(BiomassRemoved);
@@ -519,6 +701,8 @@ namespace Models.PMF.OldPlant
             Dead.Clear();
             Live.Clear();
         }
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="PhenologyChange">The phenology change.</param>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(PhaseChangedType PhenologyChange)
         {
@@ -534,8 +718,12 @@ namespace Models.PMF.OldPlant
         #endregion
 
         #region Grazing
+        /// <summary>Gets the available to animal.</summary>
+        /// <value>The available to animal.</value>
         public override AvailableToAnimalelementType[] AvailableToAnimal
         { get { return Util.AvailableToAnimal(Plant.Name, this.Name, 0.0, Live, Dead); } }
+        /// <summary>Sets the removed by animal.</summary>
+        /// <value>The removed by animal.</value>
         public override RemovedByAnimalType RemovedByAnimal
         {
             set

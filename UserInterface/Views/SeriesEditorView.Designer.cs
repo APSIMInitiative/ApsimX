@@ -43,14 +43,14 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.xComboBox = new System.Windows.Forms.ComboBox();
             this.yComboBox = new System.Windows.Forms.ComboBox();
             this.x2ComboBox = new System.Windows.Forms.ComboBox();
             this.y2ComboBox = new System.Windows.Forms.ComboBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label2
@@ -115,7 +115,7 @@
             "Bar",
             "Area"});
             this.comboBox2.Location = new System.Drawing.Point(119, 182);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(113, 24);
             this.comboBox2.TabIndex = 12;
@@ -132,7 +132,7 @@
             "DashDot",
             "None"});
             this.comboBox3.Location = new System.Drawing.Point(120, 208);
-            this.comboBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox3.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(112, 24);
             this.comboBox3.TabIndex = 14;
@@ -166,7 +166,7 @@
             "Plus",
             "Star"});
             this.comboBox4.Location = new System.Drawing.Point(120, 235);
-            this.comboBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox4.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(112, 24);
             this.comboBox4.TabIndex = 16;
@@ -186,8 +186,8 @@
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.button1.Location = new System.Drawing.Point(285, 208);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Location = new System.Drawing.Point(265, 203);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(36, 28);
             this.button1.TabIndex = 17;
@@ -198,7 +198,7 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(391, 52);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(70, 21);
             this.checkBox1.TabIndex = 18;
@@ -210,7 +210,7 @@
             // 
             this.checkBox2.AutoSize = true;
             this.checkBox2.Location = new System.Drawing.Point(391, 85);
-            this.checkBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBox2.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(78, 21);
             this.checkBox2.TabIndex = 19;
@@ -221,47 +221,32 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(391, 180);
-            this.checkBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBox3.Location = new System.Drawing.Point(335, 183);
+            this.checkBox3.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(110, 21);
+            this.checkBox3.Size = new System.Drawing.Size(154, 21);
             this.checkBox3.TabIndex = 21;
-            this.checkBox3.Text = "Regression?";
+            this.checkBox3.Text = "Overall regression?";
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.OnCheckBox3Changed);
             // 
-            // checkBox4
+            // checkBox5
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(391, 210);
-            this.checkBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(126, 21);
-            this.checkBox4.TabIndex = 26;
-            this.checkBox4.Text = "Show in legend";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            this.checkBox4.CheckedChanged += new System.EventHandler(this.OnCheckBox4Changed);
-            // 
-            // comboBox5
-            // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
-            "Split on simulation",
-            "Split on experiment",
-            "Graph all data in table"});
-            this.comboBox5.Location = new System.Drawing.Point(391, 235);
-            this.comboBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(180, 24);
-            this.comboBox5.TabIndex = 28;
-            this.comboBox5.Text = "Split on simulation";
-            this.comboBox5.SelectedValueChanged += new System.EventHandler(this.comboBox5_SelectedValueChanged);
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(335, 234);
+            this.checkBox5.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(126, 21);
+            this.checkBox5.TabIndex = 26;
+            this.checkBox5.Text = "Show in legend";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox5.CheckedChanged += new System.EventHandler(this.OnCheckBox5Changed);
             // 
             // xComboBox
             // 
             this.xComboBox.FormattingEnabled = true;
             this.xComboBox.Location = new System.Drawing.Point(119, 48);
-            this.xComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.xComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.xComboBox.Name = "xComboBox";
             this.xComboBox.Size = new System.Drawing.Size(263, 24);
             this.xComboBox.TabIndex = 29;
@@ -271,7 +256,7 @@
             // 
             this.yComboBox.FormattingEnabled = true;
             this.yComboBox.Location = new System.Drawing.Point(119, 80);
-            this.yComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.yComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.yComboBox.Name = "yComboBox";
             this.yComboBox.Size = new System.Drawing.Size(263, 24);
             this.yComboBox.TabIndex = 30;
@@ -281,7 +266,7 @@
             // 
             this.x2ComboBox.FormattingEnabled = true;
             this.x2ComboBox.Location = new System.Drawing.Point(119, 112);
-            this.x2ComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.x2ComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.x2ComboBox.Name = "x2ComboBox";
             this.x2ComboBox.Size = new System.Drawing.Size(263, 24);
             this.x2ComboBox.TabIndex = 31;
@@ -291,7 +276,7 @@
             // 
             this.y2ComboBox.FormattingEnabled = true;
             this.y2ComboBox.Location = new System.Drawing.Point(119, 144);
-            this.y2ComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.y2ComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.y2ComboBox.Name = "y2ComboBox";
             this.y2ComboBox.Size = new System.Drawing.Size(263, 24);
             this.y2ComboBox.TabIndex = 32;
@@ -301,7 +286,7 @@
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(119, 14);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(263, 24);
             this.comboBox1.TabIndex = 33;
@@ -317,18 +302,30 @@
             this.label1.TabIndex = 34;
             this.label1.Text = "Data source:";
             // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Location = new System.Drawing.Point(335, 208);
+            this.checkBox4.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(208, 21);
+            this.checkBox4.TabIndex = 35;
+            this.checkBox4.Text = "Regression for each series?";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            this.checkBox4.CheckedChanged += new System.EventHandler(this.OnCheckBox4Changed);
+            // 
             // SeriesEditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.y2ComboBox);
             this.Controls.Add(this.x2ComboBox);
             this.Controls.Add(this.yComboBox);
             this.Controls.Add(this.xComboBox);
-            this.Controls.Add(this.comboBox5);
-            this.Controls.Add(this.checkBox4);
+            this.Controls.Add(this.checkBox5);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
@@ -343,9 +340,9 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SeriesEditorView";
-            this.Size = new System.Drawing.Size(832, 271);
+            this.Size = new System.Drawing.Size(608, 271);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -368,13 +365,13 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.ComboBox xComboBox;
         private System.Windows.Forms.ComboBox yComboBox;
         private System.Windows.Forms.ComboBox x2ComboBox;
         private System.Windows.Forms.ComboBox y2ComboBox;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBox4;
     }
 }

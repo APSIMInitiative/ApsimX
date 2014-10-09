@@ -6,19 +6,33 @@ using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.
+    /// </summary>
     [Serializable]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
     public class PhaseLookupValue : Function
     {
+        /// <summary>The phenology</summary>
         [Link]
         Phenology Phenology = null;
 
+        /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 
+        /// <summary>The start</summary>
         public string Start = "";
 
+        /// <summary>The end</summary>
         public string End = "";
 
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.Exception">
+        /// Phase start name not set: + Name
+        /// or
+        /// Phase end name not set: + Name
+        /// </exception>
         public override double Value
         {
             get
@@ -41,6 +55,8 @@ namespace Models.PMF.Functions
             }
         }
 
+        /// <summary>Gets a value indicating whether [in phase].</summary>
+        /// <value><c>true</c> if [in phase]; otherwise, <c>false</c>.</value>
         public bool InPhase
         {
             get

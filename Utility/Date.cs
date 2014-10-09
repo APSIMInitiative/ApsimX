@@ -1,24 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Date.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Utility
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Some date manipulation routines, transcribed from their Fortran counterparts
     /// </summary>
     public class Date
     {
-        static List<string> LowerCaseMonths = new List<string>(new[] { null, "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" });
+        /// <summary>
+        /// a list of month names in lower case.
+        /// </summary>
+        static private List<string> LowerCaseMonths = new List<string>(new[] { null, "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" });
 
+        /// <summary>
+        /// A regular expression
+        /// </summary>
         static Regex
             rxDD = new Regex(@"\d\d?"),
             rxMMM = new Regex(@"\w{3}"),
             rxDMY = new Regex(@"^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$");
-
-        //=====================================================================
+            
         /// <summary>
         /// Convert a Julian Date to a DateTime object
         /// Where the Julian day begins at Greenwich mean noon 12pm. 12h UT.
@@ -171,7 +179,7 @@ namespace Utility
         /// <param name="ddMMM_start">The start date - a string containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <param name="today">The date to check</param>
         /// <param name="ddMMM_end">The end date - a string containing 'day of month' and at least the first 3 letters of a month's name</param>
-        /// <returns><paramref name="ddMMM_start"/> &lt;&eq; <paramref name="today"/> &lt;&eq; <paramref name="ddMMM_end"/></returns>
+        /// <returns>true if within date window</returns>
         public static bool WithinDates(string ddMMM_start, DateTime today, string ddMMM_end)
         {
             DateTime
@@ -196,12 +204,12 @@ namespace Utility
         /// <param name="start">The start date</param>
         /// <param name="today">The date to check</param>
         /// <param name="end">The end date</param>
-        /// <returns><paramref name="start"/> &lt;&eq; <paramref name="today"/> &lt;&eq; <paramref name="end"/></returns>
+        /// <returns>true if within date window</returns>
         public static bool WithinDates(DateTime start, DateTime today, DateTime end)
         {
             return today.CompareTo(start) >= 0 && today.CompareTo(end) <= 0;
         }
-        //=====================================================================
+        
         /// <summary>
         /// Get a Julian Date from a DateTime. Where the Julian day begins at Greenwich mean noon 12pm. 12h UT.
         /// 2429995.5 is 1/1/1941 00:00
@@ -238,11 +246,13 @@ namespace Utility
 
             return JD;
         }
-        //=====================================================================
+        
         /// <summary>
         /// Converts a Julian Day Number to Day of year. 
         /// </summary>
         /// <param name="JDN"> Julian day number.</param>
+        /// <param name="dyoyr">Day of year</param>
+        /// <param name="year">Year</param>
         /// <returns>Date time value.</returns>
         public static void JulianDayNumberToDayOfYear(int JDN, out int dyoyr, out int year)
         {
@@ -250,7 +260,7 @@ namespace Utility
             dyoyr = date.DayOfYear;
             year = date.Year;
         }
-        //=====================================================================
+        
         /// <summary>
         /// Convert the Julian day number (int value) emitted from Clock to a DateTime. 
         /// This will be the DateTime at 00:00 of the day. 
@@ -264,7 +274,7 @@ namespace Utility
             double jd = JDN - 0.5;  //Convert to true julian date value (at 00:00).
             return GetDate(jd);     //equiv to new DateTime(y,m,d)
         }
-        //=====================================================================
+        
         /// <summary>
         /// Convert the DateTime value to the Julian day number equivalent to what
         /// Clock would emit. Given the DateTime for a day would give the whole number
@@ -305,6 +315,5 @@ namespace Utility
             else
                 return new DateTime();    // default??
         }
-
     }
 }

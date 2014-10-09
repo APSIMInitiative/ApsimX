@@ -76,7 +76,7 @@
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Slurp</Name>
+              <Name>SlurpSoil</Name>
               <LL>
                 <double>0.3</double>
                 <double>0.3</double>
@@ -97,7 +97,7 @@
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Slurp1</Name>
+              <Name>Slurp1Soil</Name>
               <LL>
                 <double>0.3</double>
                 <double>0.3</double>
@@ -118,7 +118,7 @@
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Slurp2</Name>
+              <Name>Slurp2Soil</Name>
               <LL>
                 <double>0.3</double>
                 <double>0.3</double>
@@ -230,6 +230,11 @@
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>3</SummerCona>
             <SummerU>6</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -239,11 +244,6 @@
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -507,7 +507,6 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Clock Clock;
-		[Link] Report Report;
 		[Link] Summary Summary;
 		[Link] Soils.Soil Soil;
 
@@ -599,17 +598,17 @@ namespace Models
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>Evaluate (Slurp1.demandWater + Slurp2.demandWater) as demandWater</string>
-            <string>Evaluate sum(Slurp1.uptakeWater[1:4] + Slurp2.uptakeWater[1:4]) as UptakeWater</string>
-            <string>Evaluate sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
+            <string>(Slurp1.demandWater + Slurp2.demandWater) as demandWater</string>
+            <string>sum(Slurp1.uptakeWater[1:4] + Slurp2.uptakeWater[1:4]) as UptakeWater</string>
+            <string>sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
             <string>[Diffs].Script.diffSWDepUptake as deltaSWDep</string>
-            <string>Evaluate (Slurp1.demandNitrogen + Slurp2.demandNitrogen) as demandNitrogen</string>
-            <string>Evaluate sum(Slurp1.uptakeNitrogen[1:4] + Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
-            <string>Evaluate sum(Slurp1.uptakeNitrogenPropNO3[1:4] + Slurp2.uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
-            <string>Evaluate (sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
+            <string>(Slurp1.demandNitrogen + Slurp2.demandNitrogen) as demandNitrogen</string>
+            <string>sum(Slurp1.uptakeNitrogen[1:4] + Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
+            <string>sum(Slurp1.uptakeNitrogenPropNO3[1:4] + Slurp2.uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
+            <string>(sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.no3[1:4]) as MinN</string>
             <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
-            <string>Evaluate sum(Slurp1.uptakeNitrogen[1:4]) as UptakeNitrogen1</string>
-            <string>Evaluate sum(Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen2</string>
+            <string>sum(Slurp1.uptakeNitrogen[1:4]) as UptakeNitrogen1</string>
+            <string>sum(Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen2</string>
             <string>Slurp1.demandNitrogen as demandNitrogen1</string>
             <string>Slurp2.demandNitrogen as demandNitrogen2</string>
           </VariableNames>
@@ -662,6 +661,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Comp1</Name>
@@ -702,6 +703,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Comp2</Name>
@@ -742,6 +745,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Demand</Name>
@@ -782,6 +787,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <DataStore>

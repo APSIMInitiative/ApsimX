@@ -17,14 +17,16 @@ namespace Models.Core
     [Serializable]
     public class Simulations : Model, Utility.JobManager.IRunnable
     {
+        /// <summary>The _ file name</summary>
         private string _FileName;
+        /// <summary>Gets or sets the width of the explorer.</summary>
+        /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
 
 
 
-        /// <summary>
-        /// The name of the file containing the simulations.
-        /// </summary>
+        /// <summary>The name of the file containing the simulations.</summary>
+        /// <value>The name of the file.</value>
         [XmlIgnore]
         public string FileName
         {
@@ -41,12 +43,14 @@ namespace Models.Core
         /// <summary>
         /// A list of all exceptions thrown during the creation and loading of the simulation.
         /// </summary>
+        /// <value>The load errors.</value>
         [XmlIgnore]
         public List<Exception> LoadErrors { get; private set; }
 
-        /// <summary>
-        /// Create a simulations object by reading the specified filename
-        /// </summary>
+        /// <summary>Create a simulations object by reading the specified filename</summary>
+        /// <param name="FileName">Name of the file.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public static Simulations Read(string FileName)
         {
             
@@ -92,9 +96,10 @@ namespace Models.Core
             return simulations;
         }
 
-        /// <summary>
-        /// Create a simulations object by reading the specified filename
-        /// </summary>
+        /// <summary>Create a simulations object by reading the specified filename</summary>
+        /// <param name="node">The node.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public static Simulations Read(XmlNode node)
         {
 
@@ -122,10 +127,8 @@ namespace Models.Core
             return simulations;
         }
 
-        /// <summary>
-        /// Call Loaded event in specified model and all children
-        /// </summary>
-        /// <param name="simulations"></param>
+        /// <summary>Call Loaded event in specified model and all children</summary>
+        /// <param name="model">The model.</param>
         private static void CallOnLoaded(IModel model)
         {
             // Call OnLoaded in all models.
@@ -133,9 +136,8 @@ namespace Models.Core
                 Apsim.CallEventHandler(child, "Loaded", null);
         }
 
-        /// <summary>
-        /// Write the specified simulation set to the specified filename
-        /// </summary>
+        /// <summary>Write the specified simulation set to the specified filename</summary>
+        /// <param name="FileName">Name of the file.</param>
         public void Write(string FileName)
         {
             string tempFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(FileName));
@@ -154,9 +156,8 @@ namespace Models.Core
             SetFileNameInAllSimulations();
         }
 
-        /// <summary>
-        /// Write the specified simulation set to the specified 'stream'
-        /// </summary>
+        /// <summary>Write the specified simulation set to the specified 'stream'</summary>
+        /// <param name="stream">The stream.</param>
         public void Write(TextWriter stream)
         {
             object[] args = new object[] { true };
@@ -175,14 +176,12 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Constructor, private to stop developers using it. Use Simulations.Read instead.
-        /// </summary>
+        /// <summary>Constructor, private to stop developers using it. Use Simulations.Read instead.</summary>
         private Simulations() { }
 
-        /// <summary>
-        /// Find all simulations under the specified parent model.
-        /// </summary>
+        /// <summary>Find all simulations under the specified parent model.</summary>
+        /// <param name="parent">The parent.</param>
+        /// <returns></returns>
         public static Simulation[] FindAllSimulationsToRun(Model parent)
         {
             List<Simulation> simulations = new List<Simulation>();
@@ -219,9 +218,7 @@ namespace Models.Core
             return simulations.ToArray();
         }
 
-        /// <summary>
-        /// Find all simulation names that are going to be run.
-        /// </summary>
+        /// <summary>Find all simulation names that are going to be run.</summary>
         /// <returns></returns>
         public string[] FindAllSimulationNames()
         {
@@ -248,9 +245,7 @@ namespace Models.Core
 
         }
 
-        /// <summary>
-        /// Look through all models. For each simulation found set the filename.
-        /// </summary>
+        /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
             foreach (Model simulation in Apsim.ChildrenRecursively(this))
@@ -258,6 +253,9 @@ namespace Models.Core
                     (simulation as Simulation).FileName = FileName;
         }
 
+        /// <summary>Roots the simulations.</summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         private static Simulations RootSimulations(Model model)
         {
             Model m = model;
@@ -271,15 +269,18 @@ namespace Models.Core
         /// Allows the GUI to specify a simulation to run. It then calls
         /// 'Run' below to run this simulation.
         /// </summary>
+        /// <value>The simulation to run.</value>
         [XmlIgnore]
         public Model SimulationToRun { get; set; }
 
+        /// <summary>The number to run</summary>
         private int NumToRun;
+        /// <summary>The number completed</summary>
         private int NumCompleted;
 
-        /// <summary>
-        /// Run all simulations.
-        /// </summary>
+        /// <summary>Run all simulations.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             // Get a reference to the JobManager so that we can add jobs to it.
@@ -326,9 +327,9 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// This gets called everytime a simulation commences.
-        /// </summary>
+        /// <summary>This gets called everytime a simulation commences.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // We trap the commencing event so that we can then subscribe to 
@@ -343,6 +344,8 @@ namespace Models.Core
         /// This gets called everytime a simulation completes. When all are done then
         /// invoke each model's OnAllCompleted method.
         /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             bool RunAllCompleted = false;
@@ -358,30 +361,12 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Call the all completed event in all models.
-        /// </summary>
+        /// <summary>Call the all completed event in all models.</summary>
         public void CallAllCompleted()
         {
             object[] args = new object[] { this, new EventArgs() };
             foreach (Model model in Apsim.ChildrenRecursively(this))
                 Apsim.CallEventHandler(model, "AllCompleted", args);
-        }
-
-        /// <summary>
-        /// Ensure the specified filename is always a full path by converting relative
-        /// paths to absolute.
-        /// </summary>
-        /// <param name="fileName">The filename to convert to absolute</param>
-        /// <returns>The full path</returns>
-        public string GetFullFileName(string fileName)
-        {
-            if (fileName != null && fileName != string.Empty)
-            {
-                return Path.Combine(Path.GetDirectoryName(this.FileName), fileName);
-            }
-
-            return null;
         }
     }
 }

@@ -26,6 +26,9 @@ namespace Utility
             void Run(object sender, DoWorkEventArgs e);
         }
 
+        /// <summary>
+        /// A structure for holding information about a completed job
+        /// </summary>
         [Serializable]
         public class JobCompleteArgs : EventArgs
         {

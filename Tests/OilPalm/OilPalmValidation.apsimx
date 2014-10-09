@@ -427,7 +427,7 @@
           <Water>
             <Name>Water</Name>
             <SoilCropOilPalm>
-              <Name>OilPalm</Name>
+              <Name>OilPalmSoil</Name>
               <KL>
                 <double>0.06</double>
                 <double>0.04</double>
@@ -1403,6 +1403,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>StemMass</Name>
@@ -1463,6 +1464,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>FrondProduction</Name>
@@ -1523,6 +1525,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>BunchProduction</Name>
@@ -1583,6 +1586,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>AnnualFFB</Name>
@@ -1643,6 +1647,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>AnnualBunchSize</Name>
@@ -1703,6 +1708,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
   </Experiment>
   <Experiment>
@@ -2096,7 +2102,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCropOilPalm>
-              <Name>OilPalm</Name>
+              <Name>OilPalmSoil</Name>
               <KL>
                 <double>0.04</double>
                 <double>0.04</double>
@@ -2942,6 +2948,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>StemMass</Name>
@@ -3002,6 +3009,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>FrondProduction</Name>
@@ -3062,6 +3070,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>BunchProduction</Name>
@@ -3122,6 +3131,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>AnnualYield</Name>
@@ -3182,6 +3192,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>AnnualBunchSize</Name>
@@ -3242,6 +3253,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
   </Experiment>
   <Experiment>
@@ -3787,7 +3799,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCropOilPalm>
-              <Name>OilPalm</Name>
+              <Name>OilPalmSoil</Name>
               <KL>
                 <double>0.03</double>
                 <double>0.02</double>
@@ -4643,6 +4655,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>StemMass</Name>
@@ -4703,6 +4716,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>FrondProduction</Name>
@@ -4763,6 +4777,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>BunchProduction</Name>
@@ -4823,6 +4838,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>AnnualYield</Name>
@@ -4883,6 +4899,7 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
     <Graph>
       <Name>AnnualBunchSize</Name>
@@ -4943,15 +4960,14 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
     </Graph>
   </Experiment>
   <DataStore>
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>observed.prn</string>
-      </FileNames>
+      <FileName>observed.prn</FileName>
     </Input>
     <PredictedObserved>
       <Name>POMonthly</Name>
@@ -5005,31 +5021,12 @@ namespace Models
         <TableName>POMonthly</TableName>
         <FieldName>Observed.OilPalm.LAI</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>POMonthly</TableName>
-        <FieldName>Predicted.OilPalm.LAI</FieldName>
-      </X>
-      <Y>
-        <TableName>POMonthly</TableName>
-        <FieldName>Observed.OilPalm.LAI</FieldName>
-      </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Experiment</SplitOn>
+      <SplitOn>*</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
   </Graph>
   <Graph>
     <Name>FFB</Name>
@@ -5065,31 +5062,12 @@ namespace Models
         <TableName>POAnnual</TableName>
         <FieldName>Observed.Calculations.Script.AnnualYield</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>POAnnual</TableName>
-        <FieldName>Predicted.Calculations.Script.AnnualYield</FieldName>
-      </X>
-      <Y>
-        <TableName>POAnnual</TableName>
-        <FieldName>Observed.Calculations.Script.AnnualYield</FieldName>
-      </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Experiment</SplitOn>
+      <SplitOn>*</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
   </Graph>
   <Graph>
     <Name>BunchSize</Name>
@@ -5125,31 +5103,12 @@ namespace Models
         <TableName>POAnnual</TableName>
         <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>POAnnual</TableName>
-        <FieldName>Predicted.Calculations.Script.AnnualBunchSize</FieldName>
-      </X>
-      <Y>
-        <TableName>POAnnual</TableName>
-        <FieldName>Observed.Calculations.Script.AnnualBunchSize</FieldName>
-      </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Experiment</SplitOn>
+      <SplitOn>*</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
   </Graph>
   <Graph>
     <Name>BunchProduction</Name>
@@ -5185,31 +5144,12 @@ namespace Models
         <TableName>POAnnual</TableName>
         <FieldName>Observed.Calculations.Script.AnnualBunches</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
-    </Series>
-    <Series>
-      <Title>Series2</Title>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>POAnnual</TableName>
-        <FieldName>Predicted.Calculations.Script.AnnualBunches</FieldName>
-      </X>
-      <Y>
-        <TableName>POAnnual</TableName>
-        <FieldName>Observed.Calculations.Script.AnnualBunches</FieldName>
-      </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Experiment</SplitOn>
+      <SplitOn>*</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
   </Graph>
   <Tests>
     <Name>Tests</Name>

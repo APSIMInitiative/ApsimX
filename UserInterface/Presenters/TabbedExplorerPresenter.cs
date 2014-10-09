@@ -153,7 +153,7 @@ namespace UserInterface.Presenters
         {
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
-                Name = "Open ApsimX File",
+                Name = "Open APSIM File",
                 ResourceNameForImage = "apsim_logo32",
                 OnClick = OnOpenApsimXFile
             });

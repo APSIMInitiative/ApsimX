@@ -1,15 +1,15 @@
 
 ; Inno Setup Compiler 5.5.3
 
-;ApsimX setup script
+;APSIM setup script
 
-#define AppVerNo '14.10.1' 
+#define AppVerNo GetFileVersion("..\Bin\Model.exe") 
 
 [Setup]
 AppName=ApsimX
-AppVerName=ApsimX version {#AppVerNo}, Oct 2014
-AppPublisherURL=http://www.csiro.au
-OutputBaseFilename=setupx
+AppVerName=ApsimX version {#AppVerNo}
+AppPublisherURL=http://www.apsim.au
+OutputBaseFilename=SetupApsimX
 VersionInfoVersion={#AppVerNo}
 PrivilegesRequired=poweruser
 ;LicenseFile=..\license.txt
@@ -20,10 +20,10 @@ DefaultGroupName=APSIM
 UninstallDisplayIcon={app}\Bin\Userinterface.exe
 Compression=lzma/Max
 ChangesAssociations=true
-WizardSmallImageFile=csiro_logo.bmp
-WizardImageFile=.\asetup.bmp
+WizardSmallImageFile=apsim_logo32.bmp
+WizardImageFile=.\APSIMInitiativeBanner.bmp
 ;InfoBeforeFile=
-VersionInfoCompany=CSIRO
+VersionInfoCompany=APSIM Initiative4
 VersionInfoDescription=Apsim Modelling
 VersionInfoProductName=ApsimX
 VersionInfoProductVersion={#AppVerNo}
@@ -74,7 +74,7 @@ Name: commondesktopicon; Description: Create a &desktop icon for all users; Flag
 Name: associate; Description: &Associate .apsimx with ApsimX; GroupDescription: Other tasks:
 
 [Icons]
-Name: {commonprograms}\CSIRO\ApsimX; Filename: {app}\Bin\UserInterface.exe
+Name: {commonprograms}\ApsimX; Filename: {app}\Bin\UserInterface.exe
 ;Name: {commonprograms}\CSIRO\ApsimX Tutorial; Filename: {app}\docs\ApsimX tutorial.pdf
 Name: {userdesktop}\ApsimX; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
 Name: {commondesktop}\ApsimX; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
