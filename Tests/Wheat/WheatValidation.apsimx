@@ -2296,7 +2296,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
@@ -2309,7 +2309,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -4516,7 +4516,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
@@ -4529,7 +4529,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -10598,7 +10598,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
@@ -10611,7 +10611,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -11846,7 +11846,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
@@ -11859,7 +11859,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -13901,7 +13901,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
@@ -13914,7 +13914,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;

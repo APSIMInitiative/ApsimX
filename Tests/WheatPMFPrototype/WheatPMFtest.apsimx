@@ -556,13 +556,13 @@ namespace Models
             int layers = Soil.SoilWater.dlayer.Length;
 			if (InitialDay == true)
 			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSurfaceOMN = SOM.N;
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);

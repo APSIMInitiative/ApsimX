@@ -3494,7 +3494,7 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>SurfaceOrganicMatter.surfaceom_n</FieldName>
+            <FieldName>SurfaceOrganicMatter.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -5323,7 +5323,7 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>SurfaceOrganicMatter.surfaceom_n</FieldName>
+            <FieldName>SurfaceOrganicMatter.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
