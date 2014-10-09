@@ -242,9 +242,9 @@ namespace Models.Soils
         WeatherFile Weather;
 
 
-        //needed for "interception"
-        [Link]
-        MicroClimate MicroClimate;
+        ////needed for "interception"
+        //[Link]
+        //MicroClimate MicroClimate;
 
 
         /// <summary>The soil</summary>
