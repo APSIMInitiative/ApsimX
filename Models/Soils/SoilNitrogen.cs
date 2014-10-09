@@ -510,7 +510,7 @@ namespace Models.Soils
             }
 
             // Calculations for NEW sysbal component
-            dailyInitialC = SumDoubleArray(carbon_tot);
+            dailyInitialC = SumDoubleArray(TotalC);
             dailyInitialN = SumDoubleArray(TotalN);
 
             // Initialise the inhibitor factors
@@ -562,7 +562,7 @@ namespace Models.Soils
             // +  Note: needed for both NEW and OLD sysbal component
 
             dailyInitialN = SumDoubleArray(TotalN);
-            dailyInitialC = SumDoubleArray(carbon_tot);
+            dailyInitialC = SumDoubleArray(TotalC);
         }
 
         /// <summary>Calculates variations in C an N, and publishes MassFlows to APSIM</summary>
@@ -570,7 +570,7 @@ namespace Models.Soils
         {
 
             double dltN = SumDoubleArray(TotalN) - dailyInitialN;
-            double dltC = SumDoubleArray(carbon_tot) - dailyInitialC;
+            double dltC = SumDoubleArray(TotalC) - dailyInitialC;
 
             SendExternalMassFlowN(dltN);
             SendExternalMassFlowC(dltC);

@@ -880,7 +880,7 @@
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Soil].SoilNitrogen.dnit</string>
+            <string>[Soil].SoilNitrogen.Denitrification</string>
             <string>[ExtraVariables].Script.MineralN</string>
             <string>[Soil].SoilNitrogen.NO3</string>
             <string>[Soil].SoilNitrogen.NH4</string>
@@ -1175,7 +1175,7 @@ namespace Models
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;

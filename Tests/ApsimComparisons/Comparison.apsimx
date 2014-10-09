@@ -869,7 +869,7 @@ namespace Models
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			SW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			TotalN = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
-			TotalC = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot);
+			TotalC = Utility.Math.Sum(Soil.SoilNitrogen.TotalC);
 		}
 	}
 }

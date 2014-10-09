@@ -322,7 +322,7 @@ namespace Models.Soils
         /// <summary>Gets or sets the MCN.</summary>
         /// <value>The MCN.</value>
         [XmlIgnore]
-        public double mcn
+        private double mcn
         {
             get { return biom_cn; }
             set { biom_cn = value; }
@@ -2131,7 +2131,7 @@ namespace Models.Soils
         /// <value>The nitrification.</value>
 
         [Units("kg/ha")]
-        double[] nitrification
+        public double[] Nitrification
         {
             get
             {
@@ -2259,7 +2259,7 @@ namespace Models.Soils
         /// <value>The dnit.</value>
 
         [Units("kg/ha")]
-        public double[] dnit
+        public double[] Denitrification
         {
             get
             {
@@ -2740,7 +2740,7 @@ namespace Models.Soils
         /// <value>The fom_c.</value>
 
         [Units("kg/ha")]
-        double[] fom_c
+        public double[] FOMC
         {
             get
             {
@@ -2804,7 +2804,7 @@ namespace Models.Soils
         /// <value>The hum_c.</value>
 
         [Units("kg/ha")]
-        double[] hum_c
+        public double[] HumicC
         {
             get
             {
@@ -2820,7 +2820,7 @@ namespace Models.Soils
         /// <value>The inert_c.</value>
 
         [Units("kg/ha")]
-        double[] inert_c
+        public double[] InertC
         {
             get
             {
@@ -2836,7 +2836,7 @@ namespace Models.Soils
         /// <value>The biom_c.</value>
 
         [Units("kg/ha")]
-        double[] biom_c
+        public double[] BiomassC
         {
             get
             {
@@ -2852,7 +2852,7 @@ namespace Models.Soils
         /// <value>The carbon_tot.</value>
 
         [Units("kg/ha")]
-        public double[] carbon_tot
+        public double[] TotalC
         {
             get
             {
@@ -2879,7 +2879,7 @@ namespace Models.Soils
         {
             get
             {
-                double deltaC = SumDoubleArray(carbon_tot) - dailyInitialC;     // variation in C today
+                double deltaC = SumDoubleArray(TotalC) - dailyInitialC;     // variation in C today
                 double losses = SumDoubleArray(dlt_res_c_atm) + SumDoubleArray(dlt_fom_c_atm) + SumDoubleArray(dlt_hum_c_atm) + SumDoubleArray(dlt_biom_c_atm);
                 return -(losses + deltaC);
             }

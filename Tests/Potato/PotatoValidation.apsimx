@@ -789,7 +789,7 @@ namespace Models
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -4571,7 +4571,7 @@ namespace Models
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -8507,7 +8507,7 @@ namespace Models
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -12438,7 +12438,7 @@ namespace Models
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -16445,7 +16445,7 @@ namespace Models
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -21117,7 +21117,7 @@ namespace Models
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;

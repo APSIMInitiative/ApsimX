@@ -888,7 +888,7 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += WeatherFile.Rain;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
+			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
@@ -909,7 +909,7 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
             AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             AnnualIrrigation +=Irrigation.IrrigationApplied;
