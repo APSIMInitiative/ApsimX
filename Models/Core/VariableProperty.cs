@@ -369,7 +369,7 @@ namespace Models.Core
             {
                 DisplayAttribute displayFormatAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
                 bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
-                if (hasDisplayTotal && this.Value != null)
+                if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
                 {
                     double sum = 0.0;
                     foreach (double doubleValue in this.Value as IEnumerable<double>)

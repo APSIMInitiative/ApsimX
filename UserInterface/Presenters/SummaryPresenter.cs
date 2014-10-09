@@ -39,33 +39,38 @@ namespace UserInterface.Presenters
 
             // populate the simulation names in the view.
             Simulation simulation = Apsim.Parent(this.summary, typeof(Simulation)) as Simulation;
-            if (simulation.Parent is Experiment)
+            if (simulation != null)
             {
-                Experiment experiment = simulation.Parent as Experiment;
-                string[] simulationNames = experiment.Names();
-                this.view.SimulationNames = simulationNames;
-                this.view.SimulationName = simulationNames[0];
+                if (simulation.Parent is Experiment)
+                {
+                    Experiment experiment = simulation.Parent as Experiment;
+                    string[] simulationNames = experiment.Names();
+                    this.view.SimulationNames = simulationNames;
+                    if (simulationNames.Length > 0)
+                        this.view.SimulationName = simulationNames[0];
+                }
+                else
+                {
+                    this.view.SimulationNames = new string[] { simulation.Name };
+                    this.view.SimulationName = simulation.Name;
+                }
+
+                // create a data store - we'll need it later
+                dataStore = new DataStore(simulation, false);
+
+                // populate the view
+                this.SetHtmlInView();
+
+                // subscribe to the simulation name changed event.
+                this.view.SimulationNameChanged += OnSimulationNameChanged;
             }
-            else
-            {
-                this.view.SimulationNames = new string[] { simulation.Name };
-                this.view.SimulationName = simulation.Name;
-            }
-
-            // create a data store - we'll need it later
-            dataStore = new DataStore(simulation, false);
-
-            // populate the view
-            this.SetHtmlInView();
-
-            // subscribe to the simulation name changed event.
-            this.view.SimulationNameChanged += OnSimulationNameChanged;
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            dataStore.Disconnect();
+            if (dataStore != null)
+                dataStore.Disconnect();
             this.view.SimulationNameChanged -= OnSimulationNameChanged;
         }
 

@@ -1888,6 +1888,33 @@
       <string>[Grain].Dead</string>
     </Propertys>
   </CompositeBiomass>
+  <CompositeBiomass>
+    <Name>VegetativeLive</Name>
+    <Propertys>
+      <string>[Leaf].Live</string>
+      <string>[Stem].Live</string>
+      <string>[Pod].Live</string>
+    </Propertys>
+  </CompositeBiomass>
+  <CompositeBiomass>
+    <Name>VegetativeDead</Name>
+    <Propertys>
+      <string>[Leaf].Dead</string>
+      <string>[Stem].Dead</string>
+      <string>[Pod].Dead</string>
+    </Propertys>
+  </CompositeBiomass>
+  <CompositeBiomass>
+    <Name>Vegetative</Name>
+    <Propertys>
+      <string>[Leaf].Live</string>
+      <string>[Stem].Live</string>
+      <string>[Pod].Live</string>
+      <string>[Leaf].Dead</string>
+      <string>[Stem].Dead</string>
+      <string>[Pod].Dead</string>
+    </Propertys>
+  </CompositeBiomass>
   <StageBasedInterpolation>
     <Name>StageCode</Name>
     <Stages>
@@ -1931,6 +1958,9 @@
   <Zadok>
     <Name>Zadok</Name>
   </Zadok>
+  <Summariser>
+    
+  </Summariser>
   <AutoHarvest>false</AutoHarvest>
   <CropType>Wheat</CropType>
   <EOCropFactor>1.5</EOCropFactor>

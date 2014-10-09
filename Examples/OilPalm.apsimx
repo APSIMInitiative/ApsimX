@@ -72,7 +72,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCropOilPalm>
-            <Name>OilPalm</Name>
+            <Name>OilPalmSoil</Name>
             <KL>
               <double>0.06</double>
               <double>0.04</double>

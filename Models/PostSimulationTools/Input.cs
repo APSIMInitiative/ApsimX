@@ -39,7 +39,9 @@ namespace Models.PostSimulationTools
             get
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                return Utility.PathUtils.GetAbsolutePath(this.FileName, simulations.FileName);
+                if (simulations != null && simulations.FileName != null)
+                    return Utility.PathUtils.GetAbsolutePath(this.FileName, simulations.FileName);
+                return null;
             }
 
             set

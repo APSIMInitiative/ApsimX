@@ -306,7 +306,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to .csv",
+        [ContextMenu(MenuName = "Export to CSV",
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void ExportDataStoreToCSV(object sender, EventArgs e)
         {
