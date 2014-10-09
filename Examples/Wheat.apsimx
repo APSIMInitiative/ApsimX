@@ -343,8 +343,14 @@
           <PHUnits>Water</PHUnits>
           <BoronUnits>HotWater</BoronUnits>
         </Analysis>
+        <InitialWater>
+          <Name>InitialWater</Name>
+          <PercentMethod>EvenlyDistributed</PercentMethod>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+        </InitialWater>
         <Sample>
-          <Name>InitialWaterAndN</Name>
+          <Name>InitialN</Name>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -373,13 +379,13 @@
             <double>0.1</double>
           </NH4>
           <SW>
-            <double>0.52</double>
-            <double>0.5</double>
-            <double>0.49</double>
-            <double>0.48</double>
-            <double>0.47</double>
-            <double>0.46</double>
-            <double>0.45</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
           </SW>
           <OC>
             <double>NaN</double>
