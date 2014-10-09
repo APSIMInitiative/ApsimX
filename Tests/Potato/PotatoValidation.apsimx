@@ -771,7 +771,7 @@ namespace Models
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
@@ -2884,7 +2884,7 @@ namespace Models
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -4553,7 +4553,7 @@ namespace Models
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
@@ -6666,7 +6666,7 @@ namespace Models
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -8489,7 +8489,7 @@ namespace Models
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
@@ -10602,7 +10602,7 @@ namespace Models
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -12420,7 +12420,7 @@ namespace Models
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
@@ -12584,7 +12584,7 @@ namespace Models
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -16427,7 +16427,7 @@ namespace Models
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
@@ -16592,7 +16592,7 @@ namespace Models
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -21099,7 +21099,7 @@ namespace Models
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
@@ -21264,7 +21264,7 @@ namespace Models
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
             <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>

@@ -1913,7 +1913,7 @@ namespace Models.AgPasture1
                     // simple way, all N in the root zone is available
                     layerFraction = 1.0; //TODO: shold be this: mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
                     soilNH4Available[layer] = Soil.SoilNitrogen.nh4[layer] * layerFraction;
-                    soilNO3Available[layer] = Soil.SoilNitrogen.no3[layer] * layerFraction;
+                    soilNO3Available[layer] = Soil.SoilNitrogen.NO3[layer] * layerFraction;
                 }
                 else
                 {
@@ -1928,7 +1928,7 @@ namespace Models.AgPasture1
                     soilNH4Available[layer] *= facWtaken;
 
                     nK = mySward.Max(mySpecies => mySpecies.kuNO3);
-                    soilNO3Available[layer] = Soil.SoilNitrogen.no3[layer] * nK * layerFraction;
+                    soilNO3Available[layer] = Soil.SoilNitrogen.NO3[layer] * nK * layerFraction;
                     soilNO3Available[layer] *= facWtaken;
                 }
                 soilAvailableN[layer] = soilNH4Available[layer] + soilNO3Available[layer];
@@ -2017,10 +2017,10 @@ namespace Models.AgPasture1
                     for (int layer = 0; layer <= RootFrontier; layer++)
                     {
                         layerFraction = 1.0; // TODO: mySward.Max(aSpecies => aSpecies.LayerFractionWithRoots(layer));
-                        mySpecies.mySoilNUptake[layer] = (Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.no3[layer]) * layerFraction * uptakeFraction * speciesFraction;
+                        mySpecies.mySoilNUptake[layer] = (Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.NO3[layer]) * layerFraction * uptakeFraction * speciesFraction;
                         NTakenUp.DeltaNH4[layer] -= Soil.SoilNitrogen.nh4[layer] * layerFraction * uptakeFraction * speciesFraction;
-                        NTakenUp.DeltaNO3[layer] -= Soil.SoilNitrogen.no3[layer] * layerFraction * uptakeFraction * speciesFraction;
-                        if((NTakenUp.DeltaNH4[layer] > Soil.SoilNitrogen.nh4[layer]) || (NTakenUp.DeltaNO3[layer]>Soil.SoilNitrogen.no3[layer]))
+                        NTakenUp.DeltaNO3[layer] -= Soil.SoilNitrogen.NO3[layer] * layerFraction * uptakeFraction * speciesFraction;
+                        if((NTakenUp.DeltaNH4[layer] > Soil.SoilNitrogen.nh4[layer]) || (NTakenUp.DeltaNO3[layer]>Soil.SoilNitrogen.NO3[layer]))
                             throw new Exception(" Error on N uptake");
                     }
                 }
@@ -2060,7 +2060,7 @@ namespace Models.AgPasture1
                     {
                         mySpecies.mySoilNUptake[layer] = (adjustedNH4Available[layer] + adjustedNO3Available[layer]) * uptakeFraction;
                         NTakenUp.DeltaNH4[layer] -= Soil.SoilNitrogen.nh4[layer] * uptakeFraction;
-                        NTakenUp.DeltaNO3[layer] -= Soil.SoilNitrogen.no3[layer] * uptakeFraction;
+                        NTakenUp.DeltaNO3[layer] -= Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
                     }
                 }
             }

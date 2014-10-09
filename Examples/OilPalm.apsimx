@@ -539,6 +539,7 @@
           <string>OilPalm.Age</string>
           <string>OilPalm.LAI</string>
           <string>[Calculations].Script.AnnualRain</string>
+          <string>sum of [WeatherFile].Rain from 1-Jan to 31-Dec as AnnualRain2</string>
           <string>[Calculations].Script.AnnualIrrigation</string>
           <string>[Calculations].Script.AnnualFronds</string>
           <string>[Calculations].Script.AnnualBunches</string>
@@ -889,7 +890,7 @@ namespace Models
             AnnualRain += WeatherFile.Rain;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
@@ -1165,6 +1166,71 @@ namespace Models
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>AnnualRain</Name>
+      <Title>Annual Inputs of Irrigation and Fertiliser</Title>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Annual Irrigation (mm) and Fertiliser N (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Annual Irrigation Addition</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Calculations.Script.AnnualRain</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>*</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>AnnualOutput</TableName>
+          <FieldName>AnnualRain2</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>*</SplitOn>
+      </Series>
+      <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries>
+        <string>AnnualRain2</string>
+      </DisabledSeries>
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>

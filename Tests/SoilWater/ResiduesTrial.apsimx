@@ -882,7 +882,7 @@
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
             <string>[Soil].SoilNitrogen.dnit</string>
             <string>[ExtraVariables].Script.MineralN</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilNitrogen.NO3</string>
             <string>[Soil].SoilNitrogen.nh4</string>
             <string>[Soil].SoilNitrogen.urea</string>
             <string />
@@ -1155,7 +1155,7 @@ namespace Models
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 

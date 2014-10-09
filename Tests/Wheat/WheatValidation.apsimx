@@ -2300,7 +2300,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -2321,8 +2321,8 @@ double OrganicN = 0;
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
     OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.nh4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
@@ -4520,7 +4520,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -4541,8 +4541,8 @@ double OrganicN = 0;
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
     OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.nh4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
@@ -10602,7 +10602,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -10623,8 +10623,8 @@ double OrganicN = 0;
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
     OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.nh4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
@@ -11850,7 +11850,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -11871,8 +11871,8 @@ double OrganicN = 0;
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
     OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.nh4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
@@ -13905,7 +13905,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       for (int layer = 0; layer < layers; layer++)
       { 
       InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -13926,8 +13926,8 @@ double OrganicN = 0;
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
     OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.nh4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;

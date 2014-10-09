@@ -7708,7 +7708,7 @@ namespace Models
             <string>[Soil].SoilNitrogen.LeachUrea as leach_urea</string>
             <string>cl format 3 as mobile</string>
             <string>[Soil].SoilNitrogen.nh4 format 3 as immobile</string>
-            <string>[Soil].SoilNitrogen.no3 format 3</string>
+            <string>[Soil].SoilNitrogen.NO3 format 3</string>
             <string>[Soil].SoilNitrogen.urea format 3</string>
             <string />
             <string />
@@ -8238,7 +8238,7 @@ namespace Models
             <string>flow_urea</string>
             <string>cl format 3 as mobile</string>
             <string>[Soil].SoilNitrogen.nh4 format 3 as immobile</string>
-            <string>[Soil].SoilNitrogen.no3 format 3 as no3</string>
+            <string>[Soil].SoilNitrogen.NO3 format 3 as no3</string>
             <string>[Soil].SoilNitrogen.urea format 3 as urea</string>
             <string />
           </VariableNames>
@@ -8781,10 +8781,10 @@ namespace Models
             <string>[Clock].Today</string>
             <string>Irrigation.irrigation</string>
             <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
-            <string>[Soil].SoilNitrogen.no3[1] as no3_top</string>
+            <string>[Soil].SoilNitrogen.NO3[1] as no3_top</string>
             <string>[Soil].SoilNitrogen.nh4[1] as nh4_top</string>
             <string>cl[1] as cl_top</string>
-            <string>[Soil].SoilNitrogen.no3 as no3</string>
+            <string>[Soil].SoilNitrogen.NO3 as no3</string>
             <string>[Soil].SoilNitrogen.nh4 as nh4</string>
             <string>cl</string>
           </VariableNames>

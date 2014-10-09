@@ -4172,7 +4172,7 @@ namespace Models.AgPasture1
                 {
                     // simple way, all N in the root zone is available
                     mySoilNH4available[layer] = Soil.SoilNitrogen.nh4[layer] * LayerFractionWithRoots(layer);
-                    mySoilNO3available[layer] = Soil.SoilNitrogen.no3[layer] * LayerFractionWithRoots(layer);
+                    mySoilNO3available[layer] = Soil.SoilNitrogen.NO3[layer] * LayerFractionWithRoots(layer);
                 }
                 else
                 {
@@ -4185,7 +4185,7 @@ namespace Models.AgPasture1
 
                     // Theoretical amount available
                     mySoilNH4available[layer] = Soil.SoilNitrogen.nh4[layer] * kuNH4 * LayerFractionWithRoots(layer);
-                    mySoilNO3available[layer] = Soil.SoilNitrogen.no3[layer] * kuNO3 * LayerFractionWithRoots(layer);
+                    mySoilNO3available[layer] = Soil.SoilNitrogen.NO3[layer] * kuNO3 * LayerFractionWithRoots(layer);
 
                     // actual amount available
                     mySoilNH4available[layer] *= facWtaken;
@@ -4279,11 +4279,11 @@ namespace Models.AgPasture1
 
                     for (int layer = 0; layer < myRootFrontier; layer++)
                     {
-                        mySoilNUptake[layer] = (Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.no3[layer]) * Fraction;
+                        mySoilNUptake[layer] = (Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.NO3[layer]) * Fraction;
                         n_uptake += mySoilNUptake[layer];
 
                         NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * Fraction;
-                        NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * Fraction;
+                        NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * Fraction;
                     }
                 }
                 else
@@ -4309,7 +4309,7 @@ namespace Models.AgPasture1
                         NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * Fraction;
 
                         Fraction = Math.Min(1.0, Utility.Math.Divide(fNO3Avail[layer] + fWUptake[layer], totFacNO3, 0.0));
-                        NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * Fraction;
+                        NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * Fraction;
                     }
                 }
 

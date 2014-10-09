@@ -1338,14 +1338,14 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    double sumOld = Utility.Math.Sum(no3);   // original values
+                    double sumOld = Utility.Math.Sum(NO3);   // original values
                     for (int layer = 0; layer < value.Length; ++layer)
                         value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].no3 = value;
 
                     if (!inReset)
-                        SendExternalMassFlowN(Utility.Math.Sum(no3) - sumOld);
+                        SendExternalMassFlowN(Utility.Math.Sum(NO3) - sumOld);
                 }
                 else
                     no3ppm_reset = value;
@@ -1358,7 +1358,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil nitrate nitrogen amount")]
         [XmlIgnore]
-        public double[] no3
+        public double[] NO3
         {
             get
             {
@@ -1374,11 +1374,11 @@ namespace Models.Soils
             }
             set  // should this be private? or not exist at all?
             {
-                double sumOld = Utility.Math.Sum(no3);
+                double sumOld = Utility.Math.Sum(NO3);
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].no3 = value;
 
-                SendExternalMassFlowN(Utility.Math.Sum(no3) - sumOld);
+                SendExternalMassFlowN(Utility.Math.Sum(NO3) - sumOld);
             }
         }
 

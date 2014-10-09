@@ -988,7 +988,7 @@ namespace Models
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
           <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
@@ -2770,7 +2770,7 @@ namespace Models
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
           <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
@@ -4558,7 +4558,7 @@ namespace Models
           <string>[SurfaceOrganicMatter].surfaceom_wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
-          <string>sum([Soil].SoilNitrogen.no3) as TotalNO3</string>
+          <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
           <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>

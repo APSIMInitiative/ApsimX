@@ -484,7 +484,7 @@ namespace Models.Arbitrator
                                 {
                                     if (f == 0)
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.no3[l]);
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.NO3[l]);
                                     }
                                     else
                                     {
@@ -804,12 +804,12 @@ namespace Models.Arbitrator
                     if (NutrientUptakeMethod == 1) // use the soil KL with no water effect
                     {
                         potentialSupplyNitrogenPlantLayer[i, j] = Utility.Math.Divide(plants[i].RootProperties.KL[j], plants.Count, 0.0)
-                                                                * (Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j])
+                                                                * (Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.nh4[j])
                                                                 * plants[i].RootProperties.RootExplorationByLayer[j];
                         tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
 
                         double tempNO3OnlySupply = Utility.Math.Divide(plants[i].RootProperties.KL[j], plants.Count, 0.0)
-                                                 * Soil.SoilNitrogen.no3[j]
+                                                 * Soil.SoilNitrogen.NO3[j]
                                                  * plants[i].RootProperties.RootExplorationByLayer[j];
                         potentialSupplyPropNO3PlantLayer[i, j] = Utility.Math.Divide(tempNO3OnlySupply, potentialSupplyNitrogenPlantLayer[i, j], 0.0);
                     }
@@ -850,11 +850,11 @@ namespace Models.Arbitrator
                         double relativeSoilWaterContent = 0;
                         relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]), (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]), 0.0), 0.0, 1.0);
 
-                        potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (Utility.Math.Divide(plants[i].RootProperties.KNO3, plants.Count, 0.0) * Soil.SoilNitrogen.no3[j] + Utility.Math.Divide(plants[i].RootProperties.KNH4, plants.Count, 0.0) * Soil.SoilNitrogen.nh4[j]) * relativeSoilWaterContent);
+                        potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (Utility.Math.Divide(plants[i].RootProperties.KNO3, plants.Count, 0.0) * Soil.SoilNitrogen.NO3[j] + Utility.Math.Divide(plants[i].RootProperties.KNH4, plants.Count, 0.0) * Soil.SoilNitrogen.nh4[j]) * relativeSoilWaterContent);
                         tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below
 
                         double tempNO3OnlySupply = 0;
-                        tempNO3OnlySupply = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (Utility.Math.Divide(plants[i].RootProperties.KNO3, plants.Count, 0.0) * Soil.SoilNitrogen.no3[j]) * relativeSoilWaterContent);
+                        tempNO3OnlySupply = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (Utility.Math.Divide(plants[i].RootProperties.KNO3, plants.Count, 0.0) * Soil.SoilNitrogen.NO3[j]) * relativeSoilWaterContent);
                         potentialSupplyPropNO3PlantLayer[i, j] = Utility.Math.Divide(tempNO3OnlySupply, potentialSupplyNitrogenPlantLayer[i, j], 0.0);
                     }
                     else
@@ -874,7 +874,7 @@ namespace Models.Arbitrator
             totalAvailableNitrogen = new double[Soil.SoilWater.dlayer.Length];
             for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
             {
-                totalAvailableNitrogen[j] = Soil.SoilNitrogen.no3[j] + Soil.SoilNitrogen.nh4[j];
+                totalAvailableNitrogen[j] = Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.nh4[j];
             }
 
             // compare the potential nitrogen supply against the total available nitrogen

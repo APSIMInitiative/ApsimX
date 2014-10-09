@@ -560,7 +560,7 @@ namespace Models.ArbitratorGod
                                 {
                                     if (f == 0)
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.no3[l]);
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.NO3[l]);
                                     }
                                     else
                                     {
