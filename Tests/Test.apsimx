@@ -34,7 +34,7 @@
           <string>[WeatherFile].Rain</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.NO3</string>
-          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
+          <string>[SurfaceOrganicMatter].Wt</string>
           <string>[Soil].SoilWater.sw[1:3] as SWTop3Layers</string>
           <string>sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
           <string>[WeatherFile].Rain/25.4 as RainInches</string>

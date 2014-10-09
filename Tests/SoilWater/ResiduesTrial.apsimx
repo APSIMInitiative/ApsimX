@@ -36,7 +36,7 @@
       <SimulationName>ResiduesCoverHarvesterWindrow</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>SurfaceOrganicMatter.surfaceom_wt</ColumnNames>
+      <ColumnNames>SurfaceOrganicMatter.Wt</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
@@ -842,7 +842,7 @@
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[SurfaceOrganicMatter].surfaceom_cover</string>
-            <string>[SurfaceOrganicMatter].surfaceom_wt</string>
+            <string>[SurfaceOrganicMatter].Wt</string>
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[WeatherFile].Rain</string>
             <string>[Soil].SoilWater.dlayer</string>
@@ -1046,7 +1046,7 @@ private void OnDoManagement(object sender, EventArgs e)
 {
 //Set interception variables
 Precip = Met.Rain + Irrig.IrrigationApplied; 
-Maximum_interception = 0.0002 * SOM.surfaceom_wt;
+Maximum_interception = 0.0002 * SOM.Wt;
           
 //Determine the amount of water intercepted by residue today
 if ((Precip * SOM.surfaceom_cover) >= (Maximum_interception - Residue_water))

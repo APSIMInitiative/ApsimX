@@ -526,60 +526,60 @@
         #region Outputs
 
         /// <summary>Total mass of all surface organic materials</summary>
-        /// <value>The surfaceom_wt.</value>
+        /// <value>The Surface OM Weight.</value>
         [Units("kg/ha")]
-        public double surfaceom_wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
+        public double Wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
 
         /// <summary>Gets the carbonbalance.</summary>
         /// <value>The carbonbalance.</value>
         [Units("kg/ha")]
-        public double carbonbalance { get { return 0 - (surfaceom_c - DailyInitialC); } }
+        public double carbonbalance { get { return 0 - (C - DailyInitialC); } }
 
         /// <summary>Gets the nitrogenbalance.</summary>
         /// <value>The nitrogenbalance.</value>
         [Units("kg/ha")]
-        public double nitrogenbalance { get { return 0 - (surfaceom_n - DailyInitialN); } }
+        public double nitrogenbalance { get { return 0 - (N - DailyInitialN); } }
 
         /// <summary>Total mass of all surface organic carbon</summary>
         /// <value>The surfaceom_c.</value>
         [Summary]
         [Description("Carbon content")]
         [Units("kg/ha")]
-        public double surfaceom_c { get { return SumSurfOMStandingLying(SurfOM, x => x.C); } }
+        public double C { get { return SumSurfOMStandingLying(SurfOM, x => x.C); } }
 
         /// <summary>Total mass of all surface organic nitrogen</summary>
         /// <value>The surfaceom_n.</value>
         [Summary]
         [Description("Nitrogen content")]
         [Units("kg/ha")]
-        public double surfaceom_n { get { return SumSurfOMStandingLying(SurfOM, x => x.N); } }
+        public double N { get { return SumSurfOMStandingLying(SurfOM, x => x.N); } }
 
         /// <summary>Total mass of all surface organic phosphor</summary>
         /// <value>The surfaceom_p.</value>
         [Summary]
         [Description("Phosphorus content")]
         [Units("kg/ha")]
-        public double surfaceom_p { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
+        public double P { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
 
         /// <summary>Gets the surfaceom_ashalk.</summary>
         /// <value>The surfaceom_ashalk.</value>
         [Units("")]
-        public double surfaceom_ashalk { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
+        public double AshAlk { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
 
         /// <summary>Total mass of nitrate</summary>
         /// <value>The surfaceom_no3.</value>
         [Units("kg/ha")]
-        public double surfaceom_no3 { get { return SumSurfOM(SurfOM, x => x.no3); } }
+        public double NO3 { get { return SumSurfOM(SurfOM, x => x.no3); } }
 
         /// <summary>Total mass of ammonium</summary>
         /// <value>The surfaceom_nh4.</value>
         [Units("kg/ha")]
-        public double surfaceom_nh4 { get { return SumSurfOM(SurfOM, x => x.nh4); } }
+        public double NH4 { get { return SumSurfOM(SurfOM, x => x.nh4); } }
 
         /// <summary>Total mass of labile phosphorus</summary>
         /// <value>The surfaceom_labile_p.</value>
         [Units("kg/ha")]
-        public double surfaceom_labile_p { get { return SumSurfOM(SurfOM, x => x.po4); } }
+        public double LabileP { get { return SumSurfOM(SurfOM, x => x.po4); } }
 
         /// <summary>Fraction of ground covered by all surface OMs</summary>
         /// <value>The surfaceom_cover.</value>

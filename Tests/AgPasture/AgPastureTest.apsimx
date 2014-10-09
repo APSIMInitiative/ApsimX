@@ -985,7 +985,7 @@ namespace Models
           <string>AgPasture.GLFrgr</string>
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
-          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
+          <string>[SurfaceOrganicMatter].Wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
@@ -993,7 +993,7 @@ namespace Models
           <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
           <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
           <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
-          <string>[SurfaceOrganicMatter].surfaceom_n</string>
+          <string>[SurfaceOrganicMatter].N</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2767,7 +2767,7 @@ namespace Models
           <string>AgPasture.GLFrgr</string>
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
-          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
+          <string>[SurfaceOrganicMatter].Wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
@@ -4555,7 +4555,7 @@ namespace Models
           <string>AgPasture.GLFrgr</string>
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
-          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
+          <string>[SurfaceOrganicMatter].Wt</string>
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
@@ -4563,7 +4563,7 @@ namespace Models
           <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
           <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
           <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
-          <string>[SurfaceOrganicMatter].surfaceom_n</string>
+          <string>[SurfaceOrganicMatter].N</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>

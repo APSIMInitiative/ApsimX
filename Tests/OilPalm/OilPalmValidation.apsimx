@@ -936,8 +936,8 @@
             <string>[Clock].Today</string>
             <string>[Clock].Today.Month</string>
             <string>OilPalm.Age</string>
-            <string>[SurfaceOM].surfaceom_n</string>
-            <string>[SurfaceOM].surfaceom_wt</string>
+            <string>[SurfaceOM].N</string>
+            <string>[SurfaceOM].Wt</string>
             <string>OilPalm.CumulativeFrondNumber</string>
             <string>[Calculations].Script.MonthlyPalmBunches</string>
             <string>[Calculations].Script.MonthlyPalmYield</string>
@@ -2509,8 +2509,8 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[Clock].Today.Month</string>
             <string>OilPalm.Age</string>
-            <string>[SurfaceOM].surfaceom_n</string>
-            <string>[SurfaceOM].surfaceom_wt</string>
+            <string>[SurfaceOM].N</string>
+            <string>[SurfaceOM].Wt</string>
             <string>OilPalm.CumulativeFrondNumber</string>
             <string>[Calculations].Script.MonthlyPalmBunches</string>
             <string>[Calculations].Script.MonthlyPalmYield</string>
@@ -4241,8 +4241,8 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[Clock].Today.Month</string>
             <string>OilPalm.Age</string>
-            <string>[SurfaceOM].surfaceom_n</string>
-            <string>[SurfaceOM].surfaceom_wt</string>
+            <string>[SurfaceOM].N</string>
+            <string>[SurfaceOM].Wt</string>
             <string>OilPalm.CumulativeFrondNumber</string>
             <string>[Calculations].Script.MonthlyPalmBunches</string>
             <string>[Calculations].Script.MonthlyPalmYield</string>
