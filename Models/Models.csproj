@@ -169,6 +169,7 @@
     <Compile Include="Soils\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\Variables.cs" />
+    <Compile Include="Utility\Accumulator.cs" />
     <Compile Include="Utility\JobManager.cs" />
     <Compile Include="Core\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
