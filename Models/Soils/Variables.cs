@@ -2295,7 +2295,7 @@ namespace Models.Soils
         /// <value>The fom_n.</value>
 
         [Units("kg/ha")]
-        public double[] fom_n
+        public double[] FOMN
         {
             get
             {
@@ -2359,7 +2359,7 @@ namespace Models.Soils
         /// <value>The hum_n.</value>
 
         [Units("kg/ha")]
-        public double[] hum_n
+        public double[] HumicN
         {
             get
             {
@@ -2375,7 +2375,7 @@ namespace Models.Soils
         /// <value>The biom_n.</value>
 
         [Units("kg/ha")]
-        public double[] biom_n
+        public double[] BiomassN
         {
             get
             {
@@ -2391,7 +2391,7 @@ namespace Models.Soils
         /// <value>The nit_tot.</value>
 
         [Units("kg/ha")]
-        public double[] nit_tot
+        public double[] TotalN
         {
             get
             {
@@ -2418,7 +2418,7 @@ namespace Models.Soils
         {
             get
             {
-                double deltaN = SumDoubleArray(nit_tot) - dailyInitialN;  // variation in N today
+                double deltaN = SumDoubleArray(TotalN) - dailyInitialN;  // variation in N today
                 double losses = SumDoubleArray(dlt_nh4_dnit) + SumDoubleArray(dlt_no3_dnit);
                 return -(losses + deltaN);
                 // why leaching losses are not accounted and what about the inputs?

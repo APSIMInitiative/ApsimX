@@ -511,7 +511,7 @@ namespace Models.Soils
 
             // Calculations for NEW sysbal component
             dailyInitialC = SumDoubleArray(carbon_tot);
-            dailyInitialN = SumDoubleArray(nit_tot);
+            dailyInitialN = SumDoubleArray(TotalN);
 
             // Initialise the inhibitor factors
             if (InhibitionFactor_Nitrification == null)
@@ -561,7 +561,7 @@ namespace Models.Soils
         {
             // +  Note: needed for both NEW and OLD sysbal component
 
-            dailyInitialN = SumDoubleArray(nit_tot);
+            dailyInitialN = SumDoubleArray(TotalN);
             dailyInitialC = SumDoubleArray(carbon_tot);
         }
 
@@ -569,7 +569,7 @@ namespace Models.Soils
         private void DeltaState()
         {
 
-            double dltN = SumDoubleArray(nit_tot) - dailyInitialN;
+            double dltN = SumDoubleArray(TotalN) - dailyInitialN;
             double dltC = SumDoubleArray(carbon_tot) - dailyInitialC;
 
             SendExternalMassFlowN(dltN);

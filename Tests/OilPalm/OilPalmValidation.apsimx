@@ -1285,7 +1285,7 @@ namespace Models
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
@@ -2845,7 +2845,7 @@ namespace Models
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
@@ -4553,7 +4553,7 @@ namespace Models
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);

@@ -446,6 +446,11 @@
             <irrigation_will_runoff>false</irrigation_will_runoff>
             <irrigation_layer>1</irrigation_layer>
             <obsrunoff_name />
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <eo_source />
+            <max_pond>0</max_pond>
             <SummerCona>4.4</SummerCona>
             <SummerU>9</SummerU>
             <SummerDate>1-Nov</SummerDate>
@@ -455,11 +460,6 @@
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
             <CN2Bare>73</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
@@ -962,6 +962,8 @@
             <SplitOn>Simulation</SplitOn>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
         </Graph>
         <Operations>
           <Name>Operations</Name>
@@ -1151,9 +1153,9 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -1270,6 +1272,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Residue cover</Name>
@@ -1328,6 +1332,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>sw_dep 0 - 20 cm</Name>
@@ -1387,6 +1393,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>sw_dep 20 - 40 cm</Name>
@@ -1446,6 +1454,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>sw_dep 40 - 60 cm</Name>
@@ -1505,6 +1515,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>sw_dep 0 - 60 cm</Name>
@@ -1564,6 +1576,8 @@ namespace Models
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <ExplorerWidth>300</ExplorerWidth>

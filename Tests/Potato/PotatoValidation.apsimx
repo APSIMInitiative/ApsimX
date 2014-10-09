@@ -767,9 +767,9 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -814,9 +814,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -4549,9 +4549,9 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -4596,9 +4596,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -8485,9 +8485,9 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -8532,9 +8532,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -12416,9 +12416,9 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -12463,9 +12463,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -16423,9 +16423,9 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -16470,9 +16470,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -21095,9 +21095,9 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -21142,9 +21142,9 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
