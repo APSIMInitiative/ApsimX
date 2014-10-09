@@ -1172,9 +1172,10 @@ namespace Models.Soils
         //residueinterception can be specified in surface organic matter module (not implemented yet)
         //used in runoff and in infilitration calculation
 
+        //residueinterception is only used in ResiduesTrial.apsimx
         //[Input(IsOptional = true)]
         [Units("mm")]
-        private double residueinterception;     //residue interception loss (mm)
+        public double residueinterception;     //residue interception loss (mm)
 
 
 
