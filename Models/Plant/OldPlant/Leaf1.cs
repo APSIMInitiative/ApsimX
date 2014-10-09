@@ -218,6 +218,8 @@ namespace Models.PMF.OldPlant
         private double _LeavesPerNode = 0;
         /// <summary>The _ lai</summary>
         private double _LAI = 0;
+        /// <summary>The maximum lai</summary>
+        private double maxLAI = 0;
         /// <summary>The _ slai</summary>
         private double _SLAI = 0;
         /// <summary>The DLT lai</summary>
@@ -752,6 +754,8 @@ namespace Models.PMF.OldPlant
             _LAI -= dlt_lai_dead;
             _SLAI += dlt_lai_dead;
 
+            maxLAI = Math.Max(maxLAI, _LAI);
+
             Util.Debug("leaf.LeafNo=%f", Utility.Math.Sum(LeafNo));
             Util.Debug("leaf.LeafNoSen=%f", Utility.Math.Sum(LeafNoSen));
             Util.Debug("leaf.NodeNo=%f", NodeNo);
@@ -933,6 +937,8 @@ namespace Models.PMF.OldPlant
             Util.Debug("Leaf.dltSLAI_frost=%f", dltSLAI_frost);
             Util.Debug("Leaf.dltSLAI=%f", dltSLAI);
         }
+        /// <summary>Gets the maximum lai.</summary>
+        public double MaximumLAI { get { return maxLAI; } }
         #endregion
 
         #region Event handlers
@@ -1086,6 +1092,7 @@ namespace Models.PMF.OldPlant
 
             _LAI = InitialTPLA * Conversions.smm2sm * Population.Density;
             _SLAI = 0.0;
+            maxLAI = 0.0;
 
             Util.Debug("Leaf.InitGreen.StructuralWt=%f", Live.StructuralWt);
             Util.Debug("Leaf.InitGreen.StructuralN=%f", Live.StructuralN);

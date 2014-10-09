@@ -259,9 +259,25 @@ namespace Models.PMF.OldPlant
         [Link]
         CompositeBiomass AboveGroundLive = null;
 
+        /// <summary>The above ground dead</summary>
+        [Link]
+        CompositeBiomass AboveGroundDead = null;
+
         /// <summary>The above ground</summary>
         [Link]
         CompositeBiomass AboveGround = null;
+
+        /// <summary>The vegetative live</summary>
+        [Link]
+        CompositeBiomass VegetativeLive = null;
+        
+        /// <summary>The vegetative dead</summary>
+        [Link]
+        CompositeBiomass VegetativeDead = null;
+
+        /// <summary>The vegetative biomass pool</summary>
+        [Link]
+        CompositeBiomass Vegetative = null;
 
         /// <summary>The below ground</summary>
         [Link]
@@ -689,7 +705,7 @@ namespace Models.PMF.OldPlant
             if (SWStress != null && NStress != null)
             {
                 PhenologyEventToday = true;
-                AverageStressMessage += String.Format("    {0,40}{1,13:F3}{2,13:F3}{3,13:F3}{4,13:F3}\r\n",
+                AverageStressMessage += String.Format("{0,36}{1,13:F3}{2,13:F3}{3,13:F3}{4,13:F3}\r\n",
                                                       Data.OldPhaseName,
                                                       1 - SWStress.PhotoAverage, 1 - SWStress.ExpansionAverage,
                                                       1 - NStress.PhotoAverage, 1 - NStress.GrainAverage);
@@ -856,7 +872,7 @@ namespace Models.PMF.OldPlant
         /// </exception>
         public void OnHarvest(HarvestType Harvest)
         {
-            //WriteHarvestReport();
+            WriteHarvestReport();
 
             // Tell the rest of the system we are about to harvest
             if (Harvesting != null)
@@ -1028,6 +1044,110 @@ namespace Models.PMF.OldPlant
             Summary.WriteMessage(this, string.Format("                  N  (kg/ha) = {0,22:F2}{1,24:F2}",
                               n_removed_tops, n_removed_root));
         }
+
+        /// <summary>Report the state of the crop at harvest time</summary>
+        private void WriteHarvestReport()
+        {
+            const double  plant_c_frac = 0.4f;    // fraction of c in resiudes
+            double grain_wt;                      // grain dry weight (g/kernel)
+            double plant_grain_no;                // final grains /head
+            double n_grain;                       // total grain N uptake (kg/ha)
+            double n_green;                       // above ground green plant N (kg/ha)
+            double n_stover;                      // nitrogen content of stover (kg\ha)
+            double n_total;                       // total gross nitrogen content (kg/ha)
+            double n_grain_conc_percent;          // grain nitrogen %
+            string msg;                           // message
+            double yield;                         // grain yield dry wt (kg/ha)
+            double yield_wet;                     // grain yield including moisture (kg/ha)
+
+            // crop harvested. Report status
+            yield = Grain.Yield;
+            grain_wt = Grain.Wt;
+            plant_grain_no = Utility.Math.Divide(Grain.GrainNo, Population.Density, 0.0);
+            n_grain = (Grain.Live.N + Grain.Dead.N) * 10;  // g/m2 to kg/ha
+
+            double dmRoot = (Root.Live.Wt + Root.Dead.Wt) * 10;
+            double nRoot = (Root.Live.N + Root.Dead.N) * 10;
+
+            n_grain_conc_percent = (Grain.Live.NConc + Grain.Dead.NConc);
+
+            n_stover = Vegetative.N * 10;
+            n_green = VegetativeLive.N * 10;
+            n_total = n_grain + n_stover;
+
+            double stoverTot = Vegetative.Wt;
+            double DMRrootShootRatio = Utility.Math.Divide(dmRoot, AboveGround.Wt * 10, 0.0);
+            double HarvestIndex = Utility.Math.Divide(yield, AboveGround.Wt * 10, 0.0);
+            double StoverCNRatio     = Utility.Math.Divide(stoverTot * 10 *plant_c_frac, n_stover, 0.0);
+            double RootCNRatio       = Utility.Math.Divide(dmRoot*plant_c_frac, nRoot, 0.0);
+
+            Summary.WriteMessage(this, string.Empty);
+            Summary.WriteMessage(this, string.Empty);
+            Summary.WriteMessage(this, 
+                                 string.Format("                    stover (kg/ha) = {0,7:F1}",
+                                               stoverTot * 10));
+            Summary.WriteMessage(this,
+                                 string.Format("               grain yield (kg/ha) = {0,7:F1}",
+                                               yield));
+            Summary.WriteMessage(this,
+                                 string.Format("                      grain wt (g) =  {0,9:F3}",
+                                               grain_wt));
+            Summary.WriteMessage(this,
+                                 string.Format("                        grains/m^2 =  {0,7:F1}",
+                                               Grain.GrainNo));
+            Summary.WriteMessage(this,
+                                 string.Format("                      grains/plant =  {0,7:F1}",
+                                               plant_grain_no));
+            Summary.WriteMessage(this,
+                                 string.Format("                       maximum lai =  {0,9:F3}",
+                                               Leaf.MaximumLAI));
+            Summary.WriteMessage(this,
+                                 string.Format("Total above ground biomass (kg/ha) =  {0,7:F1}",
+                                               AboveGround.Wt * 10));
+            Summary.WriteMessage(this,
+                                 string.Format(" Live above ground biomass (kg/ha) =  {0,7:F1}",
+                                               AboveGroundLive.Wt * 10));
+            Summary.WriteMessage(this,
+                                 string.Format(" Dead above ground biomass (kg/ha) =  {0,7:F1}",
+                                               AboveGroundDead.Wt * 10));
+            Summary.WriteMessage(this,
+                                 string.Format("                  Number of leaves =  {0,7:F1}",
+                                               Leaf.LeafNumber));
+            Summary.WriteMessage(this,
+                                 string.Format("               DM Root:Shoot ratio =  {0,8:F2}",
+                                               DMRrootShootRatio));
+            Summary.WriteMessage(this,
+                                 string.Format("                     Harvest Index =  {0,8:F2}",
+                                               HarvestIndex));
+            Summary.WriteMessage(this,
+                                 string.Format("                  Stover C:N ratio =  {0,8:F2}",
+                                               StoverCNRatio));
+            Summary.WriteMessage(this,
+                                 string.Format("                    Root C:N ratio =  {0,8:F2}",
+                                               RootCNRatio));
+            Summary.WriteMessage(this,
+                                 string.Format("                   Grain N percent =  {0,8:F2}",
+                                               n_grain_conc_percent));
+            Summary.WriteMessage(this,
+                                 string.Format("           Total N content (kg/ha) =  {0,8:F2}",
+                                               n_total));
+            Summary.WriteMessage(this,
+                                 string.Format("            Grain N uptake (kg/ha) =  {0,8:F2}",
+                                               n_grain));
+            Summary.WriteMessage(this,
+                                 string.Format("            Dead N content (kg/ha) =  {0,8:F2}",
+                                               VegetativeDead.N * 10));
+            Summary.WriteMessage(this,
+                                 string.Format("           Green N content (kg/ha) =  {0,8:F2}",
+                                               n_green));
+
+            Summary.WriteMessage(this, string.Empty);
+            Summary.WriteMessage(this, string.Empty);
+            Summary.WriteMessage(this, "              Average Stress Indices    Water Photo  Water Expan  N Photo      N grain conc");
+
+            Summary.WriteMessage(this, AverageStressMessage);
+            AverageStressMessage = string.Empty;
+    }
         #endregion
 
         #region Grazing
