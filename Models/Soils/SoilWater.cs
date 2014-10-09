@@ -4789,7 +4789,7 @@ namespace Models.Soils
 
             for (counter = 0; counter < numvals; counter++)
             {
-                name = newsolute.solutes[counter].ToLower();
+                name = newsolute.solutes[counter];
                 solutes[num_solutes] = new Solute();
                 solutes[num_solutes].name = name;
                 solutes[num_solutes].ownerName = newsolute.OwnerFullPath;
