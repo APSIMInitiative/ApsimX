@@ -408,7 +408,10 @@ namespace Models.PMF.OldPlant
                 // What should be returned here?
                 // The old "plant" component returned either "out", "alive"
                 // How to determine "dead"?
-                return "alive";
+                if (SowingData == null)
+                    return "out";
+                else
+                    return "alive";
             }
         }
 
@@ -939,6 +942,7 @@ namespace Models.PMF.OldPlant
             Summary.WriteMessage(this, message);
 
             cultivarDefinition.Unapply();
+            SowingData = null;
         }
 
         /// <summary>Write a sowing report to summary file.</summary>
