@@ -1318,7 +1318,7 @@ namespace Models.Soils
         [Units("mg/kg")]
         [Description("Soil nitrate nitrogen content")]
         [XmlIgnore]
-        public double[] no3ppm
+        public double[] NO3ppm
         {
             get
             {

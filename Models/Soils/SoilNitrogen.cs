@@ -286,7 +286,7 @@ namespace Models.Soils
             oc = Soil.OC;
             ph = Soil.PH;
             salb = Soil.SoilWater.Salb;
-            no3ppm = Soil.NO3;
+            NO3ppm = Soil.NO3;
             nh4ppm = Soil.NH4;
             num_residues = 0;
             Tsoil = null;
@@ -350,7 +350,7 @@ namespace Models.Soils
 
             // reset C and N variables to their initial state
             oc = OC_reset;
-            no3ppm = no3ppm_reset;
+            NO3ppm = no3ppm_reset;
             nh4ppm = nh4ppm_reset;
             ureappm = ureappm_reset;
 

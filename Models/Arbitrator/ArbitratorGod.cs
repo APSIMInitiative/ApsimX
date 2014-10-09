@@ -622,7 +622,7 @@ namespace Models.ArbitratorGod
                                                                    * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
                                                                    * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
                                                                    * plants[p].RootProperties.KNO3                        // later add in zone
-                                                                   * Soil.SoilNitrogen.no3ppm[l]
+                                                                   * Soil.SoilNitrogen.NO3ppm[l]
                                                                    * resource[p, l, z, b, f];
                                     }
                                     else
