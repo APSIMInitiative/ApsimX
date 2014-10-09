@@ -517,10 +517,10 @@ namespace Models.Soils
                         case "urea":
                             alreadyThere[k] = Patch[k].urea;
                             break;
-                        case "nh4":
+                        case "NH4":
                             alreadyThere[k] = Patch[k].nh4;
                             break;
-                        case "no3":
+                        case "NO3":
                             alreadyThere[k] = Patch[k].no3;
                             break;
                         default:

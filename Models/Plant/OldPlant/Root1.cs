@@ -496,7 +496,7 @@ namespace Models.PMF.OldPlant
             if (NUptakeFunction is NUptake3)
             {
                 double[] no3gsm = Utility.Math.Multiply_Value(Soil.SoilNitrogen.NO3, Conversions.kg2gm / Conversions.ha2sm);
-                double[] nh4gsm = Utility.Math.Multiply_Value(Soil.SoilNitrogen.nh4, Conversions.kg2gm / Conversions.ha2sm);
+                double[] nh4gsm = Utility.Math.Multiply_Value(Soil.SoilNitrogen.NH4, Conversions.kg2gm / Conversions.ha2sm);
 
                 (NUptakeFunction as NUptake3).DoNUptake(RootDepth, no3gsm, nh4gsm,
                                                  Soil.BD, Soil.SoilWater.dlayer, sw_avail, sw_avail_pot, no3gsm_min, nh4gsm_min,

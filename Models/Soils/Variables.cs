@@ -1242,7 +1242,7 @@ namespace Models.Soils
         [Units("mg/kg")]
         [Description("Soil ammonium nitrogen content")]
         [XmlIgnore]
-        public double[] nh4ppm
+        public double[] NH4ppm
         {
             get
             {
@@ -1262,7 +1262,7 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    double sumOld = Utility.Math.Sum(nh4);   // original values
+                    double sumOld = Utility.Math.Sum(NH4);   // original values
 
                     for (int layer = 0; layer < value.Length; ++layer)
                         value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
@@ -1270,7 +1270,7 @@ namespace Models.Soils
                         Patch[k].nh4 = value;
 
                     if (!inReset)
-                        SendExternalMassFlowN(Utility.Math.Sum(nh4) - sumOld);
+                        SendExternalMassFlowN(Utility.Math.Sum(NH4) - sumOld);
                 }
                 else
                     nh4ppm_reset = value;
@@ -1283,7 +1283,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil ammonium nitrogen amount")]
         [XmlIgnore]
-        public double[] nh4
+        public double[] NH4
         {
             get
             {
@@ -1299,12 +1299,12 @@ namespace Models.Soils
             }
             set  // should this be private?
             {
-                double sumOld = Utility.Math.Sum(nh4);
+                double sumOld = Utility.Math.Sum(NH4);
 
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].nh4 = value;
 
-                SendExternalMassFlowN(Utility.Math.Sum(nh4) - sumOld);
+                SendExternalMassFlowN(Utility.Math.Sum(NH4) - sumOld);
             }
         }
 

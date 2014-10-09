@@ -356,8 +356,8 @@ namespace Models.PMF.Organs
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     no3ppm[layer] = Soil.SoilNitrogen.NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.SoilWater.dlayer[layer]));
                     NO3Supply[layer] = Soil.SoilNitrogen.NO3[layer] * KNO3 * no3ppm[layer] * swaf;
-                    nh4ppm[layer] = Soil.SoilNitrogen.nh4[layer] * (100.0 / (Soil.BD[layer] * Soil.SoilWater.dlayer[layer]));
-                    NH4Supply[layer] = Soil.SoilNitrogen.nh4[layer] * KNH4 * nh4ppm[layer] * swaf;
+                    nh4ppm[layer] = Soil.SoilNitrogen.NH4[layer] * (100.0 / (Soil.BD[layer] * Soil.SoilWater.dlayer[layer]));
+                    NH4Supply[layer] = Soil.SoilNitrogen.NH4[layer] * KNH4 * nh4ppm[layer] * swaf;
                 }
                 else
                 {

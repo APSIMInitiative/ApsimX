@@ -620,7 +620,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -630,7 +630,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -989,7 +989,7 @@ namespace Models
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
-          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
           <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
           <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
@@ -2402,7 +2402,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -2412,7 +2412,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -2771,7 +2771,7 @@ namespace Models
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
-          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
           <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
           <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>
@@ -4183,7 +4183,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -4193,7 +4193,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -4559,7 +4559,7 @@ namespace Models
           <string>[Soil].SoilWater.drain</string>
           <string>[Soil].SoilWater.es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
-          <string>sum([Soil].SoilNitrogen.nh4) as TotalNH4</string>
+          <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.hum_n) as TotalHumusN</string>
           <string>sum([Soil].SoilNitrogen.biom_n) as TotalBiomN</string>
           <string>sum([Soil].SoilNitrogen.fom_n) as TotalFomN</string>

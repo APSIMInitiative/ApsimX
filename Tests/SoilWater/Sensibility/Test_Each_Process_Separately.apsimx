@@ -180,7 +180,7 @@
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -190,7 +190,7 @@
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -703,7 +703,7 @@
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -713,7 +713,7 @@
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -1226,7 +1226,7 @@
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -1236,7 +1236,7 @@
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -1781,7 +1781,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -1791,7 +1791,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -2313,7 +2313,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -2323,7 +2323,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -2874,7 +2874,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -2884,7 +2884,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -3433,7 +3433,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -3443,7 +3443,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -3955,7 +3955,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -3965,7 +3965,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -4507,7 +4507,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -4517,7 +4517,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -5037,7 +5037,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -5047,7 +5047,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -5559,7 +5559,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -5569,7 +5569,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -6132,7 +6132,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -6142,7 +6142,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -6694,7 +6694,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -6704,7 +6704,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -7430,7 +7430,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -7440,7 +7440,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -7707,7 +7707,7 @@ namespace Models
             <string>[Soil].SoilNitrogen.LeachNO3 as leach_no3</string>
             <string>[Soil].SoilNitrogen.LeachUrea as leach_urea</string>
             <string>cl format 3 as mobile</string>
-            <string>[Soil].SoilNitrogen.nh4 format 3 as immobile</string>
+            <string>[Soil].SoilNitrogen.NH4 format 3 as immobile</string>
             <string>[Soil].SoilNitrogen.NO3 format 3</string>
             <string>[Soil].SoilNitrogen.urea format 3</string>
             <string />
@@ -7960,7 +7960,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -7970,7 +7970,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -8237,7 +8237,7 @@ namespace Models
             <string>flow_no3</string>
             <string>flow_urea</string>
             <string>cl format 3 as mobile</string>
-            <string>[Soil].SoilNitrogen.nh4 format 3 as immobile</string>
+            <string>[Soil].SoilNitrogen.NH4 format 3 as immobile</string>
             <string>[Soil].SoilNitrogen.NO3 format 3 as no3</string>
             <string>[Soil].SoilNitrogen.urea format 3 as urea</string>
             <string />
@@ -8492,7 +8492,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -8502,7 +8502,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -8782,10 +8782,10 @@ namespace Models
             <string>Irrigation.irrigation</string>
             <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
             <string>[Soil].SoilNitrogen.NO3[1] as no3_top</string>
-            <string>[Soil].SoilNitrogen.nh4[1] as nh4_top</string>
+            <string>[Soil].SoilNitrogen.NH4[1] as nh4_top</string>
             <string>cl[1] as cl_top</string>
             <string>[Soil].SoilNitrogen.NO3 as no3</string>
-            <string>[Soil].SoilNitrogen.nh4 as nh4</string>
+            <string>[Soil].SoilNitrogen.NH4 as nh4</string>
             <string>cl</string>
           </VariableNames>
           <EventNames>
@@ -9038,7 +9038,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -9048,7 +9048,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -9695,7 +9695,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -9705,7 +9705,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -10266,7 +10266,7 @@ namespace Models
               <specific_bd>2.65</specific_bd>
               <hydrol_effective_depth>450</hydrol_effective_depth>
               <mobile_solutes>
-                <string>no3</string>
+                <string>NO3</string>
                 <string>urea</string>
                 <string>cl</string>
                 <string>br</string>
@@ -10276,7 +10276,7 @@ namespace Models
                 <string>org_c_pool3</string>
               </mobile_solutes>
               <immobile_solutes>
-                <string>nh4</string>
+                <string>NH4</string>
               </immobile_solutes>
               <canopy_fact>
                 <double>1</double>
@@ -10822,7 +10822,7 @@ namespace Models
               <specific_bd>2.65</specific_bd>
               <hydrol_effective_depth>450</hydrol_effective_depth>
               <mobile_solutes>
-                <string>no3</string>
+                <string>NO3</string>
                 <string>urea</string>
                 <string>cl</string>
                 <string>br</string>
@@ -10832,7 +10832,7 @@ namespace Models
                 <string>org_c_pool3</string>
               </mobile_solutes>
               <immobile_solutes>
-                <string>nh4</string>
+                <string>NH4</string>
               </immobile_solutes>
               <canopy_fact>
                 <double>1</double>

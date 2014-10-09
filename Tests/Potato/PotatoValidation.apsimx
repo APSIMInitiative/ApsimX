@@ -303,7 +303,7 @@
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -313,7 +313,7 @@
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -772,7 +772,7 @@ namespace Models
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
@@ -4169,7 +4169,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -4179,7 +4179,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -4554,7 +4554,7 @@ namespace Models
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
@@ -8057,7 +8057,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -8067,7 +8067,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -8490,7 +8490,7 @@ namespace Models
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
@@ -11936,7 +11936,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -11946,7 +11946,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -12421,7 +12421,7 @@ namespace Models
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
@@ -15863,7 +15863,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -15873,7 +15873,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -16428,7 +16428,7 @@ namespace Models
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
@@ -19922,7 +19922,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -19932,7 +19932,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -21100,7 +21100,7 @@ namespace Models
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);

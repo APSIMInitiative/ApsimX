@@ -172,13 +172,13 @@ namespace Models.Soils
 
         /// <summary>The mobile_solutes</summary>
         [Description("Names of all possible mobile solutes")]
-        public string[] mobile_solutes = new string[] {"no3", "urea", "cl", "br", "org_n", "org_c_pool1", "org_c_pool2", 
+        public string[] mobile_solutes = new string[] {"NO3", "urea", "cl", "br", "org_n", "org_c_pool1", "org_c_pool2", 
                                                    "org_c_pool3"};     //! names of all possible mobile solutes
 
 
         /// <summary>The immobile_solutes</summary>
         [Description("Names of all possible immobile solutes")]
-        public string[] immobile_solutes = new string[] { "nh4" };   //! names of all possible immobile solutes
+        public string[] immobile_solutes = new string[] { "NH4" };   //! names of all possible immobile solutes
 
 
         /// <summary>The canopy_fact</summary>
@@ -1478,9 +1478,9 @@ namespace Models.Soils
                 //set the change in solutes for the modules
                 if (solutes[solnum].name == "urea")
                     NitrogenChanges.DeltaUrea = solutes[solnum].delta;
-                else if (solutes[solnum].name == "nh4")
+                else if (solutes[solnum].name == "NH4")
                     NitrogenChanges.DeltaNH4 = solutes[solnum].delta;
-                else if (solutes[solnum].name == "no3")
+                else if (solutes[solnum].name == "NO3")
                     NitrogenChanges.DeltaNO3 = solutes[solnum].delta;
                 else
                 {
@@ -3999,9 +3999,9 @@ namespace Models.Soils
                     MoveDownReal(solutes[solnum].leach, ref solutes[solnum].amount);      //use leaching to set new solute values
                     MoveDownReal(solutes[solnum].leach, ref solutes[solnum].delta);       //use leaching to set new delta (change in) solute values
 
-                    if(solutes[solnum].name == "no3")
+                    if(solutes[solnum].name == "NO3")
                         LeachNO3 = solutes[solnum].leach[num_layers - 1];
-                    if (solutes[solnum].name == "nh4")
+                    if (solutes[solnum].name == "NH4")
                         LeachNH4 = solutes[solnum].leach[num_layers - 1];
                     if (solutes[solnum].name == "urea")
                         LeachUrea = solutes[solnum].leach[num_layers - 1];
@@ -4863,10 +4863,10 @@ namespace Models.Soils
             {
                 switch (solutes[solnum].name)
                 {
-                    case "no3":
+                    case "NO3":
                         solute_amount = Irrigated.NO3;
                         break;
-                    case "nh4":
+                    case "NH4":
                         solute_amount = Irrigated.NH4;
                         break;
                     case "cl":

@@ -564,7 +564,7 @@ namespace Models.ArbitratorGod
                                     }
                                     else
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.nh4[l]);
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.NH4[l]);
                                     }
                                 }
                             }
@@ -631,7 +631,7 @@ namespace Models.ArbitratorGod
                                                                    * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
                                                                    * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
                                                                    * plants[p].RootProperties.KNH4                        // later add in zone
-                                                                   * Soil.SoilNitrogen.nh4ppm[l]
+                                                                   * Soil.SoilNitrogen.NH4ppm[l]
                                                                    * resource[p, l, z, b, f];
                                     }
                                     extractableByPlant[p] += extractable[p, l, z, b, f];

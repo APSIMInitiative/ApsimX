@@ -121,7 +121,7 @@
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -131,7 +131,7 @@
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -467,7 +467,7 @@ namespace Models
 		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
 		    {
 		       initSWDep += Soil.SoilWater.sw_dep[j];
-		       initMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.nh4[j];
+		       initMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
 		    }
 		}
 		
@@ -479,7 +479,7 @@ namespace Models
 		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
 		    {
 		       currSWDep += Soil.SoilWater.sw_dep[j];
-		       currMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.nh4[j];
+		       currMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
 
 			   // Summary.WriteMessage(this, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
 		    }
@@ -523,9 +523,9 @@ namespace Models
           <string>Slurp.demandNitrogen as demandNitrogen</string>
           <string>sum(Slurp.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
           <string>sum(Slurp.uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
-          <string>(sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.NO3[1:4]) as MinN</string>
+          <string>(sum([Soil].SoilNitrogen.NH4[1:4]) + sum([Soil].SoilNitrogen.NO3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
-          <string>[Soil]SoilNitrogen.nh4</string>
+          <string>[Soil]SoilNitrogen.NH4</string>
           <string>[SOil]SoilNitrogen.NO3</string>
           <string>Slurp.uptakeNitrogenPropNO3</string>
         </VariableNames>
@@ -773,7 +773,7 @@ namespace Models
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -783,7 +783,7 @@ namespace Models
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -1107,7 +1107,7 @@ namespace Models
 		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
 		    {
 		       initSWDep += Soil.SoilWater.sw_dep[j];
-		       initMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.nh4[j];
+		       initMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
 		    }
 		}
 		
@@ -1119,7 +1119,7 @@ namespace Models
 		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
 		    {
 		       currSWDep += Soil.SoilWater.sw_dep[j];
-		       currMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.nh4[j];
+		       currMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
 
 			   // Summary.WriteMessage(this, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
 		    }
@@ -1194,7 +1194,7 @@ namespace Models
           <string>Slurp2.demandNitrogen as demandNitrogen2</string>
           <string>sum(Slurp1.uptakeNitrogen[1:4]) as Slurp1UptakeN</string>
           <string>sum(Slurp2.uptakeNitrogen[1:4]) as Slurp2UptakeN</string>
-          <string>(sum([Soil].SoilNitrogen.nh4[1:4]) + sum([Soil].SoilNitrogen.NO3[1:4]) as MinN</string>
+          <string>(sum([Soil].SoilNitrogen.NH4[1:4]) + sum([Soil].SoilNitrogen.NO3[1:4]) as MinN</string>
           <string>[Diffs].Script.diffMinNUptake</string>
         </VariableNames>
         <EventNames>
