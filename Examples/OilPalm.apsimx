@@ -466,13 +466,13 @@
           <BoronUnits>HotWater</BoronUnits>
         </Analysis>
         <InitialWater>
-          <Name>Initial water</Name>
+          <Name>InitialWater</Name>
           <PercentMethod>EvenlyDistributed</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
-          <Name>Initial nitrogen</Name>
+          <Name>InitialNitrogen</Name>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -527,6 +527,7 @@
         <Site>Sangara Estate</Site>
         <NearestTown>Popondetta</NearestTown>
         <Region>Oro Province</Region>
+        <Country>PNG</Country>
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
@@ -651,7 +652,7 @@ namespace Models
 		[Description("Sowing date")]
 		public DateTime sowing_date {get; set;}
 		
-		[Description("Plant population /ha")]
+		[Description("Plant population (/ha)")]
 		public double population {get; set;}
 
 		[Description("Cultivar")]
@@ -932,9 +933,10 @@ namespace Models
     </Zone>
     <Graph>
       <Name>LAI</Name>
+      <Title>Leaf Area Index</Title>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Date</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -942,7 +944,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Palm LAI (m2/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -974,9 +976,10 @@ namespace Models
     </Graph>
     <Graph>
       <Name>AnnualFFB</Name>
+      <Title>Annual Yield of Fresh Fruit Bunches</Title>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Date</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -984,7 +987,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>FFB (t/ha)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1016,9 +1019,10 @@ namespace Models
     </Graph>
     <Graph>
       <Name>AnnualBunchProduction</Name>
+      <Title>Annual Bunch Production</Title>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Date</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1026,7 +1030,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Bunch Production (/palm)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1058,9 +1062,10 @@ namespace Models
     </Graph>
     <Graph>
       <Name>AnnualBunchSizes</Name>
+      <Title>Mean Annual Bunch Size</Title>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Date</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1068,7 +1073,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Bunch Size (kg)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1100,9 +1105,10 @@ namespace Models
     </Graph>
     <Graph>
       <Name>AnnualInputs</Name>
+      <Title>Annual Inputs of Irrigation and Fertiliser</Title>
       <Axis>
         <Type>Bottom</Type>
-        <Title />
+        <Title>Date</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1110,7 +1116,7 @@ namespace Models
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title />
+        <Title>Annual Irrigation (mm) and Fertiliser N (kg/ha)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>

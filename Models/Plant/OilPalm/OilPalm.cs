@@ -148,22 +148,22 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Gets or sets the understory cover maximum.</summary>
         /// <value>The understory cover maximum.</value>
-        [Description("Maximum understory cover")]
+        [Description("Maximum understory cover (0-1)")]
         [Units("0-1")]
         public double UnderstoryCoverMax { get; set; }
         /// <summary>Gets or sets the understory legume fraction.</summary>
         /// <value>The understory legume fraction.</value>
-        [Description("Fraction of understory that is legume")]
+        [Description("Fraction of understory that is legume (0-1)")]
         [Units("0-1")]
         public double UnderstoryLegumeFraction { get; set; }
         /// <summary>Gets or sets the interception fraction.</summary>
         /// <value>The interception fraction.</value>
-        [Description("Fraction of rainfall intercepted by canopy")]
+        [Description("Fraction of rainfall intercepted by canopy (0-1)")]
         [Units("0-1")]
         public double InterceptionFraction { get; set; }
         /// <summary>Gets or sets the maximum root depth.</summary>
         /// <value>The maximum root depth.</value>
-        [Description("Maximum palm root depth")]
+        [Description("Maximum palm root depth (mm)")]
         [Units("mm")]
         public double MaximumRootDepth { get; set; }
 

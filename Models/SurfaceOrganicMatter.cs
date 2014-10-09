@@ -215,7 +215,7 @@
         /// <summary>Gets or sets the name of the pool.</summary>
         /// <value>The name of the pool.</value>
         [Summary]
-        [Description("Pool name")]
+        [Description("Surface organic matter pool name")]
         [Units("")]
         public string PoolName {
             get
@@ -245,10 +245,10 @@
             }
         }
 
-        /// <summary>Gets or sets the type.</summary>
+        /// <summary>Gets or sets the type of surface organic matter.</summary>
         /// <value>The type.</value>
         [Summary]
-        [Description("Pool type")]
+        [Description("Surface organic matter pool type")]
         [Units("")]
         public string type 
         {
@@ -279,10 +279,10 @@
             }
         }
 
-        /// <summary>Gets or sets the mass.</summary>
-        /// <value>The mass.</value>
+        /// <summary>Gets or sets the mass of surface organic matter.</summary>
+        /// <value>The mass of surface organic matter.</value>
         [Summary]
-        [Description("Mass")]
+        [Description("Mass of surface residue (kg/ha)")]
         [Units("kg/ha")]
         public string mass
         {
@@ -316,7 +316,7 @@
         /// <summary>Gets or sets the standing_fraction.</summary>
         /// <value>The standing_fraction.</value>
         [Summary]
-        [Description("Standing fraction")]
+        [Description("Standing fraction (0-1)")]
         [Units("0-1")]
         public string standing_fraction
         {
@@ -349,11 +349,11 @@
             }
         }
 
-        /// <summary>Gets or sets the CPR.</summary>
-        /// <value>The CPR.</value>
+        /// <summary>Gets or sets the Carbon:Phosphorus ratio.</summary>
+        /// <value>The Carbon:Phosphorus ratio.</value>
         [Summary]
-        [Description("CPR")]
-        [Units("")]
+        [Description("Carbon:Phosphorus ratio (g/g)")]
+        [Units("g/g")]
         public string cpr
         {
             get
@@ -385,11 +385,11 @@
             }
         }
 
-        /// <summary>Gets or sets the CNR.</summary>
-        /// <value>The CNR.</value>
+        /// <summary>Gets or sets the Carbon:Nitrogen ratio.</summary>
+        /// <value>The Carbon:Nitrogen ratio.</value>
         [Summary]
-        [Description("CNR")]
-        [Units("")]
+        [Description("Carbon:Nitrogen ratio (g/g)")]
+        [Units("g/g")]
         public string cnr
         {
             get
