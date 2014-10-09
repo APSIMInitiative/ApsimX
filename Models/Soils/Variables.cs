@@ -360,7 +360,7 @@ namespace Models.Soils
         /// <summary>Gets or sets the root_depth.</summary>
         /// <value>The root_depth.</value>
         [XmlIgnore]
-        public double root_depth
+        private double root_depth
         {
             get { return iniFomDepth; }
             set { iniFomDepth = value; }
