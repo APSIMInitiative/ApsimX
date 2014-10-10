@@ -1718,9 +1718,9 @@ namespace Models.Soils
             NitrogenChangedType NitrogenDeltas = new NitrogenChangedType();
             NitrogenDeltas.Sender = "SoilWater";
             NitrogenDeltas.SenderType = "WaterModule";
-            NitrogenDeltas.DeltaUrea = SoilObject.GetASolutesDeltas("urea");
-            NitrogenDeltas.DeltaNH4 = SoilObject.GetASolutesDeltas("nh4");
-            NitrogenDeltas.DeltaNO3 = SoilObject.GetASolutesDeltas("no3");
+            NitrogenDeltas.DeltaUrea = SoilObject.GetFlowArrayForASolute("urea");
+            NitrogenDeltas.DeltaNH4 = SoilObject.GetFlowArrayForASolute("nh4");
+            NitrogenDeltas.DeltaNO3 = SoilObject.GetFlowArrayForASolute("no3");
 
             if (NitrogenChanged != null)
                 NitrogenChanged.Invoke(NitrogenDeltas);

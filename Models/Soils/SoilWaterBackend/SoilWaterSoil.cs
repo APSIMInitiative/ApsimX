@@ -726,7 +726,6 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-
         #endregion
 
 
@@ -995,21 +994,6 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
-
-
-        public double[] GetASolutesDeltas(string SoluteName)
-            {
-            double[] result = new double[num_layers];
-            SoluteInLayer solute;
-
-            foreach (Layer lyr in layers)
-                {
-                solute = lyr.GetASolute(SoluteName);
-                result[lyr.number - 1] = solute.delta;
-                }
-
-            return result;
-            }
 
 
 
