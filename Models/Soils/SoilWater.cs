@@ -1722,6 +1722,13 @@ namespace Models.Soils
             NitrogenDeltas.DeltaNH4 = SoilObject.GetFlowArrayForASolute("nh4");
             NitrogenDeltas.DeltaNO3 = SoilObject.GetFlowArrayForASolute("no3");
 
+            //TODO: fix this properly. Perhaps see if a negative delta realy is wrong since solute can move with unsaturated flow which can be in the upward direction.
+            //This is a fudge but I need to get this into version control and SoilNitrogen keeps not liking a negative delta value for urea.
+            for (int i = 0; i < NitrogenDeltas.DeltaUrea.Length; i++)
+                {
+                if (NitrogenDeltas.DeltaUrea[i] < -0.00001)
+                    NitrogenDeltas.DeltaUrea[i] = 0.0;
+                }
             if (NitrogenChanged != null)
                 NitrogenChanged.Invoke(NitrogenDeltas);
 
