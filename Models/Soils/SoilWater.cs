@@ -762,6 +762,26 @@ namespace Models.Soils
 
 
 
+
+        //DELTA ARRAY FOR A SOLUTE
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double[] flow_no3
+        { get { return SoilObject.GetFlowArrayForASolute("no3"); } }
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double[] flow_nh4
+        { get { return SoilObject.GetFlowArrayForASolute("nh4"); } }
+
+        [XmlIgnore]
+        [Units("kg/ha")]
+        public double[] flow_urea
+        { get { return SoilObject.GetFlowArrayForASolute("urea"); } }
+
+
+
         #endregion
 
 
@@ -1695,15 +1715,15 @@ namespace Models.Soils
         private void SendNitrogenChangedEvent()
             {
 
-            NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
-            NitrogenChanges.Sender = "SoilWater";
-            NitrogenChanges.SenderType = "WaterModule";
-            NitrogenChanges.DeltaUrea = SoilObject.GetASolutesDeltas("urea");
-            NitrogenChanges.DeltaNH4 = SoilObject.GetASolutesDeltas("nh4");
-            NitrogenChanges.DeltaNO3 = SoilObject.GetASolutesDeltas("no3");
+            NitrogenChangedType NitrogenDeltas = new NitrogenChangedType();
+            NitrogenDeltas.Sender = "SoilWater";
+            NitrogenDeltas.SenderType = "WaterModule";
+            NitrogenDeltas.DeltaUrea = SoilObject.GetASolutesDeltas("urea");
+            NitrogenDeltas.DeltaNH4 = SoilObject.GetASolutesDeltas("nh4");
+            NitrogenDeltas.DeltaNO3 = SoilObject.GetASolutesDeltas("no3");
 
             if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NitrogenChanges);
+                NitrogenChanged.Invoke(NitrogenDeltas);
 
             }
 

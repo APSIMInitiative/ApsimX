@@ -162,6 +162,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -685,6 +686,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -1208,6 +1210,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -1763,6 +1766,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3.5</SummerCona>
@@ -2308,6 +2312,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -2885,6 +2890,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3.5</SummerCona>
@@ -3288,16 +3294,15 @@ namespace Models
   <title></title>
  </head>
  <body>
-  <p></p>
+  <p>Ponding_with_Soil_Evap I changed from using MWCON to cause the pond to using KS. The new soilwater module does not support MWCON anymore. This is the reason that flux has 1 mm lost each day. Because you had to set KS to 1 in the top layer to cause the ponding. So that is maxiumum 1mm per day that can pass through. You can have less.</p>
   <p>Ponding_with_Soil_Evap does not match soilwat output because soilwat has a bug in it, where soil evaporation still occurs even when a pond is present. Which is clearly wrong. So this new soilwater fixes that problem. Although still may need some tweaking. The upshot is that even though they are different. You can ignore the difference for this particular simulation because it is due to a bug being corrected.</p>
   <p>WaterTable_Calculation does not match the soilwat output but matches the existing SoilWater output</p>
   <p>Lateral Outflow does not work but niether does Lateral Outflow for exsiting SoilWater</p>
   <p>Runoff_with_SurfaceOM does not match the soilwat output. The surfaceom_cover does not degrade over time. However the existing SoilWater has the same issue so the outputs match.</p>
   <p>Runoff_with_Irrigation does not match the soilwat output. This is a new feature. You have to specify will_runoff=1 inorder to active runoff with irrigation. Clearly it is not working however it is also not working in the existing soilwater so they match. THe irrigations don't cause any runoff at the momement.</p>
   <p>Subsurface_Irrigion does not work either. This is another new feature. Once again it does not work in the existing soilwater either. No one will be using these new features so it does not matter if they don't work.</p>
-  <p>Solute_Saturated_Flow_Only does not match soilwat output. It is missing all the leach_solutename's. However the existing soilwater also does not have them. So they match.</p>
-  <p>Solute_Unsaturated_Flow_Only has the same issues as Solute_Saturated_Flow_Only.</p>
-  <p>Solute_Irrigation has the same issues as the two solutes simulations above.</p>
+  <p>Solute_Unsaturated_Flow_Only does match but the new soilwater goes to 3 decimal places whereas the original soilwat only went to 1. When you round the new soilwater outputs they seem to be correct. However the total no3 in the soil seems to be more wrong. This maybe caused by the small rounding differences adding up over time.  Elizabeth Myer said that someone she new tried to to a detailed Nitrogen balance using Apsim and he could not do it due to these small roundings in the flow_no3 etc. So perhaps the fact that the new soilwater does not match is a good thing. Perhaps it is more accurate and perhaps now a Nitrogen balance using this new soilwater module will actually balance out. </p>
+  <p>Solute_Irrigation the new Irrigation module in ApsimX does not support applying irrigations with solutes. We will need to add an Apply method that contains the extra solute parameters eg. Irrigation.Apply(Amount, NO3Amount, NH4Amount). </p>
  </body>
 </html>]]></MemoText>
   </Memo>
@@ -3462,6 +3467,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -3984,6 +3990,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -4536,6 +4543,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3.5</SummerCona>
@@ -5066,6 +5074,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -5588,6 +5597,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -6161,6 +6171,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -6723,6 +6734,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>0</SummerU>
           <SummerCona>0</SummerCona>
@@ -7332,17 +7344,17 @@ namespace Models
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
             </NO3>
             <NH4>
               <double>350</double>
@@ -7370,7 +7382,72 @@ namespace Models
               <double>0.51</double>
               <double>0.49</double>
             </SW>
-            <NO3Units>ppm</NO3Units>
+            <OC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </OC>
+            <EC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </EC>
+            <CL>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </CL>
+            <ESP>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </ESP>
+            <PH>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </PH>
+            <NO3Units>kgha</NO3Units>
             <NH4Units>kgha</NH4Units>
             <SWUnits>Volumetric</SWUnits>
             <OCUnits>Total</OCUnits>
@@ -7459,6 +7536,7 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>0</SummerU>
             <SummerCona>0</SummerCona>
@@ -7749,16 +7827,12 @@ namespace Models
             <string>[Soil].SoilWater.runoff as runoff</string>
             <string>[Soil].SoilWater.es as es</string>
             <string>[Clock].Today</string>
-            <string>leach_cl as leach_mobile</string>
-            <string>[Soil].SoilNitrogen.LeachNH4 as leach_immobile</string>
-            <string>[Soil].SoilNitrogen.LeachNO3 as leach_no3</string>
-            <string>[Soil].SoilNitrogen.LeachUrea as leach_urea</string>
-            <string>cl format 3 as mobile</string>
-            <string>[Soil].SoilNitrogen.nh4 format 3 as immobile</string>
-            <string>[Soil].SoilNitrogen.no3 format 3</string>
-            <string>[Soil].SoilNitrogen.urea format 3</string>
-            <string />
-            <string />
+            <string>[Soil].SoilWater.LeachNO3 as leach_no3</string>
+            <string>[Soil].SoilWater.LeachNH4 as leach_nh4</string>
+            <string>[Soil].SoilWater.LeachUrea as leach_urea</string>
+            <string>[Soil].SoilNitrogen.no3 as no3</string>
+            <string>[Soil].SoilNitrogen.nh4 as nh4 </string>
+            <string>[Soil].SoilNitrogen.urea as urea</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -7862,17 +7936,17 @@ namespace Models
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
+              <double>250</double>
+              <double>350</double>
             </NO3>
             <NH4>
               <double>350</double>
@@ -7900,7 +7974,72 @@ namespace Models
               <double>0.46</double>
               <double>0.36</double>
             </SW>
-            <NO3Units>ppm</NO3Units>
+            <OC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </OC>
+            <EC>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </EC>
+            <CL>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </CL>
+            <ESP>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </ESP>
+            <PH>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+              <double>NaN</double>
+            </PH>
+            <NO3Units>kgha</NO3Units>
             <NH4Units>kgha</NH4Units>
             <SWUnits>Volumetric</SWUnits>
             <OCUnits>Total</OCUnits>
@@ -7989,6 +8128,7 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>0</SummerU>
             <SummerCona>0</SummerCona>
@@ -8279,15 +8419,12 @@ namespace Models
             <string>[Soil].SoilWater.runoff as runoff</string>
             <string>[Soil].SoilWater.es as es</string>
             <string>[Clock].Today</string>
-            <string>flow_cl as flow_mobile</string>
-            <string>flow_nh4 as flow_immobile</string>
-            <string>flow_no3</string>
-            <string>flow_urea</string>
-            <string>cl format 3 as mobile</string>
-            <string>[Soil].SoilNitrogen.nh4 format 3 as immobile</string>
-            <string>[Soil].SoilNitrogen.no3 format 3 as no3</string>
-            <string>[Soil].SoilNitrogen.urea format 3 as urea</string>
-            <string />
+            <string>[Soil].SoilWater.flow_no3 as flow_no3</string>
+            <string>[Soil].SoilWater.flow_nh4 as flow_nh4</string>
+            <string>[Soil].SoilWater.flow_urea as flow_urea</string>
+            <string>[Soil].SoilNitrogen.no3 as no3</string>
+            <string>[Soil].SoilNitrogen.nh4 as nh4</string>
+            <string>[Soil].SoilNitrogen.urea as urea</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -8521,6 +8658,7 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>0</SummerU>
             <SummerCona>0</SummerCona>
@@ -8820,20 +8958,15 @@ namespace Models
             <string>[Soil].SoilWater.dul_dep as dul_dep</string>
             <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
-            <string>[Soil].SoilWater.sw_dep as sw_dep</string>
             <string>[Soil].SoilWater.flux as flux</string>
             <string>[Soil].SoilWater.flow as flow</string>
             <string>[Soil].SoilWater.drain as drain</string>
             <string>[Soil].SoilWater.es as es</string>
             <string>[Clock].Today</string>
-            <string>Irrigation.irrigation</string>
-            <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
-            <string>[Soil].SoilNitrogen.no3[1] as no3_top</string>
-            <string>[Soil].SoilNitrogen.nh4[1] as nh4_top</string>
-            <string>cl[1] as cl_top</string>
+            <string>[Irrigation].irrigation</string>
+            <string>[Soil].SoilWater.sw_dep as sw_dep</string>
             <string>[Soil].SoilNitrogen.no3 as no3</string>
             <string>[Soil].SoilNitrogen.nh4 as nh4</string>
-            <string>cl</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -9069,6 +9202,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>0</SummerU>
               <SummerCona>0</SummerCona>
@@ -9625,6 +9759,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>0</SummerU>
               <SummerCona>0</SummerCona>

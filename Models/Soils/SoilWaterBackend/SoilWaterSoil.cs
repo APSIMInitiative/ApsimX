@@ -703,6 +703,30 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+
+        //SOLUTE FLOW ARRAY
+
+        //need to multiply by -1 because soilwat used flow_sol = (sol_leach - sol_up)
+        //but this code uses sol.delta = sol.delta + in_solute - out_solute. 
+        //Should be (out_solute - in_solute) to match (sol_leach - sol_up) in soilwat.
+
+        public double[] GetFlowArrayForASolute(string SoluteName)
+            {
+
+            double[] result = new double[num_layers];
+            SoluteInLayer sol;
+            foreach (Layer lyr in layers)
+                {
+                sol = lyr.GetASolute(SoluteName);
+                result[lyr.number - 1] = sol.leach - sol.up;
+                }
+            return result;
+
+            }
+
+
+
+
         #endregion
 
 
