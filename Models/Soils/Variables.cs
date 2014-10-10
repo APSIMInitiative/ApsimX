@@ -322,7 +322,7 @@ namespace Models.Soils
         /// <summary>Gets or sets the MCN.</summary>
         /// <value>The MCN.</value>
         [XmlIgnore]
-        public double mcn
+        private double mcn
         {
             get { return biom_cn; }
             set { biom_cn = value; }
@@ -360,7 +360,7 @@ namespace Models.Soils
         /// <summary>Gets or sets the root_depth.</summary>
         /// <value>The root_depth.</value>
         [XmlIgnore]
-        public double root_depth
+        private double root_depth
         {
             get { return iniFomDepth; }
             set { iniFomDepth = value; }
@@ -1242,7 +1242,7 @@ namespace Models.Soils
         [Units("mg/kg")]
         [Description("Soil ammonium nitrogen content")]
         [XmlIgnore]
-        public double[] nh4ppm
+        public double[] NH4ppm
         {
             get
             {
@@ -1262,7 +1262,7 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    double sumOld = Utility.Math.Sum(nh4);   // original values
+                    double sumOld = Utility.Math.Sum(NH4);   // original values
 
                     for (int layer = 0; layer < value.Length; ++layer)
                         value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
@@ -1270,7 +1270,7 @@ namespace Models.Soils
                         Patch[k].nh4 = value;
 
                     if (!inReset)
-                        SendExternalMassFlowN(Utility.Math.Sum(nh4) - sumOld);
+                        SendExternalMassFlowN(Utility.Math.Sum(NH4) - sumOld);
                 }
                 else
                     nh4ppm_reset = value;
@@ -1283,7 +1283,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil ammonium nitrogen amount")]
         [XmlIgnore]
-        public double[] nh4
+        public double[] NH4
         {
             get
             {
@@ -1299,12 +1299,12 @@ namespace Models.Soils
             }
             set  // should this be private?
             {
-                double sumOld = Utility.Math.Sum(nh4);
+                double sumOld = Utility.Math.Sum(NH4);
 
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].nh4 = value;
 
-                SendExternalMassFlowN(Utility.Math.Sum(nh4) - sumOld);
+                SendExternalMassFlowN(Utility.Math.Sum(NH4) - sumOld);
             }
         }
 
@@ -1318,7 +1318,7 @@ namespace Models.Soils
         [Units("mg/kg")]
         [Description("Soil nitrate nitrogen content")]
         [XmlIgnore]
-        public double[] no3ppm
+        public double[] NO3ppm
         {
             get
             {
@@ -1338,14 +1338,14 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    double sumOld = Utility.Math.Sum(no3);   // original values
+                    double sumOld = Utility.Math.Sum(NO3);   // original values
                     for (int layer = 0; layer < value.Length; ++layer)
                         value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].no3 = value;
 
                     if (!inReset)
-                        SendExternalMassFlowN(Utility.Math.Sum(no3) - sumOld);
+                        SendExternalMassFlowN(Utility.Math.Sum(NO3) - sumOld);
                 }
                 else
                     no3ppm_reset = value;
@@ -1358,7 +1358,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil nitrate nitrogen amount")]
         [XmlIgnore]
-        public double[] no3
+        public double[] NO3
         {
             get
             {
@@ -1374,11 +1374,11 @@ namespace Models.Soils
             }
             set  // should this be private? or not exist at all?
             {
-                double sumOld = Utility.Math.Sum(no3);
+                double sumOld = Utility.Math.Sum(NO3);
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].no3 = value;
 
-                SendExternalMassFlowN(Utility.Math.Sum(no3) - sumOld);
+                SendExternalMassFlowN(Utility.Math.Sum(NO3) - sumOld);
             }
         }
 
@@ -2131,7 +2131,7 @@ namespace Models.Soils
         /// <value>The nitrification.</value>
 
         [Units("kg/ha")]
-        double[] nitrification
+        public double[] Nitrification
         {
             get
             {
@@ -2259,7 +2259,7 @@ namespace Models.Soils
         /// <value>The dnit.</value>
 
         [Units("kg/ha")]
-        public double[] dnit
+        public double[] Denitrification
         {
             get
             {
@@ -2295,7 +2295,7 @@ namespace Models.Soils
         /// <value>The fom_n.</value>
 
         [Units("kg/ha")]
-        public double[] fom_n
+        public double[] FOMN
         {
             get
             {
@@ -2359,7 +2359,7 @@ namespace Models.Soils
         /// <value>The hum_n.</value>
 
         [Units("kg/ha")]
-        public double[] hum_n
+        public double[] HumicN
         {
             get
             {
@@ -2375,7 +2375,7 @@ namespace Models.Soils
         /// <value>The biom_n.</value>
 
         [Units("kg/ha")]
-        public double[] biom_n
+        public double[] BiomassN
         {
             get
             {
@@ -2391,7 +2391,7 @@ namespace Models.Soils
         /// <value>The nit_tot.</value>
 
         [Units("kg/ha")]
-        public double[] nit_tot
+        public double[] TotalN
         {
             get
             {
@@ -2418,7 +2418,7 @@ namespace Models.Soils
         {
             get
             {
-                double deltaN = SumDoubleArray(nit_tot) - dailyInitialN;  // variation in N today
+                double deltaN = SumDoubleArray(TotalN) - dailyInitialN;  // variation in N today
                 double losses = SumDoubleArray(dlt_nh4_dnit) + SumDoubleArray(dlt_no3_dnit);
                 return -(losses + deltaN);
                 // why leaching losses are not accounted and what about the inputs?
@@ -2740,7 +2740,7 @@ namespace Models.Soils
         /// <value>The fom_c.</value>
 
         [Units("kg/ha")]
-        double[] fom_c
+        public double[] FOMC
         {
             get
             {
@@ -2804,7 +2804,7 @@ namespace Models.Soils
         /// <value>The hum_c.</value>
 
         [Units("kg/ha")]
-        double[] hum_c
+        public double[] HumicC
         {
             get
             {
@@ -2820,7 +2820,7 @@ namespace Models.Soils
         /// <value>The inert_c.</value>
 
         [Units("kg/ha")]
-        double[] inert_c
+        public double[] InertC
         {
             get
             {
@@ -2836,7 +2836,7 @@ namespace Models.Soils
         /// <value>The biom_c.</value>
 
         [Units("kg/ha")]
-        double[] biom_c
+        public double[] BiomassC
         {
             get
             {
@@ -2852,7 +2852,7 @@ namespace Models.Soils
         /// <value>The carbon_tot.</value>
 
         [Units("kg/ha")]
-        public double[] carbon_tot
+        public double[] TotalC
         {
             get
             {
@@ -2879,7 +2879,7 @@ namespace Models.Soils
         {
             get
             {
-                double deltaC = SumDoubleArray(carbon_tot) - dailyInitialC;     // variation in C today
+                double deltaC = SumDoubleArray(TotalC) - dailyInitialC;     // variation in C today
                 double losses = SumDoubleArray(dlt_res_c_atm) + SumDoubleArray(dlt_fom_c_atm) + SumDoubleArray(dlt_hum_c_atm) + SumDoubleArray(dlt_biom_c_atm);
                 return -(losses + deltaC);
             }

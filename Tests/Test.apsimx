@@ -33,8 +33,8 @@
           <string>[WeatherFile].Radn</string>
           <string>[WeatherFile].Rain</string>
           <string>[Soil].SoilWater.sw_dep</string>
-          <string>[Soil].SoilNitrogen.no3</string>
-          <string>[SurfaceOrganicMatter].surfaceom_wt</string>
+          <string>[Soil].SoilNitrogen.NO3</string>
+          <string>[SurfaceOrganicMatter].Wt</string>
           <string>[Soil].SoilWater.sw[1:3] as SWTop3Layers</string>
           <string>sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
           <string>[WeatherFile].Rain/25.4 as RainInches</string>
@@ -274,7 +274,7 @@
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -284,7 +284,7 @@
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -753,7 +753,7 @@
           <string>[Clock].Today.Year</string>
           <string>sum of [WeatherFile].Rain from 1-Apr to 1-Sep as RainAprToSepYearly</string>
           <string>sum of [WeatherFile].Rain from 1-Apr-1960 to 1-Sep-1961 as RainAprToSepTwoYears</string>
-          <string>diff of [Soil].SoilNitrogen.carbon_tot[1] from [Clock].StartOfSimulation to [Clock].EndOfSimulation as ChangeInCarbon </string>
+          <string>diff of [Soil].SoilNitrogen.TotalC[1] from [Clock].StartOfSimulation to [Clock].EndOfSimulation as ChangeInCarbon </string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfYear</string>

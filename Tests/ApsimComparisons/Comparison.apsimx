@@ -434,7 +434,7 @@
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -444,7 +444,7 @@
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -866,10 +866,10 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
+			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			SW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			TotalN = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
-			TotalC = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot);
+			TotalN = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
+			TotalC = Utility.Math.Sum(Soil.SoilNitrogen.TotalC);
 		}
 	}
 }
@@ -948,6 +948,7 @@ namespace Models
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>SW</Name>
@@ -1008,6 +1009,7 @@ namespace Models
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>TotalN</Name>
@@ -1068,6 +1070,7 @@ namespace Models
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>TotalC</Name>
@@ -1128,6 +1131,7 @@ namespace Models
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>SW and rain</Name>
@@ -1195,6 +1199,7 @@ namespace Models
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Tests>
     <Name>Tests</Name>

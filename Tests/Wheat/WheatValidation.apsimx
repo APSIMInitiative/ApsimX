@@ -337,7 +337,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -347,7 +347,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -794,8 +794,8 @@ namespace Models
        [EventSubscribe("DoManagement")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
-			CarbonTot = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
+			CarbonTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalC);
 		}
 	}
 }
@@ -1123,7 +1123,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -1133,7 +1133,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -1779,7 +1779,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -1789,7 +1789,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -2296,11 +2296,11 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -2309,7 +2309,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -2319,11 +2319,11 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
+    TotalNH4 += Soil.SoilNitrogen.NH4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -2858,7 +2858,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -2868,7 +2868,7 @@ private void OnDoManagement(object sender, EventArgs e)
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -3893,7 +3893,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -3903,7 +3903,7 @@ private void OnDoManagement(object sender, EventArgs e)
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -4516,11 +4516,11 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -4529,7 +4529,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -4539,11 +4539,11 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
+    TotalNH4 += Soil.SoilNitrogen.NH4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -5966,7 +5966,7 @@ public class Script : Model
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -5976,7 +5976,7 @@ public class Script : Model
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -7759,7 +7759,7 @@ public class Script : Model
               <specific_bd>2.65</specific_bd>
               <hydrol_effective_depth>450</hydrol_effective_depth>
               <mobile_solutes>
-                <string>no3</string>
+                <string>NO3</string>
                 <string>urea</string>
                 <string>cl</string>
                 <string>br</string>
@@ -7769,7 +7769,7 @@ public class Script : Model
                 <string>org_c_pool3</string>
               </mobile_solutes>
               <immobile_solutes>
-                <string>nh4</string>
+                <string>NH4</string>
               </immobile_solutes>
               <canopy_fact>
                 <double>1</double>
@@ -8918,7 +8918,7 @@ public class Script : Model
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -8928,7 +8928,7 @@ public class Script : Model
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -9868,7 +9868,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -9878,7 +9878,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -10598,11 +10598,11 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -10611,7 +10611,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -10621,11 +10621,11 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
+    TotalNH4 += Soil.SoilNitrogen.NH4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -11198,7 +11198,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -11208,7 +11208,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -11846,11 +11846,11 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -11859,7 +11859,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -11869,11 +11869,11 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
+    TotalNH4 += Soil.SoilNitrogen.NH4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -12110,7 +12110,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -12120,7 +12120,7 @@ private void OnDoManagement(object sender, EventArgs e)
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -12606,7 +12606,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -12616,7 +12616,7 @@ private void OnDoManagement(object sender, EventArgs e)
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -13264,7 +13264,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -13274,7 +13274,7 @@ private void OnDoManagement(object sender, EventArgs e)
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -13901,11 +13901,11 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 	int layers = Soil.SoilWater.dlayer.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -13914,7 +13914,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -13924,11 +13924,11 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.SoilNitrogen.NO3[layer];
+    TotalNH4 += Soil.SoilNitrogen.NH4[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;

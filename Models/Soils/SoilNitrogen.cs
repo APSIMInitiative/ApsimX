@@ -286,8 +286,8 @@ namespace Models.Soils
             oc = Soil.OC;
             ph = Soil.PH;
             salb = Soil.SoilWater.Salb;
-            no3ppm = Soil.NO3;
-            nh4ppm = Soil.NH4;
+            NO3ppm = Soil.NO3;
+            NH4ppm = Soil.NH4;
             num_residues = 0;
             Tsoil = null;
             simpleST = null;
@@ -350,8 +350,8 @@ namespace Models.Soils
 
             // reset C and N variables to their initial state
             oc = OC_reset;
-            no3ppm = no3ppm_reset;
-            nh4ppm = nh4ppm_reset;
+            NO3ppm = no3ppm_reset;
+            NH4ppm = nh4ppm_reset;
             ureappm = ureappm_reset;
 
             // perform initial calculations and setup
@@ -510,8 +510,8 @@ namespace Models.Soils
             }
 
             // Calculations for NEW sysbal component
-            dailyInitialC = SumDoubleArray(carbon_tot);
-            dailyInitialN = SumDoubleArray(nit_tot);
+            dailyInitialC = SumDoubleArray(TotalC);
+            dailyInitialN = SumDoubleArray(TotalN);
 
             // Initialise the inhibitor factors
             if (InhibitionFactor_Nitrification == null)
@@ -541,11 +541,11 @@ namespace Models.Soils
                 string[] solute_names;
                 if (useOrganicSolutes)
                 {
-                    solute_names = new string[7] { "urea", "nh4", "no3", "org_c_pool1", "org_c_pool2", "org_c_pool3", "org_n" };
+                    solute_names = new string[7] { "urea", "NH4", "NO3", "org_c_pool1", "org_c_pool2", "org_c_pool3", "org_n" };
                 }
                 else
                 { // don't publish the organic solutes
-                    solute_names = new string[3] { "urea", "nh4", "no3" };
+                    solute_names = new string[3] { "urea", "NH4", "NO3" };
                 }
 
                 NewSoluteType SoluteData = new NewSoluteType();
@@ -561,16 +561,16 @@ namespace Models.Soils
         {
             // +  Note: needed for both NEW and OLD sysbal component
 
-            dailyInitialN = SumDoubleArray(nit_tot);
-            dailyInitialC = SumDoubleArray(carbon_tot);
+            dailyInitialN = SumDoubleArray(TotalN);
+            dailyInitialC = SumDoubleArray(TotalC);
         }
 
         /// <summary>Calculates variations in C an N, and publishes MassFlows to APSIM</summary>
         private void DeltaState()
         {
 
-            double dltN = SumDoubleArray(nit_tot) - dailyInitialN;
-            double dltC = SumDoubleArray(carbon_tot) - dailyInitialC;
+            double dltN = SumDoubleArray(TotalN) - dailyInitialN;
+            double dltC = SumDoubleArray(TotalC) - dailyInitialC;
 
             SendExternalMassFlowN(dltN);
             SendExternalMassFlowC(dltC);
@@ -767,7 +767,7 @@ namespace Models.Soils
                 if (hasValues(NitrogenChanges.DeltaNH4, EPSILON))
                 {
                     // 2.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "nh4", NPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", NPartitionApproach.ToLower());
                     // 2.2- send dlt's to each patch
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_nh4 = newDelta[k];
@@ -777,7 +777,7 @@ namespace Models.Soils
                 if (hasValues(NitrogenChanges.DeltaNO3, EPSILON))
                 {
                     // 3.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "no3", NPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", NPartitionApproach.ToLower());
                     // 3.2- send dlt's to each patch
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_no3 = newDelta[k];

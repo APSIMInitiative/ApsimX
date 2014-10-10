@@ -202,7 +202,7 @@ namespace Models.PMF.OilPalm
 
             for (int j = 0; j < SoilWat.Thickness.Length; j++)
             {
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * SoilN.no3[j]);
+                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * SoilN.NO3[j]);
             }
 
             double TotPotNUptake = Utility.Math.Sum(PotNUptake);

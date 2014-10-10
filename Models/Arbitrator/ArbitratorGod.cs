@@ -560,11 +560,11 @@ namespace Models.ArbitratorGod
                                 {
                                     if (f == 0)
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.no3[l]);
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.NO3[l]);
                                     }
                                     else
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.nh4[l]);
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.NH4[l]);
                                     }
                                 }
                             }
@@ -622,7 +622,7 @@ namespace Models.ArbitratorGod
                                                                    * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
                                                                    * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
                                                                    * plants[p].RootProperties.KNO3                        // later add in zone
-                                                                   * Soil.SoilNitrogen.no3ppm[l]
+                                                                   * Soil.SoilNitrogen.NO3ppm[l]
                                                                    * resource[p, l, z, b, f];
                                     }
                                     else
@@ -631,7 +631,7 @@ namespace Models.ArbitratorGod
                                                                    * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
                                                                    * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
                                                                    * plants[p].RootProperties.KNH4                        // later add in zone
-                                                                   * Soil.SoilNitrogen.nh4ppm[l]
+                                                                   * Soil.SoilNitrogen.NH4ppm[l]
                                                                    * resource[p, l, z, b, f];
                                     }
                                     extractableByPlant[p] += extractable[p, l, z, b, f];

@@ -128,10 +128,10 @@ namespace Models.Soils
                         else
                         {
                             // a value was supplied, check whether it is valid (positive and within bounds)
-                            bool IsVariableOK = CheckNegativeValues(nh4[layer], layer, "nh4");
+                            bool IsVariableOK = CheckNegativeValues(nh4[layer], layer, "NH4");
                             if (!IsVariableOK)
                                 nh4[layer] = g.nh4_min[layer];
-                            IsVariableOK = CheckVariableBounds(ref nh4[layer], layer, "nh4", g.nh4_min[layer], 10000, false);
+                            IsVariableOK = CheckVariableBounds(ref nh4[layer], layer, "NH4", g.nh4_min[layer], 10000, false);
                         }
                         _nh4[layer] = value[layer];
                     }
@@ -162,10 +162,10 @@ namespace Models.Soils
                         else
                         {
                             // a value was supplied, check whether it is valid (positive and within bounds)
-                            bool IsVariableOK = CheckNegativeValues(no3[layer], layer, "no3");
+                            bool IsVariableOK = CheckNegativeValues(no3[layer], layer, "NO3");
                             if (!IsVariableOK)
                                 no3[layer] = g.no3_min[layer];
-                            IsVariableOK = CheckVariableBounds(ref no3[layer], layer, "no3", g.no3_min[layer], 10000, false);
+                            IsVariableOK = CheckVariableBounds(ref no3[layer], layer, "NO3", g.no3_min[layer], 10000, false);
                         }
                         _no3[layer] = value[layer];
                     }
@@ -238,10 +238,10 @@ namespace Models.Soils
                                 // a value was supplied, check whether it is valid
                                 bool IsVariableOK = CheckVariableBounds(ref value[layer], layer, "dlt_nh4", -2000.0, 2000.0, false);
                                 _nh4[layer] += value[layer];
-                                IsVariableOK = CheckNegativeValues(_nh4[layer], layer, "nh4");
+                                IsVariableOK = CheckNegativeValues(_nh4[layer], layer, "NH4");
                                 if (!IsVariableOK)
                                     _nh4[layer] = g.nh4_min[layer];
-                                IsVariableOK = CheckVariableBounds(ref _nh4[layer], layer, "nh4", g.nh4_min[layer], 10000, false);
+                                IsVariableOK = CheckVariableBounds(ref _nh4[layer], layer, "NH4", g.nh4_min[layer], 10000, false);
                             }
                         }
                     }
@@ -276,10 +276,10 @@ namespace Models.Soils
                                     IsVariableOK = false;
 
                                 _no3[layer] += value[layer];
-                                IsVariableOK = CheckNegativeValues(_no3[layer], layer, "no3");
+                                IsVariableOK = CheckNegativeValues(_no3[layer], layer, "NO3");
                                 if (!IsVariableOK)
                                     _no3[layer] = g.no3_min[layer];
-                                IsVariableOK = CheckVariableBounds(ref _no3[layer], layer, "no3", g.no3_min[layer], 10000, false);
+                                IsVariableOK = CheckVariableBounds(ref _no3[layer], layer, "NO3", g.no3_min[layer], 10000, false);
                             }
                         }
                     }

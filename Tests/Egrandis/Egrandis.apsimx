@@ -152,7 +152,7 @@
           <specific_bd>2.65</specific_bd>
           <hydrol_effective_depth>450</hydrol_effective_depth>
           <mobile_solutes>
-            <string>no3</string>
+            <string>NO3</string>
             <string>urea</string>
             <string>cl</string>
             <string>br</string>
@@ -162,7 +162,7 @@
             <string>org_c_pool3</string>
           </mobile_solutes>
           <immobile_solutes>
-            <string>nh4</string>
+            <string>NH4</string>
           </immobile_solutes>
           <canopy_fact>
             <double>1</double>
@@ -2703,7 +2703,7 @@
           <string>Eucalyptus.Leaf.SpecificArea</string>
           <string>Eucalyptus.Summariser.TotalDead.Wt</string>
           <string>[Soil].SoilWater.sw_dep</string>
-          <string>[Soil].SoilNitrogen.no3</string>
+          <string>[Soil].SoilNitrogen.NO3</string>
           <string>Eucalyptus.Arbitrator.NDemand</string>
           <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
           <string>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</string>
@@ -3048,7 +3048,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Soil.SoilNitrogen.no3(1)</FieldName>
+            <FieldName>Soil.SoilNitrogen.NO3(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -3067,7 +3067,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Soil.SoilNitrogen.no3(2)</FieldName>
+            <FieldName>Soil.SoilNitrogen.NO3(2)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -3086,7 +3086,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Soil.SoilNitrogen.no3(3)</FieldName>
+            <FieldName>Soil.SoilNitrogen.NO3(3)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>

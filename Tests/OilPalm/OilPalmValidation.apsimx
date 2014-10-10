@@ -562,7 +562,7 @@
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -572,7 +572,7 @@
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -936,8 +936,8 @@
             <string>[Clock].Today</string>
             <string>[Clock].Today.Month</string>
             <string>OilPalm.Age</string>
-            <string>[SurfaceOM].surfaceom_n</string>
-            <string>[SurfaceOM].surfaceom_wt</string>
+            <string>[SurfaceOM].N</string>
+            <string>[SurfaceOM].Wt</string>
             <string>OilPalm.CumulativeFrondNumber</string>
             <string>[Calculations].Script.MonthlyPalmBunches</string>
             <string>[Calculations].Script.MonthlyPalmYield</string>
@@ -1282,10 +1282,10 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += WeatherFile.Rain;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
+			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
@@ -1303,7 +1303,7 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
             AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             
@@ -2221,7 +2221,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -2231,7 +2231,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -2509,8 +2509,8 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[Clock].Today.Month</string>
             <string>OilPalm.Age</string>
-            <string>[SurfaceOM].surfaceom_n</string>
-            <string>[SurfaceOM].surfaceom_wt</string>
+            <string>[SurfaceOM].N</string>
+            <string>[SurfaceOM].Wt</string>
             <string>OilPalm.CumulativeFrondNumber</string>
             <string>[Calculations].Script.MonthlyPalmBunches</string>
             <string>[Calculations].Script.MonthlyPalmYield</string>
@@ -2842,10 +2842,10 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += WeatherFile.Rain;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
+			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
@@ -2863,7 +2863,7 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
             AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             
@@ -3910,7 +3910,7 @@ namespace Models
             <specific_bd>2.65</specific_bd>
             <hydrol_effective_depth>450</hydrol_effective_depth>
             <mobile_solutes>
-              <string>no3</string>
+              <string>NO3</string>
               <string>urea</string>
               <string>cl</string>
               <string>br</string>
@@ -3920,7 +3920,7 @@ namespace Models
               <string>org_c_pool3</string>
             </mobile_solutes>
             <immobile_solutes>
-              <string>nh4</string>
+              <string>NH4</string>
             </immobile_solutes>
             <canopy_fact>
               <double>1</double>
@@ -4241,8 +4241,8 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[Clock].Today.Month</string>
             <string>OilPalm.Age</string>
-            <string>[SurfaceOM].surfaceom_n</string>
-            <string>[SurfaceOM].surfaceom_wt</string>
+            <string>[SurfaceOM].N</string>
+            <string>[SurfaceOM].Wt</string>
             <string>OilPalm.CumulativeFrondNumber</string>
             <string>[Calculations].Script.MonthlyPalmBunches</string>
             <string>[Calculations].Script.MonthlyPalmYield</string>
@@ -4550,10 +4550,10 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += WeatherFile.Rain;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot) / 1000;
+			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
+			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
@@ -4571,7 +4571,7 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
             AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             

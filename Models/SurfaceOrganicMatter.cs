@@ -215,7 +215,7 @@
         /// <summary>Gets or sets the name of the pool.</summary>
         /// <value>The name of the pool.</value>
         [Summary]
-        [Description("Pool name")]
+        [Description("Surface organic matter pool name")]
         [Units("")]
         public string PoolName {
             get
@@ -245,10 +245,10 @@
             }
         }
 
-        /// <summary>Gets or sets the type.</summary>
+        /// <summary>Gets or sets the type of surface organic matter.</summary>
         /// <value>The type.</value>
         [Summary]
-        [Description("Pool type")]
+        [Description("Surface organic matter pool type")]
         [Units("")]
         public string type 
         {
@@ -279,10 +279,10 @@
             }
         }
 
-        /// <summary>Gets or sets the mass.</summary>
-        /// <value>The mass.</value>
+        /// <summary>Gets or sets the mass of surface organic matter.</summary>
+        /// <value>The mass of surface organic matter.</value>
         [Summary]
-        [Description("Mass")]
+        [Description("Mass of surface residue (kg/ha)")]
         [Units("kg/ha")]
         public string mass
         {
@@ -316,7 +316,7 @@
         /// <summary>Gets or sets the standing_fraction.</summary>
         /// <value>The standing_fraction.</value>
         [Summary]
-        [Description("Standing fraction")]
+        [Description("Standing fraction (0-1)")]
         [Units("0-1")]
         public string standing_fraction
         {
@@ -349,11 +349,11 @@
             }
         }
 
-        /// <summary>Gets or sets the CPR.</summary>
-        /// <value>The CPR.</value>
+        /// <summary>Gets or sets the Carbon:Phosphorus ratio.</summary>
+        /// <value>The Carbon:Phosphorus ratio.</value>
         [Summary]
-        [Description("CPR")]
-        [Units("")]
+        [Description("Carbon:Phosphorus ratio (g/g)")]
+        [Units("g/g")]
         public string cpr
         {
             get
@@ -385,11 +385,11 @@
             }
         }
 
-        /// <summary>Gets or sets the CNR.</summary>
-        /// <value>The CNR.</value>
+        /// <summary>Gets or sets the Carbon:Nitrogen ratio.</summary>
+        /// <value>The Carbon:Nitrogen ratio.</value>
         [Summary]
-        [Description("CNR")]
-        [Units("")]
+        [Description("Carbon:Nitrogen ratio (g/g)")]
+        [Units("g/g")]
         public string cnr
         {
             get
@@ -526,60 +526,60 @@
         #region Outputs
 
         /// <summary>Total mass of all surface organic materials</summary>
-        /// <value>The surfaceom_wt.</value>
+        /// <value>The Surface OM Weight.</value>
         [Units("kg/ha")]
-        public double surfaceom_wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
+        public double Wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
 
         /// <summary>Gets the carbonbalance.</summary>
         /// <value>The carbonbalance.</value>
         [Units("kg/ha")]
-        public double carbonbalance { get { return 0 - (surfaceom_c - DailyInitialC); } }
+        public double carbonbalance { get { return 0 - (C - DailyInitialC); } }
 
         /// <summary>Gets the nitrogenbalance.</summary>
         /// <value>The nitrogenbalance.</value>
         [Units("kg/ha")]
-        public double nitrogenbalance { get { return 0 - (surfaceom_n - DailyInitialN); } }
+        public double nitrogenbalance { get { return 0 - (N - DailyInitialN); } }
 
         /// <summary>Total mass of all surface organic carbon</summary>
         /// <value>The surfaceom_c.</value>
         [Summary]
         [Description("Carbon content")]
         [Units("kg/ha")]
-        public double surfaceom_c { get { return SumSurfOMStandingLying(SurfOM, x => x.C); } }
+        public double C { get { return SumSurfOMStandingLying(SurfOM, x => x.C); } }
 
         /// <summary>Total mass of all surface organic nitrogen</summary>
         /// <value>The surfaceom_n.</value>
         [Summary]
         [Description("Nitrogen content")]
         [Units("kg/ha")]
-        public double surfaceom_n { get { return SumSurfOMStandingLying(SurfOM, x => x.N); } }
+        public double N { get { return SumSurfOMStandingLying(SurfOM, x => x.N); } }
 
         /// <summary>Total mass of all surface organic phosphor</summary>
         /// <value>The surfaceom_p.</value>
         [Summary]
         [Description("Phosphorus content")]
         [Units("kg/ha")]
-        public double surfaceom_p { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
+        public double P { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
 
         /// <summary>Gets the surfaceom_ashalk.</summary>
         /// <value>The surfaceom_ashalk.</value>
         [Units("")]
-        public double surfaceom_ashalk { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
+        public double AshAlk { get { return SumSurfOMStandingLying(SurfOM, x => x.P); } }
 
         /// <summary>Total mass of nitrate</summary>
         /// <value>The surfaceom_no3.</value>
         [Units("kg/ha")]
-        public double surfaceom_no3 { get { return SumSurfOM(SurfOM, x => x.no3); } }
+        public double NO3 { get { return SumSurfOM(SurfOM, x => x.no3); } }
 
         /// <summary>Total mass of ammonium</summary>
         /// <value>The surfaceom_nh4.</value>
         [Units("kg/ha")]
-        public double surfaceom_nh4 { get { return SumSurfOM(SurfOM, x => x.nh4); } }
+        public double NH4 { get { return SumSurfOM(SurfOM, x => x.nh4); } }
 
         /// <summary>Total mass of labile phosphorus</summary>
         /// <value>The surfaceom_labile_p.</value>
         [Units("kg/ha")]
-        public double surfaceom_labile_p { get { return SumSurfOM(SurfOM, x => x.po4); } }
+        public double LabileP { get { return SumSurfOM(SurfOM, x => x.po4); } }
 
         /// <summary>Fraction of ground covered by all surface OMs</summary>
         /// <value>The surfaceom_cover.</value>

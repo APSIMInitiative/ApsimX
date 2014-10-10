@@ -148,22 +148,22 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Gets or sets the understory cover maximum.</summary>
         /// <value>The understory cover maximum.</value>
-        [Description("Maximum understory cover")]
+        [Description("Maximum understory cover (0-1)")]
         [Units("0-1")]
         public double UnderstoryCoverMax { get; set; }
         /// <summary>Gets or sets the understory legume fraction.</summary>
         /// <value>The understory legume fraction.</value>
-        [Description("Fraction of understory that is legume")]
+        [Description("Fraction of understory that is legume (0-1)")]
         [Units("0-1")]
         public double UnderstoryLegumeFraction { get; set; }
         /// <summary>Gets or sets the interception fraction.</summary>
         /// <value>The interception fraction.</value>
-        [Description("Fraction of rainfall intercepted by canopy")]
+        [Description("Fraction of rainfall intercepted by canopy (0-1)")]
         [Units("0-1")]
         public double InterceptionFraction { get; set; }
         /// <summary>Gets or sets the maximum root depth.</summary>
         /// <value>The maximum root depth.</value>
-        [Description("Maximum palm root depth")]
+        [Description("Maximum palm root depth (mm)")]
         [Units("mm")]
         public double MaximumRootDepth { get; set; }
 
@@ -1145,8 +1145,8 @@ namespace Models.PMF.OilPalm
                 double swaf = 0;
                 swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                double no3ppm = Soil.SoilNitrogen.no3[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * Soil.SoilNitrogen.no3[j] * swaf);
+                double no3ppm = Soil.SoilNitrogen.NO3[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
+                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * Soil.SoilNitrogen.NO3[j] * swaf);
             }
 
             double TotPotNUptake = Utility.Math.Sum(PotNUptake);
@@ -1603,19 +1603,19 @@ namespace Models.PMF.OilPalm
 
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
-                UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * Soil.SoilNitrogen.no3[j]);
+                UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * Soil.SoilNitrogen.NO3[j]);
             }
 
             double TotUnderstoryPotNUptake = Utility.Math.Sum(UnderstoryPotNUptake);
             double Fr = Math.Min(1.0, (UnderstoryNdemand - UnderstoryNFixation) / TotUnderstoryPotNUptake);
 
-            double[] no3 = Soil.SoilNitrogen.no3;
+            double[] no3 = Soil.SoilNitrogen.NO3;
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstoryNUptake[j] = UnderstoryPotNUptake[j] * Fr;
                 no3[j] = no3[j] - UnderstoryNUptake[j];
             }
-            Soil.SoilNitrogen.no3 = no3;
+            Soil.SoilNitrogen.NO3 = no3;
 
             //UnderstoryNFixation += UnderstoryNdemand - Utility.Math.Sum(UnderstoryNUptake);
 
