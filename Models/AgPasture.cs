@@ -241,7 +241,7 @@ namespace Models
         }
 
         /// <summary>The ini d mshoot</summary>
-        private double[] iniDMshoot = new double[] { 1000.0, 500.0, 500.0 };
+        private double[] iniDMshoot = new double[] { 2000.0, 500.0, 500.0 };
         /// <summary>Gets or sets the initial dm shoot.</summary>
         /// <value>The initial dm shoot.</value>
         [Description("Initial above ground DM")]
@@ -258,7 +258,7 @@ namespace Models
         }
 
         /// <summary>The ini d mroot</summary>
-        private double[] iniDMroot = new double[] { 250.0, 100.0, 100.0 };
+        private double[] iniDMroot = new double[] { 500.0, 250.0, 100.0 };
         /// <summary>Gets or sets the initial dm root.</summary>
         /// <value>The initial dm root.</value>
         [Description("Initial below ground DM")]
@@ -1274,7 +1274,7 @@ namespace Models
         }
 
         /// <summary>The expo linear depth parameter</summary>
-        private double expoLinearDepthParam = 0.1;
+        private double expoLinearDepthParam = 0.12;
         /// <summary>Gets or sets the expo linear depth parameter.</summary>
         /// <value>The expo linear depth parameter.</value>
         [Description("Fraction of root depth where its proportion starts to decrease")]
@@ -1290,7 +1290,7 @@ namespace Models
         }
 
         /// <summary>The expo linear curve parameter</summary>
-        private double expoLinearCurveParam = 0.1;
+        private double expoLinearCurveParam = 3.2;
         /// <summary>Gets or sets the expo linear curve parameter.</summary>
         /// <value>The expo linear curve parameter.</value>
         [Description("Exponent to determine mass distribution in the soil profile")]
@@ -1624,6 +1624,11 @@ namespace Models
             }
         }
 
+        public double PlantGrossPotentialGrowthWt
+        {
+            get { return SP.Sum(x => x.Pgross) * 2.5; }
+        }
+
         /// <summary>Gets the plant potential growth wt.</summary>
         /// <value>The plant potential growth wt.</value>
         [Description("Potential plant growth, correct for extreme temperatures")]
@@ -1650,6 +1655,11 @@ namespace Models
         {
             //dm_daily_growth, including roots & before littering
             get { return p_dGrowth; }
+        }
+
+        public double PlantEffectiveGrowthWt
+        {
+            get { return SP.Sum(x => x.dGrowth) - SP.Sum(x => x.dLitter) - SP.Sum(x => x.dRootSen); }
         }
 
         /// <summary>Gets the herbage growth wt.</summary>
@@ -3986,6 +3996,41 @@ namespace Models
             }
         }
 
+
+
+        public double[] SpeciesNetPotGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowthPot;
+                return result;
+            }
+        }
+        public double[] SpeciesPotGrowthW
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowthW;
+                return result;
+            }
+        }
+        public double[] SpeciesActualGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowth;
+                return result;
+            }
+        }
+
+
+
         /// <summary>Gets the GPP.</summary>
         /// <value>The GPP.</value>
         [Description("Gross primary productivity")]
@@ -3996,7 +4041,7 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * 2.5;   // assume 40% C in DM
+                    result += SP[s].Pgross * 2.5;   // assume 40% C in DM
                 return result;
             }
         }
@@ -4011,7 +4056,7 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * 0.75 + SP[s].Resp_m;
+                    result += SP[s].Pgross * 0.75 - SP[s].Resp_m;
                 result *= 2.5;   // assume 40% C in DM
                 return result;
             }
@@ -4027,7 +4072,7 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * SP[s].fShoot * 0.75 + SP[s].Resp_m;
+                    result += (SP[s].Pgross * 0.75 - SP[s].Resp_m) * SP[s].fShoot;
                 result /= 2.5;   // assume 40% C in DM
                 return result;
             }
@@ -4071,6 +4116,8 @@ namespace Models
         private double p_dNRootSen;	   //daily root senescence
 
         //p_... variables are pasture states at a given time (day)
+        /// <summary>The P_F shoot</summary>
+        private double p_fShoot;		  //actual fraction of dGrowth to shoot
         /// <summary>The p_height</summary>
         private double p_height;		  // Canopy height (mm)
         /// <summary>The p_green lai</summary>
@@ -4666,6 +4713,8 @@ namespace Models
 
             //**actual daily growth
             p_dGrowth = 0;
+            if (clock.Today.Day >= 30)
+                p_dGrowth += 0.0;
             for (int s = 0; s < numSpecies; s++)
                 p_dGrowth += SP[s].DailyGrowthAct();
 
@@ -5008,8 +5057,8 @@ namespace Models
                     SNSupply[layer] = (no3[layer] * KNO3 + nh4[layer] * KNH4 ) * (double)swaf;
                     */
                     //original below
-                    p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]);
-                    SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]);
+                    p_soilNavailable += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]);
+                    SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]);
                 }
                 else
                 {
@@ -5047,8 +5096,8 @@ namespace Models
                     double swaf = 1.0;
                     swaf = (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.dul[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
-                    SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    p_soilNavailable += (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
 
                     //original below
                     //p_soilNavailable += (no3[layer] + nh4[layer]);
@@ -5102,7 +5151,7 @@ namespace Models
                     p_Nfix += moreNfix;
                 }
             }
-
+            
             //3) Get N remobilised and calculate N demand from soil
             p_soilNdemand = 0.0;
             for (int s = 0; s < numSpecies; s++)
@@ -5210,6 +5259,8 @@ namespace Models
                 {
                     p_gfn += SP[s].gfn * SP[s].dGrowthW / p_dGrowthW;
                 }
+                if (SP[s].gfn < 1.0)
+                    p_soilNavailable += 0;
             }
 
             //5) Actual uptake, remove N from soil
@@ -5420,19 +5471,19 @@ namespace Models
                 for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 {
                     double
-                        totN = Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.NO3[layer],
+                        totN = Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.no3[layer],
                         fracH2O = SWUptake[layer] / totSWUptake;
 
                     if (totN > 0)
                     {
-                        availableNH4_bylayer[layer] = fracH2O * Soil.SoilNitrogen.NH4[layer] / totN;
-                        availableNO3_bylayer[layer] = fracH2O * Soil.SoilNitrogen.NO3[layer] / totN;
+                        availableNH4_bylayer[layer] = fracH2O * Soil.SoilNitrogen.nh4[layer] / totN;
+                        availableNO3_bylayer[layer] = fracH2O * Soil.SoilNitrogen.no3[layer] / totN;
 
                         //if we have no3 and nh4 in this layer then calculate our uptake multiplier, otherwise set it to 0
                         //the idea behind the multiplier is that it allows us to calculate the max amount of N we can extract
                         //without forcing any of the layers below 0 AND STILL MAINTAINING THE RATIO as calculated with fracH2O
                         //NOTE: it doesn't matter whether we use nh4 or no3 for this calculation, we will get the same answer regardless
-                        uptake_multiplier = Soil.SoilNitrogen.NH4[layer] * Soil.SoilNitrogen.NO3[layer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.NH4[layer] / availableNH4_bylayer[layer]) : 0;
+                        uptake_multiplier = Soil.SoilNitrogen.nh4[layer] * Soil.SoilNitrogen.no3[layer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.nh4[layer] / availableNH4_bylayer[layer]) : 0;
                     }
                     else
                     {
@@ -5446,8 +5497,8 @@ namespace Models
                 availableNO3_bylayer = availableNO3_bylayer.Select(x => x * uptake_multiplier).ToArray();
 
                 //calculate how much no3/nh4 will be left in the soil layers (diff_nxx[layer] = nxx[layer] - availableNH4_bylayer[layer])
-                diffNH4_bylayer = Soil.SoilNitrogen.NH4.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
-                diffNO3_bylayer = Soil.SoilNitrogen.NO3.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
+                diffNH4_bylayer = Soil.SoilNitrogen.nh4.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
+                diffNO3_bylayer = Soil.SoilNitrogen.no3.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
 
                 //adjust this by the sum of all leftover so we get a ratio we can use later
                 double sum_diff = diffNH4_bylayer.Sum() + diffNO3_bylayer.Sum();
@@ -5475,7 +5526,7 @@ namespace Models
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                     n_uptake += SNUptake[layer] = (NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]) * -1;
 
-                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.SoilNitrogen.NO3[i] + x + 0.00000001, 0)).ToArray();
+                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.SoilNitrogen.no3[i] + x + 0.00000001, 0)).ToArray();
                 if (diffs.Any(x => x == 0))
                     throw new Exception();
 
@@ -5494,11 +5545,11 @@ namespace Models
             {
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                 {   //N are taken up only in top layers that root can reach (including buffer Zone).
-                    n_uptake += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]) * Fraction;
-                    SNUptake[layer] = (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]) * Fraction;
+                    n_uptake += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
+                    SNUptake[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
 
-                    NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * Fraction;
-                    NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * Fraction;
+                    NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * Fraction;
+                    NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * Fraction;
                 }
             }
 
@@ -5557,12 +5608,10 @@ namespace Models
                 dAmtLayer = rootSen * RootFraction[i];
                 dNLayer = NinRootSen * RootFraction[i];
 
-                float amt = (float)dAmtLayer;
-
                 Soils.FOMType fom = new Soils.FOMType();
-                fom.amount = amt;
+                fom.amount = dAmtLayer;
                 fom.N = dNLayer;// 0.03F * amt;	// N in dead root
-                fom.C = 0.40F * amt;	//40% of OM is C. Actually, 'C' is not used, as shown in DataTypes.xml
+                fom.C = 0.40 * dAmtLayer;	//40% of OM is C. Actually, 'C' is not used, as shown in DataTypes.xml
                 fom.P = 0;			  //to consider later
                 fom.AshAlk = 0;		 //to consider later
 
@@ -5978,9 +6027,9 @@ namespace Models
         internal double dmlitter;	//Litter pool (kg/ha)
 
         /// <summary>The dmdefoliated</summary>
-        internal double dmdefoliated;
+        internal double dmdefoliated = 0.0;
         /// <summary>The ndefoliated</summary>
-        internal double Ndefoliated;
+        internal double Ndefoliated = 0.0;
         /// <summary>The digest herbage</summary>
         internal double digestHerbage;
         /// <summary>The digest defoliated</summary>
@@ -6500,7 +6549,6 @@ namespace Models
                     + Nstol1 + Nstol2 + Nstol3;
             Ndead = Nleaf4 + Nstem4;
 
-
             //LAI								   //0.0001: kg/ha->kg/m2; SLA: m2/kg
             greenLAI = 0.0001 * dmleaf_green * SLA + 0.0001 * dmstol * 0.3 * SLA;   //insensitive? assuming Mass2GLA = 0.3*SLA
 
@@ -7010,8 +7058,8 @@ namespace Models
                 //Fractions [eq.4.13]
                 double toRoot = 1.0 - fShoot;
                 double toStol = fShoot * fStolon;
-                double toLeaf = fShoot * (1.0 - fStolon) * fLeaf;
-                double toStem = fShoot * (1.0 - fStolon) * (1.0 - fLeaf);
+                double toLeaf = fShoot * fLeaf;
+                double toStem = fShoot * (1.0 - fStolon - fLeaf);
 
                 //checking
                 double ToAll = toLeaf + toStem + toStol + toRoot;
