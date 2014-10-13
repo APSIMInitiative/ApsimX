@@ -510,20 +510,22 @@ namespace UserInterface.Views
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
-                while (enumerator.MoveNext())
+                do
                     dataPointValues.Add(DateTimeAxis.ToDouble(Convert.ToDateTime(enumerator.Current)));
+                while (enumerator.MoveNext());
             }
             else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
             {
                 this.EnsureAxisExists(axisType, typeof(double));
-                while (enumerator.MoveNext())
+                do 
                     dataPointValues.Add(Convert.ToDouble(enumerator.Current));
+                while (enumerator.MoveNext());
             }
             else
             {
                 this.EnsureAxisExists(axisType, typeof(string));
                 CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
-                while (enumerator.MoveNext())
+                do
                 {
                     int index = axis.Labels.IndexOf(enumerator.Current.ToString());
                     if (index == -1)
@@ -534,6 +536,7 @@ namespace UserInterface.Views
 
                     dataPointValues.Add(index);
                 }
+                while (enumerator.MoveNext());
             }
 
             return dataPointValues.ToArray();
