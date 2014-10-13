@@ -169,7 +169,7 @@ namespace UnitTests
 
             // Make sure we can get a link to a model in top level zone from Field1
             Assert.AreEqual(Apsim.Find(field1, "WeatherFile").Name, "WeatherFile");
-            Assert.AreEqual(Apsim.Find(field1, typeof(Models.WeatherFile)).Name, "WeatherFile");
+            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Weather)).Name, "WeatherFile");
 
             // Make sure we can't get a link to a model in Field2 from Field1
             Assert.IsNull(Apsim.Find(field1, "Graph"));
@@ -183,7 +183,7 @@ namespace UnitTests
             // Make sure we can get a link from a child, child zone to the top level zone.
             Zone field2SubZone = field2.Children[3] as Zone;
             Assert.AreEqual(Apsim.Find(field2SubZone, "WeatherFile").Name, "WeatherFile");
-            Assert.AreEqual(Apsim.Find(field2SubZone, typeof(Models.WeatherFile)).Name, "WeatherFile");
+            Assert.AreEqual(Apsim.Find(field2SubZone, typeof(Models.Weather)).Name, "WeatherFile");
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace UnitTests
         [Test]
         public void SetTest()
         {
-            WeatherFile weather = this.simulation.Children[0] as WeatherFile;
+            Weather weather = this.simulation.Children[0] as Weather;
             Assert.AreEqual(this.simulation.Get("[WeatherFile].Rain"), 0.0);
             this.simulation.Set("[WeatherFile].Rain", 111.0);
             Assert.AreEqual(this.simulation.Get("[WeatherFile].Rain"), 111.0);

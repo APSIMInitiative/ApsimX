@@ -3,10 +3,10 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Slurp</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>2003-10-20T00:00:00</StartDate>
@@ -21,7 +21,7 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].MaxT</string>
+          <string>[Weather].MaxT</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.NO3</string>
         </VariableNames>
@@ -638,10 +638,10 @@
   </DataStore>
   <Simulation>
     <Name>NoSlurp</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>2003-10-20T00:00:00</StartDate>

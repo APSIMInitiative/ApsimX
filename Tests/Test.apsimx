@@ -3,10 +3,10 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Test</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1960-01-01T00:00:00</StartDate>
@@ -27,17 +27,17 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].DayLength</string>
-          <string>[WeatherFile].MaxT</string>
-          <string>[WeatherFile].MinT</string>
-          <string>[WeatherFile].Radn</string>
-          <string>[WeatherFile].Rain</string>
+          <string>[Weather].DayLength</string>
+          <string>[Weather].MaxT</string>
+          <string>[Weather].MinT</string>
+          <string>[Weather].Radn</string>
+          <string>[Weather].Rain</string>
           <string>[Soil].SoilWater.sw_dep</string>
           <string>[Soil].SoilNitrogen.NO3</string>
           <string>[SurfaceOrganicMatter].Wt</string>
           <string>[Soil].SoilWater.sw[1:3] as SWTop3Layers</string>
           <string>sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
-          <string>[WeatherFile].Rain/25.4 as RainInches</string>
+          <string>[Weather].Rain/25.4 as RainInches</string>
           <string>[Soil].SoilWater.sw-[Soil].SoilWater.ll15 as ESW</string>
           <string>sum([Soil].SoilWater.sw-[Soil].SoilWater.ll15) as TotalESW</string>
         </VariableNames>
@@ -751,8 +751,8 @@
         <Name>Yearly</Name>
         <VariableNames>
           <string>[Clock].Today.Year</string>
-          <string>sum of [WeatherFile].Rain from 1-Apr to 1-Sep as RainAprToSepYearly</string>
-          <string>sum of [WeatherFile].Rain from 1-Apr-1960 to 1-Sep-1961 as RainAprToSepTwoYears</string>
+          <string>sum of [Weather].Rain from 1-Apr to 1-Sep as RainAprToSepYearly</string>
+          <string>sum of [Weather].Rain from 1-Apr-1960 to 1-Sep-1961 as RainAprToSepTwoYears</string>
           <string>diff of [Soil].SoilNitrogen.TotalC[1] from [Clock].StartOfSimulation to [Clock].EndOfSimulation as ChangeInCarbon </string>
         </VariableNames>
         <EventNames>
@@ -825,7 +825,7 @@
       </X>
       <Y>
         <TableName>Report</TableName>
-        <FieldName>WeatherFile.Rain</FieldName>
+        <FieldName>Weather.Rain</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>

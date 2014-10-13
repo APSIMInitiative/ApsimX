@@ -17,10 +17,10 @@
   </Memo>
   <Simulation>
     <Name>comparisons</Name>
-    <WeatherFile>
+    <Weather>
       <Name>met</Name>
       <FileName>..\WeatherFiles\WeeWaa1889_2012.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>2007-01-01T00:00:00</StartDate>

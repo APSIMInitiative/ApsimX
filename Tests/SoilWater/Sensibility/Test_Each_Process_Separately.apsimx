@@ -3,10 +3,10 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Saturated_Flow_Only</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Saturated Flow Only.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -446,7 +446,7 @@
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.drain as drain</string>
@@ -526,10 +526,10 @@
   </Simulation>
   <Simulation>
     <Name>Unsaturated_Flow_Only</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Unsaturated Flow Only.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -969,7 +969,7 @@
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
@@ -1049,10 +1049,10 @@
   </Simulation>
   <Simulation>
     <Name>Runoff_Only</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Runoff Only.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -1487,7 +1487,7 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
@@ -1573,10 +1573,10 @@
   </Simulation>
   <Simulation>
     <Name>Soil_Evaporation_Only</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Soil Evaporation Only.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -1605,7 +1605,7 @@ namespace Models
 		public double avgTemp{get; set;}
 		
 		[Link] Clock Clock;
-		[Link] WeatherFile Met;
+		[Link] Weather Met;
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
@@ -2050,7 +2050,7 @@ namespace Models
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Clock].Today.DayOfYear as day</string>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.u as u</string>
@@ -2060,7 +2060,7 @@ namespace Models
           <string>[Soil].SoilWater.eo as eo</string>
           <string>[Soil].SoilWater.eos as eos</string>
           <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
-          <string>[WeatherFile].Radn as radn</string>
+          <string>[Weather].Radn as radn</string>
           <string>[AvgTempCalculation].Script.avgTemp as avgTemp</string>
         </VariableNames>
         <EventNames>
@@ -2136,10 +2136,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>Ponding_Only</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Ponding Only.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -2612,7 +2612,7 @@ namespace Models
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.pond_evap as pond_evap</string>
           <string>[Soil].SoilWater.pond as pond</string>
           <string>[calculate total_pond].Script.total_pond as total_pond</string>
@@ -2697,10 +2697,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>Ponding_with_Soil_Evap</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Ponding Only.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -3173,7 +3173,7 @@ namespace Models
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.eos as eos</string>
           <string>[Soil].SoilWater.es as es</string>
           <string>[Soil].SoilWater.pond_evap as pond_evap</string>
@@ -3256,10 +3256,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>WaterTable_Calculation</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>WaterTable Only.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -3699,7 +3699,7 @@ namespace Models
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.water_table as water_table</string>
@@ -3778,10 +3778,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>Lateral_Outflow_Only</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Lateral Outflow Only.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -4221,7 +4221,7 @@ namespace Models
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.outflow_lat as outflow_lat</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
@@ -4299,10 +4299,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>Soil_Evaporation_with_SurfaceOM</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Soil Evaporation with SurfaceOM.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -4331,7 +4331,7 @@ namespace Models
 		public double avgTemp{get; set;}
 		
 		[Link] Clock Clock;
-		[Link] WeatherFile Met;
+		[Link] Weather Met;
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
@@ -4815,7 +4815,7 @@ namespace Models
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Clock].Today.DayOfYear as day</string>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.u as u</string>
@@ -4826,7 +4826,7 @@ namespace Models
           <string>[Soil].SoilWater.eo as eo</string>
           <string>[Soil].SoilWater.eos as eos</string>
           <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
-          <string>[WeatherFile].Radn as radn</string>
+          <string>[Weather].Radn as radn</string>
           <string>[AvgTempCalculation].Script.avgTemp as avgTemp</string>
         </VariableNames>
         <EventNames>
@@ -4860,10 +4860,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>Runoff_with_SurfaceOM</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Runoff with SurfaceOM.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -5337,7 +5337,7 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[Surface Organic Matter].surfaceom_cover as surfaceom_cover</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
@@ -5382,10 +5382,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>Runoff_after_Tillage_Event</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Runoff after Tillage Event.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -5872,7 +5872,7 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
@@ -5955,10 +5955,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>Runoff_with_Irrigation</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Runoff with Irrigation.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -6517,10 +6517,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>Subsurface_Irrigation</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Subsurface Irrigation.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -7171,7 +7171,7 @@ namespace Models
           <string>[Soil].SoilWater.dul_dep as dul_dep</string>
           <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
-          <string>[WeatherFile].Rain as rain</string>
+          <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
@@ -7253,10 +7253,10 @@ namespace Models
     <Name>Solute Tests</Name>
     <Simulation>
       <Name>Solute_Saturated_Flow_Only</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Solute - Saturated Flow Only.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>clock</Name>
         <StartDate>1940-01-01T00:00:00</StartDate>
@@ -7695,7 +7695,7 @@ namespace Models
             <string>[Soil].SoilWater.dul_dep as dul_dep</string>
             <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
-            <string>[WeatherFile].Rain as rain</string>
+            <string>[Weather].Rain as rain</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
             <string>[Soil].SoilWater.flux2 as flux</string>
             <string>[Soil].SoilWater.drain as drain</string>
@@ -7783,10 +7783,10 @@ namespace Models
     </Simulation>
     <Simulation>
       <Name>Solute_Unsaturated_Flow_Only</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Solute - Unsaturated Flow Only.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>clock</Name>
         <StartDate>1940-01-01T00:00:00</StartDate>
@@ -8225,7 +8225,7 @@ namespace Models
             <string>[Soil].SoilWater.dul_dep as dul_dep</string>
             <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
-            <string>[WeatherFile].Rain as rain</string>
+            <string>[Weather].Rain as rain</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
             <string>[Soil].SoilWater.flux2 as flux</string>
             <string>[Soil].SoilWater.drain as drain</string>
@@ -8312,10 +8312,10 @@ namespace Models
     </Simulation>
     <Simulation>
       <Name>Solute_Irrigation</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Solute - Irrigation Only.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>clock</Name>
         <StartDate>1940-01-01T00:00:00</StartDate>
@@ -8767,7 +8767,7 @@ namespace Models
         <Report>
           <Name>Report</Name>
           <VariableNames>
-            <string>[WeatherFile].Rain as rain</string>
+            <string>[Weather].Rain as rain</string>
             <string>[Soil].SoilWater.runoff as runoff</string>
             <string>[Soil].SoilWater.dlayer as dlayer</string>
             <string>[Soil].SoilWater.dul_dep as dul_dep</string>
@@ -8861,10 +8861,10 @@ namespace Models
     <Name>Manager Set Variables</Name>
     <Simulation>
       <Name>Setable_Variables_Erosion</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Setable Variables - Erosion.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>clock</Name>
         <StartDate>1940-01-01T00:00:00</StartDate>
@@ -9441,7 +9441,7 @@ namespace Models
             <string>[Soil].SoilWater.dul as dul</string>
             <string>[Soil].SoilWater.ll15 as ll15</string>
             <string>[Soil].SoilWater.air_dry as air_dry</string>
-            <string>[WeatherFile].Rain as rain</string>
+            <string>[Weather].Rain as rain</string>
             <string>[Soil].SoilWater.runoff as runoff</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           </VariableNames>
@@ -9518,10 +9518,10 @@ namespace Models
     </Simulation>
     <Simulation>
       <Name>Setable_Variables_Runoff</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Setable Variables - Runoff.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>clock</Name>
         <StartDate>1940-01-01T00:00:00</StartDate>
@@ -10089,10 +10089,10 @@ namespace Models
       <Name>cause ExternalMassFlow Event</Name>
       <Simulation>
         <Name>WaterTable_Set_to_a_fixed_depth</Name>
-        <WeatherFile>
-          <Name>WeatherFile</Name>
+        <Weather>
+          <Name>Weather</Name>
           <FileName>WaterTable - Set to a fixed depth.met</FileName>
-        </WeatherFile>
+        </Weather>
         <Clock>
           <Name>clock</Name>
           <StartDate>1940-01-01T00:00:00</StartDate>
@@ -10562,7 +10562,7 @@ namespace Models
               <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
               <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
               <string>[Clock].Today</string>
-              <string>[WeatherFile].Rain as rain</string>
+              <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.runoff as runoff</string>
               <string>[Soil].SoilWater.es as es</string>
               <string>[Soil].SoilWater.drain as drain</string>
@@ -10645,10 +10645,10 @@ namespace Models
       </Simulation>
       <Simulation>
         <Name>Setable_Variables_Water</Name>
-        <WeatherFile>
-          <Name>WeatherFile</Name>
+        <Weather>
+          <Name>Weather</Name>
           <FileName>Setable Variables - Water.met</FileName>
-        </WeatherFile>
+        </Weather>
         <Clock>
           <Name>clock</Name>
           <StartDate>1940-01-01T00:00:00</StartDate>
@@ -11224,7 +11224,7 @@ namespace Models
               <string>[Soil].SoilWater.dul_dep as dul_dep</string>
               <string>[Soil].SoilWater.ll15_dep as ll15_dep</string>
               <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
-              <string>[WeatherFile].Rain as rain</string>
+              <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.runoff as runoff</string>
             </VariableNames>
             <EventNames>

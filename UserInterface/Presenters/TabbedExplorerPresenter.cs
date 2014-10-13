@@ -239,10 +239,12 @@ namespace UserInterface.Presenters
             APSIMImporter importer = new APSIMImporter();
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
                 importer.ProcessFile(FileName);
 
                 string newFileName = Path.ChangeExtension(FileName, ".apsimx");
                 OpenApsimXFileInTab(newFileName);
+                Cursor.Current = Cursors.Default;
             }
             catch (Exception exp)
             {

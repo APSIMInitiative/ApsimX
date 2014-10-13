@@ -362,10 +362,10 @@
     </Factors>
     <Simulation>
       <Name>Base324</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>..\WeatherFiles\Popondetta.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1996-03-01T00:00:00</StartDate>
@@ -1184,7 +1184,7 @@ namespace Models
 		[Link] SurfaceOrganicMatter SurfaceOM;
 		[Link] Summary Summary;
 		[Link] Fertiliser Fertiliser;
-		[Link] WeatherFile WeatherFile;
+		[Link] Weather Weather;
 		
 		public double AnnualRain {get; set;}
 		public double Offset {get; set;}
@@ -1281,7 +1281,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            AnnualRain += WeatherFile.Rain;
+            AnnualRain += Weather.Rain;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
@@ -2037,10 +2037,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>Base212</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>..\WeatherFiles\Hargy.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1996-02-01T00:00:00</StartDate>
@@ -2744,7 +2744,7 @@ namespace Models
 		[Link] SurfaceOrganicMatter SurfaceOM;
 		[Link] Summary Summary;
 		[Link] Fertiliser Fertiliser;
-		[Link] WeatherFile WeatherFile;
+		[Link] Weather Weather;
 		
 		public double AnnualRain {get; set;}
 		public double Offset {get; set;}
@@ -2841,7 +2841,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            AnnualRain += WeatherFile.Rain;
+            AnnualRain += Weather.Rain;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
@@ -3734,10 +3734,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>Base504</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>..\WeatherFiles\Sagarai.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1991-03-01T00:00:00</StartDate>
@@ -4452,7 +4452,7 @@ namespace Models
 		[Link] SurfaceOrganicMatter SurfaceOM;
 		[Link] Summary Summary;
 		[Link] Fertiliser Fertiliser;
-		[Link] WeatherFile WeatherFile;
+		[Link] Weather Weather;
 		
 		public double AnnualRain {get; set;}
 		public double Offset {get; set;}
@@ -4549,7 +4549,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            AnnualRain += WeatherFile.Rain;
+            AnnualRain += Weather.Rain;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);

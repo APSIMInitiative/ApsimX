@@ -7,10 +7,10 @@
   </DataStore>
   <Simulation>
     <Name>PMFWheatTestBase</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1998-10-14T00:00:00</StartDate>
@@ -484,7 +484,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant WheatPMFPrototype;          

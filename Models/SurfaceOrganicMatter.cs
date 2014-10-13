@@ -42,7 +42,7 @@
         /// Provides access to temperature and rainfall values.
         /// </summary>
         [Link]
-        private WeatherFile weather = null;
+        private Weather weather = null;
         #endregion
 
         // ====================================================================
@@ -142,7 +142,7 @@
         /// <summary>The surf om</summary>
         private List<SurfOrganicMatterType> SurfOM;
         /// <summary>The met data</summary>
-        private Models.WeatherFile.NewMetType MetData;
+        private Models.Weather.NewMetType MetData;
 
         /// <summary>The number surfom</summary>
         private int numSurfom = 0;
@@ -1612,7 +1612,7 @@
             if (TillageTypes == null)
                 TillageTypes = new TillageTypesList();
             SurfOM = new List<SurfOrganicMatterType>();
-            MetData = new Models.WeatherFile.NewMetType();
+            MetData = new Models.Weather.NewMetType();
             irrig = 0;
             eos = 0;
             cumeos = 0;

@@ -69,7 +69,7 @@ namespace Models.Core
         [XmlElement(typeof(Summary))]
         [XmlElement(typeof(NullSummary))]
         [XmlElement(typeof(Tests))]
-        [XmlElement(typeof(WeatherFile))]
+        [XmlElement(typeof(Weather))]
         [XmlElement(typeof(Log))]
         [XmlElement(typeof(Models.Factorial.Experiment))]
         [XmlElement(typeof(Models.Factorial.Factors))]

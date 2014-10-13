@@ -21,7 +21,7 @@ namespace UserInterface.Presenters
     class MetDataPresenter : IPresenter
     {
         /// <summary>The met data</summary>
-        private WeatherFile weatherData;
+        private Weather weatherData;
 
         /// <summary>The met data view</summary>
         private IMetDataView weatherDataView;
@@ -36,7 +36,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.explorerPresenter = explorerPresenter;
-            this.weatherData = (model as WeatherFile);
+            this.weatherData = (model as Weather);
             this.weatherDataView = (view as IMetDataView);
 
             this.WriteTable(this.weatherData.FullFileName);

@@ -38,7 +38,7 @@ namespace Models.PMF.Functions.SupplyFunctions
 
         /// <summary>The met data</summary>
         [Link]
-        WeatherFile MetData = null;
+        Weather MetData = null;
 
 
         #region Class Data Members

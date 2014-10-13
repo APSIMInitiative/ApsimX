@@ -39,7 +39,7 @@ namespace Models.Soils
 
         /// <summary>The weather</summary>
         [Link]
-        WeatherFile Weather = null;
+        Weather Weather = null;
 
         /// <summary>The soil</summary>
         [Link]

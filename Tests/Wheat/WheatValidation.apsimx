@@ -135,10 +135,10 @@
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>APS26.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -966,10 +966,10 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>APS6.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -1609,10 +1609,10 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>APS14.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -2219,7 +2219,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -2682,10 +2682,10 @@ private void OnDoManagement(object sender, EventArgs e)
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>MER-86.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -3715,10 +3715,10 @@ private void OnDoManagement(object sender, EventArgs e)
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>MER-73.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -4439,7 +4439,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -5701,10 +5701,10 @@ private void OnDoManagement(object sender, EventArgs e)
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Folder>
@@ -5833,7 +5833,7 @@ namespace Models
 [System.Xml.Serialization.XmlInclude(typeof(Model))]
 public class Script : Model
  {      
-   [Link] WeatherFile Met;  
+   [Link] Weather Met;  
                
    [EventSubscribe("PreparingNewWeatherData")]
    private void OnPreparingNewWeatherData(object sender, EventArgs e)
@@ -7494,10 +7494,10 @@ public class Script : Model
         <Summary>
           <Name>summaryfile</Name>
         </Summary>
-        <WeatherFile>
-          <Name>WeatherFile</Name>
+        <Weather>
+          <Name>Weather</Name>
           <FileName>lincoln.met</FileName>
-        </WeatherFile>
+        </Weather>
         <Zone>
           <Name>paddock</Name>
           <Folder>
@@ -7626,7 +7626,7 @@ namespace Models
 [System.Xml.Serialization.XmlInclude(typeof(Model))]
 public class Script : Model
  {      
-   [Link] WeatherFile Met;  
+   [Link] Weather Met;  
                
    [EventSubscribe("PreparingNewWeatherData")]
    private void OnPreparingNewWeatherData(object sender, EventArgs e)
@@ -8687,10 +8687,10 @@ public class Script : Model
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Lincoln9192.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Folder>
@@ -9624,10 +9624,10 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Cunderdin.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -10521,7 +10521,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -10921,10 +10921,10 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>hall2002.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -11769,7 +11769,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -12987,10 +12987,10 @@ private void OnDoManagement(object sender, EventArgs e)
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Wongan83.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -13824,7 +13824,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                

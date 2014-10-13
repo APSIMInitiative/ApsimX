@@ -325,7 +325,7 @@
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utility\ExpressionEvaluator.cs" />
     <Compile Include="Utility\Met.cs" />
-    <Compile Include="WeatherFile.cs" />
+    <Compile Include="Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,10 +14,10 @@
   </Tests>
   <Simulation>
     <Name>CoffsHarbour</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>coffs.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1953-04-01T00:00:00</StartDate>

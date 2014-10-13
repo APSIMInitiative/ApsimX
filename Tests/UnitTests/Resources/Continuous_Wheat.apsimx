@@ -3,7 +3,7 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Continuous Wheat</Name>
-    <WeatherFile>
+    <Weather>
       <Name>met</Name>
       <FileName>\Examples\MetFiles\Goond.met</FileName>
       <MaxT>0</MaxT>
@@ -13,7 +13,7 @@
       <vp>0</vp>
       <wind>0</wind>
       <CO2>350</CO2>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
