@@ -9,6 +9,8 @@ namespace Utility
     using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Data;
+    using System.Linq;
 
     /// <summary>
     /// Various math utilities.
@@ -1375,6 +1377,168 @@ namespace Utility
             }
            
             return stats;
+        }
+
+        /// <summary>
+        /// Return longterm average monthly totals for the given variable. 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Assumes a a date can be derived from the data table using the 
+        /// Utility.DataTable.GetDateFromRow function.
+        /// </remarks>
+        /// <param name="table">The data table containing the data</param>
+        /// <param name="fieldName">The field name to look at</param>
+        /// <param name="firstDate">Only data after this date will be used</param>
+        /// <param name="lastDate">Only data before this date will be used</param>
+        /// <returns>An array of 12 numbers or null if no data in table.</returns>
+        public static double[] AverageMonthlyTotals(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
+        {
+            if (table.Rows.Count > 0)
+            {
+                // This first query gives monthly totals for each year.
+                var result = from row in table.AsEnumerable()
+                             where (Utility.DataTable.GetDateFromRow(row) >= firstDate &&
+                                    Utility.DataTable.GetDateFromRow(row) <= lastDate)
+                             group row by new
+                             {
+                                 Year = Utility.DataTable.GetDateFromRow(row).Year,
+                                 Month = Utility.DataTable.GetDateFromRow(row).Month,
+                             } into grp
+                             select new
+                             {
+                                 Year = grp.Key.Year,
+                                 Month = grp.Key.Month,
+                                 Total = grp.Sum(row => row.Field<float>(fieldName))
+
+
+
+                             };
+
+                // This second query gives average monthly totals using the first query.
+                var result2 = from row in result
+                              group row by new
+                              {
+                                  Month = row.Month,
+                              } into grp
+                              select new
+                              {
+                                  Month = grp.Key.Month,
+                                  Avg = grp.Average(row => row.Total)
+                              };
+
+
+                List<double> totals = new List<double>();
+                foreach (var row in result2)
+                {
+                    totals.Add(row.Avg);
+                }
+
+                return totals.ToArray();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Return yearly totals for the given variable. 
+        /// </summary>
+        /// <remarks>
+        /// Assumes a a date can be derived from the data table using the 
+        /// Utility.DataTable.GetDateFromRow function.
+        /// </remarks>
+        /// <param name="table">The data table containing the data</param>
+        /// <param name="fieldName">The field name to look at</param>
+        /// <param name="firstDate">Only data after this date will be used</param>
+        /// <param name="lastDate">Only data before this date will be used</param>
+        /// <returns>An array of yearly totals or null if no data in table.</returns>
+        public static double[] YearlyTotals(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
+        {
+            if (table.Rows.Count > 0)
+            {
+                var result = from row in table.AsEnumerable()
+                             where (Utility.DataTable.GetDateFromRow(row) >= firstDate &&
+                                    Utility.DataTable.GetDateFromRow(row) <= lastDate)
+                             group row by new
+                             {
+                                 Year = Utility.DataTable.GetDateFromRow(row).Year,
+                             } into grp
+                             select new
+                             {
+                                 Year = grp.Key.Year,
+                                 Total = grp.Sum(row => row.Field<float>(fieldName))
+                             };
+
+                List<double> totals = new List<double>();
+                foreach (var row in result)
+                    totals.Add(row.Total);
+
+                return totals.ToArray();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Return average daily totals for each month for the the given variable. 
+        /// </summary>
+        /// <remarks>
+        /// Assumes a a date can be derived from the data table using the 
+        /// Utility.DataTable.GetDateFromRow function.
+        /// </remarks>
+        /// <param name="table">The data table containing the data</param>
+        /// <param name="fieldName">The field name to look at</param>
+        /// <param name="firstDate">Only data after this date will be used</param>
+        /// <param name="lastDate">Only data before this date will be used</param>
+        /// <returns>An array of monthly averages or null if no data in table.</returns>
+        public static double[] AverageDailyTotalsForEachMonth(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
+        {
+            if (table.Rows.Count > 0)
+            {
+                var result = from row in table.AsEnumerable()
+                             where (Utility.DataTable.GetDateFromRow(row) >= firstDate &&
+                                    Utility.DataTable.GetDateFromRow(row) <= lastDate)
+                             group row by new
+                             {
+                                 Month = Utility.DataTable.GetDateFromRow(row).Month,
+                                 Year = Utility.DataTable.GetDateFromRow(row).Year,
+                             } into grp
+                             select new
+                             {
+                                 Year = grp.Key.Year,
+                                 Total = grp.Average(row => row.Field<float>(fieldName))
+                             };
+
+                List<double> totals = new List<double>();
+                foreach (var row in result)
+                    totals.Add(row.Total);
+
+                return totals.ToArray();
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// Calculate the std deviation
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="mean"></param>
+        /// <returns>Std deviation</returns>
+        public static double StandardDeviation(IEnumerable<double> values)
+        {
+            double sumOfDerivation = 0;
+            int count = 0;
+            foreach (double value in values)
+            {
+                sumOfDerivation += (value) * (value);
+                count++;
+            }
+
+            double mean = Sum(values) / count;
+            double sumOfDerivationAverage = sumOfDerivation / count;
+            return System.Math.Sqrt(sumOfDerivationAverage - (mean * mean));
         }
     }
 }

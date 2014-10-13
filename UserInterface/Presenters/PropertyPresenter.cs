@@ -96,6 +96,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to examine for properties</param>
         public void PopulateGrid(Model model)
         {
+            IGridCell selectedCell = this.grid.GetCurrentCell;
             this.model = model;
             DataTable table = new DataTable();
             table.Columns.Add("Description", typeof(string));
@@ -104,6 +105,8 @@ namespace UserInterface.Presenters
             this.FillTable(table);
             this.grid.DataSource = table;
             this.FormatGrid();
+            if (selectedCell != null)
+                this.grid.GetCurrentCell = selectedCell;
         }
         
         /// <summary>

@@ -285,38 +285,7 @@ namespace UnitTests
             List<IModel> allSiblings = Apsim.Siblings(clock);
             Assert.AreEqual(allSiblings.Count, 4);
         }
-          
-        /// <summary>
-        /// Tests for the weather model 
-        /// </summary>
-        [Test]
-        public void WeatherSummary()
-        {
-            Assert.AreEqual(this.simulation.Children[0].Name, "WeatherFile");
-
-            foreach (Model model in this.simulation.Children) 
-            {
-                if (model.GetType() == typeof(WeatherFile)) 
-                {
-                    WeatherFile wtr = model as WeatherFile;
-                    Assert.AreNotEqual(wtr.GetAllData(), null, "Weather file stream");
-                    Assert.AreEqual(wtr.Amp, 15.96, "TAMP");
-                    Assert.AreEqual(wtr.Tav, 19.86, "TAV");
-                    
-                    // for the first day
-                    Assert.AreEqual(wtr.DayLength, 14.7821247010713, 0.0001, "Day length");
-                    
-                    // check yearly and monthly aggregations
-                    double[] yrtotal, avmonth;
-                    wtr.YearlyRainfall(out yrtotal, out avmonth);
-                    Assert.AreEqual(yrtotal[0], 420, 0.001, "Yearly 1 totals");
-                    Assert.AreEqual(yrtotal[49], 586.1, 0.001, "Yearly 50 totals");
-                    Assert.AreEqual(avmonth[0], 79.7, 0.001, "LTAV1 Monthly");
-                    Assert.AreEqual(avmonth[11], 62.8259, 0.001, "LTAV12 Monthly");
-                }
-            }
-        }
-        
+  
         /// <summary>
         /// Tests for the importer
         /// </summary>
