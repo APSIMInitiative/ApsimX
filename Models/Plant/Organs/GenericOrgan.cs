@@ -24,7 +24,8 @@ namespace Models.PMF.Organs
         (0-1; Optional, default 0 if this parameter does not exist, i.e. no nitrogen reallocation).
     \param NRetranslocationFactor Factor of nitrogen retranslocation  
         (0-1; Optional, default 0 if this parameter does not exist, i.e. no nitrogen retranslocation).
-    \param MinimumNConc Minimum nitrogen concentration.
+    \param MinimumNConc Minimum nitrogen concentration
+    \param MaximumNConc Maximum nitrogen concentration.
     \retval LiveFWt The live fresh weight (g m<sup>-2</sup>)
     <remarks>
     </remarks>
