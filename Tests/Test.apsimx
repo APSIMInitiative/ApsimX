@@ -775,7 +775,7 @@
       <SimulationName>Test</SimulationName>
       <TableName>Yearly</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>RainAprToSepYearly</ColumnNames>
+      <ColumnNames>YearlyRain</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
