@@ -462,7 +462,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Report.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TreeViewImages\WeatherFile.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Weather.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\Manager.png" />

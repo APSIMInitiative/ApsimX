@@ -751,7 +751,7 @@
         <Name>Yearly</Name>
         <VariableNames>
           <string>[Clock].Today.Year</string>
-          <string>sum of [Weather].Rain from 1-Apr to 1-Sep as RainAprToSepYearly</string>
+          <string>sum of [Weather].Rain from 1-Jan to 31-Dec as YearlyRain</string>
           <string>sum of [Weather].Rain from 1-Apr-1960 to 1-Sep-1961 as RainAprToSepTwoYears</string>
           <string>diff of [Soil].SoilNitrogen.TotalC[1] from [Clock].StartOfSimulation to [Clock].EndOfSimulation as ChangeInCarbon </string>
         </VariableNames>
