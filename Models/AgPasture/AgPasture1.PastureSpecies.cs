@@ -170,6 +170,18 @@ namespace Models.AgPasture1
                 Sowing.Invoke(this, new EventArgs());
         }
 
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        {
+
+        }
+
         #endregion
 
         #region Model parameters  ------------------------------------------------------------------------------------------

@@ -4913,11 +4913,15 @@ namespace Models
             }
         }
 
-        //----------------------------------------------------------------------
-        /// <summary>Called when [sow].</summary>
-        /// <param name="PSow">The p sow.</param>
-        [EventSubscribe("Sow")]
-        private void OnSow(SowType PSow)
+        //----------------------------------------------------------------------        
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             /*SowType is our type and is defined like this:
             <type name="Sow">
