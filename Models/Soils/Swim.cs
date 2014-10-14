@@ -27,7 +27,7 @@ namespace Models.Soils
         //private Component My = null;  // Get access to "Warning" function
 
         [Link]
-        WeatherFile metFile = null;
+        Weather metFile = null;
 
         [Link]
         private Soil soil = null;

@@ -12,10 +12,10 @@
       <StartDate>2000-07-01T00:00:00</StartDate>
       <EndDate>2001-06-30T00:00:00</EndDate>
     </Clock>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\Ruakura.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Manager>
       <Name>SetCO2</Name>
       <Script>
@@ -30,7 +30,7 @@ namespace Models
 	[Serializable]
 	public class Script : Model
 	{      
-	[Link] WeatherFile MetData;
+	[Link] Weather MetData;
 	[Link] Clock Clock;
 	
 	[Description("Ambient CO2 concentration (ppm):")]
@@ -1739,10 +1739,10 @@ namespace Models
       <StartDate>2000-07-01T00:00:00</StartDate>
       <EndDate>2002-06-30T00:00:00</EndDate>
     </Clock>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\Ruakura.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Manager>
       <Name>SetCO2</Name>
       <Script>
@@ -1757,7 +1757,7 @@ namespace Models
 	[Serializable]
 	public class Script : Model
 	{      
-	[Link] WeatherFile MetData;
+	[Link] Weather MetData;
 	[Link] Clock Clock;
 	
 	[Description("Ambient CO2 concentration (ppm):")]
@@ -3520,10 +3520,10 @@ namespace Models
       <StartDate>2000-07-01T00:00:00</StartDate>
       <EndDate>2002-06-30T00:00:00</EndDate>
     </Clock>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\Ruakura.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Manager>
       <Name>SetCO2</Name>
       <Script>
@@ -3538,7 +3538,7 @@ namespace Models
 	[Serializable]
 	public class Script : Model
 	{      
-	[Link] WeatherFile MetData;
+	[Link] Weather MetData;
 	[Link] Clock Clock;
 	
 	[Description("Ambient CO2 concentration (ppm):")]

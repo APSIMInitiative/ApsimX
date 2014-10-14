@@ -87,6 +87,8 @@ namespace Models
         public event EventHandler DoUpdate;
         /// <summary>Occurs when [do management calculations].</summary>
         public event EventHandler DoManagementCalculations;
+        /// <summary>Occurs when [do report calculations].</summary>
+        public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
 
@@ -185,6 +187,8 @@ namespace Models
                 if (DoManagementCalculations != null)
                     DoManagementCalculations.Invoke(this, args);
 
+                if (DoReportCalculations != null)
+                    DoReportCalculations.Invoke(this, args);
 
                 if (Today == EndDate && EndOfSimulation != null)
                     EndOfSimulation.Invoke(this, args);

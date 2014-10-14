@@ -189,10 +189,10 @@
     </Factors>
     <Simulation>
       <Name>RussetBurbank</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2003-10-20T00:00:00</StartDate>
@@ -706,7 +706,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;
@@ -4001,10 +4001,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>BaxtersBase</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1998-10-14T00:00:00</StartDate>
@@ -4488,7 +4488,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;    
@@ -7889,10 +7889,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>FSPBase</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Pukehohe.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2000-05-01T00:00:00</StartDate>
@@ -8424,7 +8424,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;  
@@ -11741,10 +11741,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>FUE_NI_base</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Pukehohe.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2004-05-10T00:00:00</StartDate>
@@ -12355,7 +12355,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;
@@ -15695,10 +15695,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>FUE_base</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1999-10-19T00:00:00</StartDate>
@@ -16362,7 +16362,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;          
@@ -19781,10 +19781,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>Parilla_base</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Lameroo.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>clock</Name>
         <StartDate>2007-11-22T00:00:00</StartDate>
@@ -21033,7 +21033,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;

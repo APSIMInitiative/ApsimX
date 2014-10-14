@@ -173,7 +173,9 @@ namespace UserInterface.Views
 
             set
             {
-                if (value != null)
+                if (value != null && 
+                    value.ColumnIndex < this.Grid.ColumnCount &&
+                    value.RowIndex < this.Grid.RowCount)
                 {
                     this.Grid.CurrentCell = this.Grid[value.ColumnIndex, value.RowIndex];
                 }

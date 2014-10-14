@@ -259,10 +259,10 @@
     </Factors>
     <Simulation>
       <Name>Base</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2010-02-25T00:00:00</StartDate>
@@ -845,7 +845,7 @@
             <string>[SurfaceOrganicMatter].surfaceom_cover</string>
             <string>[SurfaceOrganicMatter].Wt</string>
             <string>[Soil].SoilWater.sw_dep</string>
-            <string>[WeatherFile].Rain</string>
+            <string>[Weather].Rain</string>
             <string>[Soil].SoilWater.dlayer</string>
             <string>[Soil].SoilWater.es</string>
             <string>[Irrigation].IrrigationApplied</string>
@@ -1004,7 +1004,7 @@ public class Script : Model
 [Link] Clock Clock;
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;        
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Irrigation Irrig;  
                
 [XmlIgnore] public bool InitialDay { get; set; }
@@ -1092,7 +1092,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 					

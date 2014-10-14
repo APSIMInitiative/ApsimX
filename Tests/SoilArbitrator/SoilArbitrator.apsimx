@@ -3,10 +3,10 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>NoTree</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>.\norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>
@@ -2091,10 +2091,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>1Tree1Field</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>
@@ -2849,10 +2849,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>1Tree2Field</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>
@@ -4303,10 +4303,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>1Tree3Field</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>
@@ -6421,10 +6421,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>2Tree1Field</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>
@@ -7210,10 +7210,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>3Tree1Field</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>
@@ -8172,10 +8172,10 @@ namespace Models
   </Graph>
   <Simulation>
     <Name>2T2FSameField</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>
@@ -9646,10 +9646,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>2T2FDiffField</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>
@@ -11120,10 +11120,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>2T2FDiffRoots</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>norain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1988-01-01T00:00:00</StartDate>

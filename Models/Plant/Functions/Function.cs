@@ -26,7 +26,7 @@ namespace Models.PMF.Functions
 
         /// <summary>The met data</summary>
         [Link]
-        protected WeatherFile MetData = null;
+        protected Weather MetData = null;
 
         /// <summary>The clock</summary>
         [Link]

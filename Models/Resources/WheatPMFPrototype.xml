@@ -1150,7 +1150,7 @@
 		</MultiplyFunction>
 		<LinearInterpolationFunction>
 			<Name>FrostFraction</Name>
-			<XProperty>[WeatherFile].MinT</XProperty>
+			<XProperty>[Weather].MinT</XProperty>
 			<XYPairs>
 				<Name>XYPairs</Name>
 				<X>

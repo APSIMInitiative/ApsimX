@@ -1018,7 +1018,7 @@ namespace Importer
         /// <returns>The new component node</returns>
         private XmlNode ImportMetFile(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = AddCompNode(destParent, "WeatherFile", "WeatherFile");
+            newNode = AddCompNode(destParent, "Weather", "Weather");
             // compNode/filename value
             XmlNode anode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("FileName"));
             string metfilepath = Utility.PathUtils.OSFilePath(GetInnerText(compNode, "filename"));

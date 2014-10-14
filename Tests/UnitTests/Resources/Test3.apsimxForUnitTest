@@ -3,10 +3,10 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Test</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Goondiwindi.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -380,10 +380,10 @@
   </Simulation>
   <Simulation>
     <Name>Test2</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Goondiwindi.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>

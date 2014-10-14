@@ -73,7 +73,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The weather</summary>
         [Link]
-        WeatherFile Weather = null;
+        Weather Weather = null;
 
         /// <summary>Gets or sets the photop eff.</summary>
         /// <value>The photop eff.</value>

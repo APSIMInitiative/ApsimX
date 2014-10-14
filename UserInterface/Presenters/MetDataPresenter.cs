@@ -1,55 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Graph;
-using Models.Core;
-using UserInterface.Views;
-using System.Data;
-using Models;
-
-// This presenter is for the WeatherFile component
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="MetDataPresenter.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Models.Graph;
+    using Models.Core;
+    using Views;
+    using System.Data;
+    using Models;
+    using System.Collections;
+    using System.Drawing;
+
+    /// <summary>A presenter for displaying weather data</summary>
     class MetDataPresenter : IPresenter
     {
-        private WeatherFile MetData;
-        private TabbedMetDataView MetDataView;
+        /// <summary>The met data</summary>
+        private Weather weatherData;
 
-        private ExplorerPresenter ExplorerPresenter;
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <summary>The met data view</summary>
+        private IMetDataView weatherDataView;
+
+        /// <summary>The explorer presenter</summary>
+        private ExplorerPresenter explorerPresenter;
+
+        /// <summary>Attaches the specified model.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="explorerPresenter">The explorer presenter.</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            ExplorerPresenter = explorerPresenter;
-            MetData = (Model as WeatherFile);
-            MetDataView = (View as TabbedMetDataView);
-            
-            WriteTable(MetData.FullFileName);
-            WriteSummary();
-            
-            MetDataView.OnBrowseClicked += OnBrowse;
+            this.explorerPresenter = explorerPresenter;
+            this.weatherData = (model as Weather);
+            this.weatherDataView = (view as IMetDataView);
+
+            this.WriteTable(this.weatherData.FullFileName);
+            this.WriteSummary();
+
+            this.weatherDataView.BrowseClicked += this.OnBrowse;
         }
-        /// <summary>
-        /// Detach the model from the view.
-        /// </summary>
+        
+        /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            MetDataView.OnBrowseClicked -= OnBrowse;
+            this.weatherDataView.BrowseClicked -= this.OnBrowse;
         }
-        public void OnBrowse(String FileName)
+        
+        /// <summary>Called when [browse].</summary>
+        /// <param name="fileName">Name of the file.</param>
+        public void OnBrowse(string fileName)
         {
-            WriteTable(FileName);
-            WriteSummary();
+            this.WriteTable(fileName);
+            this.WriteSummary();
         }
-        /// <summary>
-        /// Get the DataTable from the WeatherFile and send it to the View
-        /// </summary>
-        /// <param name="filename"></param>
-        private void WriteTable(String filename)
+        
+        /// <summary>Get the DataTable from the WeatherFile and send it to the View</summary>
+        /// <param name="filename">The filename.</param>
+        private void WriteTable(string filename)
         {
             if (filename != null)
             {
-                MetData.FullFileName = Utility.PathUtils.GetAbsolutePath(filename, ExplorerPresenter.ApsimXFile.FileName);
-                DataTable data = MetData.GetAllData();
+                this.weatherData.FullFileName = Utility.PathUtils.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                DataTable data = this.weatherData.GetAllData();
 
                 //format the data into useful columns
                 if (data != null)
@@ -79,98 +96,94 @@ namespace UserInterface.Presenters
                         data.Columns.RemoveAt(yrCol);       //remove unwanted columns
                         data.Columns.RemoveAt(--dayCol);
                     }
-                    MetDataView.PopulateData(data);
-                    MetDataView.Filename = Utility.PathUtils.GetRelativePath(filename, ExplorerPresenter.ApsimXFile.FileName);
+                    this.weatherDataView.PopulateData(data);
+                    this.weatherDataView.Filename = Utility.PathUtils.GetRelativePath(filename, explorerPresenter.ApsimXFile.FileName);
                 }
             }
         }
-        /// <summary>
-        /// Format a summary string about the weather file
-        /// </summary>
+        
+        /// <summary>Format a summary string about the weather file</summary>
         private void WriteSummary()
         {
             StringBuilder summary = new StringBuilder();
-            summary.AppendLine("File name: " + MetData.FileName);
-            summary.AppendLine("Latitude : " + MetData.Latitude.ToString());
-            summary.AppendLine("TAV      : " + String.Format("{0, 2:f2}", MetData.Tav));
-            summary.AppendLine("AMP      : " + String.Format("{0, 2:f2}", MetData.Amp));
-            summary.AppendLine("Start    : " + MetData.StartDate.ToShortDateString());
-            summary.AppendLine("End      : " + MetData.EndDate.ToShortDateString());
+            summary.AppendLine("File name: " + this.weatherData.FileName);
+            summary.AppendLine("Latitude : " + this.weatherData.Latitude.ToString());
+            summary.AppendLine("TAV      : " + String.Format("{0, 2:f2}", this.weatherData.Tav));
+            summary.AppendLine("AMP      : " + String.Format("{0, 2:f2}", this.weatherData.Amp));
+            summary.AppendLine("Start    : " + this.weatherData.StartDate.ToShortDateString());
+            summary.AppendLine("End      : " + this.weatherData.EndDate.ToShortDateString());
             summary.AppendLine("");
 
-            //long term average rainfall
-            double[] rainfall;
-            double[] monthlyRain;
-            MetData.YearlyRainfall(out rainfall, out monthlyRain);
-            if (rainfall.Length != 0)
-            {
-                int startYr = MetData.StartDate.Year;
-                int endYr = MetData.EndDate.Year;
-                int count = rainfall.Length;
-                List<double> yearly = new List<double>(rainfall);   //use a list as this is more flexible
-                if (MetData.EndDate.DayOfYear < 365) //if the final year is truncated
-                {
-                    yearly.RemoveAt(count - 1);
-                    count -= 1;
-                    endYr -= 1;
-                }
-                if (MetData.StartDate.DayOfYear > 2) //if the start year is truncated
-                {
-                    if (yearly.Count > 0)
-                    {
-                        yearly.RemoveAt(0);
-                        count -= 1;
-                    }
-                    startYr += 1;
-                }
-                if (count > 0)
-                {
-                    double total = 0;
-                    for (int yr = 0; yr < count; yr++)
-                    {
-                        total += yearly[yr];
-                    }
-                    summary.AppendLine(String.Format("For years : {0} - {1}", startYr, endYr));
-                    summary.AppendLine("Long term average yearly rainfall : " + String.Format("{0,3:f2}mm", total / count));
-                    double stddev = getStandardDeviation(yearly, total / count);
-                    summary.AppendLine("Yearly rainfall std deviation     : " + String.Format("{0,3:f2}mm", stddev));
-                }
+            // Make sure the data in the table consists of full years of data i.e.
+            // exclude the first and/or last year of data if they aren't complete.
+            DataTable table = this.weatherData.GetAllData();
+            DateTime firstDate = Utility.DataTable.GetDateFromRow(table.Rows[0]);
+            DateTime lastDate = Utility.DataTable.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
+            if (firstDate.DayOfYear != 1)
+                firstDate = new DateTime(firstDate.Year + 1, 1, 1);
+            if (lastDate.Day != 31 || lastDate.Month != 12)
+                lastDate = new DateTime(lastDate.Year - 1, 12, 31);
 
-                MetDataView.Summarylabel = summary.ToString();
-                PopulateGraph(monthlyRain, String.Format("Long term average monthly rainfall for years : {0} - {1}", MetData.StartDate.Year, MetData.EndDate.Year));
+            double[] yearlyRainfall = Utility.Math.YearlyTotals(table, "Rain", firstDate, lastDate);
+            double[] monthlyRainfall = Utility.Math.AverageMonthlyTotals(table, "rain", firstDate, lastDate);
+            double[] monthlyMaxT = Utility.Math.AverageDailyTotalsForEachMonth(table, "maxt", firstDate, lastDate);
+            double[] monthlyMinT = Utility.Math.AverageDailyTotalsForEachMonth(table, "mint", firstDate, lastDate);
+
+            // long term average rainfall
+            if (yearlyRainfall.Length != 0)
+            {
+                double totalYearlyRainfall = Utility.Math.Sum(yearlyRainfall);
+                int numYears = lastDate.Year - firstDate.Year + 1;
+                double meanYearlyRainfall = totalYearlyRainfall / numYears;
+                double stddev = Utility.Math.StandardDeviation(yearlyRainfall);
+
+                summary.AppendLine(String.Format("For years : {0} - {1}", firstDate.Year, lastDate.Year));
+                summary.AppendLine("Long term average yearly rainfall : " + String.Format("{0,3:f2}mm", meanYearlyRainfall));
+                summary.AppendLine("Yearly rainfall std deviation     : " + String.Format("{0,3:f2}mm", stddev));
+
+                this.weatherDataView.Summarylabel = summary.ToString();
+                string title = String.Format("Long term average monthly rainfall for years : {0} - {1}", firstDate.Year, lastDate.Year);
+                this.PopulateGraph(monthlyRainfall, 
+                                   monthlyMaxT,
+                                   monthlyMinT,
+                                   title);
+                                        
             }
         }
-        /// <summary>
-        /// Calculate the std deviation
-        /// </summary>
-        /// <param name="doubleList"></param>
-        /// <param name="mean"></param>
-        /// <returns>Std deviation</returns>
-        private double getStandardDeviation(List<double> doubleList, double mean)
-        {
-            double sumOfDerivation = 0;
-            foreach (double value in doubleList)
-            {
-                sumOfDerivation += (value) * (value);
-            }
-            double sumOfDerivationAverage = sumOfDerivation / doubleList.Count;
-            return Math.Sqrt(sumOfDerivationAverage - (mean * mean)); 
-        }
-        /// <summary>
-        /// Create the monthly lt av chart
-        /// </summary>
-        /// <param name="monthlyRain"></param>
-        /// <param name="title"></param>
-        private void PopulateGraph(double[] monthlyRain, String sTitle)
-        {
-            MetDataView.ChartTitle(sTitle);
-            MetDataView.ClearSeries();
-            MetDataView.CreateBarSeries(monthlyRain, "Monthly rain",
-                                                     "Month", "mm",
-                                                     OxyPlot.Axes.AxisPosition.Bottom, 
-                                                     OxyPlot.Axes.AxisPosition.Left);
-            MetDataView.RefreshGraph();
-        }
 
+        /// <summary>Create the monthly chart</summary>
+        /// <param name="monthlyRain">The monthly rain.</param>
+        /// <param name="title">The title.</param>
+        private void PopulateGraph(double[] monthlyRain, double[] montlyMaxt, double[] monthlyMint, string title)
+        {
+            weatherDataView.Graph.Clear();
+            weatherDataView.Graph.DrawBar("", 
+                                      Utility.Date.LowerCaseMonths,
+                                      monthlyRain,
+                                      Axis.AxisType.Bottom,
+                                      Axis.AxisType.Left,
+                                      Color.LightSkyBlue);
+            weatherDataView.Graph.DrawLineAndMarkers("Maximum temperature",
+                                                     Utility.Date.LowerCaseMonths,
+                                                     montlyMaxt,
+                                                     Axis.AxisType.Bottom,
+                                                     Axis.AxisType.Right,
+                                                     Color.Red,
+                                                     Series.LineType.Solid,
+                                                     Series.MarkerType.None);
+            weatherDataView.Graph.DrawLineAndMarkers("Minimum temperature",
+                                                     Utility.Date.LowerCaseMonths,
+                                                     monthlyMint,
+                                                     Axis.AxisType.Bottom,
+                                                     Axis.AxisType.Right,
+                                                     Color.Orange,
+                                                     Series.LineType.Solid,
+                                                     Series.MarkerType.None);
+            weatherDataView.Graph.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN);
+            weatherDataView.Graph.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
+            weatherDataView.Graph.FormatAxis(Axis.AxisType.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN);
+            weatherDataView.Graph.FormatTitle(title);
+            weatherDataView.Graph.Refresh();            
+        }
     }
 }

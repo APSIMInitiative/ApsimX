@@ -32,7 +32,7 @@ namespace Models
 
         /// <summary>The met data</summary>
         [Link]
-        private WeatherFile MetData = null;
+        private Weather MetData = null;
 
         //Events
         /// <summary>
