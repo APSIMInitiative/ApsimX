@@ -105,7 +105,7 @@ namespace Models.AgPasture1
                 // partition the demand among species
                 if (isSwardControlled)
                     foreach (PastureSpecies mySpecies in mySward)
-                        mySpecies.myWaterDemand = swardWaterDemand * mySpecies.AboveGrounLivedWt / AboveGroundLiveWt;
+                        mySpecies.myWaterDemand = Utility.Math.Divide(swardWaterDemand * mySpecies.AboveGrounLivedWt, AboveGroundLiveWt, 0.0);
             }
         }
 
@@ -853,22 +853,13 @@ namespace Models.AgPasture1
 
         #region - N concentrations  ----------------------------------------------------------------------------------------
 
-        /// <summary>Gets the shoot-root ration of N content.</summary>
-        /// <value>The ration between above and below ground N content.</value>
-        [Description("Proportion of N above ground in relation to below ground")]
-        [Units("%")]
-        public double ShootRootNPct
-        {
-            get { return 100 * (AboveGroundN / BelowGroundN); }
-        }
-
         /// <summary>Gets the average N concentration of standing plant material.</summary>
         /// <value>The average N concentration of leaves and stems.</value>
         [Description("Average N concentration of standing plants")]
         [Units("kgN/kgDM")]
         public double StandingNConc
         {
-            get { return StandingN / StandingWt; }
+            get { return Utility.Math.Divide(StandingN, StandingWt, 0.0); }
         }
 
         /// <summary>Gets the average N concentration of leaves.</summary>
@@ -877,7 +868,7 @@ namespace Models.AgPasture1
         [Units("kgN/kgDM")]
         public double LeafNConc
         {
-            get { return LeafN / LeafWt; }
+            get { return Utility.Math.Divide(LeafN, LeafWt, 0.0); }
         }
 
         /// <summary>Gets the average N concentration of stems and sheath.</summary>
@@ -886,7 +877,7 @@ namespace Models.AgPasture1
         [Units("kgN/kgDM")]
         public double StemNConc
         {
-            get { return StemN / StemWt; }
+            get { return Utility.Math.Divide(StemN, StemWt, 0.0); }
         }
 
         /// <summary>Gets the average N concentration of stolons.</summary>
@@ -895,7 +886,7 @@ namespace Models.AgPasture1
         [Units("kgN/kgDM")]
         public double StolonNConc
         {
-            get { return StolonN / StolonWt; }
+            get { return Utility.Math.Divide(StolonN, StolonWt, 0.0); }
         }
 
         /// <summary>Gets the average N concentration of roots.</summary>
@@ -904,7 +895,7 @@ namespace Models.AgPasture1
         [Units("kgN/kgDM")]
         public double RootNConc
         {
-            get { return RootN / RootWt; }
+            get { return Utility.Math.Divide(RootN, RootWt, 0.0); }
         }
 
         /// <summary>Gets the average N concentration of new grown tissue.</summary>
@@ -913,7 +904,7 @@ namespace Models.AgPasture1
         [Units("kgN/kgDM")]
         public double GrowthNConc
         {
-            get { return ActualGrowthN / ActualGrowthWt; }
+            get { return Utility.Math.Divide(ActualGrowthN, ActualGrowthWt, 0.0); }
         }
         
         # endregion
@@ -1088,7 +1079,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double FractionGrowthToRoot
         {
-            get { return DMToRoots / ActualGrowthWt; }
+            get { return Utility.Math.Divide(DMToRoots, ActualGrowthWt, 0.0); }
         }
 
         /// <summary>Gets the fraction of new growth allocated to shoot.</summary>
@@ -1097,7 +1088,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double FractionGrowthToShoot
         {
-            get { return DMToShoot / ActualGrowthWt; }
+            get { return Utility.Math.Divide(DMToShoot, ActualGrowthWt, 0.0); }
         }
 
         #endregion
@@ -1236,8 +1227,9 @@ namespace Models.AgPasture1
                 else
                 {
                     double[] result = new double[nLayers];
-                    for (int layer = 0; layer < nLayers; layer++)
-                        result[layer] = mySward.Sum(mySpecies => mySpecies.RootWt * mySpecies.RootWtFraction[layer]) / RootWt;
+                    if (RootWt > 0.0)
+                        for (int layer = 0; layer < nLayers; layer++)
+                            result[layer] = mySward.Sum(mySpecies => mySpecies.RootWt * mySpecies.RootWtFraction[layer]) / RootWt;
                     return result;
                 }
             }
@@ -1330,7 +1322,13 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double GlfN
         {
-            get { return Utility.Math.Divide(mySward.Sum(mySpecies => mySpecies.GlfN * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0); }
+            get
+            {
+                double result = 1.0;
+                if (PotGrowthWt_Wstress > 0)
+                    result = Utility.Math.Divide(mySward.Sum(mySpecies => mySpecies.GlfN * mySpecies.PotGrowthWt_Wstress), PotGrowthWt_Wstress, 0.0);
+                return result;
+            }
         }
 
         /// <summary>Gets the average growth limiting factor due to N concentration in the plant.</summary>
@@ -1339,7 +1337,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double GlfNConcentration
         {
-            get { return mySward.Sum(mySpecies => mySpecies.GlfNConcentration * mySpecies.AboveGrounLivedWt) / AboveGroundLiveWt; }
+            get { return Utility.Math.Divide(mySward.Sum(mySpecies => mySpecies.GlfNConcentration * mySpecies.AboveGroundWt), AboveGroundWt, 0.0); }
         }
 
         /// <summary>Gets the average growth limiting factor due to temperature.</summary>
@@ -1348,7 +1346,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double GlfTemperature
         {
-            get { return mySward.Sum(mySpecies => mySpecies.GlfTemperature * mySpecies.AboveGrounLivedWt) / AboveGroundLiveWt; }
+            get { return Utility.Math.Divide(mySward.Sum(mySpecies => mySpecies.GlfTemperature * mySpecies.AboveGrounLivedWt), AboveGroundLiveWt, 0.0); }
         }
 
         /// <summary>Gets the average growth limiting factor due to water availability.</summary>
@@ -1359,8 +1357,7 @@ namespace Models.AgPasture1
         {
             get
             {
-                return mySward.Sum(mySpecies => mySpecies.GlfWater * mySpecies.AboveGrounLivedWt) / AboveGroundLiveWt;
-                    //Math.Max(0.0, Math.Min(1.0, WaterUptake.Sum() / WaterDemand)); 
+                return Utility.Math.Divide(mySward.Sum(mySpecies => mySpecies.GlfWater * mySpecies.GreenLAI), GreenLAI, 0.0);
             }
         }
 
@@ -1370,7 +1367,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double GlfGeneric
         {
-            get { return mySward.Sum(mySpecies => mySpecies.GlfGeneric * mySpecies.AboveGrounLivedWt) / AboveGroundLiveWt; }
+            get { return Utility.Math.Divide(mySward.Sum(mySpecies => mySpecies.GlfGeneric * mySpecies.AboveGrounLivedWt), AboveGroundLiveWt, 0.0); }
         }
 
         // TODO: verify that this is really needed
@@ -1418,9 +1415,9 @@ namespace Models.AgPasture1
         /// <value>The N concentration in harvested DM.</value>
         [Description("average N concentration of harvested material")]
         [Units("kgN/kgDM")]
-        public double HarvestedNconc
+        public double HarvestedNConc
         {
-            get { return HarvestedN / HarvestedWt; }
+            get { return Utility.Math.Divide(HarvestedN, HarvestedWt, 0.0); }
         }
 
         /// <summary>Gets the average herbage digestibility.</summary>
@@ -1429,7 +1426,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double HerbageDigestibility
         {
-            get { return mySward.Sum(mySpecies => mySpecies.HerbageDigestibility * mySpecies.StandingWt) / StandingWt; }
+            get { return Utility.Math.Divide(mySward.Sum(mySpecies => mySpecies.HerbageDigestibility * mySpecies.StandingWt), StandingWt, 0.0); }
         }
 
         // TODO: Digestibility of harvested material should be better calculated (consider fraction actually removed)
@@ -1439,7 +1436,7 @@ namespace Models.AgPasture1
         [Units("0-1")]
         public double HarvestedDigestibility
         {
-            get { return mySward.Sum(mySpecies => mySpecies.HarvestedDigestibility * mySpecies.HarvestedWt) / HarvestedWt; }
+            get { return Utility.Math.Divide(mySward.Sum(mySpecies => mySpecies.HarvestedDigestibility * mySpecies.HarvestedWt), HarvestedWt, 0.0); }
         }
 
         /// <summary>Gets the average herbage ME (metabolisable energy).</summary>
@@ -1679,8 +1676,6 @@ namespace Models.AgPasture1
                 foreach (PastureSpecies mySpecies in mySward)
                 {
                     // step 03 - Actual growth after nutrient limitations, but before senescence
-                    if (clock.Today.Day == 30)
-                        swardWaterDemand += 0.0;
                     mySpecies.CalcActualGrowthAndPartition();
 
                     // step 04 - Effective growth after all limitations and senescence
@@ -1959,7 +1954,12 @@ namespace Models.AgPasture1
 
                 // get the glfN for each species
                 foreach (PastureSpecies mySpecies in mySward)
-                    mySpecies.glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(mySpecies.ActualGrowthN, mySpecies.RequiredOptimumN, 1.0)));
+                {
+                    if (mySpecies.ActualGrowthN > 0.0)
+                        mySpecies.glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(mySpecies.ActualGrowthN, mySpecies.RequiredOptimumN, 1.0)));
+                    else
+                        mySpecies.glfN = 1.0;
+                }
             }
             //else
             //    N uptake is evaluated by the plant mySpecies or some other module
@@ -1984,8 +1984,8 @@ namespace Models.AgPasture1
                 {
                     // simple way, all N in the root zone is available
                     layerFraction = 1.0; //TODO: shold be this: LayerFractionWithRoots(layer);
-                    soilNH4Available[layer] = Soil.SoilNitrogen.nh4[layer] * layerFraction;
-                    soilNO3Available[layer] = Soil.SoilNitrogen.no3[layer] * layerFraction;
+                    soilNH4Available[layer] = Soil.SoilNitrogen.NH4[layer] * layerFraction;
+                    soilNO3Available[layer] = Soil.SoilNitrogen.NO3[layer] * layerFraction;
                 }
                 else
                 {
@@ -1996,11 +1996,11 @@ namespace Models.AgPasture1
 
                     layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
                     nK = mySward.Max(mySpecies => mySpecies.kuNH4);
-                    soilNH4Available[layer] = Soil.SoilNitrogen.nh4[layer] * nK * layerFraction;
+                    soilNH4Available[layer] = Soil.SoilNitrogen.NH4[layer] * nK * layerFraction;
                     soilNH4Available[layer] *= facWtaken;
 
                     nK = mySward.Max(mySpecies => mySpecies.kuNO3);
-                    soilNO3Available[layer] = Soil.SoilNitrogen.no3[layer] * nK * layerFraction;
+                    soilNO3Available[layer] = Soil.SoilNitrogen.NO3[layer] * nK * layerFraction;
                     soilNO3Available[layer] *= facWtaken;
                 }
                 soilAvailableN[layer] = soilNH4Available[layer] + soilNO3Available[layer];
@@ -2090,8 +2090,8 @@ namespace Models.AgPasture1
                         // calc the amount of each N form taken up
                         for (int layer = 0; layer <= RootFrontier; layer++)
                         {
-                            NTakenUp.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * uptakeFraction;
-                            NTakenUp.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * uptakeFraction;
+                            NTakenUp.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * uptakeFraction;
+                            NTakenUp.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
                         }
 
                         // partition the amount taken up between species, considering amount actually taken up
@@ -2140,8 +2140,8 @@ namespace Models.AgPasture1
                             for (int layer = 0; layer <= mySpecies.RootFrontier; layer++)
                             {
                                 mySpecies.mySoilUptakeN[layer] = (adjustedNH4Available[layer] + adjustedNO3Available[layer]) * uptakeFraction;
-                                NTakenUp.DeltaNH4[layer] -= Soil.SoilNitrogen.nh4[layer] * uptakeFraction;
-                                NTakenUp.DeltaNO3[layer] -= Soil.SoilNitrogen.no3[layer] * uptakeFraction;
+                                NTakenUp.DeltaNH4[layer] -= Soil.SoilNitrogen.NH4[layer] * uptakeFraction;
+                                NTakenUp.DeltaNO3[layer] -= Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
                             }
                         }
                     }

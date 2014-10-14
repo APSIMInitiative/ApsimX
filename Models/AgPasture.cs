@@ -1841,21 +1841,6 @@ namespace Models
             }
         }
 
-        /// <summary>Gets the above ground n PCT.</summary>
-        /// <value>The above ground n PCT.</value>
-        [Description("Proportion of N above ground in relation to below ground")]
-        [Units("%")]
-        public double AboveGroundNPct
-        {
-            get
-            {
-                double result = 0;
-                if (AboveGroundWt != 0)
-                    result = 100 * AboveGroundN / AboveGroundWt;
-                return result;
-            }
-        }
-
         /// <summary>Gets the standing plant n.</summary>
         /// <value>The standing plant n.</value>
         [Description("Total amount of N in standing plants")]
@@ -2243,12 +2228,8 @@ namespace Models
             get
             {
                 double result = 0.0;
-                for (int s = 0; s < numSpecies; s++)
-                {
-                    result += SP[s].newGrowthN;
-                }
                 if (PlantGrowthWt > 0)
-                    result = result / PlantGrowthWt;
+                    result = PlantGrowthN / PlantGrowthWt;
                 else
                     result = 0.0;
                 return result;
@@ -2367,7 +2348,7 @@ namespace Models
             get
             {
                 double result = 0.0;
-                if (p_dGrowth <= 0)
+                if (p_dGrowth > 0)
                     result = DMToRoots / p_dGrowth;
                 return result;
             }
@@ -3932,8 +3913,9 @@ namespace Models
             get
             {
                 double[] result = new double[SP.Length];
+                double Tmnw = 0.75 * MetData.MaxT + 0.25 * MetData.MinT;  // weighted Tmean
                 for (int s = 0; s < numSpecies; s++)
-                    result[s] = SP[s].gftemp;
+                    result[s] = SP[s].GFTemperature(Tmnw);
                 return result;
             }
         }
@@ -3997,6 +3979,16 @@ namespace Models
         }
 
 
+        public double[] SpeciesGrossPotGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Pgross * 2.5;
+                return result;
+            }
+        }
 
         public double[] SpeciesNetPotGrowth
         {
@@ -4073,7 +4065,7 @@ namespace Models
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
                     result += (SP[s].Pgross * 0.75 - SP[s].Resp_m) * SP[s].fShoot;
-                result /= 2.5;   // assume 40% C in DM
+                result *= 2.5;   // assume 40% C in DM
                 return result;
             }
         }
@@ -5057,8 +5049,8 @@ namespace Models
                     SNSupply[layer] = (no3[layer] * KNO3 + nh4[layer] * KNH4 ) * (double)swaf;
                     */
                     //original below
-                    p_soilNavailable += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]);
-                    SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]);
+                    p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]);
+                    SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]);
                 }
                 else
                 {
@@ -5096,8 +5088,8 @@ namespace Models
                     double swaf = 1.0;
                     swaf = (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.dul[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    p_soilNavailable += (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
-                    SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
 
                     //original below
                     //p_soilNavailable += (no3[layer] + nh4[layer]);
@@ -5471,19 +5463,19 @@ namespace Models
                 for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                 {
                     double
-                        totN = Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.no3[layer],
+                        totN = Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.NO3[layer],
                         fracH2O = SWUptake[layer] / totSWUptake;
 
                     if (totN > 0)
                     {
-                        availableNH4_bylayer[layer] = fracH2O * Soil.SoilNitrogen.nh4[layer] / totN;
-                        availableNO3_bylayer[layer] = fracH2O * Soil.SoilNitrogen.no3[layer] / totN;
+                        availableNH4_bylayer[layer] = fracH2O * Soil.SoilNitrogen.NH4[layer] / totN;
+                        availableNO3_bylayer[layer] = fracH2O * Soil.SoilNitrogen.NO3[layer] / totN;
 
                         //if we have no3 and nh4 in this layer then calculate our uptake multiplier, otherwise set it to 0
                         //the idea behind the multiplier is that it allows us to calculate the max amount of N we can extract
                         //without forcing any of the layers below 0 AND STILL MAINTAINING THE RATIO as calculated with fracH2O
                         //NOTE: it doesn't matter whether we use nh4 or no3 for this calculation, we will get the same answer regardless
-                        uptake_multiplier = Soil.SoilNitrogen.nh4[layer] * Soil.SoilNitrogen.no3[layer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.nh4[layer] / availableNH4_bylayer[layer]) : 0;
+                        uptake_multiplier = Soil.SoilNitrogen.NH4[layer] * Soil.SoilNitrogen.NO3[layer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.NH4[layer] / availableNH4_bylayer[layer]) : 0;
                     }
                     else
                     {
@@ -5497,8 +5489,8 @@ namespace Models
                 availableNO3_bylayer = availableNO3_bylayer.Select(x => x * uptake_multiplier).ToArray();
 
                 //calculate how much no3/nh4 will be left in the soil layers (diff_nxx[layer] = nxx[layer] - availableNH4_bylayer[layer])
-                diffNH4_bylayer = Soil.SoilNitrogen.nh4.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
-                diffNO3_bylayer = Soil.SoilNitrogen.no3.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
+                diffNH4_bylayer = Soil.SoilNitrogen.NH4.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
+                diffNO3_bylayer = Soil.SoilNitrogen.NO3.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
 
                 //adjust this by the sum of all leftover so we get a ratio we can use later
                 double sum_diff = diffNH4_bylayer.Sum() + diffNO3_bylayer.Sum();
@@ -5526,7 +5518,7 @@ namespace Models
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                     n_uptake += SNUptake[layer] = (NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]) * -1;
 
-                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.SoilNitrogen.no3[i] + x + 0.00000001, 0)).ToArray();
+                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.SoilNitrogen.NO3[i] + x + 0.00000001, 0)).ToArray();
                 if (diffs.Any(x => x == 0))
                     throw new Exception();
 
@@ -5545,11 +5537,11 @@ namespace Models
             {
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                 {   //N are taken up only in top layers that root can reach (including buffer Zone).
-                    n_uptake += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
-                    SNUptake[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
+                    n_uptake += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]) * Fraction;
+                    SNUptake[layer] = (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]) * Fraction;
 
-                    NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * Fraction;
-                    NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * Fraction;
+                    NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * Fraction;
+                    NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * Fraction;
                 }
             }
 

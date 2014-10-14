@@ -2027,20 +2027,15 @@ namespace Models.AgPasture1
             get { return Utility.Math.Divide(Nstolon3, dmStolon3, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration of new grown tissue.</summary>
-        /// <value>The N concentration of new grown tissue.</value>
-        [Description("Nitrogen concentration in new growth")]
+        /// <summary>Gets the N concentration in new grown tissue.</summary>
+        /// <value>The actual growth N concentration.</value>
+        [Description("Concentration of N in new growth")]
         [Units("kgN/kgDM")]
-        public double GrowthNconc
+        public double ActualGrowthNConc
         {
-            get
-            {
-                if (dGrowthActual > 0)
-                    return newGrowthN / dGrowthActual;
-                else
-                    return 0.0;
-            }
+            get { return Utility.Math.Divide(newGrowthN, dGrowthActual, 0.0); }
         }
+
 
         #endregion
 
@@ -2179,15 +2174,6 @@ namespace Models.AgPasture1
         public double ActualGrowthN
         {
             get { return newGrowthN; }
-        }
-
-        /// <summary>Gets the N concentration in new grown tissue.</summary>
-        /// <value>The actual growth N concentration.</value>
-        [Description("Concentration of N in new growth")]
-        [Units("kgN/kgDM")]
-        public double ActualGrowthNConc
-        {
-            get { return Utility.Math.Divide(newGrowthN, ActualGrowthWt, 0.0); }
         }
 
         #endregion
@@ -2762,15 +2748,15 @@ namespace Models.AgPasture1
         // harvest and digestibility  ---------------------------------------------------------------------------------
 
         /// <summary>The DM amount harvested (defoliated)</summary>
-        private double dmDefoliated;
+        private double dmDefoliated = 0.0;
         /// <summary>The N amount harvested (defoliated)</summary>
-        private double Ndefoliated;
+        private double Ndefoliated = 0.0;
         /// <summary>The digestibility of herbage</summary>
-        private double digestHerbage;
+        private double digestHerbage = 0.0;
         /// <summary>The digestibility of defoliated material</summary>
-        private double digestDefoliated;
+        private double digestDefoliated = 0.0;
         /// <summary>The fraction of standing DM harvested</summary>
-        internal double fractionHarvested;
+        internal double fractionHarvested = 0.0;
 
         // LAI and cover  ---------------------------------------------------------------------------------------------
 
@@ -3087,7 +3073,10 @@ namespace Models.AgPasture1
                     if (myNitrogenUptakeSource == "species")
                     {
                         DoNitrogenCalculations();
-                        glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(newGrowthN, NdemandOpt, 1.0)));
+                        if (newGrowthN > 0.0)
+                            glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(newGrowthN, NdemandOpt, 1.0)));
+                        else
+                            glfN = 1.0;
                     }
                     //else if (myNitrogenUptakeSource == "AgPasture")
                     //{
@@ -3623,39 +3612,46 @@ namespace Models.AgPasture1
         {
             double result = 1.0;
 
-            double fac = 1.0;
-            int doyIncrease = doyIniHighShoot + higherShootAllocationPeriods[0];  //35;   //75
-            int doyPlateau = doyIncrease + higherShootAllocationPeriods[1];   // 95;   // 110;
-            int doyDecrease = doyPlateau + higherShootAllocationPeriods[2];  // 125;  // 140;
-            int doy = Clock.Today.DayOfYear;
-
-            if (doy > doyIniHighShoot)
+            if (prevState.dmRoot > 0.00001 || dmGreen < prevState.dmRoot)
             {
-                if (doy < doyIncrease)
-                    fac = 1 + shootSeasonalAllocationIncrease * Utility.Math.Divide(doy - doyIniHighShoot, higherShootAllocationPeriods[0], 0.0);
-                else if (doy <= doyPlateau)
-                    fac = 1.0 + shootSeasonalAllocationIncrease;
-                else if (doy <= doyDecrease)
-                    fac = 1 + shootSeasonalAllocationIncrease * (1 - Utility.Math.Divide(doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
-            }
-            else
-            {
-                if (doyDecrease > 365 && doy <= doyDecrease - 365)
-                    fac = 1 + shootSeasonalAllocationIncrease * (1 - Utility.Math.Divide(365 + doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
-            }
+                double fac = 1.0;
+                int doyIncrease = doyIniHighShoot + higherShootAllocationPeriods[0];  //35;   //75
+                int doyPlateau = doyIncrease + higherShootAllocationPeriods[1];   // 95;   // 110;
+                int doyDecrease = doyPlateau + higherShootAllocationPeriods[2];  // 125;  // 140;
+                int doy = Clock.Today.DayOfYear;
 
-            if (prevState.dmRoot > 0.00001)
-            {
-                double presentSRratio = Utility.Math.Divide(dmGreen, prevState.dmRoot, 1.0);
-                double targetedSRratio;
-
-                if (presentSRratio > fac * maxSRratio)
-                    targetedSRratio = Math.Min(glfWater, glfN) * Utility.Math.Divide(Math.Pow(fac * maxSRratio, 2.0), fac * maxSRratio, 1.0);
+                if (doy > doyIniHighShoot)
+                {
+                    if (doy < doyIncrease)
+                        fac = 1 + shootSeasonalAllocationIncrease * Utility.Math.Divide(doy - doyIniHighShoot, higherShootAllocationPeriods[0], 0.0);
+                    else if (doy <= doyPlateau)
+                        fac = 1.0 + shootSeasonalAllocationIncrease;
+                    else if (doy <= doyDecrease)
+                        fac = 1 + shootSeasonalAllocationIncrease * (1 - Utility.Math.Divide(doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
+                    else
+                        fac = 1;
+                }
                 else
-                    targetedSRratio = Math.Min(glfWater, glfN) * Utility.Math.Divide(Math.Pow(fac * maxSRratio, 2.0), presentSRratio, 1.0);
+                {
+                    if (doyDecrease > 365 && doy <= doyDecrease - 365)
+                        fac = 1 + shootSeasonalAllocationIncrease * (1 - Utility.Math.Divide(365 + doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
+                }
 
-                targetedSRratio = Math.Max(targetedSRratio, maxSRratio);
-                result = targetedSRratio / (1.0 + targetedSRratio);
+                double presentSRratio = dmGreen / prevState.dmRoot;
+                double targetedSRratio = fac * maxSRratio;
+                double newSRratio;
+
+                if (presentSRratio > targetedSRratio)
+                    newSRratio = targetedSRratio;
+                else
+                    newSRratio = targetedSRratio * (targetedSRratio / presentSRratio);
+
+                newSRratio *= Math.Min(glfWater, glfN);
+
+                result = newSRratio / (1.0 + newSRratio);
+
+                if (result / (1 - result) < targetedSRratio)
+                    result = targetedSRratio / (1 + targetedSRratio);
             }
 
             return result;
@@ -4159,8 +4155,8 @@ namespace Models.AgPasture1
                 if (useAltNUptake == "no")
                 {
                     // simple way, all N in the root zone is available
-                    mySoilNH4available[layer] = Soil.SoilNitrogen.nh4[layer] * LayerFractionWithRoots(layer);
-                    mySoilNO3available[layer] = Soil.SoilNitrogen.no3[layer] * LayerFractionWithRoots(layer);
+                    mySoilNH4available[layer] = Soil.SoilNitrogen.NH4[layer] * LayerFractionWithRoots(layer);
+                    mySoilNO3available[layer] = Soil.SoilNitrogen.NO3[layer] * LayerFractionWithRoots(layer);
                 }
                 else
                 {
@@ -4172,8 +4168,8 @@ namespace Models.AgPasture1
                                 Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer]), 0.0);
 
                     // Theoretical amount available
-                    mySoilNH4available[layer] = Soil.SoilNitrogen.nh4[layer] * kuNH4 * LayerFractionWithRoots(layer);
-                    mySoilNO3available[layer] = Soil.SoilNitrogen.no3[layer] * kuNO3 * LayerFractionWithRoots(layer);
+                    mySoilNH4available[layer] = Soil.SoilNitrogen.NH4[layer] * kuNH4 * LayerFractionWithRoots(layer);
+                    mySoilNO3available[layer] = Soil.SoilNitrogen.NO3[layer] * kuNO3 * LayerFractionWithRoots(layer);
 
                     // actual amount available
                     mySoilNH4available[layer] *= facWtaken;
@@ -4287,8 +4283,8 @@ namespace Models.AgPasture1
 
                         for (int layer = 0; layer <= myRootFrontier; layer++)
                         {
-                            NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * uptakeFraction;
-                            NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * uptakeFraction;
+                            NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * uptakeFraction;
+                            NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
 
                             mySoilUptakeN[layer] = -(NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]);
                         }
@@ -4313,10 +4309,10 @@ namespace Models.AgPasture1
                         for (int layer = 0; layer < nLayers; layer++)
                         {
                             uptakeFraction = Math.Min(1.0, Utility.Math.Divide(fNH4Avail[layer] + fWUptake[layer], totFacNH4, 0.0));
-                            NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * uptakeFraction;
+                            NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * uptakeFraction;
 
                             uptakeFraction = Math.Min(1.0, Utility.Math.Divide(fNO3Avail[layer] + fWUptake[layer], totFacNO3, 0.0));
-                            NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * uptakeFraction;
+                            NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
 
                             mySoilUptakeN[layer] = NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer];
                         }
