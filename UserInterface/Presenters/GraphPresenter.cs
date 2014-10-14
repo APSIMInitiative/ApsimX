@@ -766,12 +766,12 @@ namespace UserInterface.Presenters
             /// </summary>
             private IEnumerable GetData(GraphValues graphValues)
             {
-                if (graphValues.TableName == null && graphValues.FieldName != null)
+                if (graphValues != null && graphValues.TableName == null && graphValues.FieldName != null)
                 {
                     // Use reflection to access a property.
                     return graphValues.GetData(this.graph);
                 }
-                else if (graphValues.TableName != null && graphValues.FieldName != null)
+                else if (graphValues != null && graphValues.TableName != null && graphValues.FieldName != null)
                 {
                     // Create the data if we haven't already
                     if (this.data == null && this.dataStore.TableExists(graphValues.TableName))

@@ -59,6 +59,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PostSimulationTools.Input))]
         [XmlElement(typeof(Models.PostSimulationTools.PredictedObserved))]
         [XmlElement(typeof(Models.PostSimulationTools.TimeSeriesStats))]
+        [XmlElement(typeof(Models.PostSimulationTools.Probability))]
         [XmlElement(typeof(Irrigation))]
         [XmlElement(typeof(Manager))]
         [XmlElement(typeof(MicroClimate))]
