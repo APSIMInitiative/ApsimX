@@ -71,11 +71,11 @@ namespace Utility
             
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
-            if (relativeDirectory == null)
-                throw new Exception("The relative filename passed in must have a path");
-
-            if (!Path.IsPathRooted(path))
-                path = Path.Combine(relativeDirectory, path);
+            if (relativeDirectory != null)
+            {
+                if (!Path.IsPathRooted(path))
+                    path = Path.Combine(relativeDirectory, path);
+            }
             return Path.GetFullPath(path);
         }
 
@@ -92,15 +92,15 @@ namespace Utility
 
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
-            if (relativeDirectory == null)
-                throw new Exception("The relative filename passed in must have a path");
+            if (relativeDirectory != null)
+            {
+                // Try putting in a %root%.
+                string rootDirectory = System.IO.Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+                path = path.Replace(rootDirectory, "%root%");
 
-            // Try putting in a %root%.
-            string rootDirectory = System.IO.Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
-            path = path.Replace(rootDirectory, "%root%");
-
-            // Try getting rid of the relative directory.
-            path = path.Replace(relativeDirectory, "");
+                // Try getting rid of the relative directory.
+                path = path.Replace(relativeDirectory, "");
+            }
 
             return path;
         }

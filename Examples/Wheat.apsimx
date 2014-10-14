@@ -11,10 +11,10 @@
     <Summary>
       <Name>SummaryFile</Name>
     </Summary>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Zone>
       <Name>Field</Name>
       <Report>
@@ -609,7 +609,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[WeatherFile].Rain", RainDays);
+        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 

@@ -13,10 +13,10 @@ The second example` shows a soil depth plot where all data is coming directly fr
   </Memo>
   <Simulation>
     <Name>LowWater</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>2003-10-20T00:00:00</StartDate>
@@ -2525,10 +2525,10 @@ The second example` shows a soil depth plot where all data is coming directly fr
   </Simulation>
   <Simulation>
     <Name>MediumWater</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>2003-10-20T00:00:00</StartDate>
@@ -5143,10 +5143,10 @@ The second example` shows a soil depth plot where all data is coming directly fr
   </Simulation>
   <Simulation>
     <Name>HighWater</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>..\WeatherFiles\lincoln.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>2003-10-20T00:00:00</StartDate>

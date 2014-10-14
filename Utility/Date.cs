@@ -17,7 +17,7 @@ namespace Utility
         /// <summary>
         /// a list of month names in lower case.
         /// </summary>
-        static private List<string> LowerCaseMonths = new List<string>(new[] { null, "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" });
+        static public string[] LowerCaseMonths =  new string[] { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
 
         /// <summary>
         /// A regular expression
@@ -101,7 +101,7 @@ namespace Utility
             {
                 return new DateTime(
                     year,
-                    LowerCaseMonths.IndexOf(rxMMM.Match(ddMMM).Value.ToLower()),
+                    Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1,
                     int.Parse(rxDD.Match(ddMMM).Value),
                     0,
                     0,
@@ -168,7 +168,7 @@ namespace Utility
         public static bool DatesEqual(string ddMMM, DateTime today)
         {
             return 
-                today.Month == LowerCaseMonths.IndexOf(rxMMM.Match(ddMMM).Value.ToLower())
+                today.Month == Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1
                 &&
                 today.Day == int.Parse(rxDD.Match(ddMMM).Value);
         }

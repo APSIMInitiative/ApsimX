@@ -46,7 +46,7 @@ namespace Models.PMF.OilPalm
         Clock Clock = null;
         /// <summary>The met data</summary>
         [Link]
-        WeatherFile MetData = null;
+        Weather MetData = null;
         /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;

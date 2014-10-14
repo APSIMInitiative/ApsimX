@@ -25,7 +25,7 @@ namespace Models.Soils
 
         /// <summary>Link to APSIM's metFile (weather data)</summary>
         [Link]
-        private WeatherFile MetFile = null;
+        private Weather MetFile = null;
 
         /// <summary>The soil</summary>
         [Link]

@@ -126,7 +126,7 @@ namespace Models
 
         /// <summary>The weather</summary>
         [Link]
-        WeatherFile Weather = null;
+        Weather Weather = null;
 
         /// <summary>The _albedo</summary>
         private double _albedo = 0;

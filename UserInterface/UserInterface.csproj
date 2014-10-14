@@ -66,6 +66,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -461,7 +462,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Report.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TreeViewImages\WeatherFile.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Weather.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\Manager.png" />
@@ -578,6 +579,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Simulations.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\InitialWater.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AgPasture.png" />

@@ -22,7 +22,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The met data</summary>
         [Link]
-        WeatherFile MetData = null;
+        Weather MetData = null;
 
         /// <summary>Does the radiation partition.</summary>
         public void DoRadiationPartition()

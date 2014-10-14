@@ -38,7 +38,7 @@ namespace Models.PMF.OilPalm
         Soils.SoilNitrogen SoilN = null;
         /// <summary>The met data</summary>
         [Link]
-        WeatherFile MetData = null;
+        Weather MetData = null;
 
         /// <summary>The kl</summary>
         double kl = 0.04;

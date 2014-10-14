@@ -19,7 +19,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The met data</summary>
         [Link]
-        public WeatherFile MetData = null;
+        public Weather MetData = null;
 
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>

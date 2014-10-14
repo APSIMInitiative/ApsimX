@@ -187,14 +187,11 @@ namespace Models
                     Script.Name = "Script";
                     Script.IsHidden = true;
                     XmlElement parameters;
-                    if (_elements == null || _elements[0] == null)
-                    {
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(elementsAsXml);
-                        parameters = doc.DocumentElement;
-                    }
-                    else
-                        parameters = _elements[0];
+
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(elementsAsXml);
+                    parameters = doc.DocumentElement;
+                    
                     SetParametersInObject(Script, parameters);
 
                     // Add the new script model to our models collection.
@@ -222,7 +219,8 @@ namespace Models
                     _elements = new XmlElement[1];
                 _elements[0] = GetParametersInObject(Script);
             }
-            else if (elementsAsXml == null && _elements != null && _elements.Length >= 1)
+            
+            if (_elements != null && _elements.Length >= 1)
                 elementsAsXml = _elements[0].OuterXml;
             else if (elementsAsXml == null)
                 elementsAsXml = "<Script />";

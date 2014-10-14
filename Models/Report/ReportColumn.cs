@@ -137,7 +137,7 @@ namespace Models.Report
             this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
 
             Apsim.Subscribe(parentModel, "[Clock].StartOfDay", this.OnStartOfDay);
-            Apsim.Subscribe(parentModel, "[Clock].EndOfDay", this.OnEndOfDay);
+            Apsim.Subscribe(parentModel, "[Clock].DoReportCalculations", this.OnEndOfDay);
 
             if (DateTime.TryParse(from, out this.fromDate))
                 this.fromHasNoYear = !from.Contains(this.fromDate.Year.ToString());

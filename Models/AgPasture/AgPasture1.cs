@@ -26,7 +26,7 @@ namespace Models.AgPasture1
         
         /// <summary>Link to APSIM's WeatherFile (meteorological information)</summary>
         [Link]
-        private WeatherFile MetData = null;
+        private Weather MetData = null;
 
         /// <summary>Link to the Soil (soil layers and other information)</summary>
         [Link]

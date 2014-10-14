@@ -876,7 +876,7 @@
     </StageBasedInterpolation>
     <LinearInterpolationFunction>
       <Name>TEModifier</Name>
-      <XProperty>[WeatherFile].CO2</XProperty>
+      <XProperty>[Weather].CO2</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -893,7 +893,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>NConcCriticalModifier</Name>
-      <XProperty>[WeatherFile].CO2</XProperty>
+      <XProperty>[Weather].CO2</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1009,7 +1009,7 @@
     </PhaseBasedSwitch>
     <LinearInterpolationFunction>
       <Name>LeafSenescenceFrost</Name>
-      <XProperty>[WeatherFile].MinT</XProperty>
+      <XProperty>[Weather].MinT</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>

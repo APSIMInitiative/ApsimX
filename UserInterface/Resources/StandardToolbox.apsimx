@@ -10,10 +10,10 @@
   <Folder>
     <Name>Standard models</Name>
     <Area>0</Area>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>Goondiwindi.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
@@ -27,10 +27,10 @@
       <Name>Report</Name>
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>[WeatherFile].MaxT</string>
-        <string>[WeatherFile].MinT</string>
-        <string>[WeatherFile].Radn</string>
-        <string>[WeatherFile].Rain</string>
+        <string>[Weather].MaxT</string>
+        <string>[Weather].MinT</string>
+        <string>[Weather].Radn</string>
+        <string>[Weather].Rain</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -893,7 +893,7 @@
     </Graph>
   </Folder>
   <Folder>
-    <Name>Data store and input models</Name>
+    <Name>Data store and analysis models</Name>
     <DataStore />
     <Input>
       <Name>Input</Name>
@@ -903,6 +903,11 @@
     <TimeSeriesStats>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
+    <Probability>
+      <Name>Probability</Name>
+      <TableName></TableName>
+      <Exceedence>true</Exceedence>
+    </Probability>
   </Folder>
   <Tests>
     <Test>

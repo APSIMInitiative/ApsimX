@@ -17,7 +17,7 @@
         <SimulationName>Test</SimulationName>
         <TableName>Report</TableName>
         <X>Clock.Today</X>
-        <Y>WeatherFile.MinT</Y>
+        <Y>Weather.MinT</Y>
       </Series>
       
     </Graph>

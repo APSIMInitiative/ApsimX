@@ -15,7 +15,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The met data</summary>
         [Link]
-        WeatherFile MetData = null;
+        Weather MetData = null;
 
         /// <summary>The c o2</summary>
         public double CO2 = 350;

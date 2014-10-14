@@ -21,7 +21,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The weather</summary>
         [Link]
-        WeatherFile Weather = null;
+        Weather Weather = null;
 
         /// <summary>The start stage</summary>
         public string StartStage = "";

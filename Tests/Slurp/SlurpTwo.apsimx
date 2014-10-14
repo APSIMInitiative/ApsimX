@@ -19,10 +19,10 @@
   </Memo>
   <Simulation>
     <Name>SlurpOne</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>ForeverSpringNoRain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>2000-01-01T00:00:00</StartDate>
@@ -650,10 +650,10 @@ namespace Models
   </Simulation>
   <Simulation>
     <Name>SlurpTwo</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>ForeverSpringNoRain.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>2000-01-01T00:00:00</StartDate>

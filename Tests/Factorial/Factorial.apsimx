@@ -20,10 +20,10 @@
     </Factors>
     <Simulation>
       <Name>Base</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2003-10-20T00:00:00</StartDate>
@@ -729,10 +729,10 @@
     </Factors>
     <Simulation>
       <Name>Base2</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2003-10-20T00:00:00</StartDate>
@@ -1412,10 +1412,10 @@
     </Factors>
     <Simulation>
       <Name>Base3</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2003-11-15T00:00:00</StartDate>
@@ -2055,35 +2055,35 @@
       <Name>Factors</Name>
       <Factor>
         <Name>Dalby</Name>
-        <WeatherFile>
-          <Name>WeatherFile</Name>
+        <Weather>
+          <Name>Weather</Name>
           <FileName>..\WeatherFiles\Dalby.met</FileName>
-        </WeatherFile>
+        </Weather>
         <Specifications>
           <string>[Clock].StartDate=1988-01-01</string>
           <string>[Clock].EndDate=1988-12-31</string>
-          <string>[WeatherFile]</string>
+          <string>[Weather]</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Goondiwindi</Name>
-        <WeatherFile>
-          <Name>WeatherFile</Name>
+        <Weather>
+          <Name>Weather</Name>
           <FileName>..\WeatherFiles\Goond.met</FileName>
-        </WeatherFile>
+        </Weather>
         <Specifications>
           <string>[Clock].StartDate=1940-01-01</string>
           <string>[Clock].EndDate=1940-12-31</string>
-          <string>[WeatherFile]</string>
+          <string>[Weather]</string>
         </Specifications>
       </Factor>
     </Factors>
     <Simulation>
       <Name>Base3</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>..\WeatherFiles\lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2003-10-20T00:00:00</StartDate>

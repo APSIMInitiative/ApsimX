@@ -3,10 +3,10 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>OilPalm</Name>
-    <WeatherFile>
-      <Name>WeatherFile</Name>
+    <Weather>
+      <Name>Weather</Name>
       <FileName>%root%\Examples\WeatherFiles\Popondetta.met</FileName>
-    </WeatherFile>
+    </Weather>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1996-03-01T00:00:00</StartDate>
@@ -539,7 +539,7 @@
           <string>OilPalm.Age</string>
           <string>OilPalm.LAI</string>
           <string>[Calculations].Script.AnnualRain</string>
-          <string>sum of [WeatherFile].Rain from 1-Jan to 31-Dec as AnnualRain2</string>
+          <string>sum of [Weather].Rain from 1-Jan to 31-Dec as AnnualRain2</string>
           <string>[Calculations].Script.AnnualIrrigation</string>
           <string>[Calculations].Script.AnnualFronds</string>
           <string>[Calculations].Script.AnnualBunches</string>
@@ -647,7 +647,7 @@ namespace Models
 		[Link] OilPalm oilPalm;
 		[Link] Summary Summary;
 		[Link] Fertiliser Fertiliser;
-		[Link] WeatherFile WeatherFile;
+		[Link] Weather Weather;
 		[Link] Irrigation Irrigation;
 		
 		[Description("Sowing date")]
@@ -716,7 +716,7 @@ namespace Models
                Fertiliser.Apply(Nrate, Fertiliser.Types.NH4NO3N, 10);		    
 		    }
 		   DayCounter +=1;
-		   WeeklyRain +=WeatherFile.Rain;
+		   WeeklyRain += Weather.Rain;
 		   if (DayCounter == 7)
 		   {
 		      double Deficit = 0;
@@ -786,7 +786,7 @@ namespace Models
 		[Link] SurfaceOrganicMatter SurfaceOM;
 		[Link] Summary Summary;
 		[Link] Fertiliser Fertiliser;
-		[Link] WeatherFile WeatherFile;
+		[Link] Weather Weather;
 		[Link] Irrigation Irrigation;
 		
 		public double AnnualRain {get; set;}
@@ -887,7 +887,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            AnnualRain += WeatherFile.Rain;
+            AnnualRain += Weather.Rain;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
