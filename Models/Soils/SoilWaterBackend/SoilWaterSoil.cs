@@ -257,19 +257,17 @@ namespace Models.Soils.SoilWaterBackend
         { get { return flux - flow; } }
 
 
-        public double flow2;
-
-        public double flux2;
 
 
         public double outflow_lat;   //! outflowing lateral water   //lateral outflow
 
 
         //temporary variables. Refactor and remove these later.
+        //TODO: make these private not public
         public double new_sw_dep;
-        public double solute_up;
-        public double remain;
-        public double solute_down;
+        //public double solute_up;    //only used in solute unsaturated flow
+        //public double remain;       //only used in solute unsaturated flow
+        //public double solute_down;  //only used in solute unsaturated flow (despite the name)
 
 
 
@@ -441,7 +439,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 Layer btm = GetBottomLayer();
-                SoluteInLayer sol = btm.GetASolute("no3");
+                SoluteInLayer sol = btm.GetASolute("NO3");
                 return sol.leach;
                 }
             }         
@@ -453,7 +451,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 Layer btm = GetBottomLayer();
-                SoluteInLayer sol = btm.GetASolute("nh4");
+                SoluteInLayer sol = btm.GetASolute("NH4");
                 return sol.leach;
                 }
             }  
@@ -724,7 +722,19 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
+        public double[] GetDeltaArrayForASolute(string SoluteName)
+            {
 
+            double[] result = new double[num_layers];
+            SoluteInLayer sol;
+            foreach (Layer lyr in layers)
+                {
+                sol = lyr.GetASolute(SoluteName);
+                result[lyr.number - 1] = sol.delta;
+                }
+            return result;
+
+            }
 
         #endregion
 
@@ -1443,8 +1453,7 @@ namespace Models.Soils.SoilWaterBackend
                 lyr.flow = 0.0;
                 lyr.flux = 0.0;
                 //lyr.flow_water = 0.0; //its a property so don't need to zero it.
-                lyr.flux2 = 0.0;
-                lyr.flow2 = 0.0;
+
 
                 lyr.outflow_lat = 0.0;
 
@@ -1462,9 +1471,6 @@ namespace Models.Soils.SoilWaterBackend
             foreach (Layer lyr in layers)
                 {
                 lyr.new_sw_dep = 0.0;
-                lyr.solute_up = 0.0;
-                lyr.remain = 0.0;
-                lyr.solute_down = 0.0;
                 }
 
             }
@@ -1876,8 +1882,8 @@ namespace Models.Soils.SoilWaterBackend
             Layer lyr = GetLayer(Irrig.irrigation_layer);
 
 
-            SoluteInLayer no3 = lyr.GetASolute("no3");
-            SoluteInLayer nh4 = lyr.GetASolute("nh4");
+            SoluteInLayer no3 = lyr.GetASolute("NO3");
+            SoluteInLayer nh4 = lyr.GetASolute("NH4");
             //SoluteInLayer cl = lyr.GetASolute("cl");
 
 
@@ -1928,7 +1934,7 @@ namespace Models.Soils.SoilWaterBackend
         //sv- solute movement during Drainage (Saturated Flow)
 
 
-        public void Do_Solute_Leach_SatFlow(string SoluteName)
+        public void Calc_Solute_Leach_SatFlow(string SoluteName)
             {
             //private void soilwat2_solute_flux(ref double[] solute_out, double[] solute_kg)
             //    {
@@ -1955,14 +1961,14 @@ namespace Models.Soils.SoilWaterBackend
 
             SoluteInLayer solute;
 
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 solute = lyr.GetASolute(SoluteName);
                 solute.leach = 0.0;
 
                 //! get water draining out of layer and n content of layer includes that leaching down         
                 out_w = lyr.flux;
-                lyr.flux2 = lyr.flux; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
+
                 solute_kg_layer = solute.amount + in_solute;
 
                 //! n leaching out of layer is proportional to the water draining out.
@@ -1983,10 +1989,8 @@ namespace Models.Soils.SoilWaterBackend
                 out_max = Math.Max(solute_kg_layer, 0.0);
                 out_solute = Constants.bound(out_solute, 0.0, out_max);
 
-                //save the solute leach, amount and delta 
-                solute.leach = out_solute;
-                solute.amount = solute.amount + in_solute - out_solute;
-                solute.delta = solute.delta + in_solute - out_solute;   //add (in_solute - out_solute) to existing delta incase another form of solute movement eg.flow has also delta'ed the solute.
+                //save the solute leach
+                solute.leach = out_solute; //solute.leach is the actual output of this subroutine.
 
                 //set the input for the next layer
                 in_solute = out_solute;
@@ -1997,7 +2001,7 @@ namespace Models.Soils.SoilWaterBackend
 
         //sv- solute movement during Unsaturated Flow
 
-        public void Do_Solute_Up_UnsatFlow(string SoluteName)
+        public void Calc_Solute_Up_UnsatFlow(string SoluteName)
             {
 
             //private void soilwat2_solute_flow(ref double[] solute_up, double[] solute_kg)
@@ -2021,17 +2025,26 @@ namespace Models.Soils.SoilWaterBackend
 
             double bottomw;             //! water movement to/from next layer (kg/ha)
             double in_solute;           //! solute moving into layer from above (kg/ha)
-            double[] solute_down;         //! solute moving downwards out of each layer (kg/ha)
-            int num_layers;          //! number of layers
             double out_solute;          //! solute moving out of layer (kg/ha)
             double out_w;               //! water draining out of layer (mm)
-            double[] remain;              //! n remaining in each layer between movement up (kg/ha)
             double solute_kg_layer;     //! quantity of solute in layer (kg/ha)
             double top_w;               //! water movement to/from above layer (kg/ha)
             double water;               //! quantity of water in layer (mm)
             double solute_flow_eff_local;
 
             //sv- initialise the local arrays declared above.
+
+            
+            double[] solute_up;
+            double[] remain;              //! n remaining in each layer between movement up (kg/ha)
+            double[] solute_down;         //! solute moving downwards out of each layer (kg/ha)
+            int lyrindex;
+
+            solute_up = new double[num_layers];
+            remain = new double[num_layers];
+            solute_down = new double[num_layers];  
+
+
 
             //! flow  up from lower layer:  + up, - down
             //******************************************
@@ -2042,26 +2055,22 @@ namespace Models.Soils.SoilWaterBackend
             //**********************************************************
 
 
-            //solute_up = new double[num_layers];
-            //solute_down = new double[num_layers];
-            //remain = new double[num_layers];
-
-            in_solute = 0.0;
             SoluteInLayer solute;
             Layer above;
-            Layer top;
 
+            in_solute = 0.0;
             foreach (Layer lyr in BottomToX(2))
                 {
+                lyrindex = lyr.number - 1;
                 above = GetLayer(lyr.number - 1);
                 solute = lyr.GetASolute(SoluteName);
 
+
                 //! keep the nflow upwards
-                lyr.solute_up = in_solute;
+                solute_up[lyrindex] = in_solute;
 
                 //! get water moving up and out of layer to the one above
                 out_w = above.flow;
-                lyr.flow2 = lyr.flow; //Fixme.  HEB This is a nasty cludge to get APSIMX reporting Flux without needing to do major refactoring
                 if (out_w <= 0.0)
                     {
                     out_solute = 0.0;
@@ -2093,17 +2102,18 @@ namespace Models.Soils.SoilWaterBackend
                 in_solute = out_solute;
                 }
 
-            top = GetTopLayer();
-            top.solute_up = in_solute;
+
+
+            solute_up[0] = in_solute;
             //! now get n remaining in each layer between movements
             //! this is needed to adjust the n in each layer before calculating
             //! downwards movement.  i think we shouldn't do this within a time
             //! step. i.e. there should be no movement within a time step. jngh
-            top.remain = top.solute_up;
+            remain[0] = solute_up[0];
             foreach (Layer lyr in XToBottom(2))
                 {
-                above = GetLayer(lyr.number - 1);
-                lyr.remain = lyr.solute_up - above.solute_up;
+                lyrindex = lyr.number - 1;
+                remain[lyrindex] = solute_up[lyrindex] - solute_up[lyrindex - 1];
                 }
 
 
@@ -2115,12 +2125,13 @@ namespace Models.Soils.SoilWaterBackend
             in_solute = 0.0;
             top_w = 0.0;
 
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
+                lyrindex = lyr.number - 1;
                 solute = lyr.GetASolute(SoluteName);
 
                 //! get water moving out of layer
-                out_w = -1 * lyr.flow;
+                out_w = - lyr.flow;
                 if (out_w <= 0.0)
                     {
                     out_solute = 0.0;
@@ -2128,7 +2139,7 @@ namespace Models.Soils.SoilWaterBackend
                 else
                     {
                     //! get n content of layer includes that moving from other layer
-                    solute_kg_layer = solute.amount + in_solute + lyr.remain;
+                    solute_kg_layer = solute.amount + in_solute + remain[lyrindex];
                     water = lyr.sw_dep + out_w - top_w;
 
                     //! n moving out of layer is proportional to the water moving out.
@@ -2147,23 +2158,83 @@ namespace Models.Soils.SoilWaterBackend
                     out_solute = Utility.Math.RoundToZero(out_solute);
                     out_solute = Constants.bound(out_solute, 0.0, solute_kg_layer);
                     }
-                lyr.solute_down = out_solute;
+                solute_down[lyrindex] = out_solute;
                 in_solute = out_solute;
                 top_w = out_w;
                 }
 
-            foreach (Layer lyr in layers)
-                {
-                lyr.solute_up = lyr.solute_up - lyr.solute_down;
 
-                //save the solute up, amount and delta; 
+            foreach (Layer lyr in this)
+                {
+                lyrindex = lyr.number - 1;
+                solute_up[lyrindex] = solute_up[lyrindex] - solute_down[lyrindex];
+
+                //save the solute up
                 solute = lyr.GetASolute(SoluteName);
-                solute.up = lyr.solute_up;
-                solute.amount = solute.amount + solute.up;
-                solute.delta = solute.delta + solute.up;   //add solute.up to existing delta incase another form of solute movement eg.flux has also delta'ed the solute.
+                solute.up = solute_up[lyrindex];   //solute.up is the actual output of this subroutine.
                 }
 
             }
+
+
+
+
+
+
+        public void MoveDownSolute(string SoluteName)
+            {
+
+            //private void MoveDownReal(double[] DownAmount, ref double[] A)
+            //     {
+
+            double leach_in;    //! amount moving from layer above to current layer
+            double leach_out;   //! amount moving from current layer to the one below
+
+            //!- Implementation Section ----------------------------------
+
+
+            leach_in = 0.0;
+            SoluteInLayer sol;
+            
+            foreach (Layer lyr in this)
+                {
+                sol = lyr.GetASolute(SoluteName);
+                leach_out = sol.leach;
+                sol.amount  = sol.amount + leach_in - leach_out;
+                sol.delta = sol.delta + leach_in - leach_out;   //add to existing delta incase another form of solute movement eg."irrigation with solutes", "rain with solutes" has also delta'ed the solute.
+                leach_in = leach_out;
+                }
+
+            }
+
+
+        public void MoveUpSolute(string SoluteName)
+            {
+
+            //private void MoveUpReal(double[] UpAmount, ref double[] A)
+            //    {
+            //move_up_real(leach, temp_solute, num_layers);
+
+            //!+ Local Variables
+
+            double up_in;                   //! amount moving from layer below to current layer
+            double up_out;                  //! amount moving from current layer to the one above
+
+            //!- Implementation Section ----------------------------------
+
+            up_out = 0.0;
+            SoluteInLayer sol;
+            
+            foreach (Layer lyr in this)
+                {
+                sol = lyr.GetASolute(SoluteName);
+                up_in = sol.up;
+                sol.amount = sol.amount + up_in - up_out;
+                sol.delta = sol.delta + up_in - up_out;  //add to existing delta incase another form of solute movement eg."irrigation with solutes", "rain with solutes" has also delta'ed the solute.
+                up_out = up_in;
+                }
+            }
+
 
 
 
@@ -2180,7 +2251,8 @@ namespace Models.Soils.SoilWaterBackend
 
             foreach (string solName in soluteNames)
                 {
-                Do_Solute_Leach_SatFlow(solName);
+                Calc_Solute_Leach_SatFlow(solName);
+                MoveDownSolute(solName);
                 }
 
             }
@@ -2199,7 +2271,8 @@ namespace Models.Soils.SoilWaterBackend
 
             foreach (string solName in soluteNames)
                 {
-                Do_Solute_Up_UnsatFlow(solName);
+                Calc_Solute_Up_UnsatFlow(solName);
+                MoveUpSolute(solName);
                 }
 
             }
@@ -2291,7 +2364,7 @@ namespace Models.Soils.SoilWaterBackend
                     }
                 }
 
-            //TODO: I think this maybe wrong, saturated_fration is the fraction of drainable and drainable_capacity
+            //TODO: I think this maybe wrong, saturated_fraction is the fraction of drainable and drainable_capacity
             //      which means that when you multiply it by dlayer you only get the depth of water going from dul to sw_dep.
             //      I think it should be multiplying sw x dlayer or just using sw_dep. This depth is only subtracted from
             //      bottom depth if sw_dep is above dul_dep however because otherwise it is not part of the watertable it

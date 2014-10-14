@@ -768,12 +768,12 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] flow_no3
-        { get { return SoilObject.GetFlowArrayForASolute("no3"); } }
+        { get { return SoilObject.GetFlowArrayForASolute("NO3"); } }
 
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] flow_nh4
-        { get { return SoilObject.GetFlowArrayForASolute("nh4"); } }
+        { get { return SoilObject.GetFlowArrayForASolute("NH4"); } }
 
         [XmlIgnore]
         [Units("kg/ha")]
@@ -1399,7 +1399,7 @@ namespace Models.Soils
 
             for (counter = 0; counter < numvals; counter++)
             {
-                name = NewSolutes.solutes[counter].ToLower();
+                name = NewSolutes.solutes[counter];
                 ownerName = NewSolutes.OwnerFullPath;
 
                 isMobile = (PositionInCharArray(name, mobile_solutes) >= 0);
@@ -1718,19 +1718,14 @@ namespace Models.Soils
             NitrogenChangedType NitrogenDeltas = new NitrogenChangedType();
             NitrogenDeltas.Sender = "SoilWater";
             NitrogenDeltas.SenderType = "WaterModule";
-            NitrogenDeltas.DeltaUrea = SoilObject.GetFlowArrayForASolute("urea");
-            NitrogenDeltas.DeltaNH4 = SoilObject.GetFlowArrayForASolute("nh4");
-            NitrogenDeltas.DeltaNO3 = SoilObject.GetFlowArrayForASolute("no3");
 
-            //TODO: fix this properly. Perhaps see if a negative delta realy is wrong since solute can move with unsaturated flow which can be in the upward direction.
-            //This is a fudge but I need to get this into version control and SoilNitrogen keeps not liking a negative delta value for urea.
-            for (int i = 0; i < NitrogenDeltas.DeltaUrea.Length; i++)
-                {
-                if (NitrogenDeltas.DeltaUrea[i] < -0.00001)
-                    NitrogenDeltas.DeltaUrea[i] = 0.0;
-                }
+            NitrogenDeltas.DeltaUrea = SoilObject.GetDeltaArrayForASolute("urea");
+            NitrogenDeltas.DeltaNH4 = SoilObject.GetDeltaArrayForASolute("NH4");
+            NitrogenDeltas.DeltaNO3 = SoilObject.GetDeltaArrayForASolute("NO3");
+
             if (NitrogenChanged != null)
                 NitrogenChanged.Invoke(NitrogenDeltas);
+
 
             }
 
