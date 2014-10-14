@@ -774,12 +774,22 @@ namespace Importer
             CopyNodeAndValue(compNode, newNode, "OCUnits", "OCUnits", false);
             CopyNodeAndValue(compNode, newNode, "PHUnits", "PHUnits", false);
 
+            CopyNodeAndValue(compNode, newNode, "RecordNumber", "RecordNumber", true);
+            CopyNodeAndValue(compNode, newNode, "ASCOrder", "ASCOrder", true);
+            CopyNodeAndValue(compNode, newNode, "ASCSubOrder", "ASCSubOrder", true);
             CopyNodeAndValue(compNode, newNode, "SoilType", "SoilType", true);
-            CopyNodeAndValue(compNode, newNode, "LocalName", "LocalName", true);
             CopyNodeAndValue(compNode, newNode, "Site", "Site", true);
             CopyNodeAndValue(compNode, newNode, "NearestTown", "NearestTown", true);
             CopyNodeAndValue(compNode, newNode, "Region", "Region", true);
+            CopyNodeAndValue(compNode, newNode, "State", "State", true);
+            CopyNodeAndValue(compNode, newNode, "Country", "Country", true);
             CopyNodeAndValue(compNode, newNode, "NaturalVegetation", "NaturalVegetation", true);
+            CopyNodeAndValue(compNode, newNode, "ApsoilNumber", "ApsoilNumber", true);
+            CopyNodeAndValue(compNode, newNode, "Latitude", "Latitude", true);
+            CopyNodeAndValue(compNode, newNode, "Longitude", "Longitude", true);
+            CopyNodeAndValue(compNode, newNode, "LocationAccuracy", "LocationAccuracy", true);
+            CopyNodeAndValue(compNode, newNode, "DataSource", "DataSource", true);
+            CopyNodeAndValue(compNode, newNode, "Comments", "Comments", true);
 
             AddChildComponents(compNode, newNode);
 

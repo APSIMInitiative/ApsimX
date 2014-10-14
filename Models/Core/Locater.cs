@@ -118,8 +118,10 @@ namespace Models.Core
             {
                 return null;
             }
-            else if (namePath.IndexOfAny("(+*/".ToCharArray()) != -1)
+            else if (namePath[0] != '.' && namePath[0] != '.' &&
+                     namePath.IndexOfAny("(+*/".ToCharArray()) != -1)
             {
+                // expression - need a better way of detecting an expression
                 returnVariable = new VariableExpression(namePath, relativeToModel);
             }
             else
