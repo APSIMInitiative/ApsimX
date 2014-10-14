@@ -697,7 +697,7 @@ namespace Models
 		{	
 			if (Clock.Today.Date == sowing_date)
 			{
-			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth);
+			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
 			}
 		    if (Clock.Today.Day == 1 && (Clock.Today.Month == 3 || Clock.Today.Month == 6 || Clock.Today.Month == 9))
 		    {

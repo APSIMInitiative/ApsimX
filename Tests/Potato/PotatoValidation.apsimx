@@ -615,7 +615,7 @@
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -1011,6 +1011,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -1230,6 +1232,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -1469,6 +1473,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -1728,6 +1734,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -1827,6 +1835,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>BottomRight</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -1994,6 +2004,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -2121,6 +2133,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>BottomRight</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -2300,6 +2314,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -2426,6 +2442,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>BottomRight</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -2552,6 +2570,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -2678,6 +2698,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -2777,6 +2799,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Report>
@@ -3064,6 +3088,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -3124,6 +3150,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -3184,6 +3212,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -3244,6 +3274,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -3304,6 +3336,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -3364,6 +3398,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -3424,6 +3460,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -3484,6 +3522,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -3544,6 +3584,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -3604,6 +3646,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -3664,6 +3708,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -3724,6 +3770,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -3782,6 +3830,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -3842,6 +3892,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -3902,6 +3954,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -3942,6 +3996,8 @@ namespace Models
           <SplitOn>Experiment</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -4455,7 +4511,7 @@ namespace Models
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -4793,6 +4849,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -5012,6 +5070,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -5251,6 +5311,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -5510,6 +5572,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -5609,6 +5673,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -5776,6 +5842,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -5903,6 +5971,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -6082,6 +6152,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -6208,6 +6280,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -6334,6 +6408,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -6460,6 +6536,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -6559,6 +6637,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Report>
@@ -6939,6 +7019,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -6999,6 +7081,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -7059,6 +7143,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -7119,6 +7205,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -7179,6 +7267,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -7239,6 +7329,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -7299,6 +7391,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -7359,6 +7453,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -7419,6 +7515,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -7479,6 +7577,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -7539,6 +7639,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -7599,6 +7701,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -7657,6 +7761,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -7717,6 +7823,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -7777,6 +7885,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -7817,6 +7927,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -8391,7 +8503,7 @@ namespace Models
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -8729,6 +8841,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -8948,6 +9062,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -9187,6 +9303,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -9446,6 +9564,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -9545,6 +9665,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -9712,6 +9834,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -9839,6 +9963,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -10018,6 +10144,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -10144,6 +10272,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -10270,6 +10400,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -10396,6 +10528,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -10495,6 +10629,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Report>
@@ -10802,6 +10938,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -10862,6 +11000,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -10922,6 +11062,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -10982,6 +11124,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -11042,6 +11186,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -11102,6 +11248,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -11162,6 +11310,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -11222,6 +11372,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -11282,6 +11434,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -11342,6 +11496,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -11402,6 +11558,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -11462,6 +11620,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -11520,6 +11680,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -11580,6 +11742,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -11640,6 +11804,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -11680,6 +11846,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -12321,7 +12489,7 @@ namespace Models
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -12842,6 +13010,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -13061,6 +13231,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -13300,6 +13472,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -13559,6 +13733,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -13658,6 +13834,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -13825,6 +14003,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -13952,6 +14132,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -14131,6 +14313,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -14257,6 +14441,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -14383,6 +14569,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -14509,6 +14697,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -14608,6 +14798,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Manager>
@@ -14717,6 +14909,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -14777,6 +14971,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -14837,6 +15033,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -14897,6 +15095,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -14957,6 +15157,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -15017,6 +15219,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -15077,6 +15281,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -15137,6 +15343,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -15197,6 +15405,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -15257,6 +15467,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -15317,6 +15529,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -15377,6 +15591,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -15435,6 +15651,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -15495,6 +15713,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -15555,6 +15775,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -15595,6 +15817,8 @@ namespace Models
           <SplitOn>Experiment</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -16234,7 +16458,7 @@ namespace Models
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -16792,6 +17016,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -17011,6 +17237,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -17250,6 +17478,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -17509,6 +17739,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -17608,6 +17840,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -17775,6 +18009,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -17902,6 +18138,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -18081,6 +18319,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -18207,6 +18447,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -18333,6 +18575,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -18459,6 +18703,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -18558,6 +18804,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Manager>
@@ -18731,6 +18979,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -18791,6 +19041,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -18851,6 +19103,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -18911,6 +19165,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -18971,6 +19227,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -19031,6 +19289,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -19091,6 +19351,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -19151,6 +19413,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -19211,6 +19475,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -19271,6 +19537,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -19331,6 +19599,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -19391,6 +19661,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -19449,6 +19721,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -19509,6 +19783,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -19569,6 +19845,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -19609,6 +19887,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -20314,7 +20594,7 @@ namespace Models
 
 				if (Clock.Today.Date == SowingDate)
 				{
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                  }
                     
                 //Potato.Sow(... Contains the following arguements:
@@ -21464,6 +21744,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -21683,6 +21965,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -21922,6 +22206,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -22181,6 +22467,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -22280,6 +22568,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -22447,6 +22737,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -22574,6 +22866,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -22753,6 +23047,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -22879,6 +23175,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -23005,6 +23303,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -23131,6 +23431,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -23230,6 +23532,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Manager>
@@ -23340,6 +23644,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -23400,6 +23706,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -23460,6 +23768,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -23520,6 +23830,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -23580,6 +23892,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -23640,6 +23954,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -23700,6 +24016,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -23760,6 +24078,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -23820,6 +24140,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -23880,6 +24202,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -23940,6 +24264,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -24000,6 +24326,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -24058,6 +24386,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -24118,6 +24448,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -24178,6 +24510,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -24218,6 +24552,8 @@ namespace Models
           <SplitOn>*</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -24260,6 +24596,8 @@ namespace Models
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>Tuber Biomass Comparison</Name>
@@ -24300,6 +24638,8 @@ namespace Models
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>LeafAreaIndex</Name>
@@ -24340,6 +24680,8 @@ namespace Models
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>Tuber Nitrogen</Name>
@@ -24380,6 +24722,8 @@ namespace Models
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <ExplorerWidth>351</ExplorerWidth>
 </Simulations>

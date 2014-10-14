@@ -218,5 +218,17 @@ namespace Models.PMF
 
             return depth_of_root_in_layer / dlayer[layer];
         }
+
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar">The cultivar.</param>
+        /// <param name="population">The population.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="maxCover">The maximum cover.</param>
+        /// <param name="budNumber">The bud number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        {
+
+        }
     }
 }

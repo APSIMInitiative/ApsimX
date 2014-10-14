@@ -6,6 +6,9 @@ using Models.Core;
 
 namespace Utility
 {
+    /// <summary>
+    /// This class accumulats values of variables
+    /// </summary>
     public class Accumulator
     {
         private IModel parentModel;

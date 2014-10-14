@@ -708,22 +708,20 @@ namespace Models.PMF.OilPalm
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
         /// <param name="depth">The depth.</param>
-        /// <param name="RowSpacing">The row spacing.</param>
-        /// <param name="MaxCover">The maximum cover.</param>
-        /// <param name="BudNumber">The bud number.</param>
-        /// <param name="cropClass">The crop class.</param>
+        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="maxCover">The maximum cover.</param>
+        /// <param name="budNumber">The bud number.</param>
         /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
-        public void Sow(string cultivar, double population, double depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string cropClass = "Plant")
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = population;
             this.Population = population;
             SowingData.Depth = depth;
             SowingData.Cultivar = cultivar;
-            SowingData.MaxCover = MaxCover;
-            SowingData.BudNumber = BudNumber;
-            SowingData.RowSpacing = RowSpacing;
-            SowingData.CropClass = cropClass;
+            SowingData.MaxCover = maxCover;
+            SowingData.BudNumber = budNumber;
+            SowingData.RowSpacing = rowSpacing;
             CropInGround = true;
 
             if (SowingData.Cultivar == "")
@@ -737,7 +735,7 @@ namespace Models.PMF.OilPalm
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(this, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>Harvest the crop.</summary>

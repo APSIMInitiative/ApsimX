@@ -1003,7 +1003,10 @@
 				double PlantPopulation = 1/(RowWidth*RowSpace);
 
 				if (Clock.Today.Date == SowingDate)
-                    Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName);
+                    Plant.Sow(population:PlantPopulation, 
+                              cultivar:CultivarName, 
+                              depth:100, 
+                              rowSpacing:150);
                 //Plant.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"

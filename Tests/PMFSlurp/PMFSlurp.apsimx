@@ -487,7 +487,7 @@ namespace Models
                private void OnDoManagement(object sender, EventArgs e)
                {
 				if (Clock.Today.Date == SowingDate)
-                    PMFSlurp.Sow(Cultivar:CultivarName, Depth:InitialRootDepth);
+                    PMFSlurp.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Optional  Seeds sowing/m2.  Default is zero
                 //Cultivar    string  Required  "NameOfCultivar"

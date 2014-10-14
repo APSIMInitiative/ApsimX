@@ -108,8 +108,6 @@ namespace Models.PMF
         public Double MaxCover = 1;
         /// <summary>The bud number</summary>
         public Double BudNumber = 1;
-        /// <summary>The crop class</summary>
-        public String CropClass = "Plant";
         /// <summary>The skip row</summary>
         public Double SkipRow; //Not yet handled in Code
         /// <summary>The skip plant</summary>
@@ -382,23 +380,21 @@ namespace Models.PMF
 
         #region External Communications.  Method calls and EventHandlers
         /// <summary>Sow the crop with the specified parameters.</summary>
-        /// <param name="Cultivar">The cultivar.</param>
-        /// <param name="Population">The population.</param>
-        /// <param name="Depth">The depth.</param>
-        /// <param name="RowSpacing">The row spacing.</param>
-        /// <param name="MaxCover">The maximum cover.</param>
-        /// <param name="BudNumber">The bud number.</param>
-        /// <param name="CropClass">The crop class.</param>
-        public void Sow(string Cultivar, double Population = 1, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        /// <param name="cultivar">The cultivar.</param>
+        /// <param name="population">The population.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="maxCover">The maximum cover.</param>
+        /// <param name="budNumber">The bud number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             SowingData = new SowPlant2Type();
-            SowingData.Population = Population;
-            SowingData.Depth = Depth;
-            SowingData.Cultivar = Cultivar;
-            SowingData.MaxCover = MaxCover;
-            SowingData.BudNumber = BudNumber;
-            SowingData.RowSpacing = RowSpacing;
-            SowingData.CropClass = CropClass;
+            SowingData.Population = population;
+            SowingData.Depth = depth;
+            SowingData.Cultivar = cultivar;
+            SowingData.MaxCover = maxCover;
+            SowingData.BudNumber = budNumber;
+            SowingData.RowSpacing = rowSpacing;
 
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
@@ -410,7 +406,7 @@ namespace Models.PMF
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            this.Population = Population;
+            this.Population = population;
 
             // tell all our children about sow
             foreach (Organ Child in Organs)
@@ -422,7 +418,7 @@ namespace Models.PMF
 
             
        
-            Summary.WriteMessage(this, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of " + CropType +" (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
         /// <summary>Harvest the crop.</summary>
         public void Harvest()
