@@ -209,18 +209,18 @@ namespace UserInterface.Presenters
 
                 string workingFolder = Path.Combine(new string[] { binFolder, ".." });
 
-                Process process = new Process();
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.WorkingDirectory = workingFolder;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.FileName = pathToR;
-                process.StartInfo.Arguments = "\"" + scriptFileName + "\" " + "\"" + this.explorerPresenter.ApsimXFile.FileName + "\"";
-                process.Start();
-                process.WaitForExit();
-                this.explorerPresenter.ShowMessage(process.StandardOutput.ReadToEnd(), DataStore.ErrorLevel.Information);
-                this.explorerPresenter.ShowMessage(process.StandardError.ReadToEnd(), DataStore.ErrorLevel.Warning);
+                string arguments = "\"" + scriptFileName + "\" " + "\"" + this.explorerPresenter.ApsimXFile.FileName + "\"";
+                Process process = Utility.Process.RunProcess(pathToR, arguments, workingFolder);
+                try
+                {
+                    string message = Utility.Process.CheckProcessExitedProperly(process);
+                    this.explorerPresenter.ShowMessage(message, DataStore.ErrorLevel.Information);
+                }
+                catch (Exception err)
+                {
+                    this.explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                }
+                
             }
             else
             {

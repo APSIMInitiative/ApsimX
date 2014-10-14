@@ -1242,11 +1242,11 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <RootCN>0</RootCN>
-            <RootWt>0</RootWt>
-            <SoilCN>0</SoilCN>
-            <EnrACoeff>0</EnrACoeff>
-            <EnrBCoeff>0</EnrBCoeff>
+            <RootCN>60</RootCN>
+            <RootWt>2000</RootWt>
+            <SoilCN>14.5</SoilCN>
+            <EnrACoeff>1</EnrACoeff>
+            <EnrBCoeff>1</EnrBCoeff>
             <Thickness>
               <double>150</double>
               <double>150</double>
