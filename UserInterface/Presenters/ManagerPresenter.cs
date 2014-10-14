@@ -60,23 +60,51 @@ namespace UserInterface.Presenters
             e.ObjectName = e.ObjectName.Trim(" \t".ToCharArray());
             string typeName = string.Empty;
 
+            // Determine the field name to find. User may have typed 
+            // Soil.SoilWater. In this case the field to look for is Soil
+            string fieldName = e.ObjectName;
+            int posPeriod = e.ObjectName.IndexOf('.');
+            if (posPeriod != -1)
+                fieldName = e.ObjectName.Substring(0, posPeriod);
+                
+            // Look for the field name.
             foreach (FieldDeclaration field in fields)
             {
                 foreach (VariableInitializer var in field.Variables)
                 {
-                    if (e.ObjectName == var.Name)
+                    if (fieldName == var.Name)
                     {
                         typeName = field.ReturnType.ToString();
                     }
                 }
             }
-
+            
             // find the properties and methods
             if (typeName != string.Empty)
             {
                 Type atype = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
+                if (posPeriod != -1)
+                {
+                    string childName = e.ObjectName.Substring(posPeriod+1);
+                    atype = FindType(atype, childName);
+                }
+                    
                 e.AllItems.AddRange(NeedContextItemsArgs.ExamineTypeForContextItems(atype, true, true, false));
             }
+            
+        }
+
+        private Type FindType(Type t, string childTypeName)
+        {
+            string[] words = childTypeName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string word in words)
+            {
+                PropertyInfo property = t.GetProperty(childTypeName);
+                if (property == null)
+                    return null;
+                t = property.PropertyType;
+            }
+            return t;
         }
 
         private void buildScript()
