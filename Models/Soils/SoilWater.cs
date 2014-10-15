@@ -478,7 +478,7 @@ namespace Models.Soils
         /// <value>The eff_rain.</value>
         [Units("mm")]
         private double eff_rain                  //! daily effective rainfall (mm)
-        { get { return rain + runon - runoff - drain; } }
+        { get { return rain + runon - Runoff - drain; } }
 
         /// <summary>Potential extractable sw in profile</summary>
         /// <value>The esw.</value>
@@ -554,7 +554,8 @@ namespace Models.Soils
         /// <value>The runoff.</value>
         [XmlIgnore]
         [Units("mm")]
-        public double runoff { get; set; }           //! runoff (mm)
+        [Description("Daily surface water runoff (mm)")]
+        public double Runoff { get; set; }           //! runoff (mm)
 
         /// <summary>Evaporation from the surface of the pond</summary>
         /// <value>The pond_evap.</value>
@@ -1506,12 +1507,12 @@ namespace Models.Soils
             SetModuleSolutes();
 
             //! Send a runoff event to the system
-            if (runoff > 0.0)
+            if (Runoff > 0.0)
             {
                 RunoffEventType r = new RunoffEventType(); //! structure holding runoff event
-                r.runoff = (float)runoff;
-                if (Runoff != null)
-                    Runoff.Invoke(r);
+                r.runoff = (float)Runoff;
+                if (RunoffDelegate != null)
+                    RunoffDelegate.Invoke(r);
             }
 
         }
@@ -1708,7 +1709,7 @@ namespace Models.Soils
             //Outputs
             drain = 0.0;                            //! drainage rate from bottom layer (cm/d)
             infiltration = 0.0;                     //! infiltration (mm)
-            runoff = 0.0;                           //! runoff (mm)
+            Runoff = 0.0;                           //! runoff (mm)
 
             pond = 0.0;                             //! surface ponding depth (mm)
             pond_evap = 0.0;                        //! evaporation from the pond surface (mm)
@@ -1798,7 +1799,7 @@ namespace Models.Soils
             cn2_new = 0.0;
             drain = 0.0;
             infiltration = 0.0;
-            runoff = 0.0;
+            Runoff = 0.0;
             runoff_pot = 0.0;
             NumberOfCrops = 0;
             //obsrunoff = 0.0;
@@ -4604,7 +4605,7 @@ namespace Models.Soils
             //! ponding into account
 
             pond = pond + runoff_pot;
-            runoff = Math.Max((pond - _max_pond), 0.0);
+            Runoff = Math.Max((pond - _max_pond), 0.0);
             pond = Math.Min(pond, _max_pond);
 
             // INFILTRATION
@@ -4661,7 +4662,7 @@ namespace Models.Soils
             //Any extra_runoff then it becomes a pond. 
             pond = Math.Min(extra_runoff, _max_pond);
             //If there is too much for the pond handle then add the excess (ie. extra_runoff-pond) to normal runoff.
-            runoff = runoff + extra_runoff - pond;
+            Runoff = Runoff + extra_runoff - pond;
             //Deduct the extra_runoff from the infiltration because it did not infiltrate (because it backed up).
             infiltration = infiltration - extra_runoff;
 
@@ -5070,7 +5071,7 @@ namespace Models.Soils
         //Events
         //public event ExternalMassFlowDelegate ExternalMassFlow;
         /// <summary>Occurs when [runoff].</summary>
-        public event RunoffEventDelegate Runoff;
+        public event RunoffEventDelegate RunoffDelegate;
         /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
         #endregion

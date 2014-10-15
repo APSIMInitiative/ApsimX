@@ -630,7 +630,7 @@ namespace Models
 			AccumEO -= Soil.SoilWater.eo;
 			AccumES -= Soil.SoilWater.es; 
 			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
+			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
 		}
@@ -746,7 +746,7 @@ namespace Models
           <string>[ExtraVariables].Script.SWC</string>
           <string>[ExtraVariables].Script.DUL</string>
           <string>[Soil].SoilWater.drain</string>
-          <string>[Soil].SoilWater.runoff</string>
+          <string>[Soil].SoilWater.Runoff</string>
           <string>[ExtraVariables].Script.OutFlowLat</string>
           <string>[Soil].SoilWater.pond</string>
           <string>[ExtraVariables].Script.AccumEO</string>

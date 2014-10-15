@@ -849,7 +849,7 @@
             <string>[Soil].SoilWater.es</string>
             <string>[Irrigation].IrrigationApplied</string>
             <string>[Soil].SoilWater.sw</string>
-            <string>[Soil].SoilWater.runoff</string>
+            <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.infiltration</string>
             <string>[Soil].SoilWater.drain</string>
             <string>[Soil].SoilWater.ll15</string>
@@ -1201,7 +1201,7 @@ namespace Models
 			AccumEO -= Soil.SoilWater.eo;
 			AccumES -= Soil.SoilWater.es; 
 			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
+			AccumRunoff -= Soil.SoilWater.Runoff;
 			Flux1 = Soil.SoilWater.flux2[0];
 			Flux3 = Soil.SoilWater.flux2[2];
 		}
