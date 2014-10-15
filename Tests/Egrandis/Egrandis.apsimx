@@ -2653,9 +2653,9 @@
           <string>Eucalyptus.Phenology.CurrentPhaseName</string>
           <string>Eucalyptus.Phenology.StageCode.Value</string>
           <string>Eucalyptus.Root.NSupplyUptake</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
-          <string>[Soil].SoilWater.drain</string>
+          <string>[Soil].SoilWater.Drainage</string>
           <string>[Soil].SoilWater.Runoff</string>
           <string>[Soil].SoilWater.pond</string>
           <string>Eucalyptus.Summariser.AboveGround.Wt</string>

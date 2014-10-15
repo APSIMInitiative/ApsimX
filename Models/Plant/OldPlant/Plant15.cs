@@ -566,7 +566,7 @@ namespace Models.PMF.OldPlant
                     Organ.DoPotentialRUE();
 
                 // Calculate Plant Water Demand
-                double SWDemandMaxFactor = EOCropFactor * Soil.SoilWater.eo;
+                double SWDemandMaxFactor = EOCropFactor * Soil.SoilWater.Eo;
                 foreach (Organ1 Organ in Organ1s)
                     Organ.DoSWDemand(SWDemandMaxFactor);
 

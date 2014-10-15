@@ -479,7 +479,7 @@ namespace Models.Soils
         /// <value>The eff_rain.</value>
         [Units("mm")]
         private double eff_rain                  //! daily effective rainfall (mm)
-        { get { return rain + runon - Runoff - drain; } }
+        { get { return rain + runon - Runoff - Drainage; } }
 
         /// <summary>Potential extractable sw in profile</summary>
         /// <value>The esw.</value>
@@ -510,13 +510,13 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         [Description("Daily potential evaporation (mm)")]
-        public double eo { get; set; }                       //! effective potential evapotranspiration (mm)
+        public double Eo { get; set; }                       //! effective potential evapotranspiration (mm)
 
         /// <summary>The eos</summary>
         [XmlIgnore]
         [Units("mm")]
         [Description("Daily potential soil water evaporation (mm)")]
-        public double eos;                      //! pot sevap after modification for green cover & residue wt
+        public double Eos;                      //! pot sevap after modification for green cover & residue wt
 
 
         /// <summary>The cn2_new</summary>
@@ -526,7 +526,8 @@ namespace Models.Soils
         /// <value>The drain.</value>
         [XmlIgnore]
         [Units("mm")]
-        public double drain {get; set;}         //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
+        [Description("Daily water drainage from the soil profile (mm)")]
+        public double Drainage {get; set;}         //! drainage rate from bottom layer (cm/d) // I think this is in mm, not cm....
 
         /// <summary>Drainage rate from bottom layer</summary>
         /// <value>The leach n o3.</value>
@@ -1710,14 +1711,14 @@ namespace Models.Soils
             _water_table = 0.0;                      //! water table depth (mm)
 
             //Outputs
-            drain = 0.0;                            //! drainage rate from bottom layer (cm/d)
+            Drainage = 0.0;                            //! drainage rate from bottom layer (cm/d)
             Infiltration = 0.0;                     //! infiltration (mm)
             Runoff = 0.0;                           //! runoff (mm)
 
             pond = 0.0;                             //! surface ponding depth (mm)
             pond_evap = 0.0;                        //! evaporation from the pond surface (mm)
-            eo = 0.0;                               //! potential evapotranspiration (mm)
-            eos = 0.0;                              //! pot sevap after modification for green cover & residue wt
+            Eo = 0.0;                               //! potential evapotranspiration (mm)
+            Eos = 0.0;                              //! pot sevap after modification for green cover & residue wt
             t = 0.0;                                //! time after 2nd-stage soil evaporation begins (d)
             cn2_new = 0.0;                          //! New cn2  after modification for crop cover & residue cover
             cover_surface_runoff = 0.0;             //! effective total cover (0-1)
@@ -1797,10 +1798,10 @@ namespace Models.Soils
             canopy_height = null;
             //ZeroArray(ref crop_module, max_crops);
 
-            eo = 0.0;
-            eos = 0.0;
+            Eo = 0.0;
+            Eos = 0.0;
             cn2_new = 0.0;
-            drain = 0.0;
+            Drainage = 0.0;
             Infiltration = 0.0;
             Runoff = 0.0;
             runoff_pot = 0.0;
@@ -2927,15 +2928,15 @@ namespace Models.Soils
 
             if (pond > 0.0)
             {
-                if (pond >= eos)
+                if (pond >= Eos)
                 {
-                    pond = pond - eos;    //sv- the depth of water in the pond decreases by the amount of soil evaporation.
-                    pond_evap = eos;
-                    eos = 0.0;
+                    pond = pond - Eos;    //sv- the depth of water in the pond decreases by the amount of soil evaporation.
+                    pond_evap = Eos;
+                    Eos = 0.0;
                 }
                 else
                 {
-                    eos = eos - pond;
+                    Eos = Eos - pond;
                     pond_evap = pond;
                     pond = 0.0;
                 }
@@ -2968,7 +2969,7 @@ namespace Models.Soils
             eeq = radn * 23.8846 * (0.000204 - 0.000183 * albedo) * (wt_ave_temp + 29.0);
 
             //! find potential evapotranspiration (eo) from equilibrium evap rate
-            eo = eeq * soilwat2_eeq_fac();
+            Eo = eeq * soilwat2_eeq_fac();
         }
 
 
@@ -3018,7 +3019,7 @@ namespace Models.Soils
             //   ! NB. ritchie + b&s evaporate from layer 1, but rickert
             //   !     can evaporate from L1 + L2.
             asw1 = _sw_dep[0] - _air_dry_dep[0];
-            asw1 = bound(asw1, 0.0, eo);
+            asw1 = bound(asw1, 0.0, Eo);
 
             //3. get actual soil water evaporation
             soilwat2_soil_evaporation(asw1);
@@ -3085,7 +3086,7 @@ namespace Models.Soils
             }
 
             //! Reduce potential soil evap under canopy to that under residue (mulch)
-            eos = eo * eos_canopy_fract * eos_residue_fract;
+            Eos = Eo * eos_canopy_fract * eos_residue_fract;
         }
 
 
@@ -3192,9 +3193,9 @@ namespace Models.Soils
             {
                 //! we are in stage1
                 //! set esoil1 = potential, or limited by u.
-                esoil1 = Math.Min(eos, sumes1_max - sumes1);
+                esoil1 = Math.Min(Eos, sumes1_max - sumes1);
 
-                if ((eos > esoil1) && (esoil1 < Eos_max))
+                if ((Eos > esoil1) && (esoil1 < Eos_max))
                 {
                     //*           !  eos not satisfied by 1st stage drying,
                     //*           !  & there is evaporative sw excess to air_dry, allowing for esoil1.
@@ -3206,11 +3207,11 @@ namespace Models.Soils
                     if (sumes2 > 0.0)
                     {
                         t = t + 1.0;
-                        esoil2 = Math.Min((eos - esoil1), (_cona * Math.Pow(t, 0.5) - sumes2));
+                        esoil2 = Math.Min((Eos - esoil1), (_cona * Math.Pow(t, 0.5) - sumes2));
                     }
                     else
                     {
-                        esoil2 = 0.6 * (eos - esoil1);
+                        esoil2 = 0.6 * (Eos - esoil1);
                     }
                 }
                 else
@@ -3234,7 +3235,7 @@ namespace Models.Soils
                 esoil1 = 0.0;
 
                 t = t + 1.0;
-                esoil2 = Math.Min(eos, (_cona * Math.Pow(t, 0.5) - sumes2));
+                esoil2 = Math.Min(Eos, (_cona * Math.Pow(t, 0.5) - sumes2));
 
                 //! check with lower limit of evaporative sw.
                 esoil2 = Math.Min(esoil2, Eos_max);
@@ -3246,7 +3247,7 @@ namespace Models.Soils
             es_layers[0] = esoil1 + esoil2;
 
             //! make sure we are within bounds      
-            es_layers[0] = bound(es_layers[0], 0.0, eos);
+            es_layers[0] = bound(es_layers[0], 0.0, Eos);
             es_layers[0] = bound(es_layers[0], 0.0, Eos_max);
         }
 
@@ -4552,7 +4553,7 @@ namespace Models.Soils
 
             //! potential: sevap + transpiration:
             soilwat2_pot_evapotranspiration();
-            real_eo = eo;  //! store for reporting
+            real_eo = Eo;  //! store for reporting
 
             //Get variables from other modules
             //taken from Main() 
@@ -4675,7 +4676,7 @@ namespace Models.Soils
             MoveDownReal(flux, ref _sw_dep);
 
             //! drainage out of bottom layer
-            drain = flux[num_layers - 1];
+            Drainage = flux[num_layers - 1];
 
             // SATURATED FLOW SOLUTE MOVEMENT
 

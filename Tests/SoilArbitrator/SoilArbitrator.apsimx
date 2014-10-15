@@ -2117,7 +2117,7 @@ namespace Models
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
           <string>[Calculations].Script.Uptake</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
         </VariableNames>
         <EventNames>
@@ -6446,7 +6446,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
           <string>[Calculations].Script.Uptake1</string>
@@ -7235,7 +7235,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
           <string>[Calculations].Script.Uptake1</string>
@@ -8197,7 +8197,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
           <string>[Calculations].Script.Uptake1</string>
@@ -8924,7 +8924,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
         </VariableNames>
         <EventNames>
@@ -9671,7 +9671,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
         </VariableNames>
@@ -10367,7 +10367,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
         </VariableNames>
@@ -11145,7 +11145,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
           <string>[Calculations].Script.Uptake1</string>
@@ -11872,7 +11872,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
         </VariableNames>
         <EventNames>

@@ -851,7 +851,7 @@
             <string>[Soil].SoilWater.sw</string>
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.Infiltration</string>
-            <string>[Soil].SoilWater.drain</string>
+            <string>[Soil].SoilWater.Drainage</string>
             <string>[Soil].SoilWater.LL15</string>
             <string>[Soil].SoilWater.DUL</string>
             <string>[Soil].SoilWater.LL15mm</string>
@@ -1031,8 +1031,8 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 {
 //calculate the amount of water that is going to evaporate from the residue water pool
 
-if (Residue_water > Soil.SoilWater.eo)
-   Evaporated_interception = Soil.SoilWater.eo;
+if (Residue_water > Soil.SoilWater.Eo)
+   Evaporated_interception = Soil.SoilWater.Eo;
 else
    Evaporated_interception = Residue_water;
 
@@ -1198,9 +1198,9 @@ namespace Models
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			int layers = Soil.SoilWater.dlayer.Length;			
-			AccumEO -= Soil.SoilWater.eo;
+			AccumEO -= Soil.SoilWater.Eo;
 			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage -= Soil.SoilWater.drain;
+			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			Flux1 = Soil.SoilWater.flux2[0];
 			Flux3 = Soil.SoilWater.flux2[2];

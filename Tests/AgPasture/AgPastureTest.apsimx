@@ -986,7 +986,7 @@ namespace Models
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].Wt</string>
-          <string>[Soil].SoilWater.drain</string>
+          <string>[Soil].SoilWater.Drainage</string>
           <string>[Soil].SoilWater.Es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
@@ -2768,7 +2768,7 @@ namespace Models
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].Wt</string>
-          <string>[Soil].SoilWater.drain</string>
+          <string>[Soil].SoilWater.Drainage</string>
           <string>[Soil].SoilWater.Es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
@@ -4556,7 +4556,7 @@ namespace Models
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].Wt</string>
-          <string>[Soil].SoilWater.drain</string>
+          <string>[Soil].SoilWater.Drainage</string>
           <string>[Soil].SoilWater.Es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>

@@ -2330,10 +2330,10 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
 AccumES -= Soil.SoilWater.Es; 
-AccumDrainage -= Soil.SoilWater.drain; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
@@ -4550,10 +4550,10 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
 AccumES -= Soil.SoilWater.Es; 
-AccumDrainage -= Soil.SoilWater.drain; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
@@ -10632,10 +10632,10 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
 AccumES -= Soil.SoilWater.Es; 
-AccumDrainage -= Soil.SoilWater.drain; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
@@ -11880,10 +11880,10 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
 AccumES -= Soil.SoilWater.Es; 
-AccumDrainage -= Soil.SoilWater.drain; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
@@ -13935,10 +13935,10 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
 AccumES -= Soil.SoilWater.Es; 
-AccumDrainage -= Soil.SoilWater.drain; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;

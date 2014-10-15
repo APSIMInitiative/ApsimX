@@ -449,7 +449,7 @@
           <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.Es as es</string>
         </VariableNames>
@@ -972,7 +972,7 @@
           <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.Es as es</string>
         </VariableNames>
@@ -1497,7 +1497,7 @@
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Es as es</string>
         </VariableNames>
         <EventNames>
@@ -2048,7 +2048,7 @@ namespace Models
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Weather].Rain as rain</string>
           <string>[Clock].Today.DayOfYear as day</string>
@@ -2057,8 +2057,8 @@ namespace Models
           <string>[Soil].SoilWater.cona as cona</string>
           <string>[Soil].SoilWater.t as t</string>
           <string>[Soil].SoilWater.Es as es</string>
-          <string>[Soil].SoilWater.eo as eo</string>
-          <string>[Soil].SoilWater.eos as eos</string>
+          <string>[Soil].SoilWater.Eo as eo</string>
+          <string>[Soil].SoilWater.Eos as eos</string>
           <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
           <string>[Weather].Radn as radn</string>
           <string>[AvgTempCalculation].Script.avgTemp as avgTemp</string>
@@ -2619,7 +2619,7 @@ namespace Models
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.sw_dep[1:3] as sw_top</string>
           <string>[Soil].SoilWater.Es as es</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
@@ -3174,14 +3174,14 @@ namespace Models
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
           <string>[Weather].Rain as rain</string>
-          <string>[Soil].SoilWater.eos as eos</string>
+          <string>[Soil].SoilWater.Eos as eos</string>
           <string>[Soil].SoilWater.Es as es</string>
           <string>[Soil].SoilWater.pond_evap as pond_evap</string>
           <string>[Soil].SoilWater.pond as pond</string>
           <string>[calculate total_pond].Script.total_pond as total_pond</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.sw_dep[1:3] as sw_top</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
@@ -3701,7 +3701,7 @@ namespace Models
           <string>[Clock].Today</string>
           <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.water_table as water_table</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.Es as es</string>
@@ -4225,7 +4225,7 @@ namespace Models
           <string>[Soil].SoilWater.outflow_lat as outflow_lat</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.Es as es</string>
         </VariableNames>
@@ -4813,7 +4813,7 @@ namespace Models
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Weather].Rain as rain</string>
           <string>[Clock].Today.DayOfYear as day</string>
@@ -4823,8 +4823,8 @@ namespace Models
           <string>[Soil].SoilWater.t as t</string>
           <string>[Surface Organic Matter].surfaceom_cover as surfaceom_cover</string>
           <string>[Soil].SoilWater.Es as es</string>
-          <string>[Soil].SoilWater.eo as eo</string>
-          <string>[Soil].SoilWater.eos as eos</string>
+          <string>[Soil].SoilWater.Eo as eo</string>
+          <string>[Soil].SoilWater.Eos as eos</string>
           <string>[Soil].SoilWater.sw_dep[1] as sw_top</string>
           <string>[Weather].Radn as radn</string>
           <string>[AvgTempCalculation].Script.avgTemp as avgTemp</string>
@@ -5348,7 +5348,7 @@ namespace Models
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Es as es</string>
         </VariableNames>
         <EventNames>
@@ -5882,7 +5882,7 @@ namespace Models
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Es as es</string>
         </VariableNames>
         <EventNames>
@@ -6441,7 +6441,7 @@ namespace Models
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flux2 as flux</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Es as es</string>
         </VariableNames>
         <EventNames>
@@ -7174,7 +7174,7 @@ namespace Models
           <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.flow2 as flow</string>
-          <string>[Soil].SoilWater.drain as drain</string>
+          <string>[Soil].SoilWater.Drainage as drain</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.Es as es</string>
         </VariableNames>
@@ -7698,7 +7698,7 @@ namespace Models
             <string>[Weather].Rain as rain</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
             <string>[Soil].SoilWater.flux2 as flux</string>
-            <string>[Soil].SoilWater.drain as drain</string>
+            <string>[Soil].SoilWater.Drainage as drain</string>
             <string>[Soil].SoilWater.Runoff as runoff</string>
             <string>[Soil].SoilWater.Es as es</string>
             <string>[Clock].Today</string>
@@ -8228,7 +8228,7 @@ namespace Models
             <string>[Weather].Rain as rain</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
             <string>[Soil].SoilWater.flux2 as flux</string>
-            <string>[Soil].SoilWater.drain as drain</string>
+            <string>[Soil].SoilWater.Drainage as drain</string>
             <string>[Soil].SoilWater.Runoff as runoff</string>
             <string>[Soil].SoilWater.Es as es</string>
             <string>[Clock].Today</string>
@@ -8776,7 +8776,7 @@ namespace Models
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
             <string>[Soil].SoilWater.flux2 as flux</string>
             <string>[Soil].SoilWater.flow2 as flow</string>
-            <string>[Soil].SoilWater.drain as drain</string>
+            <string>[Soil].SoilWater.Drainage as drain</string>
             <string>[Soil].SoilWater.Es as es</string>
             <string>[Clock].Today</string>
             <string>Irrigation.irrigation</string>
@@ -9978,7 +9978,7 @@ namespace Models
 			    soil.SoilWater.CN2Bare = 100;
 			    soil.SoilWater.CNRed = 60;     
 			    soil.SoilWater.CNCov = 0.8; 
-			    //SoilWater.eo_source = "Brand_New_Eo_Source" 
+			    //SoilWater.Eo_source = "Brand_New_Eo_Source" 
 				}
 			
 			if (Clock.Today == new DateTime(1940, 01, 07))
@@ -10565,7 +10565,7 @@ namespace Models
               <string>[Weather].Rain as rain</string>
               <string>[Soil].SoilWater.Runoff as runoff</string>
               <string>[Soil].SoilWater.Es as es</string>
-              <string>[Soil].SoilWater.drain as drain</string>
+              <string>[Soil].SoilWater.Drainage as drain</string>
               <string>[Soil].SoilWater.water_table as water_table</string>
               <string>[Soil].SoilWater.sw as sw</string>
               <string>[Soil].SoilWater.flux2 as flux</string>

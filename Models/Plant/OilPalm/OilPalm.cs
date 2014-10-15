@@ -1087,7 +1087,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Does the water balance.</summary>
         private void DoWaterBalance()
         {
-            PEP = Soil.SoilWater.eo * cover_green;
+            PEP = Soil.SoilWater.Eo * cover_green;
 
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
@@ -1567,7 +1567,7 @@ namespace Models.PMF.OilPalm
         {
 
             UnderstoryCoverGreen = UnderstoryCoverMax * (1 - cover_green);
-            UnderstoryPEP = Soil.SoilWater.eo * UnderstoryCoverGreen * (1 - cover_green);
+            UnderstoryPEP = Soil.SoilWater.Eo * UnderstoryCoverGreen * (1 - cover_green);
 
             for (int j = 0; j < Soil.Thickness.Length; j++)
                 UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.LL15mm[j]));

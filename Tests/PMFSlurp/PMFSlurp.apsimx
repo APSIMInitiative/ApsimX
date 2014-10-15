@@ -627,9 +627,9 @@ namespace Models
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
-			AccumEO -= Soil.SoilWater.eo;
+			AccumEO -= Soil.SoilWater.Eo;
 			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage -= Soil.SoilWater.drain;
+			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
@@ -741,11 +741,11 @@ namespace Models
           <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
           <string>[PMFSlurp].Root.NSupply</string>
-          <string>[Soil].SoilWater.eo</string>
+          <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[ExtraVariables].Script.SWC</string>
           <string>[ExtraVariables].Script.DUL</string>
-          <string>[Soil].SoilWater.drain</string>
+          <string>[Soil].SoilWater.Drainage</string>
           <string>[Soil].SoilWater.Runoff</string>
           <string>[ExtraVariables].Script.OutFlowLat</string>
           <string>[Soil].SoilWater.pond</string>
@@ -1902,7 +1902,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.eo</FieldName>
+          <FieldName>Soil.SoilWater.Eo</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>

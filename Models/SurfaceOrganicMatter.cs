@@ -1829,7 +1829,7 @@
         /// <summary>Get the values of variables from other modules</summary>
         private void GetOtherVariables()
         {
-            eos = soil.SoilWater.eos;
+            eos = soil.SoilWater.Eos;
             dlayer = soil.Thickness;
 
             CheckPond();

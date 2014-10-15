@@ -161,7 +161,7 @@ namespace Models.PMF.OilPalm
             double OPCover = (double)Apsim.Get(this, "OilPalm.cover_green");
             
             cover_green = 0.40 * (1 - OPCover);
-            PEP = SoilWat.eo * cover_green * (1 - OPCover);
+            PEP = SoilWat.Eo * cover_green * (1 - OPCover);
 
 
             for (int j = 0; j < SoilWat.Thickness.Length; j++)
