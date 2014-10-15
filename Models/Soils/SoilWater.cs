@@ -506,12 +506,6 @@ namespace Models.Soils
         #region Ouputs (NOT Layered)
 
 
-        /// <summary>
-        /// Total es
-        /// </summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public double es { get{return surface.Es;} }
 
         /// <summary>
         /// Effective potential evapotranspiration
@@ -527,6 +521,39 @@ namespace Models.Soils
         [Units("mm")]
         public double eos { get{return surface.Eos;} }
 
+
+        /// <summary>
+        /// Total es
+        /// </summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double es { get { return surface.Es; } }
+
+        /// <summary>
+        /// time after 2nd-stage soil evaporation begins (d)
+        /// </summary>
+        [XmlIgnore]
+        [Units("d")]
+        public double t
+            {
+            get
+                {
+                switch (surface.SurfaceType)
+                    {
+                    case Surfaces.NormalSurface:
+                        NormalSurface normal = (NormalSurface)surface;
+                        return normal.t;
+
+                    case Surfaces.PondSurface:
+                        PondSurface pond = (PondSurface)surface;
+                        return pond.t;
+
+                    default:
+                        return Double.NaN;
+                    }
+                }
+
+            }
 
         /// <summary>
         /// New cn2 after modification for crop cover & residue cover
@@ -1141,7 +1168,7 @@ namespace Models.Soils
         //DAILY INPUTS FROM OTHER MODULES
 
 
-        #region Daily Inputs
+        #region Daily Input (Data Variables)
 
         //Met 
         private MetData met;
@@ -1164,7 +1191,7 @@ namespace Models.Soils
 
 
 
-        #region Optional Daily Inputs
+        #region Optional Daily Input (Data Variables)
 
 
         //Runon can be specified in a met file or sparse data file or manager script
@@ -1210,8 +1237,8 @@ namespace Models.Soils
             {
             //zero to get rid of yesterdays value in case there isn't one none today.
             runon = 0.0;
-            interception = 0.0;
-            residueinterception = 0.0;
+            //interception = 0.0;
+            //residueinterception = 0.0;
 
 
             object objectRunon = Apsim.Get(this, "runon");
@@ -1224,13 +1251,13 @@ namespace Models.Soils
             else
                 inflow_lat = new double[SoilObject.num_layers];
 
-            object objectIntercept = Apsim.Get(this, "interception");
-            if (objectIntercept != null)
-                interception = (double)objectIntercept;
+            //object objectIntercept = Apsim.Get(this, "interception");
+            //if (objectIntercept != null)
+            //    interception = (double)objectIntercept;
 
-            object objectResIntercept = Apsim.Get(this, "residueinterception");
-            if (objectResIntercept != null)
-                residueinterception = (double)objectResIntercept;
+            //object objectResIntercept = Apsim.Get(this, "residueinterception");
+            //if (objectResIntercept != null)
+            //    residueinterception = (double)objectResIntercept;
 
             }
 
@@ -1687,6 +1714,9 @@ namespace Models.Soils
 
             SendNitrogenChangedEvent();
 
+
+            //zero this here so it is not used tomorrow. 
+            residueinterception = 0.0;
 
         }
 

@@ -177,7 +177,7 @@ namespace Models.Soils.SoilWaterBackend
 
             evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
             Es = evap.Es;
-
+            t = evap.t;
             }
 
 
@@ -329,10 +329,10 @@ namespace Models.Soils.SoilWaterBackend
                     
                     //calculate Es using altered Eos.
                     evap.Eos = Eos;
-                    base.evap.InitialiseAccumulatingVars(SoilObject); //Reinitialise the Accumulating variables for the normal surface evaporation;
+                    evap.InitialiseAccumulatingVars(SoilObject); //Reinitialise the Accumulating variables for the normal surface evaporation;
                     evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
                     Es = evap.Es;
-                    
+                    t = evap.t;
                     }
 
                 }
@@ -344,6 +344,7 @@ namespace Models.Soils.SoilWaterBackend
                 //work out Es as you would for a NormalSurface
                 evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
                 Es = evap.Es;
+                t = evap.t;
                 }
 
 
