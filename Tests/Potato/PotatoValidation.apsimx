@@ -823,7 +823,7 @@ namespace Models
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
@@ -2907,7 +2907,7 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
@@ -4661,7 +4661,7 @@ namespace Models
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
@@ -6745,7 +6745,7 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
@@ -8653,7 +8653,7 @@ namespace Models
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
@@ -10737,7 +10737,7 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
@@ -12640,7 +12640,7 @@ namespace Models
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
@@ -12751,7 +12751,7 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
@@ -16703,7 +16703,7 @@ namespace Models
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 
 		}
@@ -16815,7 +16815,7 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
@@ -21431,7 +21431,7 @@ namespace Models
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 
 		}
@@ -21543,7 +21543,7 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].SoilNitrogen.NO3</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>

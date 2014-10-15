@@ -4424,7 +4424,7 @@ namespace Models
                     spDepth += Soil.SoilWater.dlayer[layer];
                     if (spDepth <= p_rootFrontier)
                     {
-                        SW += Soil.SoilWater.sw_dep[layer];
+                        SW += Soil.SoilWater.SWmm[layer];
                         Sat += Soil.SoilWater.sat_dep[layer];
                         FC += Soil.SoilWater.DULmm[layer];
                     }
@@ -5090,7 +5090,7 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.DUL[layer] - soilCrop.LL[layer]);
+                    swaf = (Soil.SoilWater.SWmm[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.DUL[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
                     SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
@@ -5304,7 +5304,7 @@ namespace Models
             p_waterSupply = 0;
             for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
-                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer] * (Soil.SoilWater.dlayer[layer])))
+                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.SoilWater.SWmm[layer] - soilCrop.LL[layer] * (Soil.SoilWater.dlayer[layer])))
                                 * LayerFractionForRoots(layer, p_rootFrontier);
                 if (layer < p_bottomRootLayer)
                     p_waterSupply += SWSupply[layer];

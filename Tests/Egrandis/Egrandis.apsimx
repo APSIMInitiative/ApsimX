@@ -2705,7 +2705,7 @@
           <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
           <string>Eucalyptus.Leaf.SpecificArea</string>
           <string>Eucalyptus.Summariser.TotalDead.Wt</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].SoilNitrogen.NO3</string>
           <string>Eucalyptus.Arbitrator.NDemand</string>
           <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>

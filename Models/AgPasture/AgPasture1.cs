@@ -1751,7 +1751,7 @@ namespace Models.AgPasture1
                 double sDUL = 0.0;
                 for (int layer = 0; layer < RootFrontier; layer++)  // TODO this should be <=
                 {
-                    sWater += Soil.SoilWater.sw_dep[layer];
+                    sWater += Soil.SoilWater.SWmm[layer];
                     sSat += Soil.SoilWater.sat_dep[layer];
                     sDUL += Soil.SoilWater.DULmm[layer];
                 }
@@ -1778,7 +1778,7 @@ namespace Models.AgPasture1
                 for (int layer = 0; layer <= RootFrontier; layer++)
                 {
                     layerFraction = LayerFractionWithRoots(layer);
-                    result[layer] = Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
+                    result[layer] = Math.Max(0.0, Soil.SoilWater.SWmm[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
                                   * layerFraction;
                     result[layer] *= soilCropData.KL[layer];
                     // Note: assumes KL and LL defined for whole sward, ignores the values for each mySpecies
@@ -1804,13 +1804,13 @@ namespace Models.AgPasture1
                 {
                     facCond = 1 - Math.Pow(10, -Soil.Water.KS[layer] / referenceKSuptake);
                     facWcontent = 1 - Math.Pow(10,
-                                -(Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]))
+                                -(Math.Max(0.0, Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]))
                                 / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]));
 
                     // theoretical total available water
                     layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
                     layerLL = mySward.Min(mySpecies => mySpecies.LL[layer]) * Soil.Thickness[layer];
-                    result[layer] = Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - layerLL) * layerFraction;
+                    result[layer] = Math.Max(0.0, Soil.SoilWater.SWmm[layer] - layerLL) * layerFraction;
 
                     // actual available water
                     result[layer] = Math.Min(result[layer] * facCond * facWcontent, sumWaterAvailable[layer]);
@@ -1992,7 +1992,7 @@ namespace Models.AgPasture1
                     // Method implemented by RCichota,
                     // N is available following water uptake and a given 'availability' factor (for each N form)
 
-                    facWtaken = swardWaterUptake[layer] / Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]);
+                    facWtaken = swardWaterUptake[layer] / Math.Max(0.0, Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]);
 
                     layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
                     nK = mySward.Max(mySpecies => mySpecies.kuNH4);

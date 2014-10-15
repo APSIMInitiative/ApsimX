@@ -32,14 +32,14 @@
           <string>[Weather].MinT</string>
           <string>[Weather].Radn</string>
           <string>[Weather].Rain</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].SoilNitrogen.NO3</string>
           <string>[SurfaceOrganicMatter].Wt</string>
-          <string>[Soil].SoilWater.sw[1:3] as SWTop3Layers</string>
-          <string>sum([Soil].SoilWater.sw[1:3]) as TotalSWTop3Layers</string>
+          <string>[Soil].SoilWater.SW[1:3] as SWTop3Layers</string>
+          <string>sum([Soil].SoilWater.SW[1:3]) as TotalSWTop3Layers</string>
           <string>[Weather].Rain/25.4 as RainInches</string>
-          <string>[Soil].SoilWater.sw-[Soil].SoilWater.LL15 as ESW</string>
-          <string>sum([Soil].SoilWater.sw-[Soil].SoilWater.LL15) as TotalESW</string>
+          <string>[Soil].SoilWater.SW-[Soil].SoilWater.LL15 as ESW</string>
+          <string>sum([Soil].SoilWater.SW-[Soil].SoilWater.LL15) as TotalESW</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -845,7 +845,7 @@
       </X>
       <Y>
         <TableName>Report</TableName>
-        <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+        <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>

@@ -2342,7 +2342,7 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
      DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
@@ -4562,7 +4562,7 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
      DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
@@ -9306,7 +9306,7 @@ public class Script : Model
             <string>Wheat.NStress.Photo</string>
             <string>Wheat.NStress.Expansion</string>
             <string>Wheat.Total.Wt</string>
-            <string>sum([Soil].SoilWater.sw_dep) as TotalSW</string>
+            <string>sum([Soil].SoilWater.SWmm) as TotalSW</string>
             <string />
           </VariableNames>
           <EventNames>
@@ -10644,7 +10644,7 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
      DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
@@ -11892,7 +11892,7 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
      DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
@@ -13947,7 +13947,7 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
      DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }

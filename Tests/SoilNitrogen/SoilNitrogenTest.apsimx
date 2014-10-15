@@ -22,7 +22,7 @@
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Weather].MaxT</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].SoilNitrogen.NO3</string>
         </VariableNames>
         <EventNames>
@@ -656,7 +656,7 @@
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].SoilNitrogen.NO3</string>
         </VariableNames>
         <EventNames>

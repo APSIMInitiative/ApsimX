@@ -867,7 +867,7 @@ namespace Models
        private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
 			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			SW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			TotalN = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
 			TotalC = Utility.Math.Sum(Soil.SoilNitrogen.TotalC);
 		}

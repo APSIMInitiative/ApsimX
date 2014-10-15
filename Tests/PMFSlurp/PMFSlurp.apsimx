@@ -631,7 +631,7 @@ namespace Models
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
@@ -774,7 +774,7 @@ namespace Models
           <string>[PMFSlurp].Leaf.LAI</string>
           <string>[PMFSlurp].Leaf.Height</string>
           <string>[PMFSlurp].Leaf.PotentialBiomass.Value</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].SoilNitrogen.NO3</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
           <string>[PMFSlurp].Arbitrator.NDemand</string>

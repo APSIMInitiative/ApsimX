@@ -165,7 +165,7 @@ namespace Models.PMF.OilPalm
 
 
             for (int j = 0; j < SoilWat.Thickness.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl * (SoilWat.sw_dep[j] - SoilWat.LL15mm[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl * (SoilWat.SWmm[j] - SoilWat.LL15mm[j]));
 
             double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
 
@@ -174,7 +174,7 @@ namespace Models.PMF.OilPalm
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
-                SoilWat.sw_dep[j] = SoilWat.sw_dep[j] - SWUptake[j];
+                SoilWat.SWmm[j] = SoilWat.SWmm[j] - SWUptake[j];
 
             }
             if (PEP > 0.0)

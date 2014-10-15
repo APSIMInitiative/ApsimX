@@ -795,7 +795,7 @@ namespace Models.Soils
 #endif
 
         [XmlIgnore]
-        public double[] sw        //! soil water content of layer
+        public double[] SW        //! soil water content of layer
         {
             get
             {
@@ -1036,7 +1036,8 @@ namespace Models.Soils
         /// <value>The sw_dep.</value>
         [XmlIgnore]
         [Units("mm")]
-        public double[] sw_dep    // sw * dlayer //see soilwat2_init() for initialisation
+        [Description("Soil water content (mm)")]
+        public double[] SWmm    // sw * dlayer //see soilwat2_init() for initialisation
         {
             get { return _sw_dep; }
             set
@@ -2193,7 +2194,7 @@ namespace Models.Soils
                 sat = reset_sat;
                 DUL = reset_dul;
                 numvals_sw = reset_numvals_sw;  //used in soilwat2_set_default();
-                sw = reset_sw;
+                SW = reset_sw;
                 LL15 = reset_ll15;
                 air_dry = reset_air_dry;
                 inReset = false;
@@ -4497,12 +4498,12 @@ namespace Models.Soils
                 dlayer = Soil.Thickness;
                 sat = Soil.SAT;
                 DUL = Soil.DUL;
-                sw = Soil.SW;
+                SW = Soil.SW;
                 LL15 = Soil.LL15;
                 air_dry = Soil.AirDry;
                 ks = Water.KS;
                 bd = Water.BD;
-                sw = Soil.SW;
+                SW = Soil.SW;
 
                 // some defaults.
                 if (SWCON == null)

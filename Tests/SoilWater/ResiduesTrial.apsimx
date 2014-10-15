@@ -43,28 +43,28 @@
       <SimulationName>ResiduesCoverBareSoil</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
+      <ColumnNames>Soil.SoilWater.SWmm(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>ResiduesCoverMownStubble</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
+      <ColumnNames>Soil.SoilWater.SWmm(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>ResiduesCoverHarvesterWindrow</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
+      <ColumnNames>Soil.SoilWater.SWmm(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
       <SimulationName>ResiduesCoverStandingStubble</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>Soil.SoilWater.sw_dep(1)</ColumnNames>
+      <ColumnNames>Soil.SoilWater.SWmm(1)</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
@@ -843,12 +843,12 @@
             <string>[Clock].Today</string>
             <string>[SurfaceOrganicMatter].surfaceom_cover</string>
             <string>[SurfaceOrganicMatter].Wt</string>
-            <string>[Soil].SoilWater.sw_dep</string>
+            <string>[Soil].SoilWater.SWmm</string>
             <string>[Weather].Rain</string>
             <string>[Soil].SoilWater.dlayer</string>
             <string>[Soil].SoilWater.Es</string>
             <string>[Irrigation].IrrigationApplied</string>
-            <string>[Soil].SoilWater.sw</string>
+            <string>[Soil].SoilWater.SW</string>
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.Infiltration</string>
             <string>[Soil].SoilWater.Drainage</string>
@@ -1036,7 +1036,7 @@ if (Residue_water > Soil.SoilWater.Eo)
 else
    Evaporated_interception = Residue_water;
 
-SWC60 = Soil.SoilWater.sw_dep[0] + Soil.SoilWater.sw_dep[1] + Soil.SoilWater.sw_dep[2];
+SWC60 = Soil.SoilWater.SWmm[0] + Soil.SoilWater.SWmm[1] + Soil.SoilWater.SWmm[2];
 
 // remove evaporation from residue water pool               
 
@@ -1186,12 +1186,12 @@ namespace Models
 			AccumIrrigation += Irrig.IrrigationApplied; 
 			AccumRainfall += Met.Rain;
 			SWDep60 = 0;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
-			SWDep60 = Soil.SoilWater.sw_dep[0] + Soil.SoilWater.sw_dep[1] + Soil.SoilWater.sw_dep[2];
+			SWDep60 = Soil.SoilWater.SWmm[0] + Soil.SoilWater.SWmm[1] + Soil.SoilWater.SWmm[2];
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -1366,7 +1366,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1386,7 +1386,7 @@ namespace Models
         </X>
         <Y>
           <TableName>ObservedSoilWater</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1427,7 +1427,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(2)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1447,7 +1447,7 @@ namespace Models
         </X>
         <Y>
           <TableName>ObservedSoilWater</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(2)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1488,7 +1488,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(3)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1508,7 +1508,7 @@ namespace Models
         </X>
         <Y>
           <TableName>ObservedSoilWater</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(3)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
