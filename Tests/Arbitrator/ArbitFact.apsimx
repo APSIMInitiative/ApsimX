@@ -550,7 +550,7 @@ namespace Models
 
 			   // Summary.WriteMessage(FullPath, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
 		    }
-            diffSWDepUptake = (initSWDep - currSWDep) - Soil.SoilWater.es;
+            diffSWDepUptake = (initSWDep - currSWDep) - Soil.SoilWater.Es;
             diffMinNUptake = (initMinN - currMinN); // what about denitrification?
         }
 	}

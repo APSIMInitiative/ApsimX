@@ -846,11 +846,11 @@
             <string>[Soil].SoilWater.sw_dep</string>
             <string>[Weather].Rain</string>
             <string>[Soil].SoilWater.dlayer</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[Irrigation].IrrigationApplied</string>
             <string>[Soil].SoilWater.sw</string>
             <string>[Soil].SoilWater.Runoff</string>
-            <string>[Soil].SoilWater.infiltration</string>
+            <string>[Soil].SoilWater.Infiltration</string>
             <string>[Soil].SoilWater.drain</string>
             <string>[Soil].SoilWater.ll15</string>
             <string>[Soil].SoilWater.dul</string>
@@ -1199,7 +1199,7 @@ namespace Models
 		{
 			int layers = Soil.SoilWater.dlayer.Length;			
 			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
+			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.drain;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			Flux1 = Soil.SoilWater.flux2[0];

@@ -1331,7 +1331,7 @@ namespace Models
             <string>[OilPalm].Age</string>
             <string>[OilPalm].UnderstoryNFixation</string>
             <string>[OilPalm].FW</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[OilPalm].cover_green</string>
           </VariableNames>
           <EventNames>

@@ -628,7 +628,7 @@ namespace Models
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
+			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.drain;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
@@ -742,7 +742,7 @@ namespace Models
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
           <string>[PMFSlurp].Root.NSupply</string>
           <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Es</string>
           <string>[ExtraVariables].Script.SWC</string>
           <string>[ExtraVariables].Script.DUL</string>
           <string>[Soil].SoilWater.drain</string>

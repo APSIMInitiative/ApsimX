@@ -471,7 +471,8 @@ namespace Models.Soils
         /// <summary>Total es</summary>
         /// <value>The es.</value>
         [Units("mm")]
-        public double es                      //! total es
+        [Description("Daily soil water evaporation (mm)")]
+        public double Es                      //! total es
         { get { return Utility.Math.Sum(es_layers); } }
 
         /// <summary>Daily effective rainfall</summary>
@@ -483,7 +484,7 @@ namespace Models.Soils
         /// <summary>Potential extractable sw in profile</summary>
         /// <value>The esw.</value>
         [Units("mm")]
-        public double esw                       //! potential extractable sw in profile  
+        public double ESW                       //! potential extractable sw in profile  
         {
             get
             {
@@ -508,11 +509,13 @@ namespace Models.Soils
         /// <value>The eo.</value>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Daily potential evaporation (mm)")]
         public double eo { get; set; }                       //! effective potential evapotranspiration (mm)
 
         /// <summary>The eos</summary>
         [XmlIgnore]
         [Units("mm")]
+        [Description("Daily potential soil water evaporation (mm)")]
         public double eos;                      //! pot sevap after modification for green cover & residue wt
 
 
@@ -548,7 +551,7 @@ namespace Models.Soils
         /// <value>The infiltration.</value>
         [XmlIgnore]
         [Units("mm")]
-        public double infiltration { get; set; }     //! infiltration (mm)
+        public double Infiltration { get; set; }     //! infiltration (mm)
 
         /// <summary>Gets or sets the runoff.</summary>
         /// <value>The runoff.</value>
@@ -1708,7 +1711,7 @@ namespace Models.Soils
 
             //Outputs
             drain = 0.0;                            //! drainage rate from bottom layer (cm/d)
-            infiltration = 0.0;                     //! infiltration (mm)
+            Infiltration = 0.0;                     //! infiltration (mm)
             Runoff = 0.0;                           //! runoff (mm)
 
             pond = 0.0;                             //! surface ponding depth (mm)
@@ -1798,7 +1801,7 @@ namespace Models.Soils
             eos = 0.0;
             cn2_new = 0.0;
             drain = 0.0;
-            infiltration = 0.0;
+            Infiltration = 0.0;
             Runoff = 0.0;
             runoff_pot = 0.0;
             NumberOfCrops = 0;
@@ -2871,7 +2874,7 @@ namespace Models.Soils
 
 
             infiltration_2 = pond;
-            infiltration = infiltration_1 + infiltration_2;
+            Infiltration = infiltration_1 + infiltration_2;
 
             pond = 0.0;
 
@@ -3167,7 +3170,7 @@ namespace Models.Soils
             }
 
             sumes1_max = _u;
-            w_inf = infiltration;
+            w_inf = Infiltration;
 
             //! if infiltration, reset sumes1
             //! reset sumes2 if infil exceeds sumes1      
@@ -4615,7 +4618,7 @@ namespace Models.Soils
             //! all infiltration and solutes(from irrigation)
             //! go into the top layer.
 
-            _sw_dep[0] = _sw_dep[0] + infiltration;
+            _sw_dep[0] = _sw_dep[0] + Infiltration;
 
             // IRRIGATION
 
@@ -4664,7 +4667,7 @@ namespace Models.Soils
             //If there is too much for the pond handle then add the excess (ie. extra_runoff-pond) to normal runoff.
             Runoff = Runoff + extra_runoff - pond;
             //Deduct the extra_runoff from the infiltration because it did not infiltrate (because it backed up).
-            infiltration = infiltration - extra_runoff;
+            Infiltration = Infiltration - extra_runoff;
 
             _sw_dep[0] = _sw_dep[0] - extra_runoff;   //sv- actually add the extra runoff to _sw_dep
 

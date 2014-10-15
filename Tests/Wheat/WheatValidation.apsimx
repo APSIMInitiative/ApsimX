@@ -2332,7 +2332,7 @@ SoilNitrogenContent = MineralN;
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= Soil.SoilWater.eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
+AccumES -= Soil.SoilWater.Es; 
 AccumDrainage -= Soil.SoilWater.drain; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
@@ -4552,7 +4552,7 @@ SoilNitrogenContent = MineralN;
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= Soil.SoilWater.eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
+AccumES -= Soil.SoilWater.Es; 
 AccumDrainage -= Soil.SoilWater.drain; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
@@ -10634,7 +10634,7 @@ SoilNitrogenContent = MineralN;
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= Soil.SoilWater.eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
+AccumES -= Soil.SoilWater.Es; 
 AccumDrainage -= Soil.SoilWater.drain; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
@@ -11882,7 +11882,7 @@ SoilNitrogenContent = MineralN;
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= Soil.SoilWater.eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
+AccumES -= Soil.SoilWater.Es; 
 AccumDrainage -= Soil.SoilWater.drain; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
@@ -13937,7 +13937,7 @@ SoilNitrogenContent = MineralN;
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 AccumEO -= Soil.SoilWater.eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
+AccumES -= Soil.SoilWater.Es; 
 AccumDrainage -= Soil.SoilWater.drain; 
 AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
