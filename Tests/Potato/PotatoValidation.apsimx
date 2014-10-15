@@ -769,7 +769,7 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
            	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -816,7 +816,7 @@ namespace Models
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -4607,7 +4607,7 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
            	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -4654,7 +4654,7 @@ namespace Models
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -8599,7 +8599,7 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
            	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -8646,7 +8646,7 @@ namespace Models
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -12586,7 +12586,7 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
            	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -12633,7 +12633,7 @@ namespace Models
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -16649,7 +16649,7 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
            	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -16696,7 +16696,7 @@ namespace Models
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
@@ -21377,7 +21377,7 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
            	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -21424,7 +21424,7 @@ namespace Models
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.eo;
