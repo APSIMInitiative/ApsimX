@@ -781,7 +781,7 @@ namespace Models.PMF.OldPlant
                 double[] FASW = new double[Soil.SoilWater.dlayer.Length];
                 for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
                 {
-                    FASW[i] = Utility.Math.Divide(Soil.SoilWater.sw_dep[i] - ll_dep[i], Soil.SoilWater.dul_dep[i] - ll_dep[i], 0.0);
+                    FASW[i] = Utility.Math.Divide(Soil.SoilWater.SWmm[i] - ll_dep[i], Soil.SoilWater.DULmm[i] - ll_dep[i], 0.0);
                     FASW[i] = Utility.Math.Constrain(FASW[i], 0.0, 1.0);
                 }
                 return FASW;
@@ -827,7 +827,7 @@ namespace Models.PMF.OldPlant
                 double ESW = 0;
                 int deepest_layer = FindLayerNo(RootDepth);
                 for (int layer = 0; layer <= deepest_layer; layer++)
-                    ESW += Utility.Math.Constrain(Soil.SoilWater.sw_dep[layer] - ll_dep[layer], 0.0, double.MaxValue);
+                    ESW += Utility.Math.Constrain(Soil.SoilWater.SWmm[layer] - ll_dep[layer], 0.0, double.MaxValue);
                 return ESW;
             }
         }
@@ -924,7 +924,7 @@ namespace Models.PMF.OldPlant
                                   Utility.Math.Divide(ll_dep[layer], Soil.SoilWater.dlayer[layer], 0.0),
                                   xf[layer]));
                 dep_tot += Soil.SoilWater.dlayer[layer];
-                esw_tot += Soil.SoilWater.dul_dep[layer] - ll_dep[layer];
+                esw_tot += Soil.SoilWater.DULmm[layer] - ll_dep[layer];
             }
              writer.WriteLine("-----------------------------------------------");
             if (HaveModifiedKLValues)
@@ -1179,7 +1179,7 @@ namespace Models.PMF.OldPlant
 
             int deepest_layer = FindLayerNo(RootDepth);
             for (int layer = 0; layer <= deepest_layer; layer++)
-                sw_avail_pot[layer] = Soil.SoilWater.dul_dep[layer] - ll_dep[layer];
+                sw_avail_pot[layer] = Soil.SoilWater.DULmm[layer] - ll_dep[layer];
 
             // correct bottom layer for actual root penetration
             sw_avail_pot[deepest_layer] = sw_avail_pot[deepest_layer] * RootProportion(deepest_layer, RootDepth);
@@ -1199,7 +1199,7 @@ namespace Models.PMF.OldPlant
             int deepest_layer = FindLayerNo(RootDepth);
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
-                sw_avail[layer] = Soil.SoilWater.sw_dep[layer] - ll_dep[layer];
+                sw_avail[layer] = Soil.SoilWater.SWmm[layer] - ll_dep[layer];
                 sw_avail[layer] = Utility.Math.Constrain(sw_avail[layer], 0.0, double.MaxValue);
             }
             // correct bottom layer for actual root penetration
@@ -1221,7 +1221,7 @@ namespace Models.PMF.OldPlant
             double sw_avail;
             for (int i = 0; i <= deepest_layer; i++)
             {
-                sw_avail = (Soil.SoilWater.sw_dep[i] - ll_dep[i]);
+                sw_avail = (Soil.SoilWater.SWmm[i] - ll_dep[i]);
                 sw_supply[i] = sw_avail * getModifiedKL(i);
                 sw_supply[i] = Utility.Math.Constrain(sw_supply[i], 0.0, double.MaxValue);
             }
@@ -1313,8 +1313,8 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         private double WFPS(int layer)
         {
-            double wfps = Utility.Math.Divide(Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer],
-                                            Soil.SoilWater.sat_dep[layer] - Soil.SoilWater.ll15_dep[layer], 0.0);
+            double wfps = Utility.Math.Divide(Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer],
+                                            Soil.SoilWater.sat_dep[layer] - Soil.SoilWater.LL15mm[layer], 0.0);
             return Utility.Math.Constrain(wfps, 0.0, 1.0);
         }
 

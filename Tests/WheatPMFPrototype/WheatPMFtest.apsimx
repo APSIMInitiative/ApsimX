@@ -451,7 +451,7 @@
                private void OnDoManagement(object sender, EventArgs e)
                {
 				if (Clock.Today.Date == SowingDate)
-                    WheatPMFPrototype.Sow(Cultivar:CultivarName, Depth:InitialRootDepth);
+                    WheatPMFPrototype.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Optional  Seeds sowing/m2.  Default is zero
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -545,7 +545,7 @@ namespace Models
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
            	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
 			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
 			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
@@ -588,15 +588,15 @@ namespace Models
 		{
 			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.BiomassN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
-			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
-			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }
@@ -705,12 +705,12 @@ namespace Models
           <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
           <string>[WheatPMFPrototype].Root.NSupply</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
           <string>[ExtraVariables].Script.SWC</string>
           <string>[ExtraVariables].Script.DUL</string>
-          <string>[Soil].SoilWater.drain</string>
-          <string>[Soil].SoilWater.runoff</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Runoff</string>
           <string>[ExtraVariables].Script.OutFlowLat</string>
           <string>[Soil].SoilWater.pond</string>
           <string>[ExtraVariables].Script.AccumEO</string>
@@ -744,7 +744,7 @@ namespace Models
           <string>[WheatPMFPrototype].Leaf.LAI</string>
           <string>[WheatPMFPrototype].Leaf.Height</string>
           <string>[WheatPMFPrototype].Leaf.PotentialBiomass.Value</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].SoilNitrogen.NO3</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
           <string>[WheatPMFPrototype].Arbitrator.NDemand</string>
@@ -1831,7 +1831,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.eo</FieldName>
+          <FieldName>Soil.SoilWater.Eo</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>

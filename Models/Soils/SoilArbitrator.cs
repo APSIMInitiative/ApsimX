@@ -156,7 +156,7 @@ namespace Models.Soils
                 {
                     Zone = rz.Zone,
                     Plant = rs.Crop,
-                    SWDep = rz.Soil.SoilWater.sw_dep,
+                    SWDep = rz.Soil.SoilWater.SWmm,
                     Uptake = null,
                     Strength = 0
                 });
@@ -212,7 +212,7 @@ namespace Models.Soils
                 double[] ActualUptake = Utility.Math.Add(ThisZone[0].Uptake, ThisZone[1].Uptake); //will need to change if we go to more iterations
                 ActualUptake = Utility.Math.Divide_Value(ActualUptake, NumIterations);
                 Soil Soil = (Soil)Apsim.Find(z,(typeof(Soil)));
-                Soil.SoilWater.sw_dep = Utility.Math.Subtract(Soil.SoilWater.sw_dep, ActualUptake);
+                Soil.SoilWater.SWmm = Utility.Math.Subtract(Soil.SoilWater.SWmm, ActualUptake);
                 SummaryFile.WriteMessage(this, z.Name + " " + String.Join(" ", ActualUptake.Select(x => x.ToString()).ToArray()));
             }
 

@@ -241,7 +241,7 @@ namespace Models
         }
 
         /// <summary>The ini d mshoot</summary>
-        private double[] iniDMshoot = new double[] { 1000.0, 500.0, 500.0 };
+        private double[] iniDMshoot = new double[] { 2000.0, 500.0, 500.0 };
         /// <summary>Gets or sets the initial dm shoot.</summary>
         /// <value>The initial dm shoot.</value>
         [Description("Initial above ground DM")]
@@ -258,7 +258,7 @@ namespace Models
         }
 
         /// <summary>The ini d mroot</summary>
-        private double[] iniDMroot = new double[] { 250.0, 100.0, 100.0 };
+        private double[] iniDMroot = new double[] { 500.0, 250.0, 100.0 };
         /// <summary>Gets or sets the initial dm root.</summary>
         /// <value>The initial dm root.</value>
         [Description("Initial below ground DM")]
@@ -1274,7 +1274,7 @@ namespace Models
         }
 
         /// <summary>The expo linear depth parameter</summary>
-        private double expoLinearDepthParam = 0.1;
+        private double expoLinearDepthParam = 0.12;
         /// <summary>Gets or sets the expo linear depth parameter.</summary>
         /// <value>The expo linear depth parameter.</value>
         [Description("Fraction of root depth where its proportion starts to decrease")]
@@ -1290,7 +1290,7 @@ namespace Models
         }
 
         /// <summary>The expo linear curve parameter</summary>
-        private double expoLinearCurveParam = 0.1;
+        private double expoLinearCurveParam = 3.2;
         /// <summary>Gets or sets the expo linear curve parameter.</summary>
         /// <value>The expo linear curve parameter.</value>
         [Description("Exponent to determine mass distribution in the soil profile")]
@@ -1624,6 +1624,11 @@ namespace Models
             }
         }
 
+        public double PlantGrossPotentialGrowthWt
+        {
+            get { return SP.Sum(x => x.Pgross) * 2.5; }
+        }
+
         /// <summary>Gets the plant potential growth wt.</summary>
         /// <value>The plant potential growth wt.</value>
         [Description("Potential plant growth, correct for extreme temperatures")]
@@ -1650,6 +1655,11 @@ namespace Models
         {
             //dm_daily_growth, including roots & before littering
             get { return p_dGrowth; }
+        }
+
+        public double PlantEffectiveGrowthWt
+        {
+            get { return SP.Sum(x => x.dGrowth) - SP.Sum(x => x.dLitter) - SP.Sum(x => x.dRootSen); }
         }
 
         /// <summary>Gets the herbage growth wt.</summary>
@@ -1827,21 +1837,6 @@ namespace Models
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
                     result += SP[s].Nroot;
-                return result;
-            }
-        }
-
-        /// <summary>Gets the above ground n PCT.</summary>
-        /// <value>The above ground n PCT.</value>
-        [Description("Proportion of N above ground in relation to below ground")]
-        [Units("%")]
-        public double AboveGroundNPct
-        {
-            get
-            {
-                double result = 0;
-                if (AboveGroundWt != 0)
-                    result = 100 * AboveGroundN / AboveGroundWt;
                 return result;
             }
         }
@@ -2233,12 +2228,8 @@ namespace Models
             get
             {
                 double result = 0.0;
-                for (int s = 0; s < numSpecies; s++)
-                {
-                    result += SP[s].newGrowthN;
-                }
                 if (PlantGrowthWt > 0)
-                    result = result / PlantGrowthWt;
+                    result = PlantGrowthN / PlantGrowthWt;
                 else
                     result = 0.0;
                 return result;
@@ -2357,7 +2348,7 @@ namespace Models
             get
             {
                 double result = 0.0;
-                if (p_dGrowth <= 0)
+                if (p_dGrowth > 0)
                     result = DMToRoots / p_dGrowth;
                 return result;
             }
@@ -3922,8 +3913,9 @@ namespace Models
             get
             {
                 double[] result = new double[SP.Length];
+                double Tmnw = 0.75 * MetData.MaxT + 0.25 * MetData.MinT;  // weighted Tmean
                 for (int s = 0; s < numSpecies; s++)
-                    result[s] = SP[s].gftemp;
+                    result[s] = SP[s].GFTemperature(Tmnw);
                 return result;
             }
         }
@@ -3986,6 +3978,51 @@ namespace Models
             }
         }
 
+
+        public double[] SpeciesGrossPotGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Pgross * 2.5;
+                return result;
+            }
+        }
+
+        public double[] SpeciesNetPotGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowthPot;
+                return result;
+            }
+        }
+        public double[] SpeciesPotGrowthW
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowthW;
+                return result;
+            }
+        }
+        public double[] SpeciesActualGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowth;
+                return result;
+            }
+        }
+
+
+
         /// <summary>Gets the GPP.</summary>
         /// <value>The GPP.</value>
         [Description("Gross primary productivity")]
@@ -3996,7 +4033,7 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * 2.5;   // assume 40% C in DM
+                    result += SP[s].Pgross * 2.5;   // assume 40% C in DM
                 return result;
             }
         }
@@ -4011,7 +4048,7 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * 0.75 + SP[s].Resp_m;
+                    result += SP[s].Pgross * 0.75 - SP[s].Resp_m;
                 result *= 2.5;   // assume 40% C in DM
                 return result;
             }
@@ -4027,8 +4064,8 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * SP[s].fShoot * 0.75 + SP[s].Resp_m;
-                result /= 2.5;   // assume 40% C in DM
+                    result += (SP[s].Pgross * 0.75 - SP[s].Resp_m) * SP[s].fShoot;
+                result *= 2.5;   // assume 40% C in DM
                 return result;
             }
         }
@@ -4071,6 +4108,8 @@ namespace Models
         private double p_dNRootSen;	   //daily root senescence
 
         //p_... variables are pasture states at a given time (day)
+        /// <summary>The P_F shoot</summary>
+        private double p_fShoot;		  //actual fraction of dGrowth to shoot
         /// <summary>The p_height</summary>
         private double p_height;		  // Canopy height (mm)
         /// <summary>The p_green lai</summary>
@@ -4385,9 +4424,9 @@ namespace Models
                     spDepth += Soil.SoilWater.dlayer[layer];
                     if (spDepth <= p_rootFrontier)
                     {
-                        SW += Soil.SoilWater.sw_dep[layer];
+                        SW += Soil.SoilWater.SWmm[layer];
                         Sat += Soil.SoilWater.sat_dep[layer];
-                        FC += Soil.SoilWater.dul_dep[layer];
+                        FC += Soil.SoilWater.DULmm[layer];
                     }
                 }
                 if (SW > FC) //if saturated
@@ -4666,6 +4705,8 @@ namespace Models
 
             //**actual daily growth
             p_dGrowth = 0;
+            if (clock.Today.Day >= 30)
+                p_dGrowth += 0.0;
             for (int s = 0; s < numSpecies; s++)
                 p_dGrowth += SP[s].DailyGrowthAct();
 
@@ -4913,11 +4954,15 @@ namespace Models
             }
         }
 
-        //----------------------------------------------------------------------
-        /// <summary>Called when [sow].</summary>
-        /// <param name="PSow">The p sow.</param>
-        [EventSubscribe("Sow")]
-        private void OnSow(SowType PSow)
+        //----------------------------------------------------------------------        
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             /*SowType is our type and is defined like this:
             <type name="Sow">
@@ -5045,7 +5090,7 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.dul[layer] - soilCrop.LL[layer]);
+                    swaf = (Soil.SoilWater.SWmm[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.DUL[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
                     SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
@@ -5102,7 +5147,7 @@ namespace Models
                     p_Nfix += moreNfix;
                 }
             }
-
+            
             //3) Get N remobilised and calculate N demand from soil
             p_soilNdemand = 0.0;
             for (int s = 0; s < numSpecies; s++)
@@ -5210,6 +5255,8 @@ namespace Models
                 {
                     p_gfn += SP[s].gfn * SP[s].dGrowthW / p_dGrowthW;
                 }
+                if (SP[s].gfn < 1.0)
+                    p_soilNavailable += 0;
             }
 
             //5) Actual uptake, remove N from soil
@@ -5257,7 +5304,7 @@ namespace Models
             p_waterSupply = 0;
             for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
             {
-                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer] * (Soil.SoilWater.dlayer[layer])))
+                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.SoilWater.SWmm[layer] - soilCrop.LL[layer] * (Soil.SoilWater.dlayer[layer])))
                                 * LayerFractionForRoots(layer, p_rootFrontier);
                 if (layer < p_bottomRootLayer)
                     p_waterSupply += SWSupply[layer];
@@ -5557,12 +5604,10 @@ namespace Models
                 dAmtLayer = rootSen * RootFraction[i];
                 dNLayer = NinRootSen * RootFraction[i];
 
-                float amt = (float)dAmtLayer;
-
                 Soils.FOMType fom = new Soils.FOMType();
-                fom.amount = amt;
+                fom.amount = dAmtLayer;
                 fom.N = dNLayer;// 0.03F * amt;	// N in dead root
-                fom.C = 0.40F * amt;	//40% of OM is C. Actually, 'C' is not used, as shown in DataTypes.xml
+                fom.C = 0.40 * dAmtLayer;	//40% of OM is C. Actually, 'C' is not used, as shown in DataTypes.xml
                 fom.P = 0;			  //to consider later
                 fom.AshAlk = 0;		 //to consider later
 
@@ -5978,9 +6023,9 @@ namespace Models
         internal double dmlitter;	//Litter pool (kg/ha)
 
         /// <summary>The dmdefoliated</summary>
-        internal double dmdefoliated;
+        internal double dmdefoliated = 0.0;
         /// <summary>The ndefoliated</summary>
-        internal double Ndefoliated;
+        internal double Ndefoliated = 0.0;
         /// <summary>The digest herbage</summary>
         internal double digestHerbage;
         /// <summary>The digest defoliated</summary>
@@ -6500,7 +6545,6 @@ namespace Models
                     + Nstol1 + Nstol2 + Nstol3;
             Ndead = Nleaf4 + Nstem4;
 
-
             //LAI								   //0.0001: kg/ha->kg/m2; SLA: m2/kg
             greenLAI = 0.0001 * dmleaf_green * SLA + 0.0001 * dmstol * 0.3 * SLA;   //insensitive? assuming Mass2GLA = 0.3*SLA
 
@@ -7010,8 +7054,8 @@ namespace Models
                 //Fractions [eq.4.13]
                 double toRoot = 1.0 - fShoot;
                 double toStol = fShoot * fStolon;
-                double toLeaf = fShoot * (1.0 - fStolon) * fLeaf;
-                double toStem = fShoot * (1.0 - fStolon) * (1.0 - fLeaf);
+                double toLeaf = fShoot * fLeaf;
+                double toStem = fShoot * (1.0 - fStolon - fLeaf);
 
                 //checking
                 double ToAll = toLeaf + toStem + toStol + toRoot;

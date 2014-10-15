@@ -669,7 +669,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -1332,7 +1332,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -1995,7 +1995,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -2036,7 +2036,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -2056,7 +2056,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report1</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -2076,7 +2076,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report2</TableName>
-          <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+          <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -2117,8 +2117,8 @@ namespace Models
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
           <string>[Calculations].Script.Uptake</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2791,7 +2791,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
             if (SimpleTree.RootSystem.Uptake != null)
               Uptake = Utility.Math.Sum(SimpleTree.RootSystem.Uptake);
 		}
@@ -3543,7 +3543,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -4207,7 +4207,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -4997,7 +4997,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -5661,7 +5661,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -6325,7 +6325,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -6446,8 +6446,8 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
           <string>[Calculations].Script.Uptake1</string>
         </VariableNames>
@@ -7150,7 +7150,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
             if (SimpleTree.RootSystem.Uptake != null)
             	Uptake = Utility.Math.Sum(SimpleTree.RootSystem.Uptake);
             if (SimpleTree1.RootSystem.Uptake != null)
@@ -7235,8 +7235,8 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
           <string>[Calculations].Script.Uptake1</string>
         </VariableNames>
@@ -7964,7 +7964,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
             if (SimpleTree.RootSystem.Uptake != null)
             	Uptake = Utility.Math.Sum(SimpleTree.RootSystem.Uptake);
             if (SimpleTree1.RootSystem.Uptake != null)
@@ -8197,8 +8197,8 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
           <string>[Calculations].Script.Uptake1</string>
         </VariableNames>
@@ -8901,7 +8901,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
             if (SimpleTree.RootSystem.Uptake != null)
             	Uptake = Utility.Math.Sum(SimpleTree.RootSystem.Uptake);
             if (SimpleTree1.RootSystem.Uptake != null)
@@ -8924,8 +8924,8 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -9570,7 +9570,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }
@@ -9671,8 +9671,8 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
         </VariableNames>
         <EventNames>
@@ -10346,7 +10346,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
             if (SimpleTree.RootSystem.Uptake != null)
             	Uptake = Utility.Math.Sum(SimpleTree.RootSystem.Uptake);
 		}
@@ -10367,8 +10367,8 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
         </VariableNames>
         <EventNames>
@@ -11042,7 +11042,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
             if (SimpleTree.RootSystem.Uptake != null)
             	Uptake = Utility.Math.Sum(SimpleTree.RootSystem.Uptake);
 		}
@@ -11145,8 +11145,8 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
           <string>[Calculations].Script.Uptake</string>
           <string>[Calculations].Script.Uptake1</string>
         </VariableNames>
@@ -11849,7 +11849,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
             if (SimpleTree.RootSystem.Uptake != null)
             	Uptake = Utility.Math.Sum(SimpleTree.RootSystem.Uptake);
             if (SimpleTree1.RootSystem.Uptake != null)
@@ -11872,8 +11872,8 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Calculations].Script.TotalSW</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -12518,7 +12518,7 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            TotalSW = Utility.Math.Sum(Soil.SoilWater.sw_dep);
+            TotalSW = Utility.Math.Sum(Soil.SoilWater.SWmm);
 		}
 	}
 }

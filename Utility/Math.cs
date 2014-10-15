@@ -1524,7 +1524,6 @@ namespace Utility
         /// Calculate the std deviation
         /// </summary>
         /// <param name="values"></param>
-        /// <param name="mean"></param>
         /// <returns>Std deviation</returns>
         public static double StandardDeviation(IEnumerable<double> values)
         {

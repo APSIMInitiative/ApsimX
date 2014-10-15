@@ -1118,7 +1118,7 @@ namespace Models
 		{	
 			if (Clock.Today.Date == sowing_date)
 			{
-			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth);
+			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
 			}
 			
 			if (HarvestCounter == 14)
@@ -1331,7 +1331,7 @@ namespace Models
             <string>[OilPalm].Age</string>
             <string>[OilPalm].UnderstoryNFixation</string>
             <string>[OilPalm].FW</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[OilPalm].cover_green</string>
           </VariableNames>
           <EventNames>
@@ -2678,7 +2678,7 @@ namespace Models
 			
 			if (Clock.Today.Date == sowing_date)
 			{
-			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth);
+			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
 			}
 			
 			if (HarvestCounter == 14)
@@ -4386,7 +4386,7 @@ namespace Models
 			
 			if (Clock.Today.Date == sowing_date)
 			{
-			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth);
+			    oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
 			}
 			
 			if (HarvestCounter == 14)

@@ -352,7 +352,7 @@ namespace Models.PMF.Organs
                 if (LayerLive[layer].Wt > 0)
                 {
                     double swaf = 0;
-                    swaf = (Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer]) / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.ll15_dep[layer]);
+                    swaf = (Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     no3ppm[layer] = Soil.SoilNitrogen.NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.SoilWater.dlayer[layer]));
                     NO3Supply[layer] = Soil.SoilNitrogen.NO3[layer] * KNO3 * no3ppm[layer] * swaf;
@@ -770,7 +770,7 @@ namespace Models.PMF.Organs
                     SWSupply = new double[Soil.SoilWater.dlayer.Length];
                 for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
                     if (layer <= LayerIndex(Depth))
-                        SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer] * Soil.SoilWater.dlayer[layer]) * RootProportion(layer, Depth));
+                        SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.SoilWater.SWmm[layer] - soilCrop.LL[layer] * Soil.SoilWater.dlayer[layer]) * RootProportion(layer, Depth));
                     else
                         SWSupply[layer] = 0;
 

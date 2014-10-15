@@ -2375,7 +2375,7 @@ namespace Models.Soils
         /// <value>The biom_n.</value>
 
         [Units("kg/ha")]
-        public double[] BiomassN
+        public double[] MicrobialN
         {
             get
             {
@@ -2836,7 +2836,7 @@ namespace Models.Soils
         /// <value>The biom_c.</value>
 
         [Units("kg/ha")]
-        public double[] BiomassC
+        public double[] MicrobialC
         {
             get
             {

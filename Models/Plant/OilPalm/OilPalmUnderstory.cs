@@ -87,10 +87,10 @@ namespace Models.PMF.OilPalm
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             //MyPaddock.Parent.ChildPaddocks
-            PotSWUptake = new double[SoilWat.ll15_dep.Length];
-            SWUptake = new double[SoilWat.ll15_dep.Length];
-            NUptake = new double[SoilWat.ll15_dep.Length];
-            PotNUptake = new double[SoilWat.ll15_dep.Length];
+            PotSWUptake = new double[SoilWat.LL15mm.Length];
+            SWUptake = new double[SoilWat.LL15mm.Length];
+            NUptake = new double[SoilWat.LL15mm.Length];
+            PotNUptake = new double[SoilWat.LL15mm.Length];
         }
 
         /// <summary>Occurs when [biomass removed].</summary>
@@ -161,11 +161,11 @@ namespace Models.PMF.OilPalm
             double OPCover = (double)Apsim.Get(this, "OilPalm.cover_green");
             
             cover_green = 0.40 * (1 - OPCover);
-            PEP = SoilWat.eo * cover_green * (1 - OPCover);
+            PEP = SoilWat.Eo * cover_green * (1 - OPCover);
 
 
             for (int j = 0; j < SoilWat.Thickness.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl * (SoilWat.sw_dep[j] - SoilWat.ll15_dep[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl * (SoilWat.SWmm[j] - SoilWat.LL15mm[j]));
 
             double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
 
@@ -174,7 +174,7 @@ namespace Models.PMF.OilPalm
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
-                SoilWat.sw_dep[j] = SoilWat.sw_dep[j] - SWUptake[j];
+                SoilWat.SWmm[j] = SoilWat.SWmm[j] - SWUptake[j];
 
             }
             if (PEP > 0.0)

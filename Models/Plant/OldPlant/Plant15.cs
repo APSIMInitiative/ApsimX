@@ -204,8 +204,10 @@ namespace Models.PMF.OldPlant
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="depth">The depth.</param>
         /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="budNumber">Bud number not used</param>
+        /// <param name="maxCover">Maximum cover not used</param>
         /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
-        public void Sow(double population, string cultivar, double depth, double rowSpacing)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = population;
@@ -564,7 +566,7 @@ namespace Models.PMF.OldPlant
                     Organ.DoPotentialRUE();
 
                 // Calculate Plant Water Demand
-                double SWDemandMaxFactor = EOCropFactor * Soil.SoilWater.eo;
+                double SWDemandMaxFactor = EOCropFactor * Soil.SoilWater.Eo;
                 foreach (Organ1 Organ in Organ1s)
                     Organ.DoSWDemand(SWDemandMaxFactor);
 
@@ -1056,9 +1058,7 @@ namespace Models.PMF.OldPlant
             double n_stover;                      // nitrogen content of stover (kg\ha)
             double n_total;                       // total gross nitrogen content (kg/ha)
             double n_grain_conc_percent;          // grain nitrogen %
-            string msg;                           // message
             double yield;                         // grain yield dry wt (kg/ha)
-            double yield_wet;                     // grain yield including moisture (kg/ha)
 
             // crop harvested. Report status
             yield = Grain.Yield;

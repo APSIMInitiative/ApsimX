@@ -466,7 +466,7 @@ namespace Models
 		    initMinN = 0.0;
 		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
 		    {
-		       initSWDep += Soil.SoilWater.sw_dep[j];
+		       initSWDep += Soil.SoilWater.SWmm[j];
 		       initMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
 		    }
 		}
@@ -478,12 +478,12 @@ namespace Models
 		    currMinN = 0.0;
 		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
 		    {
-		       currSWDep += Soil.SoilWater.sw_dep[j];
+		       currSWDep += Soil.SoilWater.SWmm[j];
 		       currMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
 
-			   // Summary.WriteMessage(this, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
+			   // Summary.WriteMessage(this, (Soil.SoilWater.SWmm[j].ToString() + " " + currSWDep.ToString()));
 		    }
-            diffSWDepUptake = (initSWDep - currSWDep) - Soil.SoilWater.es;
+            diffSWDepUptake = (initSWDep - currSWDep) - Soil.SoilWater.Es;
             diffMinNUptake = (initMinN - currMinN); // what about denitrification?
         }
 	}
@@ -518,7 +518,7 @@ namespace Models
           <string>[Clock].Today</string>
           <string>Slurp.demandWater as demandWater</string>
           <string>sum(Slurp.uptakeWater[1:4]) as UptakeWater</string>
-          <string>sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
+          <string>sum([Soil].SoilWater.SWmm[1:4]) as SWDep</string>
           <string>[Diffs].Script.diffSWDepUptake as deltaSWDep</string>
           <string>Slurp.demandNitrogen as demandNitrogen</string>
           <string>sum(Slurp.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
@@ -1106,7 +1106,7 @@ namespace Models
 		    initMinN = 0.0;
 		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
 		    {
-		       initSWDep += Soil.SoilWater.sw_dep[j];
+		       initSWDep += Soil.SoilWater.SWmm[j];
 		       initMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
 		    }
 		}
@@ -1118,12 +1118,12 @@ namespace Models
 		    currMinN = 0.0;
 		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
 		    {
-		       currSWDep += Soil.SoilWater.sw_dep[j];
+		       currSWDep += Soil.SoilWater.SWmm[j];
 		       currMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
 
-			   // Summary.WriteMessage(this, (Soil.SoilWater.sw_dep[j].ToString() + " " + currSWDep.ToString()));
+			   // Summary.WriteMessage(this, (Soil.SoilWater.SWmm[j].ToString() + " " + currSWDep.ToString()));
 		    }
-            diffSWDepUptake = (initSWDep - currSWDep) - Soil.SoilWater.es;
+            diffSWDepUptake = (initSWDep - currSWDep) - Soil.SoilWater.Es;
             diffMinNUptake = (initMinN - currMinN); // what about denitrification?
         }
 	}
@@ -1173,7 +1173,7 @@ namespace Models
         <Name>ReportWater</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>sum([Soil].SoilWater.sw_dep[1:4]) as SWDep</string>
+          <string>sum([Soil].SoilWater.SWmm[1:4]) as SWDep</string>
           <string>[Diffs].Script.diffSWDepUptake</string>
           <string>Slurp1.demandWater</string>
           <string>Slurp2.demandWater</string>

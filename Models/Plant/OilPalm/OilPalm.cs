@@ -708,22 +708,20 @@ namespace Models.PMF.OilPalm
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
         /// <param name="depth">The depth.</param>
-        /// <param name="RowSpacing">The row spacing.</param>
-        /// <param name="MaxCover">The maximum cover.</param>
-        /// <param name="BudNumber">The bud number.</param>
-        /// <param name="cropClass">The crop class.</param>
+        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="maxCover">The maximum cover.</param>
+        /// <param name="budNumber">The bud number.</param>
         /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
-        public void Sow(string cultivar, double population, double depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string cropClass = "Plant")
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = population;
             this.Population = population;
             SowingData.Depth = depth;
             SowingData.Cultivar = cultivar;
-            SowingData.MaxCover = MaxCover;
-            SowingData.BudNumber = BudNumber;
-            SowingData.RowSpacing = RowSpacing;
-            SowingData.CropClass = cropClass;
+            SowingData.MaxCover = maxCover;
+            SowingData.BudNumber = budNumber;
+            SowingData.RowSpacing = rowSpacing;
             CropInGround = true;
 
             if (SowingData.Cultivar == "")
@@ -737,7 +735,7 @@ namespace Models.PMF.OilPalm
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(this, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -1089,20 +1087,20 @@ namespace Models.PMF.OilPalm
         /// <summary>Does the water balance.</summary>
         private void DoWaterBalance()
         {
-            PEP = Soil.SoilWater.eo * cover_green;
+            PEP = Soil.SoilWater.Eo * cover_green;
 
 
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
+            for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (Soil.SoilWater.SWmm[j] - Soil.SoilWater.LL15mm[j]));
 
             double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
 
             EP = 0.0;
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
-                Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - SWUptake[j];
+                Soil.SoilWater.SWmm[j] = Soil.SoilWater.SWmm[j] - SWUptake[j];
 
             }
 
@@ -1140,10 +1138,10 @@ namespace Models.PMF.OilPalm
             Ndemand = StemNDemand + FrondNDemand + RootNDemand + BunchNDemand;  //kg/ha
 
 
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
             {
                 double swaf = 0;
-                swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]);
+                swaf = (Soil.SoilWater.SWmm[j] - Soil.SoilWater.LL15mm[j]) / (Soil.SoilWater.DULmm[j] - Soil.SoilWater.LL15mm[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                 double no3ppm = Soil.SoilNitrogen.NO3[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
                 PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * Soil.SoilNitrogen.NO3[j] * swaf);
@@ -1152,7 +1150,7 @@ namespace Models.PMF.OilPalm
             double TotPotNUptake = Utility.Math.Sum(PotNUptake);
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
             {
                 NUptake[j] = PotNUptake[j] * Fr;
                 NUptakeType.DeltaNO3[j] = -NUptake[j];
@@ -1179,14 +1177,14 @@ namespace Models.PMF.OilPalm
 
             StemN += StemNDemand / 10 * Fr;
 
-            double[] RootNDef = new double[Soil.SoilWater.ll15_dep.Length];
+            double[] RootNDef = new double[Soil.SoilWater.LL15mm.Length];
             double TotNDef = 1e-20;
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
             {
                 RootNDef[j] = Math.Max(0.0, Roots[j].Mass * RootNConcentration.Value / 100.0 - Roots[j].N);
                 TotNDef += RootNDef[j];
             }
-            for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
                 Roots[j].N += RootNDemand / 10 * Fr * RootNDef[j] / TotNDef;
 
             foreach (FrondType F in Fronds)
@@ -1569,15 +1567,15 @@ namespace Models.PMF.OilPalm
         {
 
             UnderstoryCoverGreen = UnderstoryCoverMax * (1 - cover_green);
-            UnderstoryPEP = Soil.SoilWater.eo * UnderstoryCoverGreen * (1 - cover_green);
+            UnderstoryPEP = Soil.SoilWater.Eo * UnderstoryCoverGreen * (1 - cover_green);
 
             for (int j = 0; j < Soil.Thickness.Length; j++)
-                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]));
+                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.SoilWater.SWmm[j] - Soil.SoilWater.LL15mm[j]));
 
             double TotUnderstoryPotSWUptake = Utility.Math.Sum(UnderstoryPotSWUptake);
 
             UnderstoryEP = 0.0;
-            double[] sw_dep = Soil.SoilWater.sw_dep;
+            double[] sw_dep = Soil.SoilWater.SWmm;
             for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 UnderstorySWUptake[j] = UnderstoryPotSWUptake[j] * Math.Min(1.0, UnderstoryPEP / TotUnderstoryPotSWUptake);
@@ -1585,7 +1583,7 @@ namespace Models.PMF.OilPalm
                 sw_dep[j] = sw_dep[j] - UnderstorySWUptake[j];
 
             }
-            Soil.SoilWater.sw_dep = sw_dep;
+            Soil.SoilWater.SWmm = sw_dep;
 
             if (UnderstoryPEP > 0.0)
                 UnderstoryFW = UnderstoryEP / UnderstoryPEP;

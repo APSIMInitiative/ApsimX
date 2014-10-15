@@ -143,7 +143,7 @@ namespace Models.PMF
                 for (int j = 0; j < thisCrop[i].SWDep.Length; j++)
                 {
                     thisCrop[i].Uptake[j] = Math.Max(0.0, RootProportion(j, RootSystem.RootZones[0].RootDepth, RootSystem.RootZones[0].Soil.Thickness) *
-                                                      kl[j] * (thisCrop[i].SWDep[j] - RootSystem.RootZones[0].Soil.SoilWater.ll15_dep[j]) *
+                                                      kl[j] * (thisCrop[i].SWDep[j] - RootSystem.RootZones[0].Soil.SoilWater.LL15mm[j]) *
                                                       thisCrop[i].Strength);
                     thisCrop[i].Plant = this;
                 }
@@ -185,7 +185,7 @@ namespace Models.PMF
                 Soil Soil = (Soil)Apsim.Find(info[i].Zone, typeof(Soil));
                 double[] ESWlayers;
 
-                ESWlayers = Utility.Math.Subtract(info[i].SWDep, Soil.SoilWater.ll15_dep);//Utility.Math.Multiply(Soil.LL(CropType), Soil.Thickness)); //is this right?
+                ESWlayers = Utility.Math.Subtract(info[i].SWDep, Soil.SoilWater.LL15mm);//Utility.Math.Multiply(Soil.LL(CropType), Soil.Thickness)); //is this right?
                 for (int j = 0; j < ESWlayers.Length; j++)
                     ESWlayers[j] = Math.Max(0.0, ESWlayers[j]);
                 ESWDeps[i] = (double)Utility.Math.Sum(ESWlayers);
@@ -217,6 +217,18 @@ namespace Models.PMF
             depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
             return depth_of_root_in_layer / dlayer[layer];
+        }
+
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar">The cultivar.</param>
+        /// <param name="population">The population.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="maxCover">The maximum cover.</param>
+        /// <param name="budNumber">The bud number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        {
+
         }
     }
 }

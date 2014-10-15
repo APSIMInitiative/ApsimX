@@ -986,12 +986,12 @@ namespace Models
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].Wt</string>
-          <string>[Soil].SoilWater.drain</string>
-          <string>[Soil].SoilWater.es as evaporation</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.HumicN) as TotalHumusN</string>
-          <string>sum([Soil].SoilNitrogen.BiomassN) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.MicrobialN) as TotalBiomN</string>
           <string>sum([Soil].SoilNitrogen.FOMN) as TotalFomN</string>
           <string>[SurfaceOrganicMatter].N</string>
         </VariableNames>
@@ -2768,12 +2768,12 @@ namespace Models
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].Wt</string>
-          <string>[Soil].SoilWater.drain</string>
-          <string>[Soil].SoilWater.es as evaporation</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.HumicN) as TotalHumusN</string>
-          <string>sum([Soil].SoilNitrogen.BiomassN) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.MicrobialN) as TotalBiomN</string>
           <string>sum([Soil].SoilNitrogen.FOMN) as TotalFomN</string>
         </VariableNames>
         <EventNames>
@@ -4556,12 +4556,12 @@ namespace Models
           <string>AgPasture.GPP</string>
           <string>AgPasture.NitrogenSupply</string>
           <string>[SurfaceOrganicMatter].Wt</string>
-          <string>[Soil].SoilWater.drain</string>
-          <string>[Soil].SoilWater.es as evaporation</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Es as evaporation</string>
           <string>sum([Soil].SoilNitrogen.NO3) as TotalNO3</string>
           <string>sum([Soil].SoilNitrogen.NH4) as TotalNH4</string>
           <string>sum([Soil].SoilNitrogen.HumicN) as TotalHumusN</string>
-          <string>sum([Soil].SoilNitrogen.BiomassN) as TotalBiomN</string>
+          <string>sum([Soil].SoilNitrogen.MicrobialN) as TotalBiomN</string>
           <string>sum([Soil].SoilNitrogen.FOMN) as TotalFomN</string>
           <string>[SurfaceOrganicMatter].N</string>
         </VariableNames>

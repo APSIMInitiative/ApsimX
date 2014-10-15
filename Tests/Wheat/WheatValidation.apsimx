@@ -1242,11 +1242,11 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <RootCN>0</RootCN>
-            <RootWt>0</RootWt>
-            <SoilCN>0</SoilCN>
-            <EnrACoeff>0</EnrACoeff>
-            <EnrBCoeff>0</EnrBCoeff>
+            <RootCN>60</RootCN>
+            <RootWt>2000</RootWt>
+            <SoilCN>14.5</SoilCN>
+            <EnrACoeff>1</EnrACoeff>
+            <EnrBCoeff>1</EnrBCoeff>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2299,7 +2299,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
       InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
@@ -2320,7 +2320,7 @@ double OrganicN = 0;
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.NH4[layer];
@@ -2330,11 +2330,11 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -2342,8 +2342,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -4519,7 +4519,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
       InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
@@ -4540,7 +4540,7 @@ double OrganicN = 0;
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.NH4[layer];
@@ -4550,11 +4550,11 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -4562,8 +4562,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -9306,7 +9306,7 @@ public class Script : Model
             <string>Wheat.NStress.Photo</string>
             <string>Wheat.NStress.Expansion</string>
             <string>Wheat.Total.Wt</string>
-            <string>sum([Soil].SoilWater.sw_dep) as TotalSW</string>
+            <string>sum([Soil].SoilWater.SWmm) as TotalSW</string>
             <string />
           </VariableNames>
           <EventNames>
@@ -10601,7 +10601,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
       InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
@@ -10622,7 +10622,7 @@ double OrganicN = 0;
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.NH4[layer];
@@ -10632,11 +10632,11 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -10644,8 +10644,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -11849,7 +11849,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
       InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
@@ -11870,7 +11870,7 @@ double OrganicN = 0;
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.NH4[layer];
@@ -11880,11 +11880,11 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -11892,8 +11892,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -13904,7 +13904,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
       InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
       InitialMineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
@@ -13925,7 +13925,7 @@ double OrganicN = 0;
     { 
     AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
     AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-    OrganicN += (Soil.SoilNitrogen.BiomassN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.SoilNitrogen.NO3[layer];
     TotalNH4 += Soil.SoilNitrogen.NH4[layer];
@@ -13935,11 +13935,11 @@ DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -13947,8 +13947,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -14059,7 +14059,7 @@ private void OnDoManagement(object sender, EventArgs e)
     <DisabledSeries />
   </Graph>
   <Graph>
-    <Name>BiomassN</Name>
+    <Name>MicrobialN</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Observed Above Ground N</Title>

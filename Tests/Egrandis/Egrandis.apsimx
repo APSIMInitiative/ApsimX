@@ -1003,7 +1003,10 @@
 				double PlantPopulation = 1/(RowWidth*RowSpace);
 
 				if (Clock.Today.Date == SowingDate)
-                    Plant.Sow(Population:PlantPopulation, Cultivar:CultivarName);
+                    Plant.Sow(population:PlantPopulation, 
+                              cultivar:CultivarName, 
+                              depth:100, 
+                              rowSpacing:150);
                 //Plant.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -2650,10 +2653,10 @@
           <string>Eucalyptus.Phenology.CurrentPhaseName</string>
           <string>Eucalyptus.Phenology.StageCode.Value</string>
           <string>Eucalyptus.Root.NSupplyUptake</string>
-          <string>[Soil].SoilWater.eo</string>
-          <string>[Soil].SoilWater.es</string>
-          <string>[Soil].SoilWater.drain</string>
-          <string>[Soil].SoilWater.runoff</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Runoff</string>
           <string>[Soil].SoilWater.pond</string>
           <string>Eucalyptus.Summariser.AboveGround.Wt</string>
           <string>Eucalyptus.Summariser.BelowGround.Wt</string>
@@ -2702,7 +2705,7 @@
           <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
           <string>Eucalyptus.Leaf.SpecificArea</string>
           <string>Eucalyptus.Summariser.TotalDead.Wt</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].SoilNitrogen.NO3</string>
           <string>Eucalyptus.Arbitrator.NDemand</string>
           <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>

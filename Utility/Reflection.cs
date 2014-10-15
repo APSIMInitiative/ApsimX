@@ -413,8 +413,8 @@ namespace Utility
                 return Boolean.Parse(stringValue);
             else if (type.IsEnum)
                 return Enum.Parse(type, stringValue, true);
-
-            throw new Exception("Cannot convert the string '" + stringValue + "' to a " + type.ToString());
+            else
+                return null;
         }
 
         /// <summary>

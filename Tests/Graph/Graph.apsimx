@@ -31,7 +31,7 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2543,7 +2543,7 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -5161,7 +5161,7 @@ The second example` shows a soil depth plot where all data is coming directly fr
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Soil].SoilWater.sw_dep</string>
+          <string>[Soil].SoilWater.SWmm</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -7688,7 +7688,7 @@ The second example` shows a soil depth plot where all data is coming directly fr
       </X>
       <Y>
         <TableName>Report</TableName>
-        <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+        <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
@@ -7708,7 +7708,7 @@ The second example` shows a soil depth plot where all data is coming directly fr
       </X>
       <Y>
         <TableName>Observed</TableName>
-        <FieldName>Soil.SoilWater.sw_dep(1)</FieldName>
+        <FieldName>Soil.SoilWater.SWmm(1)</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
