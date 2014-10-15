@@ -1502,6 +1502,7 @@
           <string>[Soil].SoilWater.flow as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.es as es</string>
+          <string>[Soil].SoilWater.infiltration as infiltration</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -4820,7 +4821,7 @@ namespace Models
         <Longitude>0</Longitude>
       </Soil>
       <SurfaceOrganicMatter>
-        <Name>Surface Organic Matter</Name>
+        <Name>SurfaceOM</Name>
         <ResidueTypes>
           <Name>ResidueTypesList</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -4876,7 +4877,7 @@ namespace Models
           <string>[Soil].SoilWater.u as u</string>
           <string>[Soil].SoilWater.cona as cona</string>
           <string>[Soil].SoilWater.t as t</string>
-          <string>[Surface Organic Matter].surfaceom_cover as surfaceom_cover</string>
+          <string>[SurfaceOrganicMatter].surfaceom_cover as surfaceom_cover</string>
           <string>[Soil].SoilWater.es as es</string>
           <string>[Soil].SoilWater.eo as eo</string>
           <string>[Soil].SoilWater.eos as eos</string>
@@ -5351,7 +5352,7 @@ namespace Models
         <Longitude>0</Longitude>
       </Soil>
       <SurfaceOrganicMatter>
-        <Name>Surface Organic Matter</Name>
+        <Name>SurfaceOM</Name>
         <ResidueTypes>
           <Name>ResidueTypesList</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
@@ -5395,7 +5396,7 @@ namespace Models
           <string>[Clock].Today</string>
           <string>[Weather].Rain as rain</string>
           <string>[Soil].SoilWater.runoff as runoff</string>
-          <string>[Surface Organic Matter].surfaceom_cover as surfaceom_cover</string>
+          <string>[SurfaceOrganicMatter].surfaceom_cover as surfaceom_cover</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
           <string>[Soil].SoilWater.dul_dep as dul_dep</string>
@@ -5406,6 +5407,7 @@ namespace Models
           <string>[Soil].SoilWater.flow as flow</string>
           <string>[Soil].SoilWater.drain as drain</string>
           <string>[Soil].SoilWater.es as es</string>
+          <string>[Soil].SoilWater.infiltration as infiltration</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
