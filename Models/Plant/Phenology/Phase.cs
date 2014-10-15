@@ -36,7 +36,7 @@ namespace Models.PMF.Phen
     \f[
         \Delta TT_{pheno}=\Delta TT\times f_{s,\, pheno}
     \f]
-    if \a Stress no exist
+    if \a Stress no exist.
     \f[
         \Delta TT_{pheno}=\Delta TT
     \f] 
