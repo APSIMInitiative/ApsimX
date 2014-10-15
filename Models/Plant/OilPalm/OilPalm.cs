@@ -1141,7 +1141,7 @@ namespace Models.PMF.OilPalm
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
             {
                 double swaf = 0;
-                swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.LL15mm[j]) / (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.LL15mm[j]);
+                swaf = (Soil.SoilWater.sw_dep[j] - Soil.SoilWater.LL15mm[j]) / (Soil.SoilWater.DULmm[j] - Soil.SoilWater.LL15mm[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                 double no3ppm = Soil.SoilNitrogen.NO3[j] * (100.0 / (Soil.BD[j] * Soil.SoilWater.dlayer[j]));
                 PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * Soil.SoilNitrogen.NO3[j] * swaf);

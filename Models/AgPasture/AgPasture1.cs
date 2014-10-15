@@ -1753,7 +1753,7 @@ namespace Models.AgPasture1
                 {
                     sWater += Soil.SoilWater.sw_dep[layer];
                     sSat += Soil.SoilWater.sat_dep[layer];
-                    sDUL += Soil.SoilWater.dul_dep[layer];
+                    sDUL += Soil.SoilWater.DULmm[layer];
                 }
                 double waterLoggingFactor = 1 - Math.Max(0.0, 0.1 * (sWater - sDUL) / (sSat - sDUL));
                 double waterLimitingFactor = (waterDeficitFactor < 0.999) ? waterDeficitFactor : waterLoggingFactor;
@@ -1805,7 +1805,7 @@ namespace Models.AgPasture1
                     facCond = 1 - Math.Pow(10, -Soil.Water.KS[layer] / referenceKSuptake);
                     facWcontent = 1 - Math.Pow(10,
                                 -(Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]))
-                                / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.LL15mm[layer]));
+                                / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]));
 
                     // theoretical total available water
                     layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));

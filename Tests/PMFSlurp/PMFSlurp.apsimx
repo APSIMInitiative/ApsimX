@@ -632,7 +632,7 @@ namespace Models
 			AccumDrainage -= Soil.SoilWater.drain;
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }

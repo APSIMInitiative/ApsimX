@@ -853,9 +853,9 @@
             <string>[Soil].SoilWater.Infiltration</string>
             <string>[Soil].SoilWater.drain</string>
             <string>[Soil].SoilWater.LL15</string>
-            <string>[Soil].SoilWater.dul</string>
+            <string>[Soil].SoilWater.DUL</string>
             <string>[Soil].SoilWater.LL15mm</string>
-            <string>[Soil].SoilWater.dul_dep</string>
+            <string>[Soil].SoilWater.DULmm</string>
             <string>[ExtraVariables].Script.SWDep60</string>
             <string>[ExtraVariables].Script.FomN</string>
             <string>[ExtraVariables].Script.HumN</string>
@@ -1187,7 +1187,7 @@ namespace Models
 			AccumRainfall += Met.Rain;
 			SWDep60 = 0;
 			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;

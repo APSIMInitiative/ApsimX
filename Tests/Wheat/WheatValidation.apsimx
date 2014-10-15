@@ -2343,7 +2343,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -4563,7 +4563,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -10645,7 +10645,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -11893,7 +11893,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -13948,7 +13948,7 @@ double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
      SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;

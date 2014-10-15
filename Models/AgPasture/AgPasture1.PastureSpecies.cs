@@ -3994,7 +3994,7 @@ namespace Models.AgPasture1
                     facCond = 1 - Math.Pow(10, -Soil.Water.KS[layer] / ReferenceKSuptake);
                     facWcontent = 1 - Math.Pow(10,
                                 -(Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]))
-                                / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.LL15mm[layer]));
+                                / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]));
 
                     // Theoretical total available water
                     result[layer] = Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
@@ -4978,7 +4978,7 @@ namespace Models.AgPasture1
                 // water content at saturation
                 mySaturation += Soil.SoilWater.sat_dep[layer] * fractionLayer;
                 // water content at field capacity
-                myDUL += Soil.SoilWater.dul_dep[layer] * fractionLayer;
+                myDUL += Soil.SoilWater.DULmm[layer] * fractionLayer;
             }
 
             result = 1.0 - waterLoggingCoefficient * Math.Max(0.0, mySWater - myDUL) / (mySaturation - myDUL);

@@ -4426,7 +4426,7 @@ namespace Models
                     {
                         SW += Soil.SoilWater.sw_dep[layer];
                         Sat += Soil.SoilWater.sat_dep[layer];
-                        FC += Soil.SoilWater.dul_dep[layer];
+                        FC += Soil.SoilWater.DULmm[layer];
                     }
                 }
                 if (SW > FC) //if saturated
@@ -5090,7 +5090,7 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.dul[layer] - soilCrop.LL[layer]);
+                    swaf = (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.DUL[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
                     SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);

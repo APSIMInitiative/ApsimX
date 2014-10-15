@@ -442,7 +442,7 @@
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
@@ -965,7 +965,7 @@
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
@@ -1491,7 +1491,7 @@
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
@@ -2043,7 +2043,7 @@ namespace Models
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
@@ -2608,7 +2608,7 @@ namespace Models
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
@@ -3169,7 +3169,7 @@ namespace Models
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
@@ -3695,7 +3695,7 @@ namespace Models
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
@@ -4217,7 +4217,7 @@ namespace Models
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Clock].Today</string>
@@ -4808,7 +4808,7 @@ namespace Models
         <VariableNames>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
@@ -5342,7 +5342,7 @@ namespace Models
           <string>[Surface Organic Matter].surfaceom_cover as surfaceom_cover</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
@@ -5876,7 +5876,7 @@ namespace Models
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
@@ -6435,7 +6435,7 @@ namespace Models
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Soil].SoilWater.sw_dep as sw_dep</string>
@@ -7168,7 +7168,7 @@ namespace Models
           <string>[Irrigation].irrigation</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-          <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+          <string>[Soil].SoilWater.DULmm as dul_dep</string>
           <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
           <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
           <string>[Weather].Rain as rain</string>
@@ -7692,7 +7692,7 @@ namespace Models
           <VariableNames>
             <string>[Soil].SoilWater.dlayer as dlayer</string>
             <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-            <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+            <string>[Soil].SoilWater.DULmm as dul_dep</string>
             <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
             <string>[Weather].Rain as rain</string>
@@ -8222,7 +8222,7 @@ namespace Models
           <VariableNames>
             <string>[Soil].SoilWater.dlayer as dlayer</string>
             <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-            <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+            <string>[Soil].SoilWater.DULmm as dul_dep</string>
             <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
             <string>[Weather].Rain as rain</string>
@@ -8770,7 +8770,7 @@ namespace Models
             <string>[Weather].Rain as rain</string>
             <string>[Soil].SoilWater.Runoff as runoff</string>
             <string>[Soil].SoilWater.dlayer as dlayer</string>
-            <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+            <string>[Soil].SoilWater.DULmm as dul_dep</string>
             <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
             <string>[Soil].SoilWater.sw_dep as sw_dep</string>
@@ -9326,7 +9326,7 @@ namespace Models
 			if (Clock.Today == new DateTime(1940, 01, 05))
 				{
 			    soil.SoilWater.sat_dep = new double[] {30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30};    
-			    soil.SoilWater.dul_dep = new double[] {20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20};  
+			    soil.SoilWater.DULmm = new double[] {20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20};  
 			   soil.SoilWater.LL15mm = new double[] {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};  
 		    soil.SoilWater.air_dry_dep = new double[] { 3,  4,  5,  5,  5,  5,  5,  5,  5,  5,  5};    
 				}
@@ -9335,7 +9335,7 @@ namespace Models
 			if (Clock.Today == new DateTime(1940, 01, 08)) 
 				{
 			    soil.SoilWater.sat = new double[] {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};    
-			    soil.SoilWater.dul = new double[] {0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4};  
+			    soil.SoilWater.DUL = new double[] {0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4};  
 			   soil.SoilWater.LL15 = new double[] {0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3};  
 			soil.SoilWater.air_dry = new double[] {0.1, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2};  
 				}
@@ -9434,11 +9434,11 @@ namespace Models
             <string>[calculate total_pond].Script.total_pond as total_pond</string>
             <string>[Soil].SoilWater.dlayer as dlayer</string>
             <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-            <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+            <string>[Soil].SoilWater.DULmm as dul_dep</string>
             <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
             <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
             <string>[Soil].SoilWater.sat as sat</string>
-            <string>[Soil].SoilWater.dul as dul</string>
+            <string>[Soil].SoilWater.DUL as dul</string>
             <string>[Soil].SoilWater.LL15 as ll15</string>
             <string>[Soil].SoilWater.air_dry as air_dry</string>
             <string>[Weather].Rain as rain</string>
@@ -10558,7 +10558,7 @@ namespace Models
             <VariableNames>
               <string>[Soil].SoilWater.dlayer as dlayer</string>
               <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-              <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+              <string>[Soil].SoilWater.DULmm as dul_dep</string>
               <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
               <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
               <string>[Clock].Today</string>
@@ -11217,11 +11217,11 @@ namespace Models
               <string>[Soil].SoilWater.sw_dep as sw_dep</string>
               <string>[Soil].SoilWater.dlayer as dlayer</string>
               <string>[Soil].SoilWater.sat as sat</string>
-              <string>[Soil].SoilWater.dul as dul</string>
+              <string>[Soil].SoilWater.DUL as dul</string>
               <string>[Soil].SoilWater.LL15 as ll15</string>
               <string>[Soil].SoilWater.air_dry as air_dry</string>
               <string>[Soil].SoilWater.sat_dep as sat_dep</string>
-              <string>[Soil].SoilWater.dul_dep as dul_dep</string>
+              <string>[Soil].SoilWater.DULmm as dul_dep</string>
               <string>[Soil].SoilWater.LL15mm as ll15_dep</string>
               <string>[Soil].SoilWater.air_dry_dep as air_dry_dep</string>
               <string>[Weather].Rain as rain</string>

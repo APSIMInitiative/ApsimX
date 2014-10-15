@@ -748,7 +748,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        public double[] dul       //! drained upper limit soil water content for each soil layer 
+        public double[] DUL       //! drained upper limit soil water content for each soil layer 
         {
             get
             {
@@ -1012,7 +1012,7 @@ namespace Models.Soils
         /// <value>The dul_dep.</value>
         [Units("mm")]
         [XmlIgnore]
-        public double[] dul_dep   // dul * dlayer  //see soilwat2_init() for initialisation
+        public double[] DULmm   // dul * dlayer  //see soilwat2_init() for initialisation
         {
             get { return _dul_dep; }
             set
@@ -2190,7 +2190,7 @@ namespace Models.Soils
                 _dlayer = new double[reset_dlayer.Length];
                 Array.Copy(reset_dlayer, _dlayer, reset_dlayer.Length);
                 sat = reset_sat;
-                dul = reset_dul;
+                DUL = reset_dul;
                 numvals_sw = reset_numvals_sw;  //used in soilwat2_set_default();
                 sw = reset_sw;
                 LL15 = reset_ll15;
@@ -4495,7 +4495,7 @@ namespace Models.Soils
             {
                 dlayer = Soil.Thickness;
                 sat = Soil.SAT;
-                dul = Soil.DUL;
+                DUL = Soil.DUL;
                 sw = Soil.SW;
                 LL15 = Soil.LL15;
                 air_dry = Soil.AirDry;
