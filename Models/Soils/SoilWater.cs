@@ -847,7 +847,7 @@ namespace Models.Soils
         [Units("0-1")]
 #endif
         [XmlIgnore]
-        public double[] ll15      //! 15 bar lower limit of extractable soil water for each soil layer
+        public double[] LL15      //! 15 bar lower limit of extractable soil water for each soil layer
         {
             get
             {
@@ -1062,7 +1062,7 @@ namespace Models.Soils
         /// <value>The ll15_dep.</value>
         [Units("mm")]
         [XmlIgnore]
-        public double[] ll15_dep  // ll15 * dlayer //see soilwat2_init() for initialisation
+        public double[] LL15mm  // ll15 * dlayer //see soilwat2_init() for initialisation
         {
             get { return _ll15_dep; }
             set
@@ -2193,7 +2193,7 @@ namespace Models.Soils
                 dul = reset_dul;
                 numvals_sw = reset_numvals_sw;  //used in soilwat2_set_default();
                 sw = reset_sw;
-                ll15 = reset_ll15;
+                LL15 = reset_ll15;
                 air_dry = reset_air_dry;
                 inReset = false;
             }
@@ -2230,7 +2230,7 @@ namespace Models.Soils
                 double swr_top;       //! stage 2 evaporation occurs ratio available sw potentially available sw in top layer
 
                 //! set up evaporation stage
-                swr_top = Utility.Math.Divide((_sw_dep[0] - ll15_dep[0]), (_dul_dep[0] - _ll15_dep[0]), 0.0);
+                swr_top = Utility.Math.Divide((_sw_dep[0] - LL15mm[0]), (_dul_dep[0] - _ll15_dep[0]), 0.0);
                 swr_top = bound(swr_top, 0.0, 1.0);
 
                 //! are we in stage1 or stage2 evap?
@@ -4497,7 +4497,7 @@ namespace Models.Soils
                 sat = Soil.SAT;
                 dul = Soil.DUL;
                 sw = Soil.SW;
-                ll15 = Soil.LL15;
+                LL15 = Soil.LL15;
                 air_dry = Soil.AirDry;
                 ks = Water.KS;
                 bd = Water.BD;

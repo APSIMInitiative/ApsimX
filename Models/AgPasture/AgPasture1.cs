@@ -1804,8 +1804,8 @@ namespace Models.AgPasture1
                 {
                     facCond = 1 - Math.Pow(10, -Soil.Water.KS[layer] / referenceKSuptake);
                     facWcontent = 1 - Math.Pow(10,
-                                -(Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer]))
-                                / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.ll15_dep[layer]));
+                                -(Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]))
+                                / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.LL15mm[layer]));
 
                     // theoretical total available water
                     layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
@@ -1992,7 +1992,7 @@ namespace Models.AgPasture1
                     // Method implemented by RCichota,
                     // N is available following water uptake and a given 'availability' factor (for each N form)
 
-                    facWtaken = swardWaterUptake[layer] / Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer]);
+                    facWtaken = swardWaterUptake[layer] / Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]);
 
                     layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
                     nK = mySward.Max(mySpecies => mySpecies.kuNH4);

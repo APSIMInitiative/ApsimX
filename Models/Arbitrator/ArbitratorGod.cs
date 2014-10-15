@@ -615,7 +615,7 @@ namespace Models.ArbitratorGod
                                 }
                                 else if (resourceToArbitrate.ToLower() == "nitrogen")
                                 {
-                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.ll15_dep[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.ll15_dep[l]), 0.0), 0.0, 1.0);
+                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.LL15mm[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.LL15mm[l]), 0.0), 0.0, 1.0);
                                     if (f == 0)
                                     {
                                         extractable[p, l, z, b, f] = relativeSoilWaterContent

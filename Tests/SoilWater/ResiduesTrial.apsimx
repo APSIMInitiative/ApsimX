@@ -852,9 +852,9 @@
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.Infiltration</string>
             <string>[Soil].SoilWater.drain</string>
-            <string>[Soil].SoilWater.ll15</string>
+            <string>[Soil].SoilWater.LL15</string>
             <string>[Soil].SoilWater.dul</string>
-            <string>[Soil].SoilWater.ll15_dep</string>
+            <string>[Soil].SoilWater.LL15mm</string>
             <string>[Soil].SoilWater.dul_dep</string>
             <string>[ExtraVariables].Script.SWDep60</string>
             <string>[ExtraVariables].Script.FomN</string>

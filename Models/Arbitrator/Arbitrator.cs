@@ -525,7 +525,7 @@ namespace Models.Arbitrator
                                 }
                                 else if (resourceToArbitrate.ToLower() == "nitrogen")
                                 {
-                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.ll15_dep[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.ll15_dep[l]), 0.0), 0.0, 1.0);
+                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.LL15mm[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.LL15mm[l]), 0.0), 0.0, 1.0);
                                     if (f == 0)
                                     {
                                         extractable[p, l, z, b, f] = relativeSoilWaterContent
@@ -737,7 +737,7 @@ namespace Models.Arbitrator
             totalAvailableWater = new double[Soil.SoilWater.dlayer.Length];
             for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
             {
-                totalAvailableWater[j] = Math.Max(0.0, Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]);
+                totalAvailableWater[j] = Math.Max(0.0, Soil.SoilWater.sw_dep[j] - Soil.SoilWater.LL15mm[j]);
             }
 
             // compare the potential water supply against the total available water
@@ -848,7 +848,7 @@ namespace Models.Arbitrator
                     {
                         //method from OilPlam - based on amount
                         double relativeSoilWaterContent = 0;
-                        relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[j] - Soil.SoilWater.ll15_dep[j]), (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.ll15_dep[j]), 0.0), 0.0, 1.0);
+                        relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[j] - Soil.SoilWater.LL15mm[j]), (Soil.SoilWater.dul_dep[j] - Soil.SoilWater.LL15mm[j]), 0.0), 0.0, 1.0);
 
                         potentialSupplyNitrogenPlantLayer[i, j] = Math.Max(0.0, plants[i].RootProperties.RootExplorationByLayer[j] * (Utility.Math.Divide(plants[i].RootProperties.KNO3, plants.Count, 0.0) * Soil.SoilNitrogen.NO3[j] + Utility.Math.Divide(plants[i].RootProperties.KNH4, plants.Count, 0.0) * Soil.SoilNitrogen.NH4[j]) * relativeSoilWaterContent);
                         tempSupply += potentialSupplyNitrogenPlantLayer[i, j]; // temporary add up the supply of water across all layers for this crop, then scale back if needed below

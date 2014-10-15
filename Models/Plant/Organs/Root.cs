@@ -352,7 +352,7 @@ namespace Models.PMF.Organs
                 if (LayerLive[layer].Wt > 0)
                 {
                     double swaf = 0;
-                    swaf = (Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer]) / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.ll15_dep[layer]);
+                    swaf = (Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.LL15mm[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     no3ppm[layer] = Soil.SoilNitrogen.NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.SoilWater.dlayer[layer]));
                     NO3Supply[layer] = Soil.SoilNitrogen.NO3[layer] * KNO3 * no3ppm[layer] * swaf;

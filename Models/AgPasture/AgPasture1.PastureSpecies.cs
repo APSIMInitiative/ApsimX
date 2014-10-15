@@ -3993,8 +3993,8 @@ namespace Models.AgPasture1
                     facRLD = 1 - Math.Pow(10, -myRLD[layer] / ReferenceRLD);
                     facCond = 1 - Math.Pow(10, -Soil.Water.KS[layer] / ReferenceKSuptake);
                     facWcontent = 1 - Math.Pow(10,
-                                -(Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer]))
-                                / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.ll15_dep[layer]));
+                                -(Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]))
+                                / (Soil.SoilWater.dul_dep[layer] - Soil.SoilWater.LL15mm[layer]));
 
                     // Theoretical total available water
                     result[layer] = Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
@@ -4177,7 +4177,7 @@ namespace Models.AgPasture1
 
                     // fraction of available water taken up
                     facWtaken = Utility.Math.Divide(mySoilWaterTakenUp[layer],
-                                Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.ll15_dep[layer]), 0.0);
+                                Math.Max(0.0, Soil.SoilWater.sw_dep[layer] - Soil.SoilWater.LL15mm[layer]), 0.0);
 
                     // Theoretical amount available
                     mySoilNH4available[layer] = Soil.SoilNitrogen.NH4[layer] * kuNH4 * LayerFractionWithRoots(layer);
