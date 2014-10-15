@@ -132,6 +132,7 @@ namespace Models.Soils.SoilWaterBackend
             winterU = SoilObject.WinterU;
             winterDate = SoilObject.WinterDate;
 
+            InitialiseAccumulatingVars(SoilObject);  //initialise the evaporation object.
             }
 
 
