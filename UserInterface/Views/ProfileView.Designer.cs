@@ -42,7 +42,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
@@ -53,14 +53,14 @@
             this.splitContainer1.Panel1.Controls.Add(this.ProfileGrid);
             this.splitContainer1.Panel1.Controls.Add(this.splitter1);
             this.splitContainer1.Panel1.Controls.Add(this.PropertyGrid);
-            this.splitContainer1.Panel1MinSize = 300;
+            this.splitContainer1.Panel1MinSize = 400;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Graph);
             this.splitContainer1.Panel2MinSize = 100;
             this.splitContainer1.Size = new System.Drawing.Size(899, 649);
-            this.splitContainer1.SplitterDistance = 300;
+            this.splitContainer1.SplitterDistance = 50;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -76,7 +76,7 @@
             this.ProfileGrid.NumericFormat = null;
             this.ProfileGrid.ReadOnly = false;
             this.ProfileGrid.RowCount = 0;
-            this.ProfileGrid.Size = new System.Drawing.Size(899, 27);
+            this.ProfileGrid.Size = new System.Drawing.Size(899, 0);
             this.ProfileGrid.TabIndex = 4;
             // 
             // splitter1
@@ -111,7 +111,7 @@
             this.Graph.Location = new System.Drawing.Point(0, 0);
             this.Graph.Margin = new System.Windows.Forms.Padding(4);
             this.Graph.Name = "Graph";
-            this.Graph.Size = new System.Drawing.Size(899, 345);
+            this.Graph.Size = new System.Drawing.Size(899, 545);
             this.Graph.TabIndex = 4;
             // 
             // ProfileView
