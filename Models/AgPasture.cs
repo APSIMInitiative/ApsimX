@@ -1624,6 +1624,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant gross potential growth wt.</summary>
+        /// <value>The plant gross potential growth wt.</value>
         public double PlantGrossPotentialGrowthWt
         {
             get { return SP.Sum(x => x.Pgross) * 2.5; }
@@ -1657,6 +1659,8 @@ namespace Models
             get { return p_dGrowth; }
         }
 
+        /// <summary>Gets the plant effective growth wt.</summary>
+        /// <value>The plant effective growth wt.</value>
         public double PlantEffectiveGrowthWt
         {
             get { return SP.Sum(x => x.dGrowth) - SP.Sum(x => x.dLitter) - SP.Sum(x => x.dRootSen); }
@@ -3978,7 +3982,8 @@ namespace Models
             }
         }
 
-
+        /// <summary>Gets the species gross pot growth.</summary>
+        /// <value>The species gross pot growth.</value>
         public double[] SpeciesGrossPotGrowth
         {
             get
@@ -3990,6 +3995,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species net pot growth.</summary>
+        /// <value>The species net pot growth.</value>
         public double[] SpeciesNetPotGrowth
         {
             get
@@ -4000,6 +4007,9 @@ namespace Models
                 return result;
             }
         }
+
+        /// <summary>Gets the species pot growth w.</summary>
+        /// <value>The species pot growth w.</value>
         public double[] SpeciesPotGrowthW
         {
             get
@@ -4010,6 +4020,9 @@ namespace Models
                 return result;
             }
         }
+
+        /// <summary>Gets the species actual growth.</summary>
+        /// <value>The species actual growth.</value>
         public double[] SpeciesActualGrowth
         {
             get
@@ -4108,8 +4121,8 @@ namespace Models
         private double p_dNRootSen;	   //daily root senescence
 
         //p_... variables are pasture states at a given time (day)
-        /// <summary>The P_F shoot</summary>
-        private double p_fShoot;		  //actual fraction of dGrowth to shoot
+        
+        //private double p_fShoot;		  //actual fraction of dGrowth to shoot
         /// <summary>The p_height</summary>
         private double p_height;		  // Canopy height (mm)
         /// <summary>The p_green lai</summary>

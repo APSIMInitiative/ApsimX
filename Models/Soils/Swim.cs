@@ -9,10 +9,10 @@ using System.Xml.Serialization;
 
 namespace Models.Soils
 {
-    ///<summary>
+    /// <summary>
     /// .NET port of the Fortran SWIM3 model
     /// Ported by Eric Zurcher July-August 2014
-    ///</summary> 
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]   // Until we have a better view for SWIM...
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -20,21 +20,11 @@ namespace Models.Soils
     {
         #region Links
 
+        /// <summary>The clock</summary>
         [Link]
         private Clock clock = null;
 
-        //[Link]
-        //private Component My = null;  // Get access to "Warning" function
-
-        [Link]
-        Weather metFile = null;
-
-        [Link]
-        private Soil soil = null;
-
-        [Link]
-        private Water water = null;
-
+        /// <summary>The summary</summary>
         [Link]
         private ISummary summary = null;
 
@@ -42,15 +32,21 @@ namespace Models.Soils
 
         #region Constants
 
+        /// <summary>The effpar</summary>
         const double effpar = 0.184;
+        /// <summary>The psi_ll15</summary>
         const double psi_ll15 = -15000.0;
+        /// <summary>The psiad</summary>
         const double psiad = -1e6;
+        /// <summary>The psi0</summary>
         const double psi0 = -0.6e7;
 
         #endregion
 
         #region user settable parameters
 
+        /// <summary>Gets or sets the salb.</summary>
+        /// <value>The salb.</value>
         [Description("Bare soil albedo")]
         [Units("0-1")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
@@ -66,361 +62,594 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets or sets the c n2 bare.</summary>
+        /// <value>The c n2 bare.</value>
         [Description("Bare soil runoff curve number")]
         [Bounds(Lower = 0.0, Upper = 100.0)]
         public double CN2Bare { get; set; }
 
+        /// <summary>Gets or sets the cn red.</summary>
+        /// <value>The cn red.</value>
         [Description("Max. reduction in curve number due to cover")]
         [Bounds(Lower = 0.0, Upper = 100.0)]
         public double CNRed { get; set; }
 
+        /// <summary>Gets or sets the cn cov.</summary>
+        /// <value>The cn cov.</value>
         [Description("Cover for max curve number reduction")]
         [Bounds(Lower = 0.0, Upper = 100.0)]
         public double CNCov { get; set; }
 
+        /// <summary>Gets or sets the k dul.</summary>
+        /// <value>The k dul.</value>
         [Description("Hydraulic conductivity at DUL (mm/d)")]
         [Units("mm/d")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         public double KDul { get; set; }
 
+        /// <summary>Gets or sets the psi dul.</summary>
+        /// <value>The psi dul.</value>
         [Description("Matric Potential at DUL (cm)")]
         [Units("cm")]
         [Bounds(Lower = -1e3, Upper = 0.0)]
         public double PSIDul { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether this <see cref="Swim3"/> is vc.</summary>
+        /// <value><c>true</c> if vc; otherwise, <c>false</c>.</value>
         [Description("Vapour Conductivity Calculations?")]
         public bool VC { get; set; }
 
+        /// <summary>Gets or sets the d tmin.</summary>
+        /// <value>The d tmin.</value>
         [Description("Minimum Timestep (min)")]
         [Units("min")]
         [Bounds(Lower = 0.0, Upper = 1440.0)]
         public double DTmin { get; set; }
 
+        /// <summary>Gets or sets the d tmax.</summary>
+        /// <value>The d tmax.</value>
         [Description("Maximum Timestep (min)")]
         [Units("min")]
         [Bounds(Lower = 0.01, Upper = 1440.0)]
         public double DTmax { get; set; }
 
+        /// <summary>Gets or sets the maximum water increment.</summary>
+        /// <value>The maximum water increment.</value>
         [Description("Maximum water increment (mm)")]
         public double MaxWaterIncrement { get; set; }
 
+        /// <summary>Gets or sets the space weighting factor.</summary>
+        /// <value>The space weighting factor.</value>
         [Description("Space weighting factor")]
         public double SpaceWeightingFactor { get; set; }
 
+        /// <summary>Gets or sets the solute space weighting factor.</summary>
+        /// <value>The solute space weighting factor.</value>
         [Description("Solute space weighting factor")]
         public double SoluteSpaceWeightingFactor { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether this <see cref="Swim3"/> is diagnostics.</summary>
+        /// <value><c>true</c> if diagnostics; otherwise, <c>false</c>.</value>
         [Description("Diagnostic Information?")]
         public bool Diagnostics { get; set; }
 
         #endregion
 
+        /// <summary>Gets or sets the dtmin.</summary>
+        /// <value>The dtmin.</value>
         [Units("min")]
         [Bounds(Lower = 0.0, Upper = 1440.0)]
         public double dtmin { get; set; }
 
+        /// <summary>Gets or sets the dtmax.</summary>
+        /// <value>The dtmax.</value>
         [Units("min")]
         [Bounds(Lower = 0.01, Upper = 1440.0)]
         public double dtmax { get; set; }
 
+        /// <summary>Gets or sets the dw.</summary>
+        /// <value>The dw.</value>
         [Bounds(Lower = 1e-3, Upper = 10.0)]
         double dw { get; set; }
 
+        /// <summary>Gets or sets the SWT.</summary>
+        /// <value>The SWT.</value>
         public double swt { get; set; }
 
+        /// <summary>Gets or sets the negative_conc_warn.</summary>
+        /// <value>The negative_conc_warn.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         public double negative_conc_warn { get; set; }
 
+        /// <summary>Gets or sets the negative_conc_fatal.</summary>
+        /// <value>The negative_conc_fatal.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         public double negative_conc_fatal { get; set; }
 
+        /// <summary>Gets or sets the max_iterations.</summary>
+        /// <value>The max_iterations.</value>
         [Bounds(Lower = 1, Upper = 100)]
         // [Description("number of iterations before timestep is halved")]
         public int max_iterations { get; set; }
 
-        private double _hm0;
+        /// <summary>The _HM0</summary>
+        private double _hm0 = 0;
+        /// <summary>Gets or sets the HM0.</summary>
+        /// <value>The HM0.</value>
         [Units("mm")]
         public double hm0 { get; set; }
 
+        /// <summary>Gets or sets the minimum_surface_storage.</summary>
+        /// <value>The minimum_surface_storage.</value>
         [Bounds(Lower = 1e-3, Upper = 100.0)]
         [Units("mm")]
         public double minimum_surface_storage { get; set; }
 
-        private double _hm1;
+        /// <summary>The _HM1</summary>
+        private double _hm1 = 0;
+        /// <summary>Gets or sets the HM1.</summary>
+        /// <value>The HM1.</value>
         [Units("mm")]
         public double hm1 { get; set; }
 
+        /// <summary>Gets or sets the maximum_surface_storage.</summary>
+        /// <value>The maximum_surface_storage.</value>
         [Bounds(Lower = 1e-3, Upper = 1000.0)]
         [Units("mm")]
         public double maximum_surface_storage { get; set; }
 
-        private double _hrc;
+        /// <summary>The _HRC</summary>
+        private double _hrc = 0;
+        /// <summary>Gets or sets the HRC.</summary>
+        /// <value>The HRC.</value>
         [Units("mm")]
         public double hrc { get; set; }
 
-        private double _grc;
+        /// <summary>The _GRC</summary>
+        private double _grc = 0;
+        /// <summary>Gets or sets the GRC.</summary>
+        /// <value>The GRC.</value>
         [Units("cm")]
         public double grc { get; set; }
 
+        /// <summary>Gets or sets the roff0.</summary>
+        /// <value>The roff0.</value>
         [Bounds(Lower = 1.0e-6, Upper = 100.0)]
         [Units("mm/mm^p")]
         public double roff0 { get; set; }
 
+        /// <summary>Gets or sets the roff1.</summary>
+        /// <value>The roff1.</value>
         [Bounds(Lower = 0.1, Upper = 10.0)]
         public double roff1 { get; set; }
 
+        /// <summary>Gets or sets the cover_effects.</summary>
+        /// <value>The cover_effects.</value>
         public string cover_effects { get; set; }
 
+        /// <summary>Gets or sets the DPPL.</summary>
+        /// <value>The DPPL.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         public double dppl { get; set; }
 
+        /// <summary>Gets or sets the DPNL.</summary>
+        /// <value>The DPNL.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         public double dpnl { get; set; }
 
+        /// <summary>Gets or sets the slcerr.</summary>
+        /// <value>The slcerr.</value>
         [Bounds(Lower = 1e-8, Upper = 1e-4)]
         public double slcerr { get; set; }
 
-        private double _g0;
+        /// <summary>The _G0</summary>
+        private double _g0 = 0;
 
+        /// <summary>The g0</summary>
         [Units("mm")]
         public double g0 = Double.NaN;
 
+        /// <summary>Gets or sets the minimum_conductance.</summary>
+        /// <value>The minimum_conductance.</value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("/h")]
         public double minimum_conductance { get; set; }
 
-        private double _g1;
+        /// <summary>The _G1</summary>
+        private double _g1 = 0;
 
+        /// <summary>The g1</summary>
         [Units("/h")]
         public double g1 = Double.NaN;
 
+        /// <summary>Gets or sets the maximum_conductance.</summary>
+        /// <value>The maximum_conductance.</value>
         [Bounds(Lower = 0.0, Upper = 1.0e6)]
         [Units("/h")]
         public double maximum_conductance { get; set; }
 
+        /// <summary>Gets or sets the ersoil.</summary>
+        /// <value>The ersoil.</value>
         [Bounds(Lower = 1.0e-10, Upper = 1.0)]
         public double ersoil { get; set; }
 
+        /// <summary>Gets or sets the ernode.</summary>
+        /// <value>The ernode.</value>
         [Bounds(Lower = 1.0e-10, Upper = 1.0)]
         public double ernode { get; set; }
 
+        /// <summary>Gets or sets the errex.</summary>
+        /// <value>The errex.</value>
         [Bounds(Lower = 1.0e-10, Upper = 1.0)]
         public double errex { get; set; }
 
+        /// <summary>Gets or sets the SLSWT.</summary>
+        /// <value>The SLSWT.</value>
         [Bounds(Lower = -1.0, Upper = 1.0)]
         public double slswt { get; set; }
 
+        /// <summary>Gets or sets the a_to_evap_fact.</summary>
+        /// <value>The a_to_evap_fact.</value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         //[Description("converts residue specfic area 'A' to")]
         public double a_to_evap_fact { get; set; }
 
+        /// <summary>Gets or sets the canopy_eos_coef.</summary>
+        /// <value>The canopy_eos_coef.</value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         //[Description("coef. in exp effect of canopy on")]
         public double canopy_eos_coef { get; set; }
 
-        private double[] _swf;
+        /// <summary>The _SWF</summary>
+        private double[] _swf = null;
 
-        [Units("mm")]
-        private double rain = Double.NaN;   // from met file
+        //[Units("mm")]
+        //private double rain = Double.NaN;   // from met file
 
-        [Units("oC")]
-        private double mint;
+        //[Units("oC")]
+        //private double mint;
 
-        [Units("oC")]
-        private double maxt;
+        //[Units("oC")]
+        //private double maxt;
 
-        [Units("MJ")]
-        private double radn;
+        //[Units("MJ")]
+        //private double radn;
 
+        /// <summary>The salb</summary>
         private double salb;
+        /// <summary>The _dlayer</summary>
         private double[] _dlayer = null;
-        private double[] _ll15;
-        private double[] _dul;
-        private double[] _sat;
-        private double[] _ks;
-        private double[] _air_dry;
+        //private double[] _ll15;
+        //private double[] _dul;
+        /// <summary>The _sat</summary>
+        private double[] _sat = null;
+        /// <summary>The _KS</summary>
+        private double[] _ks = null;
+        //private double[] _air_dry;
 
+        /// <summary>The swim rain time</summary>
         private double[] SWIMRainTime = new double[0];
+        /// <summary>The swim rain amt</summary>
         private double[] SWIMRainAmt = new double[0];
+        /// <summary>The swim eq rain time</summary>
         private double[] SWIMEqRainTime = new double[0];
+        /// <summary>The swim eq rain amt</summary>
         private double[] SWIMEqRainAmt = new double[0];
+        /// <summary>The swim evap time</summary>
         private double[] SWIMEvapTime = new double[0];
+        /// <summary>The swim evap amt</summary>
         private double[] SWIMEvapAmt = new double[0];
-        private double[][] SWIMSolTime;
-        private double[][] SWIMSolAmt;
-        private double[] SubSurfaceInFlow;
-        private int day;
-        private int year;
+        /// <summary>The swim sol time</summary>
+        private double[][] SWIMSolTime = null;
+        /// <summary>The swim sol amt</summary>
+        private double[][] SWIMSolAmt = null;
+        /// <summary>The sub surface in flow</summary>
+        private double[] SubSurfaceInFlow = null;
+        /// <summary>The day</summary>
+        private int day = 0;
+        /// <summary>The year</summary>
+        private int year = 0;
+        /// <summary>The apsim_timestep</summary>
         private double apsim_timestep = 1440.0;
-        private int start_day;
-        private int start_year;
+        /// <summary>The start_day</summary>
+        private int start_day = 0;
+        /// <summary>The start_year</summary>
+        private int start_year = 0;
+        /// <summary>The apsim_time</summary>
         private string apsim_time = "00:00";
+        /// <summary>The run_has_started</summary>
         private bool run_has_started;
 
-        private double psim;
-        private double[] psimin;
-        private double[][] rld;
-        private double[][] rc;
-        private double[] rtp;
-        private double[] rt;
-        private double[] ctp;
-        private double[] ct;
-        private double[][] qr;
-        private double[][] qrpot;
+        ///// <summary>The psim</summary>
+        //private double psim;
+        ///// <summary>The psimin</summary>
+        private double[] psimin = null;
+        /// <summary>The RLD</summary>
+        private double[][] rld = null;
+        /// <summary>The rc</summary>
+        private double[][] rc = null;
+        /// <summary>The RTP</summary>
+        private double[] rtp = null;
+        /// <summary>The rt</summary>
+        private double[] rt = null;
+        /// <summary>The CTP</summary>
+        private double[] ctp = null;
+        /// <summary>The ct</summary>
+        private double[] ct = null;
+        /// <summary>The qr</summary>
+        private double[][] qr = null;
+        /// <summary>The qrpot</summary>
+        private double[][] qrpot = null;
 
-        private string[] crop_names;
-        private string[] crop_owners;
-        private int[] crop_owner_id;
-        private bool[] crop_in;
-        private bool[] demand_received;
-        private int num_crops;
-        private int[] supply_event_id;  // Indicates the event number for sending CohortWaterSupply
+        /// <summary>The num_crops</summary>
+        private int num_crops = 0;
+        ///// <summary>The supply_event_id</summary>
+        //private int[] supply_event_id;  // Indicates the event number for sending CohortWaterSupply
 
-        private int[] uptake_water_id; // Property number for returning crop water uptake
-        private int[][] supply_solute_id; // Property number for returning crop solute supply
+        ///// <summary>The uptake_water_id</summary>
+        //private int[] uptake_water_id; // Property number for returning crop water uptake
+        ///// <summary>The supply_solute_id</summary>
+        //private int[][] supply_solute_id; // Property number for returning crop solute supply
 
-        private int[] leach_id;
-        private int[] flow_id;
-        private int[] exco_id;
-        private int[] conc_water_id;
-        private int[] conc_adsorb_id;
-        private int[] subsurface_drain_id;
+        ///// <summary>The leach_id</summary>
+        //private int[] leach_id;
+        ///// <summary>The flow_id</summary>
+        //private int[] flow_id;
+        ///// <summary>The exco_id</summary>
+        //private int[] exco_id;
+        ///// <summary>The conc_water_id</summary>
+        //private int[] conc_water_id;
+        ///// <summary>The conc_adsorb_id</summary>
+        //private int[] conc_adsorb_id;
+        ///// <summary>The subsurface_drain_id</summary>
+        //private int[] subsurface_drain_id;
 
-        private int nveg;
-        private double[][] RootRadius; // Was root_radius
-        private double[][] RootConductance; // was root_conductance
-        private double[] pep;
-        private double[][] solute_demand;
-        private double[] canopy_height;
-        private double[] cover_tot;
+        /// <summary>The nveg</summary>
+        private int nveg = 0;
+        /// <summary>The root radius</summary>
+        private double[][] RootRadius = null; // Was root_radius
+        /// <summary>The root conductance</summary>
+        private double[][] RootConductance = null; // was root_conductance
+        /// <summary>The pep</summary>
+        private double[] pep = null;
+        /// <summary>The solute_demand</summary>
+        private double[][] solute_demand = null;
+        ///// <summary>The canopy_height</summary>
+        //private double[] canopy_height;
+        ///// <summary>The cover_tot</summary>
+        //private double[] cover_tot;
 
-        private double crop_cover;
-        private double residue_cover;
-        private double _cover_green_sum;
-        private double _cover_surface_runoff;
+        /// <summary>The crop_cover</summary>
+        private double crop_cover = 0;
+        /// <summary>The residue_cover</summary>
+        private double residue_cover = 0;
+        ///// <summary>The _cover_green_sum</summary>
+        //private double _cover_green_sum;
+        ///// <summary>The _cover_surface_runoff</summary>
+        //private double _cover_surface_runoff;
 
+        /// <summary>The QBP</summary>
         private double qbp;
-        private double qbpd;
-        private double[] qslbp;
+        ///// <summary>The QBPD</summary>
+        //private double qbpd;
+        /// <summary>The QSLBP</summary>
+        private double[] qslbp = null;
 
-        private double gf;
+        /// <summary>The gf</summary>
+        private double gf = 0;
 
-        private double[] swta;
+        /// <summary>The swta</summary>
+        private double[] swta = null;
 
-        private double[][][] psuptake;
-        private double[][] pwuptake;
-        private double[][] pwuptakepot;
-        private double[][] cslold;
-        private double[][] cslstart;
+        /// <summary>The psuptake</summary>
+        private double[][][] psuptake = null;
+        /// <summary>The pwuptake</summary>
+        private double[][] pwuptake = null;
+        /// <summary>The pwuptakepot</summary>
+        private double[][] pwuptakepot = null;
+        ///// <summary>The cslold</summary>
+        //private double[][] cslold;
+        /// <summary>The cslstart</summary>
+        private double[][] cslstart = null;
 
-        private bool crops_found;
-        private double[] _psix;
+        ///// <summary>The crops_found</summary>
+        //private bool crops_found;
+        ///// <summary>The _psix</summary>
+        private double[] _psix = null;
 
-        private double CN_runoff;
-        private double[,] DELk;
-        private double[,] Mk;
-        private double[,] M0;
-        private double[,] M1;
-        private double[,] Y0;
-        private double[,] Y1;
-        private double[] MicroP;
-        private double[] MicroKs;
-        private double[] Kdula;
-        private double[] MacroP;
+        ///// <summary>The c n_runoff</summary>
+        //private double CN_runoff;
+        ///// <summary>The de lk</summary>
+        //private double[,] DELk;
+        ///// <summary>The mk</summary>
+        //private double[,] Mk;
+        /// <summary>The m0</summary>
+        private double[,] M0 = null;
+        /// <summary>The m1</summary>
+        private double[,] M1 = null;
+        /// <summary>The y0</summary>
+        private double[,] Y0 = null;
+        /// <summary>The y1</summary>
+        private double[,] Y1 = null;
+        /// <summary>The micro p</summary>
+        private double[] MicroP = null;
+        /// <summary>The micro ks</summary>
+        private double[] MicroKs = null;
+        ///// <summary>The kdula</summary>
+        //private double[] Kdula;
+        /// <summary>The macro p</summary>
+        private double[] MacroP = null;
 
+        /// <summary>The t d_runoff</summary>
         private double TD_runoff;
+        /// <summary>The t d_rain</summary>
         private double TD_rain;
+        /// <summary>The t d_evap</summary>
         private double TD_evap;
+        /// <summary>The t d_pevap</summary>
         private double TD_pevap;
+        /// <summary>The t d_drain</summary>
         private double TD_drain;
+        /// <summary>The t d_subsurface_drain</summary>
         private double TD_subsurface_drain;
-        private double[] TD_soldrain;
-        private double[] TD_slssof;
-        private double[] TD_wflow;
-        private double[][] TD_sflow;
+        /// <summary>The t d_soldrain</summary>
+        private double[] TD_soldrain = null;
+        /// <summary>The t d_slssof</summary>
+        private double[] TD_slssof = null;
+        /// <summary>The t d_wflow</summary>
+        private double[] TD_wflow = null;
+        /// <summary>The t d_sflow</summary>
+        private double[][] TD_sflow = null;
 
+        /// <summary>The t</summary>
         private double t;
+        /// <summary>The _DT</summary>
         private double _dt;
 
+        /// <summary>The _WP</summary>
         private double _wp;
-        private double wp0;
+        ///// <summary>The WP0</summary>
+        //private double wp0;
 
-        private double[] _p;
+        /// <summary>The _p</summary>
+        private double[] _p = null;
+        /// <summary>The _psi</summary>
         private double[] _psi = null;
+        /// <summary>The th</summary>
         private double[] th = null;
-        private double[] thold;
+        /// <summary>The thold</summary>
+        private double[] thold = null;
+        /// <summary>The hk</summary>
         private double[] hk;
-        private double[] q;
+        /// <summary>The q</summary>
+        private double[] q = null;
+        /// <summary>The _h</summary>
         private double _h;
+        /// <summary>The hold</summary>
         private double hold;
+        /// <summary>The ron</summary>
         private double ron;
+        /// <summary>The roff</summary>
         private double roff;
+        /// <summary>The resource</summary>
         private double res;
+        /// <summary>The resp</summary>
         private double resp;
+        /// <summary>The rex</summary>
         private double rex;
+        /// <summary>The RSSF</summary>
         private double rssf;
-        private double[] qs;
+        /// <summary>The qs</summary>
+        private double[] qs = null;
+        /// <summary>The qex</summary>
         private double[] qex;
-        private double[] qexpot;
-        private double[] qssif;
-        private double[] qssof;
+        /// <summary>The qexpot</summary>
+        private double[] qexpot = null;
+        /// <summary>The qssif</summary>
+        private double[] qssif = null;
+        /// <summary>The qssof</summary>
+        private double[] qssof = null;
 
 
-        private double[][] dc;
+        /// <summary>The dc</summary>
+        private double[][] dc = null;
+        /// <summary>The CSL</summary>
         private double[][] csl;
-        private double[][] cslt;
-        private double[][] qsl;
-        private double[][] qsls;
-        private double[] slsur;
-        private double[] cslsur;
-        private double[] rslon;
-        private double[] rsloff;
-        private double[] rslex;
+        /// <summary>The CSLT</summary>
+        private double[][] cslt = null;
+        /// <summary>The QSL</summary>
+        private double[][] qsl = null;
+        /// <summary>The QSLS</summary>
+        private double[][] qsls = null;
+        /// <summary>The slsur</summary>
+        private double[] slsur = null;
+        /// <summary>The cslsur</summary>
+        private double[] cslsur = null;
+        /// <summary>The rslon</summary>
+        private double[] rslon = null;
+        /// <summary>The rsloff</summary>
+        private double[] rsloff = null;
+        /// <summary>The rslex</summary>
+        private double[] rslex = null;
 
-        private bool[][] demand_is_met;
+        /// <summary>The demand_is_met</summary>
+        private bool[][] demand_is_met = null;
 
-        private int[] solute_owners;
+        /// <summary>The solute_owners</summary>
+        private int[] solute_owners = null;
 
+        /// <summary>The _work</summary>
         private double _work;
+        /// <summary>The slwork</summary>
         private double slwork;
 
+        /// <summary>The _hmin</summary>
         private double _hmin = Double.NaN;
 
+        /// <summary>The gsurf</summary>
         private double gsurf;
 
-        private double[] psid;
+        /// <summary>The psid</summary>
+        private double[] psid = null;
 
-        private int n;
-        private double[] x;
-        private double[] dx;
+        /// <summary>The n</summary>
+        private int n = 0;
+        /// <summary>The x</summary>
+        private double[] x = null;
+        /// <summary>The dx</summary>
+        private double[] dx = null;
 
-        private bool ivap;
-        private int isbc;
-        private int itbc;
-        private int ibbc;
+        /// <summary>The ivap</summary>
+        private bool ivap = false;
+        /// <summary>The isbc</summary>
+        private int isbc = 0;
+        /// <summary>The itbc</summary>
+        private int itbc = 0;
+        /// <summary>The ibbc</summary>
+        private int ibbc = 0;
 
-        private double[][] ex;
-        private double[] cslgw;
-        private double[] slupf;
-        private double[] slsci;
-        private double[] slscr;
-        private double[] dcon;
+        /// <summary>The ex</summary>
+        private double[][] ex = null;
+        /// <summary>The CSLGW</summary>
+        private double[] cslgw = null;
+        ///// <summary>The slupf</summary>
+        //private double[] slupf;
+        /// <summary>The slsci</summary>
+        private double[] slsci = null;
+        /// <summary>The SLSCR</summary>
+        private double[] slscr = null;
+        /// <summary>The dcon</summary>
+        private double[] dcon = null;
 
-        double[][] fip;
+        /// <summary>The fip</summary>
+        double[][] fip = null;
 
+        /// <summary>The slos</summary>
         private double[] slos;
-        private double[] d0;
+        ///// <summary>The d0</summary>
+        //private double[] d0;
 
-        private string[] solute_names;
+        /// <summary>The solute_names</summary>
+        private string[] solute_names = null;
+        /// <summary>The num_solutes</summary>
         private int num_solutes = 0;
 
-        private double bbc_value;
-        private double water_table_conductance;
+        /// <summary>The bbc_value</summary>
+        private double bbc_value = 0;
+        /// <summary>The water_table_conductance</summary>
+        private double water_table_conductance = 0;
 
-        private string subsurfaceDrain;
+        /// <summary>The subsurface drain</summary>
+        private string subsurfaceDrain = null;
 
+        /// <summary>Gets or sets the swim solute parameters.</summary>
+        /// <value>The swim solute parameters.</value>
         public SwimSoluteParameters SwimSoluteParameters { get; set; }
+        /// <summary>Gets or sets the swim water table.</summary>
+        /// <value>The swim water table.</value>
         public SwimWaterTable SwimWaterTable { get; set; }
+        /// <summary>Gets or sets the swim subsurface drain.</summary>
+        /// <value>The swim subsurface drain.</value>
         public SwimSubsurfaceDrain SwimSubsurfaceDrain { get; set; }
 
         // In the Fortran version, the data for ponding water was held in
@@ -429,14 +658,26 @@ namespace Models.Soils
         // Note, however, that SWIM3 in APSIM never allowed the user to
         // set the value for isbc, which controls the way ponding is handled;
         // as a consequence, this version of the logic remains untested.
+        /// <summary>
+        /// 
+        /// </summary>
         private struct PondingData
         {
+            /// <summary>The b</summary>
             public double b;
+            /// <summary>The c</summary>
             public double c;
+            /// <summary>The RHS</summary>
             public double rhs;
+            /// <summary>The v</summary>
             public double v;
         };
 
+        /// <summary>Times the specified yy.</summary>
+        /// <param name="yy">The yy.</param>
+        /// <param name="dd">The dd.</param>
+        /// <param name="tt">The tt.</param>
+        /// <returns></returns>
         private double Time(int yy, int dd, int tt)
         {
             // first we must calculate the julian date for the starting date.
@@ -452,6 +693,10 @@ namespace Models.Soils
             return (julianDate - julianStartDate) * 24.0 + tt / 60.0; // Convert to hours
         }
 
+        /// <summary>Purges the log information.</summary>
+        /// <param name="time">The time.</param>
+        /// <param name="SWIMTime">The swim time.</param>
+        /// <param name="SWIMAmt">The swim amt.</param>
         private void PurgeLogInfo(double time, ref double[] SWIMTime, ref double[] SWIMAmt)
         {
             int old_numpairs = SWIMTime.Length;
@@ -478,6 +723,13 @@ namespace Models.Soils
             Array.Resize(ref SWIMAmt, new_index);
         }
 
+        /// <summary>Inserts the loginfo.</summary>
+        /// <param name="time">The time.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="amount">The amount.</param>
+        /// <param name="SWIMTime">The swim time.</param>
+        /// <param name="SWIMAmt">The swim amt.</param>
+        /// <exception cref="System.Exception">log time before start of run</exception>
         private void InsertLoginfo(double time,     // min since start
                                    double duration, // min
                                    double amount,   // mm
@@ -575,6 +827,10 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>cs the sol.</summary>
+        /// <param name="solnum">The solnum.</param>
+        /// <param name="time">The time.</param>
+        /// <returns></returns>
         private double CSol(int solnum, double time)
         {
             //  Purpose
@@ -604,6 +860,9 @@ namespace Models.Soils
                 return 0.0;
         }
 
+        /// <summary>cs the rain.</summary>
+        /// <param name="time">The time.</param>
+        /// <returns></returns>
         private double CRain(double time)
         {
             bool interp;
@@ -613,6 +872,9 @@ namespace Models.Soils
                 return 0.0;
         }
 
+        /// <summary>cs the evap.</summary>
+        /// <param name="time">The time.</param>
+        /// <returns></returns>
         private double CEvap(double time)
         {
             bool interp;
@@ -622,6 +884,9 @@ namespace Models.Soils
                 return 0.0;
         }
 
+        /// <summary>Eqrains the specified time.</summary>
+        /// <param name="time">The time.</param>
+        /// <returns></returns>
         private double Eqrain(double time)
         {
             bool interp;
@@ -631,6 +896,10 @@ namespace Models.Soils
                 return 0.0;
         }
 
+        /// <summary>Suctions the specified node.</summary>
+        /// <param name="node">The node.</param>
+        /// <param name="theta">The theta.</param>
+        /// <returns></returns>
         private double Suction(int node, double theta)
         {
             //  Purpose
@@ -657,6 +926,10 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Simples the s.</summary>
+        /// <param name="layer">The layer.</param>
+        /// <param name="psiValue">The psi value.</param>
+        /// <returns></returns>
         private double SimpleS(int layer, double psiValue)
         {
             //  Purpose
@@ -664,6 +937,10 @@ namespace Models.Soils
             return SimpleTheta(layer, psiValue) / _sat[layer];
         }
 
+        /// <summary>Simples the theta.</summary>
+        /// <param name="layer">The layer.</param>
+        /// <param name="psiValue">The psi value.</param>
+        /// <returns></returns>
         private double SimpleTheta(int layer, double psiValue)
         {
             //  Purpose
@@ -704,6 +981,13 @@ namespace Models.Soils
                     + (-2 * tCube + 3 * tSqr) * Y1[layer, i] + (tCube - tSqr) * M1[layer, i];
         }
 
+        /// <summary>Interps the specified node.</summary>
+        /// <param name="node">The node.</param>
+        /// <param name="tpsi">The tpsi.</param>
+        /// <param name="tth">The TTH.</param>
+        /// <param name="thd">The THD.</param>
+        /// <param name="hklg">The HKLG.</param>
+        /// <param name="hklgd">The HKLGD.</param>
         private void Interp(int node, double tpsi, out double tth, out double thd, out double hklg, out double hklgd)
         {
             //  Purpose
@@ -721,6 +1005,10 @@ namespace Models.Soils
             hklgd = (temp - hklg) / Math.Log10((tpsi + dpsi) / tpsi);
         }
 
+        /// <summary>Simples the k.</summary>
+        /// <param name="layer">The layer.</param>
+        /// <param name="psiValue">The psi value.</param>
+        /// <returns></returns>
         private double SimpleK(int layer, double psiValue)
         {
             //  Purpose
@@ -746,6 +1034,10 @@ namespace Models.Soils
             return simpleK / 24.0 / 10.0;
         }
 
+        /// <summary>Thetas the specified node.</summary>
+        /// <param name="node">The node.</param>
+        /// <param name="suction">The suction.</param>
+        /// <returns></returns>
         private double Theta(int node, double suction)
         {
             double theta;
@@ -757,6 +1049,10 @@ namespace Models.Soils
             return theta;
         }
 
+        /// <summary>Does the swim.</summary>
+        /// <param name="timestepStart">The timestep start.</param>
+        /// <param name="timestep">The timestep.</param>
+        /// <returns></returns>
         private bool DoSwim(double timestepStart, double timestep)
         {
             //  Notes
@@ -792,7 +1088,7 @@ namespace Models.Soils
             do
             {
                 double dr;
-                /// call event_send(unknown_module,'swim_timestep_preparation')
+                // call event_send(unknown_module,'swim_timestep_preparation')
 
                 //        calculate next step size_of g%dt
 
@@ -909,7 +1205,7 @@ namespace Models.Soils
                 //cnh
                 CheckDemand();
 
-                ///call event_send(unknown_module,'pre_swim_timestep')
+                //call event_send(unknown_module,'pre_swim_timestep')
 
                 // integrate for step _dt
 
@@ -992,6 +1288,8 @@ namespace Models.Soils
             return fail;
         }
 
+        /// <summary>Shows the diagnostics.</summary>
+        /// <param name="pold">The pold.</param>
         private void ShowDiagnostics(double[] pold)
         {
             if (Diagnostics)
@@ -1018,6 +1316,7 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Checks the demand.</summary>
         private void CheckDemand()
         {
             for (int crop = 0; crop < num_crops; crop++)
@@ -1033,6 +1332,9 @@ namespace Models.Soils
                 }
         }
 
+        /// <summary>hes the minimum.</summary>
+        /// <param name="deqrain">The deqrain.</param>
+        /// <param name="sstorage">The sstorage.</param>
         private void HMin(double deqrain, ref double sstorage)
         {
             // Ideally, if timesteps are small we could just use
@@ -1072,6 +1374,9 @@ namespace Models.Soils
             //! sstorage = _hm0;
         }
 
+        /// <summary>gs the surf.</summary>
+        /// <param name="deqrain">The deqrain.</param>
+        /// <param name="surfcon">The surfcon.</param>
         private void GSurf(double deqrain, ref double surfcon)
         {
             //     Short Description:
@@ -1113,6 +1418,9 @@ namespace Models.Soils
                 surfcon = gsurf;
         }
 
+        /// <summary>Solves the specified itlim.</summary>
+        /// <param name="itlim">The itlim.</param>
+        /// <param name="fail">if set to <c>true</c> [fail].</param>
         private void Solve(int itlim, ref bool fail)
         {
             //     Short description:
@@ -1225,6 +1533,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the sol.</summary>
+        /// <param name="solnum">The solnum.</param>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
+        /// <param name="c">The c.</param>
+        /// <param name="d">The d.</param>
+        /// <param name="rhs">The RHS.</param>
+        /// <param name="c1">The c1.</param>
+        /// <param name="c2">The c2.</param>
+        /// <param name="pondingData">The ponding data.</param>
+        /// <param name="fail">if set to <c>true</c> [fail].</param>
         private void GetSol(int solnum, ref double[] a, ref double[] b, ref double[] c, ref double[] d, ref double[] rhs, ref double[] c1, ref double[] c2, ref PondingData pondingData, ref bool fail)
         {
             //     Short description:
@@ -1666,6 +1985,7 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the solute variables.</summary>
         private void GetSoluteVariables()
         {
             double[] solute_n = new double[n + 1];
@@ -1678,6 +1998,10 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Gets the flow.</summary>
+        /// <param name="flowName">Name of the flow.</param>
+        /// <param name="flowArray">The flow array.</param>
+        /// <param name="flowFlag">if set to <c>true</c> [flow flag].</param>
         private void GetFlow(string flowName, out double[] flowArray, out bool flowFlag)
         {
             //+  Initial Data Values
@@ -1685,13 +2009,13 @@ namespace Models.Soils
             // set to true.
             flowFlag = false;
 
-            string flowUnits;
+            //string flowUnits;
             flowArray = new double[n + 1];
 
             if (flowName == "water")
             {
                 flowFlag = true;
-                flowUnits = "(mm)";
+                //flowUnits = "(mm)";
                 for (int node = 0; node <= n + 1; node++)
                     flowArray[node] = TD_wflow[node];
             }
@@ -1704,13 +2028,23 @@ namespace Models.Soils
                         for (int node = 0; node <= n + 1; node++)
                             flowArray[node] = TD_sflow[solnum][node];
                         flowFlag = true;
-                        flowUnits = "(kg/ha)";
+                        //flowUnits = "(kg/ha)";
                         return;
                     }
                 }
             }
         }
 
+        /// <summary>Concs the water solute.</summary>
+        /// <param name="solname">The solname.</param>
+        /// <param name="concWaterSolute">The conc water solute.</param>
+        /// <exception cref="System.Exception">
+        /// No module has registered ownership for solute:  + solname
+        /// or
+        /// -ve value for solute was passed to SWIM + mess
+        /// or
+        /// You have asked apswim to use a solute that it does not know about :- + solname
+        /// </exception>
         private void ConcWaterSolute(string solname, ref double[] concWaterSolute)
         {
             //+  Changes
@@ -1765,7 +2099,7 @@ namespace Models.Soils
                                         solute_n[node]);
                         throw new Exception("-ve value for solute was passed to SWIM" + mess);
 
-                        solute_n[node] = 0.0;
+                        //solute_n[node] = 0.0;
                     }
 
                     else if (solute_n[node] < -(negative_conc_warn))
@@ -1807,6 +2141,16 @@ namespace Models.Soils
                 throw new Exception("You have asked apswim to use a solute that it does not know about :-" + solname);
         }
 
+        /// <summary>Concs the adsorb solute.</summary>
+        /// <param name="solname">The solname.</param>
+        /// <param name="concAdsorbSolute">The conc adsorb solute.</param>
+        /// <exception cref="System.Exception">
+        /// No module has registered ownership for solute:  + solname
+        /// or
+        /// -ve value for solute was passed to SWIM + Environment.NewLine + mess
+        /// or
+        /// You have asked apswim to use a solute that it does not know about :- + solname
+        /// </exception>
         private void ConcAdsorbSolute(string solname, ref double[] concAdsorbSolute)
         {
             //+  Purpose
@@ -1858,7 +2202,7 @@ namespace Models.Soils
                                         solute_n[node]);
                         throw new Exception("-ve value for solute was passed to SWIM" + Environment.NewLine + mess);
 
-                        solute_n[node] = 0.0;
+                        //solute_n[node] = 0.0;
                     }
 
                     else if (solute_n[node] < -(negative_conc_warn))
@@ -1909,6 +2253,9 @@ namespace Models.Soils
                 throw new Exception("You have asked apswim to use a solute that it does not know about :-" + solname);
         }
 
+        /// <summary>Solutes the number.</summary>
+        /// <param name="solname">The solname.</param>
+        /// <returns></returns>
         private int SoluteNumber(string solname)
         {
             for (int counter = 0; counter < num_solutes; counter++)
@@ -1917,6 +2264,22 @@ namespace Models.Soils
             return -1;
         }
 
+        /// <summary>Solves the freundlich.</summary>
+        /// <param name="node">The node.</param>
+        /// <param name="solnum">The solnum.</param>
+        /// <param name="Ctot">The ctot.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">
+        /// -ve concentration was passed to Freundlich solution + mess
+        /// or
+        /// -ve value for Cw on solving Freundlich1 + mess
+        /// or
+        /// -ve value for Cw on solving Freundlich2 + mess
+        /// or
+        /// -ve value for solute found in adsorption isotherm + mess
+        /// or
+        /// APSwim failed to solve the freundlich isotherm
+        /// </exception>
         private double SolveFreundlich(int node, int solnum, double Ctot)
         {
             //+  Purpose
@@ -2076,7 +2439,7 @@ namespace Models.Soils
                                          node,
                                          Cw);
                     throw new Exception("-ve value for solute found in adsorption isotherm" + mess);
-                    Cw = 0.0;
+                    //Cw = 0.0;
                 }
                 // else Cw is positive and considerable
 
@@ -2091,10 +2454,17 @@ namespace Models.Soils
                 // A solution was not found
 
                 throw new Exception("APSwim failed to solve the freundlich isotherm");
-                return Utility.Math.Divide(Ctot, th[node], 0.0);
+                //return Utility.Math.Divide(Ctot, th[node], 0.0);
             }
         }
 
+        /// <summary>Freundliches the specified node.</summary>
+        /// <param name="node">The node.</param>
+        /// <param name="solnum">The solnum.</param>
+        /// <param name="Cw">The cw.</param>
+        /// <param name="Ctot">The ctot.</param>
+        /// <param name="dCtot">The d ctot.</param>
+        /// <exception cref="System.Exception">-ve value has been passed to Freundlich solution + mess</exception>
         private void Freundlich(int node, int solnum, ref double Cw, out double Ctot, out double dCtot)
         {
             //+  Changes
@@ -2121,8 +2491,8 @@ namespace Models.Soils
                                      node,
                                      Cw);
                 throw new Exception("-ve value has been passed to Freundlich solution" + mess);
-                Ctot = 0.0;
-                dCtot = 0.0;
+                //Ctot = 0.0;
+                //dCtot = 0.0;
             }
             else
             {
@@ -2154,6 +2524,8 @@ namespace Models.Soils
                 dCtot = 0.0;
         }
 
+        /// <summary>WPFs this instance.</summary>
+        /// <returns></returns>
         private double Wpf()
         {
             //     Short description:
@@ -2166,6 +2538,9 @@ namespace Models.Soils
             return wpf;
         }
 
+        /// <summary>Pfs the specified psi value.</summary>
+        /// <param name="psiValue">The psi value.</param>
+        /// <returns></returns>
         private double Pf(double psiValue)
         {
             //     Short description:
@@ -2180,6 +2555,9 @@ namespace Models.Soils
                 return v;
         }
 
+        /// <summary>ps the stat.</summary>
+        /// <param name="istat">The istat.</param>
+        /// <param name="tresp">The tresp.</param>
         private void PStat(int istat, ref double tresp)
         {
             //     Short Description:
@@ -2270,11 +2648,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Slupfs the specified crop.</summary>
+        /// <param name="crop">The crop.</param>
+        /// <param name="solnum">The solnum.</param>
+        /// <returns></returns>
         private double Slupf(int crop, int solnum)
         {
             return 0.0;
         }
 
+        /// <summary>Covers the eos redn.</summary>
+        /// <returns></returns>
         private double CoverEosRedn()
         {
             //+  Purpose
@@ -2317,6 +2701,16 @@ namespace Models.Soils
             return eos_canopy_fract * eos_residue_fract;
         }
 
+        /// <summary>Watvars the specified ix.</summary>
+        /// <param name="ix">The ix.</param>
+        /// <param name="tp">The tp.</param>
+        /// <param name="tpsi">The tpsi.</param>
+        /// <param name="psip">The psip.</param>
+        /// <param name="psipp">The psipp.</param>
+        /// <param name="tth">The TTH.</param>
+        /// <param name="thp">The THP.</param>
+        /// <param name="thk">The THK.</param>
+        /// <param name="hkp">The HKP.</param>
         private void Watvar(int ix, double tp, out double tpsi, out double psip, out double psipp, out double tth, ref double thp, out double thk, ref double hkp)
         {
             //     Short Description:
@@ -2397,6 +2791,11 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Transes the specified p.</summary>
+        /// <param name="p">The p.</param>
+        /// <param name="psi">The psi.</param>
+        /// <param name="psip">The psip.</param>
+        /// <param name="psipp">The psipp.</param>
         private void Trans(double p, out double psi, out double psip, out double psipp)
         {
             //     Short description:
@@ -2425,6 +2824,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Thomases the specified istart.</summary>
+        /// <param name="istart">The istart.</param>
+        /// <param name="n">The n.</param>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
+        /// <param name="c">The c.</param>
+        /// <param name="rhs">The RHS.</param>
+        /// <param name="d">The d.</param>
+        /// <param name="v">The v.</param>
+        /// <param name="pondingData">The ponding data.</param>
+        /// <param name="fail">if set to <c>true</c> [fail].</param>
         private void Thomas(int istart, int n, ref double[] a, ref double[] b, ref double[] c, ref double[] rhs, ref double[] d, ref double[] v, ref PondingData pondingData, out bool fail)
         {
             //     Short description:
@@ -2468,10 +2878,25 @@ namespace Models.Soils
         }
 
         // Variables used only in Baleq, but which need to be saved across invocations
+        /// <summary>The ifirst</summary>
         private int ifirst = 0;
+        /// <summary>The ilast</summary>
         private int ilast = 0;
+        /// <summary>The gr</summary>
         private double gr = 0.0;
 
+        /// <summary>Baleqs the specified it.</summary>
+        /// <param name="it">It.</param>
+        /// <param name="iroots">The iroots.</param>
+        /// <param name="tslos">The tslos.</param>
+        /// <param name="tcsl">The TCSL.</param>
+        /// <param name="ibegin">The ibegin.</param>
+        /// <param name="iend">The iend.</param>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
+        /// <param name="c">The c.</param>
+        /// <param name="rhs">The RHS.</param>
+        /// <param name="pondingData">The ponding data.</param>
         private void Baleq(int it, ref int iroots, ref double[] tslos, ref double[][] tcsl, out int ibegin, out int iend, ref double[] a, ref double[] b, ref double[] c, ref double[] rhs, ref PondingData pondingData)
         {
             //     Short Description:
@@ -2629,8 +3054,8 @@ namespace Models.Soils
                 rssf += qssif[i] - qssof[i];
             }
 
-            ///   get soil surface fluxes, taking account of top boundary condition
-            ///   
+            //   get soil surface fluxes, taking account of top boundary condition
+            //   
             double respsi;
             double roffd;
             if (itbc == 0)
@@ -2785,10 +3210,10 @@ namespace Models.Soils
             }
             //     bypass flow?
             qbp = 0.0;
-            qbpd = 0.0;
-            double qbpp = 0.0;
-            double qbps = 0.0;
-            double qbpsp = 0.0;
+            //qbpd = 0.0;
+            //double qbpp = 0.0;
+            //double qbps = 0.0;
+            //double qbpsp = 0.0;
 
             //   bottom boundary condition
             if (ibbc == 0)
@@ -2819,7 +3244,7 @@ namespace Models.Soils
                     if (q[n + 1] >= 0.0)
                     {
                         ilast = n - 1;
-                        qbpd = 0.0;
+                        //qbpd = 0.0;
                     }
                     else
                     {
@@ -2886,6 +3311,11 @@ namespace Models.Soils
             iend = k;
         }
 
+        /// <summary>ses the cond.</summary>
+        /// <param name="ttt">The TTT.</param>
+        /// <param name="tth">The TTH.</param>
+        /// <param name="g_">The g_.</param>
+        /// <param name="gh">The gh.</param>
         private void SCond(double ttt, double tth, out double g_, out double gh)
         {
             //     Short Description:
@@ -2897,6 +3327,11 @@ namespace Models.Soils
             gh = 0.0;
         }
 
+        /// <summary>Runoffs the specified t.</summary>
+        /// <param name="t">The t.</param>
+        /// <param name="h">The h.</param>
+        /// <param name="roff">The roff.</param>
+        /// <param name="roffh">The roffh.</param>
         private void Runoff(double t, double h, out double roff, out double roffh)
         {
             //     Short Description:
@@ -2915,6 +3350,13 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Uptakes the specified tpsi.</summary>
+        /// <param name="tpsi">The tpsi.</param>
+        /// <param name="thk">The THK.</param>
+        /// <param name="tpsip">The tpsip.</param>
+        /// <param name="thkp">The THKP.</param>
+        /// <param name="tqex">The tqex.</param>
+        /// <param name="tqexp">The tqexp.</param>
         private void Uptake(ref double[] tpsi, ref double[] thk, ref double[] tpsip, ref double[] thkp, ref double[] tqex, ref double[,] tqexp)
         {
             //     gets flow rates to roots and total water extraction rates
@@ -3036,6 +3478,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Drains the specified qdrain.</summary>
+        /// <param name="qdrain">The qdrain.</param>
+        /// <param name="qdrainpsi">The qdrainpsi.</param>
         private void Drain(out double[] qdrain, out double[] qdrainpsi)
         {
             //     Short Description:
@@ -3080,8 +3525,15 @@ namespace Models.Soils
                 qdrainpsi[drain_node] = (qdrain2[drain_node] - qdrain[drain_node]) / dpsi;
             }
         }
- 
 
+
+        /// <summary>Hooghoudts the specified d.</summary>
+        /// <param name="d">The d.</param>
+        /// <param name="m">The m.</param>
+        /// <param name="L">The l.</param>
+        /// <param name="r">The r.</param>
+        /// <param name="Ke">The ke.</param>
+        /// <returns></returns>
         private double Hooghoudt(double d, double m, double L, double r, double Ke)
         {
             //  Purpose
@@ -3108,6 +3560,10 @@ namespace Models.Soils
             return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
         }
 
+        /// <summary>Times to mins.</summary>
+        /// <param name="timeString">The time string.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">bad time format</exception>
         private int TimeToMins(string timeString)
         {
             DateTime timeValue;
@@ -3116,6 +3572,9 @@ namespace Models.Soils
             return timeValue.Hour * 60 + timeValue.Minute;
         }
 
+        /// <summary>Finds the layer no.</summary>
+        /// <param name="depth">The depth.</param>
+        /// <returns></returns>
         private int FindLayerNo(double depth)
         {
             // Find the soil layer in which the indicated depth is located
@@ -3131,6 +3590,8 @@ namespace Models.Soils
             return _dlayer.Length - 1;
         }
 
+        /// <summary>Issues the warning.</summary>
+        /// <param name="warningText">The warning text.</param>
         private void IssueWarning(string warningText)
         {
             if (summary != null)

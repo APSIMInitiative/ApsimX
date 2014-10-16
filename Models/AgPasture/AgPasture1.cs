@@ -112,7 +112,7 @@ namespace Models.AgPasture1
         /// <summary>The intercepted solar radiation</summary>
         private double interceptedRadn;
         /// <summary>Light profile (energy available for each canopy layer)</summary>
-        private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
+        private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile = null;
         /// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
@@ -1501,8 +1501,8 @@ namespace Models.AgPasture1
         private double swardNdemand = 0.0;
         /// <summary>The soil N demand for the whole sward</summary>
         private double swardSoilNdemand = 0.0;
-        /// <summary>The N uptake for the whole sward</summary>
-        private double[] swardNUptake;
+        ///// <summary>The N uptake for the whole sward</summary>
+        //private double[] swardNUptake;
         /// <summary>The total N uptake for the whole sward</summary>
         private double swardSoilNuptake = 0.0;
         /// <summary>The remobilised N in the whole sward</summary>

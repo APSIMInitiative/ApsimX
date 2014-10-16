@@ -2603,8 +2603,8 @@ namespace Models.AgPasture1
         private int daysEmgToAnth = 0;
         /// <summary>The phenologic stage (0= pre_emergence, 1= vegetative, 2= reproductive)</summary>
         private int phenoStage = 1;
-        /// <summary>The phenologic factor</summary>
-        private double phenoFactor = 1;
+        ///// <summary>The phenologic factor</summary>
+        //private double phenoFactor = 1;
         /// <summary>The number of days from emergence</summary>
         private int daysfromEmergence = 0;
         /// <summary>The number of days from anthesis</summary>
@@ -2733,8 +2733,8 @@ namespace Models.AgPasture1
 
         // N uptake process  ------------------------------------------------------------------------------------------
 
-        /// <summary>The amount of N demanded for new growth</summary>
-        private double myNitrogenDemand = 0.0;
+        ///// <summary>The amount of N demanded for new growth</summary>
+        //private double myNitrogenDemand = 0.0;
         /// <summary>The amount of N in the soil available to the plant</summary>
         internal double[] mySoilAvailableN;
         /// <summary>The amount of NH4 in the soil available to the plant</summary>

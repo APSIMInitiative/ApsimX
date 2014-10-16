@@ -44,6 +44,9 @@ namespace Models.PMF.Phen
     The generic and/or environmental stresses (\f$f_{s,\, pheno}\f$) gets from the value of \a Stress. 
     </remarks>
     */
+    /// <summary>
+    /// Base class for all phenological phases
+    /// </summary>
     [Serializable]
     abstract public class Phase : Model
     {

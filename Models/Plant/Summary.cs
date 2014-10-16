@@ -15,10 +15,10 @@ namespace Models.PMF
     {
         /// <summary>The above ground</summary>
         [Link] Biomass AboveGround = null;
-        [Link] Biomass BelowGround = null;
-        [Link] Biomass Total       = null;
-        [Link] Biomass TotalLive   = null;
-        [Link] Biomass TotalDead   = null;
+        //[Link] Biomass BelowGround = null;
+        //[Link] Biomass Total       = null;
+        //[Link] Biomass TotalLive   = null;
+        //[Link] Biomass TotalDead   = null;
 
         [Link]
         ISummary Summary = null;
