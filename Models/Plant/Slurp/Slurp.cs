@@ -192,9 +192,9 @@ namespace Models.PMF.Slurp
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             CropType = "Slurp";
-            uptakeWater = new double[Soil.SoilWater.dlayer.Length];
-            uptakeNitrogen = new double[Soil.SoilWater.dlayer.Length];
-            uptakeNitrogenPropNO3 = new double[Soil.SoilWater.dlayer.Length];
+            uptakeWater = new double[Soil.Thickness.Length];
+            uptakeNitrogen = new double[Soil.Thickness.Length];
+            uptakeNitrogenPropNO3 = new double[Soil.Thickness.Length];
             
             // set the canopy and root properties here - no need to capture the sets from any Managers as they directly set the properties
             CanopyProperties.Name = "Slurp";
@@ -213,14 +213,14 @@ namespace Models.PMF.Slurp
 
             RootProperties.KL = soilCrop.KL;
 
-            RootProperties.MinNO3ConcForUptake = new double[Soil.SoilWater.dlayer.Length];
-            RootProperties.MinNH4ConcForUptake = new double[Soil.SoilWater.dlayer.Length];
+            RootProperties.MinNO3ConcForUptake = new double[Soil.Thickness.Length];
+            RootProperties.MinNH4ConcForUptake = new double[Soil.Thickness.Length];
 
-            RootProperties.LowerLimitDep = new double[Soil.SoilWater.dlayer.Length];
+            RootProperties.LowerLimitDep = new double[Soil.Thickness.Length];
 
-            for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+            for (int j = 0; j < Soil.Thickness.Length; j++)
             {
-                RootProperties.LowerLimitDep[j] = soilCrop.LL[j] * Soil.SoilWater.dlayer[j];
+                RootProperties.LowerLimitDep[j] = soilCrop.LL[j] * Soil.Thickness[j];
                 RootProperties.MinNO3ConcForUptake[j] = 0.0;
                 RootProperties.MinNH4ConcForUptake[j] = 0.0;
             }
@@ -228,16 +228,16 @@ namespace Models.PMF.Slurp
             RootProperties.KNO3 = localKNO3;
             RootProperties.KNH4 = localKNH4;
 
-            RootProperties.UptakePreferenceByLayer = new double[Soil.SoilWater.dlayer.Length];
-            for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+            RootProperties.UptakePreferenceByLayer = new double[Soil.Thickness.Length];
+            for (int j = 0; j < Soil.Thickness.Length; j++)
             {
                 RootProperties.UptakePreferenceByLayer[j] = 1.0;
             }
 
-            localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
-            localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
+            localRootExplorationByLayer = new double[Soil.Thickness.Length];
+            localRootLengthDensityByVolume = new double[Soil.Thickness.Length];
 
-            uptakeWater = new double[Soil.SoilWater.dlayer.Length];
+            uptakeWater = new double[Soil.Thickness.Length];
 
             tempDepthUpper = 0.0;
             tempDepthMiddle = 0.0;
@@ -246,19 +246,19 @@ namespace Models.PMF.Slurp
             demandWater = localDemandWater;
 
             // calculate root exploration (proprotion of the layer occupied by the roots) for each layer
-            for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+            for (int j = 0; j < Soil.Thickness.Length; j++)
             {
 
-                tempDepthLower += Soil.SoilWater.dlayer[j];  // increment soil depth thorugh the layers
-                tempDepthMiddle = tempDepthLower - Soil.SoilWater.dlayer[j]*0.5;
-                tempDepthUpper = tempDepthLower - Soil.SoilWater.dlayer[j];
+                tempDepthLower += Soil.Thickness[j];  // increment soil depth thorugh the layers
+                tempDepthMiddle = tempDepthLower - Soil.Thickness[j]*0.5;
+                tempDepthUpper = tempDepthLower - Soil.Thickness[j];
                 if (tempDepthUpper < localRootDepth)        // set the root exploration
                 {
                     localRootExplorationByLayer[j] = 1.0;
                 }
                 else if (tempDepthLower <= localRootDepth)
                 {
-                    localRootExplorationByLayer[j] = Utility.Math.Divide(localRootDepth - tempDepthUpper, Soil.SoilWater.dlayer[j], 0.0);
+                    localRootExplorationByLayer[j] = Utility.Math.Divide(localRootDepth - tempDepthUpper, Soil.Thickness[j], 0.0);
                 }
                 else
                 {

@@ -890,7 +890,7 @@ namespace Models
             AnnualRain += Weather.Rain;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
+			TotalNO3 = Utility.Math.Sum(Soil.NO3N);
 			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;

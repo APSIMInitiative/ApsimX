@@ -2985,7 +2985,7 @@ namespace Models.AgPasture1
                 if (cumDepth >= myRootDepth)
                 {
                     myRootFrontier = layer;
-                    layer = Soil.SoilWater.dlayer.Length;
+                    layer = Soil.Thickness.Length;
                 }
             }
             rootFraction = RootProfileDistribution();
@@ -3395,13 +3395,13 @@ namespace Models.AgPasture1
 
                 // get new layer for root frontier
                 double cumDepth = 0.0;
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
-                    cumDepth += Soil.SoilWater.dlayer[layer];
+                    cumDepth += Soil.Thickness[layer];
                     if (cumDepth >= myRootDepth)
                     {
                         myRootFrontier = layer;
-                        layer = Soil.SoilWater.dlayer.Length;
+                        layer = Soil.Thickness.Length;
                     }
                 }
             }
@@ -3972,7 +3972,7 @@ namespace Models.AgPasture1
             {
                 for (int layer = 0; layer <= myRootFrontier; layer++)
                 {
-                    result[layer] = Math.Max(0.0, Soil.SoilWater.SWmm[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
+                    result[layer] = Math.Max(0.0, Soil.Water[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
                                   * LayerFractionWithRoots(layer);
                     result[layer] *= soilCropData.KL[layer];
                 }
@@ -3993,11 +3993,11 @@ namespace Models.AgPasture1
                     facRLD = 1 - Math.Pow(10, -myRLD[layer] / ReferenceRLD);
                     facCond = 1 - Math.Pow(10, -Soil.KS[layer] / ReferenceKSuptake);
                     facWcontent = 1 - Math.Pow(10,
-                                -(Math.Max(0.0, Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]))
+                                -(Math.Max(0.0, Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]))
                                 / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]));
 
                     // Theoretical total available water
-                    result[layer] = Math.Max(0.0, Soil.SoilWater.SWmm[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
+                    result[layer] = Math.Max(0.0, Soil.Water[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
                                   * LayerFractionWithRoots(layer);
                     // Actual available water
                     result[layer] *= facRLD * facCond * facWcontent;
@@ -4167,8 +4167,8 @@ namespace Models.AgPasture1
                 if (useAltNUptake == "no")
                 {
                     // simple way, all N in the root zone is available
-                    mySoilNH4available[layer] = Soil.SoilNitrogen.NH4[layer] * LayerFractionWithRoots(layer);
-                    mySoilNO3available[layer] = Soil.SoilNitrogen.NO3[layer] * LayerFractionWithRoots(layer);
+                    mySoilNH4available[layer] = Soil.NH4N[layer] * LayerFractionWithRoots(layer);
+                    mySoilNO3available[layer] = Soil.NO3N[layer] * LayerFractionWithRoots(layer);
                 }
                 else
                 {
@@ -4177,11 +4177,11 @@ namespace Models.AgPasture1
 
                     // fraction of available water taken up
                     facWtaken = Utility.Math.Divide(mySoilWaterTakenUp[layer],
-                                Math.Max(0.0, Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]), 0.0);
+                                Math.Max(0.0, Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]), 0.0);
 
                     // Theoretical amount available
-                    mySoilNH4available[layer] = Soil.SoilNitrogen.NH4[layer] * kuNH4 * LayerFractionWithRoots(layer);
-                    mySoilNO3available[layer] = Soil.SoilNitrogen.NO3[layer] * kuNO3 * LayerFractionWithRoots(layer);
+                    mySoilNH4available[layer] = Soil.NH4N[layer] * kuNH4 * LayerFractionWithRoots(layer);
+                    mySoilNO3available[layer] = Soil.NO3N[layer] * kuNO3 * LayerFractionWithRoots(layer);
 
                     // actual amount available
                     mySoilNH4available[layer] *= facWtaken;
@@ -4295,8 +4295,8 @@ namespace Models.AgPasture1
 
                         for (int layer = 0; layer <= myRootFrontier; layer++)
                         {
-                            NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * uptakeFraction;
-                            NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
+                            NUptake.DeltaNH4[layer] = -Soil.NH4N[layer] * uptakeFraction;
+                            NUptake.DeltaNO3[layer] = -Soil.NO3N[layer] * uptakeFraction;
 
                             mySoilUptakeN[layer] = -(NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]);
                         }
@@ -4321,10 +4321,10 @@ namespace Models.AgPasture1
                         for (int layer = 0; layer < nLayers; layer++)
                         {
                             uptakeFraction = Math.Min(1.0, Utility.Math.Divide(fNH4Avail[layer] + fWUptake[layer], totFacNH4, 0.0));
-                            NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * uptakeFraction;
+                            NUptake.DeltaNH4[layer] = -Soil.NH4N[layer] * uptakeFraction;
 
                             uptakeFraction = Math.Min(1.0, Utility.Math.Divide(fNO3Avail[layer] + fWUptake[layer], totFacNO3, 0.0));
-                            NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
+                            NUptake.DeltaNO3[layer] = -Soil.NO3N[layer] * uptakeFraction;
 
                             mySoilUptakeN[layer] = NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer];
                         }
@@ -4974,7 +4974,7 @@ namespace Models.AgPasture1
                 // fraction of layer with roots 
                 fractionLayer = LayerFractionWithRoots(layer);
                 // actual soil water content
-                mySWater += Soil.SoilWater.SWmm[layer] * fractionLayer;
+                mySWater += Soil.Water[layer] * fractionLayer;
                 // water content at saturation
                 mySaturation += Soil.SoilWater.sat_dep[layer] * fractionLayer;
                 // water content at field capacity

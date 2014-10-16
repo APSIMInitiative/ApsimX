@@ -1751,7 +1751,7 @@ namespace Models.AgPasture1
                 double sDUL = 0.0;
                 for (int layer = 0; layer < RootFrontier; layer++)  // TODO this should be <=
                 {
-                    sWater += Soil.SoilWater.SWmm[layer];
+                    sWater += Soil.Water[layer];
                     sSat += Soil.SoilWater.sat_dep[layer];
                     sDUL += Soil.SoilWater.DULmm[layer];
                 }
@@ -1778,7 +1778,7 @@ namespace Models.AgPasture1
                 for (int layer = 0; layer <= RootFrontier; layer++)
                 {
                     layerFraction = LayerFractionWithRoots(layer);
-                    result[layer] = Math.Max(0.0, Soil.SoilWater.SWmm[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
+                    result[layer] = Math.Max(0.0, Soil.Water[layer] - soilCropData.LL[layer] * Soil.Thickness[layer])
                                   * layerFraction;
                     result[layer] *= soilCropData.KL[layer];
                     // Note: assumes KL and LL defined for whole sward, ignores the values for each mySpecies
@@ -1804,13 +1804,13 @@ namespace Models.AgPasture1
                 {
                     facCond = 1 - Math.Pow(10, -Soil.KS[layer] / referenceKSuptake);
                     facWcontent = 1 - Math.Pow(10,
-                                -(Math.Max(0.0, Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]))
+                                -(Math.Max(0.0, Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]))
                                 / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]));
 
                     // theoretical total available water
                     layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
                     layerLL = mySward.Min(mySpecies => mySpecies.LL[layer]) * Soil.Thickness[layer];
-                    result[layer] = Math.Max(0.0, Soil.SoilWater.SWmm[layer] - layerLL) * layerFraction;
+                    result[layer] = Math.Max(0.0, Soil.Water[layer] - layerLL) * layerFraction;
 
                     // actual available water
                     result[layer] = Math.Min(result[layer] * facCond * facWcontent, sumWaterAvailable[layer]);
@@ -1984,23 +1984,23 @@ namespace Models.AgPasture1
                 {
                     // simple way, all N in the root zone is available
                     layerFraction = 1.0; //TODO: shold be this: LayerFractionWithRoots(layer);
-                    soilNH4Available[layer] = Soil.SoilNitrogen.NH4[layer] * layerFraction;
-                    soilNO3Available[layer] = Soil.SoilNitrogen.NO3[layer] * layerFraction;
+                    soilNH4Available[layer] = Soil.NH4N[layer] * layerFraction;
+                    soilNO3Available[layer] = Soil.NO3N[layer] * layerFraction;
                 }
                 else
                 {
                     // Method implemented by RCichota,
                     // N is available following water uptake and a given 'availability' factor (for each N form)
 
-                    facWtaken = swardWaterUptake[layer] / Math.Max(0.0, Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    facWtaken = swardWaterUptake[layer] / Math.Max(0.0, Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]);
 
                     layerFraction = mySward.Max(mySpecies => mySpecies.LayerFractionWithRoots(layer));
                     nK = mySward.Max(mySpecies => mySpecies.kuNH4);
-                    soilNH4Available[layer] = Soil.SoilNitrogen.NH4[layer] * nK * layerFraction;
+                    soilNH4Available[layer] = Soil.NH4N[layer] * nK * layerFraction;
                     soilNH4Available[layer] *= facWtaken;
 
                     nK = mySward.Max(mySpecies => mySpecies.kuNO3);
-                    soilNO3Available[layer] = Soil.SoilNitrogen.NO3[layer] * nK * layerFraction;
+                    soilNO3Available[layer] = Soil.NO3N[layer] * nK * layerFraction;
                     soilNO3Available[layer] *= facWtaken;
                 }
                 soilAvailableN[layer] = soilNH4Available[layer] + soilNO3Available[layer];
@@ -2090,8 +2090,8 @@ namespace Models.AgPasture1
                         // calc the amount of each N form taken up
                         for (int layer = 0; layer <= RootFrontier; layer++)
                         {
-                            NTakenUp.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * uptakeFraction;
-                            NTakenUp.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
+                            NTakenUp.DeltaNH4[layer] = -Soil.NH4N[layer] * uptakeFraction;
+                            NTakenUp.DeltaNO3[layer] = -Soil.NO3N[layer] * uptakeFraction;
                         }
 
                         // partition the amount taken up between species, considering amount actually taken up
@@ -2140,8 +2140,8 @@ namespace Models.AgPasture1
                             for (int layer = 0; layer <= mySpecies.RootFrontier; layer++)
                             {
                                 mySpecies.mySoilUptakeN[layer] = (adjustedNH4Available[layer] + adjustedNO3Available[layer]) * uptakeFraction;
-                                NTakenUp.DeltaNH4[layer] -= Soil.SoilNitrogen.NH4[layer] * uptakeFraction;
-                                NTakenUp.DeltaNO3[layer] -= Soil.SoilNitrogen.NO3[layer] * uptakeFraction;
+                                NTakenUp.DeltaNH4[layer] -= Soil.NH4N[layer] * uptakeFraction;
+                                NTakenUp.DeltaNO3[layer] -= Soil.NO3N[layer] * uptakeFraction;
                             }
                         }
                     }

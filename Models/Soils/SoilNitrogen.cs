@@ -598,7 +598,7 @@ namespace Models.Soils
 
             num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
 
-            sw_dep = Soil.SoilWater.SWmm;
+            sw_dep = Soil.Water;
 
             // update soil temperature
             if (use_external_st)

@@ -4238,10 +4238,10 @@ namespace Models
             p_greenDM = 0.0;
             p_deadDM = 0.0;
 
-            SWSupply = new double[Soil.SoilWater.dlayer.Length];
-            SWUptake = new double[Soil.SoilWater.dlayer.Length];
-            SNSupply = new double[Soil.SoilWater.dlayer.Length];
-            SNUptake = new double[Soil.SoilWater.dlayer.Length];
+            SWSupply = new double[Soil.Thickness.Length];
+            SWUptake = new double[Soil.Thickness.Length];
+            SNSupply = new double[Soil.Thickness.Length];
+            SNUptake = new double[Soil.Thickness.Length];
 
             // check that initialisation fractions have been supplied accordingly
             Array.Resize(ref initialDMFractions_grass, 11);
@@ -4432,12 +4432,12 @@ namespace Models
                 double Sat = 0;	 //water content at saturation
                 double FC = 0;	  //water contenct at field capacity
 
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
-                    spDepth += Soil.SoilWater.dlayer[layer];
+                    spDepth += Soil.Thickness[layer];
                     if (spDepth <= p_rootFrontier)
                     {
-                        SW += Soil.SoilWater.SWmm[layer];
+                        SW += Soil.Water[layer];
                         Sat += Soil.SoilWater.sat_dep[layer];
                         FC += Soil.SoilWater.DULmm[layer];
                     }
@@ -5052,7 +5052,7 @@ namespace Models
             p_soilNavailable = 0;
             double spDepth = 0;		 // depth before next soil layer
             int layer = 0;
-            for (layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 if (spDepth <= p_rootFrontier)
                 {
@@ -5066,8 +5066,8 @@ namespace Models
                     SNSupply[layer] = (no3[layer] * KNO3 + nh4[layer] * KNH4 ) * (double)swaf;
                     */
                     //original below
-                    p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]);
-                    SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]);
+                    p_soilNavailable += (Soil.NO3N[layer] + Soil.NH4N[layer]);
+                    SNSupply[layer] = (Soil.NO3N[layer] + Soil.NH4N[layer]);
                 }
                 else
                 {
@@ -5075,7 +5075,7 @@ namespace Models
                     break;
                 }
 
-                spDepth += Soil.SoilWater.dlayer[layer];
+                spDepth += Soil.Thickness[layer];
 
             }
 
@@ -5095,7 +5095,7 @@ namespace Models
             int layer = 0;
             SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
                     
-            for (layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 if (spDepth <= p_rootFrontier)
                 {
@@ -5103,10 +5103,10 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (Soil.SoilWater.SWmm[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.DUL[layer] - soilCrop.LL[layer]);
+                    swaf = (Soil.Water[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.DUL[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    p_soilNavailable += (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
-                    SNSupply[layer] = (Soil.SoilNitrogen.NO3[layer] * KNO3 + Soil.SoilNitrogen.NH4[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    p_soilNavailable += (Soil.NO3N[layer] * KNO3 + Soil.NH4N[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    SNSupply[layer] = (Soil.NO3N[layer] * KNO3 + Soil.NH4N[layer] * KNH4) * Math.Pow(swaf, 0.25);
 
                     //original below
                     //p_soilNavailable += (no3[layer] + nh4[layer]);
@@ -5118,7 +5118,7 @@ namespace Models
                     break;
                 }
 
-                spDepth += Soil.SoilWater.dlayer[layer];
+                spDepth += Soil.Thickness[layer];
 
             }
 
@@ -5315,9 +5315,9 @@ namespace Models
 
             //find out soil available water
             p_waterSupply = 0;
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
-                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.SoilWater.SWmm[layer] - soilCrop.LL[layer] * (Soil.SoilWater.dlayer[layer])))
+                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.Water[layer] - soilCrop.LL[layer] * (Soil.Thickness[layer])))
                                 * LayerFractionForRoots(layer, p_rootFrontier);
                 if (layer < p_bottomRootLayer)
                     p_waterSupply += SWSupply[layer];
@@ -5325,7 +5325,7 @@ namespace Models
 
             //uptake in proportion
             PMF.WaterChangedType WaterUptake = new PMF.WaterChangedType();
-            WaterUptake.DeltaWater = new double[Soil.SoilWater.dlayer.Length];
+            WaterUptake.DeltaWater = new double[Soil.Thickness.Length];
             //double[] SWUptake = new double[dlayer.Length];
             double Fraction = Math.Min(1.0, p_waterDemand / p_waterSupply);
             double actualUptake = 0.0;
@@ -5454,8 +5454,8 @@ namespace Models
             Soils.NitrogenChangedType NUptake = new Soils.NitrogenChangedType();
             NUptake.Sender = Name;
             NUptake.SenderType = "Plant";
-            NUptake.DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
-            NUptake.DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
+            NUptake.DeltaNO3 = new double[Soil.Thickness.Length];
+            NUptake.DeltaNH4 = new double[Soil.Thickness.Length];
 
             double Fraction = 0;
             if (p_soilNavailable > 0)
@@ -5472,27 +5472,27 @@ namespace Models
                     totSWUptake = SWUptake.Sum();
 
                 double[]
-                    availableNH4_bylayer = new double[Soil.SoilWater.dlayer.Length],
-                    availableNO3_bylayer = new double[Soil.SoilWater.dlayer.Length],
-                    diffNH4_bylayer = new double[Soil.SoilWater.dlayer.Length],
-                    diffNO3_bylayer = new double[Soil.SoilWater.dlayer.Length];
+                    availableNH4_bylayer = new double[Soil.Thickness.Length],
+                    availableNO3_bylayer = new double[Soil.Thickness.Length],
+                    diffNH4_bylayer = new double[Soil.Thickness.Length],
+                    diffNO3_bylayer = new double[Soil.Thickness.Length];
 
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     double
-                        totN = Soil.SoilNitrogen.NH4[layer] + Soil.SoilNitrogen.NO3[layer],
+                        totN = Soil.NH4N[layer] + Soil.NO3N[layer],
                         fracH2O = SWUptake[layer] / totSWUptake;
 
                     if (totN > 0)
                     {
-                        availableNH4_bylayer[layer] = fracH2O * Soil.SoilNitrogen.NH4[layer] / totN;
-                        availableNO3_bylayer[layer] = fracH2O * Soil.SoilNitrogen.NO3[layer] / totN;
+                        availableNH4_bylayer[layer] = fracH2O * Soil.NH4N[layer] / totN;
+                        availableNO3_bylayer[layer] = fracH2O * Soil.NO3N[layer] / totN;
 
                         //if we have no3 and nh4 in this layer then calculate our uptake multiplier, otherwise set it to 0
                         //the idea behind the multiplier is that it allows us to calculate the max amount of N we can extract
                         //without forcing any of the layers below 0 AND STILL MAINTAINING THE RATIO as calculated with fracH2O
                         //NOTE: it doesn't matter whether we use nh4 or no3 for this calculation, we will get the same answer regardless
-                        uptake_multiplier = Soil.SoilNitrogen.NH4[layer] * Soil.SoilNitrogen.NO3[layer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.NH4[layer] / availableNH4_bylayer[layer]) : 0;
+                        uptake_multiplier = Soil.NH4N[layer] * Soil.NO3N[layer] > 0 ? Math.Min(uptake_multiplier, Soil.NH4N[layer] / availableNH4_bylayer[layer]) : 0;
                     }
                     else
                     {
@@ -5506,8 +5506,8 @@ namespace Models
                 availableNO3_bylayer = availableNO3_bylayer.Select(x => x * uptake_multiplier).ToArray();
 
                 //calculate how much no3/nh4 will be left in the soil layers (diff_nxx[layer] = nxx[layer] - availableNH4_bylayer[layer])
-                diffNH4_bylayer = Soil.SoilNitrogen.NH4.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
-                diffNO3_bylayer = Soil.SoilNitrogen.NO3.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
+                diffNH4_bylayer = Soil.NH4N.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
+                diffNO3_bylayer = Soil.NO3N.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
 
                 //adjust this by the sum of all leftover so we get a ratio we can use later
                 double sum_diff = diffNH4_bylayer.Sum() + diffNO3_bylayer.Sum();
@@ -5535,7 +5535,7 @@ namespace Models
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                     n_uptake += SNUptake[layer] = (NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]) * -1;
 
-                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.SoilNitrogen.NO3[i] + x + 0.00000001, 0)).ToArray();
+                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.NO3N[i] + x + 0.00000001, 0)).ToArray();
                 if (diffs.Any(x => x == 0))
                     throw new Exception();
 
@@ -5554,11 +5554,11 @@ namespace Models
             {
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                 {   //N are taken up only in top layers that root can reach (including buffer Zone).
-                    n_uptake += (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]) * Fraction;
-                    SNUptake[layer] = (Soil.SoilNitrogen.NO3[layer] + Soil.SoilNitrogen.NH4[layer]) * Fraction;
+                    n_uptake += (Soil.NO3N[layer] + Soil.NH4N[layer]) * Fraction;
+                    SNUptake[layer] = (Soil.NO3N[layer] + Soil.NH4N[layer]) * Fraction;
 
-                    NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.NO3[layer] * Fraction;
-                    NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.NH4[layer] * Fraction;
+                    NUptake.DeltaNO3[layer] = -Soil.NO3N[layer] * Fraction;
+                    NUptake.DeltaNH4[layer] = -Soil.NH4N[layer] * Fraction;
                 }
             }
 
@@ -5605,7 +5605,7 @@ namespace Models
         /// <param name="NinRootSen">The nin root sen.</param>
         private void DoIncorpFomEvent(double rootSen, double NinRootSen)
         {
-            Soils.FOMLayerLayerType[] fomLL = new Soils.FOMLayerLayerType[Soil.SoilWater.dlayer.Length];
+            Soils.FOMLayerLayerType[] fomLL = new Soils.FOMLayerLayerType[Soil.Thickness.Length];
 
             // ****  RCichota, Jun, 2014 change how RootFraction (rlvp) is used in here ****************************************
             // root senesced are returned to soil (as FOM) considering return is proportional to root mass

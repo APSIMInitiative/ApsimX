@@ -300,7 +300,7 @@ namespace Models.PMF.OldPlant
                 ; /* nothing */
 
             int RootLayerMax = deepest_layer + 1;
-            double RootDepthMax = Utility.Math.Sum(Soil.SoilWater.dlayer, 0, deepest_layer + 1, 0.0);
+            double RootDepthMax = Utility.Math.Sum(Soil.Thickness, 0, deepest_layer + 1, 0.0);
             dltRootDepth = Utility.Math.Constrain(dltRootDepth, double.MinValue, RootDepthMax - RootDepth);
 
             if (dltRootDepth < 0.0)
@@ -495,11 +495,11 @@ namespace Models.PMF.OldPlant
         {
             if (NUptakeFunction is NUptake3)
             {
-                double[] no3gsm = Utility.Math.Multiply_Value(Soil.SoilNitrogen.NO3, Conversions.kg2gm / Conversions.ha2sm);
-                double[] nh4gsm = Utility.Math.Multiply_Value(Soil.SoilNitrogen.NH4, Conversions.kg2gm / Conversions.ha2sm);
+                double[] no3gsm = Utility.Math.Multiply_Value(Soil.NO3N, Conversions.kg2gm / Conversions.ha2sm);
+                double[] nh4gsm = Utility.Math.Multiply_Value(Soil.NH4N, Conversions.kg2gm / Conversions.ha2sm);
 
                 (NUptakeFunction as NUptake3).DoNUptake(RootDepth, no3gsm, nh4gsm,
-                                                 Soil.BD, Soil.SoilWater.dlayer, sw_avail, sw_avail_pot, no3gsm_min, nh4gsm_min,
+                                                 Soil.BD, Soil.Thickness, sw_avail, sw_avail_pot, no3gsm_min, nh4gsm_min,
                                                  ref no3gsm_uptake_pot, ref nh4gsm_uptake_pot);
             }
             else
@@ -677,10 +677,10 @@ namespace Models.PMF.OldPlant
 
             RootDepth += dltRootDepth;
 
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 RootLength[layer] += dltRootLength[layer];
 
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 RootLength[layer] -= dltRootLengthSenesced[layer];
                 RootLengthSenesced[layer] += dltRootLengthSenesced[layer];
@@ -690,14 +690,14 @@ namespace Models.PMF.OldPlant
             // Note that this is not entirely accurate.  It links live root
             // weight with root length and so thereafter dead(and detaching)
             // root is assumed to have the same distribution as live roots.
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 dltRootLengthDead[layer] = RootLength[layer] * Population.DyingFractionPlants;
                 RootLength[layer] -= dltRootLengthDead[layer];
                 RootLengthSenesced[layer] += dltRootLengthDead[layer];
             }
 
-            double CumDepth = Utility.Math.Sum(Soil.SoilWater.dlayer);
+            double CumDepth = Utility.Math.Sum(Soil.Thickness);
             if (RootDepth < 0 || RootDepth > CumDepth)
                 throw new Exception("Invalid root depth: " + RootDepth.ToString());
 
@@ -778,10 +778,10 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                double[] FASW = new double[Soil.SoilWater.dlayer.Length];
-                for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+                double[] FASW = new double[Soil.Thickness.Length];
+                for (int i = 0; i < Soil.Thickness.Length; i++)
                 {
-                    FASW[i] = Utility.Math.Divide(Soil.SoilWater.SWmm[i] - ll_dep[i], Soil.SoilWater.DULmm[i] - ll_dep[i], 0.0);
+                    FASW[i] = Utility.Math.Divide(Soil.Water[i] - ll_dep[i], Soil.SoilWater.DULmm[i] - ll_dep[i], 0.0);
                     FASW[i] = Utility.Math.Constrain(FASW[i], 0.0, 1.0);
                 }
                 return FASW;
@@ -795,14 +795,14 @@ namespace Models.PMF.OldPlant
             {
                 //  the layer with root front
                 int layer = FindLayerNo(RootDepth);
-                int deepest_layer = Soil.SoilWater.dlayer.Length - 1;
+                int deepest_layer = Soil.Thickness.Length - 1;
 
-                double CumDepth = Utility.Math.Sum(Soil.SoilWater.dlayer, 0, layer + 1, 0.0);
+                double CumDepth = Utility.Math.Sum(Soil.Thickness, 0, layer + 1, 0.0);
 
-                double rootdepth_in_layer = Soil.SoilWater.dlayer[layer] - (CumDepth - RootDepth);
-                rootdepth_in_layer = Utility.Math.Constrain(rootdepth_in_layer, 0.0, Soil.SoilWater.dlayer[layer]);
+                double rootdepth_in_layer = Soil.Thickness[layer] - (CumDepth - RootDepth);
+                rootdepth_in_layer = Utility.Math.Constrain(rootdepth_in_layer, 0.0, Soil.Thickness[layer]);
 
-                double weighting_factor = Utility.Math.Divide(rootdepth_in_layer, Soil.SoilWater.dlayer[layer], 0.0);
+                double weighting_factor = Utility.Math.Divide(rootdepth_in_layer, Soil.Thickness[layer], 0.0);
                 int next_layer = Math.Min(layer + 1, deepest_layer);
 
                 double fasw1 = FASWLayered[layer];
@@ -817,7 +817,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Root length density - needed by SWIM</summary>
         /// <value>The root length density.</value>
         [Units("mm/mm^3")]
-        public double[] RootLengthDensity { get { return Utility.Math.Divide(RootLength, Soil.SoilWater.dlayer); } }
+        public double[] RootLengthDensity { get { return Utility.Math.Divide(RootLength, Soil.Thickness); } }
         /// <summary>Calculate the extractable soil water in the root zone (mm).</summary>
         /// <value>The esw in root zone.</value>
         internal double ESWInRootZone
@@ -827,7 +827,7 @@ namespace Models.PMF.OldPlant
                 double ESW = 0;
                 int deepest_layer = FindLayerNo(RootDepth);
                 for (int layer = 0; layer <= deepest_layer; layer++)
-                    ESW += Utility.Math.Constrain(Soil.SoilWater.SWmm[layer] - ll_dep[layer], 0.0, double.MaxValue);
+                    ESW += Utility.Math.Constrain(Soil.Water[layer] - ll_dep[layer], 0.0, double.MaxValue);
                 return ESW;
             }
         }
@@ -840,13 +840,13 @@ namespace Models.PMF.OldPlant
             int i;
             double progressive_sum = 0.0;
 
-            for (i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            for (i = 0; i < Soil.Thickness.Length; i++)
             {
-                progressive_sum = progressive_sum + Soil.SoilWater.dlayer[i];
+                progressive_sum = progressive_sum + Soil.Thickness[i];
                 if (progressive_sum >= depth)
                     break;
             }
-            if (i != 0 && i == Soil.SoilWater.dlayer.Length)
+            if (i != 0 && i == Soil.Thickness.Length)
                 return (i - 1); // last element in array
             return i;
         }
@@ -863,7 +863,7 @@ namespace Models.PMF.OldPlant
             double depth_today = RootDepth + dltRootDepth;
             int deepest_layer = FindLayerNo(depth_today);
 
-            double[] rlv_factor = new double[Soil.SoilWater.dlayer.Length];    // relative rooting factor for all layers
+            double[] rlv_factor = new double[Soil.Thickness.Length];    // relative rooting factor for all layers
 
             double[] relativeRootRate = RelativeRootRate.Values;
             double[] sWFactorRootLength = SWFactorRootLength.Values;
@@ -876,7 +876,7 @@ namespace Models.PMF.OldPlant
                 rlv_factor[layer] = sWFactorRootLength[layer] *
                                     branching_factor *                                   // branching factor
                                     xf[layer] *                                          // growth factor
-                                    Utility.Math.Divide(Soil.SoilWater.dlayer[layer], RootDepth, 0.0);   // space weighting factor
+                                    Utility.Math.Divide(Soil.Thickness[layer], RootDepth, 0.0);   // space weighting factor
 
                 rlv_factor[layer] = Utility.Math.Constrain(rlv_factor[layer], 1e-6, double.MaxValue);
                 rlv_factor_tot += rlv_factor[layer];
@@ -916,14 +916,14 @@ namespace Models.PMF.OldPlant
             double dep_tot, esw_tot;                      // total depth of soil & ll
 
             dep_tot = esw_tot = 0.0;
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 writer.WriteLine(string.Format("{0,9:F1}{1,10:F3}{2,15:F3}{3,12:F3}",
-                                  Soil.SoilWater.dlayer[layer],
+                                  Soil.Thickness[layer],
                                   getModifiedKL(layer),
-                                  Utility.Math.Divide(ll_dep[layer], Soil.SoilWater.dlayer[layer], 0.0),
+                                  Utility.Math.Divide(ll_dep[layer], Soil.Thickness[layer], 0.0),
                                   xf[layer]));
-                dep_tot += Soil.SoilWater.dlayer[layer];
+                dep_tot += Soil.Thickness[layer];
                 esw_tot += Soil.SoilWater.DULmm[layer] - ll_dep[layer];
             }
              writer.WriteLine("-----------------------------------------------");
@@ -949,10 +949,10 @@ namespace Models.PMF.OldPlant
             Dead = Dead + Dead;
 
             // do root_length
-            double[] dltRootLengthDie = new double[Soil.SoilWater.dlayer.Length];
+            double[] dltRootLengthDie = new double[Soil.Thickness.Length];
             double Die_length = Dead.Wt / Conversions.sm2smm * SpecificRootLength;
             RootDist(Die_length, dltRootLengthDie);
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 RootLength[layer] -= dltRootLengthDie[layer];
         }
 
@@ -976,29 +976,29 @@ namespace Models.PMF.OldPlant
             GreenRemoved = new Biomass();
             SenescedRemoved = new Biomass();
 
-            dlt_sw_dep = new double[Soil.SoilWater.dlayer.Length];
-            sw_avail = new double[Soil.SoilWater.dlayer.Length];
-            sw_avail_pot = new double[Soil.SoilWater.dlayer.Length];
-            sw_supply = new double[Soil.SoilWater.dlayer.Length];
+            dlt_sw_dep = new double[Soil.Thickness.Length];
+            sw_avail = new double[Soil.Thickness.Length];
+            sw_avail_pot = new double[Soil.Thickness.Length];
+            sw_supply = new double[Soil.Thickness.Length];
 
-            dlt_no3gsm = new double[Soil.SoilWater.dlayer.Length];
-            dlt_nh4gsm = new double[Soil.SoilWater.dlayer.Length];
-            no3gsm_uptake_pot = new double[Soil.SoilWater.dlayer.Length];
-            nh4gsm_uptake_pot = new double[Soil.SoilWater.dlayer.Length];
-            dltRootLength = new double[Soil.SoilWater.dlayer.Length];
-            dltRootLengthSenesced = new double[Soil.SoilWater.dlayer.Length];
-            dltRootLengthDead = new double[Soil.SoilWater.dlayer.Length];
-            no3gsm_min = new double[Soil.SoilWater.dlayer.Length];
-            nh4gsm_min = new double[Soil.SoilWater.dlayer.Length];
-            RootLength = new double[Soil.SoilWater.dlayer.Length];
-            RootLengthSenesced = new double[Soil.SoilWater.dlayer.Length];
+            dlt_no3gsm = new double[Soil.Thickness.Length];
+            dlt_nh4gsm = new double[Soil.Thickness.Length];
+            no3gsm_uptake_pot = new double[Soil.Thickness.Length];
+            nh4gsm_uptake_pot = new double[Soil.Thickness.Length];
+            dltRootLength = new double[Soil.Thickness.Length];
+            dltRootLengthSenesced = new double[Soil.Thickness.Length];
+            dltRootLengthDead = new double[Soil.Thickness.Length];
+            no3gsm_min = new double[Soil.Thickness.Length];
+            nh4gsm_min = new double[Soil.Thickness.Length];
+            RootLength = new double[Soil.Thickness.Length];
+            RootLengthSenesced = new double[Soil.Thickness.Length];
 
             SoilCrop soilCrop = Soil.Crop(Plant.Name) as SoilCrop;
             ll = soilCrop.LL;
             kl = soilCrop.KL;
             xf = soilCrop.XF;
 
-            ll_dep = Utility.Math.Multiply(ll, Soil.SoilWater.dlayer);
+            ll_dep = Utility.Math.Multiply(ll, Soil.Thickness);
             Util.ZeroArray(no3gsm_min);
             Util.ZeroArray(nh4gsm_min);
         }
@@ -1086,7 +1086,7 @@ namespace Models.PMF.OldPlant
                 int deepest_layer = FindLayerNo(RootDepth);
 
                 for (int layer = 0; layer <= deepest_layer; layer++)
-                    RootLength[layer] = rld * Soil.SoilWater.dlayer[layer] * RootProportion(layer, RootDepth);
+                    RootLength[layer] = rld * Soil.Thickness[layer] * RootProportion(layer, RootDepth);
 
                 Util.Debug("Root.InitGreen.StructuralWt=%f", Live.StructuralWt);
                 Util.Debug("Root.InitGreen.StructuralN=%f", Live.StructuralN);
@@ -1199,7 +1199,7 @@ namespace Models.PMF.OldPlant
             int deepest_layer = FindLayerNo(RootDepth);
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
-                sw_avail[layer] = Soil.SoilWater.SWmm[layer] - ll_dep[layer];
+                sw_avail[layer] = Soil.Water[layer] - ll_dep[layer];
                 sw_avail[layer] = Utility.Math.Constrain(sw_avail[layer], 0.0, double.MaxValue);
             }
             // correct bottom layer for actual root penetration
@@ -1221,7 +1221,7 @@ namespace Models.PMF.OldPlant
             double sw_avail;
             for (int i = 0; i <= deepest_layer; i++)
             {
-                sw_avail = (Soil.SoilWater.SWmm[i] - ll_dep[i]);
+                sw_avail = (Soil.Water[i] - ll_dep[i]);
                 sw_supply[i] = sw_avail * getModifiedKL(i);
                 sw_supply[i] = Utility.Math.Constrain(sw_supply[i], 0.0, double.MaxValue);
             }
@@ -1282,11 +1282,11 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         private double RootProportion(int layer, double RootDepth)
         {
-            double depth_to_layer_bottom = Utility.Math.Sum(Soil.SoilWater.dlayer, 0, layer + 1, 0.0);
-            double depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
+            double depth_to_layer_bottom = Utility.Math.Sum(Soil.Thickness, 0, layer + 1, 0.0);
+            double depth_to_layer_top = depth_to_layer_bottom - Soil.Thickness[layer];
             double depth_to_root = Math.Min(depth_to_layer_bottom, RootDepth);
             double depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
-            return (Utility.Math.Divide(depth_of_root_in_layer, Soil.SoilWater.dlayer[layer], 0.0));
+            return (Utility.Math.Divide(depth_of_root_in_layer, Soil.Thickness[layer], 0.0));
         }
 
         /// <summary>
@@ -1313,7 +1313,7 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         private double WFPS(int layer)
         {
-            double wfps = Utility.Math.Divide(Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer],
+            double wfps = Utility.Math.Divide(Soil.Water[layer] - Soil.SoilWater.LL15mm[layer],
                                             Soil.SoilWater.sat_dep[layer] - Soil.SoilWater.LL15mm[layer], 0.0);
             return Utility.Math.Constrain(wfps, 0.0, 1.0);
         }
