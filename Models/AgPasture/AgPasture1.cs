@@ -1802,7 +1802,7 @@ namespace Models.AgPasture1
 
                 for (int layer = 0; layer <= RootFrontier; layer++)
                 {
-                    facCond = 1 - Math.Pow(10, -Soil.Water.KS[layer] / referenceKSuptake);
+                    facCond = 1 - Math.Pow(10, -Soil.KS[layer] / referenceKSuptake);
                     facWcontent = 1 - Math.Pow(10,
                                 -(Math.Max(0.0, Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]))
                                 / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]));

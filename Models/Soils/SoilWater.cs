@@ -4498,12 +4498,12 @@ namespace Models.Soils
                 dlayer = Soil.Thickness;
                 sat = Soil.SAT;
                 DUL = Soil.DUL;
-                SW = Soil.SW;
+                SW = Soil.InitialWaterVolumetric;
                 LL15 = Soil.LL15;
                 air_dry = Soil.AirDry;
                 ks = Water.KS;
                 bd = Water.BD;
-                SW = Soil.SW;
+                SW = Soil.InitialWaterVolumetric;
 
                 // some defaults.
                 if (SWCON == null)
