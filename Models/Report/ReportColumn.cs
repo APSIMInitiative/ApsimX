@@ -299,7 +299,11 @@ namespace Models.Report
                 }
                 else if (this.fromHasNoYear)
                 {
-                    if (this.clock.Today.Day == this.fromDate.Day && this.clock.Today.Month == this.fromDate.Month)
+                    DateTime d1 = new DateTime(this.clock.Today.Year, this.fromDate.Month, this.fromDate.Day);
+                    DateTime d2 = new DateTime(this.clock.Today.Year, this.toDate.Month, this.toDate.Day);
+                    if (d2.DayOfYear <= d1.DayOfYear)
+                        d2 = new DateTime(this.clock.Today.Year + 1, this.toDate.Month, this.toDate.Day);
+                    if (this.clock.Today >= d1 && this.clock.Today <= d2)
                         this.inCaptureWindow = true;
                 }
                 else

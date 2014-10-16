@@ -620,7 +620,7 @@ namespace Models
 			
 			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.EsW > MinESW &&
+			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
