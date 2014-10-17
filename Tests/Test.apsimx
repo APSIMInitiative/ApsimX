@@ -33,7 +33,7 @@
           <string>[Weather].Radn</string>
           <string>[Weather].Rain</string>
           <string>[Soil].SoilWater.SWmm</string>
-          <string>[Soil].SoilNitrogen.NO3</string>
+          <string>[Soil].NO3N</string>
           <string>[SurfaceOrganicMatter].Wt</string>
           <string>[Soil].SoilWater.SW[1:3] as SWTop3Layers</string>
           <string>sum([Soil].SoilWater.SW[1:3]) as TotalSWTop3Layers</string>

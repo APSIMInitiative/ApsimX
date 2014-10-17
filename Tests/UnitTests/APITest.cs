@@ -85,7 +85,7 @@ namespace UnitTests
             
             Assert.AreEqual(Apsim.FullPath(this.simulation), ".Simulations.Test");
             Assert.AreEqual(Apsim.FullPath(zone2), ".Simulations.Test.Field2");
-            Assert.AreEqual(Apsim.FullPath(soil.Water), ".Simulations.Test.Field2.Soil.Water");
+            Assert.AreEqual(Apsim.FullPath(soil), ".Simulations.Test.Field2.Soil");
         }
 
         /// <summary>

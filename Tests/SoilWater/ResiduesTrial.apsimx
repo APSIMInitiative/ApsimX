@@ -846,7 +846,7 @@
             <string>[SurfaceOrganicMatter].Wt</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Weather].Rain</string>
-            <string>[Soil].SoilWater.dlayer</string>
+            <string>[Soil].Thickness</string>
             <string>[Soil].SoilWater.Es</string>
             <string>[Irrigation].IrrigationApplied</string>
             <string>[Soil].SoilWater.SW</string>
@@ -883,8 +883,8 @@
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
             <string>[Soil].SoilNitrogen.Denitrification</string>
             <string>[ExtraVariables].Script.MineralN</string>
-            <string>[Soil].SoilNitrogen.NO3</string>
-            <string>[Soil].SoilNitrogen.NH4</string>
+            <string>[Soil].NO3N</string>
+            <string>[Soil].NH4N</string>
             <string>[Soil].SoilNitrogen.urea</string>
             <string />
             <string />
@@ -1158,13 +1158,13 @@ namespace Models
 			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
 		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.NO3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.NH4);
+			NO3N = Utility.Math.Sum(Soil.NO3N);
+			NH4N = Utility.Math.Sum(Soil.NH4N);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
 			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            int layers = Soil.SoilWater.dlayer.Length;
+            int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
 				InitialSurfaceOMN = SOM.N;
@@ -1198,7 +1198,7 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			int layers = Soil.SoilWater.dlayer.Length;			
+			int layers = Soil.Thickness.Length;			
 			AccumEO -= Soil.SoilWater.Eo;
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;

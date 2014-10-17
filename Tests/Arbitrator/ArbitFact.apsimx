@@ -531,10 +531,10 @@ namespace Models
 		{
 		    initSWDep = 0.0;
 		    initMinN = 0.0;
-		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+		    for (int j = 0; j < Soil.Thickness.Length; j++)
 		    {
 		       initSWDep += Soil.SoilWater.SWmm[j];
-		       initMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
+		       initMinN += Soil.NO3N[j] + Soil.NH4N[j];
 		    }
 		}
 		
@@ -543,10 +543,10 @@ namespace Models
 		{	
 		    currSWDep = 0.0;
 		    currMinN = 0.0;
-		    for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+		    for (int j = 0; j < Soil.Thickness.Length; j++)
 		    {
 		       currSWDep += Soil.SoilWater.SWmm[j];
-		       currMinN += Soil.SoilNitrogen.NO3[j] + Soil.SoilNitrogen.NH4[j];
+		       currMinN += Soil.NO3N[j] + Soil.NH4N[j];
 
 			   // Summary.WriteMessage(FullPath, (Soil.SoilWater.SWmm[j].ToString() + " " + currSWDep.ToString()));
 		    }
@@ -605,7 +605,7 @@ namespace Models
             <string>(Slurp1.demandNitrogen + Slurp2.demandNitrogen) as demandNitrogen</string>
             <string>sum(Slurp1.uptakeNitrogen[1:4] + Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen</string>
             <string>sum(Slurp1.uptakeNitrogenPropNO3[1:4] + Slurp2.uptakeNitrogenPropNO3[1:4]) as UptakeNPropNO3</string>
-            <string>(sum([Soil].SoilNitrogen.NH4[1:4]) + sum([Soil].SoilNitrogen.NO3[1:4]) as MinN</string>
+            <string>(sum([Soil].NH4N[1:4]) + sum([Soil].NO3N[1:4]) as MinN</string>
             <string>[Diffs].Script.diffMinNUptake as deltaMinN</string>
             <string>sum(Slurp1.uptakeNitrogen[1:4]) as UptakeNitrogen1</string>
             <string>sum(Slurp2.uptakeNitrogen[1:4]) as UptakeNitrogen2</string>

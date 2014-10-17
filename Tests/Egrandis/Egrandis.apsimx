@@ -2706,7 +2706,7 @@
           <string>Eucalyptus.Leaf.SpecificArea</string>
           <string>Eucalyptus.Summariser.TotalDead.Wt</string>
           <string>[Soil].SoilWater.SWmm</string>
-          <string>[Soil].SoilNitrogen.NO3</string>
+          <string>[Soil].NO3N</string>
           <string>Eucalyptus.Arbitrator.NDemand</string>
           <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
           <string>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</string>
@@ -3051,7 +3051,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Soil.SoilNitrogen.NO3(1)</FieldName>
+            <FieldName>Soil.NO3N(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -3070,7 +3070,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Soil.SoilNitrogen.NO3(2)</FieldName>
+            <FieldName>Soil.NO3N(2)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -3089,7 +3089,7 @@
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Soil.SoilNitrogen.NO3(3)</FieldName>
+            <FieldName>Soil.NO3N(3)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>

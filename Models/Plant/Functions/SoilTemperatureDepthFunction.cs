@@ -37,7 +37,7 @@ namespace Models.PMF.Functions
         {
             get
             {
-                int Layer = LayerIndex(Depth, Soil.SoilWater.dlayer);
+                int Layer = LayerIndex(Depth, Soil.Thickness);
 
                 if (soilTempSource == "Unknown")
                 {

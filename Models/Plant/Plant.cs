@@ -163,8 +163,8 @@ namespace Models.PMF
         [Link(IsOptional = true)] public Phenology Phenology = null;
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
-        /// <summary>The rue model</summary>
-        [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
+        ///// <summary>The rue model</summary>
+        //[Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         /// <summary>The structure</summary>
         [Link(IsOptional=true)] public Structure Structure = null;
         /// <summary>The soil</summary>
@@ -680,9 +680,9 @@ namespace Models.PMF
         /// <summary>Initialises the interface types.</summary>
         private void InitialiseInterfaceTypes()
         {
-            uptakeWater = new double[Soil.SoilWater.dlayer.Length];
-            uptakeNitrogen = new double[Soil.SoilWater.dlayer.Length];
-            uptakeNitrogenPropNO3 = new double[Soil.SoilWater.dlayer.Length];
+            uptakeWater = new double[Soil.Thickness.Length];
+            uptakeNitrogen = new double[Soil.Thickness.Length];
+            uptakeNitrogenPropNO3 = new double[Soil.Thickness.Length];
 
             //Set up CanopyData and root data types
             LocalCanopyData = new NewCanopyType();
@@ -719,8 +719,8 @@ namespace Models.PMF
             RootProperties.KNO3 = Root.KNO3;
             RootProperties.KNH4 = Root.KNH4;
 
-            localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
-            localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
+            localRootExplorationByLayer = new double[Soil.Thickness.Length];
+            localRootLengthDensityByVolume = new double[Soil.Thickness.Length];
 
             demandWater = 0;
             demandNitrogen = 0;

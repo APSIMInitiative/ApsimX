@@ -278,16 +278,16 @@ namespace Models.Soils
             // Variable handling when using APSIMX
             initDone = false;
             dlayer = Soil.Thickness;
-            bd = Soil.Water.BD;
+            bd = Soil.BD;
             sat_dep = Utility.Math.Multiply(Soil.SAT, Soil.Thickness);
             dul_dep = Utility.Math.Multiply(Soil.DUL, Soil.Thickness);
             ll15_dep = Utility.Math.Multiply(Soil.LL15, Soil.Thickness);
-            sw_dep = Utility.Math.Multiply(Soil.SW, Soil.Thickness);
+            sw_dep = Utility.Math.Multiply(Soil.InitialWaterVolumetric, Soil.Thickness);
             oc = Soil.OC;
             ph = Soil.PH;
             salb = Soil.SoilWater.Salb;
-            NO3ppm = Soil.NO3;
-            NH4ppm = Soil.NH4;
+            NO3ppm = Soil.InitialNO3N;
+            NH4ppm = Soil.InitialNH4N;
             num_residues = 0;
             Tsoil = null;
             simpleST = null;
@@ -598,7 +598,7 @@ namespace Models.Soils
 
             num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
 
-            sw_dep = Soil.SoilWater.SWmm;
+            sw_dep = Soil.Water;
 
             // update soil temperature
             if (use_external_st)

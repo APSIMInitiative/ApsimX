@@ -112,9 +112,9 @@ namespace Models.PMF.Organs
 
             if (LayerLive == null || LayerLive.Length == 0)
             {
-                LayerLive = new Biomass[Soil.SoilWater.dlayer.Length];
-                LayerDead = new Biomass[Soil.SoilWater.dlayer.Length];
-                for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+                LayerLive = new Biomass[Soil.Thickness.Length];
+                LayerDead = new Biomass[Soil.Thickness.Length];
+                for (int i = 0; i < Soil.Thickness.Length; i++)
                 {
                     LayerLive[i] = new Biomass();
                     LayerDead[i] = new Biomass();
@@ -122,7 +122,7 @@ namespace Models.PMF.Organs
             }
             else
             {
-                for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+                for (int i = 0; i < Soil.Thickness.Length; i++)
                 {
                     LayerLive[i].Clear();
                     LayerDead[i].Clear();
@@ -130,8 +130,8 @@ namespace Models.PMF.Organs
             }
 
 
-            DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
-            DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
+            DeltaNO3 = new double[Soil.Thickness.Length];
+            DeltaNH4 = new double[Soil.Thickness.Length];
         }
 
         #endregion
@@ -164,9 +164,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double[] value = new double[Soil.SoilWater.dlayer.Length];
-                for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-                    value[i] = soilCrop.LL[i] * Soil.SoilWater.dlayer[i];
+                double[] value = new double[Soil.Thickness.Length];
+                for (int i = 0; i < Soil.Thickness.Length; i++)
+                    value[i] = soilCrop.LL[i] * Soil.Thickness[i];
                 return value;
             }
         }
@@ -178,9 +178,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double[] value = new double[Soil.SoilWater.dlayer.Length];
-                for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-                    value[i] = LayerLive[i].Wt * SpecificRootLength / 1000000 / Soil.SoilWater.dlayer[i];
+                double[] value = new double[Soil.Thickness.Length];
+                for (int i = 0; i < Soil.Thickness.Length; i++)
+                    value[i] = LayerLive[i].Wt * SpecificRootLength / 1000000 / Soil.Thickness[i];
                 return value;
             }
         }
@@ -210,13 +210,13 @@ namespace Models.PMF.Organs
                 Depth = Plant.SowingData.Depth;
                 double AccumulatedDepth = 0;
                 double InitialLayers = 0;
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     if (AccumulatedDepth < Depth)
                         InitialLayers += 1;
                     AccumulatedDepth += Soil.SoilWater.Thickness[layer];
                 }
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     if (layer <= InitialLayers - 1)
                     {
@@ -229,7 +229,7 @@ namespace Models.PMF.Organs
             }
             */
             Length = 0;
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 Length += LengthDensity[layer];
         }
 
@@ -244,16 +244,16 @@ namespace Models.PMF.Organs
 
             Depth = Depth + RootFrontVelocity.Value * soilCrop.XF[RootLayer] * TEM;
             double MaxDepth = 0;
-            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            for (int i = 0; i < Soil.Thickness.Length; i++)
                 if (soilCrop.XF[i] > 0)
-                    MaxDepth += Soil.SoilWater.dlayer[i];
+                    MaxDepth += Soil.Thickness[i];
 
             Depth = Math.Min(Depth, MaxDepth);
 
             // Do Root Senescence
-            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.SoilWater.dlayer.Length];
+            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
 
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 double DM = LayerLive[layer].Wt * _SenescenceRate * 10.0;
                 double N = LayerLive[layer].StructuralN * _SenescenceRate * 10.0;
@@ -313,9 +313,9 @@ namespace Models.PMF.Organs
         private int LayerIndex(double depth)
         {
             double CumDepth = 0;
-            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            for (int i = 0; i < Soil.Thickness.Length; i++)
             {
-                CumDepth = CumDepth + Soil.SoilWater.dlayer[i];
+                CumDepth = CumDepth + Soil.Thickness[i];
                 if (CumDepth >= depth) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");
@@ -332,32 +332,32 @@ namespace Models.PMF.Organs
             double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
             // Implementation Section ----------------------------------
             for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += Soil.SoilWater.dlayer[i];
-            depth_to_layer_top = depth_to_layer_bottom - Soil.SoilWater.dlayer[layer];
+                depth_to_layer_bottom += Soil.Thickness[i];
+            depth_to_layer_top = depth_to_layer_bottom - Soil.Thickness[layer];
             depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
             depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-            return depth_of_root_in_layer / Soil.SoilWater.dlayer[layer];
+            return depth_of_root_in_layer / Soil.Thickness[layer];
         }
         /// <summary>Soils the n supply.</summary>
         /// <param name="NO3Supply">The n o3 supply.</param>
         /// <param name="NH4Supply">The n h4 supply.</param>
         private void SoilNSupply(double[] NO3Supply, double[] NH4Supply)
         {
-            double[] no3ppm = new double[Soil.SoilWater.dlayer.Length];
-            double[] nh4ppm = new double[Soil.SoilWater.dlayer.Length];
+            double[] no3ppm = new double[Soil.Thickness.Length];
+            double[] nh4ppm = new double[Soil.Thickness.Length];
 
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 if (LayerLive[layer].Wt > 0)
                 {
                     double swaf = 0;
-                    swaf = (Soil.SoilWater.SWmm[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    no3ppm[layer] = Soil.SoilNitrogen.NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.SoilWater.dlayer[layer]));
-                    NO3Supply[layer] = Soil.SoilNitrogen.NO3[layer] * KNO3 * no3ppm[layer] * swaf;
-                    nh4ppm[layer] = Soil.SoilNitrogen.NH4[layer] * (100.0 / (Soil.BD[layer] * Soil.SoilWater.dlayer[layer]));
-                    NH4Supply[layer] = Soil.SoilNitrogen.NH4[layer] * KNH4 * nh4ppm[layer] * swaf;
+                    no3ppm[layer] = Soil.NO3N[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
+                    NO3Supply[layer] = Soil.NO3N[layer] * KNO3 * no3ppm[layer] * swaf;
+                    nh4ppm[layer] = Soil.NH4N[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
+                    NH4Supply[layer] = Soil.NH4N[layer] * KNH4 * nh4ppm[layer] * swaf;
                 }
                 else
                 {
@@ -374,23 +374,23 @@ namespace Models.PMF.Organs
             Plant.RootProperties.RootDepth = Depth;
             Plant.RootProperties.MaximumDailyNUptake = MaxDailyNUptake.Value;
             
-            double[] RLD = new double[Soil.SoilWater.dlayer.Length];
-                for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
-                    RLD[i] = LayerLive[i].Wt * SpecificRootLength / 1000000 / Soil.SoilWater.dlayer[i];
+            double[] RLD = new double[Soil.Thickness.Length];
+                for (int i = 0; i < Soil.Thickness.Length; i++)
+                    RLD[i] = LayerLive[i].Wt * SpecificRootLength / 1000000 / Soil.Thickness[i];
             Plant.RootProperties.RootLengthDensityByVolume = RLD;
             
-            double[] RootProp = new double[Soil.SoilWater.dlayer.Length];
-                 for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            double[] RootProp = new double[Soil.Thickness.Length];
+                 for (int i = 0; i < Soil.Thickness.Length; i++)
                     RootProp[i] =  RootProportion(i, Depth);
             Plant.RootProperties.RootExplorationByLayer = RootProp;
 
-            double[] KlAdjusted = new double[Soil.SoilWater.dlayer.Length];
-            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            double[] KlAdjusted = new double[Soil.Thickness.Length];
+            for (int i = 0; i < Soil.Thickness.Length; i++)
                 KlAdjusted[i] = soilCrop.KL[i] * KLModifier.Value;
             Plant.RootProperties.KL = KlAdjusted;
 
-            double[] LL_dep = new double[Soil.SoilWater.dlayer.Length];
-            for (int i = 0; i < Soil.SoilWater.dlayer.Length; i++)
+            double[] LL_dep = new double[Soil.Thickness.Length];
+            for (int i = 0; i < Soil.Thickness.Length; i++)
                 LL_dep[i] = soilCrop.LL[i] * Soil.Thickness[i];
             Plant.RootProperties.LowerLimitDep = LL_dep;
    
@@ -411,9 +411,9 @@ namespace Models.PMF.Organs
         /// <summary>Called when [end crop].</summary>
         public override void OnEndCrop()
         {
-            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.SoilWater.dlayer.Length];
+            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
 
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 double DM = (LayerLive[layer].Wt + LayerDead[layer].Wt) * 10.0;
                 double N = (LayerLive[layer].N + LayerDead[layer].N) * 10.0;
@@ -445,18 +445,18 @@ namespace Models.PMF.Organs
         public override void OnSow(SowPlant2Type Sow)
         {
             //Fixme, this can be deleted when arbitrator calculates uptake ?????
-            Uptake = new double[Soil.SoilWater.dlayer.Length];
+            Uptake = new double[Soil.Thickness.Length];
             
             Depth = Plant.SowingData.Depth;
             double AccumulatedDepth = 0;
             double InitialLayers = 0;
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 if (AccumulatedDepth < Depth)
                     InitialLayers += 1;
                 AccumulatedDepth += Soil.SoilWater.Thickness[layer];
             }
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 if (layer <= InitialLayers - 1)
                 {
@@ -501,23 +501,23 @@ namespace Models.PMF.Organs
                     else
                         throw new Exception("Invalid allocation of potential DM in" + Name);
                 // Calculate Root Activity Values for water and nitrogen
-                double[] RAw = new double[Soil.SoilWater.dlayer.Length];
-                double[] RAn = new double[Soil.SoilWater.dlayer.Length];
+                double[] RAw = new double[Soil.Thickness.Length];
+                double[] RAn = new double[Soil.Thickness.Length];
                 double TotalRAw = 0;
                 double TotalRAn = 0; ;
 
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     if (layer <= LayerIndex(Depth))
                         if (LayerLive[layer].Wt > 0)
                         {
                             RAw[layer] = Uptake[layer] / LayerLive[layer].Wt
-                                       * Soil.SoilWater.dlayer[layer]
+                                       * Soil.Thickness[layer]
                                        * RootProportion(layer, Depth);
                             RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
                             RAn[layer] = (DeltaNO3[layer] + DeltaNH4[layer]) / LayerLive[layer].Wt
-                                           * Soil.SoilWater.dlayer[layer]
+                                           * Soil.Thickness[layer]
                                            * RootProportion(layer, Depth);
                             RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
                         }
@@ -535,7 +535,7 @@ namespace Models.PMF.Organs
                     TotalRAn += RAn[layer];
                 }
                 double allocated = 0;
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     if (TotalRAw > 0)
 
@@ -554,25 +554,25 @@ namespace Models.PMF.Organs
             set
             {
                 // Calculate Root Activity Values for water and nitrogen
-                double[] RAw = new double[Soil.SoilWater.dlayer.Length];
-                double[] RAn = new double[Soil.SoilWater.dlayer.Length];
+                double[] RAw = new double[Soil.Thickness.Length];
+                double[] RAn = new double[Soil.Thickness.Length];
                 double TotalRAw = 0;
                 double TotalRAn = 0;
 
                 if (Depth <= 0)
                     return; // cannot do anything with no depth
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     if (layer <= LayerIndex(Depth))
                         if (LayerLive[layer].Wt > 0)
                         {
                             RAw[layer] = Uptake[layer] / LayerLive[layer].Wt
-                                       * Soil.SoilWater.dlayer[layer]
+                                       * Soil.Thickness[layer]
                                        * RootProportion(layer, Depth);
                             RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
                             RAn[layer] = (DeltaNO3[layer] + DeltaNH4[layer]) / LayerLive[layer].Wt
-                                       * Soil.SoilWater.dlayer[layer]
+                                       * Soil.Thickness[layer]
                                        * RootProportion(layer, Depth);
                             RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
 
@@ -591,7 +591,7 @@ namespace Models.PMF.Organs
                     TotalRAn += RAn[layer];
                 }
                 double allocated = 0;
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     if (TotalRAw > 0)
                     {
@@ -633,10 +633,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (Soil.SoilWater.dlayer != null)
+                if (Soil.Thickness != null)
                 {
-                    double[] no3supply = new double[Soil.SoilWater.dlayer.Length];
-                    double[] nh4supply = new double[Soil.SoilWater.dlayer.Length];
+                    double[] no3supply = new double[Soil.Thickness.Length];
+                    double[] nh4supply = new double[Soil.Thickness.Length];
                     SoilNSupply(no3supply, nh4supply);
                     double NSupply = (Math.Min(Utility.Math.Sum(no3supply), MaxDailyNUptake.Value) + Math.Min(Utility.Math.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
                     return new BiomassSupplyType { Uptake = NSupply };
@@ -693,11 +693,11 @@ namespace Models.PMF.Organs
                 NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
                 NitrogenUptake.Sender = "Plant2";
                 NitrogenUptake.SenderType = "Plant";
-                NitrogenUptake.DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
-                NitrogenUptake.DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
+                NitrogenUptake.DeltaNO3 = new double[Soil.Thickness.Length];
+                NitrogenUptake.DeltaNH4 = new double[Soil.Thickness.Length];
 
-                double[] no3supply = new double[Soil.SoilWater.dlayer.Length];
-                double[] nh4supply = new double[Soil.SoilWater.dlayer.Length];
+                double[] no3supply = new double[Soil.Thickness.Length];
+                double[] nh4supply = new double[Soil.Thickness.Length];
                 SoilNSupply(no3supply, nh4supply);
                 double NSupply = Utility.Math.Sum(no3supply) + Utility.Math.Sum(nh4supply);
                 if (Uptake > 0)
@@ -707,7 +707,7 @@ namespace Models.PMF.Organs
                     double fraction = 0;
                     if (NSupply > 0) fraction = Uptake / NSupply;
 
-                    for (int layer = 0; layer <= Soil.SoilWater.dlayer.Length - 1; layer++)
+                    for (int layer = 0; layer <= Soil.Thickness.Length - 1; layer++)
                     {
                         DeltaNO3[layer] = -no3supply[layer] * fraction;
                         DeltaNH4[layer] = -nh4supply[layer] * fraction;
@@ -766,11 +766,11 @@ namespace Models.PMF.Organs
                 [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e)
         {
-                if (SWSupply == null || SWSupply.Length != Soil.SoilWater.dlayer.Length)
-                    SWSupply = new double[Soil.SoilWater.dlayer.Length];
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                if (SWSupply == null || SWSupply.Length != Soil.Thickness.Length)
+                    SWSupply = new double[Soil.Thickness.Length];
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                     if (layer <= LayerIndex(Depth))
-                        SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.SoilWater.SWmm[layer] - soilCrop.LL[layer] * Soil.SoilWater.dlayer[layer]) * RootProportion(layer, Depth));
+                        SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.Water[layer] - soilCrop.LL[layer] * Soil.Thickness[layer]) * RootProportion(layer, Depth));
                     else
                         SWSupply[layer] = 0;
 
@@ -786,7 +786,7 @@ namespace Models.PMF.Organs
         
             // Gets the water uptake for each layer as calculated by an external module (SWIM)
 
-            Uptake = new double[Soil.SoilWater.dlayer.Length];
+            Uptake = new double[Soil.Thickness.Length];
 
             for (int i = 0; i != SoilWater.Uptakes.Length; i++)
             {
