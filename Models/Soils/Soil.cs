@@ -186,6 +186,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets or sets the soil water for each layer (mm)</summary>
+        [XmlIgnore]
         public double[] Water
         {
             get
@@ -246,6 +247,20 @@ namespace Models.Soils
                 return Map(SoilWater.SWCON, SoilWater.Thickness, Thickness, MapType.Concentration, 0); 
             } 
         }
+
+        /// <summary>
+        /// KLAT at standard thickness. Units: 0-1
+        /// </summary>
+        internal double[] KLAT
+            {
+            get
+                {
+                if (SoilWater == null) return null;
+                return Map(SoilWater.KLAT, SoilWater.Thickness, Thickness, MapType.Concentration, 0);
+                }
+            }
+
+
 
         /// <summary>Return the plant available water CAPACITY at standard thickness. Units: mm/mm</summary>
         public double[] PAWC

@@ -1035,6 +1035,17 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Layer">Zero Based Layer Number</param>
+        /// <param name="SW_dep">New Value</param>
+        public void SetWater_mm(int Layer, double SW_dep)
+            {
+            Layer lyr = GetLayer(Layer + 1);
+            lyr.sw_dep = SW_dep;
+            }
+
 
         public void SetWater_frac(double[] New_SW)
             {
@@ -1401,7 +1412,7 @@ namespace Models.Soils.SoilWaterBackend
                 //From "InitWater" node or "SoilSample" node
                 //------------------------------------------
                     
-                lyr.sw = Soil.SW[i];  //Soil.SW returns the initial water not the current water.
+                lyr.sw = Soil.InitialWaterVolumetric[i]; 
 
 
                 i++;
