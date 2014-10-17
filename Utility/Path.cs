@@ -58,7 +58,9 @@ namespace Utility
         }
 
         /// <summary>
-        /// Try to find an absolute path from a relative one
+        /// Try to find an absolute path from a relative one.
+        /// The %root% macro will be expanded if it exists. This macro
+        /// represents the parent of the directory containing the executing assembly.
         /// </summary>
         /// <param name="path">The relative path to find an abolsute for</param>
         /// <param name="relativePath">The relative path to use</param>
@@ -99,7 +101,7 @@ namespace Utility
                 path = path.Replace(rootDirectory, "%root%");
 
                 // Try getting rid of the relative directory.
-                path = path.Replace(relativeDirectory, "");
+                path = path.Replace(relativeDirectory + Path.DirectorySeparatorChar, "");  // the relative path should not have a preceding \
             }
 
             return path;
