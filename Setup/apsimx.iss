@@ -34,6 +34,97 @@ var
   DataDirPage: TInputDirWizardPage;
   OptionPage: TInputOptionWizardPage;
 
+type
+  //
+  // Enumeration used to specify a .NET framework version 
+  //
+  TDotNetFramework = (
+    DotNet_v11_4322,  // .NET Framework 1.1
+    DotNet_v20_50727, // .NET Framework 2.0
+    DotNet_v30,       // .NET Framework 3.0
+    DotNet_v35,       // .NET Framework 3.5
+    DotNet_v4_Client, // .NET Framework 4.0 Client Profile
+    DotNet_v4_Full,   // .NET Framework 4.0 Full Installation
+    DotNet_v45);      // .NET Framework 4.5
+
+//
+// Checks whether the specified .NET Framework version and service pack
+// is installed (See: http://www.kynosarges.de/DotNetVersion.html)
+//
+// Parameters:
+//   Version     - Required .NET Framework version
+//   ServicePack - Required service pack level (0: None, 1: SP1, 2: SP2 etc.)
+//
+function IsDotNetInstalled(Version: TDotNetFramework; ServicePack: cardinal): boolean;
+  var
+    KeyName      : string;
+    Check45      : boolean;
+    Success      : boolean;
+    InstallFlag  : cardinal; 
+    ReleaseVer   : cardinal;
+    ServiceCount : cardinal;
+  begin
+    // Registry path for the requested .NET Version
+    KeyName := 'SOFTWARE\Microsoft\NET Framework Setup\NDP\';
+
+    case Version of
+      DotNet_v11_4322:  KeyName := KeyName + 'v1.1.4322';
+      DotNet_v20_50727: KeyName := KeyName + 'v2.0.50727';
+      DotNet_v30:       KeyName := KeyName + 'v3.0';
+      DotNet_v35:       KeyName := KeyName + 'v3.5';
+      DotNet_v4_Client: KeyName := KeyName + 'v4\Client';
+      DotNet_v4_Full:   KeyName := KeyName + 'v4\Full';
+      DotNet_v45:       KeyName := KeyName + 'v4\Full';
+    end;
+
+    // .NET 3.0 uses "InstallSuccess" key in subkey Setup
+    if (Version = DotNet_v30) then
+      Success := RegQueryDWordValue(HKLM, KeyName + '\Setup', 'InstallSuccess', InstallFlag) else
+      Success := RegQueryDWordValue(HKLM, KeyName, 'Install', InstallFlag);
+
+    // .NET 4.0/4.5 uses "Servicing" key instead of "SP"
+    if (Version = DotNet_v4_Client) or
+       (Version = DotNet_v4_Full) or
+       (Version = DotNet_v45) then
+      Success := Success and RegQueryDWordValue(HKLM, KeyName, 'Servicing', ServiceCount) else
+      Success := Success and RegQueryDWordValue(HKLM, KeyName, 'SP', ServiceCount);
+
+    // .NET 4.5 is distinguished from .NET 4.0 by the Release key
+    if (Version = DotNet_v45) then
+      begin
+        Success := Success and RegQueryDWordValue(HKLM, KeyName, 'Release', ReleaseVer);
+        Success := Success and (ReleaseVer >= 378389);
+      end;
+
+    Result := Success and (InstallFlag = 1) and (ServiceCount >= ServicePack);
+  end;
+
+// this is the main function that detects the required version
+function IsRequiredDotNetDetected(): Boolean;  
+begin
+    result := IsDotNetInstalled(DotNet_v4_Full, 0);
+end;
+
+function InitializeSetup(): Boolean;
+var
+  answer: integer;
+  ErrorCode: Integer;
+begin
+    //check for the .net runtime. If it is not found then show a message.
+    if not IsRequiredDotNetDetected() then 
+    begin
+        answer := MsgBox('The Microsoft .NET Framework 4.0 is required.' + #13#10 + #13#10 +
+        'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);        
+        result := false;
+        if (answer = MROK) then
+        begin
+          ShellExecAsOriginalUser('open', 'http://www.microsoft.com/en-au/download/details.aspx?id=17718', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+        end;
+    end
+    else
+      result := true;
+end; 
+
 [InstallDelete]
 Name: {localappdata}\VirtualStore\ApsimX\*.*; Type: filesandordirs
 Name: {localappdata}\VirtualStore\ApsimX; Type: dirifempty
