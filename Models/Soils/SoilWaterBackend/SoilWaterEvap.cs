@@ -69,11 +69,29 @@ namespace Models.Soils.SoilWaterBackend
 
         //Initialise the Accumulating Variables
 
-        public void InitialiseAccumulatingVars(SoilWaterSoil SoilObject)
+        public void InitialiseAccumulatingVars(SoilWaterSoil SoilObject, Clock Clock)
             {
             //reset the accumulated Evap variables (sumes1, sumes2, t) 
             //nb. sumes1 -> is sum of es during stage1
             //used in the SoilWater Init, Reset event
+
+
+
+            // soilwat2_soil_property_param()
+
+            //assign u and cona to either sumer or winter values
+            // Need to add 12 hours to move from "midnight" to "noon", or this won't work as expected
+            if (Utility.Date.WithinDates(winterDate, Clock.Today, summerDate))
+                {
+                cona = winterCona;
+                u = winterU;
+                }
+            else
+                {
+                cona = summerCona;
+                u = summerU;
+                }
+
 
 
             //private void soilwat2_evap_init()
@@ -116,14 +134,17 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+
+
         //Constructor
 
-        public NormalEvaporation(SoilWaterSoil SoilObject)
+        public NormalEvaporation(SoilWaterSoil SoilObject, Clock Clock)
             {
+
             cons = SoilObject.Constants;
 
             salb = SoilObject.Salb;
-            
+
             summerCona = SoilObject.SummerCona;
             summerU = SoilObject.SummerU;
             summerDate = SoilObject.SummerDate;
@@ -132,7 +153,51 @@ namespace Models.Soils.SoilWaterBackend
             winterU = SoilObject.WinterU;
             winterDate = SoilObject.WinterDate;
 
-            InitialiseAccumulatingVars(SoilObject);  //initialise the evaporation object.
+
+            // soilwat2_soil_property_param()
+
+            //u - can either use (one value for summer and winter) or two different values.
+            //    (must also take into consideration where they enter two values [one for summer and one for winter] but they make them both the same)
+
+
+            if ((Double.IsNaN(summerU) || (Double.IsNaN(winterU))))
+                {
+                throw new Exception("A single value for u OR BOTH values for summeru and winteru must be specified");
+                }
+            //if they entered two values but they made them the same
+            if (summerU == winterU)
+                {
+                u = summerU;      //u is now no longer null. As if the user had entered a value for u.
+                }
+
+
+
+            //cona - can either use (one value for summer and winter) or two different values.
+            //       (must also take into consideration where they enter two values [one for summer and one for winter] but they make them both the same)
+
+            if ((Double.IsNaN(summerCona)) || (Double.IsNaN(winterCona)))
+                {
+                throw new Exception("A single value for cona OR BOTH values for summercona and wintercona must be specified");
+                }
+            //if they entered two values but they made them the same.
+            if (summerCona == winterCona)
+                {
+                cona = summerCona;   //cona is now no longer null. As if the user had entered a value for cona.
+                }
+
+
+            //summer and winter default dates.
+            if (summerDate == "not_read")
+                {
+                summerDate = "1-oct";
+                }
+
+            if (winterDate == "not_read")
+                {
+                winterDate = "1-apr";
+                }
+
+            InitialiseAccumulatingVars(SoilObject, Clock);
             }
 
 

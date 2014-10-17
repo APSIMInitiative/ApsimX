@@ -112,6 +112,15 @@ namespace Models.Soils.SoilWaterBackend
             _cn2_bare = SoilObject.cn2_bare;
             coverCnRed = SoilObject.cn_red;
             coverCnCov = SoilObject.cn_cov;
+
+
+            //soilwat2_soil_property_param()
+
+            if (coverCnRed >= _cn2_bare)
+                {
+                coverCnRed = _cn2_bare - 0.00009;
+                }
+
             }
 
 

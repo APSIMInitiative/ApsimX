@@ -95,14 +95,14 @@ namespace Models.Soils.SoilWaterBackend
     public class SurfaceFactory 
         {
 
-        public Surface GetSurface(SoilWaterSoil SoilObject)
+        public Surface GetSurface(SoilWaterSoil SoilObject, Clock Clock)
             {
             Surface surface;
 
             if (SoilObject.max_pond <= 0.0)
-                surface = new NormalSurface(SoilObject);
+                surface = new NormalSurface(SoilObject, Clock);
             else
-                surface = new PondSurface(SoilObject);
+                surface = new PondSurface(SoilObject, Clock);
 
             return surface;
             }
@@ -136,12 +136,12 @@ namespace Models.Soils.SoilWaterBackend
         internal NormalEvaporation evap;
 
 
-        public NormalSurface(SoilWaterSoil SoilObject)
+        public NormalSurface(SoilWaterSoil SoilObject, Clock Clock)
             {
             SurfaceType = Surfaces.NormalSurface;
             base.constants = SoilObject.Constants;
             runoff = new NormalRunoff(SoilObject);     //Soil is needed to initialise the cn2bare, etc. 
-            evap = new NormalEvaporation(SoilObject);
+            evap = new NormalEvaporation(SoilObject, Clock);
             }
 
 
@@ -247,7 +247,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-        public PondSurface(SoilWaterSoil SoilObject):base(SoilObject)
+        public PondSurface(SoilWaterSoil SoilObject, Clock Clock):base(SoilObject, Clock)
             {
             base.SurfaceType = Surfaces.PondSurface;
             pond = 0.0;
@@ -329,7 +329,7 @@ namespace Models.Soils.SoilWaterBackend
                     
                     //calculate Es using altered Eos.
                     evap.Eos = Eos;
-                    evap.InitialiseAccumulatingVars(SoilObject); //Reinitialise the Accumulating variables for the normal surface evaporation;
+                    evap.InitialiseAccumulatingVars(base.SoilObject, base.Clock); //Reinitialise the Accumulating variables for the normal surface evaporation;
                     evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
                     Es = evap.Es;
                     t = evap.t;

@@ -831,7 +831,7 @@ namespace Models.Soils
             {
             Summary.WriteMessage(this, "Resetting Soil Water Balance");
             SoilObject.ResetSoil(constants, Soil);          //reset the soil
-            surface = surfaceFactory.GetSurface(SoilObject); //reset the surface
+            surface = surfaceFactory.GetSurface(SoilObject, Clock); //reset the surface
             }
 
 
@@ -1051,7 +1051,7 @@ namespace Models.Soils
 
             //if the user changes max_pond after the OnSimulationCommencing event
             //you may need to change the surface either to or from a ponding surface.
-            surface = surfaceFactory.GetSurface(SoilObject);
+            surface = surfaceFactory.GetSurface(SoilObject, Clock);
             }
 
 
@@ -1544,7 +1544,7 @@ namespace Models.Soils
                 {
                 SoilObject = new SoilWaterSoil(constants, Soil);
                 surfaceFactory = new SurfaceFactory();
-                surface = surfaceFactory.GetSurface(SoilObject);
+                surface = surfaceFactory.GetSurface(SoilObject, Clock);
 
                 //optional inputs (array)
                 inflow_lat = null; 
