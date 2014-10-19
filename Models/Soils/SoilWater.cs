@@ -46,16 +46,16 @@ namespace Models.Soils
 
         //different evap for summer and winter
         //summer
-        [Description("Date for start of summer evaporation (dd-mmm)")]
+        [Description("Start Date for Summer evaporation (dd-mmm)")]
         public string SummerDate { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
-        [Description("Upper limit of stage 1 soil evaporation during summer (U)")]
+        [Description("Summer: Cummulative Evap for end of stage 1 soil evaporation (U)")]
         public double SummerU { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Description("Stage 2 drying coefficient during summer (Cona)")]
+        [Description("Summer: Stage 2 drying coefficient (Cona)")]
         public double SummerCona { get; set; }
 
 
@@ -63,16 +63,16 @@ namespace Models.Soils
 
         //winter
 
-        [Description("Date for start of winter evaporation (dd-mmm)")]
+        [Description("Start Date for Winter evaporation (dd-mmm)")]
         public string WinterDate { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
-        [Description("Upper limit of stage 1 soil evaporation during winter (U)")]
+        [Description("Winter: Cummulative Evap for end of stage 1 soil evaporation (U)")]
         public double WinterU { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Description("Stage 2 drying coefficient during winter (Cona)")]
+        [Description("Winter: Stage 2 drying coefficient (Cona)")]
         public double WinterCona { get; set; }
 
 
@@ -135,7 +135,7 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Maximum water storage on soil surface")]
+        [Description("Maximum Ponding Depth (eg. Rice Paddy)")]
         public double max_pond { get; set; }
 
 
@@ -170,7 +170,9 @@ namespace Models.Soils
         /// This is the NON standard layer thickness.
         /// </summary>
         [Units("mm")]
-        [Description("Thicknesses specified in SoilWater node of GUI")]
+        /// <summary>
+        /// Thicknesses specified in SoilWater node of GUI
+        /// </summary>
         public double[] Thickness { get; set; }
 
 
@@ -283,109 +285,147 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("oC")]
-        [Description("Temperature below which eeq decreases")]
+        /// <summary>
+        ///Temperature below which eeq decreases 
+        /// </summary>
         public double min_crit_temp {get; set;}           
 
 
         [Bounds(Lower = 0.0, Upper = 50.0)]
         [Units("oC")]
-        [Description("Temperature above which eeq increases")]
+        /// <summary>
+        /// Temperature above which eeq increases
+        /// </summary>
         public double max_crit_temp {get; set;}            
 
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Maximum bare ground soil albedo")]
+        /// <summary>
+        /// Maximum bare ground soil albedo
+        /// </summary>
         public double max_albedo {get; set;}           
 
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Factor to convert 'A' to coefficient in Adam's type residue effect on Eos")]
+        /// <summary>
+        ///Factor to convert 'A' to coefficient in Adam's type residue effect on Eos 
+        /// </summary>
         public double A_to_evap_fact {get; set;}      
 
 
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("0-10")]
-        [Description("Coefficient in cover Eos reduction equation")]
+        /// <summary>
+        /// Coefficient in cover Eos reduction equation
+        /// </summary>
         public double canopy_eos_coef {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Critical sw ratio in top layer below which stage 2 evaporation occurs")]
+        /// <summary>
+        /// Critical sw ratio in top layer below which stage 2 evaporation occurs
+        /// </summary>
         public double sw_top_crit {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Upper limit of sumes1")]
+        /// <summary>
+        /// Upper limit of sumes1
+        /// </summary>
         public double sumes1_max {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Upper limit of sumes2")]
+        /// <summary>
+        /// Upper limit of sumes2
+        /// </summary>
         public double sumes2_max {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Efficiency of moving solute with unsaturated flow")]
+        /// <summary>
+        /// Efficiency of moving solute with unsaturated flow
+        /// </summary>
         public double[] solute_flow_eff {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Efficiency of moving solute with flux (saturated flow)")]
+        /// <summary>
+        /// Efficiency of moving solute with flux (saturated flow)
+        /// </summary>
         public double[] solute_flux_eff {get; set;}   
 
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Gradient due to hydraulic differentials")]
+        /// <summary>
+        /// Gradient due to hydraulic differentials
+        /// </summary>
         public double gravity_gradient {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("g/cm^3")]
-        [Description("Specific bulk density")]
+        /// <summary>
+        /// Specific bulk density
+        /// </summary>
         public double specific_bd {get; set;}  
 
 
         [Bounds(Lower = 1.0, Upper = 1000.0)]
         [Units("mm")]
-        [Description("Hydrologically effective depth for runoff")]
+        /// <summary>
+        /// Hydrologically effective depth for runoff
+        /// </summary>
         public double hydrol_effective_depth {get; set;}  
 
 
-        [Description("Names of all possible mobile solutes")]
+        /// <summary>
+        /// Names of all possible mobile solutes
+        /// </summary>
         public string[] mobile_solutes {get; set;}  
 
 
-        [Description("Names of all possible immobile solutes")]
+        /// <summary>
+        /// Names of all possible immobile solutes
+        /// </summary>
         public string[] immobile_solutes {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Canopy factors for cover runoff effect")]
+        /// <summary>
+        /// Canopy factors for cover runoff effect
+        /// </summary>
         public double[] canopy_fact {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 100000.0)]
         [Units("mm")]
-        [Description("Heights for canopy factors")]
+        /// <summary>
+        /// Heights for canopy factors
+        /// </summary>
         public double[] canopy_fact_height {get; set;}  
 
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Default canopy factor in absence of height")]
+        /// <summary>
+        /// Default canopy factor in absence of height
+        /// </summary>
         public double canopy_fact_default {get; set;}  
 
 
-        [Description("Actual soil evaporation model being used")]
+        /// <summary>
+        ///Actual soil evaporation model being used 
+        /// </summary>
         public string act_evap_method {get; set;}  
  
 
