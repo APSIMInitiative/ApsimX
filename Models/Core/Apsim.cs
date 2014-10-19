@@ -12,6 +12,7 @@ namespace Models.Core
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Xml;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -184,6 +185,39 @@ namespace Models.Core
 
                 return returnObject;
             }
+        }
+
+        /// <summary>Adds a new model (as specified by the xml node) to the specified parent.</summary>
+        /// <param name="parent">The parent to add the model to</param>
+        /// <param name="node">The XML representing the new model</param>
+        /// <returns>The newly created model.</returns>
+        public static IModel Add(IModel parent, XmlNode node)
+        {
+            IModel modelToAdd = Utility.Xml.Deserialise(node) as Model;
+
+            // Get all child models
+            List<IModel> modelsToNotify = Apsim.ChildrenRecursively(modelToAdd);
+
+            // Call deserialised in all models.
+            object[] args = new object[] { true };
+            CallEventHandler(modelToAdd, "Deserialised", args);
+            foreach (IModel modelToNotify in modelsToNotify)
+                CallEventHandler(modelToNotify, "Deserialised", args);
+
+            // Corrently parent all models.
+            modelToAdd.Parent = parent;
+            Apsim.ParentAllChildren(modelToAdd);
+            parent.Children.Add(modelToAdd as Model);
+
+            // Ensure the model name is valid.
+            Apsim.EnsureNameIsUnique(modelToAdd);
+
+            // Call OnLoaded
+            Apsim.CallEventHandler(modelToAdd, "Loaded", null);
+            foreach (IModel child in modelsToNotify)
+                Apsim.CallEventHandler(child, "Loaded", null);
+
+            return modelToAdd;
         }
 
         /// <summary>
