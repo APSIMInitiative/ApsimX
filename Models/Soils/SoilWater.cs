@@ -84,7 +84,7 @@ namespace Models.Soils
         public double DiffusConst { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 100.0)]
-        [Description("Slope for diffusivity/soil water content relationship")]
+        [Description("Diffusivity slope for diffusivity/soil water content relationship")]
         public double DiffusSlope { get; set; }
 
         [Description("Bare soil albedo")]
@@ -116,17 +116,17 @@ namespace Models.Soils
 
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [Description("Slope")]
+        [Description("Lateral Flow: Slope of Catchment Area")]
         public double slope { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m")]
-        [Description("Basal width of discharge area")]
+        [Description("Lateral Flow: Basal width of downslope boundary of the catchment")]
         public double discharge_width { get; set; }
 
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m^2")]
-        [Description("Area over which lateral flow is occuring")]
+        [Description("Lateral Flow: Catchment Area")]
         public double catchment_area { get; set; }
 
 
