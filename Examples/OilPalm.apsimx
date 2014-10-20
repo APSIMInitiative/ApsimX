@@ -189,6 +189,65 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
+          <SummerDate>1-Nov</SummerDate>
+          <SummerU>5</SummerU>
+          <SummerCona>5</SummerCona>
+          <WinterDate>1-Apr</WinterDate>
+          <WinterU>5</WinterU>
+          <WinterCona>5</WinterCona>
+          <DiffusConst>88</DiffusConst>
+          <DiffusSlope>35.4</DiffusSlope>
+          <Salb>0.18</Salb>
+          <CN2Bare>68</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
+          <Thickness>
+            <double>100</double>
+            <double>200</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>500</double>
+            <double>500</double>
+            <double>500</double>
+            <double>500</double>
+            <double>500</double>
+            <double>1000</double>
+          </Thickness>
+          <SWCON>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.7</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.5</double>
+            <double>0.5</double>
+          </SWCON>
+          <KLAT>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KLAT>
           <min_crit_temp>5</min_crit_temp>
           <max_crit_temp>35</max_crit_temp>
           <max_albedo>0.23</max_albedo>
@@ -235,66 +294,6 @@
           <act_evap_method>ritchie</act_evap_method>
           <irrigation_will_runoff>false</irrigation_will_runoff>
           <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>5</SummerCona>
-          <SummerU>5</SummerU>
-          <SummerDate>1-Nov</SummerDate>
-          <WinterCona>5</WinterCona>
-          <WinterU>5</WinterU>
-          <WinterDate>1-Apr</WinterDate>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35.4</DiffusSlope>
-          <Salb>0.18</Salb>
-          <CN2Bare>68</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>1000</double>
-          </Thickness>
-          <SWCON>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-          </SWCON>
-          <KLAT>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KLAT>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -538,9 +537,10 @@
           <string>[Clock].Today</string>
           <string>OilPalm.Age</string>
           <string>OilPalm.LAI</string>
-          <string>[Calculations].Script.AnnualRain</string>
-          <string>sum of [Weather].Rain from 1-Jan to 31-Dec as AnnualRain2</string>
-          <string>[Calculations].Script.AnnualIrrigation</string>
+          <string>sum of [Weather].Rain from 1-Jan to 31-Dec as AnnualRain</string>
+          <string>sum of [Irrigation].IrrigationApplied from 1-Jan to 31-Dec as AnnualIrrigation</string>
+          <string>sum of [Fertiliser].NitrogenApplied from 1-Jan to 31-Dec as AnnualFertiliserNAdded</string>
+          <string>sum of [Soil].SoilWater.LeachNO3 from 1-Jan to 31-Dec as AnnualNLeaching</string>
           <string>[Calculations].Script.AnnualFronds</string>
           <string>[Calculations].Script.AnnualBunches</string>
           <string>[Calculations].Script.AnnualYield</string>
@@ -555,11 +555,9 @@
           <string>[Calculations].Script.AnnualBunchNPP</string>
           <string>[Calculations].Script.AnnualTotalVegetativeNPP</string>
           <string>[Calculations].Script.AnnualTotalNInput</string>
-          <string>[Calculations].Script.AnnualFertiliserNAdded</string>
           <string>[Calculations].Script.AnnualNRemoved</string>
           <string>[Calculations].Script.AnnualDenitrification</string>
           <string>[Calculations].Script.AnnualN2O</string>
-          <string>[Calculations].Script.AnnualLeaching</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfYear</string>
@@ -737,35 +735,31 @@ namespace Models
       <Manager>
         <Name>Calculations</Name>
         <Script>
-          <AnnualRain>0</AnnualRain>
-          <Offset>6</Offset>
+          <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+          <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+          <SoilCtpha>NaN</SoilCtpha>
+          <NitTot>NaN</NitTot>
           <AnnualFronds>0</AnnualFronds>
           <AnnualBunches>0</AnnualBunches>
           <AnnualYield>0</AnnualYield>
           <AnnualBunchSize>0</AnnualBunchSize>
-          <SoilCtpha>NaN</SoilCtpha>
-          <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-          <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-          <OilPalmYield>0</OilPalmYield>
-          <TotalNO3>NaN</TotalNO3>
-          <NitTot>NaN</NitTot>
-          <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
           <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+          <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
           <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
           <AnnualPalmNUptake>0</AnnualPalmNUptake>
-          <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
-          <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
-          <AnnualFrondNPP>0</AnnualFrondNPP>
-          <AnnualStemNPP>0</AnnualStemNPP>
           <AnnualRootNPP>0</AnnualRootNPP>
+          <AnnualStemNPP>0</AnnualStemNPP>
+          <AnnualFrondNPP>0</AnnualFrondNPP>
           <AnnualBunchNPP>0</AnnualBunchNPP>
+          <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
           <AnnualTotalNInput>0</AnnualTotalNInput>
-          <AnnualFertiliserNAdded>0</AnnualFertiliserNAdded>
           <AnnualNRemoved>0</AnnualNRemoved>
           <AnnualDenitrification>0</AnnualDenitrification>
           <AnnualN2O>0</AnnualN2O>
-          <AnnualLeaching>0</AnnualLeaching>
-          <AnnualIrrigation>0</AnnualIrrigation>
+          <Offset>6</Offset>
+          <OilPalmYield>0</OilPalmYield>
+          <TotalNO3>NaN</TotalNO3>
+          <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
         </Script>
         <Code><![CDATA[using System;
 using Models.Core;
@@ -789,7 +783,6 @@ namespace Models
 		[Link] Weather Weather;
 		[Link] Irrigation Irrigation;
 		
-		public double AnnualRain {get; set;}
 		public double Offset {get; set;}
 		public double AnnualFronds {get; set;}
 		public double AnnualBunches {get; set;}
@@ -813,17 +806,15 @@ namespace Models
         public double AnnualRootNPP {get; set;}
         public double AnnualBunchNPP {get; set;}
         public double AnnualTotalNInput {get; set;}
-        public double AnnualFertiliserNAdded {get; set;}
         public double AnnualNRemoved {get; set;}
         public double AnnualDenitrification {get; set;}
         public double AnnualN2O {get;set;}
-        public double AnnualLeaching {get; set;}
-        public double AnnualIrrigation {get;set;}
+
+
         
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-		    AnnualRain = 0;
 			Offset = 0;
 			OilPalmYield = 0;
 			AnnualFronds = 0;
@@ -847,19 +838,16 @@ namespace Models
             AnnualRootNPP = 0;
             AnnualBunchNPP = 0;
             AnnualTotalNInput = 0;
-			AnnualFertiliserNAdded = 0;
 			AnnualNRemoved = 0;
 			AnnualDenitrification = 0;
 			AnnualN2O = 0;
-		    AnnualLeaching = 0;	
-		    AnnualIrrigation = 0;
+
 		}
 		
 
        [EventSubscribe("StartOfYear")]
        private void OnStartOfYear(object sender, EventArgs e)
        {
-            AnnualRain = 0;
 	   		Offset = OilPalm.CumulativeFrondNumber;
 			AnnualYield = 0;
 			AnnualBunches = 0;
@@ -876,18 +864,14 @@ namespace Models
             AnnualRootNPP = 0;
             AnnualBunchNPP = 0;
             AnnualTotalNInput = 0;
-            AnnualFertiliserNAdded = 0;
             AnnualNRemoved = 0;
             AnnualDenitrification = 0;
             AnnualN2O = 0;
-            AnnualLeaching = 0;
-            AnnualIrrigation = 0;
 		}
 		
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-            AnnualRain += Weather.Rain;
 			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
 			TotalNO3 = Utility.Math.Sum(Soil.NO3N);
@@ -908,11 +892,8 @@ namespace Models
             AnnualBunchNPP += OilPalm.BunchGrowth * 10;
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
-            AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
             AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
             AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
-            AnnualLeaching += Soil.SoilWater.LeachNO3;
-            AnnualIrrigation +=Irrigation.IrrigationApplied;
             
 		}
 		
@@ -1123,11 +1104,18 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <Series>
         <Title>Annual Irrigation Addition</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
+        <YAxis>Right</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>Solid</Line>
@@ -1137,7 +1125,7 @@ namespace Models
         </X>
         <Y>
           <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualIrrigation</FieldName>
+          <FieldName>AnnualIrrigation</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -1157,7 +1145,7 @@ namespace Models
         </X>
         <Y>
           <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualFertiliserNAdded</FieldName>
+          <FieldName>AnnualFertiliserNAdded</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -1200,27 +1188,7 @@ namespace Models
         </X>
         <Y>
           <TableName>AnnualOutput</TableName>
-          <FieldName>Calculations.Script.AnnualRain</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <SplitOn>*</SplitOn>
-      </Series>
-      <Series>
-        <Title>Series2</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>FilledCircle</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>AnnualOutput</TableName>
-          <FieldName>AnnualRain2</FieldName>
+          <FieldName>AnnualRain</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -1228,9 +1196,7 @@ namespace Models
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries>
-        <string>AnnualRain2</string>
-      </DisabledSeries>
+      <DisabledSeries />
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
