@@ -145,7 +145,7 @@ namespace UserInterface.Presenters
                     summary.AppendLine("Yearly rainfall std deviation     : " + String.Format("{0,3:f2}mm", stddev));
 
                     this.weatherDataView.Summarylabel = summary.ToString();
-                    string title = String.Format("Long term average monthly rainfall for years : {0} - {1}", firstDate.Year, lastDate.Year);
+                    string title = String.Format("Long term average data for years : {0} - {1}", firstDate.Year, lastDate.Year);
                     this.PopulateGraph(monthlyRainfall,
                                        monthlyMaxT,
                                        monthlyMinT,
