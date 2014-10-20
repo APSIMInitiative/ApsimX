@@ -58,16 +58,9 @@ namespace UserInterface.Commands
                     soilNode = Utility.Xml.FindByType(newDoc.DocumentElement, "Soil");
                 }
 
-                this.modelToAdd = Utility.Xml.Deserialise(soilNode) as Model;
-                this.modelToAdd.Parent = this.toParent;
-                Apsim.ParentAllChildren(this.modelToAdd);
+                this.modelToAdd = Apsim.Add(this.toParent, soilNode) as Model;
 
-                this.toParent.Children.Add(this.modelToAdd);
-                Apsim.EnsureNameIsUnique(this.modelToAdd);
                 commandHistory.InvokeModelStructureChanged(this.toParent);
-
-                // Call OnLoaded
-                Apsim.CallEventHandler(this.modelToAdd, "Loaded", null);
 
                 this.modelAdded = true;
             }
