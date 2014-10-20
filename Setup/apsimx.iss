@@ -155,7 +155,7 @@ Source: changes.html; DestDir: {app}\Documentation;
 
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
-Source: ..\Examples\*; DestDir: {userdocs}\Apsim\Examples; Flags: recursesubdirs
+Source: ..\Examples\*; DestDir: {commondocs}\Apsim\Examples; Flags: recursesubdirs
 
 [INI]
 
