@@ -500,22 +500,22 @@ namespace Models.PMF.OilPalm
         /// <summary>Potential daily evapotranspiration for the understory</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double UnderstoryPEP = 0;
+        public double UnderstoryPEP { get; set; }
 
         /// <summary>Daily evapotranspiration for the understory</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double UnderstoryEP = 0;
+        public double UnderstoryEP {get;set;}
 
         /// <summary>Understory plant water stress factor</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double UnderstoryFW = 0;
+        public double UnderstoryFW {get;set;}
 
         /// <summary>Daily understory dry matter growth</summary>
         [XmlIgnore]
         [Units("g/m^2")]
-        public double UnderstoryDltDM = 0;
+        public double UnderstoryDltDM{get;set;}
 
         /// <summary>
         /// 
@@ -642,6 +642,10 @@ namespace Models.PMF.OilPalm
             Age = 0;
             Population = 0;
             UnderstoryNFixation = 0;
+            UnderstoryDltDM = 0;
+            UnderstoryEP = 0;
+            UnderstoryPEP = 0;
+            UnderstoryFW = 0;
             StemMass = 0;
             StemN = 0;
             CropInGround = false;
