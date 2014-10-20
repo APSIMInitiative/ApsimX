@@ -1,18 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UserInterface.Views;
-using System.IO;
-using System.Xml;
-using Models.Core;
-using Importer;
-using System.Windows.Forms;
+﻿// -----------------------------------------------------------------------
+// <copyright file="TabbedExplorerPresenter.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Windows.Forms;
+    using System.Xml;
+    using Importer;
+    using Models.Core;
+    using Views;
+    
     /// <summary>
-    /// This presenter class provides the funcionality behind a TabbedExplorerView 
+    /// This presenter class provides the functionality behind a TabbedExplorerView 
     /// which is a tab control where each tabs represent an .apsimx file. Each tab
     /// then has an ExplorerPresenter and ExplorerView created when the tab is
     /// created.
@@ -22,48 +28,56 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A private reference to the view this presenter will talk to.
         /// </summary>
-        private ITabbedExplorerView View;
+        private ITabbedExplorerView view;
 
         /// <summary>
-        /// point to the mainform config
+        /// The path last used to open the examples
         /// </summary>
-        public Utility.Configuration config;
+        private string lastExamplesPath;
 
         /// <summary>
-        /// A list of ExplorerPresenters - one for each open tab.
+        /// Gets or sets the reference to the main form config
+        /// </summary>
+        public Utility.Configuration Config { get; set; }
+
+        /// <summary>
+        /// Gets a list of ExplorerPresenters - one for each open tab.
         /// </summary>
         public List<ExplorerPresenter> Presenters { get; private set; }
 
         /// <summary>
         /// Attach this presenter with a view.
         /// </summary>
+        /// <param name="view">The view to attach</param>
         public void Attach(object view)
         {
-            this.View = view as ITabbedExplorerView;
-            this.View.PopulateStartPage += OnPopulateStartPage;
-            this.View.MruFileClick += OnMruApsimOpenFile;
-            this.View.ReloadMruView += OnReloadMruView;
-            this.View.TabClosing += OnTabClosing;
-            Presenters = new List<ExplorerPresenter>();
+            this.view = view as ITabbedExplorerView;
+            this.view.PopulateStartPage += this.OnPopulateStartPage;
+            this.view.MruFileClick += this.OnMruApsimOpenFile;
+            this.view.ReloadMruView += this.OnReloadMruView;
+            this.view.TabClosing += this.OnTabClosing;
+            this.Presenters = new List<ExplorerPresenter>();
         }
 
         /// <summary>
         /// Detach this presenter from the view.
         /// </summary>
+        /// <param name="view">The view used for this object</param>
         public void Detach(object view)
         {
-            this.View.PopulateStartPage -= OnPopulateStartPage;
-            this.View.MruFileClick -= OnMruApsimOpenFile;
-            this.View.ReloadMruView -= OnReloadMruView;
-            this.View.TabClosing -= OnTabClosing;
+            this.view.PopulateStartPage -= this.OnPopulateStartPage;
+            this.view.MruFileClick -= this.OnMruApsimOpenFile;
+            this.view.ReloadMruView -= this.OnReloadMruView;
+            this.view.TabClosing -= this.OnTabClosing;
         }
 
         /// <summary>
         /// Close the application.
         /// </summary>
+        /// <param name="askToSave">Flag to turn on the request to save</param>
         public void Close(bool askToSave = true)
         {
-            UserControl view = View as UserControl;
+            UserControl view = this.view as UserControl;
             Form mainForm = view.ParentForm;
             if (!askToSave)
                 mainForm.DialogResult = DialogResult.Cancel;
@@ -73,11 +87,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Allow the form to close?
         /// </summary>
+        /// <returns>True if can be closed</returns>
         public bool AllowClose()
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in Presenters)
+            foreach (ExplorerPresenter presenter in this.Presenters)
             {
                 ok = presenter.SaveIfChanged() && ok;
             }
@@ -88,40 +103,42 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Open an .apsimx file into the current tab.
         /// </summary>
+        /// <param name="fileName">The file to open</param>
         public void OpenApsimXFileInTab(string fileName)
         {
             if (fileName != null)
             {
-                ExplorerView ExplorerView = new ExplorerView();
-                ExplorerPresenter Presenter = new ExplorerPresenter();
-                Presenters.Add(Presenter);
+                ExplorerView explorerView = new ExplorerView();
+                ExplorerPresenter presenter = new ExplorerPresenter();
+                this.Presenters.Add(presenter);
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    Presenter.Config = config;  // give it access to the configuration settings for MRU's
+                    presenter.Config = this.Config;  // give it access to the configuration settings for MRU's
                     Simulations simulations = Simulations.Read(fileName);
-                    Presenter.Attach(simulations, ExplorerView, null);
-                    View.AddTab(fileName, Properties.Resources.apsim_logo32, ExplorerView, true);
+                    presenter.Attach(simulations, explorerView, null);
+                    this.view.AddTab(fileName, Properties.Resources.apsim_logo32, explorerView, true);
+
                     // restore the simulation tree width on the form
                     if (simulations.ExplorerWidth == 0)
-                        Presenter.TreeWidth = 250;
+                        presenter.TreeWidth = 250;
                     else
-                        Presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, View.TabWidth - 20); // ?
-                    config.Settings.AddMruFile(fileName);
-                    config.Save();
-                    List<string> ValidMrus = new List<string>(); //make sure recently used files still exist before displaying them
-                    foreach (string s in config.Settings.MruList)
+                        presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, this.view.TabWidth - 20); // ?
+                    this.Config.Settings.AddMruFile(fileName);
+                    this.Config.Save();
+                    List<string> validMrus = new List<string>();                           // make sure recently used files still exist before displaying them
+                    foreach (string s in this.Config.Settings.MruList)
                         if (File.Exists(s))
-                            ValidMrus.Add(s);
-                    config.Settings.MruList = ValidMrus;
-                    View.FillMruList(ValidMrus);
+                            validMrus.Add(s);
+                    this.Config.Settings.MruList = validMrus;
+                    this.view.FillMruList(validMrus);
 
                     Cursor.Current = Cursors.Default;
                 }
                 catch (Exception err)
                 {
-                    this.View.ShowError(err.Message);
+                    this.view.ShowError(err.Message);
                 }
             }
         }
@@ -129,18 +146,20 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Open an .apsimx file into the current tab.
         /// </summary>
+        /// <param name="name">Name of the simulation</param>
+        /// <param name="contents">The xml content</param>
         public void OpenApsimXFromMemoryInTab(string name, string contents)
         {
-            ExplorerView ExplorerView = new ExplorerView();
-            ExplorerPresenter Presenter = new ExplorerPresenter();
-            Presenters.Add(Presenter);
-            Presenter.Config = config;  // give it access to the configuration settings for MRU's
-            XmlDocument Doc = new XmlDocument();
-            Doc.LoadXml(contents);
-            Simulations simulations = Simulations.Read(Doc.DocumentElement);
-            Presenter.Attach(simulations, ExplorerView, null);
+            ExplorerView explorerView = new ExplorerView();
+            ExplorerPresenter presenter = new ExplorerPresenter();
+            this.Presenters.Add(presenter);
+            presenter.Config = this.Config;  // give it access to the configuration settings for MRU's
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(contents);
+            Simulations simulations = Simulations.Read(doc.DocumentElement);
+            presenter.Attach(simulations, explorerView, null);
 
-            View.AddTab(name, Properties.Resources.apsim_logo32, ExplorerView, true);
+            this.view.AddTab(name, Properties.Resources.apsim_logo32, explorerView, true);
         }
 
         /// <summary>
@@ -155,95 +174,106 @@ namespace UserInterface.Presenters
             {
                 Name = "Open APSIM File",
                 ResourceNameForImage = "apsim_logo32",
-                OnClick = OnOpenApsimXFile
+                OnClick = this.OnOpenApsimXFile
             });
 
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
                 Name = "Standard toolbox",
                 ResourceNameForImage = "StandardToolboxIcon",
-                OnClick = OnStandardToolboxClick
+                OnClick = this.OnStandardToolboxClick
             });
 
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
                 Name = "Import old .apsim file",
                 ResourceNameForImage = "apsim7_logo32",
-                OnClick = OnImport
+                OnClick = this.OnImport
             });
 
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
                 Name = "Open an example",
                 ResourceNameForImage = "gfolder_32",
-                OnClick = OnExample
+                OnClick = this.OnExample
             });
 
-            config.Settings.CleanMruList();                     // cleanup the list when this tab is first shown
-            View.FillMruList(config.Settings.MruList);
+            this.Config.Settings.CleanMruList();                     // cleanup the list when this tab is first shown
+            this.view.FillMruList(this.Config.Settings.MruList);
         }
 
         /// <summary>
-        /// Handler to reload the mru files list
+        /// Handler to reload the most recently used files list
         /// </summary>
         /// <param name="sender">Sender Object</param>
         /// <param name="e">Event arguments</param>
         private void OnReloadMruView(object sender, EventArgs e)
         {
-            View.FillMruList(config.Settings.MruList);
+            this.view.FillMruList(this.Config.Settings.MruList);
         }
 
         /// <summary>
         /// Event handler invoked when user clicks on 'Open ApsimX file'
         /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event parameters</param>
         private void OnOpenApsimXFile(object sender, EventArgs e)
         {
-            string FileName = View.AskUserForFileName("", "*.apsimx|*.apsimx");
-            OpenApsimXFileInTab(FileName);
+            string fileName = this.view.AskUserForFileName(string.Empty, "*.apsimx|*.apsimx");
+            this.OpenApsimXFileInTab(fileName);
         }
 
+        /// <summary>
+        /// Open a recently used file
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void OnMruApsimOpenFile(object sender, EventArgs e)
         {
-            string FileName = View.SelectedMruFileName();
-            OpenApsimXFileInTab(FileName);
+            string fileName = this.view.SelectedMruFileName();
+            this.OpenApsimXFileInTab(fileName);
         }
 
         /// <summary>
         /// Current tab is closing - remove presenter from our presenters list
         /// </summary>
         /// <param name="sender">Sender of event</param>
-        /// <param name="s">Event arguments</param>
+        /// <param name="e">Event arguments</param>
         private void OnTabClosing(object sender, EventArgs e)
         {
-            Presenters[this.View.CurrentTabIndex].SaveIfChanged();
-            Presenters.RemoveAt(this.View.CurrentTabIndex);
+            this.Presenters[this.view.CurrentTabIndex].SaveIfChanged();
+            this.Presenters.RemoveAt(this.view.CurrentTabIndex);
         }
 
         /// <summary>
         /// Event handler invoked when user clicks on 'Standard toolbox'
         /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         public void OnStandardToolboxClick(object sender, EventArgs e)
         {
             byte[] b = Properties.Resources.ResourceManager.GetObject("StandardToolBox") as byte[];
-            StreamReader SR = new StreamReader(new MemoryStream(b));
-            OpenApsimXFromMemoryInTab("Standard toolbox", SR.ReadToEnd());
+            StreamReader streamReader = new StreamReader(new MemoryStream(b));
+            this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd());
         }
 
         /// <summary>
         /// Event handler invoked when user clicks on 'Import'
         /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void OnImport(object sender, EventArgs e)
         {
-            string FileName = View.AskUserForFileName("", "*.apsim|*.apsim");
+            string fileName = this.view.AskUserForFileName(string.Empty, "*.apsim|*.apsim");
 
             APSIMImporter importer = new APSIMImporter();
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                importer.ProcessFile(FileName);
+                importer.ProcessFile(fileName);
 
-                string newFileName = Path.ChangeExtension(FileName, ".apsimx");
-                OpenApsimXFileInTab(newFileName);
+                string newFileName = Path.ChangeExtension(fileName, ".apsimx");
+                this.OpenApsimXFileInTab(newFileName);
                 Cursor.Current = Cursors.Default;
             }
             catch (Exception exp)
@@ -253,22 +283,35 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Open a file open dialog with the initial dir in an Examples directory
-        /// that is at the same level as this app directory
+        /// Open a file open dialog with the initial directory in an Examples directory.
+        /// Use one that is at the same level as this app directory.
+        /// Any files opened here will need to be saved before running.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
         private void OnExample(object sender, EventArgs e)
         {
-            string initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            initialPath = Path.GetFullPath(Path.Combine(initialPath, @"../Examples"));
+            string initialPath;
 
-            string FileName = View.AskUserForFileName( initialPath, "*.apsimx|*.apsimx");
-
-            if (FileName != null)
+            if ((this.lastExamplesPath != null) && (this.lastExamplesPath.Length > 0) && Directory.Exists(this.lastExamplesPath))
             {
-                StreamReader reader = new StreamReader(FileName);
-                OpenApsimXFromMemoryInTab("", reader.ReadToEnd());
+                initialPath = this.lastExamplesPath; // use the last used path in this session
+            }
+            else
+            {
+                // use an examples directory relative to this assembly
+                initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                initialPath = Path.GetFullPath(Path.Combine(initialPath, @"../Examples"));
+            }
+            string fileName = this.view.AskUserForFileName(initialPath, "*.apsimx|*.apsimx");
+
+            if (fileName != null)
+            {
+                this.lastExamplesPath = Path.GetDirectoryName(fileName);
+
+                // ensure that they are saved in another file before running by opening them in memory
+                StreamReader reader = new StreamReader(fileName);
+                this.OpenApsimXFromMemoryInTab(string.Empty, reader.ReadToEnd());
                 reader.Close();
             }
         }
