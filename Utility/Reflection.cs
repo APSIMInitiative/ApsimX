@@ -315,7 +315,9 @@ namespace Utility
                         CompilerParameters Params = new CompilerParameters();
 
                         if (assemblyFileName == null)
+                        {
                             Params.GenerateInMemory = true;
+                        }
                         else
                         {
                             Params.GenerateInMemory = false;
@@ -328,7 +330,7 @@ namespace Utility
                         Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
                         if (Assembly.GetCallingAssembly() != Assembly.GetExecutingAssembly())
                             Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetCallingAssembly().Location));
-                        Params.TempFiles = new TempFileCollection(".");
+                        Params.TempFiles = new TempFileCollection(Path.GetTempPath());  // ensure that any temp files are in a writeable area
                         Params.TempFiles.KeepFiles = false;
                         string[] source = new string[1];
                         source[0] = code;
