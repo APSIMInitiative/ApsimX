@@ -283,146 +283,165 @@ namespace Models.Soils
 
         #region Module Constants (Default Values) (NOT specified in GUI)
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("oC")]
         /// <summary>
         ///Temperature below which eeq decreases 
         /// </summary>
-        public double min_crit_temp {get; set;}           
+        public double min_crit_temp {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 50.0)]
         [Units("oC")]
         /// <summary>
         /// Temperature above which eeq increases
         /// </summary>
-        public double max_crit_temp {get; set;}            
+        public double max_crit_temp {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         /// <summary>
         /// Maximum bare ground soil albedo
         /// </summary>
-        public double max_albedo {get; set;}           
+        public double max_albedo {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         /// <summary>
         ///Factor to convert 'A' to coefficient in Adam's type residue effect on Eos 
         /// </summary>
-        public double A_to_evap_fact {get; set;}      
+        public double A_to_evap_fact {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("0-10")]
         /// <summary>
         /// Coefficient in cover Eos reduction equation
         /// </summary>
-        public double canopy_eos_coef {get; set;}  
+        public double canopy_eos_coef {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         /// <summary>
         /// Critical sw ratio in top layer below which stage 2 evaporation occurs
         /// </summary>
-        public double sw_top_crit {get; set;}  
+        public double sw_top_crit {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
         /// <summary>
         /// Upper limit of sumes1
         /// </summary>
-        public double sumes1_max {get; set;}  
+        public double sumes1_max {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
         /// <summary>
         /// Upper limit of sumes2
         /// </summary>
-        public double sumes2_max {get; set;}  
+        public double sumes2_max {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         /// <summary>
         /// Efficiency of moving solute with unsaturated flow
         /// </summary>
-        public double[] solute_flow_eff {get; set;}  
+        public double[] solute_flow_eff {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         /// <summary>
         /// Efficiency of moving solute with flux (saturated flow)
         /// </summary>
-        public double[] solute_flux_eff {get; set;}   
+        public double[] solute_flux_eff {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         /// <summary>
         /// Gradient due to hydraulic differentials
         /// </summary>
-        public double gravity_gradient {get; set;}  
+        public double gravity_gradient {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("g/cm^3")]
         /// <summary>
         /// Specific bulk density
         /// </summary>
-        public double specific_bd {get; set;}  
+        public double specific_bd {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 1.0, Upper = 1000.0)]
         [Units("mm")]
         /// <summary>
         /// Hydrologically effective depth for runoff
         /// </summary>
-        public double hydrol_effective_depth {get; set;}  
+        public double hydrol_effective_depth {get; set;}
 
 
+        [XmlIgnore]
         /// <summary>
         /// Names of all possible mobile solutes
         /// </summary>
-        public string[] mobile_solutes {get; set;}  
+        public string[] mobile_solutes {get; set;}
 
 
+        [XmlIgnore]
         /// <summary>
         /// Names of all possible immobile solutes
         /// </summary>
-        public string[] immobile_solutes {get; set;}  
+        public string[] immobile_solutes {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         /// <summary>
         /// Canopy factors for cover runoff effect
         /// </summary>
-        public double[] canopy_fact {get; set;}  
+        public double[] canopy_fact {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 100000.0)]
         [Units("mm")]
         /// <summary>
         /// Heights for canopy factors
         /// </summary>
-        public double[] canopy_fact_height {get; set;}  
+        public double[] canopy_fact_height {get; set;}
 
 
+        [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         /// <summary>
         /// Default canopy factor in absence of height
         /// </summary>
-        public double canopy_fact_default {get; set;}  
+        public double canopy_fact_default {get; set;}
 
 
+        [XmlIgnore]
         /// <summary>
         ///Actual soil evaporation model being used 
         /// </summary>
