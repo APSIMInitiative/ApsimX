@@ -548,15 +548,16 @@
           <string>[Calculations].Script.AnnualBunches</string>
           <string>[Calculations].Script.AnnualYield</string>
           <string>[Calculations].Script.AnnualBunchSize</string>
-          <string>[Calculations].Script.AnnualUnderstoryNPP</string>
-          <string>[Calculations].Script.AnnualUnderstoryNFixation</string>
-          <string>[Calculations].Script.AnnualUnderstoryNUptake</string>
-          <string>[Calculations].Script.AnnualPalmNUptake</string>
+          <string>sum of [OilPalm].UnderstoryDltDM*10 from 1-Jan to 31-Dec as AnnualUnderstoryNPP</string>
+          <string>sum of [OilPalm].UnderstoryNFixation from 1-Jan to 31-Dec as AnnualUnderstoryNFixation</string>
+          <string>sum of sum([OilPalm].UnderstoryNUptake) from 1-Jan to 31-Dec as AnnualUnderstoryNUptake</string>
+          <string>sum of sum([OilPalm].NUptake) from 1-Jan to 31-Dec as AnnualPalmNUptake</string>
           <string>sum of [OilPalm].RootGrowth*10 from 1-Jan to 31-Dec as AnnualRootNPP</string>
           <string>sum of [OilPalm].StemGrowth*10 from 1-Jan to 31-Dec as AnnualStemNPP</string>
           <string>sum of [OilPalm].FrondGrowth*10 from 1-Jan to 31-Dec as AnnualFrondNPP</string>
           <string>sum of [OilPalm].BunchGrowth*10 from 1-Jan to 31-Dec as AnnualBunchNPP</string>
-          <string>[Calculations].Script.AnnualTotalVegetativeNPP</string>
+          <string>sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth+[OilPalm].UnderstoryDltDM)*10) from 1-Jan to 31-Dec as AnnualTotalVegetativeNPP</string>
+          <string>sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth)*10) from 1-Jan to 31-Dec as AnnualPalmVegetativeNPP</string>
           <string>[Calculations].Script.AnnualNRemoved</string>
         </VariableNames>
         <EventNames>
@@ -744,12 +745,6 @@ namespace Models
           <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
           <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
           <OilPalmYield>0</OilPalmYield>
-          <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
-          <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
-          <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
-          <AnnualPalmNUptake>0</AnnualPalmNUptake>
-          <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
-          <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
           <AnnualNRemoved>0</AnnualNRemoved>
         </Script>
         <Code><![CDATA[using System;
@@ -782,13 +777,6 @@ namespace Models
 		public double surfaceom_wt_oilpalmstem {get; set;}
 		public double surfaceom_wt_oilpalmunderstory {get; set;}
 	    public double OilPalmYield {get; set;}
-	    public double AnnualUnderstoryNFixation {get; set;}	
-	    public double AnnualUnderstoryNPP {get; set;}	
-	    public double AnnualUnderstoryNUptake {get; set;}	
-	    public double AnnualPalmNUptake {get; set;}
-	    
-	    public double AnnualTotalVegetativeNPP {get; set;}
-        public double AnnualPalmVegetativeNPP {get; set;}
         public double AnnualNRemoved {get; set;}
 
 
@@ -804,13 +792,6 @@ namespace Models
 			AnnualYield = 0;
 			surfaceom_wt_oilpalmstem = 0;
 			surfaceom_wt_oilpalmunderstory = 0;	
-			AnnualUnderstoryNFixation = 0;
-			AnnualUnderstoryNPP = 0;
-			AnnualUnderstoryNUptake = 0;
-			AnnualPalmNUptake = 0;
-
-            AnnualTotalVegetativeNPP = 0;
-            AnnualPalmVegetativeNPP = 0;
 			AnnualNRemoved = 0;
 
 		}
@@ -823,13 +804,6 @@ namespace Models
 			AnnualYield = 0;
 			AnnualBunches = 0;
 			AnnualBunchSize = 0;
-			AnnualUnderstoryNFixation = 0;
-			AnnualUnderstoryNPP = 0;
-			AnnualUnderstoryNUptake = 0;
-			AnnualPalmNUptake = 0;
-            AnnualTotalVegetativeNPP = 0;
-            AnnualPalmVegetativeNPP = 0;
-            AnnualUnderstoryNPP = 0;
             AnnualNRemoved = 0;
 		}
 		
@@ -837,16 +811,8 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-
-			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
-			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
-			AnnualUnderstoryNUptake += Utility.Math.Sum(OilPalm.UnderstoryNUptake);
-			AnnualPalmNUptake += Utility.Math.Sum(OilPalm.NUptake);
 			AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
 
-
-            AnnualTotalVegetativeNPP += (OilPalm.RootGrowth + OilPalm.StemGrowth + OilPalm.FrondGrowth + OilPalm.UnderstoryDltDM) * 10;
-            AnnualPalmVegetativeNPP += (OilPalm.RootGrowth + OilPalm.StemGrowth + OilPalm.FrondGrowth) * 10;
 		}
 		
 		[EventSubscribe("Harvesting")]
