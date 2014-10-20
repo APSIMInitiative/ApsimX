@@ -201,7 +201,7 @@ namespace Models.Soils
         }
 
         /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
-        private double[] SWAtWaterThickness
+        public double[] SWAtWaterThickness
         {
             get
             {
