@@ -168,7 +168,7 @@ namespace UserInterface.Presenters
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
                 Name = "Import old .apsim file",
-                ResourceNameForImage = "import2.png",
+                ResourceNameForImage = "apsim7_logo32",
                 OnClick = OnImport
             });
 
