@@ -442,8 +442,8 @@ namespace Models.Soils
         //Two below, store the Apsim variable names that you ask the System to provide by doing a Variables.Get();
         //The response can come from a Met file or Input File or Manager Script.
 
-        [Description("System variable name of external eo source")]
-        public string eo_source { get; set; }    
+        //[Description("System variable name of external eo source")]
+        //public string eo_source { get; set; }    
 
 
 
@@ -524,7 +524,7 @@ namespace Models.Soils
 
             //Manager Variables
 
-            eo_source = "";
+            //eo_source = "";
 
             irrigation_will_runoff = false;
             irrigation_layer = 1;  //layer 1 is surface irrigation 
