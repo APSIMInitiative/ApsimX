@@ -475,7 +475,7 @@ namespace Models.Soils.SoilWaterBackend
                 {
                 //sum esw over the profile and give single total value
                 double result = 0.0;
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result =  result + lyr.esw;
                     }
@@ -495,7 +495,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.dlayer;
                     }
@@ -512,7 +512,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.sat_dep;
                     }
@@ -525,7 +525,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.dul_dep;
                     }
@@ -539,7 +539,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.sw_dep;
                     }
@@ -554,7 +554,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.ll15_dep;
                     }
@@ -568,7 +568,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.air_dry_dep;
                     }
@@ -587,7 +587,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.sat;
                     }
@@ -600,7 +600,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.dul;
                     }
@@ -614,7 +614,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.sw;
                     }
@@ -629,7 +629,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.ll15;
                     }
@@ -643,7 +643,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.air_dry;
                     }
@@ -662,7 +662,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.flow;
                     }
@@ -676,7 +676,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.flux;
                     }
@@ -690,7 +690,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double[] result = new double[num_layers];
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     result[lyr.number - 1] = lyr.outflow_lat;
                     }
@@ -713,7 +713,7 @@ namespace Models.Soils.SoilWaterBackend
 
             double[] result = new double[num_layers];
             SoluteInLayer sol;
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 sol = lyr.GetASolute(SoluteName);
                 result[lyr.number - 1] = sol.leach - sol.up;
@@ -727,7 +727,7 @@ namespace Models.Soils.SoilWaterBackend
 
             double[] result = new double[num_layers];
             SoluteInLayer sol;
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 sol = lyr.GetASolute(SoluteName);
                 result[lyr.number - 1] = sol.delta;
@@ -920,7 +920,7 @@ namespace Models.Soils.SoilWaterBackend
             get
                 {
                 double depth = 0.0;
-                foreach (Layer lyr in layers)
+                foreach (Layer lyr in this)
                     {
                     depth = depth + lyr.dlayer;
                     }
@@ -955,7 +955,7 @@ namespace Models.Soils.SoilWaterBackend
             layers.Sort();
 
             double depth_cum = 0.0;
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 depth_cum = depth_cum + lyr.dlayer;
                 if (depth_cum >= Depth)
@@ -994,7 +994,7 @@ namespace Models.Soils.SoilWaterBackend
         public void UpdateSoluteAmounts(string SoluteName, double[] Amounts)
             {
             SoluteInLayer sol;
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 if (lyr.number <= Amounts.Length)
                     {
@@ -1028,7 +1028,7 @@ namespace Models.Soils.SoilWaterBackend
 
         public void SetWater_mm(double[] New_SW_dep)
             {
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 if (New_SW_dep.Length >= lyr.number)
                     lyr.sw_dep = New_SW_dep[lyr.number - 1];
@@ -1049,7 +1049,7 @@ namespace Models.Soils.SoilWaterBackend
 
         public void SetWater_frac(double[] New_SW)
             {
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 if (New_SW.Length >= lyr.number)
                     lyr.sw_dep = New_SW[lyr.number - 1] * lyr.dlayer;
@@ -1059,7 +1059,7 @@ namespace Models.Soils.SoilWaterBackend
 
         public void DeltaWater_mm(double[] Delta_mm)
             {
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 if (Delta_mm.Length >= lyr.number)
                     lyr.sw_dep = lyr.sw_dep + Delta_mm[lyr.number - 1];
@@ -1069,7 +1069,7 @@ namespace Models.Soils.SoilWaterBackend
 
         public void DeltaWater_frac(double[] Delta_frac)
             {
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 if (Delta_frac.Length >= lyr.number)
                     lyr.sw_dep = lyr.sw_dep + (Delta_frac[lyr.number - 1] * lyr.dlayer);
@@ -1368,7 +1368,7 @@ namespace Models.Soils.SoilWaterBackend
             //************************
 
             int i = 0;
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
 
                 lyr.number = i + 1;
@@ -1458,7 +1458,7 @@ namespace Models.Soils.SoilWaterBackend
             //Soil Layers
 
             //deltas
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
 
                 lyr.flow = 0.0;
@@ -1479,7 +1479,7 @@ namespace Models.Soils.SoilWaterBackend
 
         private void ZeroLayerTemporaryVars()
             {
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 lyr.new_sw_dep = 0.0;
                 }
@@ -1664,7 +1664,7 @@ namespace Models.Soils.SoilWaterBackend
 
             win = 0.0;
 
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 wout = lyr.flux;
                 lyr.sw_dep = lyr.sw_dep + win - wout;
@@ -1852,7 +1852,7 @@ namespace Models.Soils.SoilWaterBackend
             //!- Implementation Section ----------------------------------
 
             wout = 0.0;
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 win = lyr.flow;
                 lyr.sw_dep = lyr.sw_dep + win - wout;
@@ -2327,7 +2327,7 @@ namespace Models.Soils.SoilWaterBackend
             Layer lyrAboveSat;
 
             //Find Saturated Layer
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 margin = Constants.error_margin;
 
@@ -2488,7 +2488,7 @@ namespace Models.Soils.SoilWaterBackend
             bottom = 0.0;
 
 
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
                 top = bottom;
                 bottom = bottom + lyr.dlayer;
@@ -2531,7 +2531,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-            foreach (Layer lyr in layers)
+            foreach (Layer lyr in this)
                 {
 
                 //! dsg 150302   add the inflowing lateral water
