@@ -6,10 +6,10 @@
 #define AppVerNo GetFileVersion("..\Bin\Model.exe") 
 
 [Setup]
-AppName=ApsimX
-AppVerName=ApsimX version {#AppVerNo}
+AppName=APSIM (Next generator)
+AppVerName=APSIM version {#AppVerNo}
 AppPublisherURL=http://www.apsim.au
-OutputBaseFilename=SetupApsimX
+OutputBaseFilename=APSIMSetup
 VersionInfoVersion={#AppVerNo}
 PrivilegesRequired=poweruser
 ;LicenseFile=..\license.txt
@@ -23,9 +23,9 @@ ChangesAssociations=true
 WizardSmallImageFile=apsim_logo32.bmp
 WizardImageFile=.\APSIMInitiativeBanner.bmp
 ;InfoBeforeFile=
-VersionInfoCompany=APSIM Initiative4
+VersionInfoCompany=APSIM Initiative
 VersionInfoDescription=Apsim Modelling
-VersionInfoProductName=ApsimX
+VersionInfoProductName=APSIM
 VersionInfoProductVersion={#AppVerNo}
 
 
@@ -165,14 +165,14 @@ Name: commondesktopicon; Description: Create a &desktop icon for all users; Flag
 Name: associate; Description: &Associate .apsimx with ApsimX; GroupDescription: Other tasks:
 
 [Icons]
-Name: {commonprograms}\ApsimX; Filename: {app}\Bin\UserInterface.exe
+Name: {commonprograms}\APSIM; Filename: {app}\Bin\UserInterface.exe
 ;Name: {commonprograms}\CSIRO\ApsimX Tutorial; Filename: {app}\docs\ApsimX tutorial.pdf
-Name: {userdesktop}\ApsimX; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
-Name: {commondesktop}\ApsimX; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
+Name: {userdesktop}\APSIM; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
+Name: {commondesktop}\APSIM; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
 
 [Registry]
 
 
 [Run]
 Filename: {app}\Documentation\changes.html; Description: View the CHANGES file; Flags: postinstall shellexec skipifsilent
-Filename: {app}\Bin\UserInterface.exe; Description: Launch ApsimX; Flags: postinstall nowait skipifsilent
+Filename: {app}\Bin\UserInterface.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent

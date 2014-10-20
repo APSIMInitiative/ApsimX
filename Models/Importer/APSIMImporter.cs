@@ -793,6 +793,24 @@ namespace Importer
 
             AddChildComponents(compNode, newNode);
 
+            if (Utility.Xml.FindByType(newNode, "InitialWater") == null)
+            {
+                // Add it.
+                Utility.Xml.SetValue(newNode, "InitialWater/Name", "Initial water");
+                Utility.Xml.SetValue(newNode, "InitialWater/PercentMethod", "FilledFromTop");
+                Utility.Xml.SetValue(newNode, "InitialWater/FractionFull", "1");
+                Utility.Xml.SetValue(newNode, "InitialWater/DepthWetSoil", "NaN");
+            }
+
+
+            if (Utility.Xml.FindByType(newNode, "Sample") == null)
+            {
+                // Add it.
+                XmlNode sampleNode = newNode.OwnerDocument.CreateElement("Sample");
+                Utility.Xml.SetValue(sampleNode, "Name", "Initial conditions");
+                newNode.AppendChild(sampleNode);
+            }
+
             return newNode;
         }
 
