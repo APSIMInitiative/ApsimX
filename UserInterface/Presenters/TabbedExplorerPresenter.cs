@@ -269,6 +269,7 @@ namespace UserInterface.Presenters
             {
                 StreamReader reader = new StreamReader(FileName);
                 OpenApsimXFromMemoryInTab("", reader.ReadToEnd());
+                reader.Close();
             }
         }
     }
