@@ -18,11 +18,6 @@ namespace UserInterface.Interfaces
         event EventHandler OnTableSelected;
 
         /// <summary>
-        /// Invoked when a table is selected.
-        /// </summary>
-        event EventHandler OnSimulationSelected;
-
-        /// <summary>
         /// Invoked when the auto export checkbox is clicked.
         /// </summary>
         event EventHandler AutoExportClicked;
@@ -43,24 +38,8 @@ namespace UserInterface.Interfaces
         Interfaces.IGridView Grid { get; }
 
         /// <summary>
-        /// Gets or sets the list of simulation names.
-        /// </summary>
-        string[] SimulationNames { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selected simulation name.
-        /// </summary>
-        string SelectedSimulationName { get; set; }
-
-        /// <summary>
         /// Gets or sets the autoexport option
         /// </summary>
         bool AutoExport { get; set; }
-
-        /// <summary>
-        /// Show the summary content.
-        /// </summary>
-        /// <param name="content">The html content to show.</param>
-        void ShowSummaryContent(string content);
     }
 }

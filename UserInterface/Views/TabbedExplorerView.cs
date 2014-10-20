@@ -339,13 +339,16 @@ namespace UserInterface.Views
         /// <returns>The full path name for the file</returns>
         public string SelectedMruFileName()
         {
-            ListViewItem item = listViewMain.SelectedItems[0];
-            if (item.Group == recentFilesGroup)
+            if (listViewMain.SelectedItems.Count > 0)
             {
-                return item.ToolTipText;    // full path for the file
+                ListViewItem item = listViewMain.SelectedItems[0];
+                if (item.Group == recentFilesGroup)
+                {
+                    return item.ToolTipText;    // full path for the file
+                }
             }
-            else
-                return "";  //invalid item
+
+            return "";  //invalid item
         }
 
         /// <summary>

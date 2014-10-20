@@ -30,7 +30,7 @@
         {
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.htmlView1 = new HTMLView();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -53,23 +53,21 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Simulation:";
             // 
-            // htmlView1
+            // panel1
             // 
-            this.htmlView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.htmlView1.Location = new System.Drawing.Point(7, 44);
-            this.htmlView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.htmlView1.Name = "htmlView1";
-            this.htmlView1.ReadOnly = false;
-            this.htmlView1.Size = new System.Drawing.Size(622, 560);
-            this.htmlView1.TabIndex = 2;
+            this.panel1.Location = new System.Drawing.Point(7, 39);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(622, 563);
+            this.panel1.TabIndex = 2;
             // 
             // SummaryView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.htmlView1);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
             this.Name = "SummaryView";
@@ -83,6 +81,6 @@
 
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label1;
-        private HTMLView htmlView1;
+        private System.Windows.Forms.Panel panel1;
     }
 }

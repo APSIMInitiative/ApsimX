@@ -107,61 +107,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Gets or sets the list of simulation names.
-        /// </summary>
-        public string[] SimulationNames
-        {
-            get
-            {
-                string[] items = new string[this.listView2.Items.Count];
-                for (int i = 0; i < this.listView2.Items.Count; i++)
-                {
-                    items[i] = this.listView2.Items[i].Text;
-                }
-
-                return items;
-            }
-
-            set
-            {
-                this.listView2.Items.Clear();
-                foreach (string tableName in value)
-                {
-                    ListViewItem newItem = new ListViewItem();
-                    newItem.Text = tableName;
-                    this.listView2.Items.Add(newItem);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the selected simulation name.
-        /// </summary>
-        public string SelectedSimulationName
-        {
-            get
-            {
-                if (this.listView2.SelectedItems.Count > 0)
-                {
-                    return this.listView2.SelectedItems[0].Text;
-                }
-
-                return null;
-            }
-
-            set
-            {
-                foreach (ListViewItem listItem in this.listView2.Items)
-                {
-                    if (listItem.Text == value)
-                    {
-                        listItem.Selected = true;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the autoexport option
         /// </summary>
         public bool AutoExport
@@ -175,15 +120,6 @@ namespace UserInterface.Views
             {
                 this.checkBox1.Checked = value;
             }
-        }
-
-        /// <summary>
-        /// Show the summary content.
-        /// </summary>
-        /// <param name="content">The html content to show.</param>
-        public void ShowSummaryContent(string content)
-        {
-            this.htmlView1.MemoText = content;
         }
 
         /// <summary>

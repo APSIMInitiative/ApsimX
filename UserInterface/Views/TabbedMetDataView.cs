@@ -86,7 +86,8 @@ namespace UserInterface.Views
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 label1.Text = openFileDialog1.FileName;
-                BrowseClicked.Invoke(label1.Text);    //reload the grid with data
+                if (BrowseClicked != null)
+                    BrowseClicked.Invoke(label1.Text);    //reload the grid with data
             }
         }
     }

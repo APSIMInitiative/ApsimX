@@ -78,6 +78,14 @@ namespace Utility
                 if (!Path.IsPathRooted(path))
                     path = Path.Combine(relativeDirectory, path);
             }
+
+            // Convert slashes.
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                path = path.Replace("/", @"\");
+            else
+                path = path.Replace(@"\", "/");
+
             return Path.GetFullPath(path);
         }
 
@@ -103,6 +111,13 @@ namespace Utility
                 // Try getting rid of the relative directory.
                 path = path.Replace(relativeDirectory + Path.DirectorySeparatorChar, "");  // the relative path should not have a preceding \
             }
+
+            // Convert slashes.
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                path = path.Replace("/", @"\");
+            else
+                path = path.Replace(@"\", "/");
 
             return path;
         }

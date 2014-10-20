@@ -47,21 +47,12 @@ namespace UserInterface.Presenters
             this.dataStoreView.AutoExport = dataStore.AutoExport;
 
             this.dataStoreView.OnTableSelected += this.OnTableSelected;
-            this.dataStoreView.OnSimulationSelected += this.OnSimulationSelected;
             this.dataStoreView.AutoExportClicked += OnAutoExportClicked;
 
             this.dataStoreView.Grid.ReadOnly = true;
 
-            // MONO doesn't seem to like the auto filter option.
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                Environment.OSVersion.Platform == PlatformID.Win32Windows)
-            {
-                this.dataStoreView.Grid.AutoFilterOn = true;
-            }
-
             this.dataStoreView.Grid.NumericFormat = "N3";
             this.dataStoreView.TableNames = this.GetTableNames();
-            this.dataStoreView.SimulationNames = this.dataStore.SimulationNames;
         }
 
         /// <summary>
@@ -70,7 +61,6 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.dataStoreView.OnTableSelected -= this.OnTableSelected;
-            this.dataStoreView.OnSimulationSelected += this.OnSimulationSelected;
             this.dataStoreView.AutoExportClicked -= OnAutoExportClicked;
         }
 
@@ -100,19 +90,6 @@ namespace UserInterface.Presenters
         private void OnTableSelected(object sender, EventArgs e)
         {
             this.dataStoreView.Grid.DataSource = this.dataStore.GetData("*", this.dataStoreView.SelectedTableName);
-        }
-
-        /// <summary>
-        /// The selected simulation has changed.
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnSimulationSelected(object sender, EventArgs e)
-        {
-            StringWriter writer = new StringWriter();
-
-            Summary.WriteReport(dataStore, this.dataStoreView.SelectedSimulationName, writer, null, true);
-            this.dataStoreView.ShowSummaryContent(writer.ToString());
         }
 
         /// <summary>

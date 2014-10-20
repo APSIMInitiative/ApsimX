@@ -151,8 +151,14 @@ namespace UserInterface.Views
             
             set 
             {
-                this.isAutoFilterOn = value;
-                this.PopulateGrid();
+
+                // MONO doesn't seem to like the auto filter option.
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                    Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                {
+                    this.isAutoFilterOn = value;
+                    this.PopulateGrid();
+                }    
             }
         }
 

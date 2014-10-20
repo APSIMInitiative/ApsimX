@@ -97,9 +97,10 @@ namespace UserInterface.Presenters
                         data.Columns.RemoveAt(--dayCol);
                     }
                     this.weatherDataView.PopulateData(data);
-                    this.weatherDataView.Filename = Utility.PathUtils.GetRelativePath(filename, explorerPresenter.ApsimXFile.FileName);
                 }
             }
+
+            this.weatherDataView.Filename = Utility.PathUtils.GetRelativePath(filename, explorerPresenter.ApsimXFile.FileName);
         }
         
         /// <summary>Format a summary string about the weather file</summary>
@@ -117,37 +118,40 @@ namespace UserInterface.Presenters
             // Make sure the data in the table consists of full years of data i.e.
             // exclude the first and/or last year of data if they aren't complete.
             DataTable table = this.weatherData.GetAllData();
-            DateTime firstDate = Utility.DataTable.GetDateFromRow(table.Rows[0]);
-            DateTime lastDate = Utility.DataTable.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
-            if (firstDate.DayOfYear != 1)
-                firstDate = new DateTime(firstDate.Year + 1, 1, 1);
-            if (lastDate.Day != 31 || lastDate.Month != 12)
-                lastDate = new DateTime(lastDate.Year - 1, 12, 31);
-
-            double[] yearlyRainfall = Utility.Math.YearlyTotals(table, "Rain", firstDate, lastDate);
-            double[] monthlyRainfall = Utility.Math.AverageMonthlyTotals(table, "rain", firstDate, lastDate);
-            double[] monthlyMaxT = Utility.Math.AverageDailyTotalsForEachMonth(table, "maxt", firstDate, lastDate);
-            double[] monthlyMinT = Utility.Math.AverageDailyTotalsForEachMonth(table, "mint", firstDate, lastDate);
-
-            // long term average rainfall
-            if (yearlyRainfall.Length != 0)
+            if (table != null && table.Rows.Count > 0)
             {
-                double totalYearlyRainfall = Utility.Math.Sum(yearlyRainfall);
-                int numYears = lastDate.Year - firstDate.Year + 1;
-                double meanYearlyRainfall = totalYearlyRainfall / numYears;
-                double stddev = Utility.Math.StandardDeviation(yearlyRainfall);
+                DateTime firstDate = Utility.DataTable.GetDateFromRow(table.Rows[0]);
+                DateTime lastDate = Utility.DataTable.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
+                if (firstDate.DayOfYear != 1)
+                    firstDate = new DateTime(firstDate.Year + 1, 1, 1);
+                if (lastDate.Day != 31 || lastDate.Month != 12)
+                    lastDate = new DateTime(lastDate.Year - 1, 12, 31);
 
-                summary.AppendLine(String.Format("For years : {0} - {1}", firstDate.Year, lastDate.Year));
-                summary.AppendLine("Long term average yearly rainfall : " + String.Format("{0,3:f2}mm", meanYearlyRainfall));
-                summary.AppendLine("Yearly rainfall std deviation     : " + String.Format("{0,3:f2}mm", stddev));
+                double[] yearlyRainfall = Utility.Math.YearlyTotals(table, "Rain", firstDate, lastDate);
+                double[] monthlyRainfall = Utility.Math.AverageMonthlyTotals(table, "rain", firstDate, lastDate);
+                double[] monthlyMaxT = Utility.Math.AverageDailyTotalsForEachMonth(table, "maxt", firstDate, lastDate);
+                double[] monthlyMinT = Utility.Math.AverageDailyTotalsForEachMonth(table, "mint", firstDate, lastDate);
 
-                this.weatherDataView.Summarylabel = summary.ToString();
-                string title = String.Format("Long term average monthly rainfall for years : {0} - {1}", firstDate.Year, lastDate.Year);
-                this.PopulateGraph(monthlyRainfall, 
-                                   monthlyMaxT,
-                                   monthlyMinT,
-                                   title);
-                                        
+                // long term average rainfall
+                if (yearlyRainfall.Length != 0)
+                {
+                    double totalYearlyRainfall = Utility.Math.Sum(yearlyRainfall);
+                    int numYears = lastDate.Year - firstDate.Year + 1;
+                    double meanYearlyRainfall = totalYearlyRainfall / numYears;
+                    double stddev = Utility.Math.StandardDeviation(yearlyRainfall);
+
+                    summary.AppendLine(String.Format("For years : {0} - {1}", firstDate.Year, lastDate.Year));
+                    summary.AppendLine("Long term average yearly rainfall : " + String.Format("{0,3:f2}mm", meanYearlyRainfall));
+                    summary.AppendLine("Yearly rainfall std deviation     : " + String.Format("{0,3:f2}mm", stddev));
+
+                    this.weatherDataView.Summarylabel = summary.ToString();
+                    string title = String.Format("Long term average monthly rainfall for years : {0} - {1}", firstDate.Year, lastDate.Year);
+                    this.PopulateGraph(monthlyRainfall,
+                                       monthlyMaxT,
+                                       monthlyMinT,
+                                       title);
+
+                }
             }
         }
 
