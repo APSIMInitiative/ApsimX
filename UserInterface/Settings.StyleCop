@@ -2,6 +2,7 @@
   <GlobalSettings>
     <CollectionProperty Name="RecognizedWords">
       <Value>alphanumerics</Value>
+      <Value>apsim</Value>
       <Value>apsimx</Value>
       <Value>intellisense</Value>
     </CollectionProperty>
