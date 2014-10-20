@@ -49,7 +49,7 @@ namespace UserInterface.Commands
 
                 // If the model xml is a soil object then try and convert from old
                 // APSIM format to new.
-                if (doc.DocumentElement.Name == "Soil" && Utility.Xml.FindByType(doc.DocumentElement, "SoilNitrogen") == null)
+                if (doc.DocumentElement.Name == "Soil")
                 {
                     XmlDocument newDoc = new XmlDocument();
                     newDoc.AppendChild(newDoc.CreateElement("D"));

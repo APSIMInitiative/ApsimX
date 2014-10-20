@@ -6,16 +6,16 @@
 #define AppVerNo GetFileVersion("..\Bin\Model.exe") 
 
 [Setup]
-AppName=APSIM (Next generator)
-AppVerName=APSIM version {#AppVerNo}
+AppName=Apsim
+AppVerName=Apsim version {#AppVerNo}
 AppPublisherURL=http://www.apsim.au
-OutputBaseFilename=APSIMSetup
+OutputBaseFilename=SetupApsim
 VersionInfoVersion={#AppVerNo}
 PrivilegesRequired=poweruser
 ;LicenseFile=..\license.txt
 AppVersion={#AppVerNo}
-AppID=apsimx
-DefaultDirName={pf}\ApsimX
+AppID=apsim
+DefaultDirName={pf}\Apsim
 DefaultGroupName=APSIM
 UninstallDisplayIcon={app}\Bin\Userinterface.exe
 Compression=lzma/Max
@@ -23,9 +23,9 @@ ChangesAssociations=true
 WizardSmallImageFile=apsim_logo32.bmp
 WizardImageFile=.\APSIMInitiativeBanner.bmp
 ;InfoBeforeFile=
-VersionInfoCompany=APSIM Initiative
+VersionInfoCompany=APSIM Initiative4
 VersionInfoDescription=Apsim Modelling
-VersionInfoProductName=APSIM
+VersionInfoProductName=Apsim
 VersionInfoProductVersion={#AppVerNo}
 
 
@@ -126,8 +126,8 @@ begin
 end; 
 
 [InstallDelete]
-Name: {localappdata}\VirtualStore\ApsimX\*.*; Type: filesandordirs
-Name: {localappdata}\VirtualStore\ApsimX; Type: dirifempty
+Name: {localappdata}\VirtualStore\Apsim\*.*; Type: filesandordirs
+Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 
 [Files]
 Source: ..\Bin\UserInterface.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
@@ -151,28 +151,28 @@ Source: ..\Bin\OxyPlot.WindowsForms.dll; DestDir: {app}\Bin; Flags: ignoreversio
 Source: ..\Bin\sqlite3.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
 
 Source: changes.html; DestDir: {app}\Documentation;
-;Source: ..\Documentation\ApsimX tutorial.pdf; DestDir: {app}\Documentation;
+;Source: ..\Documentation\Apsim tutorial.pdf; DestDir: {app}\Documentation;
 
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
-Source: ..\Examples\*; DestDir: {userdocs}\ApsimX\Examples; Flags: recursesubdirs
+Source: ..\Examples\*; DestDir: {userdocs}\Apsim\Examples; Flags: recursesubdirs
 
 [INI]
 
 [Tasks]
 Name: desktopicon; Description: Create a &desktop icon; Flags: exclusive; GroupDescription: Additional icons:
 Name: commondesktopicon; Description: Create a &desktop icon for all users; Flags: exclusive; GroupDescription: Additional icons:
-Name: associate; Description: &Associate .apsimx with ApsimX; GroupDescription: Other tasks:
+Name: associate; Description: &Associate .apsimx with Apsim; GroupDescription: Other tasks:
 
 [Icons]
-Name: {commonprograms}\APSIM; Filename: {app}\Bin\UserInterface.exe
-;Name: {commonprograms}\CSIRO\ApsimX Tutorial; Filename: {app}\docs\ApsimX tutorial.pdf
-Name: {userdesktop}\APSIM; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
-Name: {commondesktop}\APSIM; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
+Name: {commonprograms}\Apsim; Filename: {app}\Bin\UserInterface.exe
+;Name: {commonprograms}\CSIRO\Apsim Tutorial; Filename: {app}\docs\Apsim tutorial.pdf
+Name: {userdesktop}\Apsim; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
+Name: {commondesktop}\Apsim; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
 
 [Registry]
 
 
 [Run]
 Filename: {app}\Documentation\changes.html; Description: View the CHANGES file; Flags: postinstall shellexec skipifsilent
-Filename: {app}\Bin\UserInterface.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent
+Filename: {app}\Bin\UserInterface.exe; Description: Launch Apsim; Flags: postinstall nowait skipifsilent
