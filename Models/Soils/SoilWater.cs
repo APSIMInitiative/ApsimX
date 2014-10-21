@@ -467,18 +467,7 @@ namespace Models.Soils
 
 
         //TODO: turn these into MANAGER COMMANDS by turning them into Set methods. Just like SetMaxPond
-        //maybe get rid of the set; and just leave a get; so they are still available as outputs
-
-        //Irrigation Command
-        //******************
-
-        [Bounds(Lower = 0, Upper = 100)]
-        [Description("Irrigation will runoff (0 no runoff [default], 1 runoff like rain")]
-        public bool irrigation_will_runoff {get; set;}
-
-        [Bounds(Lower = 0, Upper = 100)]
-        [Description("Number of soil layer to which irrigation water is applied (where top layer == 1)")]
-        public int irrigation_layer {get; set;}   
+        //maybe get rid of the set; and just leave a get; so they are still available as outputs  
 
 
 
@@ -543,10 +532,7 @@ namespace Models.Soils
 
             //Manager Variables
 
-            //eo_source = "";
-
-            irrigation_will_runoff = false;
-            irrigation_layer = 1;  //layer 1 is surface irrigation 
+            //eo_source = ""; 
 
 
             }
@@ -1585,7 +1571,7 @@ namespace Models.Soils
 
             //daily inputs
             met = new MetData();
-            irrig = new IrrigData(irrigation_will_runoff, irrigation_layer);
+            irrig = new IrrigData();
             canopy = new CanopyData();
             surfaceCover = new SurfaceCoverData();
 
@@ -1678,7 +1664,8 @@ namespace Models.Soils
 
             // LATERAL FLOW
 
-            SoilObject.Do_Lateral_Flow(inflow_lat);
+            SoilObject.Do_Lateral_Flow(inflow_lat);  
+            //Lateral flow does not move solutes (comming in with inflow_lat, and out with outflow_lat). We should add this feature one day.
 
 
 
@@ -1697,25 +1684,23 @@ namespace Models.Soils
 
 
 
-            // SUBSURFACE IRRIGATION
+            // IRRIGATION
+
+            //subsurface irrigation
             if (irrig.irrigation_layer > 1)
                 SoilObject.AddSubSurfaceIrrig(irrig);
 
 
-            //! save solutes from irrigation
+            //add solutes from irrigation
             SoilObject.AddSolutesDueToIrrigation(irrig);
+            
             /*
-                  //! receive any solutes from rainfall
-                  soilwat2_rainfall_solute();
+            //! receive any solutes from rainfall
+            soilwat2_rainfall_solute();
             */
-            //! NIH 180895
-            //! in order to continue capturing irrigation information we zero
-            //! the value here.  If we zero the value at the beginning of the day
-            //! we may zero it after irrigation has already been specified and the
-            //! information would be lost.  The safest way is to hold onto the
-            //! information until it is used then reset the record.
-
-            irrig.ZeroIrrigation(irrigation_will_runoff, irrigation_layer); 
+           
+            //now that we had applied the irrigation (either to the surface or straight into the soil via subsurface), so zero it.
+            irrig.ZeroIrrigation(); 
 
 
 

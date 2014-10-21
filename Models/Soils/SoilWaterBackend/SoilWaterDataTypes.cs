@@ -234,36 +234,32 @@ namespace Models.Soils.SoilWaterBackend
     public class IrrigData
         {
 
-        public double irrigation;       //! irrigation (mm)  
-
-
-        //Two below, are assigned in either the ini file or as a parameter with the irrigation command in manager code.
-
-        public bool irrigation_will_runoff;
-
-        public int irrigation_layer;      //! number of soil layer to which irrigation water is applied
+        public double irrigation;           //amount of irrigation (mm)  
+        public int irrigation_layer;        //layer to which irrigation is applied. This is one based. eg. surface is layer 1.
+        public bool irrigation_will_runoff; //will the irrigation runoff like rain. (0 means no runoff [default], 1 means it will runoff just like rainfall.)
+        
 
         public double NO3;
         public double NH4;
         public double CL;
 
-
-        public IrrigData(bool Irrigation_will_runoff, int Irrigation_layer)
+        public IrrigData()
             {
-            ZeroIrrigation(Irrigation_will_runoff, Irrigation_layer);
+            //all the other values should be zero (or false) which is what you want them to be.
+            irrigation_layer = 1;
             }
 
 
-        public void ZeroIrrigation(bool Irrigation_will_runoff, int Irrigation_layer)
+        public void ZeroIrrigation()
             {
             irrigation = 0.0;
+            irrigation_will_runoff = false;
+            irrigation_layer = 1;
+
             NO3 = 0.0;
             NH4 = 0.0;
             CL = 0.0;
 
-            //set these back to what the ini file had. (if not specified in the ini file then they get the default values) 
-            irrigation_will_runoff = Irrigation_will_runoff;
-            irrigation_layer = Irrigation_layer;
             }
 
         }
