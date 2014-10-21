@@ -218,8 +218,6 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -696,8 +694,6 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -1174,8 +1170,6 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -1685,8 +1679,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -2185,8 +2177,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -2717,8 +2707,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -3248,8 +3236,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -3725,8 +3711,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -4232,8 +4216,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -4717,8 +4699,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -5195,8 +5175,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -5723,8 +5701,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -6240,8 +6216,6 @@ namespace Models
             <double>0</double>
             <double>0</double>
           </KLAT>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -6996,8 +6970,6 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -7542,8 +7514,6 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -8026,8 +7996,6 @@ namespace Models
               <double>0</double>
               <double>0</double>
             </KLAT>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -8524,8 +8492,6 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
-              <irrigation_will_runoff>false</irrigation_will_runoff>
-              <irrigation_layer>1</irrigation_layer>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -9038,8 +9004,6 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
-              <irrigation_will_runoff>false</irrigation_will_runoff>
-              <irrigation_layer>1</irrigation_layer>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>

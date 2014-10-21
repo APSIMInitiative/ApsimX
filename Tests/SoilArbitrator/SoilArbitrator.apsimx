@@ -241,70 +241,23 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -904,70 +857,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -1567,70 +1473,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -2335,70 +2194,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -3090,70 +2902,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -3779,70 +3544,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -4544,70 +4262,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -5233,70 +4904,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -5897,70 +5521,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -6666,70 +6243,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -7455,70 +6985,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -8417,70 +7900,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -9142,70 +8578,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -9890,70 +9279,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -10586,70 +9928,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -11365,70 +10660,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -12090,70 +11338,23 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <min_crit_temp>5</min_crit_temp>
-          <max_crit_temp>35</max_crit_temp>
-          <max_albedo>0.23</max_albedo>
-          <A_to_evap_fact>0.44</A_to_evap_fact>
-          <canopy_eos_coef>1.7</canopy_eos_coef>
-          <sw_top_crit>0.9</sw_top_crit>
-          <sumes1_max>100</sumes1_max>
-          <sumes2_max>25</sumes2_max>
-          <solute_flow_eff>
-            <double>1</double>
-          </solute_flow_eff>
-          <solute_flux_eff>
-            <double>1</double>
-          </solute_flux_eff>
-          <gravity_gradient>2E-05</gravity_gradient>
-          <specific_bd>2.65</specific_bd>
-          <hydrol_effective_depth>450</hydrol_effective_depth>
-          <mobile_solutes>
-            <string>NO3</string>
-            <string>urea</string>
-            <string>cl</string>
-            <string>br</string>
-            <string>org_n</string>
-            <string>org_c_pool1</string>
-            <string>org_c_pool2</string>
-            <string>org_c_pool3</string>
-          </mobile_solutes>
-          <immobile_solutes>
-            <string>NH4</string>
-          </immobile_solutes>
-          <canopy_fact>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-          </canopy_fact>
-          <canopy_fact_height>
-            <double>0</double>
-            <double>600</double>
-            <double>1800</double>
-            <double>30000</double>
-          </canopy_fact_height>
-          <canopy_fact_default>0.5</canopy_fact_default>
-          <act_evap_method>ritchie</act_evap_method>
-          <irrigation_will_runoff>false</irrigation_will_runoff>
-          <irrigation_layer>1</irrigation_layer>
-          <obsrunoff_name />
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <eo_source />
-          <max_pond>0</max_pond>
-          <SummerCona>0</SummerCona>
-          <SummerU>0</SummerU>
+          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
-          <WinterCona>0</WinterCona>
-          <WinterU>0</WinterU>
+          <SummerU>0</SummerU>
+          <SummerCona>0</SummerCona>
           <WinterDate>1-Apr</WinterDate>
+          <WinterU>0</WinterU>
+          <WinterCona>0</WinterCona>
           <DiffusConst>40</DiffusConst>
           <DiffusSlope>16</DiffusSlope>
           <Salb>0.13</Salb>
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
+          <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
             <double>150</double>
