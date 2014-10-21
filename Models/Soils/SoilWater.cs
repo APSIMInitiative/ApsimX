@@ -1663,14 +1663,12 @@ namespace Models.Soils
 
 
             // LATERAL FLOW
-
             SoilObject.Do_Lateral_Flow(inflow_lat);  
             //Lateral flow does not move solutes (comming in with inflow_lat, and out with outflow_lat). We should add this feature one day.
 
 
 
             // RUNOFF
-
             surface.CalcRunoff();
 
 
@@ -1679,7 +1677,6 @@ namespace Models.Soils
            
             surface.CalcInfiltration();
 
-            //add infiltration to soil
             surface.AddInfiltrationToSoil(ref SoilObject);
 
 
@@ -1704,7 +1701,8 @@ namespace Models.Soils
 
 
 
-            // SATURATED FLOW
+
+            // SATURATED FLOW & ADD BACKED UP TO SURFACE
 
             //calculate saturated flow
             backedup = SoilObject.Calc_Saturated_Flow();
@@ -1712,16 +1710,13 @@ namespace Models.Soils
             if (backedup > 0.0)
                 surface.AddBackedUpWaterToSurface(backedup, ref SoilObject);
 
-            //! move water down     (Saturated Flow - alter sw_dep values using flux calculation)
-            SoilObject.Do_Saturated_Flow();         //also calculate drainage out the bottom layer.
+            //! move water down     
+            SoilObject.Do_Saturated_Flow();   //also calculate drainage out the bottom layer.
 
 
 
 
-            // SATURATED FLOW SOLUTE MOVEMENT
-
-            //! now move the solutes with flux  
-            //! flux -  flow > dul
+            // SOLUTE MOVEMENT - SATURATED FLOW 
             SoilObject.Do_Solutes_SatFlow();
 
 
@@ -1731,7 +1726,6 @@ namespace Models.Soils
 
             surface.CalcEvaporation();
 
-            //! ** take away evaporation
             surface.RemoveEvaporationFromSoil(ref SoilObject);
 
 
@@ -1739,34 +1733,28 @@ namespace Models.Soils
 
             // UNSATURATED FLOW 
 
-            //calculate unsaturated flow   
             SoilObject.Calc_Unsaturated_Flow();
 
-            //! move water up          (Unsaturated Flow - alter sw_dep values using flow calculation)
+            //! move water up         
             SoilObject.Do_Unsaturated_Flow();
 
-            //! now check that the soil water is not silly
             SoilObject.CheckSoilForErrors();
 
 
 
 
             // WATER TABLE
-
             SoilObject.Calc_DepthToWaterTable();
 
 
 
-            // UNSATURATED FLOW SOLUTE MOVEMENT
-
-            //! now move the solutes with flow  
+            // SOLUTE MOVEMENT - UNSATURATED FLOW 
             SoilObject.Do_Solutes_UnsatFlow();
 
 
 
 
             // SEND EVENTS OUT
-
             SendNitrogenChangedEvent();
 
 

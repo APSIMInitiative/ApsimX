@@ -245,7 +245,7 @@ namespace Models.Soils.SoilWaterBackend
 
         public IrrigData()
             {
-            //all the other values should be zero (or false) which is what you want them to be.
+            //all the other values should already be initialised to zero (or false) which is what you want them to be.
             irrigation_layer = 1;
             }
 
