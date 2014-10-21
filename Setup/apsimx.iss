@@ -99,6 +99,25 @@ function IsDotNetInstalled(Version: TDotNetFramework; ServicePack: cardinal): bo
     Result := Success and (InstallFlag = 1) and (ServiceCount >= ServicePack);
   end;
 
+// .net v4.0 requires a fix that is not in the v4.0 installer. On Win7 and Win8
+// this will eventually be installed in the Windows Updates.
+function Isv40FixInstalled(): boolean;
+var
+    KeyName      : string;
+    Success      : boolean;
+    Flag         : string;
+begin
+    KeyName := 'SOFTWARE\Microsoft\Updates\Microsoft .NET Framework 4 Extended\KB2468871';
+    RegQueryStringValue(HKLM, KeyName,'ThisVersionInstalled', Flag);
+    Success := Flag = 'Y';
+
+    KeyName := 'SOFTWARE\Wow6432Node\Microsoft\Updates\Microsoft .NET Framework 4 Extended\KB2468871';
+    RegQueryStringValue(HKLM, KeyName,'ThisVersionInstalled', Flag);
+    Success := Success or (Flag = 'Y');
+
+    result := Success;
+end;
+
 // this is the main function that detects the required version
 function IsRequiredDotNetDetected(): Boolean;  
 begin
@@ -122,7 +141,18 @@ begin
         end;
     end
     else
-      result := true;
+      if not Isv40FixInstalled() then
+      begin
+        answer := MsgBox('A fix pack for .NET Framework 4.0 is required.' + #13#10 + #13#10 +
+        'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);        
+        result := false;
+        if (answer = MROK) then
+        begin
+          ShellExecAsOriginalUser('open', 'http://support.microsoft.com/kb/2468871', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+        end;
+      end
+      else
+        result := true;
 end; 
 
 [InstallDelete]
