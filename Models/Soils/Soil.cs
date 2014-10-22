@@ -1483,7 +1483,7 @@ namespace Models.Soils
             if (LL == null)
                 return PAWC;
             if (Thickness.Length != DUL.Length || Thickness.Length != LL.Length)
-                return null;
+                throw new ApsimXException(null, "Number of soil layers in SoilWater is different to number of layers in SoilWater.Crop");
 
             for (int layer = 0; layer != Thickness.Length; layer++)
                 if (DUL[layer] == Utility.Math.MissingValue ||
