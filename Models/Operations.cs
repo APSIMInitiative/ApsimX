@@ -90,55 +90,60 @@ namespace Models
                     // convert arguments to an object array.
                     ParameterInfo[] parameters = method.GetParameters();
                     object[] parameterValues = new object[parameters.Length];
-                    for (int i = 0; i < parameterValues.Length; i++)
-                    {
-                        if (i >= arguments.Length)
+
+                    //retrieve the values for the named arguments that were provided. (not all the named arguments for the method may have been provided)
+                    for (int i = 0; i < arguments.Length; i++)
                         {
-                            // no more arguments were specified - use default value.
-                            parameterValues[i] = parameters[i].DefaultValue;
-                        }
+                        string value = arguments[i];
+                        int argumentIndex;
+                        int posColon = arguments[i].IndexOf(':');
+                        if (posColon == -1)
+                            argumentIndex = i;
                         else
-                        {
-                            string value = arguments[i];
-                            int argumentIndex;
-                            int posColon = arguments[i].IndexOf(':');
-                            if (posColon == -1)
-                                argumentIndex = i;
-                            else
                             {
-                                string argumentName = arguments[i].Substring(0, posColon).Trim();
-                                // find parameter with this name.
-                                for (argumentIndex = 0; argumentIndex < parameters.Length; argumentIndex++)
+                            string argumentName = arguments[i].Substring(0, posColon).Trim();
+                            // find parameter with this name.
+                            for (argumentIndex = 0; argumentIndex < parameters.Length; argumentIndex++)
                                 {
-                                    if (parameters[argumentIndex].Name == argumentName)
-                                        break;
+                                if (parameters[argumentIndex].Name == argumentName)
+                                    break;
                                 }
-                                if (argumentIndex == parameters.Length)
-                                    throw new ApsimXException(this, "Cannot find argument: " + argumentName + " in operation call: " + operation.Action);
-                                value = value.Substring(posColon + 1);
+                            if (argumentIndex == parameters.Length)
+                                throw new ApsimXException(this, "Cannot find argument: " + argumentName + " in operation call: " + operation.Action);
+                            value = value.Substring(posColon + 1);
                             }
 
-                            // convert value to correct type.
-                            if (parameters[argumentIndex].ParameterType == typeof(double))
-                                parameterValues[argumentIndex] = Convert.ToDouble(value);
-                            else if (parameters[argumentIndex].ParameterType == typeof(float))
-                                parameterValues[argumentIndex] = Convert.ToSingle(value);
-                            else if (parameters[argumentIndex].ParameterType == typeof(int))
-                                parameterValues[argumentIndex] = Convert.ToInt32(value);
-                            else if (parameters[argumentIndex].ParameterType == typeof(bool))
-                                parameterValues[argumentIndex] = Convert.ToBoolean(value);
-                            else if (parameters[argumentIndex].ParameterType == typeof(string))
-                                parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
-                            else if (parameters[argumentIndex].ParameterType.IsEnum)
+                        // convert value to correct type.
+                        if (parameters[argumentIndex].ParameterType == typeof(double))
+                            parameterValues[argumentIndex] = Convert.ToDouble(value);
+                        else if (parameters[argumentIndex].ParameterType == typeof(float))
+                            parameterValues[argumentIndex] = Convert.ToSingle(value);
+                        else if (parameters[argumentIndex].ParameterType == typeof(int))
+                            parameterValues[argumentIndex] = Convert.ToInt32(value);
+                        else if (parameters[argumentIndex].ParameterType == typeof(bool))
+                            parameterValues[argumentIndex] = Convert.ToBoolean(value);
+                        else if (parameters[argumentIndex].ParameterType == typeof(string))
+                            parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
+                        else if (parameters[argumentIndex].ParameterType.IsEnum)
                             {
-                                value = value.Trim();
-                                int posLastPeriod = value.LastIndexOf('.');
-                                if (posLastPeriod != -1)
-                                    value = value.Substring(posLastPeriod+1);
-                                parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
+                            value = value.Trim();
+                            int posLastPeriod = value.LastIndexOf('.');
+                            if (posLastPeriod != -1)
+                                value = value.Substring(posLastPeriod + 1);
+                            parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
                             }
                         }
+
+
+                    //if there were missing named arguments in the method call then use the default values for them.
+                    for (int i = 0; i < parameterValues.Length; i++)
+                    {
+                        if (parameterValues[i] == null)
+                        { 
+                            parameterValues[i] = parameters[i].DefaultValue;
+                        }
                     }
+
 
                     // invoke method.
                     method.Invoke(model, parameterValues);
