@@ -5915,7 +5915,7 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[Irrigation].irrigation</string>
+          <string>[Irrigation].IrrigationApplied as irrigation</string>
           <string>[Soil].SoilWater.Runoff as runoff</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
@@ -6395,31 +6395,31 @@ namespace Models
         <Name>Operations Schedule</Name>
         <Operation>
           <Date>1940-01-01T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
+          <Action>[Irrigation].Apply(amount:10, depth:600); </Action>
         </Operation>
         <Operation>
           <Date>1940-01-02T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
+          <Action>[Irrigation].Apply(amount:10, depth:1550);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-04T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
+          <Action>[Irrigation].Apply(amount:10, depth:300);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-06T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
+          <Action>[Irrigation].Apply(amount:10, depth:0);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-08T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
+          <Action>[Irrigation].Apply(amount:10, depth:3000);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-10T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
+          <Action>[Irrigation].Apply(amount:10, depth:-10);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-12T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
+          <Action>[Irrigation].Apply(amount:10, depth:3100);</Action>
         </Operation>
       </Operations>
       <Manager>
@@ -6602,7 +6602,7 @@ namespace Models
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.irrigation_layer</string>
-          <string>[Irrigation].irrigation</string>
+          <string>[Irrigation].IrrigationApplied as irrigation</string>
           <string>[Soil].SoilWater.dlayer as dlayer</string>
           <string>[Soil].SoilWater.sat_dep as sat_dep</string>
           <string>[Soil].SoilWater.DULmm as dul_dep</string>
@@ -8197,7 +8197,7 @@ namespace Models
             <string>[Soil].SoilWater.Drainage as drain</string>
             <string>[Soil].SoilWater.Es as es</string>
             <string>[Clock].Today</string>
-            <string>[Irrigation].irrigation</string>
+            <string>[Irrigation].IrrigationApplied as irrigation</string>
             <string>[Soil].SoilWater.SWmm as sw_dep</string>
             <string>[Soil].SoilNitrogen.NO3 as no3</string>
             <string>[Soil].SoilNitrogen.NH4 as nh4</string>
