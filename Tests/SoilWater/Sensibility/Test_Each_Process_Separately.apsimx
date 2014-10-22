@@ -9481,5 +9481,29 @@ namespace Models
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
+      <SimulationName>Saturated_Flow_Only</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>sw_dep</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Saturated_Flow_Only</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>flux</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Saturated_Flow_Only</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>drain</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
   <ExplorerWidth>0</ExplorerWidth>
 </Simulations>
