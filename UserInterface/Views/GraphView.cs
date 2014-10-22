@@ -213,7 +213,8 @@ namespace UserInterface.Views
             series.FillColor = ConverterExtensions.ToOxyColor(colour);
             series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
             series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
-
+            series.XAxisKey = xAxisType.ToString();
+            series.YAxisKey = yAxisType.ToString();
             this.plot1.Model.Series.Add(series);
         }
 
