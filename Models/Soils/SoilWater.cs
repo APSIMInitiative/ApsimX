@@ -1052,11 +1052,12 @@ namespace Models.Soils
                 {
                 irrig.irrigation_will_runoff = false;
                 String warningText;
-                warningText = "In the irrigation 'apply' command, 'will_runoff' was set to true" + "\n"
-                + "If you specify irrigation depth > 0 (mm), " + "\n"
-                 + "then you can not choose to have irrigation runoff like rain as well. ('will_runoff = true')" + "\n"
-                 + "ie. Subsurface irrigations can not runoff like rain does. (Only surface irrigation can)" + "\n"
-                 + "nb. Subsurface irrigations will cause runoff if ponding occurs though.";
+                warningText = "Irrigation Apply method parameter, willRunoff was reset from true to false." 
+                + "In the Irrigation 'Apply' command, 'willRunoff' was set to true" + "\n"
+                + " and irrigation depth was set to > 0 (mm)." + "\n"
+                 + "Subsurface irrigation can not runoff like rain does. (Only surface irrigation can)" + "\n"
+                 + "nb. Subsurface irrigations can still cause runoff if ponding occurs though.";
+             
                 constants.IssueWarning(warningText);
                 }
 
@@ -1677,7 +1678,7 @@ namespace Models.Soils
            
             surface.CalcInfiltration();
 
-            surface.AddInfiltrationToSoil(ref SoilObject);
+            surface.AddInfiltrationToSoil(ref SoilObject); //this includes the irrigation
 
 
 
@@ -1696,7 +1697,8 @@ namespace Models.Soils
             soilwat2_rainfall_solute();
             */
            
-            //now that we had applied the irrigation (either to the surface or straight into the soil via subsurface), so zero it.
+            //now that we have applied the irrigation 
+            //(either through infiltration or straight into the soil via subsurface), zero it.
             irrig.ZeroIrrigation(); 
 
 
