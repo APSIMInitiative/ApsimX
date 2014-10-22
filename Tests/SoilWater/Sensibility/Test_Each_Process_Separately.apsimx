@@ -193,17 +193,17 @@
             <double>300</double>
           </Thickness>
           <SWCON>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
+            <double>0.8</double>
+            <double>0.8</double>
+            <double>0.8</double>
+            <double>0.8</double>
+            <double>0.9</double>
+            <double>0.9</double>
+            <double>0.9</double>
+            <double>0.9</double>
+            <double>0.9</double>
+            <double>0.9</double>
+            <double>0.9</double>
           </SWCON>
           <KLAT>
             <double>0</double>
