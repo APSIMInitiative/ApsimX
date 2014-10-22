@@ -125,6 +125,8 @@ namespace Models
                                 parameterValues[argumentIndex] = Convert.ToSingle(value);
                             else if (parameters[argumentIndex].ParameterType == typeof(int))
                                 parameterValues[argumentIndex] = Convert.ToInt32(value);
+                            else if (parameters[argumentIndex].ParameterType == typeof(bool))
+                                parameterValues[argumentIndex] = Convert.ToBoolean(value);
                             else if (parameters[argumentIndex].ParameterType == typeof(string))
                                 parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
                             else if (parameters[argumentIndex].ParameterType.IsEnum)
