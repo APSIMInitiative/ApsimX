@@ -115,7 +115,7 @@ namespace UserInterface.Views
 
             set
             {
-                if (comboBox1.Items.IndexOf(value) != -1)
+                if (comboBox2.Items.IndexOf(value) != -1)
                 {
                     comboBox2.Text = value;
                 }

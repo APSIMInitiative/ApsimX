@@ -94,22 +94,28 @@ namespace UserInterface
                 this.Text = "APSIM " + version.Major + "." + version.Minor;                
 
             // Look for a script specified on the command line.
-            if (commandLineArguments != null && commandLineArguments.Length > 0 &&
-                commandLineArguments[0].EndsWith(".cs"))
+            if (commandLineArguments != null && commandLineArguments.Length > 0)
             {
-                try
+                if (commandLineArguments[0].EndsWith(".cs"))
                 {
+                    try
+                    {
 
-                    ProcessStartupScript(commandLineArguments[0]);
+                        ProcessStartupScript(commandLineArguments[0]);
+                    }
+                    catch (Exception err)
+                    {
+                        ErrorMessage = err.Message;
+                        if (err.InnerException != null)
+                            ErrorMessage += "\r\n" + err.InnerException.Message;
+                        ErrorMessage += "\r\n" + err.StackTrace;
+                        DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                        Close();
+                    }
                 }
-                catch (Exception err)
+                else if (commandLineArguments[0].EndsWith(".apsimx"))
                 {
-                    ErrorMessage = err.Message;
-                    if (err.InnerException != null)
-                        ErrorMessage += "\r\n" + err.InnerException.Message;
-                    ErrorMessage += "\r\n" + err.StackTrace;
-                    DialogResult = System.Windows.Forms.DialogResult.Cancel;
-                    Close();
+                    Presenter1.OpenApsimXFileInTab(commandLineArguments[0]);
                 }
             }
         }
