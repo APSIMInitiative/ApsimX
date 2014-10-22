@@ -5880,35 +5880,35 @@ namespace Models
         <Name>Operations Schedule</Name>
         <Operation>
           <Date>1940-01-02T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
+          <Action>[Irrigation].Apply(amount:10, willRunoff:true);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-05T00:00:00</Date>
-          <Action>[Irrigation].Apply(20);</Action>
+          <Action>[Irrigation].Apply(amount:20, willRunoff:true);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-08T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
+          <Action>[Irrigation].Apply(amount:50, willRunoff:true);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-11T00:00:00</Date>
-          <Action>[Irrigation].Apply(100);</Action>
+          <Action>[Irrigation].Apply(amount:100, willRunoff:true);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-14T00:00:00</Date>
-          <Action>[Irrigation].Apply(250);</Action>
+          <Action>[Irrigation].Apply(amount:250, willRunoff:true);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-17T00:00:00</Date>
-          <Action>[Irrigation].Apply(500);</Action>
+          <Action>[Irrigation].Apply(amount:500, willRunoff:true);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-20T00:00:00</Date>
-          <Action>[Irrigation].Apply(1000);</Action>
+          <Action>[Irrigation].Apply(amount:1000, willRunoff:true);</Action>
         </Operation>
         <Operation>
           <Date>1940-01-23T00:00:00</Date>
-          <Action>[Irrigation].Apply(2000);</Action>
+          <Action>[Irrigation].Apply(amount:2000, willRunoff:true);</Action>
         </Operation>
       </Operations>
       <Report>
