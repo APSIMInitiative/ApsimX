@@ -764,8 +764,7 @@ namespace Models.Soils.SoilWaterBackend
         /// </summary>
         public IEnumerator GetEnumerator()
             {
-            layers.Sort();
-
+            //layers.Sort();
             for (int i = top; i <= bottom; i++)
                 {
                 yield return layers[i - 1];
@@ -778,8 +777,7 @@ namespace Models.Soils.SoilWaterBackend
         /// </summary>
         public IEnumerable BottomToTop()
             {
-            layers.Sort();
-
+            //layers.Sort();
             for (int i = bottom; i >= top; i--)
                 {
                 yield return layers[i - 1];
@@ -794,7 +792,7 @@ namespace Models.Soils.SoilWaterBackend
         /// <param name="X">X is 1 based</param>
         public IEnumerable TopToX(int X)
             {
-            layers.Sort();
+            //layers.Sort();
             for (int i = top; i <= X; i++)
                 {
                 yield return layers[i - 1];
@@ -809,7 +807,7 @@ namespace Models.Soils.SoilWaterBackend
         /// <param name="X">X is 1 based</param>
         public IEnumerable XToTop(int X)
             {
-            layers.Sort();
+            //layers.Sort();
             for (int i = X; i >= top; i--)
                 {
                 yield return layers[i - 1];
@@ -824,7 +822,7 @@ namespace Models.Soils.SoilWaterBackend
         /// <param name="X">X is 1 based</param>
         public IEnumerable XToBottom(int X)
             {
-            layers.Sort();
+            //layers.Sort();
             for (int i = X; i <= bottom; i++)
                 {
                 yield return layers[i - 1];
@@ -839,7 +837,7 @@ namespace Models.Soils.SoilWaterBackend
         /// <param name="X">X is 1 based</param>
         public IEnumerable BottomToX(int X)
             {
-            layers.Sort();
+            //layers.Sort();
             for (int i = bottom; i >= X; i--)
                 {
                 yield return layers[i - 1];
