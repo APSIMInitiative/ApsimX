@@ -971,11 +971,11 @@ namespace Models.PMF.OilPalm
             double[] FrondsAgeDelta = new double[Fronds.Count];
 
             //precalculate  above two arrays
-            Parallel.For(0, Fronds.Count, i =>
+            for (int i = 0; i < Fronds.Count; i++)
                 {
                     FrondsAge[i] = SizeFunction(Fronds[i].Age);
                     FrondsAgeDelta[i] = SizeFunction(Fronds[i].Age + DeltaT);
-                });
+                }
 
             RootGrowth = (DltDM * RootFraction.Value);
             DMAvailable -= RootGrowth;
@@ -987,8 +987,9 @@ namespace Models.PMF.OilPalm
             double TotBunchDMD = Utility.Math.Sum(BunchDMD);
 
             double[] FrondDMD = new double[Fronds.Count];
-            Parallel.For(0, Fronds.Count, i =>
-                FrondDMD[i] = (FrondsAgeDelta[i] - FrondsAge[i]) / SpecificLeafArea.Value * Population * Fn);
+            double specificLeafArea = SpecificLeafArea.Value;
+            for (int i = 0; i < Fronds.Count; i++)
+                FrondDMD[i] = (FrondsAgeDelta[i] - FrondsAge[i]) / specificLeafArea * Population * Fn;
             double TotFrondDMD = Utility.Math.Sum(FrondDMD);
 
             double StemDMD = TotFrondDMD * StemToFrondFraction.Value;
@@ -998,8 +999,8 @@ namespace Models.PMF.OilPalm
             if (Fr > 1.0)
                 Excess = DMAvailable - (TotBunchDMD + TotFrondDMD + StemDMD);
 
-            //why is this here? -JF
-            if (Age > 10 && Fr < 1)
+            //why is this here? -JF 
+            if (Age > 10 && Fr < 1) 
             { }
 
             BunchGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual bunches
@@ -1017,17 +1018,19 @@ namespace Models.PMF.OilPalm
 
             FrondGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual fronds
 
-            Parallel.For(0, Fronds.Count, i =>
+            double specificLeafAreaMax = SpecificLeafAreaMax.Value;
+
+            for (int i = 0; i < Fronds.Count; i++)
             {
                 double IndividualFrondGrowth = FrondDMD[i] * Fr / Population;
                 Fronds[i].Mass += IndividualFrondGrowth;
                 FrondGrowth += IndividualFrondGrowth * Population;
-                if (Fr >= SpecificLeafArea.Value / SpecificLeafAreaMax.Value)
+                if (Fr >= specificLeafArea / specificLeafAreaMax)
                     Fronds[i].Area += (FrondsAgeDelta[i] - FrondsAge[i]) * Fn;
                 else
-                    Fronds[i].Area += IndividualFrondGrowth * SpecificLeafAreaMax.Value;
+                    Fronds[i].Area += IndividualFrondGrowth * specificLeafAreaMax;
 
-            });
+            };
 
             StemGrowth = StemDMD * Fr;// +Excess; 
             StemMass += StemGrowth;

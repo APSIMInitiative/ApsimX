@@ -25,7 +25,10 @@ namespace Models.Soils
     public class Soil : Model
     {
         /// <summary>Gets the water.</summary>
-        private Water WaterNode { get { return Apsim.Child(this, typeof(Water)) as Water; } }
+        private Water waterNode;
+
+        /// <summary>A reference to the layer structure node or null if not present.</summary>
+        private LayerStructure structure;
 
         /// <summary>Gets or sets the record number.</summary>
         [Summary]
@@ -140,6 +143,8 @@ namespace Models.Soils
         /// <summary>Find our children.</summary>
         private void FindChildren()
         {
+            waterNode = Apsim.Child(this, typeof(Water)) as Water;
+            structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(SoilWater)) as SoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
@@ -152,11 +157,10 @@ namespace Models.Soils
         {
             get
             {
-                LayerStructure structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
                 if (structure != null)
                     return structure.Thickness;
                 else
-                    return WaterNode.Thickness;
+                    return waterNode.Thickness;
             }
         }
 
@@ -174,14 +178,14 @@ namespace Models.Soils
         }
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
-        internal double[] BD { get { return Map(WaterNode.BD, WaterNode.Thickness, Thickness, MapType.Concentration, WaterNode.BD.Last()); } }
+        internal double[] BD { get { return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last()); } }
 
         /// <summary>Soil water at standard thickness. Units: mm/mm</summary>
         public double[] InitialWaterVolumetric
         {
             get
             {
-                return SWMapped(SWAtWaterThickness, WaterNode.Thickness, Thickness);
+                return SWMapped(SWAtWaterThickness, waterNode.Thickness, Thickness);
             }
         }
 
@@ -208,14 +212,14 @@ namespace Models.Soils
                 InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
 
                 if (initialWater != null)
-                    return initialWater.SW(WaterNode.Thickness, WaterNode.LL15, WaterNode.DUL, null);
+                    return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
                 else
                 {
                     foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     {
                         if (Utility.Math.ValuesInArray(Sample.SW))
                         {
-                            return SWMapped(Sample.SWVolumetric, Sample.Thickness, WaterNode.Thickness);
+                            return SWMapped(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness);
                         }
                     }
                 }
@@ -224,19 +228,19 @@ namespace Models.Soils
         }
 
         /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
-        public double[] AirDry { get { return Map(WaterNode.AirDry, WaterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] AirDry { get { return Map(waterNode.AirDry, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
-        public double[] LL15 { get { return Map(WaterNode.LL15, WaterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] LL15 { get { return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
-        public double[] DUL { get { return Map(WaterNode.DUL, WaterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] DUL { get { return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
-        public double[] SAT { get { return Map(WaterNode.SAT, WaterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] SAT { get { return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
-        internal double[] KS { get { return Map(WaterNode.KS, WaterNode.Thickness, Thickness, MapType.Concentration); } }
+        internal double[] KS { get { return Map(waterNode.KS, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>SWCON at standard thickness. Units: 0-1</summary>
         internal double[] SWCON 
@@ -345,9 +349,9 @@ namespace Models.Soils
         {
             get
             {
-                return CalcPAWC(WaterNode.Thickness,
-                                WaterNode.LL15,
-                                WaterNode.DUL,
+                return CalcPAWC(waterNode.Thickness,
+                                waterNode.LL15,
+                                waterNode.DUL,
                                 null);
             }
         }
@@ -357,7 +361,7 @@ namespace Models.Soils
         {
             get
             {
-                return Utility.Math.Multiply(PAWCAtWaterThickness, WaterNode.Thickness);
+                return Utility.Math.Multiply(PAWCAtWaterThickness, waterNode.Thickness);
             }
         }
 
@@ -366,8 +370,8 @@ namespace Models.Soils
         {
             get
             {
-                return CalcPAWC(WaterNode.Thickness,
-                                WaterNode.LL15,
+                return CalcPAWC(waterNode.Thickness,
+                                waterNode.LL15,
                                 SWAtWaterThickness,
                                 null);
             }
@@ -379,7 +383,7 @@ namespace Models.Soils
         /// <summary>A list of crop names.</summary>
         /// <value>The crop names.</value>
         [XmlIgnore]
-        public string[] CropNames { get { return WaterNode.CropNames; } }
+        public string[] CropNames { get { return waterNode.CropNames; } }
 
         /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
         /// <param name="CropName">Name of the crop.</param>
@@ -390,7 +394,7 @@ namespace Models.Soils
             if (!CropName.EndsWith("Soil"))
                 CropName += "Soil";
 
-            ISoilCrop MeasuredCrop = WaterNode.Crop(CropName); 
+            ISoilCrop MeasuredCrop = waterNode.Crop(CropName); 
             if (MeasuredCrop != null)
                 return MeasuredCrop;
             ISoilCrop Predicted = PredictedCrop(CropName);
@@ -455,10 +459,10 @@ namespace Models.Soils
         /// <returns></returns>
         public double[] PAWCCropAtWaterThickness(string CropName)
         {
-            return CalcPAWC(WaterNode.Thickness,
-                            LLMapped(CropName, WaterNode.Thickness),
-                            DULMapped(WaterNode.Thickness),
-                            XFMapped(CropName, WaterNode.Thickness));
+            return CalcPAWC(waterNode.Thickness,
+                            LLMapped(CropName, waterNode.Thickness),
+                            DULMapped(waterNode.Thickness),
+                            XFMapped(CropName, waterNode.Thickness));
         }
 
         /// <summary>
@@ -468,10 +472,10 @@ namespace Models.Soils
         /// <returns></returns>
         public double[] PAWCropAtWaterThickness(string CropName)
         {
-            return CalcPAWC(WaterNode.Thickness,
-                            LLMapped(CropName, WaterNode.Thickness),
+            return CalcPAWC(waterNode.Thickness,
+                            LLMapped(CropName, waterNode.Thickness),
                             SWAtWaterThickness,
-                            XFMapped(CropName, WaterNode.Thickness));
+                            XFMapped(CropName, waterNode.Thickness));
         }
 
         /// <summary>
@@ -481,7 +485,7 @@ namespace Models.Soils
         /// <returns></returns>
         public double[] PAWmmAtWaterThickness(string CropName)
         {
-            return Utility.Math.Multiply(PAWCropAtWaterThickness(CropName), WaterNode.Thickness);
+            return Utility.Math.Multiply(PAWCropAtWaterThickness(CropName), waterNode.Thickness);
         }
         #endregion
 
@@ -679,10 +683,10 @@ namespace Models.Soils
                 return null;
 
             double[] LL = PredictedLL(A, B);
-            LL = Map(LL, PredictedThickness, WaterNode.Thickness, MapType.Concentration, LL.Last());
-            KL = Map(KL, PredictedThickness, WaterNode.Thickness, MapType.Concentration, KL.Last());
-            double[] XF = Map(PredictedXF, PredictedThickness, WaterNode.Thickness, MapType.Concentration, PredictedXF.Last());
-            string[] Metadata = Utility.String.CreateStringArray("Estimated", WaterNode.Thickness.Length);
+            LL = Map(LL, PredictedThickness, waterNode.Thickness, MapType.Concentration, LL.Last());
+            KL = Map(KL, PredictedThickness, waterNode.Thickness, MapType.Concentration, KL.Last());
+            double[] XF = Map(PredictedXF, PredictedThickness, waterNode.Thickness, MapType.Concentration, PredictedXF.Last());
+            string[] Metadata = Utility.String.CreateStringArray("Estimated", waterNode.Thickness.Length);
 
             SoilCrop soilCrop = new SoilCrop()
             {
@@ -1038,7 +1042,7 @@ namespace Models.Soils
         /// <returns></returns>
         internal double[] BDMapped(double[] ToThickness)
         {
-            return Map(WaterNode.BD, WaterNode.Thickness, ToThickness, MapType.Concentration, WaterNode.BD.Last());
+            return Map(waterNode.BD, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.BD.Last());
         }
 
         /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>
@@ -1046,7 +1050,7 @@ namespace Models.Soils
         /// <returns></returns>
         public double[] AirDryMapped(double[] ToThickness)
         {
-            return Map(WaterNode.AirDry, WaterNode.Thickness, ToThickness, MapType.Concentration, WaterNode.AirDry.Last());
+            return Map(waterNode.AirDry, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.AirDry.Last());
         }
 
         /// <summary>Lower limit 15 bar - mapped to the specified layer structure. Units: mm/mm</summary>
@@ -1054,7 +1058,7 @@ namespace Models.Soils
         /// <returns></returns>
         public double[] LL15Mapped(double[] ToThickness)
         {
-            return Map(WaterNode.LL15, WaterNode.Thickness, ToThickness, MapType.Concentration, WaterNode.LL15.Last());
+            return Map(waterNode.LL15, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.LL15.Last());
         }
 
         /// <summary>Drained upper limit - mapped to the specified layer structure. Units: mm/mm</summary>
@@ -1062,7 +1066,7 @@ namespace Models.Soils
         /// <returns></returns>
         public double[] DULMapped(double[] ToThickness)
         {
-            return Map(WaterNode.DUL, WaterNode.Thickness, ToThickness, MapType.Concentration, WaterNode.DUL.Last());
+            return Map(waterNode.DUL, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.DUL.Last());
         }
 
         /// <summary>SW - mapped to the specified layer structure. Units: mm/mm</summary>
@@ -1094,8 +1098,8 @@ namespace Models.Soils
 
             // Get the first crop ll or ll15.
             double[] LowerBound;
-            if (WaterNode.Crops.Count > 0)
-                LowerBound = LLMapped(WaterNode.Crops[0].Name, Thicknesses);
+            if (waterNode.Crops.Count > 0)
+                LowerBound = LLMapped(waterNode.Crops[0].Name, Thicknesses);
             else
                 LowerBound = LL15Mapped(Thicknesses);
             if (LowerBound == null)
@@ -1116,9 +1120,9 @@ namespace Models.Soils
         internal double[] LLMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (Utility.Math.AreEqual(WaterNode.Thickness, ToThickness))
+            if (Utility.Math.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.LL;
-            double[] Values = Map(SoilCrop.LL, WaterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
+            double[] Values = Map(SoilCrop.LL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
             if (Values == null) return null;
             double[] AirDry = AirDryMapped(ToThickness);
             double[] DUL = DULMapped(ToThickness);
@@ -1139,9 +1143,9 @@ namespace Models.Soils
         internal double[] XFMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (Utility.Math.AreEqual(WaterNode.Thickness, ToThickness))
+            if (Utility.Math.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.XF;
-            return Map(SoilCrop.XF, WaterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
+            return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
         }
 
         /// <summary>
@@ -1203,7 +1207,7 @@ namespace Models.Soils
                 FromValues = Utility.Math.Multiply(FromValues, FromThickness);
             else if (MapType == Soil.MapType.UseBD)
             {
-                double[] BD = WaterNode.BD;
+                double[] BD = waterNode.BD;
                 for (int Layer = 0; Layer < FromValues.Length; Layer++)
                     FromValues[Layer] = FromValues[Layer] * BD[Layer] * FromThickness[Layer] / 100;
             }
@@ -1543,7 +1547,7 @@ namespace Models.Soils
                 SoilCrop soilCrop = this.Crop(Crop) as SoilCrop;
                 if (soilCrop != null)
                 {
-                    double[] LL = this.LLMapped(Crop, WaterNode.Thickness);
+                    double[] LL = this.LLMapped(Crop, waterNode.Thickness);
                     double[] KL = soilCrop.KL;
                     double[] XF = soilCrop.XF;
 
@@ -1554,7 +1558,7 @@ namespace Models.Soils
 
                     else
                     {
-                        for (int layer = 0; layer != WaterNode.Thickness.Length; layer++)
+                        for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
                         {
                             int RealLayerNumber = layer + 1;
 
@@ -1580,14 +1584,14 @@ namespace Models.Soils
                                 Msg += Crop + " LL value missing"
                                          + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                            else if (Utility.Math.LessThan(LL[layer], WaterNode.AirDry[layer], 3))
+                            else if (Utility.Math.LessThan(LL[layer], waterNode.AirDry[layer], 3))
                                 Msg += Crop + " LL of " + LL[layer].ToString("f3")
-                                             + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + WaterNode.AirDry[layer].ToString("f3")
+                                             + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + waterNode.AirDry[layer].ToString("f3")
                                            + "\r\n";
 
-                            else if (Utility.Math.GreaterThan(LL[layer], WaterNode.DUL[layer], 3))
+                            else if (Utility.Math.GreaterThan(LL[layer], waterNode.DUL[layer], 3))
                                 Msg += Crop + " LL of " + LL[layer].ToString("f3")
-                                             + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + WaterNode.DUL[layer].ToString("f3")
+                                             + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + waterNode.DUL[layer].ToString("f3")
                                            + "\r\n";
                         }
                     }
@@ -1595,63 +1599,63 @@ namespace Models.Soils
             }
 
             // Check other profile variables.
-            for (int layer = 0; layer != WaterNode.Thickness.Length; layer++)
+            for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
             {
-                double max_sw = Utility.Math.Round(1.0 - WaterNode.BD[layer] / specific_bd, 3);
+                double max_sw = Utility.Math.Round(1.0 - waterNode.BD[layer] / specific_bd, 3);
                 int RealLayerNumber = layer + 1;
 
-                if (WaterNode.AirDry[layer] == Utility.Math.MissingValue)
+                if (waterNode.AirDry[layer] == Utility.Math.MissingValue)
                     Msg += " Air dry value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.LessThan(WaterNode.AirDry[layer], min_sw, 3))
-                    Msg += " Air dry lower limit of " + WaterNode.AirDry[layer].ToString("f3")
+                else if (Utility.Math.LessThan(waterNode.AirDry[layer], min_sw, 3))
+                    Msg += " Air dry lower limit of " + waterNode.AirDry[layer].ToString("f3")
                                        + " in layer " + RealLayerNumber.ToString() + " is below acceptable value of " + min_sw.ToString("f3")
                                + "\r\n";
 
-                if (WaterNode.LL15[layer] == Utility.Math.MissingValue)
+                if (waterNode.LL15[layer] == Utility.Math.MissingValue)
                     Msg += "15 bar lower limit value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.LessThan(WaterNode.LL15[layer], WaterNode.AirDry[layer], 3))
-                    Msg += "15 bar lower limit of " + WaterNode.LL15[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + WaterNode.AirDry[layer].ToString("f3")
+                else if (Utility.Math.LessThan(waterNode.LL15[layer], waterNode.AirDry[layer], 3))
+                    Msg += "15 bar lower limit of " + waterNode.LL15[layer].ToString("f3")
+                                 + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + waterNode.AirDry[layer].ToString("f3")
                                + "\r\n";
 
-                if (WaterNode.DUL[layer] == Utility.Math.MissingValue)
+                if (waterNode.DUL[layer] == Utility.Math.MissingValue)
                     Msg += "Drained upper limit value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.LessThan(WaterNode.DUL[layer], WaterNode.LL15[layer], 3))
-                    Msg += "Drained upper limit of " + WaterNode.DUL[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is at or below lower limit of " + WaterNode.LL15[layer].ToString("f3")
+                else if (Utility.Math.LessThan(waterNode.DUL[layer], waterNode.LL15[layer], 3))
+                    Msg += "Drained upper limit of " + waterNode.DUL[layer].ToString("f3")
+                                 + " in layer " + RealLayerNumber.ToString() + " is at or below lower limit of " + waterNode.LL15[layer].ToString("f3")
                                + "\r\n";
 
-                if (WaterNode.SAT[layer] == Utility.Math.MissingValue)
+                if (waterNode.SAT[layer] == Utility.Math.MissingValue)
                     Msg += "Saturation value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.LessThan(WaterNode.SAT[layer], WaterNode.DUL[layer], 3))
-                    Msg += "Saturation of " + WaterNode.SAT[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is at or below drained upper limit of " + WaterNode.DUL[layer].ToString("f3")
+                else if (Utility.Math.LessThan(waterNode.SAT[layer], waterNode.DUL[layer], 3))
+                    Msg += "Saturation of " + waterNode.SAT[layer].ToString("f3")
+                                 + " in layer " + RealLayerNumber.ToString() + " is at or below drained upper limit of " + waterNode.DUL[layer].ToString("f3")
                                + "\r\n";
 
-                else if (Utility.Math.GreaterThan(WaterNode.SAT[layer], max_sw, 3))
+                else if (Utility.Math.GreaterThan(waterNode.SAT[layer], max_sw, 3))
                 {
-                    double max_bd = (1.0 - WaterNode.SAT[layer]) * specific_bd;
-                    Msg += "Saturation of " + WaterNode.SAT[layer].ToString("f3")
+                    double max_bd = (1.0 - waterNode.SAT[layer]) * specific_bd;
+                    Msg += "Saturation of " + waterNode.SAT[layer].ToString("f3")
                                  + " in layer " + RealLayerNumber.ToString() + " is above acceptable value of  " + max_sw.ToString("f3")
                                + ". You must adjust bulk density to below " + max_bd.ToString("f3")
                                + " OR saturation to below " + max_sw.ToString("f3")
                                + "\r\n";
                 }
 
-                if (WaterNode.BD[layer] == Utility.Math.MissingValue)
+                if (waterNode.BD[layer] == Utility.Math.MissingValue)
                     Msg += "BD value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.GreaterThan(WaterNode.BD[layer], 2.65, 3))
-                    Msg += "BD value of " + WaterNode.BD[layer].ToString("f3")
+                else if (Utility.Math.GreaterThan(waterNode.BD[layer], 2.65, 3))
+                    Msg += "BD value of " + waterNode.BD[layer].ToString("f3")
                                  + " in layer " + RealLayerNumber.ToString() + " is greater than the theoretical maximum of 2.65"
                                + "\r\n";
             }
@@ -1659,7 +1663,7 @@ namespace Models.Soils
             if (OC.Length == 0)
                 throw new Exception("Cannot find OC values in soil");
 
-            for (int layer = 0; layer != WaterNode.Thickness.Length; layer++)
+            for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
             {
                 int RealLayerNumber = layer + 1;
                 if (OC[layer] == Utility.Math.MissingValue)
@@ -1690,7 +1694,7 @@ namespace Models.Soils
                 if (!Utility.Math.ValuesInArray(InitialWaterVolumetric))
                     Msg += "No starting soil water values found.\r\n";
                 else
-                    for (int layer = 0; layer != WaterNode.Thickness.Length; layer++)
+                    for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
                     {
                         int RealLayerNumber = layer + 1;
 
@@ -1698,14 +1702,14 @@ namespace Models.Soils
                             Msg += "Soil water value missing"
                                         + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                        else if (Utility.Math.GreaterThan(InitialWaterVolumetric[layer], WaterNode.SAT[layer], 3))
+                        else if (Utility.Math.GreaterThan(InitialWaterVolumetric[layer], waterNode.SAT[layer], 3))
                             Msg += "Soil water of " + InitialWaterVolumetric[layer].ToString("f3")
-                                            + " in layer " + RealLayerNumber.ToString() + " is above saturation of " + WaterNode.SAT[layer].ToString("f3")
+                                            + " in layer " + RealLayerNumber.ToString() + " is above saturation of " + waterNode.SAT[layer].ToString("f3")
                                             + "\r\n";
 
-                        else if (Utility.Math.LessThan(InitialWaterVolumetric[layer], WaterNode.AirDry[layer], 3))
+                        else if (Utility.Math.LessThan(InitialWaterVolumetric[layer], waterNode.AirDry[layer], 3))
                             Msg += "Soil water of " + InitialWaterVolumetric[layer].ToString("f3")
-                                            + " in layer " + RealLayerNumber.ToString() + " is below air-dry value of " + WaterNode.AirDry[layer].ToString("f3")
+                                            + " in layer " + RealLayerNumber.ToString() + " is below air-dry value of " + waterNode.AirDry[layer].ToString("f3")
                                             + "\r\n";
                     }
 
