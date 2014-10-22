@@ -9816,6 +9816,13 @@ namespace Models
       <SimulationName>Soil_Evaporation_Only</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
+      <ColumnNames>sw_dep(1)</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Soil_Evaporation_Only</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
       <ColumnNames>eo</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
@@ -9838,6 +9845,69 @@ namespace Models
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
       <ColumnNames>t</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Soil_Evaporation_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>surfaceom_cover</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Soil_Evaporation_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>sw_dep(1)</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Soil_Evaporation_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>eo</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Soil_Evaporation_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>eos</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Soil_Evaporation_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>es</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Soil_Evaporation_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>t</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Runoff_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>surfaceom_cover</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Runoff_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>runoff</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Runoff_with_SurfaceOM</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>infiltration</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
   </Tests>
