@@ -1,38 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UserInterface.Views;
-using System.Reflection;
-using Models;
-using UserInterface.EventArguments;
-using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory;
-using Models.Core;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ManagerPresenter.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
-    class ManagerPresenter : IPresenter
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using EventArguments;
+    using ICSharpCode.NRefactory;
+    using ICSharpCode.NRefactory.CSharp;
+    using Models;
+    using Models.Core;
+    using Views;
+
+    /// <summary>
+    /// Presenter for the Manager component
+    /// </summary>
+    public class ManagerPresenter : IPresenter
     {
-        private PropertyPresenter PropertyPresenter = new PropertyPresenter();
-        private Manager Manager;
-        private IManagerView ManagerView;
-        private ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// The presenter used for properties
+        /// </summary>
+        private PropertyPresenter propertyPresenter = new PropertyPresenter();
+
+        /// <summary>
+        /// The manager object
+        /// </summary>
+        private Manager manager;
+
+        /// <summary>
+        /// The view for the manager
+        /// </summary>
+        private IManagerView managerView;
+
+        /// <summary>
+        /// The explorer presenter used
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
         /// </summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <param name="model">The model</param>
+        /// <param name="view">The view to attach</param>
+        /// <param name="explorerPresenter">The explorer presenter being used</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Manager = Model as Manager;
-            ManagerView = View as IManagerView;
-            ExplorerPresenter = explorerPresenter;
+            this.manager = model as Manager;
+            this.managerView = view as IManagerView;
+            this.explorerPresenter = explorerPresenter;
 
-            PropertyPresenter.Attach(Manager.Script, ManagerView.GridView, ExplorerPresenter);
+            this.propertyPresenter.Attach(this.manager.Script, this.managerView.GridView, this.explorerPresenter);
 
-            ManagerView.Editor.Text = Manager.Code;
-            ManagerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
-            ManagerView.Editor.LeaveEditor += OnEditorLeave;
+            this.managerView.Editor.Text = this.manager.Code;
+            this.managerView.Editor.ContextItemsNeeded += this.OnNeedVariableNames;
+            this.managerView.Editor.LeaveEditor += this.OnEditorLeave;
         }
 
         /// <summary>
@@ -40,19 +67,21 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            buildScript();  // compiles and saves the script
+            this.BuildScript();  // compiles and saves the script
 
-            ManagerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
-            ManagerView.Editor.LeaveEditor -= OnEditorLeave;
+            this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
+            this.managerView.Editor.LeaveEditor -= this.OnEditorLeave;
         }
 
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
-        void OnNeedVariableNames(object Sender, NeedContextItemsArgs e)
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Context item arguments</param>
+        public void OnNeedVariableNames(object sender, NeedContextItemsArgs e)
         {
             CSharpParser parser = new CSharpParser();
-            SyntaxTree syntaxTree = parser.Parse(ManagerView.Editor.Text); //Manager.Code);
+            SyntaxTree syntaxTree = parser.Parse(this.managerView.Editor.Text); // Manager.Code);
             syntaxTree.Freeze();
 
             IEnumerable<FieldDeclaration> fields = syntaxTree.Descendants.OfType<FieldDeclaration>();
@@ -85,15 +114,20 @@ namespace UserInterface.Presenters
                 Type atype = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
                 if (posPeriod != -1)
                 {
-                    string childName = e.ObjectName.Substring(posPeriod+1);
-                    atype = FindType(atype, childName);
+                    string childName = e.ObjectName.Substring(posPeriod + 1);
+                    atype = this.FindType(atype, childName);
                 }
                     
                 e.AllItems.AddRange(NeedContextItemsArgs.ExamineTypeForContextItems(atype, true, true, false));
             }
-            
         }
 
+        /// <summary>
+        /// Find the type in the name
+        /// </summary>
+        /// <param name="t">Type to find</param>
+        /// <param name="childTypeName">The text string to search</param>
+        /// <returns>The type found</returns>
         private Type FindType(Type t, string childTypeName)
         {
             string[] words = childTypeName.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
@@ -107,47 +141,52 @@ namespace UserInterface.Presenters
             return t;
         }
 
-        private void buildScript()
+        /// <summary>
+        /// Build the script
+        /// </summary>
+        private void BuildScript()
         {
-            ExplorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            this.explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
             try
             {
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
-                Manager.Code = ManagerView.Editor.Text;
+                this.manager.Code = this.managerView.Editor.Text;
 
                 // If it gets this far then compiles ok.
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Manager, "Code", ManagerView.Editor.Text));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", this.managerView.Editor.Text));
             }
             catch (Models.Core.ApsimXException err)
             {
-                string Msg = err.Message;
+                string msg = err.Message;
                 if (err.InnerException != null)
-                    ExplorerPresenter.ShowMessage(string.Format("[{0}]: {1}",  err.model.Name, err.InnerException.Message), DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.InnerException.Message), DataStore.ErrorLevel.Error);
                 else
-                    ExplorerPresenter.ShowMessage(string.Format("[{0}]: {1}",  err.model.Name, err.Message), DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.Message), DataStore.ErrorLevel.Error);
             }
-            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
+            this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
         }
-
 
         /// <summary>
         /// The user has changed the code script.
         /// </summary>
-        void OnEditorLeave(object sender, EventArgs e)
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">The arguments</param>
+        public void OnEditorLeave(object sender, EventArgs e)
         {
-            ExplorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(CommandHistory_ModelChanged);
-            if (Manager.Script != null)
-                PropertyPresenter.PopulateGrid(Manager.Script);
+            this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            if (this.manager.Script != null)
+                this.propertyPresenter.PopulateGrid(this.manager.Script);
         }
 
         /// <summary>
         /// The model has changed so update our view.
         /// </summary>
-        void CommandHistory_ModelChanged(object changedModel)
+        /// <param name="changedModel">The changed manager model</param>
+        public void CommandHistory_ModelChanged(object changedModel)
         {
-            if (changedModel == Manager)
-                ManagerView.Editor.Text = Manager.Code;
+            if (changedModel == this.manager)
+                this.managerView.Editor.Text = this.manager.Code;
         }
     }
 }

@@ -1,35 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UserInterface.Views;
-using Models;
-using System.Drawing;
-using System.IO;
+﻿// -----------------------------------------------------------------------
+// <copyright file="MemoPresenter.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.IO;
+    using System.Text;
+    using Models;
+    using Views;
+
     /// <summary>
     /// Presents the text from a memo component.
     /// </summary>
     public class MemoPresenter : IPresenter, IExportable
     {
-        private Memo MemoModel;
-        private HTMLView MemoViewer;
+        /// <summary>
+        /// The memo object
+        /// </summary>
+        private Memo memoModel;
 
-        private ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// The memo view
+        /// </summary>
+        private HTMLView memoViewer;
+
+        /// <summary>
+        /// The explorer presenter used
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// Attach the 'Model' and the 'View' to this presenter.
         /// </summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <param name="model">The model to use</param>
+        /// <param name="view">The view object</param>
+        /// <param name="explorerPresenter">The explorer presenter used</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            MemoModel = Model as Memo;
-            MemoViewer = View as HTMLView;
-            ExplorerPresenter = explorerPresenter;
+            this.memoModel = model as Memo;
+            this.memoViewer = view as HTMLView;
+            this.explorerPresenter = explorerPresenter;
 
-            MemoViewer.MemoText = MemoModel.MemoText;
+            this.memoViewer.MemoText = this.memoModel.MemoText;
 
-            MemoViewer.MemoUpdate += Update;
+            this.memoViewer.MemoUpdate += this.Update;
         }
 
         /// <summary>
@@ -37,33 +56,38 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            Update(null, null);
-            MemoViewer.MemoUpdate -= Update;
+            this.Update(null, null);
+            this.memoViewer.MemoUpdate -= this.Update;
         }
 
         /// <summary>
         /// Handles the event from the view to update the memo component text.
         /// </summary>
-        void Update(object sender, EventArgs e)
+        /// <param name="sender">Sending object</param>
+        /// <param name="e">Event arguments</param>
+        public void Update(object sender, EventArgs e)
         {
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(MemoModel, "MemoText", MemoViewer.MemoText));
+            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "MemoText", this.memoViewer.MemoText));
         }
 
         /// <summary>
         /// The model has changed so update our view.
         /// </summary>
-        void CommandHistory_ModelChanged(object changedModel)
+        /// <param name="changedModel">The model object that has changed</param>
+        public void CommandHistory_ModelChanged(object changedModel)
         {
-            if (changedModel == MemoModel)
-                MemoViewer.MemoText = ((Memo)changedModel).MemoText;
+            if (changedModel == this.memoModel)
+                this.memoViewer.MemoText = ((Memo)changedModel).MemoText;
         }
 
         /// <summary>
         /// Export the contents of this memo to the specified file.
         /// </summary>
+        /// <param name="folder">The name of the folder</param>
+        /// <returns>The text from the memo</returns>
         public string ConvertToHtml(string folder)
         {
-            return MemoViewer.MemoText;
+            return this.memoViewer.MemoText;
         }
     }
 }
