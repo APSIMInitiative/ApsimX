@@ -9,6 +9,7 @@ namespace UserInterface.Presenters
     using System.IO;
     using Models;
     using Models.Core;
+    using System.Diagnostics;
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.
@@ -82,6 +83,19 @@ namespace UserInterface.Presenters
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
             this.explorerPresenter.ToggleSecondExplorerViewVisible();
+        }
+
+        /// <summary>
+        /// User has clicked on Help
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [MainMenu(MenuName = "Help")]
+        public void OnHelp(object sender, EventArgs e)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = "http://www.apsim.info/Documentation/ApsimX/Overview.aspx";
+            process.Start();
         }
     }
 }

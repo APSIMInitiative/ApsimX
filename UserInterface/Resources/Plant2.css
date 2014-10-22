@@ -6,19 +6,19 @@
 body {
   background: white url(ApsruTile.jpg) repeat-y scroll left top;
   font-family: Verdana,Arial,Helvetica,sans-serif;
-  font-size: 9pt;
+  font-size: 11pt;
   color: black;
   padding-left: 70px;
   text-align: left;
 }
 p {
   font-family: Verdana,Arial,Helvetica,sans-serif;
-  font-size: 9pt;
+  font-size: 11pt;
   color: black;
 }
 table {
   border: 0px solid #cccccc;
-  font-size: 9pt;
+  font-size: 11pt;
   font-family: Arial,Helvetica,sans-serif;
   border-collapse: collapse;
   text-align: center;
@@ -32,7 +32,6 @@ h1 {
 }
 h2 {
   border-color: SteelBlue;
-  border-bottom-style: inset;
   text-align: left;
   font-size: 18pt;
   margin-top: 50px;

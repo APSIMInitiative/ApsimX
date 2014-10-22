@@ -357,20 +357,27 @@ namespace UserInterface.Presenters
             string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
             if (destinationFolder != null)
             {
-                Model modelClicked = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                if (modelClicked != null)
-                {
-                    if (modelClicked is Simulations)
-                    {
-                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
-                        this.explorerPresenter.CommandHistory.Add(command, true);
-                    }
-                    else
-                    {
-                        string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
+                ExportToHTML(destinationFolder);
+            }
+        }
 
-                        Classes.PMFDocumentation.Go(fileName, modelClicked);
-                    }
+        /// <summary>Exports the currently selected model to HTML.</summary>
+        /// <param name="destinationFolder">The destination folder.</param>
+        public void ExportToHTML(string destinationFolder)
+        {
+            Model modelClicked = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+            if (modelClicked != null)
+            {
+                if (modelClicked is Simulations)
+                {
+                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
+                    this.explorerPresenter.CommandHistory.Add(command, true);
+                }
+                else
+                {
+                    string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
+
+                    Classes.PMFDocumentation.Go(fileName, modelClicked);
                 }
             }
         }

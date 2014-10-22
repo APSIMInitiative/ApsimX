@@ -66,9 +66,12 @@ namespace UserInterface.Classes
 
                 List<XmlNode> children = Utility.Xml.ChildNodes(image, "");
 
+                OutputFile.WriteLine("<h2>Validation</h2>");
+                OutputFile.WriteLine("<A HREF=\"Index.html\">Model validation can be found here.<A>");
+
                 OutputFile.WriteLine("<table style=\"text-align: left; width: 100%;\" border=\"1\" cellpadding=\"2\"\ncellspacing=\"2\">\n<tbody>\n<tr>\n<td id=\"toc\"style=\"vertical-align: top;\">");
                 OutputFile.WriteLine("<A NAME=\"toc\"></A>");
-                OutputFile.WriteLine("<h2>Table of Contents</h2><br>"); //ToC added after the rest of the file is created. See CreateTOC()
+                OutputFile.WriteLine("<h2>Model Documentation</h2><br>"); //ToC added after the rest of the file is created. See CreateTOC()
                 OutputFile.WriteLine("</td>\n<td>");
                 foreach (XmlNode n in children)
                 {
@@ -325,7 +328,7 @@ namespace UserInterface.Classes
             {
                 inject += s + "\n";
             }
-            return fullText.Insert(30 + fullText.IndexOf("<h2>Table of Contents</h2><br>"), inject); //21 length of index string
+            return fullText.Insert(30 + fullText.IndexOf("<h2>Model Documentation</h2><br>"), inject); //21 length of index string
         }
 
         private static void ChillingPhaseFunction(StreamWriter OutputFile, XmlNode N, int Level)

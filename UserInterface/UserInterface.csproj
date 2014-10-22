@@ -608,6 +608,7 @@
     <EmbeddedResource Include="Resources\MenuImages\Export to EXCEL.png" />
     <EmbeddedResource Include="Resources\MenuImages\Export to HTML.png" />
     <EmbeddedResource Include="Resources\MenuImages\Save.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Help.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup />

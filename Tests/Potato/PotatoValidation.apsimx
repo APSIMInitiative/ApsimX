@@ -10,7 +10,7 @@
   <title></title>
  </head>
  <body>
-  <p>This is the potato validation</p>
+  <p></p>
  </body>
 </html>]]></MemoText>
   </Memo>
@@ -24309,12 +24309,12 @@ namespace Models
         <TableName>FinalYieldData</TableName>
         <FieldName>Predicted.Potato.Tuber.LiveFWt</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
+    <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
   </Graph>
   <Graph>
@@ -24351,12 +24351,12 @@ namespace Models
         <TableName>FinalYieldData</TableName>
         <FieldName>Predicted.Potato.Tuber.Live.Wt</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
+    <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
   </Graph>
   <Graph>
@@ -24393,12 +24393,12 @@ namespace Models
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Potato.Leaf.LAI</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
+    <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
   </Graph>
   <Graph>
@@ -24435,12 +24435,12 @@ namespace Models
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Potato.Tuber.Live.N</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
+    <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
   </Graph>
   <ExplorerWidth>351</ExplorerWidth>

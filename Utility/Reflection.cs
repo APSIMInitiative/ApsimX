@@ -327,6 +327,7 @@ namespace Utility
                         Params.WarningLevel = 2;
                         Params.ReferencedAssemblies.Add("System.dll");
                         Params.ReferencedAssemblies.Add("System.Xml.dll");
+                        Params.ReferencedAssemblies.Add("System.Windows.Forms.dll");
                         Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
                         if (Assembly.GetCallingAssembly() != Assembly.GetExecutingAssembly())
                             Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetCallingAssembly().Location));

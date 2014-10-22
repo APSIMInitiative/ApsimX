@@ -123,7 +123,8 @@ namespace UserInterface.Commands
                         string childFolderPath = Path.Combine(folderPath, child.Name);
 
                         string childFileName = Path.Combine(childFolderPath, "Index.html");
-                        index.WriteLine("<p><a href=file://{0}>{1}</a></p>",
+                        childFileName = childFileName.Replace(this.FolderPath + "\\", "");
+                        index.WriteLine("<p><a href={0}>{1}</a></p>",
                                         new object[] {Utility.String.DQuote(childFileName),
                                                 child.Name});
 
