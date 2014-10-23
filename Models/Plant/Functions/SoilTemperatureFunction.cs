@@ -32,7 +32,9 @@ namespace Models.PMF.Functions
         {
             get
             {
-                return AirTemperatureFunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, XYPairs);
+                AirTemperatureFunction airtempfunction = new AirTemperatureFunction();
+                airtempfunction.XYPairs = XYPairs;
+                return airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, XYPairs);
             }
         }
     }

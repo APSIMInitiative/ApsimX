@@ -234,9 +234,10 @@ namespace Models.Soils.SoilWaterBackend
     public class IrrigData
         {
 
-        public double irrigation;           //amount of irrigation (mm)  
-        public int irrigation_layer;        //layer to which irrigation is applied. This is one based. eg. surface is layer 1.
-        public bool irrigation_will_runoff; //will the irrigation runoff like rain. (0 means no runoff [default], 1 means it will runoff just like rainfall.)
+        public double amount;           //amount of irrigation (mm)  
+        public bool isSubSurface;
+        public int layer;        //layer to which irrigation is applied. This is one based. eg. surface is layer 1.
+        public bool willRunoff; //will the irrigation runoff like rain. (0 means no runoff [default], 1 means it will runoff just like rainfall.)
         
 
         public double NO3;
@@ -246,15 +247,16 @@ namespace Models.Soils.SoilWaterBackend
         public IrrigData()
             {
             //all the other values should already be initialised to zero (or false) which is what you want them to be.
-            irrigation_layer = 1;
+            layer = 1;
             }
 
 
         public void ZeroIrrigation()
             {
-            irrigation = 0.0;
-            irrigation_will_runoff = false;
-            irrigation_layer = 1;
+            amount = 0.0;
+            isSubSurface = false;
+            willRunoff = false;
+            layer = 1;
 
             NO3 = 0.0;
             NH4 = 0.0;

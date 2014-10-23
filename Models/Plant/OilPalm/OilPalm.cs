@@ -689,11 +689,14 @@ namespace Models.PMF.OilPalm
                 Roots[i].N = Roots[i].Mass * RootNConcentration.Value / 100;
             }
 
+            double FMA = FrondMaxArea.Value;
+            double GrowthDuration = ExpandingFronds.Value * FrondAppearanceRate.Value;
+
             for (int i = 0; i < (int)InitialFrondNumber.Value; i++)
             {
                 FrondType F = new FrondType();
                 F.Age = ((int)InitialFrondNumber.Value - i) * FrondAppearanceRate.Value;
-                F.Area = SizeFunction(F.Age);
+                F.Area = SizeFunction(F.Age, FMA, GrowthDuration);
                 F.Mass = F.Area / SpecificLeafArea.Value;
                 F.N = F.Mass * FrondCriticalNConcentration.Value / 100.0;
                 Fronds.Add(F);
@@ -971,10 +974,14 @@ namespace Models.PMF.OilPalm
             double[] FrondsAgeDelta = new double[Fronds.Count];
 
             //precalculate  above two arrays
+            double FMA = FrondMaxArea.Value;
+            double frondAppearanceRate = FrondAppearanceRate.Value;
+            double GrowthDuration = ExpandingFronds.Value * frondAppearanceRate;
+
             for (int i = 0; i < Fronds.Count; i++)
                 {
-                    FrondsAge[i] = SizeFunction(Fronds[i].Age);
-                    FrondsAgeDelta[i] = SizeFunction(Fronds[i].Age + DeltaT);
+                    FrondsAge[i] = SizeFunction(Fronds[i].Age, FMA, GrowthDuration);
+                    FrondsAgeDelta[i] = SizeFunction(Fronds[i].Age + DeltaT, FMA, GrowthDuration);
                 }
 
             RootGrowth = (DltDM * RootFraction.Value);
@@ -983,7 +990,7 @@ namespace Models.PMF.OilPalm
 
             double[] BunchDMD = new double[Bunches.Count];
             for (int i = 0; i < 6; i++)
-                BunchDMD[i] = BunchSizeMax.Value / (6 * FrondAppearanceRate.Value / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value;
+                BunchDMD[i] = BunchSizeMax.Value / (6 * frondAppearanceRate / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value;
             double TotBunchDMD = Utility.Math.Sum(BunchDMD);
 
             double[] FrondDMD = new double[Fronds.Count];
@@ -1488,10 +1495,8 @@ namespace Models.PMF.OilPalm
         /// <summary>Sizes the function.</summary>
         /// <param name="Age">The age.</param>
         /// <returns></returns>
-        protected double SizeFunction(double Age)
+        protected double SizeFunction(double Age, double FMA, double GrowthDuration)
         {
-            double FMA = FrondMaxArea.Value;
-            double GrowthDuration = ExpandingFronds.Value * FrondAppearanceRate.Value;
             double alpha = -Math.Log((1 / 0.99 - 1) / (FMA / (FMA * 0.01) - 1)) / GrowthDuration;
             double leafsize = FMA / (1 + (FMA / (FMA * 0.01) - 1) * Math.Exp(-alpha * Age));
             return leafsize;

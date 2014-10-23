@@ -61,25 +61,26 @@ namespace Models.Soils.SoilWaterBackend
 
                 double waterForRunoff = Met.rain + Runon - (Canopy.interception + SurfaceCover.residueinterception);
    
-                if (Irrig.irrigation_will_runoff)
-                    waterForRunoff = waterForRunoff + Irrig.irrigation;
+                if (Irrig.willRunoff)
+                    waterForRunoff = waterForRunoff + Irrig.amount;
 
                 return waterForRunoff;
                 }
             }
 
 
-        public double TodaysWaterForSurface
+        public double TodaysWaterForInfiltration
             {
             get
                 {
-                double waterForSurface = TodaysWaterForRunoff;
+                double waterForInfiltration = TodaysWaterForRunoff;
 
-                //if irrigations don't runoff and this is surface irrigation (not subsurface)
-                if ((!Irrig.irrigation_will_runoff) && (Irrig.irrigation_layer == 1))
-                    waterForSurface = TodaysWaterForRunoff + Irrig.irrigation;
+                //if irrigation was not included in TodaysWaterForRunoff (because will_runoff was false)
+                //and this is surface irrigation (not subsurface) then it needs to be included in the TodaysWaterForInfiltration.
+                if ((!Irrig.willRunoff) && (Irrig.isSubSurface == false))
+                    waterForInfiltration = TodaysWaterForRunoff + Irrig.amount;
 
-                return waterForSurface;
+                return waterForInfiltration;
                 }
 
             }
@@ -161,7 +162,7 @@ namespace Models.Soils.SoilWaterBackend
 
         public override void CalcInfiltration()
             {
-            Infiltration = base.TodaysWaterForSurface - Runoff;
+            Infiltration = base.TodaysWaterForInfiltration - Runoff;  //remove the runoff because it did not infiltrate.
             }
 
 
@@ -261,7 +262,7 @@ namespace Models.Soils.SoilWaterBackend
             {
 
 
-            base.CalcRunoff();
+            base.CalcRunoff();  //do NormalSurface runoff
 
             pond = pond + base.Runoff;
             base.Runoff = Math.Max((pond - SoilObject.max_pond), 0.0);
@@ -274,7 +275,7 @@ namespace Models.Soils.SoilWaterBackend
         public override void CalcInfiltration()
             {
 
-            base.CalcInfiltration();
+            base.CalcInfiltration();  //do NormalSurface infiltration
 
             //infiltrate all of the pond each day. Let the soil work out how much of it backs up again to work out the pond each day.
             base.Infiltration = base.Infiltration + pond;

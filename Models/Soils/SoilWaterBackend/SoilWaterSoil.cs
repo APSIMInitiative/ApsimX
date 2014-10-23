@@ -1013,13 +1013,14 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-        public void AddSubSurfaceIrrig(IrrigData Irrig)
+        public void AddSubSurfaceIrrigToSoil(IrrigData Irrig)
             {
 
-            Layer lyr = GetLayer(Irrig.irrigation_layer);
-            lyr.sw_dep = lyr.sw_dep + Irrig.irrigation;
-
-            //what about solutes?
+            if (Irrig.isSubSurface)
+                {
+                Layer lyr = GetLayer(Irrig.layer);
+                lyr.sw_dep = lyr.sw_dep + Irrig.amount;
+                }
 
             }
 
@@ -1888,7 +1889,8 @@ namespace Models.Soils.SoilWaterBackend
             //HOWEVER, when rain causes runoff we don't remove solutes from the surface layer of the soil. 
             //So why when irrigation causes runoff should we remove solutes.  
 
-            Layer lyr = GetLayer(Irrig.irrigation_layer);
+
+            Layer lyr = GetLayer(Irrig.layer);
 
 
             SoluteInLayer no3 = lyr.GetASolute("NO3");
