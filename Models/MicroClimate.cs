@@ -760,6 +760,7 @@ namespace Models
         private void AddCropTypes()
         {
             // Could we keep this list in alphabetical order, please
+            ComponentDataDefinitions.Clear();
             SetupCropTypes("AgPasture", "Crop");
             SetupCropTypes("bambatsi", "C4grass");
             SetupCropTypes("banksia", "Tree");
@@ -861,7 +862,7 @@ namespace Models
                 CropType.Gsmax = 0.011;
             }
 
-            ComponentData.Add(CropType);
+            ComponentDataDefinitions.Add(CropType);
         }
 
         /// <summary>The maxt</summary>
@@ -908,6 +909,8 @@ namespace Models
         private double[] layerLAIsum = new double[-1 + 1];
         /// <summary>The number layers</summary>
         private int numLayers;
+
+        private List<ComponentDataStruct> ComponentDataDefinitions = new List<ComponentDataStruct>();
 
         /// <summary>Gets or sets the component data.</summary>
         /// <value>The component data.</value>
@@ -987,13 +990,16 @@ namespace Models
                     return i;
                 }
             }
-            // Couldn't find
-
-            if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
+            // Couldn't find - see if the name is in the ComponentDataDefinitions. If it
+            // is then add it as a componentdata that we need to handle.
+            for (int i = 0; i <= ComponentDataDefinitions.Count - 1; i++)
             {
-                // crop type
-                ComponentData.Add(new ComponentDataStruct());
-                return ComponentData.Count - 1;
+                if (ComponentDataDefinitions[i].Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // found
+                    ComponentData.Add(ComponentDataDefinitions[i]);
+                    return ComponentData.Count - 1;
+                }
             }
             return -1;
         }
