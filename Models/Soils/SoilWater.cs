@@ -728,6 +728,23 @@ namespace Models.Soils
 
 
 
+    
+
+        /// <summary>
+        /// Layer that irrigation went into.
+        /// Needed for subsurface irrigations because you specify a depth.
+        /// It is helpful to see exactly which layer that depth put the irrigation into.
+        /// layer = 0 means, top layer but via a surface irrigation (depth = 0) (NOT subsurface)
+        /// layer = 1 means, top layer but via a subsurface irrigation
+        /// layer > 1 means that layer (one based not zero based)
+        /// </summary>
+        [XmlIgnore]
+        [Units("")]
+        public int IrrigLayer
+        { get { return irrig.layer; } }
+
+
+
         #endregion
 
 
@@ -1040,17 +1057,14 @@ namespace Models.Soils
             {
 
 
-            //TODO: need to zero the irrig object each day. 
+            irrig.amount = IrrigationData.Amount;  
 
-            //see OnProcess event handler for where this irrigation is added to the soil water 
-            irrig.irrigation = IrrigationData.Amount;  //! amount of irrigation (mm)    
+            irrig.willRunoff = IrrigationData.will_runoff;
 
-            //Added on 5 Dec 2012 to allow irrigation to runoff like rain. 
-            irrig.irrigation_will_runoff = IrrigationData.will_runoff;
-
+            //check if will_runoff value conflicts with subsurface irrigation.
             if ((IrrigationData.will_runoff) && (IrrigationData.Depth > 0.0))
                 {
-                irrig.irrigation_will_runoff = false;
+                irrig.willRunoff = false;
                 String warningText;
                 warningText = "Irrigation Apply method parameter, willRunoff was reset from true to false." 
                 + "In the Irrigation 'Apply' command, 'willRunoff' was set to true" + "\n"
@@ -1062,15 +1076,16 @@ namespace Models.Soils
                 }
 
 
-            //sv- added on 26 Nov 2012. Needed for subsurface irrigation. 
-            //    Manager module sends "apply" command specifying depth as a argument to irrigation module.
-            //    irrigation module sends "Irrigated" event with the depth. 
-            //    Now need to turn depth into the specific subsurface layer that the irrigation is to go into.
-            irrig.irrigation_layer = SoilObject.FindLayerNo(IrrigationData.Depth);
+            if (IrrigationData.Depth == 0.0)
+                irrig.isSubSurface = false;
+            else
+                irrig.isSubSurface = true;
+    
+
+            irrig.layer = SoilObject.FindLayerNo(IrrigationData.Depth); //subsurface irrigation. (top layer is 1 not zero)
 
 
             //Solute amount in irrigation water.
-
             irrig.NO3 = IrrigationData.NO3;
             irrig.NH4 = IrrigationData.NH4;
             irrig.CL = IrrigationData.CL;
@@ -1678,15 +1693,14 @@ namespace Models.Soils
            
             surface.CalcInfiltration();
 
-            surface.AddInfiltrationToSoil(ref SoilObject); //this includes the irrigation
+            surface.AddInfiltrationToSoil(ref SoilObject); //this includes the surface irrigation
 
 
 
             // IRRIGATION
 
             //subsurface irrigation
-            if (irrig.irrigation_layer > 1)
-                SoilObject.AddSubSurfaceIrrig(irrig);
+            SoilObject.AddSubSurfaceIrrigToSoil(irrig);
 
 
             //add solutes from irrigation
@@ -1698,7 +1712,7 @@ namespace Models.Soils
             */
            
             //now that we have applied the irrigation 
-            //(either through infiltration or straight into the soil via subsurface), zero it.
+            //(either through surface irrigation or straight into the soil via subsurface), zero it.
             irrig.ZeroIrrigation(); 
 
 
