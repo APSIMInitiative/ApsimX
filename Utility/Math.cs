@@ -311,51 +311,24 @@ namespace Utility
             bDidInterpolate = false;
             if (dXCoordinate == null || dYCoordinate == null)
                 return 0;
-            //find where x lies in the x coordinate
-            if (dXCoordinate.Length == 0 || dYCoordinate.Length == 0 || dXCoordinate.Length != dYCoordinate.Length)
-            {
-                throw new Exception("Utility.Math.LinearInterpReal: Lengths of passed in arrays are incorrect");
-            }
 
-            for (int iIndex = 0; iIndex < dXCoordinate.Length; iIndex++)
-            {
-                if (dX <= dXCoordinate[iIndex])
-                {
-                    //Chcek to see if dX is exactly equal to dXCoordinate[iIndex]
-                    //If so then don't calcuate dY.  This was added to remove roundoff error.
-                    if (dX == dXCoordinate[iIndex])
-                    {
-                        bDidInterpolate = false;
-                        return dYCoordinate[iIndex];
-                    }
-                    //Found position
-                    else if (iIndex == 0)
-                    {
-                        bDidInterpolate = true;
-                        return dYCoordinate[iIndex];
-                    }
-                    else
-                    {
-                        //interpolate - y = mx+c
-                        if ((dXCoordinate[iIndex] - dXCoordinate[iIndex - 1]) == 0)
-                        {
-                            bDidInterpolate = true;
-                            return dYCoordinate[iIndex - 1];
-                        }
-                        else
-                        {
-                            bDidInterpolate = true;
-                            return ((dYCoordinate[iIndex] - dYCoordinate[iIndex - 1]) / (dXCoordinate[iIndex] - dXCoordinate[iIndex - 1]) * (dX - dXCoordinate[iIndex - 1]) + dYCoordinate[iIndex - 1]);
-                        }
-                    }
-                }
-                else if (iIndex == (dXCoordinate.Length - 1))
-                {
-                    bDidInterpolate = true;
-                    return dYCoordinate[iIndex];
-                }
-            }// END OF FOR LOOP
-            return 0.0;
+            // find where x lies in the x coordinate
+            if (dXCoordinate.Length == 0 || dYCoordinate.Length == 0 || dXCoordinate.Length != dYCoordinate.Length)
+                throw new Exception("Utility.Math.LinearInterpReal: Lengths of passed in arrays are incorrect");
+
+            int pos = Array.BinarySearch(dXCoordinate, dX);
+            if (pos == -1)
+                return dYCoordinate[0];  // off the bottom
+            else if (pos >= 0)
+                return dYCoordinate[pos];   // exact match
+            else if (pos < 0)
+                pos = ~pos;
+            
+            if (pos == dXCoordinate.Length)
+                return dYCoordinate[dXCoordinate.Length - 1];  // off the top
+            
+            // pos should now point to the next largest value - interpolate
+            return (dYCoordinate[pos] - dYCoordinate[pos - 1]) / (dXCoordinate[pos] - dXCoordinate[pos - 1]) * (dX - dXCoordinate[pos - 1]) + dYCoordinate[pos - 1];
         }
 
         /// <summary>
