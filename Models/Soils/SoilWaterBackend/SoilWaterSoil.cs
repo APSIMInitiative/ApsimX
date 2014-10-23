@@ -858,7 +858,7 @@ namespace Models.Soils.SoilWaterBackend
             {
             if (layers != null)
                 {
-                layers.Sort();
+                //layers.Sort();
                 return layers.First();
                 }
             else
@@ -874,7 +874,7 @@ namespace Models.Soils.SoilWaterBackend
             {
             if (layers != null)
                 {
-                layers.Sort();
+                //layers.Sort();
                 return layers[LayerNumber - 1];
                 }
             else
@@ -886,7 +886,7 @@ namespace Models.Soils.SoilWaterBackend
             {
             if (layers != null)
                 {
-                layers.Sort();
+                //layers.Sort();
                 return layers.Last();
                 }
             else
@@ -950,7 +950,7 @@ namespace Models.Soils.SoilWaterBackend
             // Find the soil layer in which the indicated depth is located
             // If the depth is not reached, the last element is used
 
-            layers.Sort();
+            //layers.Sort();
 
             double depth_cum = 0.0;
             foreach (Layer lyr in this)
