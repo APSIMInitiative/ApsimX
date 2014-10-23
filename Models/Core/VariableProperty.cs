@@ -228,7 +228,7 @@ namespace Models.Core
             {
                 object obj = this.property.GetValue(this.Object, null);
 
-                if (obj != null && obj.GetType().IsArray && this.lowerArraySpecifier != 0)
+                if (this.lowerArraySpecifier != 0 && obj != null && obj.GetType().IsArray)
                 {
                     Array array = obj as Array;
                     if (array.Length == 0)
