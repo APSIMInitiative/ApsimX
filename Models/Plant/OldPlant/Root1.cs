@@ -220,6 +220,9 @@ namespace Models.PMF.OldPlant
         /// <summary>The dlt_n_senesced_trans</summary>
         private double dlt_n_senesced_trans;
 
+        /// <summary>The drained upper limit (mm)</summary>
+        private double[] DULmm;
+
 
         /// <summary>The _ dm green demand</summary>
         private double _DMGreenDemand;
@@ -781,7 +784,7 @@ namespace Models.PMF.OldPlant
                 double[] FASW = new double[Soil.Thickness.Length];
                 for (int i = 0; i < Soil.Thickness.Length; i++)
                 {
-                    FASW[i] = Utility.Math.Divide(Soil.Water[i] - ll_dep[i], Soil.SoilWater.DULmm[i] - ll_dep[i], 0.0);
+                    FASW[i] = Utility.Math.Divide(Soil.Water[i] - ll_dep[i], DULmm[i] - ll_dep[i], 0.0);
                     FASW[i] = Utility.Math.Constrain(FASW[i], 0.0, 1.0);
                 }
                 return FASW;
@@ -924,7 +927,7 @@ namespace Models.PMF.OldPlant
                                   Utility.Math.Divide(ll_dep[layer], Soil.Thickness[layer], 0.0),
                                   xf[layer]));
                 dep_tot += Soil.Thickness[layer];
-                esw_tot += Soil.SoilWater.DULmm[layer] - ll_dep[layer];
+                esw_tot += DULmm[layer] - ll_dep[layer];
             }
              writer.WriteLine("-----------------------------------------------");
             if (HaveModifiedKLValues)
@@ -997,6 +1000,7 @@ namespace Models.PMF.OldPlant
             ll = soilCrop.LL;
             kl = soilCrop.KL;
             xf = soilCrop.XF;
+            DULmm = Utility.Math.Multiply(Soil.DUL, Soil.Thickness);
 
             ll_dep = Utility.Math.Multiply(ll, Soil.Thickness);
             Util.ZeroArray(no3gsm_min);
@@ -1179,7 +1183,7 @@ namespace Models.PMF.OldPlant
 
             int deepest_layer = FindLayerNo(RootDepth);
             for (int layer = 0; layer <= deepest_layer; layer++)
-                sw_avail_pot[layer] = Soil.SoilWater.DULmm[layer] - ll_dep[layer];
+                sw_avail_pot[layer] = DULmm[layer] - ll_dep[layer];
 
             // correct bottom layer for actual root penetration
             sw_avail_pot[deepest_layer] = sw_avail_pot[deepest_layer] * RootProportion(deepest_layer, RootDepth);
