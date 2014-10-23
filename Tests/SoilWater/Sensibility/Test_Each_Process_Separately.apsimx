@@ -486,7 +486,7 @@
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
-      <EndDate>1950-12-31T00:00:00</EndDate>
+      <EndDate>1940-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
@@ -957,12 +957,12 @@
     <Name>Runoff_Only</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>Runoff Only.met</FileName>
+      <FileName>%root%\Tests\SoilWater\Sensibility\Runoff Only.met</FileName>
     </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
-      <EndDate>1950-12-31T00:00:00</EndDate>
+      <EndDate>1940-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
@@ -4491,7 +4491,7 @@ namespace Models
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
-      <EndDate>1950-12-31T00:00:00</EndDate>
+      <EndDate>1940-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
@@ -4967,7 +4967,7 @@ namespace Models
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
-      <EndDate>1950-12-31T00:00:00</EndDate>
+      <EndDate>1940-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
@@ -5488,12 +5488,12 @@ namespace Models
     <Name>Runoff_with_Irrigation</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>Runoff with Irrigation.met</FileName>
+      <FileName>%root%\Tests\SoilWater\Sensibility\Runoff with Irrigation.met</FileName>
     </Weather>
     <Clock>
       <Name>clock</Name>
       <StartDate>1940-01-01T00:00:00</StartDate>
-      <EndDate>1950-12-31T00:00:00</EndDate>
+      <EndDate>1940-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
@@ -7241,7 +7241,7 @@ namespace Models
       <Clock>
         <Name>clock</Name>
         <StartDate>1940-01-01T00:00:00</StartDate>
-        <EndDate>1950-12-31T00:00:00</EndDate>
+        <EndDate>1940-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
