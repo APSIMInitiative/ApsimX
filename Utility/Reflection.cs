@@ -12,6 +12,7 @@ namespace Utility
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Globalization;
 
     /// <summary>
     /// Utility class with reflection functions
@@ -403,13 +404,13 @@ namespace Utility
                     throw new Exception("Cannot convert '" + stringValue + "' into an object of type '" + type.ToString() + "'");
             }
             else if (type == typeof(double))
-                return Convert.ToDouble(stringValue);
+                return Convert.ToDouble(stringValue, CultureInfo.InvariantCulture);
             else if (type == typeof(float))
-                return Convert.ToSingle(stringValue);
+                return Convert.ToSingle(stringValue, CultureInfo.InvariantCulture);
             else if (type == typeof(int))
-                return Convert.ToInt32(stringValue);
+                return Convert.ToInt32(stringValue, CultureInfo.InvariantCulture);
             else if (type == typeof(DateTime))
-                return Convert.ToDateTime(stringValue);
+                return Convert.ToDateTime(stringValue, CultureInfo.InvariantCulture);
             else if (type == typeof(string))
                 return stringValue;
             else if (type == typeof(bool))
@@ -443,7 +444,7 @@ namespace Utility
             }
             else
             {
-                return obj.ToString();
+                return Convert.ToString(obj, CultureInfo.InvariantCulture);
             }
         }
 

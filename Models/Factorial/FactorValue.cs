@@ -8,6 +8,7 @@ namespace Models.Factorial
     using System;
     using System.Collections.Generic;
     using Models.Core;
+    using System.Globalization;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.
@@ -83,13 +84,13 @@ namespace Models.Factorial
             object originalValue = newSimulation.Get(path);
             object newValue;
             if (originalValue is DateTime)
-                newValue = DateTime.Parse(name);
+                newValue = DateTime.Parse(name, CultureInfo.InvariantCulture);
             else if (originalValue is float)
-                newValue = Convert.ToSingle(name);
+                newValue = Convert.ToSingle(name, CultureInfo.InvariantCulture);
             else if (originalValue is double)
-                newValue = Convert.ToDouble(name);
+                newValue = Convert.ToDouble(name, CultureInfo.InvariantCulture);
             else if (originalValue is int)
-                newValue = Convert.ToInt32(name);
+                newValue = Convert.ToInt32(name, CultureInfo.InvariantCulture);
             else if (originalValue is string)
                 newValue = Convert.ToString(name);
             else

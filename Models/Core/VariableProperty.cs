@@ -10,6 +10,7 @@ namespace Models.Core
     using System.Linq;
     using System.Reflection;
     using Models.Soils;
+    using System.Globalization;
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
@@ -436,11 +437,11 @@ namespace Models.Core
             {
                 if (this.DataType == typeof(double))
                 {
-                    this.Value = Convert.ToDouble(value);
+                    this.Value = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                 }
                 else if (this.DataType == typeof(int))
                 {
-                    this.Value = Convert.ToInt32(value);
+                    this.Value = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                 }
                 else if (this.DataType == typeof(string))
                 {

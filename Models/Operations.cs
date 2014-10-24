@@ -6,6 +6,7 @@ using Models.Core;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace Models
 {
@@ -115,13 +116,13 @@ namespace Models
 
                         // convert value to correct type.
                         if (parameters[argumentIndex].ParameterType == typeof(double))
-                            parameterValues[argumentIndex] = Convert.ToDouble(value);
+                            parameterValues[argumentIndex] = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                         else if (parameters[argumentIndex].ParameterType == typeof(float))
-                            parameterValues[argumentIndex] = Convert.ToSingle(value);
+                            parameterValues[argumentIndex] = Convert.ToSingle(value, CultureInfo.InvariantCulture);
                         else if (parameters[argumentIndex].ParameterType == typeof(int))
-                            parameterValues[argumentIndex] = Convert.ToInt32(value);
+                            parameterValues[argumentIndex] = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                         else if (parameters[argumentIndex].ParameterType == typeof(bool))
-                            parameterValues[argumentIndex] = Convert.ToBoolean(value);
+                            parameterValues[argumentIndex] = Convert.ToBoolean(value, CultureInfo.InvariantCulture);
                         else if (parameters[argumentIndex].ParameterType == typeof(string))
                             parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
                         else if (parameters[argumentIndex].ParameterType.IsEnum)

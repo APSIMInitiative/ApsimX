@@ -56,7 +56,6 @@ namespace Utility
         private StringCollection Words = new StringCollection();
         private Type[] ColumnTypes;
 
-
         /// <summary>
         /// Open the file ready for reading.
         /// </summary>
@@ -141,6 +140,14 @@ namespace Utility
                 }
             }
             return null;
+        }
+
+        /// <summary>Returns a constant as double.</summary>
+        /// <param name="ConstantName">Name of the constant.</param>
+        /// <returns></returns>
+        public double ConstantAsDouble(string ConstantName)
+        {
+            return Convert.ToDouble(Constant(ConstantName).Value, CultureInfo.InvariantCulture);
         }
         public void SetConstant(string ConstantName, string ConstantValue)
         {
@@ -346,13 +353,13 @@ namespace Utility
                         DateFormat = DateFormat.Replace("m", "M");
                         if (DateFormat == "")
                             DateFormat = "d/M/yyyy";
-                        DateTime Value = DateTime.ParseExact(Words[w], DateFormat, null);
+                        DateTime Value = DateTime.ParseExact(Words[w], DateFormat, CultureInfo.InvariantCulture);
                         Values[w] = Value;
                     }
                     else if (ColumnTypes[w] == typeof(float))
                     {
                         double Value;
-                        if (double.TryParse(Words[w], out Value))
+                        if (double.TryParse(Words[w], NumberStyles.Float, CultureInfo.InvariantCulture, out Value))
                             Values[w] = Value;
                         else
                             Values[w] = DBNull.Value;
