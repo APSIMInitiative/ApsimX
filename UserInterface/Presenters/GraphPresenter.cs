@@ -680,7 +680,13 @@ namespace UserInterface.Presenters
             {
                 get
                 {
-                    return GetData(series.Y);
+                    IEnumerable data = GetData(series.Y);
+                    if (series.Cumulative)
+                    {
+                        data = Utility.Math.Cumulative((IEnumerable<double>)data);
+                    }
+
+                    return data;
                 }
             }
 

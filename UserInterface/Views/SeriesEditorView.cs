@@ -74,6 +74,11 @@ namespace UserInterface.Views
         public event EventHandler YOnRightChanged;
 
         /// <summary>
+        /// Invoked when the user changes the cumulative field
+        /// </summary>
+        public event EventHandler CumulativeChanged;
+
+        /// <summary>
         /// Invoked when the user changes the x
         /// </summary>
         public event EventHandler XChanged;
@@ -231,6 +236,23 @@ namespace UserInterface.Views
             set
             {
                 checkBox2.Checked = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the series is cumulative.
+        /// </summary>
+        /// <value><c>true</c> if cumulative; otherwise, <c>false</c>.</value>
+        public bool Cumulative
+        {
+            get
+            {
+                return this.cumulativeCheckBox.Checked;
+            }
+
+            set
+            {
+                this.cumulativeCheckBox.Checked = value;
             }
         }
 
@@ -537,6 +559,15 @@ namespace UserInterface.Views
             {
                 Y2Changed.Invoke(sender, e);
             }
+        }
+
+        /// <summary>Handles the CheckedChanged event of the cumulativeCheckBox control.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnCheckedChanged(object sender, EventArgs e)
+        {
+            if (this.CumulativeChanged != null)
+                this.CumulativeChanged(this, e);
         }
     }
 }

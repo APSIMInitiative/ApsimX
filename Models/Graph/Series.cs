@@ -22,7 +22,6 @@ namespace Models.Graph
         {
             this.XAxis = Axis.AxisType.Bottom;
             this.Colour = Color.Blue;
-            this.SplitOn = "Simulation";
         }
 
         /// <summary>
@@ -233,6 +232,6 @@ namespace Models.Graph
         /// <summary>
         /// Gets or sets a string indicating what the series should be split on e.g. 'simulation' or 'experiment'
         /// </summary>
-        public string SplitOn { get; set; }
+        public bool Cumulative { get; set; }
     }
 }

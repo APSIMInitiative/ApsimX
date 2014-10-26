@@ -332,6 +332,12 @@ namespace UserInterface.Views
                 // ColIndex doesn't matter since we're resizing all of them.
                 this.GetColumn(0).Width = -1;
 
+                // Turn on autosizing.
+                foreach (DataGridViewColumn col in this.Grid.Columns)
+                {
+                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                }
+
                 // Reinstate Grid.CellValueChanged event.
                 this.Grid.CellValueChanged += this.OnCellValueChanged;
 
