@@ -773,8 +773,8 @@
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.Drainage</string>
               <string>sum([Soil].SoilNitrogen.NO3)</string>
-              <string>sum([Soil].SoilNitrogen.dlt_n_min)</string>
-              <string>[SurfaceOrganicMatter].surfaceom_wt_all</string>
+              <string>sum([Soil].SoilNitrogen.MineralisedN)</string>
+              <string>[SurfaceOrganicMatter].WtAllPools</string>
               <string>[SurfaceOrganicMatter].Cover</string>
             </VariableNames>
             <EventNames>
@@ -1396,8 +1396,8 @@
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.Drainage</string>
               <string>sum([Soil].SoilNitrogen.NO3)</string>
-              <string>sum([Soil].SoilNitrogen.dlt_n_min)</string>
-              <string>[SurfaceOrganicMatter].surfaceom_wt_all</string>
+              <string>sum([Soil].SoilNitrogen.MineralisedN)</string>
+              <string>[SurfaceOrganicMatter].WtAllPools</string>
               <string>[SurfaceOrganicMatter].Cover</string>
             </VariableNames>
             <EventNames>
@@ -2023,8 +2023,8 @@
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.Drainage</string>
             <string>sum([Soil].SoilNitrogen.NO3)</string>
-            <string>sum([Soil].SoilNitrogen.dlt_n_min)</string>
-            <string>[SurfaceOrganicMatter].surfaceom_wt_all</string>
+            <string>sum([Soil].SoilNitrogen.MineralisedN)</string>
+            <string>[SurfaceOrganicMatter].WtAllPools</string>
             <string>[SurfaceOrganicMatter].Cover</string>
           </VariableNames>
           <EventNames>
@@ -2650,8 +2650,8 @@
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.Drainage</string>
             <string>sum([Soil].SoilNitrogen.NO3)</string>
-            <string>sum([Soil].SoilNitrogen.dlt_n_min)</string>
-            <string>[SurfaceOrganicMatter].surfaceom_wt_all</string>
+            <string>sum([Soil].SoilNitrogen.MineralisedN)</string>
+            <string>[SurfaceOrganicMatter].WtAllPools</string>
             <string>[SurfaceOrganicMatter].Cover</string>
           </VariableNames>
           <EventNames>

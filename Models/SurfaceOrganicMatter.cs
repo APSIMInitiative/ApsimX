@@ -644,7 +644,7 @@
         /// <summary>Mass of organic matter in all pools</summary>
         /// <value>The surfaceom_wt_all.</value>
         [Units("kg/ha")]
-        public double[] surfaceom_wt_all
+        public double[] WtAllPools
         {
             get
             {
