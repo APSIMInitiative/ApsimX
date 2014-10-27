@@ -1412,7 +1412,7 @@ namespace Models.Soils
             {
             surfaceCover.ZeroSurfaceCover();
 
-            surfaceCover.surfaceom_cover = SurfaceOM.surfaceom_cover;
+            surfaceCover.surfaceom_cover = SurfaceOM.Cover;
             surfaceCover.residueinterception = residueinterception;
             }
 

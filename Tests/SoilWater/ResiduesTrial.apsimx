@@ -29,7 +29,7 @@
       <SimulationName>ResiduesCoverHarvesterWindrow</SimulationName>
       <TableName>Report</TableName>
       <Type>Tolerance</Type>
-      <ColumnNames>SurfaceOrganicMatter.surfaceom_cover</ColumnNames>
+      <ColumnNames>SurfaceOrganicMatter.Cover</ColumnNames>
       <Parameters>1,1</Parameters>
     </Test>
     <Test>
@@ -842,7 +842,7 @@
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[SurfaceOrganicMatter].surfaceom_cover</string>
+            <string>[SurfaceOrganicMatter].Cover</string>
             <string>[SurfaceOrganicMatter].Wt</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Weather].Rain</string>
@@ -1052,10 +1052,10 @@ Precip = Met.Rain + Irrig.IrrigationApplied;
 Maximum_interception = 0.0002 * SOM.Wt;
           
 //Determine the amount of water intercepted by residue today
-if ((Precip * SOM.surfaceom_cover) >= (Maximum_interception - Residue_water))
+if ((Precip * SOM.Cover) >= (Maximum_interception - Residue_water))
    Interception_today = (Maximum_interception - Residue_water);
 else
-   Interception_today = (Precip * SOM.surfaceom_cover) ;
+   Interception_today = (Precip * SOM.Cover) ;
 
 // Send message to soil module to take interception out of water balance
     
@@ -1307,7 +1307,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>SurfaceOrganicMatter.surfaceom_cover</FieldName>
+          <FieldName>SurfaceOrganicMatter.Cover</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1326,7 +1326,7 @@ namespace Models
         </X>
         <Y>
           <TableName>ObservedResidues</TableName>
-          <FieldName>surfaceom_cover</FieldName>
+          <FieldName>Cover</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>

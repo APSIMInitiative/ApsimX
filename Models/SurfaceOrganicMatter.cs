@@ -585,7 +585,7 @@
         /// <value>The surfaceom_cover.</value>
         [Description("Fraction of ground covered by all surface OMs")]
         [Units("m^2/m^2")]
-        public double surfaceom_cover { get { return CoverTotal(); } }
+        public double Cover { get { return CoverTotal(); } }
 
         /// <summary>Temperature factor for decomposition</summary>
         /// <value>The tf.</value>
@@ -801,7 +801,7 @@
             {
                 double[] result = new double[SurfOM.Count];
                 for (int i = 0; i < result.Length; i++)
-                    result[i] = Cover(i);
+                    result[i] = CoverOfSOM(i);
 
                 return result;
             }
@@ -2167,7 +2167,7 @@
             double combinedCover = 0;  // effective combined cover(0-1)
 
             for (int i = 0; i < numSurfom; i++)
-                combinedCover = AddCover(combinedCover, Cover(i));
+                combinedCover = AddCover(combinedCover, CoverOfSOM(i));
 
             return combinedCover;
         }
@@ -3029,7 +3029,7 @@
         /// </summary>
         /// <param name="SOMindex">The so mindex.</param>
         /// <returns></returns>
-        private double Cover(int SOMindex)
+        private double CoverOfSOM(int SOMindex)
         {
             double F_Cover;             // Fraction of soil surface covered by residue (0-1)
             double areaLying;          // area of lying component;
