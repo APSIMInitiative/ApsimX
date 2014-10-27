@@ -39,7 +39,7 @@ namespace Models.PostSimulationTools
             get
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null && simulations.FileName != null)
+                if (simulations != null && simulations.FileName != null && this.FileName != null)
                     return Utility.PathUtils.GetAbsolutePath(this.FileName, simulations.FileName);
                 return null;
             }
@@ -68,6 +68,11 @@ namespace Models.PostSimulationTools
         }
 
         /// <summary>
+        /// Provides an error message to display if something is wrong.
+        /// </summary>
+        public string ErrorMessage = string.Empty;
+
+        /// <summary>
         /// Return a datatable for this input file. Returns null if no data.
         /// </summary>
         /// <returns></returns>
@@ -77,10 +82,18 @@ namespace Models.PostSimulationTools
             string fullFileName = FullFileName;
             if (fullFileName != null)
             {
-                if ( File.Exists(fullFileName))
+                if (File.Exists(fullFileName))
                 {
                     Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
-                    textFile.Open(fullFileName);
+                    try
+                    {
+                        textFile.Open(fullFileName);
+                    }
+                    catch (Exception err)
+                    {
+                        ErrorMessage = err.Message;
+                        return null;
+                    }
                     DataTable table = textFile.ToTable();
                     textFile.Close();
 
@@ -89,9 +102,17 @@ namespace Models.PostSimulationTools
                     else
                         returnDataTable.Merge(table);
                 }
+                else
+                {
+                    ErrorMessage = "The specified file does not exist.";
+                }
             }
-         
+            else
+            {
+                ErrorMessage = "Please select a file to use.";
+            }
+
             return returnDataTable;
-        }
+        }       
     }
 }

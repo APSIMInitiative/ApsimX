@@ -25,8 +25,7 @@ namespace UserInterface.Presenters
             View = view as IInputView;
             ExplorerPresenter = explorerPresenter;
 
-            View.FileName = Input.FullFileName;
-            View.GridView.DataSource = Input.GetTable();
+            OnModelChanged(model);  // Updates the view
 
             View.BrowseButtonClicked += OnBrowseButtonClicked;
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -64,6 +63,10 @@ namespace UserInterface.Presenters
         {
             View.FileName = Input.FullFileName;
             View.GridView.DataSource = Input.GetTable();
+            if (View.GridView.DataSource == null)
+                View.WarningText = Input.ErrorMessage;
+            else
+                View.WarningText = string.Empty;
         }
     }
 }
