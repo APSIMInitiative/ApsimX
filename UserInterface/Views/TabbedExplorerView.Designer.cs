@@ -39,6 +39,7 @@
             this.TabImageList = new System.Windows.Forms.ImageList(this.components);
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.TabControl.SuspendLayout();
             this.StartPage.SuspendLayout();
             this.TabPopupMenu.SuspendLayout();
@@ -49,9 +50,10 @@
             this.TabControl.Controls.Add(this.StartPage);
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControl.Location = new System.Drawing.Point(0, 0);
+            this.TabControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TabControl.Name = "TabControl";
             this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(610, 523);
+            this.TabControl.Size = new System.Drawing.Size(813, 644);
             this.TabControl.TabIndex = 0;
             this.TabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl_Selecting);
             this.TabControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnTabControlMouseUp);
@@ -59,10 +61,11 @@
             // StartPage
             // 
             this.StartPage.Controls.Add(this.listViewMain);
-            this.StartPage.Location = new System.Drawing.Point(4, 22);
+            this.StartPage.Location = new System.Drawing.Point(4, 25);
+            this.StartPage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.StartPage.Name = "StartPage";
-            this.StartPage.Padding = new System.Windows.Forms.Padding(3);
-            this.StartPage.Size = new System.Drawing.Size(602, 497);
+            this.StartPage.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StartPage.Size = new System.Drawing.Size(805, 615);
             this.StartPage.TabIndex = 0;
             this.StartPage.Text = " ";
             this.StartPage.UseVisualStyleBackColor = true;
@@ -73,11 +76,12 @@
             this.listViewMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewMain.LargeImageList = this.ListViewImages;
-            this.listViewMain.Location = new System.Drawing.Point(3, 3);
+            this.listViewMain.Location = new System.Drawing.Point(4, 4);
+            this.listViewMain.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.listViewMain.MultiSelect = false;
             this.listViewMain.Name = "listViewMain";
             this.listViewMain.ShowItemToolTips = true;
-            this.listViewMain.Size = new System.Drawing.Size(596, 491);
+            this.listViewMain.Size = new System.Drawing.Size(797, 607);
             this.listViewMain.TabIndex = 4;
             this.listViewMain.TileSize = new System.Drawing.Size(400, 100);
             this.listViewMain.UseCompatibleStateImageBehavior = false;
@@ -99,12 +103,12 @@
             this.TabPopupMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CloseTabMenuItem});
             this.TabPopupMenu.Name = "TabPopupMenu";
-            this.TabPopupMenu.Size = new System.Drawing.Size(124, 26);
+            this.TabPopupMenu.Size = new System.Drawing.Size(141, 28);
             // 
             // CloseTabMenuItem
             // 
             this.CloseTabMenuItem.Name = "CloseTabMenuItem";
-            this.CloseTabMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.CloseTabMenuItem.Size = new System.Drawing.Size(140, 24);
             this.CloseTabMenuItem.Text = "Close tab";
             this.CloseTabMenuItem.Click += new System.EventHandler(this.OnCloseTabClick);
             // 
@@ -119,13 +123,19 @@
             this.OpenFileDialog.DefaultExt = "apsimx";
             this.OpenFileDialog.Filter = "ApsimX files|*.apsimx";
             // 
+            // SaveFileDialog
+            // 
+            this.SaveFileDialog.DefaultExt = "apsimx";
+            this.SaveFileDialog.Filter = "*.apsimx|*.apsimx";
+            // 
             // TabbedExplorerView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.TabControl);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "TabbedExplorerView";
-            this.Size = new System.Drawing.Size(610, 523);
+            this.Size = new System.Drawing.Size(813, 644);
             this.Load += new System.EventHandler(this.OnLoad);
             this.TabControl.ResumeLayout(false);
             this.StartPage.ResumeLayout(false);
@@ -145,5 +155,6 @@
         private System.Windows.Forms.ToolStripMenuItem CloseTabMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ListView listViewMain;
+        private System.Windows.Forms.SaveFileDialog SaveFileDialog;
     }
 }

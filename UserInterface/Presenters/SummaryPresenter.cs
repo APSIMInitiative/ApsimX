@@ -77,10 +77,8 @@ namespace UserInterface.Presenters
         /// <summary>Populate the summary view.</summary>
         private void SetHtmlInView()
         {
-            Utility.Configuration configuration = new Utility.Configuration();
-
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(dataStore, this.view.SimulationName, writer, configuration.SummaryPngFileName, html:true);
+            Summary.WriteReport(dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, html:true);
             this.view.SetSummaryContent(writer.ToString());
             writer.Close();
         }

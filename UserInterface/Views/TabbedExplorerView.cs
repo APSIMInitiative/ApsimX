@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using UserInterface.Commands;
+using System.Reflection;
 
 namespace UserInterface.Views
 {
@@ -76,7 +77,7 @@ namespace UserInterface.Views
         {
             InitializeComponent();
             
-            recentFilesGroup = new ListViewGroup("Recent files", HorizontalAlignment.Left);           
+            recentFilesGroup = new ListViewGroup("Recent files", HorizontalAlignment.Left);
         }
 
 
@@ -121,7 +122,8 @@ namespace UserInterface.Views
                 int ImageIndex = ListViewImages.Images.IndexOfKey(Description.ResourceNameForImage);
                 if (ImageIndex == -1)
                 {
-                    Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
+                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                    Bitmap Icon = new Bitmap(s); // Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
                     if (Icon != null)
                     {
                         ListViewImages.Images.Add(Description.ResourceNameForImage, Icon);
@@ -311,12 +313,42 @@ namespace UserInterface.Views
         /// </summary>
         public string AskUserForFileName(string initialDir, string fileSpec)
         {
+            string fileName = null;
             OpenFileDialog.Filter = fileSpec;
             if (initialDir.Length > 0)
                 OpenFileDialog.InitialDirectory = initialDir;
+            else
+                OpenFileDialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
+
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-                return OpenFileDialog.FileName;
-            return null;
+            {
+                fileName = OpenFileDialog.FileName;
+                string dir = Path.GetDirectoryName(fileName);
+                if (!dir.Contains(@"ApsimX\Examples"))
+                    Utility.Configuration.Settings.PreviousFolder = dir;
+            }
+
+            return fileName;
+        }
+
+        /// <summary>
+        /// A helper function that asks user for a SaveAs name and returns their new choice.
+        /// </summary>
+        /// <returns>Returns the new file name or null if action cancelled by user.</returns>
+        public string AskUserForSaveFileName(string OldFilename)
+        {
+            SaveFileDialog.FileName = Path.GetFileName(OldFilename);
+            SaveFileDialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
+
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string dir = Path.GetDirectoryName(SaveFileDialog.FileName);
+                if (!dir.Contains(@"ApsimX\Examples"))
+                    Utility.Configuration.Settings.PreviousFolder = dir;
+                return SaveFileDialog.FileName;
+            }
+            else
+                return null;
         }
 
         /// <summary>

@@ -33,7 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\apsim_logo32.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML">
@@ -428,11 +429,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GraphToolbox.apsimx" />
-    <None Include="Resources\ManagementToolbox.apsimx" />
-    <None Include="Resources\StandardToolbox.apsimx">
+    <EmbeddedResource Include="Resources\Toolboxes\ManagementToolbox.apsimx" />
+    <EmbeddedResource Include="Resources\Toolboxes\StandardToolbox.apsimx">
       <SubType>Designer</SubType>
-    </None>
+    </EmbeddedResource>
     <None Include="Resources\SyntaxHighlighting\Report.xshd" />
     <None Include="Resources\SyntaxHighlighting\Test.xshd" />
     <EmbeddedResource Include="Resources\MenuImages\Undo.png" />
@@ -516,6 +516,7 @@
     <EmbeddedResource Include="Resources\MenuImages\Check Soil.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Toolboxes\TrainingToolbox.apsimx" />
     <None Include="Resources\window_delete.png" />
   </ItemGroup>
   <ItemGroup>
@@ -579,6 +580,8 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Simulations.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\InitialWater.png" />
@@ -591,13 +594,13 @@
     <EmbeddedResource Include="Resources\TreeViewImages\PredictedObserved.png" />
     <Content Include="apsim_logo32.ico" />
     <EmbeddedResource Include="Resources\apsim_logo.png" />
-    <Content Include="Resources\apsim_logo32.ico" />
+    <EmbeddedResource Include="Resources\Toolboxes\Toolbox.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
     <EmbeddedResource Include="Resources\MenuImages\Export to CSV.png" />
     <None Include="Resources\InitialWaterGraph.xml" />
     <EmbeddedResource Include="Resources\TreeViewImages\ExcelInput.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Cultivar.png" />
-    <None Include="Resources\gfolder_32.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\OpenExample.png" />
     <EmbeddedResource Include="Resources\Export.css" />
     <EmbeddedResource Include="Resources\hd_bg.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Memo.png" />

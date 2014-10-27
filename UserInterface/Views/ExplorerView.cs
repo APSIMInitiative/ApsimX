@@ -442,11 +442,8 @@ namespace UserInterface.Views
         /// <returns>Returns the new file name or null if action cancelled by user.</returns>
         public string SaveAs(string OldFilename)
         {
-            SaveFileDialog.FileName = Path.GetFileName(OldFilename);
-            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
-                return SaveFileDialog.FileName;
-            else
-                return null;
+            TabbedExplorerView parentView = this.Parent.Parent.Parent as TabbedExplorerView;
+            return parentView.AskUserForSaveFileName(OldFilename);
         }
 
         /// <summary>

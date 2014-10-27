@@ -800,7 +800,12 @@ namespace Importer
             // import this object into the new xml document
             //// newNode = ImportObject(destParent, newNode, mysoil, Utility.Xml.Name(compNode));
 
-            newNode = this.AddCompNode(destParent, "Soil", Utility.Xml.NameAttr(compNode));
+            string name = Utility.Xml.Attribute(compNode, "name");
+            if (name == "")
+                name = Utility.Xml.Value(compNode, "Name");
+            if (name == "")
+                name = compNode.Name;
+            newNode = this.AddCompNode(destParent, "Soil", name);
 
             this.CopyNodeAndValue(compNode, newNode, "NO3Units", "NO3Units", false);
             this.CopyNodeAndValue(compNode, newNode, "NH4Units", "NH4Units", false);

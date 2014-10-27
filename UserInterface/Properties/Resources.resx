@@ -121,18 +121,6 @@
   <data name="apsim_logo32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\apsim logo32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="StandardToolBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\StandardToolbox.apsimx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="GraphToolbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GraphToolbox.apsimx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="ManagementToolbox" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ManagementToolbox.apsimx;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="StandardToolboxIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\box.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="WindowDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\window_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -160,13 +148,7 @@
   <data name="Report" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SyntaxHighlighting\Report.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="gfolder_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gfolder_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Plant2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Plant2.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="apsim7_logo32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\apsim7_logo32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
