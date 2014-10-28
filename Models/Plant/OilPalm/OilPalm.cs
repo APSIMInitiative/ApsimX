@@ -58,23 +58,6 @@ namespace Models.PMF.OilPalm
         [Units("")]
         public string CropType { get { return "OilPalm"; } }
 
-        /// <summary>Root system information</summary>
-        [XmlIgnore]
-        public RootSystem RootSystem
-        {
-            get
-            {
-                return rootSystem;
-            }
-            set
-            {
-                rootSystem = value;
-            }
-        }
-
-        /// <summary>The root system</summary>
-        [NonSerialized]
-        private RootSystem rootSystem;
         /// <summary>The soil crop</summary>
         private SoilCropOilPalm soilCrop;
         /// <summary>The cultivar definition</summary>
@@ -825,6 +808,11 @@ namespace Models.PMF.OilPalm
         {
             return info;
         }
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        { }
 
         /// <summary>Does the flower abortion.</summary>
         private void DoFlowerAbortion()

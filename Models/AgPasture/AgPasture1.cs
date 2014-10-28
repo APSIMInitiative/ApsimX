@@ -141,16 +141,6 @@ namespace Models.AgPasture1
             get { return myCanopyData; }
         }
 
-        /// <summary>Data about the sward's root system</summary>
-        private Soils.RootSystem rootSystem;
-        /// <summary>Gets or sets the data about the sward's root system</summary>
-        [XmlIgnore]
-        public Soils.RootSystem RootSystem
-        {
-            get { return rootSystem; }
-            set { rootSystem = value; }
-        }
-
         // TODO: have to verify how this works (what exactly is needed by MicroClimate
         /// <summary>Plant growth limiting factor, supplied to another module calculating potential transpiration</summary>
         public double FRGR
@@ -2417,6 +2407,11 @@ namespace Models.AgPasture1
         {
             return info;
         }
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        { }
 
         /// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>
         /// <returns>The proportion of root mass in each soil layer</returns>

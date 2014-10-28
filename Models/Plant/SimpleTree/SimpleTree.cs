@@ -21,19 +21,6 @@ namespace Models.PMF
         /// <summary>The local canopy data</summary>
         NewCanopyType LocalCanopyData = new NewCanopyType();
 
-        /// <summary>Root system information</summary>
-        [XmlIgnore]
-        public RootSystem RootSystem
-        {
-            get
-            {
-                return rootSystem;
-            }
-            set
-            {
-                rootSystem = value;
-            }
-        }
 
         /// <summary>Cover live</summary>
         /// <value>The cover live.</value>
@@ -54,9 +41,6 @@ namespace Models.PMF
         [XmlIgnore]
         public double[] Uptake {get;set;}
 
-        /// <summary>The root system</summary>
-        [NonSerialized]
-        private RootSystem rootSystem;
 
         /// <summary>Gets or sets the zones.</summary>
         /// <value>The zones.</value>
@@ -127,47 +111,56 @@ namespace Models.PMF
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
         public List<UptakeInfo> GetSWUptake(List<UptakeInfo> info)
         {
-            //get the uptake information applicable to this crop
-            List<UptakeInfo> thisCrop = info.AsEnumerable().Where(x => x.Plant.Equals(this)).ToList();
-            thisCrop = CalcSWSourceStrength(thisCrop);
-
-            double[] kl = (double[]) Apsim.Get(RootSystem.RootZones[0].Soil, "Water.SimpleTreeSoil.KL");
-
-            for (int i = 0; i < thisCrop.Count; i++)
-            {
-                List<RootZone> thisRZ = RootSystem.RootZones.AsEnumerable().Where(x => x.Zone.Name.Equals(this.Parent.Name)).ToList();
-                if (thisRZ.Count == 0)
-                    throw new ApsimXException(this, "Could not find root zone in Zone " + this.Parent.Name + " for SimpleTree");
-
-                thisCrop[i].Uptake = new double[thisCrop[i].SWDep.Length];
-                for (int j = 0; j < thisCrop[i].SWDep.Length; j++)
-                {
-                    thisCrop[i].Uptake[j] = Math.Max(0.0, RootProportion(j, RootSystem.RootZones[0].RootDepth, RootSystem.RootZones[0].Soil.Thickness) *
-                                                      kl[j] * (thisCrop[i].SWDep[j] - RootSystem.RootZones[0].Soil.SoilWater.LL15mm[j]) *
-                                                      thisCrop[i].Strength);
-                    thisCrop[i].Plant = this;
-                }
-
-               /* for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
-                {
-                    SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
-                    EP += SWUptake[j];
-                    Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - SWUptake[j];
-
-                }*/
-            }
-
-            foreach (UptakeInfo ui in thisCrop)
-            {
-                UptakeInfo temp = new UptakeInfo();
-                temp.Plant = ui.Plant;
-                temp.Uptake = new double[ui.Uptake.Length];
-                for (int i = 0; i < ui.Uptake.Length; i++)
-                    temp.Uptake[i] = ui.Uptake[i];
-                Uptakes.Add(temp);
-            }
-            return thisCrop;
+            return null;
         }
+
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        {}
+
+        //    //get the uptake information applicable to this crop
+        //    List<UptakeInfo> thisCrop = info.AsEnumerable().Where(x => x.Plant.Equals(this)).ToList();
+        //    thisCrop = CalcSWSourceStrength(thisCrop);
+
+            //double[] kl = new double[] { 0.06, 0.06, 0.06, 0.06, 0, 0, 0 };// (double[])Apsim.Get(RootSystem.RootZones[0].Soil, "Water.SimpleTreeSoil.KL");
+
+            //for (int i = 0; i < thisCrop.Count; i++)
+            //{
+            //    List<RootZone> thisRZ = RootSystem.RootZones.AsEnumerable().Where(x => x.Zone.Name.Equals(this.Parent.Name)).ToList();
+            //    if (thisRZ.Count == 0)
+            //        throw new ApsimXException(this, "Could not find root zone in Zone " + this.Parent.Name + " for SimpleTree");
+
+            //    thisCrop[i].Uptake = new double[thisCrop[i].Amount.Length];
+            //    for (int j = 0; j < thisCrop[i].Amount.Length; j++)
+            //    {
+            //        thisCrop[i].Uptake[j] = Math.Max(0.0, RootProportion(j, RootSystem.RootZones[0].RootDepth, RootSystem.RootZones[0].Soil.Thickness) *
+            //                                          kl[j] * (thisCrop[i].Amount[j] - RootSystem.RootZones[0].Soil.SoilWater.LL15mm[j]) *
+            //                                          thisCrop[i].Strength);
+            //        thisCrop[i].Plant = this;
+            //    }
+
+            //   /* for (int j = 0; j < Soil.SoilWater.ll15_dep.Length; j++)
+            //    {
+            //        SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
+            //        EP += SWUptake[j];
+            //        Soil.SoilWater.sw_dep[j] = Soil.SoilWater.sw_dep[j] - SWUptake[j];
+
+            //    }*/
+            //}
+
+            //foreach (UptakeInfo ui in thisCrop)
+            //{
+            //    UptakeInfo temp = new UptakeInfo();
+            //    temp.Plant = ui.Plant;
+            //    temp.Uptake = new double[ui.Uptake.Length];
+            //    for (int i = 0; i < ui.Uptake.Length; i++)
+            //        temp.Uptake[i] = ui.Uptake[i];
+            //    Uptakes.Add(temp);
+            //}
+            //return thisCrop;
+        //}
 
         /// <summary>
         /// Calculate the best paddocks to take water from when a crop is in multiple root zones.
@@ -175,51 +168,51 @@ namespace Models.PMF
         /// </summary>
         /// <param name="info">A list of Uptake data from fields the current crop is in.</param>
         /// <returns>A Dictionary containing the paddock names and relative strengths</returns>
-        private List<UptakeInfo> CalcSWSourceStrength(List<UptakeInfo> info) 
-        {
-            double[] ESWDeps = new double[info.Count];
-            double TotalESW;
+        //private List<UptakeInfo> CalcSWSourceStrength(List<UptakeInfo> info) 
+        //{
+        //    double[] ESWDeps = new double[info.Count];
+        //    double TotalESW;
 
-            for (int i = 0; i < info.Count; i++)
-            {
-                Soil Soil = (Soil)Apsim.Find(info[i].Zone, typeof(Soil));
-                double[] ESWlayers;
+        //    for (int i = 0; i < info.Count; i++)
+        //    {
+        //        Soil Soil = (Soil)Apsim.Find(info[i].ZoneName, typeof(Soil));
+        //        double[] ESWlayers;
 
-                ESWlayers = Utility.Math.Subtract(info[i].SWDep, Soil.SoilWater.LL15mm);//Utility.Math.Multiply(Soil.LL(CropType), Soil.Thickness)); //is this right?
-                for (int j = 0; j < ESWlayers.Length; j++)
-                    ESWlayers[j] = Math.Max(0.0, ESWlayers[j]);
-                ESWDeps[i] = (double)Utility.Math.Sum(ESWlayers);
-            }
+        //        ESWlayers = Utility.Math.Subtract(info[i].Amount, Soil.SoilWater.LL15mm);//Utility.Math.Multiply(Soil.LL(CropType), Soil.Thickness)); //is this right?
+        //        for (int j = 0; j < ESWlayers.Length; j++)
+        //            ESWlayers[j] = Math.Max(0.0, ESWlayers[j]);
+        //        ESWDeps[i] = (double)Utility.Math.Sum(ESWlayers);
+        //    }
 
-            TotalESW = (double)Utility.Math.Sum(ESWDeps);
-            for (int i = 0; i < info.Count; i++)
-                info[i].Strength = ESWDeps[i] / TotalESW; // * RootData.RootZones[i].Zone.Area); //ignore area for now; need to find a better way of implementing it - probably area ratio
+        //    TotalESW = (double)Utility.Math.Sum(ESWDeps);
+        //    for (int i = 0; i < info.Count; i++)
+        //        info[i].Strength = ESWDeps[i] / TotalESW; // * RootData.RootZones[i].Zone.Area); //ignore area for now; need to find a better way of implementing it - probably area ratio
 
-            return info;
-        }
+        //    return info;
+        //}
 
-        /// <summary>Calculate how far through the given layer the roots are</summary>
-        /// <param name="layer">The layer number to check.</param>
-        /// <param name="root_depth">Depth of the roots.</param>
-        /// <param name="dlayer">An array representing the thickness of the soil layers.</param>
-        /// <returns></returns>
-        private double RootProportion(int layer, double root_depth, double[] dlayer)
-        {
-            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-            double depth_to_layer_top = 0;      // depth to top of layer (mm)
-            double depth_to_root = 0;           // depth to root in layer (mm)
-            double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
-            // Implementation Section ----------------------------------
-            for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += dlayer[i];
-            depth_to_layer_top = depth_to_layer_bottom - dlayer[layer];
-            depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
-            depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
+        ///// <summary>Calculate how far through the given layer the roots are</summary>
+        ///// <param name="layer">The layer number to check.</param>
+        ///// <param name="root_depth">Depth of the roots.</param>
+        ///// <param name="dlayer">An array representing the thickness of the soil layers.</param>
+        ///// <returns></returns>
+        //private double RootProportion(int layer, double root_depth, double[] dlayer)
+        //{
+        //    double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
+        //    double depth_to_layer_top = 0;      // depth to top of layer (mm)
+        //    double depth_to_root = 0;           // depth to root in layer (mm)
+        //    double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
+        //    // Implementation Section ----------------------------------
+        //    for (int i = 0; i <= layer; i++)
+        //        depth_to_layer_bottom += dlayer[i];
+        //    depth_to_layer_top = depth_to_layer_bottom - dlayer[layer];
+        //    depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
+        //    depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-            return depth_of_root_in_layer / dlayer[layer];
-        }
+        //    return depth_of_root_in_layer / dlayer[layer];
+        //}
 
-        /// <summary>Sows the plant</summary>
+       /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
         /// <param name="depth">The depth.</param>

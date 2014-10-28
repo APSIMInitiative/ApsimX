@@ -286,6 +286,28 @@ namespace Models.PMF.OldPlant
         /// <exception cref="System.Exception">negative root growth??</exception>
         public override void DoSWUptake(double SWDemand)
         {
+            
+
+            // potential extractable sw
+            DoPotentialExtractableSW();
+
+            // actual extractable sw (sw-ll)
+            DoSWAvailable();
+
+            DoSWSupply();
+
+            if (SwimIsPresent)
+            {
+                dlt_sw_dep = (double[])Apsim.Get(this, "uptake_water_" + Plant.CropType);
+                dlt_sw_dep = Utility.Math.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
+            }
+            else
+                DoWaterUptakeInternal(SWDemand);
+            Util.Debug("Root.dlt_sw_dep=%f", Utility.Math.Sum(dlt_sw_dep));
+        }
+
+        public void DoRootDepth()
+        {
             // Firstly grow roots.
             //  the layer with root front
             int layer = FindLayerNo(RootDepth);
@@ -312,23 +334,6 @@ namespace Models.PMF.OldPlant
             Util.Debug("Root.dltRootDepth=%f", dltRootDepth);
             Util.Debug("Root.root_layer_max=%i", RootLayerMax);
             Util.Debug("Root.root_depth_max=%f", RootDepthMax);
-
-            // potential extractable sw
-            DoPotentialExtractableSW();
-
-            // actual extractable sw (sw-ll)
-            DoSWAvailable();
-
-            DoSWSupply();
-
-            if (SwimIsPresent)
-            {
-                dlt_sw_dep = (double[])Apsim.Get(this, "uptake_water_" + Plant.CropType);
-                dlt_sw_dep = Utility.Math.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
-            }
-            else
-                DoWaterUptakeInternal(SWDemand);
-            Util.Debug("Root.dlt_sw_dep=%f", Utility.Math.Sum(dlt_sw_dep));
         }
 
 

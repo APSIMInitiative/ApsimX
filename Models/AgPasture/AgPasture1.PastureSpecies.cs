@@ -138,16 +138,6 @@ namespace Models.AgPasture1
             }
         }
 
-        /// <summary>Data about this plant's root system</summary>
-        private Soils.RootSystem rootSystem;
-        /// <summary>Gets or sets the data about this plant's root system</summary>
-        [XmlIgnore]
-        public Soils.RootSystem RootSystem
-        {
-            get { return rootSystem; }
-            set { rootSystem = value; }
-        }
-
         // TODO: have to verify how this works (what exactly is needed by MicroClimate
         /// <summary>Plant growth limiting factor, supplied to another module calculating potential transpiration</summary>
         public double FRGR
@@ -4753,6 +4743,12 @@ namespace Models.AgPasture1
         {
             return info;
         }
+
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        { }
 
         /// <summary>Growth limiting factor due to temperature</summary>
         /// <param name="Temp">Temperature for which the limiting factor will be computed</param>

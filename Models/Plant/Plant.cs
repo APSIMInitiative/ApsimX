@@ -266,11 +266,6 @@ namespace Models.PMF
                 return frgr; 
             } 
         }
-        /// <summary>Root system information</summary>
-        /// <value>The root system.</value>
-        [XmlIgnore]
-        public Models.Soils.RootSystem RootSystem { get { return new Models.Soils.RootSystem(); } }
-
         /// <summary>MicroClimate supplies light profile.</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }

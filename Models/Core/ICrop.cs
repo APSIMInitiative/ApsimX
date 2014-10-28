@@ -43,15 +43,17 @@ namespace Models.Core
         /// </summary>
         string[] CultivarNames { get; }
 
-        /// <summary>
-        /// Gets the plants root system information
-        /// </summary>
-        Models.Soils.RootSystem RootSystem { get; set;}
 
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
         List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info);
+
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        void SetSWUptake(List<Soils.UptakeInfo> info);
+
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>

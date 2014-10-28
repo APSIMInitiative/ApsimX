@@ -130,22 +130,6 @@ namespace Models.PMF.OldPlant
         /// </summary>
         public string CropType { get; set; }
 
-        /// <summary>Root system information</summary>
-        [XmlIgnore]
-        public Soils.RootSystem RootSystem
-        {
-            get
-            {
-                return rootSystem;
-            }
-            set
-            {
-                rootSystem = value;
-            }
-        }
-        /// <summary>The root system</summary>
-        private Soils.RootSystem rootSystem;
-
 
         /// <summary>The cultivar definition</summary>
         private Cultivar cultivarDefinition;
@@ -589,7 +573,7 @@ namespace Models.PMF.OldPlant
 
             if (SowingData != null)
             {
-
+                Root.DoRootDepth();
                 Util.Debug("\r\nPROCESS=%s", Clock.Today.ToString("d/M/yyyy"));
                 Util.Debug("       =%i", Clock.Today.DayOfYear);
                 foreach (Organ1 Organ in Organ1s)
@@ -1245,6 +1229,11 @@ namespace Models.PMF.OldPlant
         {
             return info;
         }
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        { }
 
         /// <summary>A property to return all cultivar definitions.</summary>
         /// <value>The cultivars.</value>
