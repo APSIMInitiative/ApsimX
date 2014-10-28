@@ -1233,7 +1233,9 @@ namespace Models.PMF.OldPlant
         /// Set the potential sw uptake for today
         /// </summary>
         public void SetSWUptake(List<Soils.UptakeInfo> info)
-        { }
+        {
+            //Root.AribtratorSWUptake = info[0].Amount;
+        }
 
         /// <summary>A property to return all cultivar definitions.</summary>
         /// <value>The cultivars.</value>

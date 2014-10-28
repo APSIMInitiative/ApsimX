@@ -153,6 +153,10 @@ namespace Models.PMF.OldPlant
         /// <value>The length of the specific root.</value>
         public double SpecificRootLength { get; set; }
 
+        /// <summary>Gets or sets the length of the soil water uptake from the arbitrator.</summary>
+        [XmlIgnore]
+        public double[] AribtratorSWUptake { get; set; }
+
         #endregion
 
         #region Variables we need from other modules
@@ -301,11 +305,15 @@ namespace Models.PMF.OldPlant
                 dlt_sw_dep = (double[])Apsim.Get(this, "uptake_water_" + Plant.CropType);
                 dlt_sw_dep = Utility.Math.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
             }
+            else if (AribtratorSWUptake != null)
+            {
+                //dlt_sw_dep = 
+            }
             else
                 DoWaterUptakeInternal(SWDemand);
             Util.Debug("Root.dlt_sw_dep=%f", Utility.Math.Sum(dlt_sw_dep));
         }
-
+        /// <summary>Calculate change in rooting depth.</summary>
         public void DoRootDepth()
         {
             // Firstly grow roots.
