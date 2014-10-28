@@ -1234,7 +1234,7 @@ namespace Models.PMF.OldPlant
         /// </summary>
         public void SetSWUptake(List<Soils.UptakeInfo> info)
         {
-            //Root.AribtratorSWUptake = info[0].Amount;
+            Root.AribtratorSWUptake = info[0].Amount;
         }
 
         /// <summary>A property to return all cultivar definitions.</summary>

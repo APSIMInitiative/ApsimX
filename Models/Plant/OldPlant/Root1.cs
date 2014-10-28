@@ -290,15 +290,9 @@ namespace Models.PMF.OldPlant
         /// <exception cref="System.Exception">negative root growth??</exception>
         public override void DoSWUptake(double SWDemand)
         {
-            
 
-            // potential extractable sw
-            DoPotentialExtractableSW();
 
-            // actual extractable sw (sw-ll)
-            DoSWAvailable();
-
-            DoSWSupply();
+            dlt_sw_dep = CalculateWaterUptake(SWDemand, Soil.Water);
 
             if (SwimIsPresent)
             {
@@ -307,11 +301,23 @@ namespace Models.PMF.OldPlant
             }
             else if (AribtratorSWUptake != null)
             {
-                //dlt_sw_dep = 
+                dlt_sw_dep = Utility.Math.Multiply_Value(AribtratorSWUptake, -1);   // make them negative numbers.
             }
-            else
-                DoWaterUptakeInternal(SWDemand);
+            else { }
+ 
             Util.Debug("Root.dlt_sw_dep=%f", Utility.Math.Sum(dlt_sw_dep));
+        }
+
+        public double[] CalculateWaterUptake(double SWDemand, double[] SW)
+        {
+            // potential extractable sw
+            DoPotentialExtractableSW();
+
+            // actual extractable sw (sw-ll)
+            DoSWAvailable(SW);
+            DoSWSupply(SW);
+            return DoWaterUptakeInternal(SWDemand);
+
         }
         /// <summary>Calculate change in rooting depth.</summary>
         public void DoRootDepth()
@@ -1209,14 +1215,14 @@ namespace Models.PMF.OldPlant
         /// Return actual water available for extraction from each layer in the
         /// soil profile by the crop (mm water)
         /// </summary>
-        private void DoSWAvailable()
+        private void DoSWAvailable(double[] SW)
         {
             Util.ZeroArray(sw_avail);
 
             int deepest_layer = FindLayerNo(RootDepth);
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
-                sw_avail[layer] = Soil.Water[layer] - ll_dep[layer];
+                sw_avail[layer] = SW[layer] - ll_dep[layer];
                 sw_avail[layer] = Utility.Math.Constrain(sw_avail[layer], 0.0, double.MaxValue);
             }
             // correct bottom layer for actual root penetration
@@ -1230,7 +1236,7 @@ namespace Models.PMF.OldPlant
         /// layer regardless of lateral root distribution but takes account of
         /// root depth in bottom layer.
         /// </summary>
-        private void DoSWSupply()
+        private void DoSWSupply(double[] SW)
         {
             Util.ZeroArray(sw_supply);
 
@@ -1238,7 +1244,7 @@ namespace Models.PMF.OldPlant
             double sw_avail;
             for (int i = 0; i <= deepest_layer; i++)
             {
-                sw_avail = (Soil.Water[i] - ll_dep[i]);
+                sw_avail = (SW[i] - ll_dep[i]);
                 sw_supply[i] = sw_avail * getModifiedKL(i);
                 sw_supply[i] = Utility.Math.Constrain(sw_supply[i], 0.0, double.MaxValue);
             }
@@ -1249,8 +1255,9 @@ namespace Models.PMF.OldPlant
 
         /// <summary>Calculate todays daily water uptake by this root system</summary>
         /// <param name="sw_demand">The sw_demand.</param>
-        private void DoWaterUptakeInternal(double sw_demand)
+        private double[] DoWaterUptakeInternal(double sw_demand)
         {
+            double[] dlt = new double[sw_supply.Length];
             int deepest_layer = FindLayerNo(RootDepth);
             double sw_supply_sum = Utility.Math.Sum(sw_supply, 0, deepest_layer + 1, 0.0);
 
@@ -1262,7 +1269,7 @@ namespace Models.PMF.OldPlant
             else
             {
                 // get actual uptake
-                Util.ZeroArray(dlt_sw_dep);
+                Util.ZeroArray(dlt);
                 if (sw_demand < sw_supply_sum)
                 {
                     // demand is less than what roots could take up.
@@ -1270,7 +1277,7 @@ namespace Models.PMF.OldPlant
                     // distribute demand proportionately in all layers.
                     for (int layer = 0; layer <= deepest_layer; layer++)
                     {
-                        dlt_sw_dep[layer] = -1.0 * Utility.Math.Divide(sw_supply[layer], sw_supply_sum, 0.0) * sw_demand;
+                        dlt[layer] = -1.0 * Utility.Math.Divide(sw_supply[layer], sw_supply_sum, 0.0) * sw_demand;
                     }
                 }
                 else
@@ -1279,10 +1286,11 @@ namespace Models.PMF.OldPlant
                     // what is available (potential)
                     for (int layer = 0; layer <= deepest_layer; layer++)
                     {
-                        dlt_sw_dep[layer] = -1 * sw_supply[layer];
+                        dlt[layer] = -1 * sw_supply[layer];
                     }
                 }
             }
+            return dlt;
         }
 
         /// <summary>
