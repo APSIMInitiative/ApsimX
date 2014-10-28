@@ -82,17 +82,19 @@ namespace Models.Soils
             List<CropUptakeInfo> Uptakes = new List<CropUptakeInfo>();
             foreach (ICrop crop in Apsim.ChildrenRecursively(Simulation, typeof(ICrop)))
             {
-                CropUptakeInfo CropUptakes = new CropUptakeInfo();
-                CropUptakes.Crop=crop;
-                CropUptakes.Uptakes=crop.GetSWUptake(SWSupplies);
-                Uptakes.Add(CropUptakes);
+                if (crop.IsAlive)
+                {
+                    CropUptakeInfo CropUptakes = new CropUptakeInfo();
+                    CropUptakes.Crop = crop;
+                    CropUptakes.Uptakes = crop.GetSWUptake(SWSupplies);
+                    Uptakes.Add(CropUptakes);
+                }
             }
 
-            foreach (ICrop crop in Apsim.ChildrenRecursively(Simulation, typeof(ICrop)))
+            foreach (CropUptakeInfo Info in Uptakes)
             {
-                CropUptakeInfo CropUptake = Uptakes.Find(u => u.Crop == crop);
-                crop.SetSWUptake(CropUptake.Uptakes);
-
+                Info.Crop.SetSWUptake(Info.Uptakes);
+                //CropUptakeInfo CropUptake = Uptakes.Find(u => u.Crop == crop);
             }
 
 

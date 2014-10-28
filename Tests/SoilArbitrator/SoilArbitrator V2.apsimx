@@ -36,7 +36,8 @@
           <string>Wheat.Grain.Wt</string>
           <string>Wheat.Grain.N</string>
           <string>Wheat.Total.Wt</string>
-          <string>Wheat.Ep</string>
+          <string>Wheat.EP</string>
+          <string>[wheat].SWStress.Photo</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
@@ -673,7 +674,8 @@ namespace Models
           <string>Wheat.Grain.Wt</string>
           <string>Wheat.Grain.N</string>
           <string>Wheat.Total.Wt</string>
-          <string>Wheat.Ep</string>
+          <string>Wheat.EP</string>
+          <string>[wheat].SWStress.Photo</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
@@ -1276,5 +1278,131 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
+  <Graph>
+    <Name>Graph</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>X axis title 2</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Y axis title</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>Wheat.AboveGround.Wt</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
+  <Graph>
+    <Name>Stress</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>X axis title 2</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Y axis title</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>wheat.SWStress.Photo</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
+  <Graph>
+    <Name>Stress1</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>X axis title 2</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Y axis title</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Line</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>Wheat.EP</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

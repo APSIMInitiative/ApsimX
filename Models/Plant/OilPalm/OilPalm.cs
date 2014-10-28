@@ -38,6 +38,15 @@ namespace Models.PMF.OilPalm
                 return LocalCanopyData; 
             } 
         }
+
+        /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        public bool IsAlive
+        {
+            get { return plant_status == "alive"; }
+        }
+
         /// <summary>The plant_status</summary>
         [XmlIgnore]
         public string plant_status = "out";

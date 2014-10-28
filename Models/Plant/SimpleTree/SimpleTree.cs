@@ -21,7 +21,13 @@ namespace Models.PMF
         /// <summary>The local canopy data</summary>
         NewCanopyType LocalCanopyData = new NewCanopyType();
 
-
+        /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        public bool IsAlive
+        {
+            get { return true; }
+        }
         /// <summary>Cover live</summary>
         /// <value>The cover live.</value>
         public double CoverLive { get; set; }

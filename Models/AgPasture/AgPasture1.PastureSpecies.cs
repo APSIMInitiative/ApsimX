@@ -1160,6 +1160,14 @@ namespace Models.AgPasture1
 
         #region Model outputs  ---------------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        public bool IsAlive
+        {
+            get { return PlantStatus=="alive"; }
+        }
+
         /// <summary>Gets the plant status.</summary>
         /// <value>The plant status (dead, alive, etc).</value>
         [Description("Plant status (dead, alive, etc)")]

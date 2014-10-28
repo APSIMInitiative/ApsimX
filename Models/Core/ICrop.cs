@@ -21,6 +21,11 @@ namespace Models.Core
         string CropType { get; }
 
         /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        bool IsAlive { get; }
+
+        /// <summary>
         /// Crop specific relative growth stress factor (0-1). MicroClimate
         /// uses this to calculate the crop canopy conductance
         /// </summary>

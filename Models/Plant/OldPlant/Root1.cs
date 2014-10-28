@@ -301,13 +301,16 @@ namespace Models.PMF.OldPlant
             }
             else if (AribtratorSWUptake != null)
             {
-                dlt_sw_dep = Utility.Math.Multiply_Value(AribtratorSWUptake, -1);   // make them negative numbers.
+                //dlt_sw_dep = Utility.Math.Multiply_Value(AribtratorSWUptake, -1);   // make them negative numbers.
+                dlt_sw_dep = AribtratorSWUptake;   // make them negative numbers.
+                //Util.ZeroArray(AribtratorSWUptake);
             }
             else { }
  
             Util.Debug("Root.dlt_sw_dep=%f", Utility.Math.Sum(dlt_sw_dep));
         }
 
+        /// <summary>Calculate SW uptake for a given demand and soil water content</summary>
         public double[] CalculateWaterUptake(double SWDemand, double[] SW)
         {
             // potential extractable sw
@@ -1264,7 +1267,7 @@ namespace Models.PMF.OldPlant
             if ((sw_supply_sum < 0.0) || (sw_demand < 0.0))
             {
                 //we have no uptake - there is no demand or potential
-                Util.ZeroArray(dlt_sw_dep);
+                Util.ZeroArray(dlt);
             }
             else
             {

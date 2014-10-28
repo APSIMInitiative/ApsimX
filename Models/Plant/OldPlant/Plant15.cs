@@ -385,6 +385,14 @@ namespace Models.PMF.OldPlant
         public double height
         { get { return Stem.Height; } }
 
+
+        /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        public bool IsAlive
+        {
+            get { return plant_status == "alive"; }
+        }
         /// <summary>Gets the plant_status.</summary>
         /// <value>The plant_status.</value>
         public string plant_status
@@ -1227,7 +1235,15 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
         {
-            return info;
+            List<Soils.UptakeInfo> Uptakes= new List<Soils.UptakeInfo>();
+            Soils.UptakeInfo Uptake = new Soils.UptakeInfo();
+            Uptake.ZoneName = info[0].ZoneName;
+            double[] SW = info[0].Amount;
+            OnPrepare(null, null);  //DEAN!!!
+            Uptake.Amount = Root.CalculateWaterUptake(TopsSWDemand, SW);
+            Uptakes.Add(Uptake);
+            return Uptakes;
+
         }
         /// <summary>
         /// Set the potential sw uptake for today

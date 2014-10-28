@@ -1352,6 +1352,13 @@ namespace Models
             get { return SwardName; }
         }
 
+        /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        public bool IsAlive
+        {
+            get { return PlantStatus == "alive"; }
+        }
 
         /// <summary>Gets the plant status.</summary>
         /// <value>The plant status.</value>
