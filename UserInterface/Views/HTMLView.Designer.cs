@@ -30,7 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tooledControl1 = new ModelText.ModelEditControl.TooledControl();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -38,24 +39,32 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // tooledControl1
+            // richTextBox1
             // 
-            this.tooledControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tooledControl1.Location = new System.Drawing.Point(0, 0);
-            this.tooledControl1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.tooledControl1.Name = "tooledControl1";
-            this.tooledControl1.Size = new System.Drawing.Size(847, 620);
-            this.tooledControl1.TabIndex = 2;
-            this.tooledControl1.Leave += new System.EventHandler(this.richTextBox1_Leave);
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.richTextBox1.Location = new System.Drawing.Point(0, 32);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(635, 472);
+            this.richTextBox1.TabIndex = 1;
+            this.richTextBox1.Text = "";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(250, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // HTMLView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tooledControl1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.richTextBox1);
             this.Name = "HTMLView";
-            this.Size = new System.Drawing.Size(847, 620);
+            this.Size = new System.Drawing.Size(635, 504);
             this.ResumeLayout(false);
 
         }
@@ -63,6 +72,7 @@
         #endregion
 
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private ModelText.ModelEditControl.TooledControl tooledControl1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button button1;
     }
 }

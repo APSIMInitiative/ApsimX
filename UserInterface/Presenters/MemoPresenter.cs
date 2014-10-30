@@ -49,6 +49,7 @@ namespace UserInterface.Presenters
             this.memoViewer.MemoText = this.memoModel.MemoText;
 
             this.memoViewer.MemoUpdate += this.Update;
+            Classes.HtmlEditor.RTF2HTML(this.memoViewer.MemoText);
         }
 
         /// <summary>
@@ -58,6 +59,8 @@ namespace UserInterface.Presenters
         {
             this.Update(null, null);
             this.memoViewer.MemoUpdate -= this.Update;
+            this.memoModel.MemoText = this.memoViewer.MemoText;
+            File.WriteAllText(@"C:\temp\text2.rtf", memoViewer.MemoText);
         }
 
         /// <summary>
