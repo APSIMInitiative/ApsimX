@@ -6,6 +6,7 @@
       <Value>apsimx</Value>
       <Value>intellisense</Value>
     </CollectionProperty>
+    <StringProperty Name="Culture">en-GB</StringProperty>
   </GlobalSettings>
   <Analyzers>
     <Analyzer AnalyzerId="StyleCop.CSharp.DocumentationRules">

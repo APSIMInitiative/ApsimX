@@ -25,6 +25,9 @@ namespace Models
         /// <summary>The elements as XML</summary>
         private string elementsAsXml = null;
 
+
+        private string assemblyName = null;
+
         /// <summary>The _ script</summary>
         [NonSerialized] private Model _Script;
         /// <summary>The _elements</summary>
@@ -162,24 +165,38 @@ namespace Models
                         Children.Remove(Script);
                         Script = null;
                     }
-
+                    
                     // Compile the code.
-                    Assembly compiledAssembly;
-                    try
+                    Assembly compiledAssembly = null;
+                    if (assemblyName != null)
                     {
-                        compiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
+                        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            if (assembly.FullName == assemblyName)
+                            {
+                                compiledAssembly = assembly;
+                                break;
+                            }
+                        }
                     }
-                    catch (Exception err)
+                    
+                    if (compiledAssembly == null)
                     {
-                        throw new ApsimXException(this, err.Message);
+                        try
+                        {
+                            compiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
+                            // Get the script 'Type' from the compiled assembly.
+                            if (compiledAssembly.GetType("Models.Script") == null)
+                                throw new ApsimXException(this, "Cannot find a public class called 'Script'");
+                        }
+                        catch (Exception err)
+                        {
+                            throw new ApsimXException(this, err.Message);
+                        }
                     }
 
+                    assemblyName = compiledAssembly.FullName;
                     CompiledCode = _Code;
-
-                    // Get the script 'Type' from the compiled assembly.
-                    Type scriptType = compiledAssembly.GetType("Models.Script");
-                    if (scriptType == null)
-                        throw new ApsimXException(this, "Cannot find a public class called 'Script'");
 
                     // Create a new script model.
                     Script = compiledAssembly.CreateInstance("Models.Script") as Model;

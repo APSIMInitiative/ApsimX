@@ -504,7 +504,7 @@ namespace Models
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -516,7 +516,7 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("WheatPMFPrototype.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;

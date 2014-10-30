@@ -99,14 +99,22 @@ namespace Utility
         {
             try
             {
-                return new DateTime(
-                    year,
-                    Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1,
-                    int.Parse(rxDD.Match(ddMMM).Value),
-                    0,
-                    0,
-                    0
-                    );
+                int posDelimiter = ddMMM.IndexOfAny(new char[] {'/', '-'});
+                if (posDelimiter == -1)
+                    throw new ArgumentException();
+
+                int month = Utility.String.IndexOfCaseInsensitive(LowerCaseMonths, ddMMM.Substring(posDelimiter + 1)) + 1;
+                int day = Convert.ToInt32(ddMMM.Substring(0, posDelimiter));
+                return new DateTime(year, month, day);
+
+                //return new DateTime(
+                //    year,
+                //    Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1,
+                //    int.Parse(rxDD.Match(ddMMM).Value),
+                //    0,
+                //    0,
+                //    0
+                //    );
             }
             catch
             {

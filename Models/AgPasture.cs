@@ -1352,21 +1352,13 @@ namespace Models
             get { return SwardName; }
         }
 
-        /// <summary>Root system information</summary>
-        [XmlIgnore]
-        public Soils.RootSystem RootSystem
+        /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        public bool IsAlive
         {
-            get
-            {
-                return rootSystem;
-            }
-            set
-            {
-                rootSystem = value;
-            }
+            get { return PlantStatus == "alive"; }
         }
-        /// <summary>The root system</summary>
-        private Soils.RootSystem rootSystem;
 
         /// <summary>Gets the plant status.</summary>
         /// <value>The plant status.</value>
@@ -5300,6 +5292,12 @@ namespace Models
         {
             return info;
         }
+
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        { }
 
         //===============================================
         /// <summary>

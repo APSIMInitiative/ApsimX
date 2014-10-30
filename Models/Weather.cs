@@ -282,7 +282,7 @@ namespace Models
                 }
                 else
                 {
-                    return Convert.ToDouble(this.reader.Constant("Latitude").Value);
+                    return this.reader.ConstantAsDouble("Latitude");
                 }
             }
         }
@@ -304,7 +304,7 @@ namespace Models
                     this.CalcTAVAMP();
                 }
 
-                return Convert.ToDouble(this.reader.Constant("tav").Value);
+                return this.reader.ConstantAsDouble("tav");
             }
         }
         
@@ -325,7 +325,7 @@ namespace Models
                     this.CalcTAVAMP();
                 }
 
-                return Convert.ToDouble(this.reader.Constant("amp").Value);
+                return this.reader.ConstantAsDouble("amp");
             }
         }
         

@@ -332,6 +332,10 @@ namespace UserInterface.Presenters
                 {
                     table.Columns.Add(columnName, property.DataType.GetElementType());
                 }
+                else
+                {
+
+                }
 
                 Utility.DataTable.AddColumnOfObjects(table, columnName, values);
             }

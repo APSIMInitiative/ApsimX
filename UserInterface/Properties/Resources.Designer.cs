@@ -73,16 +73,6 @@ namespace UserInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap apsim7_logo32 {
-            get {
-                object obj = ResourceManager.GetObject("apsim7_logo32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap ApsimSummary {
             get {
                 object obj = ResourceManager.GetObject("ApsimSummary", resourceCulture);
@@ -97,26 +87,6 @@ namespace UserInterface.Properties {
             get {
                 object obj = ResourceManager.GetObject("Close", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap gfolder_32 {
-            get {
-                object obj = ResourceManager.GetObject("gfolder_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] GraphToolbox {
-            get {
-                object obj = ResourceManager.GetObject("GraphToolbox", resourceCulture);
-                return ((byte[])(obj));
             }
         }
         
@@ -150,16 +120,6 @@ namespace UserInterface.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] ManagementToolbox {
-            get {
-                object obj = ResourceManager.GetObject("ManagementToolbox", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
         internal static System.IO.UnmanagedMemoryStream notes {
@@ -177,21 +137,21 @@ namespace UserInterface.Properties {
         ///body {
         ///  background: white url(ApsruTile.jpg) repeat-y scroll left top;
         ///  font-family: Verdana,Arial,Helvetica,sans-serif;
-        ///  font-size: 9pt;
+        ///  font-size: 11pt;
         ///  color: black;
         ///  padding-left: 70px;
         ///  text-align: left;
         ///}
         ///p {
         ///  font-family: Verdana,Arial,Helvetica,sans-serif;
-        ///  font-size: 9pt;
+        ///  font-size: 11pt;
         ///  color: black;
         ///}
         ///table {
         ///  border: 0px solid #cccccc;
-        ///  font-size: 9pt;
+        ///  font-size: 11pt;
         ///  font-family: Arial,Helvetica,sans-serif;
-        ///  bor [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Plant2 {
             get {
@@ -206,26 +166,6 @@ namespace UserInterface.Properties {
             get {
                 object obj = ResourceManager.GetObject("Report", resourceCulture);
                 return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] StandardToolBox {
-            get {
-                object obj = ResourceManager.GetObject("StandardToolBox", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap StandardToolboxIcon {
-            get {
-                object obj = ResourceManager.GetObject("StandardToolboxIcon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

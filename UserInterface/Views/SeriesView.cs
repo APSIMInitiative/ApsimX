@@ -103,6 +103,9 @@ namespace UserInterface.Views
                 {
                     this.listView1.Items.Add(st);
                 }
+
+                if (this.listView1.Items.Count > 0)
+                    this.listView1.Items[0].Selected = true;
             }
         }
 

@@ -52,24 +52,10 @@ namespace UserInterface.Presenters
         private bool advancedMode = false;
 
         /// <summary>
-        /// Link to the global configuration
-        /// </summary>
-        private Utility.Configuration config;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ExplorerPresenter" /> class.
         /// </summary>
         public ExplorerPresenter()
         {
-        }
-
-        /// <summary>
-        /// Gets or sets the link to the global configuration
-        /// </summary>
-        public Utility.Configuration Config
-        {
-            get { return this.config; }   // the main config
-            set { this.config = value; }
         }
 
         /// <summary>
@@ -269,10 +255,9 @@ namespace UserInterface.Presenters
                 try
                 {
                     if (this.ApsimXFile.FileName != null)
-                        this.config.Settings.DelMruFile(this.ApsimXFile.FileName);
+                        Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
 
-                    this.config.Settings.AddMruFile(newFileName);
-                    this.config.Save();
+                    Utility.Configuration.Settings.AddMruFile(newFileName);
                     this.ApsimXFile.Write(newFileName);
                     this.view.ChangeTabText(Path.GetFileNameWithoutExtension(newFileName));
                     return true;

@@ -134,14 +134,17 @@ using System.Text;
             {
                 foreach (IModel model in (o as IModel).Children)
                 {
-                    NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
-                    item.Name = model.Name;
-                    item.IsProperty = false;
-                    item.IsEvent = false;
-                    item.IsWriteable = false;
-                    item.TypeName = model.GetType().Name;
-                    item.Units = string.Empty;
-                    allItems.Add(item);
+                    if (allItems.Find(m => m.Name == model.Name) == null)
+                    {
+                        NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                        item.Name = model.Name;
+                        item.IsProperty = false;
+                        item.IsEvent = false;
+                        item.IsWriteable = false;
+                        item.TypeName = model.GetType().Name;
+                        item.Units = string.Empty;
+                        allItems.Add(item);
+                    }
                 }
 
                 allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
@@ -153,7 +156,7 @@ using System.Text;
         /// <summary>
         /// Complete context item information
         /// </summary>
-        public struct ContextItem
+        public class ContextItem
         {
             /// <summary>
             /// Name of the item

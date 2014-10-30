@@ -55,6 +55,11 @@ namespace UserInterface.Interfaces
         event EventHandler YOnRightChanged;
 
         /// <summary>
+        /// Invoked when the user changes the cumulative field
+        /// </summary>
+        event EventHandler CumulativeChanged;
+
+        /// <summary>
         /// Invoked when the user changes the x
         /// </summary>
         event EventHandler XChanged;
@@ -123,6 +128,12 @@ namespace UserInterface.Interfaces
         /// Gets or sets a value indicating whether y is on right.
         /// </summary>
         bool YOnRight { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the series is cumulative.
+        /// </summary>
+        /// <value><c>true</c> if cumulative; otherwise, <c>false</c>.</value>
+        bool Cumulative { get; set; }
 
         /// <summary>
         /// Gets or sets the x variable name

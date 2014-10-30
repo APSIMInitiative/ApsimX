@@ -11,7 +11,6 @@ namespace UserInterface
 {
     public partial class MainForm : Form
     {
-        private Utility.Configuration Configuration;
         private TabbedExplorerPresenter Presenter1;
         private TabbedExplorerPresenter Presenter2;
         private string[] commandLineArguments;
@@ -29,16 +28,12 @@ namespace UserInterface
             InitializeComponent();
             Application.EnableVisualStyles();
 
-            Configuration = new Utility.Configuration();
-            
             Presenter1 = new TabbedExplorerPresenter();
             Presenter1.Attach(tabbedExplorerView1);
-            Presenter1.Config = Configuration;
-
+        
             Presenter2 = new TabbedExplorerPresenter();
             Presenter2.Attach(tabbedExplorerView2);
-            Presenter2.Config = Configuration;
-
+        
             SplitContainer.Panel2Collapsed = true;
             commandLineArguments = args;
         }
@@ -53,12 +48,9 @@ namespace UserInterface
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            Configuration.Settings.MainFormLocation = Location; 
-            Configuration.Settings.MainFormSize = Size;
-            Configuration.Settings.MainFormWindowState = WindowState;
-            //store settings on closure
-            Configuration.Save();
-
+            Utility.Configuration.Settings.MainFormLocation = Location; 
+            Utility.Configuration.Settings.MainFormSize = Size;
+            Utility.Configuration.Settings.MainFormWindowState = WindowState;
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -75,9 +67,9 @@ namespace UserInterface
 
             try
             {
-                Location = Configuration.Settings.MainFormLocation;
-                Size = Configuration.Settings.MainFormSize;
-                WindowState = Configuration.Settings.MainFormWindowState;
+                Location = Utility.Configuration.Settings.MainFormLocation;
+                Size = Utility.Configuration.Settings.MainFormSize;
+                WindowState = Utility.Configuration.Settings.MainFormWindowState;
             }
             catch (System.Exception)
             {

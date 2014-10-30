@@ -16,6 +16,7 @@ namespace UserInterface.Presenters
     using Importer;
     using Models.Core;
     using Views;
+    using System.Reflection;
     
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -34,11 +35,6 @@ namespace UserInterface.Presenters
         /// The path last used to open the examples
         /// </summary>
         private string lastExamplesPath;
-
-        /// <summary>
-        /// Gets or sets the reference to the main form config
-        /// </summary>
-        public Utility.Configuration Config { get; set; }
 
         /// <summary>
         /// Gets a list of ExplorerPresenters - one for each open tab.
@@ -115,7 +111,6 @@ namespace UserInterface.Presenters
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    presenter.Config = this.Config;  // give it access to the configuration settings for MRU's
                     Simulations simulations = Simulations.Read(fileName);
                     presenter.Attach(simulations, explorerView, null);
                     this.view.AddTab(fileName, Properties.Resources.apsim_logo32, explorerView, true);
@@ -125,13 +120,12 @@ namespace UserInterface.Presenters
                         presenter.TreeWidth = 250;
                     else
                         presenter.TreeWidth = Math.Min(simulations.ExplorerWidth, this.view.TabWidth - 20); // ?
-                    this.Config.Settings.AddMruFile(fileName);
-                    this.Config.Save();
+                    Utility.Configuration.Settings.AddMruFile(fileName);
                     List<string> validMrus = new List<string>();                           // make sure recently used files still exist before displaying them
-                    foreach (string s in this.Config.Settings.MruList)
+                    foreach (string s in Utility.Configuration.Settings.MruList)
                         if (File.Exists(s))
                             validMrus.Add(s);
-                    this.Config.Settings.MruList = validMrus;
+                    Utility.Configuration.Settings.MruList = validMrus;
                     this.view.FillMruList(validMrus);
 
                     Cursor.Current = Cursors.Default;
@@ -153,7 +147,6 @@ namespace UserInterface.Presenters
             ExplorerView explorerView = new ExplorerView();
             ExplorerPresenter presenter = new ExplorerPresenter();
             this.Presenters.Add(presenter);
-            presenter.Config = this.Config;  // give it access to the configuration settings for MRU's
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(contents);
             Simulations simulations = Simulations.Read(doc.DocumentElement);
@@ -173,33 +166,41 @@ namespace UserInterface.Presenters
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
                 Name = "Open APSIM File",
-                ResourceNameForImage = "apsim_logo32",
+                ResourceNameForImage = "UserInterface.Resources.Toolboxes.OpenFile.png",
                 OnClick = this.OnOpenApsimXFile
             });
 
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
                 Name = "Standard toolbox",
-                ResourceNameForImage = "StandardToolboxIcon",
+                ResourceNameForImage = "UserInterface.Resources.Toolboxes.Toolbox.png",
                 OnClick = this.OnStandardToolboxClick
+            });
+
+
+            e.Descriptions.Add(new PopulateStartPageArgs.Description()
+            {
+                Name = "Training toolbox",
+                ResourceNameForImage = "UserInterface.Resources.Toolboxes.Toolbox.png",
+                OnClick = this.OnTrainingToolboxClick
             });
 
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
                 Name = "Import old .apsim file",
-                ResourceNameForImage = "apsim7_logo32",
+                ResourceNameForImage = "UserInterface.Resources.Toolboxes.Import.png",
                 OnClick = this.OnImport
             });
 
             e.Descriptions.Add(new PopulateStartPageArgs.Description()
             {
                 Name = "Open an example",
-                ResourceNameForImage = "gfolder_32",
+                ResourceNameForImage = "UserInterface.Resources.Toolboxes.OpenExample.png",
                 OnClick = this.OnExample
             });
 
-            this.Config.Settings.CleanMruList();                     // cleanup the list when this tab is first shown
-            this.view.FillMruList(this.Config.Settings.MruList);
+            Utility.Configuration.Settings.CleanMruList();                     // cleanup the list when this tab is first shown
+            this.view.FillMruList(Utility.Configuration.Settings.MruList);
         }
 
         /// <summary>
@@ -209,7 +210,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnReloadMruView(object sender, EventArgs e)
         {
-            this.view.FillMruList(this.Config.Settings.MruList);
+            this.view.FillMruList(Utility.Configuration.Settings.MruList);
         }
 
         /// <summary>
@@ -220,7 +221,11 @@ namespace UserInterface.Presenters
         private void OnOpenApsimXFile(object sender, EventArgs e)
         {
             string fileName = this.view.AskUserForFileName(string.Empty, "*.apsimx|*.apsimx");
-            this.OpenApsimXFileInTab(fileName);
+            if (fileName != null)
+            {
+                this.OpenApsimXFileInTab(fileName);
+                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+            }
         }
 
         /// <summary>
@@ -231,7 +236,11 @@ namespace UserInterface.Presenters
         private void OnMruApsimOpenFile(object sender, EventArgs e)
         {
             string fileName = this.view.SelectedMruFileName();
-            this.OpenApsimXFileInTab(fileName);
+            if (fileName != null)
+            {
+                this.OpenApsimXFileInTab(fileName);
+                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+            }
         }
 
         /// <summary>
@@ -252,9 +261,21 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         public void OnStandardToolboxClick(object sender, EventArgs e)
         {
-            byte[] b = Properties.Resources.ResourceManager.GetObject("StandardToolBox") as byte[];
-            StreamReader streamReader = new StreamReader(new MemoryStream(b));
+            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.StandardToolbox.apsimx");
+            StreamReader streamReader = new StreamReader(s);
             this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd());
+        }
+
+        /// <summary>
+        /// Event handler invoked when user clicks on 'Training toolbox'
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="e">Event arguments</param>
+        public void OnTrainingToolboxClick(object sender, EventArgs e)
+        {
+            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.TrainingToolbox.apsimx");
+            StreamReader streamReader = new StreamReader(s);
+            this.OpenApsimXFromMemoryInTab("Training toolbox", streamReader.ReadToEnd());
         }
 
         /// <summary>

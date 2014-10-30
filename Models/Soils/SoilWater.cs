@@ -1381,7 +1381,6 @@ namespace Models.Soils
 
             foreach (Model m in models2)
                 {
-                canopy.NumberOfCrops = 0;
                 Array.Resize(ref canopy.cover_green, canopy.NumberOfCrops + 1);
                 Array.Resize(ref canopy.cover_tot, canopy.NumberOfCrops + 1);
                 Array.Resize(ref canopy.canopy_height, canopy.NumberOfCrops + 1);
@@ -1412,7 +1411,7 @@ namespace Models.Soils
             {
             surfaceCover.ZeroSurfaceCover();
 
-            surfaceCover.surfaceom_cover = SurfaceOM.surfaceom_cover;
+            surfaceCover.surfaceom_cover = SurfaceOM.Cover;
             surfaceCover.residueinterception = residueinterception;
             }
 

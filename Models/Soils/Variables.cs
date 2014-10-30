@@ -1969,7 +1969,7 @@ namespace Models.Soils
         /// <value>The dlt_n_min.</value>
 
         [Units("kg/ha")]
-        public double[] dlt_n_min
+        public double[] MineralisedN
         {
             get
             {

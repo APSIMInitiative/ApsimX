@@ -1512,5 +1512,24 @@ namespace Utility
             double sumOfDerivationAverage = sumOfDerivation / count;
             return System.Math.Sqrt(sumOfDerivationAverage - (mean * mean));
         }
+
+        /// <summary>Cumulates the specified values.</summary>
+        /// <param name="values">The values.</param>
+        /// <returns>The cumulated values</returns>
+        public static IEnumerable<double> Cumulative(IEnumerable<double> values)
+        {
+            if (values == null)
+                return null;
+
+            List<double> newValues = new List<double>();
+            double sumSoFar = 0.0;
+            foreach (double value in values)
+            {
+                sumSoFar += value;
+                newValues.Add(sumSoFar);
+            }
+
+            return newValues;
+        }
     }
 }
