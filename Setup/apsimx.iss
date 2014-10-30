@@ -3,13 +3,14 @@
 
 ;APSIM setup script
 
-#define AppVerNo GetFileVersion("..\Bin\Model.exe") 
+#include  "ISPPBuiltins.iss"
+#define AppVerNo GetStringFileInfo("..\Bin\Model.exe", PRODUCT_VERSION) 
 
 [Setup]
-AppName=Apsim
-AppVerName=Apsim version {#AppVerNo}
+AppName=APSIM
+AppVerName=APSIM v{#AppVerNo}
 AppPublisherURL=http://www.apsim.au
-OutputBaseFilename=SetupApsim
+OutputBaseFilename=Apsim{#AppVerNo} Setup
 VersionInfoVersion={#AppVerNo}
 PrivilegesRequired=poweruser
 ;LicenseFile=..\license.txt
