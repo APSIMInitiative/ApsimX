@@ -106,7 +106,6 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateStartPageList()
         {
-            ListViewImages.ColorDepth = ColorDepth.Depth32Bit;
             listViewMain.Groups.Insert(0, new ListViewGroup("Standard", HorizontalAlignment.Left));
             PopulateStartPageArgs Args = new PopulateStartPageArgs();
             listViewMain.Items.Clear();
