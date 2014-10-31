@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Net.Sgoliver.NRtfTree.Core;
+using System.IO;
 
 namespace UserInterface.Classes
 {
@@ -13,25 +13,19 @@ namespace UserInterface.Classes
         private static string[] ignore = new string[] { "*", "f", "flomajor", "fhimajor", "fdbmajor", "fbimajor",
                                                         "flominor", "fhiminor", "fdbminor", "fbiminor", "stylesheet",
                                                         "fonttbl", "colortbl" };
-        private static bool pntext = false;       // is this Group a \pntext control?
-        private static bool lastpntext = false;   // was the last group a pntext control
-        private static bool listtext = false;     // is this Group a \listtext control?
-        private static bool lastlisttext = false; // was the last group a listtext control
-        private static bool TableOpen = false;    // is a <table> being constructed?
+        private static bool TableOpen = false;          // is a <table> being constructed?
+        private static bool OrderedListOpen = false;    // is a <ol> being constructed?
+        private static bool UnorderedListOpen = false;  // is a <ul> being constructed?
+        private static bool Processed = false;          // has line been processed by a previous format block?
 
         public static string RTF2HTML(string rtf)
         {
-            RtfTree tree = new RtfTree();
-            Stack<Group> groups = new Stack<Group>();
-            RtfTreeNode root = tree.RootNode;
+            string[] Lines = rtf.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             StringBuilder sb = new StringBuilder();
-            tree.LoadRtfFile(@"C:\temp\text.rtf");
+            
             sb.AppendLine("<html><head />\r\n<body>\r\n<p>");
 
-            groups.Push(new Group("root"));
-
-            foreach (RtfTreeNode node in root.ChildNodes)
-                sb = ParseNode(node, sb, groups);
+            sb = ParseRTF(Lines, sb);
 
             sb.Append("</body>\r\n</html>");
 
@@ -40,140 +34,132 @@ namespace UserInterface.Classes
             return sb.ToString();
         }
 
-        private static StringBuilder ParseNode(RtfTreeNode root, StringBuilder sb, Stack<Group> groups)
+        private static StringBuilder ParseRTF(string[] Lines, StringBuilder sb)
         {
-            // ignore unwanted controls
-            if (ignore.Any(groups.Peek().name.Contains))
-                return sb;
-
-            // prepend formatting where specified in group name
-
-            // pntext indicates numbered list. We use this instead of the more complex \pn* group.
-            // Plus we add more complexity since RTF doesn't have an end of list delimiter.
-            if (groups.Peek().name.Equals("pntext"))
+            for(int i=0;i<Lines.Count();i++)
             {
-                pntext = true;
-                if (Regex.Matches(sb.ToString(), "</ol>").Count == Regex.Matches(sb.ToString(), "<ol>").Count)
-                    sb.AppendLine("<ol><li>");
-                else
-                    sb.AppendLine("<li>");
-            }
-            else
-            {
-                if (pntext == true)
+                Processed = false;
+                //tables
+                if (Lines[i].Contains("\\trowd")) //table header
                 {
-                    lastpntext = true;
-                    pntext = false;
+                    TableOpen = true;
+                    sb.AppendLine("<table border=\"1\"");
+                    sb.Append("<tr>");
+
+                    MatchCollection text = Regex.Matches(Lines[i], @"\s(\w\s*)+"); 
+                    foreach (Match m in text)
+                        sb.Append("<td>" + m.Value + "</td>");
+                    sb.AppendLine("</tr>");
+                    Processed = true;
                 }
-                else
-                    lastpntext = false;
-            }
-            if (pntext == false && lastpntext == false && Regex.Matches(sb.ToString(), "</ol>").Count != Regex.Matches(sb.ToString(), "<ol>").Count)
-                sb.AppendLine("</ol>");
-
-            // Now we do the same thing for unordered lists.
-            if (groups.Peek().name.Equals("listtext"))
-            {
-                listtext = true;
-                if (Regex.Matches(sb.ToString(), "</ul>").Count == Regex.Matches(sb.ToString(), "<ul>").Count)
-                    sb.AppendLine("<ul><li>");
-                else
-                    sb.AppendLine("<li>");
-            }
-            else
-            {
-                if (listtext == true)
+                if (Lines[i].Contains("\\row") && !Lines[i].Contains("\\trowd"))
                 {
-                    lastlisttext = true;
-                    listtext = false;
+                    MatchCollection text = Regex.Matches(Lines[i], @"\s(\w\s*)+");
+                    foreach (Match m in text)
+                        sb.Append("<td>" + m.Value + "</td>");
+                    sb.Append("</tr>" + Environment.NewLine + "<tr>");
+                    Processed = true;
                 }
-                else
-                    lastlisttext = false;
-            }
-
-            if (listtext == false && lastlisttext == false && Regex.Matches(sb.ToString(), "</ul>").Count != Regex.Matches(sb.ToString(), "<ul>").Count)
-                sb.AppendLine("</ul>");
-
-            RtfTreeNode node = new RtfTreeNode();
-
-            for (int i = 0; i < root.ChildNodes.Count; i++)
-            {
-
-                node = root.ChildNodes[i];
-
-                if (node.NodeType == RtfNodeType.Group)
+                if (TableOpen) //every row in table will end with /row. If the identifer is not found the table is ended.
                 {
-                    groups.Push(new Group(node.FirstChild.NodeKey));
-                    sb = ParseNode(node, sb, groups);
-                }
-                else if (node.NodeType == RtfNodeType.Control)
-                {
-                    //...
-                }
-                else if (node.NodeType == RtfNodeType.Keyword)
-                {
-                    switch (node.NodeKey)
+                    if (i == Lines.Count() - 1 || (i < Lines.Count() - 2 && !Lines[i + 1].Contains("\\row")))
                     {
-                        case "f":  //Font type
-                            //...
-                            break;
-                        case "cf":  //Font color
-                            //...
-                            break;
-                        case "fs":  //Font size
-                            //...
-                            break;
-                        case "b":
-                        case "i":
-                        case "sub":
-                        case "strike":
-                            // If key has parameter it means we're closing the format block.
-                            sb.Append("<" + (node.HasParameter ? "/" : "") + node.NodeKey + ">");
-                            break;
-                        case "super":
-                            sb.Append("<sup>");
-                            break;
-                        case "par":
-                            sb.AppendLine("</p>\r\n<p>");
-                            break;
-                        case "ul":
-                            sb.Append("<" + (node.HasParameter ? "/" : "") + "u>");
-                            break;
-                        case "ulnone":
-                            sb.AppendLine("</u>");
-                            break;
+                        sb.AppendLine("</table>");
+                        TableOpen = false;
                     }
                 }
-                else if (node.NodeType == RtfNodeType.Text && !groups.Peek().name.Equals("pntext")) //don't write numbers for list; HTML will do that.
+
+                //ordered lists
+                Regex ol = new Regex(@"\d+\.\\tab\s(\w\s*)+");
+                if (ol.IsMatch(Lines[i]))
                 {
-                    sb.Append(node.NodeKey);
+                    if (!OrderedListOpen)
+                    {
+                        OrderedListOpen = true;
+                        sb.AppendLine("<ol>");
+                    }
+                    string str = ol.Match(Lines[i]).Value;
+                    str = str.Substring(str.IndexOf(' '), str.Length - str.IndexOf(' '));
+                    sb.AppendLine("<li>" + str + "</li>");
+                    Processed = true;
+
+                    if (OrderedListOpen)
+                    {
+                        if (i == Lines.Count() - 1)
+                        {
+                            sb.AppendLine("</ol>");
+                            OrderedListOpen = false;
+                        }
+                        else if (!ol.IsMatch(Lines[i + 1]))
+                        {
+                            sb.AppendLine("</ol>");
+                            OrderedListOpen = false;
+                        }
+                    }
+                }
+
+                //unordered lists
+                if (Lines[i].Contains(@"\'b7\tab")) //the rich text box doesn't use RTF tags; it just constructs a list using tabs and special chars
+                {
+                    Regex ul = new Regex(@"\s(\w\s*)+");
+                    if (!UnorderedListOpen)
+                    {
+                        UnorderedListOpen = true;
+                        sb.AppendLine("<ul>");
+                    }
+                    sb.AppendLine("<li>" + ul.Match(Lines[i]).Value + "</li>");
+                    Processed = true;
+
+                    if (UnorderedListOpen)
+                    {
+                        if (i == Lines.Count() - 1)
+                        {
+                            sb.AppendLine("</ul>");
+                            UnorderedListOpen = false;
+                        }
+                        else if (!ul.IsMatch(Lines[i + 1]))
+                        {
+                            sb.AppendLine("</ul>");
+                            UnorderedListOpen = false;
+                        }
+                    }
+                }
+
+                //bold
+                Regex b = new Regex(@"\\b\s(\w\s*)+\\b");
+                if (b.IsMatch(Lines[i]))
+                {
+                    string Text = b.Match(Lines[i]).Value;
+                   // Lines[i]
+                    //sb.AppendLine("<b>" + ))
+                }
+
+                //regular text
+                if (!Processed)
+                {
+                    string Text = Regex.Replace(Lines[i], @"\\\w+|\{.*?\}|}", string.Empty);
+                    sb.AppendLine("<p>" + Text.Trim() + "</p>");
                 }
             }
-            // It's also valid to have formatting in the group descriptor in which case there
-            // will be no closing tag. When a group has been processed, check for open tags and close them.
-            if (Regex.Matches(sb.ToString(), "</b>").Count != Regex.Matches(sb.ToString(), "<b>").Count)
-                sb.Append("</b>");
-            if (Regex.Matches(sb.ToString(), "</i>").Count != Regex.Matches(sb.ToString(), "<i>").Count)
-                sb.Append("</i>");
-            if (Regex.Matches(sb.ToString(), "</u>").Count != Regex.Matches(sb.ToString(), "<u>").Count)
-                sb.Append("</u>");
-            if (Regex.Matches(sb.ToString(), "</sub>").Count != Regex.Matches(sb.ToString(), "<sub>").Count)
-                sb.Append("</sub>");
-            if (Regex.Matches(sb.ToString(), "</strike>").Count != Regex.Matches(sb.ToString(), "<strike>").Count)
-                sb.Append("</strike>");
-            if (Regex.Matches(sb.ToString(), "</sup>").Count != Regex.Matches(sb.ToString(), "<sup>").Count)
-                sb.Append("</sup>");
 
-            groups.Pop();
             return sb;
         }
 
-    }
-
-    struct Group
-    {
-        public string name;
-
-        public Group(string name) { this.name = name; }
+        private static string ProcessFormatting(string rtf)
+        {
+            rtf = rtf.Replace("\\b", "<b>");
+            rtf = rtf.Replace("\\b0", "</b>");
+            rtf = rtf.Replace("\\i", "<i>");
+            rtf = rtf.Replace("\\i0", "</i>");
+            rtf = rtf.Replace("\\ul", "<ul>");
+            rtf = rtf.Replace("\\ulnone", "</ul>");
+            rtf = rtf.Replace("\\strike", "<strike>");
+            rtf = rtf.Replace("\\strike0", "</strike>");
+            rtf = rtf.Replace("\\super", "<ul>");
+            rtf = rtf.Replace("\\ulnone", "</ul>");
+            rtf = rtf.Replace("\\ul", "<ul>");
+            rtf = rtf.Replace("\\ulnone", "</ul>");
+            return "";
+        }
     }
 }

@@ -557,8 +557,8 @@ namespace UserInterface.Presenters
                 double yPosition = largestAxisScale - seriesIndex * interval;
 
                 string equation = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
-                                                "NSE = {3:F2}, ME = {4:F2}, MAE = {5:F2}\r\n" +
-                                                "RSR = {6:F2}, RMSD = {7:F2}",
+                                                "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
+                                                "RSR = {7:F2}, RMSD = {8:F2}",
                                                 new object[] {stats.m,
                                                                           stats.c,
                                                                           stats.R2,
