@@ -130,8 +130,8 @@ namespace UserInterface.Classes
                 if (b.IsMatch(Lines[i]))
                 {
                     string Text = b.Match(Lines[i]).Value;
-                    Lines[i]
-                    sb.AppendLine("<b>" + ))
+                   // Lines[i]
+                    //sb.AppendLine("<b>" + ))
                 }
 
                 //regular text
@@ -145,7 +145,7 @@ namespace UserInterface.Classes
             return sb;
         }
 
-        private string ProcessFormatting(string rtf)
+        private static string ProcessFormatting(string rtf)
         {
             rtf = rtf.Replace("\\b", "<b>");
             rtf = rtf.Replace("\\b0", "</b>");
@@ -159,6 +159,7 @@ namespace UserInterface.Classes
             rtf = rtf.Replace("\\ulnone", "</ul>");
             rtf = rtf.Replace("\\ul", "<ul>");
             rtf = rtf.Replace("\\ulnone", "</ul>");
+            return "";
         }
     }
 }
