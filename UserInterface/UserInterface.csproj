@@ -33,8 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML, Version=0.75.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
@@ -521,7 +520,9 @@
     <EmbeddedResource Include="Resources\MenuImages\Check Soil.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Toolboxes\TrainingToolbox.apsimx" />
+    <EmbeddedResource Include="Resources\Toolboxes\TrainingToolbox.apsimx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Resources\window_delete.png" />
   </ItemGroup>
   <ItemGroup>
@@ -597,7 +598,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Wheat.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Zone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\PredictedObserved.png" />
-    <Content Include="apsim_logo32.ico" />
+    <Content Include="ApsimLogo.ico" />
     <EmbeddedResource Include="Resources\apsim_logo.png" />
     <EmbeddedResource Include="Resources\Toolboxes\Toolbox.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
