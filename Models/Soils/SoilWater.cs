@@ -764,7 +764,7 @@ namespace Models.Soils
 
         [XmlIgnore]
         [Units("mm")]
-        public double[] sat_dep
+        public double[] SATmm
         { get { return SoilObject.sat_dep; } }
 
         [XmlIgnore]
@@ -803,7 +803,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        public double[] sat
+        public double[] SAT
         { get { return SoilObject.sat; } }
 
         [XmlIgnore]
