@@ -1750,7 +1750,7 @@ namespace Models.AgPasture1
                 for (int layer = 0; layer < RootFrontier; layer++)  // TODO this should be <=
                 {
                     sWater += Soil.Water[layer];
-                    sSat += Soil.SoilWater.sat_dep[layer];
+                    sSat += Soil.SoilWater.SATmm[layer];
                     sDUL += Soil.SoilWater.DULmm[layer];
                 }
                 double waterLoggingFactor = 1 - Math.Max(0.0, 0.1 * (sWater - sDUL) / (sSat - sDUL));
