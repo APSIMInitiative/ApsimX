@@ -792,7 +792,7 @@ namespace Models.Soils
 
         [XmlIgnore]
         [Units("mm")]
-        public double[] air_dry_dep
+        public double[] AIRDRYmm
         { get { return SoilObject.air_dry_dep; } }
 
 
@@ -830,7 +830,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        public double[] air_dry
+        public double[] AIRDRY
         { get { return SoilObject.air_dry; } }
 
 
