@@ -28,6 +28,15 @@ namespace UserInterface
             InitializeComponent();
             Application.EnableVisualStyles();
 
+            // Adjust font size for MONO.
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
+                Environment.OSVersion.Platform != PlatformID.Win32Windows)
+            {
+                this.Font = new Font(this.Font.FontFamily, 10.2F);
+            }
+            tabbedExplorerView1.Font = this.Font;
+            tabbedExplorerView2.Font = this.Font;
+
             Presenter1 = new TabbedExplorerPresenter();
             Presenter1.Attach(tabbedExplorerView1);
         

@@ -50,7 +50,6 @@ namespace UserInterface.Presenters
             this.view = view as ITabbedExplorerView;
             this.view.PopulateStartPage += this.OnPopulateStartPage;
             this.view.MruFileClick += this.OnMruApsimOpenFile;
-            this.view.ReloadMruView += this.OnReloadMruView;
             this.view.TabClosing += this.OnTabClosing;
             this.Presenters = new List<ExplorerPresenter>();
         }
@@ -63,7 +62,6 @@ namespace UserInterface.Presenters
         {
             this.view.PopulateStartPage -= this.OnPopulateStartPage;
             this.view.MruFileClick -= this.OnMruApsimOpenFile;
-            this.view.ReloadMruView -= this.OnReloadMruView;
             this.view.TabClosing -= this.OnTabClosing;
         }
 
@@ -126,7 +124,7 @@ namespace UserInterface.Presenters
                         if (File.Exists(s))
                             validMrus.Add(s);
                     Utility.Configuration.Settings.MruList = validMrus;
-                    this.view.FillMruList(validMrus);
+                    //this.view.FillMruList(validMrus);
 
                     Cursor.Current = Cursors.Default;
                 }
@@ -200,16 +198,6 @@ namespace UserInterface.Presenters
             });
 
             Utility.Configuration.Settings.CleanMruList();                     // cleanup the list when this tab is first shown
-            this.view.FillMruList(Utility.Configuration.Settings.MruList);
-        }
-
-        /// <summary>
-        /// Handler to reload the most recently used files list
-        /// </summary>
-        /// <param name="sender">Sender Object</param>
-        /// <param name="e">Event arguments</param>
-        private void OnReloadMruView(object sender, EventArgs e)
-        {
             this.view.FillMruList(Utility.Configuration.Settings.MruList);
         }
 

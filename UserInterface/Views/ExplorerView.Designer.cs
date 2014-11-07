@@ -56,11 +56,10 @@
             this.Panel.Controls.Add(this.splitter2);
             this.Panel.Controls.Add(this.StatusWindow);
             this.Panel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Panel.Location = new System.Drawing.Point(0, 0);
             this.Panel.Margin = new System.Windows.Forms.Padding(4);
             this.Panel.Name = "Panel";
-            this.Panel.Size = new System.Drawing.Size(800, 738);
+            this.Panel.Size = new System.Drawing.Size(757, 697);
             this.Panel.TabIndex = 5;
             // 
             // RightHandPanel
@@ -69,7 +68,7 @@
             this.RightHandPanel.Location = new System.Drawing.Point(271, 0);
             this.RightHandPanel.Margin = new System.Windows.Forms.Padding(4);
             this.RightHandPanel.Name = "RightHandPanel";
-            this.RightHandPanel.Size = new System.Drawing.Size(529, 709);
+            this.RightHandPanel.Size = new System.Drawing.Size(486, 668);
             this.RightHandPanel.TabIndex = 10;
             // 
             // splitter1
@@ -80,7 +79,7 @@
             this.splitter1.Margin = new System.Windows.Forms.Padding(4);
             this.splitter1.MinExtra = 0;
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(8, 709);
+            this.splitter1.Size = new System.Drawing.Size(8, 668);
             this.splitter1.TabIndex = 9;
             this.splitter1.TabStop = false;
             this.splitter1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.OnSplitterMoved);
@@ -91,7 +90,6 @@
             this.TreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TreeView.ContextMenuStrip = this.PopupMenu;
             this.TreeView.Dock = System.Windows.Forms.DockStyle.Left;
-            this.TreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TreeView.HideSelection = false;
             this.TreeView.ImageIndex = 0;
             this.TreeView.ImageList = this.TreeImageList;
@@ -100,7 +98,7 @@
             this.TreeView.Margin = new System.Windows.Forms.Padding(4);
             this.TreeView.Name = "TreeView";
             this.TreeView.SelectedImageIndex = 0;
-            this.TreeView.Size = new System.Drawing.Size(263, 709);
+            this.TreeView.Size = new System.Drawing.Size(263, 668);
             this.TreeView.TabIndex = 8;
             this.TreeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnBeforeLabelEdit);
             this.TreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnAfterLabelEdit);
@@ -129,10 +127,10 @@
             // 
             this.splitter2.BackColor = System.Drawing.SystemColors.Control;
             this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter2.Location = new System.Drawing.Point(0, 709);
+            this.splitter2.Location = new System.Drawing.Point(0, 668);
             this.splitter2.Margin = new System.Windows.Forms.Padding(4);
             this.splitter2.Name = "splitter2";
-            this.splitter2.Size = new System.Drawing.Size(800, 7);
+            this.splitter2.Size = new System.Drawing.Size(757, 7);
             this.splitter2.TabIndex = 11;
             this.splitter2.TabStop = false;
             // 
@@ -140,12 +138,12 @@
             // 
             this.StatusWindow.BackColor = System.Drawing.SystemColors.Info;
             this.StatusWindow.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.StatusWindow.Location = new System.Drawing.Point(0, 716);
+            this.StatusWindow.Location = new System.Drawing.Point(0, 675);
             this.StatusWindow.Multiline = true;
             this.StatusWindow.Name = "StatusWindow";
             this.StatusWindow.ReadOnly = true;
             this.StatusWindow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.StatusWindow.Size = new System.Drawing.Size(800, 22);
+            this.StatusWindow.Size = new System.Drawing.Size(757, 22);
             this.StatusWindow.TabIndex = 13;
             // 
             // StatusWindowPopup
@@ -174,7 +172,7 @@
             // 
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";
-            this.ToolStrip.Size = new System.Drawing.Size(800, 31);
+            this.ToolStrip.Size = new System.Drawing.Size(757, 25);
             this.ToolStrip.TabIndex = 11;
             this.ToolStrip.Text = "toolStrip1";
             this.ToolStrip.Visible = false;
@@ -194,7 +192,7 @@
             this.Controls.Add(this.ToolStrip);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ExplorerView";
-            this.Size = new System.Drawing.Size(800, 738);
+            this.Size = new System.Drawing.Size(757, 697);
             this.Load += new System.EventHandler(this.OnLoad);
             this.Panel.ResumeLayout(false);
             this.Panel.PerformLayout();

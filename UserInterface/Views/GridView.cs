@@ -252,6 +252,10 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateGrid()
         {
+            this.Grid.DefaultCellStyle.Font = this.Grid.Font;
+            this.popupMenu.Font = this.Font;
+            this.Grid.ColumnHeadersDefaultCellStyle.Font = this.Grid.Font;
+
             // The DataGridViewAutoFilterColumnHeaderCell class needs DataSource to be set.
             this.Grid.DataSource = null;
             this.Grid.Columns.Clear();
@@ -296,14 +300,26 @@ namespace UserInterface.Views
                     }
 
                     // Populate the grid headers.
+                    bool headersContainLineFeeds = false;
                     for (int col = 0; col < this.DataSource.Columns.Count; col++)
                     {
                         this.Grid.Columns[col].HeaderText = this.DataSource.Columns[col].ColumnName;
+                        if (this.Grid.Columns[col].HeaderText.Contains("\n"))
+                            headersContainLineFeeds = true;
+
                         this.Grid.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         this.Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         this.Grid.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;
 
                         this.NumericFormat = this.defaultNumericFormat;
+                    }
+
+                    // Looks like MONO ignores ColumnHeadersHeightSizeMode property.
+                    if (headersContainLineFeeds)
+                    {
+                        this.Grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+                        this.Grid.ColumnHeadersHeight = Convert.ToInt32(this.Grid.RowTemplate.Height * 3.5);
+
                     }
 
                     // Populate the grid cells with new rows.
