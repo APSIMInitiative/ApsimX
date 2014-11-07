@@ -17,7 +17,6 @@ namespace UserInterface.Views
         event EventHandler<PopulateStartPageArgs> PopulateStartPage;
 
         event EventHandler MruFileClick;
-        event EventHandler ReloadMruView;
        
         event EventHandler TabClosing;
 
@@ -67,7 +66,6 @@ namespace UserInterface.Views
 
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
         public event EventHandler MruFileClick;
-        public event EventHandler ReloadMruView;
         public event EventHandler TabClosing;
         
         /// <summary>
@@ -106,6 +104,7 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateStartPageList()
         {
+            listViewMain.Clear();
             ListViewImages.ColorDepth = ColorDepth.Depth32Bit;
             listViewMain.Groups.Insert(0, new ListViewGroup("Standard", HorizontalAlignment.Left));
             PopulateStartPageArgs Args = new PopulateStartPageArgs();
@@ -146,12 +145,16 @@ namespace UserInterface.Views
             // cleanup the list so it can be reshown in the correct order
             foreach (ListViewItem item in listViewMain.Items)
             {
+                item.Selected = false;
                 if (item.Group == recentFilesGroup)
                 {
+                    
                     item.Remove();
                 }
             }
-            listViewMain.Groups.Add(recentFilesGroup);
+
+            if (!listViewMain.Groups.Contains(recentFilesGroup))
+                listViewMain.Groups.Add(recentFilesGroup);
             // now add each item from the list of files
             foreach (string xfile in files)
             {
@@ -242,19 +245,19 @@ namespace UserInterface.Views
         /// </summary>
         public void AddTab(string TabText, Image TabImage, UserControl Contents, bool SelectTab)
         {
+            listViewMain.Clear();
+            //foreach (ListViewItem item in listViewMain.Items)
+            //    item.Selected = false;
+
             TabPage OriginalTab = TabControl.SelectedTab;
             TabPage NewTabPage = new TabPage();
             int i = TabControl.TabPages.Count - 1;
-            TabControl.TabPages.Insert(i, NewTabPage);
+            TabControl.TabPages.Add(NewTabPage);
             SetupTab(NewTabPage, TabText, TabImage, Contents);
-            if (SelectTab)
-            {
-                // On MONO OSX: The screen doesn't redraw properly when a tab is 'inserted' in the
-                // tab pages collections. The 3 lines below seem to work.
-                TabControl.SelectedTab = NewTabPage;
-                TabControl.SelectedTab = OriginalTab;
-                TabControl.SelectedTab = NewTabPage;
-            }
+
+            // On MONO OSX: The screen doesn't redraw properly when a tab is 'inserted'.
+            TabControl.SelectedTab = NewTabPage;
+            //NewTabPage.Invalidate();
         }
 
         /// <summary>
@@ -390,10 +393,8 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if (e.TabPage.Text == " ")
-            {
-                ReloadMruView(sender, e);
-            }
+            if (e.TabPage.Text == "+")
+                PopulateStartPageList();
         }
     }
 

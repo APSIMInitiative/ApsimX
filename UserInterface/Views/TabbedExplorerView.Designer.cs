@@ -50,7 +50,7 @@
             this.TabControl.Controls.Add(this.StartPage);
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControl.Location = new System.Drawing.Point(0, 0);
-            this.TabControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TabControl.Margin = new System.Windows.Forms.Padding(4);
             this.TabControl.Name = "TabControl";
             this.TabControl.SelectedIndex = 0;
             this.TabControl.Size = new System.Drawing.Size(813, 644);
@@ -62,22 +62,22 @@
             // 
             this.StartPage.Controls.Add(this.listViewMain);
             this.StartPage.Location = new System.Drawing.Point(4, 25);
-            this.StartPage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StartPage.Margin = new System.Windows.Forms.Padding(4);
             this.StartPage.Name = "StartPage";
-            this.StartPage.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StartPage.Padding = new System.Windows.Forms.Padding(4);
             this.StartPage.Size = new System.Drawing.Size(805, 615);
             this.StartPage.TabIndex = 0;
-            this.StartPage.Text = " ";
+            this.StartPage.Text = "+";
             this.StartPage.UseVisualStyleBackColor = true;
             // 
             // listViewMain
             // 
             this.listViewMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewMain.LabelEdit = true;
             this.listViewMain.LargeImageList = this.ListViewImages;
             this.listViewMain.Location = new System.Drawing.Point(4, 4);
-            this.listViewMain.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.listViewMain.Margin = new System.Windows.Forms.Padding(4);
             this.listViewMain.MultiSelect = false;
             this.listViewMain.Name = "listViewMain";
             this.listViewMain.ShowItemToolTips = true;
@@ -133,7 +133,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.TabControl);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "TabbedExplorerView";
             this.Size = new System.Drawing.Size(813, 644);
             this.Load += new System.EventHandler(this.OnLoad);
