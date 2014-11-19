@@ -586,6 +586,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />

@@ -1870,19 +1870,19 @@ namespace Models.Soils
 
         [Units("kg/ha")]
         [Description("Minimum allowable urea")]
-        double[] urea_min;
+        public double[] urea_min;
 
         /// <summary>Minimum allowable NH4 amount in each layer</summary>
 
         [Units("kg/ha")]
         [Description("Minimum allowable NH4")]
-        double[] nh4_min;
+        public double[] nh4_min;
 
         /// <summary>Minimum allowable NO3 amount in each layer</summary>
 
         [Units("kg/ha")]
         [Description("Minimum allowable NO3")]
-        double[] no3_min;
+        public double[] no3_min;
 
         #endregion
 

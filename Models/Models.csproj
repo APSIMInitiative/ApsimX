@@ -175,6 +175,10 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Soils\Variables.cs" />
+    <Compile Include="SugarCane\CropConstants.cs" />
+    <Compile Include="SugarCane\CultivarConstants.cs" />
+    <Compile Include="SugarCane\MathUtil.cs" />
+    <Compile Include="SugarCane\SugarCane.cs" />
     <Compile Include="Utility\Accumulator.cs" />
     <Compile Include="Utility\JobManager.cs" />
     <Compile Include="Core\Variable.cs" />

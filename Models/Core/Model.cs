@@ -92,6 +92,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.SoilTemperature2))]
         [XmlElement(typeof(Soils.SoilArbitrator))]
         [XmlElement(typeof(Soils.Sample))]
+        [XmlElement(typeof(Models.SugarCane))]
         [XmlElement(typeof(Models.PMF.OrganArbitrator))]
         [XmlElement(typeof(Models.PMF.Structure))]
         [XmlElement(typeof(Models.PMF.Summariser))]
