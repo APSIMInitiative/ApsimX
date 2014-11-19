@@ -4980,7 +4980,7 @@ namespace Models.AgPasture1
                 // actual soil water content
                 mySWater += Soil.Water[layer] * fractionLayer;
                 // water content at saturation
-                mySaturation += Soil.SoilWater.sat_dep[layer] * fractionLayer;
+                mySaturation += Soil.SoilWater.SATmm[layer] * fractionLayer;
                 // water content at field capacity
                 myDUL += Soil.SoilWater.DULmm[layer] * fractionLayer;
             }
