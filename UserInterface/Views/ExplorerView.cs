@@ -341,6 +341,7 @@ namespace UserInterface.Views
                 PopulateMainMenu(this, Args);
 
                 ToolStrip.Items.Clear();
+                ToolStrip.Font = this.Font;
                 foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
                 {
                     Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
@@ -580,6 +581,7 @@ namespace UserInterface.Views
                 MenuDescriptionArgs Args = new MenuDescriptionArgs();
                 PopulateContextMenu(this, Args);
 
+                PopupMenu.Font = this.Font;
                 PopupMenu.Items.Clear();
                 foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
                 {
@@ -589,7 +591,7 @@ namespace UserInterface.Views
                         Icon = new Bitmap(s);
 
                     ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
-                    Button.TextImageRelation = TextImageRelation.ImageAboveText;
+                    Button.TextImageRelation = TextImageRelation.ImageBeforeText;
                     Button.Checked = Description.Checked;
                     Button.ShortcutKeys = Description.ShortcutKey;
                     Button.Enabled = Description.Enabled;

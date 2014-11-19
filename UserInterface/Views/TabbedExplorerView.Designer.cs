@@ -65,14 +65,14 @@
             this.StartPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.StartPage.Size = new System.Drawing.Size(602, 497);
             this.StartPage.TabIndex = 0;
-            this.StartPage.Text = " ";
+            this.StartPage.Text = "+";
             this.StartPage.UseVisualStyleBackColor = true;
             // 
             // listViewMain
             // 
             this.listViewMain.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewMain.LabelEdit = true;
             this.listViewMain.LargeImageList = this.ListViewImages;
             this.listViewMain.Location = new System.Drawing.Point(3, 3);
             this.listViewMain.MultiSelect = false;

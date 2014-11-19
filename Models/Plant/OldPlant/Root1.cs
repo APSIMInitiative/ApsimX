@@ -1342,7 +1342,7 @@ namespace Models.PMF.OldPlant
         private double WFPS(int layer)
         {
             double wfps = Utility.Math.Divide(Soil.Water[layer] - Soil.SoilWater.LL15mm[layer],
-                                            Soil.SoilWater.SATmm[layer] - Soil.SoilWater.LL15mm[layer], 0.0);
+                                            Soil.SoilWater.sat_dep[layer] - Soil.SoilWater.LL15mm[layer], 0.0);
             return Utility.Math.Constrain(wfps, 0.0, 1.0);
         }
 

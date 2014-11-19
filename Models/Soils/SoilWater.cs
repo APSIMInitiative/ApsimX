@@ -764,7 +764,7 @@ namespace Models.Soils
 
         [XmlIgnore]
         [Units("mm")]
-        public double[] SATmm
+        public double[] sat_dep
         { get { return SoilObject.sat_dep; } }
 
         [XmlIgnore]
@@ -792,7 +792,7 @@ namespace Models.Soils
 
         [XmlIgnore]
         [Units("mm")]
-        public double[] AIRDRYmm
+        public double[] air_dry_dep
         { get { return SoilObject.air_dry_dep; } }
 
 
@@ -803,7 +803,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        public double[] SAT
+        public double[] sat
         { get { return SoilObject.sat; } }
 
         [XmlIgnore]
@@ -830,7 +830,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        public double[] AIRDRY
+        public double[] air_dry
         { get { return SoilObject.air_dry; } }
 
 
@@ -934,7 +934,7 @@ namespace Models.Soils
                 //! We have an unspecified tillage type
 
                 string message = "Cannot find info for tillage:- " + data.Name;
-                throw new ApsimXException(this, message);
+                throw new Exception(message);
                 }
 
 
@@ -999,7 +999,7 @@ namespace Models.Soils
                 string message = "tillage:- " + Data.Name + " has incorrect values for " + Environment.NewLine +
                     "CN reduction = " + Data.cn_red + Environment.NewLine + "Acc rain     = " + Data.cn_red;
 
-                throw new ApsimXException(this, message);
+                throw new Exception(message);
                 }
 
 
@@ -1504,7 +1504,7 @@ namespace Models.Soils
                 isImmobile = (PositionInCharArray(name, immobile_solutes) >= 0);
 
                 if ( !isMobile && !isImmobile)
-                    throw new ApsimXException(this, "No solute mobility information for " + name + " , please specify as mobile or immobile in the SoilWater ini file.");
+                    throw new Exception("No solute mobility information for " + name + " , please specify as mobile or immobile in the SoilWater ini file.");
 
 
                 //Add the solute to each layer of the Soil
@@ -1598,23 +1598,16 @@ namespace Models.Soils
 
             if (Soil.Thickness != null)
                 {
-                try
-                    {
-                    SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
-                    surfaceFactory = new SurfaceFactory();
-                    surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
+                SoilObject = new SoilWaterSoil(constants, Soil);
+                surfaceFactory = new SurfaceFactory();
+                surface = surfaceFactory.GetSurface(SoilObject, Clock);
 
-                    //optional inputs (array)
-                    inflow_lat = null;
-                    }
-                catch (Exception Ex)
-                    {
-                    throw new ApsimXException(this, Ex.Message);  //catch any constructor Exceptions and rethrow as an ApsimXException.
-                    }
+                //optional inputs (array)
+                inflow_lat = null; 
                 }
             else
                 {
-                throw new ApsimXException(this, "SoilWater module has detected that the Soil has no layers.");
+                throw new Exception("SoilWater module has detected that the Soil has no layers.");
                 }
 
         }
