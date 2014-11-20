@@ -1601,7 +1601,7 @@ namespace Models.Soils
                 try
                     {
                     SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
-                surfaceFactory = new SurfaceFactory();
+                    surfaceFactory = new SurfaceFactory();
                     surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
 
                 //optional inputs (array)
