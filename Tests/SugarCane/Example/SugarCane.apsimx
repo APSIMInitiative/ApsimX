@@ -3120,16 +3120,15 @@ namespace Models
         private int 	 fallowin;
 
 		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
+			//Rotation variables. Not sure if these are still needed in ApsimX rotations
             nextcrop = 0;
             fallowin = 0;
-            plantlen = 0;
-            ratoonlen = 0;
-            
-
 		}
+
+
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
@@ -3137,16 +3136,17 @@ namespace Models
             //! Initialise and set a time counter for entire run
             dah = 0;
 
-            if (SugarCane.crop_status == "alive") 
+
+            if ( SugarCane.crop_status == "alive" ) 
             	{
                 dah = 0;
 
                 //! Set harvest dates for each crop phase
-                if ( ((SugarCane.DaysAfterSowing == plantlen) && (SugarCane.ratoon_no == 0)) ||
-                     ((SugarCane.DaysAfterSowing == ratoonlen) && (SugarCane.ratoon_no > 0)) )
+                if ( ((SugarCane.DaysAfterSowing == plantlen) && (SugarCane.ratoon_no == 0)) 
+                  || ((SugarCane.DaysAfterSowing == ratoonlen) && (SugarCane.ratoon_no > 0)) )
 					{
+					
                    	SugarCane.HarvestCrop();
-
                   	if (SugarCane.ratoon_no == NoRatoons + 1)
                   		{
                      	//! plough the crop out
@@ -3163,21 +3163,18 @@ namespace Models
                 	{
                   	//! We have not reached the harvest date for this ratoon.
                		}
-               	}
-                
-            else if (SugarCane.crop_status == "dead")
+               	}   
+            else if ( SugarCane.crop_status == "dead" )
             	{
                 SugarCane.HarvestCrop();
                 SugarCane.EndCrop();
-				}
-                
+				}   
             else if ( (SugarCane.crop_status == "out") && (Utility.Date.DatesEqual(planting_day, Clock.Today)) )
             	{
                 SugarCane.Sow(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);
                 SugarCane.plants = plant_stalks;
                 dah = 0;
-				}
-				
+				}	
             else
             	{
                 dah = dah + 1;

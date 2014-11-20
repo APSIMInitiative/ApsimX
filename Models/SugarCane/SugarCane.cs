@@ -9130,14 +9130,21 @@ namespace Models
 
 
 
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+            {
+            OnPrepare();
+            OnProcess();
+            }
 
 
 
 
         //[EventHandler]
         //public void OnPrepare()
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        //[EventSubscribe("DoPotentialPlantGrowth")]
+        //private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        private void OnPrepare()
             {
 
             //sv- taken from OnTick event handler
@@ -9275,8 +9282,9 @@ namespace Models
 
         //[EventHandler]
         //public void OnProcess()
-        [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        //[EventSubscribe("DoActualPlantGrowth")]
+        //private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        private void OnProcess()
             {
 
 
