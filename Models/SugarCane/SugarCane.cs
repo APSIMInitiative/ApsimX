@@ -38,11 +38,11 @@ namespace Models
 
         /// <summary>The weather</summary>
         [Link]
-        Weather Weather;
+        private Weather Weather;
 
         
         [Link]
-        MicroClimate MicroClim; //added for fr_intc_radn_ , but don't know what the corresponding variable is in MicroClimate.
+        private MicroClimate MicroClim; //added for fr_intc_radn_ , but don't know what the corresponding variable is in MicroClimate.
 
         
         /// <summary>The soil</summary>
@@ -52,7 +52,7 @@ namespace Models
 
         /// <summary>The summary</summary>
         [Link]
-        ISummary Summary = null;
+        private ISummary Summary = null;
 
 
         #endregion
@@ -9079,8 +9079,8 @@ namespace Models
 
         //[EventHandler]
         //public void OnInitialised()
-         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+         [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
             {
             //sv-taken from OnTick event handler
             g_day_of_year = Clock.Today.DayOfYear;
