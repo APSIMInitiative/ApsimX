@@ -934,7 +934,7 @@ namespace Models.Soils
                 //! We have an unspecified tillage type
 
                 string message = "Cannot find info for tillage:- " + data.Name;
-                throw new Exception(message);
+                throw new ApsimXException(this, message);
                 }
 
 
@@ -999,7 +999,7 @@ namespace Models.Soils
                 string message = "tillage:- " + Data.Name + " has incorrect values for " + Environment.NewLine +
                     "CN reduction = " + Data.cn_red + Environment.NewLine + "Acc rain     = " + Data.cn_red;
 
-                throw new Exception(message);
+                throw new ApsimXException(this, message);
                 }
 
 
@@ -1504,7 +1504,7 @@ namespace Models.Soils
                 isImmobile = (PositionInCharArray(name, immobile_solutes) >= 0);
 
                 if ( !isMobile && !isImmobile)
-                    throw new Exception("No solute mobility information for " + name + " , please specify as mobile or immobile in the SoilWater ini file.");
+                    throw new ApsimXException(this, "No solute mobility information for " + name + " , please specify as mobile or immobile in the SoilWater ini file.");
 
 
                 //Add the solute to each layer of the Soil
@@ -1598,16 +1598,23 @@ namespace Models.Soils
 
             if (Soil.Thickness != null)
                 {
-                SoilObject = new SoilWaterSoil(constants, Soil);
+                try
+                    {
+                    SoilObject = new SoilWaterSoil(constants, Soil);  //constructor can throw an Exception
                 surfaceFactory = new SurfaceFactory();
-                surface = surfaceFactory.GetSurface(SoilObject, Clock);
+                    surface = surfaceFactory.GetSurface(SoilObject, Clock);  //constructor can throw an Exception (Evap class constructor too)
 
                 //optional inputs (array)
                 inflow_lat = null; 
                 }
+                catch (Exception Ex)
+                    {
+                    throw new ApsimXException(this, Ex.Message);  //catch any constructor Exceptions and rethrow as an ApsimXException.
+                    }
+                }
             else
                 {
-                throw new Exception("SoilWater module has detected that the Soil has no layers.");
+                throw new ApsimXException(this, "SoilWater module has detected that the Soil has no layers.");
                 }
 
         }
