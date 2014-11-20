@@ -4430,7 +4430,7 @@ namespace Models
                     if (spDepth <= p_rootFrontier)
                     {
                         SW += Soil.Water[layer];
-                        Sat += Soil.SoilWater.sat_dep[layer];
+                        Sat += Soil.SoilWater.SATmm[layer];
                         FC += Soil.SoilWater.DULmm[layer];
                     }
                 }
