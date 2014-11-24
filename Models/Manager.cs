@@ -146,6 +146,8 @@ namespace Models
             RebuildScriptModel();
         }
 
+        private bool lastCompileFailed = false;
+
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         /// <exception cref="ApsimXException">
         /// Cannot find a public class called 'Script'
@@ -168,6 +170,7 @@ namespace Models
                     
                     // Compile the code.
                     Assembly compiledAssembly = null;
+                    
                     if (assemblyName != null)
                     {
                         foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -180,7 +183,12 @@ namespace Models
                         }
                     }
                     
-                    if (compiledAssembly == null)
+                    // When running a simulation, we don't want to waste time by re-compiling
+                    // the script unnecessarily. But we need to be careful to avoid two sorts
+                    // of problems: (1) failing to recompile when the script has been changed
+                    // and (2) attempting to use a previously compiled assembly when the script 
+                    // has been modified and will now not compile correctly.
+                    if (compiledAssembly == null || CompiledCode != null || lastCompileFailed)
                     {
                         try
                         {
@@ -191,12 +199,14 @@ namespace Models
                         }
                         catch (Exception err)
                         {
+                            lastCompileFailed = true;
                             throw new ApsimXException(this, err.Message);
                         }
                     }
 
                     assemblyName = compiledAssembly.FullName;
                     CompiledCode = _Code;
+                    lastCompileFailed = false;
 
                     // Create a new script model.
                     Script = compiledAssembly.CreateInstance("Models.Script") as Model;
