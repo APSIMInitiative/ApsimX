@@ -511,9 +511,9 @@
           <CN2Bare>73</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <slope>NaN</slope>
-          <discharge_width>NaN</discharge_width>
-          <catchment_area>NaN</catchment_area>
+          <slope>0</slope>
+          <discharge_width>0</discharge_width>
+          <catchment_area>0</catchment_area>
           <max_pond>0</max_pond>
           <Thickness>
             <double>150</double>
@@ -3129,8 +3129,8 @@ namespace Models
 		}
 
 
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
 		{
 
             //! Initialise and set a time counter for entire run
@@ -3236,8 +3236,8 @@ namespace Models
         */
         
         
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
+		[EventSubscribe("StartOfDay")]
+		private void OnStartOfDay(object sender, EventArgs e)
 		{
 
         if (Utility.Date.DatesEqual(fert_date, Clock.Today))
