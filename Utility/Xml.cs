@@ -550,10 +550,15 @@ namespace Utility
         /// <param name="AttributeValue">The attribute value.</param>
         public static void SetAttribute(XmlNode Node, string AttributeName, string AttributeValue)
         {
-            // ----------------------------------------
-            // Set the value of the specified attribute
-            // ----------------------------------------
-            if (Attribute(Node, AttributeName) != AttributeValue)
+            int posLastDelimiter = AttributeName.LastIndexOf(Delimiter);
+            if (posLastDelimiter != -1)
+            {
+                string attributePath = AttributeName.Substring(0, posLastDelimiter);
+                string attributeName = AttributeName.Substring(posLastDelimiter + 1);
+                XmlNode attributeNode = EnsureNodeExists(Node, attributePath);
+                SetAttribute(attributeNode, attributeName, AttributeValue);
+            }
+            else if (Attribute(Node, AttributeName) != AttributeValue)
             {
                 XmlNode attr = Node.OwnerDocument.CreateNode(XmlNodeType.Attribute, AttributeName, "");
                 attr.Value = AttributeValue;

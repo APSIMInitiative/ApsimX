@@ -63,12 +63,6 @@ namespace UserInterface.Presenters
             // Populate the series names.
             PopulateSeriesNames();
 
-            // Trap events from the view.
-            ConnectViewEvents();
-
-            //this.PopulateDataSources();
-            //this.PopulateSeries();
-
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnGraphModelChanged2;
         }
 
