@@ -67,6 +67,16 @@ using System.Text;
 
             }
 
+       static public double[] RoundArray(double[] InputArray, int DecimalPlaces)
+           {
+           double[] outArray = new double[InputArray.Length];
+
+           for (int i=0; i< InputArray.Length; i++)
+               {
+               outArray[i] = Math.Round(InputArray[i], DecimalPlaces);
+               }
+           return outArray;
+           }
 
 
         //REPLACED with CSGeneral.MathUtility.Divide()

@@ -572,6 +572,11 @@ namespace Models
         //! Soil Water module
         //! -----------------
 
+        ////[ MinVal=dlayer_lb, MaxVal=dlayer_ub]
+        //[Input(IsOptional = true)]
+        //[Units("mm")]
+        //double[] dlayer = new double[max_layer];
+
 
 
         int num_layers
@@ -589,6 +594,44 @@ namespace Models
                     }
                 }
             }
+
+
+
+        ////[ MinVal=0.0, MaxVal=2.65]
+        //[Input(IsOptional = true)]
+        //[Units("g/cc")]
+        //double[] bd = new double[max_layer];
+
+
+
+        ////[MinVal=dul_dep_lb, MaxVal=dul_dep_ub]
+        //[Input(IsOptional = true)]
+        //[Units("mm")]
+        //double[] dul_dep = new double[max_layer];
+
+
+        ////[MinVal=sw_dep_lb, MaxValsw_dep_ub]
+        //[Input(IsOptional = true)]
+        //[Units("mm")]
+        //double[] sw_dep = new double[max_layer];
+
+        ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
+        //[Input(IsOptional = true)]
+        //[Units("mm")]
+        //double[] sat_dep = new double[max_layer];
+
+        ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
+        //[Input(IsOptional = true)]
+        //[Units("mm")]
+        //double[] ll15_dep = new double[max_layer];
+
+
+
+
+
+
+
+
 
 
         #endregion
@@ -2709,7 +2752,7 @@ namespace Models
             double l_afps;
             bool l_didInterpolate;
 
-            l_afps = Utility.Math.Divide((Soil.SoilWater.SATmm[zb(i_layer_ob)] - Soil.SoilWater.SWmm[zb(i_layer_ob)]), Soil.Thickness[zb(i_layer_ob)], 0.0);
+            l_afps = Utility.Math.Divide((Soil.SoilWater.SATmm[zb(i_layer_ob)] - Soil.Water[zb(i_layer_ob)]), Soil.Thickness[zb(i_layer_ob)], 0.0);
 
             return Utility.Math.LinearInterpReal(l_afps, crop.x_afps, crop.y_afps_fac, out l_didInterpolate);
 
@@ -5715,7 +5758,7 @@ namespace Models
                 l_fixation_determinant = SumArray(g_dm_green, max_part) - g_dm_green[root];
 
                 cproc_n_supply2(Soil.Thickness, max_layer,
-                                g_dlt_sw_dep, g_no3gsm, g_no3gsm_min, g_root_depth, Soil.SoilWater.SWmm, ref g_no3gsm_mflow_avail,
+                                g_dlt_sw_dep, g_no3gsm, g_no3gsm_min, g_root_depth, Soil.Water, ref g_no3gsm_mflow_avail,
                                 g_sw_avail, g_sw_avail_pot, ref g_no3gsm_diffn_pot,
                                 g_current_stage, crop.n_fix_rate, l_fixation_determinant, g_swdef_fixation, ref g_n_fix_pot);
                 }
@@ -8283,7 +8326,7 @@ namespace Models
                 {
                 double l_temp = SumArray(g_leaf_area_zb, max_leaf);
                 l_temp = l_temp * g_plants / 1000000.0;
-                return l_temp;
+                return Math.Round(l_temp,2);
                 }
             }
 
@@ -8297,7 +8340,7 @@ namespace Models
                 {
                 double l_temp = SumArray(g_leaf_dm_zb, max_leaf);
                 l_temp = l_temp * g_plants;
-                return l_temp;
+                return Math.Round(l_temp,2);
                 }
             }
 
@@ -8313,21 +8356,21 @@ namespace Models
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double rootgreenwt
-        { get { return g_dm_green[root]; } }
+        { get { return Math.Round(g_dm_green[root],2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double leafgreenwt
-        { get { return g_dm_green[leaf]; } }
+        { get { return Math.Round(g_dm_green[leaf],2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double sstem_wt
-        { get { return g_dm_green[sstem] + g_dm_dead[sstem]; } }  //! Add dead pool for lodged crops
+        { get { return Math.Round(g_dm_green[sstem] + g_dm_dead[sstem],2); } }  //! Add dead pool for lodged crops
 
 
         
@@ -8410,14 +8453,14 @@ namespace Models
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double sucrose_wt
-        { get { return g_dm_green[sucrose] + g_dm_dead[sucrose]; } }  //! Add dead pool to allow for lodged stalks
+        { get { return Math.Round(g_dm_green[sucrose] + g_dm_dead[sucrose],2); } }  //! Add dead pool to allow for lodged stalks
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double cabbage_wt
-        { get { return g_dm_green[cabbage]; } }
+        { get { return Math.Round(g_dm_green[cabbage],2); } }
 
 
         
@@ -8429,7 +8472,7 @@ namespace Models
                 {
                 double l_cane_wt = g_dm_green[sstem] + g_dm_green[sucrose]
                                + g_dm_dead[sstem] + g_dm_dead[sucrose];   //! Add dead pool for lodged crops
-                return l_cane_wt;
+                return Math.Round(l_cane_wt,2);
                 }
             }
 
@@ -8443,7 +8486,7 @@ namespace Models
                 double l_biomass = SumArray(g_dm_green, max_part) - g_dm_green[root]
                                   + SumArray(g_dm_senesced, max_part) - g_dm_senesced[root]
                                   + SumArray(g_dm_dead, max_part) - g_dm_dead[root];
-                return l_biomass;
+                return Math.Round(l_biomass,2);
                 }
             }
 
@@ -8457,7 +8500,7 @@ namespace Models
                 {
                 double l_biomass = SumArray(g_dm_green, max_part) - g_dm_green[root]
                                  + g_dm_dead[sstem] + g_dm_dead[sucrose];  //! Add dead pool for lodged crops
-                return l_biomass;
+                return Math.Round(l_biomass,2);
                 }
             }
 
@@ -8466,51 +8509,51 @@ namespace Models
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double greenwt
-        { get { return SumArray(g_dm_green, max_part); } }
+        { get { return Math.Round(SumArray(g_dm_green, max_part),2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double senescedwt
-        { get { return SumArray(g_dm_senesced, max_part); } }
+        { get { return Math.Round(SumArray(g_dm_senesced, max_part),2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double dm_dead
-        { get { return SumArray(g_dm_dead, max_part); } }
+        { get { return Math.Round(SumArray(g_dm_dead, max_part),2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double dlt_dm
-        { get { return g_dlt_dm; } }
+        { get { return Math.Round(g_dlt_dm,2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double partition_xs
-        { get { return g_partition_xs; } }
+        { get { return Math.Round(g_partition_xs,2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double dlt_dm_green
-        { get { return SumArray(g_dlt_dm_green, max_part); } }
+        { get { return Math.Round(SumArray(g_dlt_dm_green, max_part),2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double[] dlt_dm_detached
-        { get { return g_dlt_dm_detached; } }
+        { get { return mu.RoundArray(g_dlt_dm_detached,2); } }
 
-
+        
 
 
         // Reporting of N concentrations
@@ -8538,7 +8581,7 @@ namespace Models
             get
                 {
                 double l_Conc_N_leaf = Utility.Math.Divide(g_n_green[leaf], g_dm_green[leaf], 0.0);
-                return l_Conc_N_leaf;
+                return Math.Round(l_Conc_N_leaf,2);
                 }
             }
 
@@ -8550,7 +8593,7 @@ namespace Models
             get
                 {
                 double l_Conc_N_cab = Utility.Math.Divide(g_n_green[cabbage], g_dm_green[cabbage], 0.0);
-                return l_Conc_N_cab;
+                return Math.Round(l_Conc_N_cab,2);
                 }
             }
 
@@ -8562,7 +8605,7 @@ namespace Models
             get
                 {
                 double l_Conc_N_cane = Utility.Math.Divide(g_n_green[sstem] + g_n_green[sucrose], g_dm_green[sstem] + g_dm_green[sucrose], 0.0);
-                return l_Conc_N_cane;
+                return Math.Round(l_Conc_N_cane,2);
                 }
             }
 
@@ -8576,7 +8619,7 @@ namespace Models
             get
                 {
                 double l_N_leaf_crit = g_n_conc_crit[leaf] * g_dm_green[leaf];
-                return l_N_leaf_crit;
+                return Math.Round(l_N_leaf_crit,2);
                 }
             }
 
@@ -8588,7 +8631,7 @@ namespace Models
             get
                 {
                 double l_N_leaf_min = g_n_conc_min[leaf] * g_dm_green[leaf];
-                return l_N_leaf_min;
+                return Math.Round(l_N_leaf_min,2);
                 }
             }
 
@@ -8603,7 +8646,7 @@ namespace Models
                 double l_biomass_n = SumArray(g_n_green, max_part) - g_n_green[root]
                                   + SumArray(g_n_senesced, max_part) - g_n_senesced[root]
                                   + SumArray(g_n_dead, max_part) - g_n_dead[root];
-                return l_biomass_n;
+                return Math.Round(l_biomass_n,2);
                 }
             }
 
@@ -8618,7 +8661,7 @@ namespace Models
                 double l_plant_n_tot = SumArray(g_n_green, max_part)
                                     + SumArray(g_n_senesced, max_part)
                                     + SumArray(g_n_dead, max_part);
-                return l_plant_n_tot;
+                return Math.Round(l_plant_n_tot,2);
                 }
             }
 
@@ -8631,7 +8674,7 @@ namespace Models
             get
                 {
                 double l_green_biomass_n = SumArray(g_n_green, max_part) - g_n_green[root];
-                return l_green_biomass_n;
+                return Math.Round(l_green_biomass_n,2);
                 }
             }
 
@@ -8640,21 +8683,21 @@ namespace Models
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double[] n_green
-        { get { return g_n_green; } }
+        { get { return mu.RoundArray(g_n_green,2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double greenn
-        { get { return SumArray(g_n_green, max_part); } }
+        { get { return Math.Round(SumArray(g_n_green, max_part),2); } }
 
 
         
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double senescedn
-        { get { return SumArray(g_n_senesced, max_part); } }
+        { get { return Math.Round(SumArray(g_n_senesced, max_part),2); } }
 
 
         //Delta N in plant tops
@@ -8663,7 +8706,7 @@ namespace Models
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double[] dlt_n_green
-        { get { return g_dlt_n_green; } }
+        { get { return mu.RoundArray(g_dlt_n_green,2); } }
 
 
 
@@ -8818,7 +8861,7 @@ namespace Models
                     {
                     for (int layer = 0; layer < num_layers; layer++)
                         {
-                        l_esw_layr[layer] = Math.Max(0.0, Soil.SoilWater.SWmm[layer] - g_ll_dep[layer]);
+                        l_esw_layr[layer] = Math.Max(0.0, Soil.Water[layer] - g_ll_dep[layer]);
                         }
                     }
                 else
@@ -8861,7 +8904,7 @@ namespace Models
                 {
                 int deepest_layer_ob = FindLayerNo_ob(g_root_depth);
                 double l_NO3gsm_tot = SumArray(g_no3gsm, deepest_layer_ob);
-                return l_NO3gsm_tot;
+                return Math.Round(l_NO3gsm_tot,2);
                 }
             }
 
@@ -8874,7 +8917,7 @@ namespace Models
             get
                 {
                 double l_N_demand = SumArray(g_n_demand, max_part);
-                return l_N_demand;
+                return Math.Round(l_N_demand,2);
                 }
             }
 
@@ -8887,7 +8930,7 @@ namespace Models
             get
                 {
                 double l_N_demand = SumArray(g_n_demand, max_part) * 10.0;
-                return l_N_demand;
+                return Math.Round(l_N_demand,1);
                 }
             }
 
@@ -8900,7 +8943,7 @@ namespace Models
             get
                 {
                 double l_N_supply = SumArray(g_dlt_n_green, max_part) - g_dlt_n_green[root];
-                return l_N_supply;
+                return Math.Round(l_N_supply,2);
                 }
             }
 
@@ -9128,17 +9171,15 @@ namespace Models
         //public void OnPrepare()
         //[EventSubscribe("DoPotentialPlantGrowth")]
         //private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
             {
-
             //sv- taken from OnTick event handler
             g_day_of_year = Clock.Today.DayOfYear;
             g_year = Clock.Today.Year;
             sugar_zero_daily_variables();
 
             Summary.WriteMessage(this, "day of year: " + g_day_of_year);
-
 
 
 
@@ -9219,7 +9260,7 @@ namespace Models
                 //WATER LOGGING     //sv- also called in Process Event.
 
                 //sugar_water_log(1);       
-                g_oxdef_photo = crop_oxdef_photo1(crop.oxdef_photo, crop.oxdef_photo_rtfr, Soil.SoilWater.LL15mm, Soil.SoilWater.SATmm, Soil.SoilWater.SWmm, Soil.Thickness, g_root_length, g_root_depth);
+                g_oxdef_photo = crop_oxdef_photo1(crop.oxdef_photo, crop.oxdef_photo_rtfr, Soil.SoilWater.LL15mm, Soil.SoilWater.SATmm, Soil.Water, Soil.Thickness, g_root_length, g_root_depth);
 
 
 
@@ -9286,7 +9327,7 @@ namespace Models
                 sugar_root_depth_growth(Soil.Thickness,
                                          crop.x_sw_ratio, crop.y_sw_fac_root,
                                          crop.x_afps, crop.y_afps_fac,
-                                         Soil.SoilWater.DULmm, Soil.SoilWater.SWmm, g_ll_dep,
+                                         Soil.SoilWater.DULmm, Soil.Water, g_ll_dep,
                                          crop.root_depth_rate, g_current_stage, xf,
                                          out g_dlt_root_depth, g_root_depth);
 
@@ -9303,7 +9344,7 @@ namespace Models
                 //sugar_water_supply(1)
 
                 //c+!!!!!!!!! check order dependency of delta
-                cproc_sw_supply1(sw_dep_lb, Soil.Thickness, g_ll_dep, Soil.SoilWater.DULmm, Soil.SoilWater.SWmm, g_root_depth, kl
+                cproc_sw_supply1(sw_dep_lb, Soil.Thickness, g_ll_dep, Soil.SoilWater.DULmm, Soil.Water, g_root_depth, kl
                                 , ref g_sw_avail
                                 , ref g_sw_avail_pot
                                 , ref g_sw_supply
@@ -9385,7 +9426,7 @@ namespace Models
 
                     g_phase_devel = crop_phase_devel(sowing, sprouting, flowering,
                                                         crop.pesw_germ, crop.fasw_emerg, crop.rel_emerg_rate, crop.num_fasw_emerg, g_current_stage, g_days_tot,
-                                                        Soil.Thickness, max_layer, g_sowing_depth, Soil.SoilWater.SWmm, Soil.SoilWater.DULmm, g_ll_dep, ref g_dlt_tt, g_phase_tt, g_tt_tot);
+                                                        Soil.Thickness, max_layer, g_sowing_depth, Soil.Water, Soil.SoilWater.DULmm, g_ll_dep, ref g_dlt_tt, g_phase_tt, g_tt_tot);
 
 
                     crop_devel(g_current_stage, max_stage, g_phase_devel, out g_dlt_stage, ref g_current_stage);
@@ -9455,7 +9496,7 @@ namespace Models
                     //WATER LOGGING
 
                     //sugar_water_log(1)
-                    g_oxdef_photo = crop_oxdef_photo1(crop.oxdef_photo, crop.oxdef_photo_rtfr, Soil.SoilWater.LL15mm, Soil.SoilWater.SATmm, Soil.SoilWater.SWmm, Soil.Thickness, g_root_length, g_root_depth);
+                    g_oxdef_photo = crop_oxdef_photo1(crop.oxdef_photo, crop.oxdef_photo_rtfr, Soil.SoilWater.LL15mm, Soil.SoilWater.SATmm, Soil.Water, Soil.Thickness, g_root_length, g_root_depth);
 
 
 
@@ -9548,7 +9589,7 @@ namespace Models
                                              crop.specific_root_length, Soil.Thickness,
                                              g_dlt_dm_green[root], g_dlt_root_depth, g_root_depth, g_root_length, g_plants, xf,
                                              crop.x_sw_ratio, crop.y_sw_fac_root, crop.x_plant_rld, crop.y_rel_root_rate,
-                                             Soil.SoilWater.DULmm, Soil.SoilWater.SWmm, g_ll_dep, max_layer);
+                                             Soil.SoilWater.DULmm, Soil.Water, g_ll_dep, max_layer);
 
 
 
@@ -9738,7 +9779,7 @@ namespace Models
 
 
                 sugar_event(crop.stage_code_list, crop.stage_names, g_current_stage, g_days_tot, g_day_of_year,
-                            Soil.Thickness, g_dm_dead, g_dm_green, g_dm_senesced, g_lai, g_n_green, g_root_depth, Soil.SoilWater.SWmm, g_year, g_ll_dep);
+                            Soil.Thickness, g_dm_dead, g_dm_green, g_dm_senesced, g_lai, g_n_green, g_root_depth, Soil.Water, g_year, g_ll_dep);
 
 
 
