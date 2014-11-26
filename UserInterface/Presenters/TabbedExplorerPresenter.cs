@@ -238,8 +238,8 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnTabClosing(object sender, EventArgs e)
         {
-            this.Presenters[this.view.CurrentTabIndex].SaveIfChanged();
-            this.Presenters.RemoveAt(this.view.CurrentTabIndex);
+            this.Presenters[this.view.CurrentTabIndex-1].SaveIfChanged();
+            this.Presenters.RemoveAt(this.view.CurrentTabIndex-1);
         }
 
         /// <summary>

@@ -496,6 +496,9 @@ namespace UserInterface.Presenters
 
                     this.seriesView.SeriesEditor.OverallRegression = this.graph.ShowRegressionLine;
 
+                    if (series.Type == Series.SeriesType.Line)
+                        series.Type = Series.SeriesType.Scatter;
+
                     this.seriesView.SeriesEditor.SeriesType = series.Type.ToString();
                     this.seriesView.SeriesEditor.SeriesLineType = series.Line.ToString();
                     this.seriesView.SeriesEditor.SeriesMarkerType = series.Marker.ToString();

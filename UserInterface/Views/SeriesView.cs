@@ -192,7 +192,7 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnSeriesRenameAfterLabelEdit(object sender, LabelEditEventArgs e)
         {
-            if (this.SeriesRenamed != null)
+            if (this.SeriesRenamed != null && e.Label != null)
             {
                 listView1.Items[e.Item].Text = e.Label;
                 this.SeriesRenamed.Invoke(sender, null);

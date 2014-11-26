@@ -264,11 +264,11 @@ namespace Models
 
                     if (errorLevel == DataStore.ErrorLevel.Error)
                     {
-                        message += "FATAL ERROR: " + message;
+                        previousMessage += "FATAL ERROR: " + message;
                     }
                     else if (errorLevel == DataStore.ErrorLevel.Warning)
                     {
-                        message += "WARNING: " + message;
+                        previousMessage += "WARNING: " + message;
                     }
                     else
                     {

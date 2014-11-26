@@ -30,7 +30,7 @@ namespace Models.Graph
         public enum SeriesType 
         { 
             /// <summary>
-            /// A line series
+            /// A line series. Kept for compatibility reasons
             /// </summary>
             Line, 
 

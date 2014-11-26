@@ -373,9 +373,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnGraphModelChanged(object Model)
         {
-            if (Graph.Axes.Count >= 2 &&
-                (Model == Graph || Model == Graph.Axes[0] || Model == Graph.Axes[1] || Model is Series))
-                DrawGraph();
+            DrawGraph();
         }
 
         /// <summary>
@@ -717,13 +715,16 @@ namespace UserInterface.Presenters
             /// </summary>
             public void DrawOnView(IGraphView graphView)
             {
+                if (series.Type == Series.SeriesType.Line)
+                    series.Type = Series.SeriesType.Scatter;
+
                 // Create the series and populate it with data.
                 if (series.Type == Models.Graph.Series.SeriesType.Bar)
                 {
                     graphView.DrawBar(Title, X, Y, series.XAxis, series.YAxis, Colour);
                 }
 
-                else if (series.Type == Series.SeriesType.Line || series.Type == Series.SeriesType.Scatter)
+                else if (series.Type == Series.SeriesType.Scatter)
                 {
                     graphView.DrawLineAndMarkers(Title, X, Y, series.XAxis, series.YAxis, Colour,
                                                  series.Line, series.Marker);
