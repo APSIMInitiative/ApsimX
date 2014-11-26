@@ -102,11 +102,15 @@ namespace Models
                     }
                     while (percentComplete < 100);
 
+                    exitCode = 0;
                     for (int j = 0; j < jobManager.CountOfJobs; j++)
                     {
                         string errorMessage = jobManager.GetJobErrorMessage(j);
-                        Console.WriteLine(errorMessage);
-                        exitCode = 1;
+                        if (errorMessage != null && errorMessage != string.Empty)
+                        {
+                            Console.WriteLine(errorMessage);
+                            exitCode = 1;
+                        }
                     }
 
                     // Write out the number of simulations run to the console.
