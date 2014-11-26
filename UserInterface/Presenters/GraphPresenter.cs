@@ -718,20 +718,24 @@ namespace UserInterface.Presenters
                 if (series.Type == Series.SeriesType.Line)
                     series.Type = Series.SeriesType.Scatter;
 
+                string title = Title;
+                if (!series.Title.StartsWith("Series"))
+                    title = series.Title;
+
                 // Create the series and populate it with data.
                 if (series.Type == Models.Graph.Series.SeriesType.Bar)
                 {
-                    graphView.DrawBar(Title, X, Y, series.XAxis, series.YAxis, Colour);
+                    graphView.DrawBar(title, X, Y, series.XAxis, series.YAxis, Colour);
                 }
 
                 else if (series.Type == Series.SeriesType.Scatter)
                 {
-                    graphView.DrawLineAndMarkers(Title, X, Y, series.XAxis, series.YAxis, Colour,
+                    graphView.DrawLineAndMarkers(title, X, Y, series.XAxis, series.YAxis, Colour,
                                                  series.Line, series.Marker);
                 }
                 else if (X2 != null && Y2 != null)
                 {
-                    graphView.DrawArea(Title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour);
+                    graphView.DrawArea(title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour);
                 }
             }
 
