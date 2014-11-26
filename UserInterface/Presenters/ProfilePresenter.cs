@@ -387,6 +387,8 @@ namespace UserInterface.Presenters
                     if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
                     {
                         values = Utility.DataTable.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
+                        if (!Utility.Math.ValuesInArray((double[])values))
+                            values = null;
                     }
                     else
                     {

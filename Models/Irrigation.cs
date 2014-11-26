@@ -42,7 +42,7 @@ namespace Models
                 water.will_runoff = willRunoff;
                 IrrigationApplied = amount;
                 Irrigated.Invoke(this, water);
-                Summary.WriteMessage(this, string.Format("{0} mm of water added at depth {1}", amount * efficiency, depth));
+                Summary.WriteMessage(this, string.Format("{0:F1} mm of water added at depth {1}", amount * efficiency, depth));
             }
         }
 

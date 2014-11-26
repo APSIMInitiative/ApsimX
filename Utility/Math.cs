@@ -1210,7 +1210,10 @@ namespace Utility
 
             for (int i = 0; i < L1.Count; i++)
             {
-                if (!Math.FloatsAreEqual(L1[i], L2[i]))
+                if (double.IsNaN(L1[i]) && double.IsNaN(L2[i]))
+                {
+                }
+                else if (!Math.FloatsAreEqual(L1[i], L2[i]))
                 {
                     return false;
                 }
