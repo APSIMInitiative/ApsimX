@@ -864,11 +864,11 @@
       <Name>Graph</Name>
       <Axis>
         <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
+        <Title></Title>
       </Axis>
       <Axis>
         <Type>Left</Type>
-        <Title>Y axis title</Title>
+        <Title></Title>
       </Axis>
       <Series>
         <Title>Series1</Title>
