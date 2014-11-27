@@ -530,7 +530,11 @@ namespace Importer
             mycrop.KL = this.GetChildDoubles(compNode, "KL", 0);
             mycrop.XF = this.GetChildDoubles(compNode, "XF", 0);
 
-            newNode = ImportObject(destParent, newNode, mycrop, Utility.Xml.NameAttr(compNode));
+            string name = Utility.Xml.NameAttr(compNode);
+            if (name == "SoilCrop")
+                name = Utility.Xml.Value(compNode, "Name");
+            
+            newNode = ImportObject(destParent, newNode, mycrop, name);
 
             return newNode;
         }
@@ -597,7 +601,11 @@ namespace Importer
                     mywater.PercentMethod = methodValue;
             }
 
-            newNode = ImportObject(destParent, newNode, mywater, Utility.Xml.NameAttr(compNode));
+            string name = Utility.Xml.NameAttr(compNode);
+            if (name == "InitialWater" && Utility.Xml.Value(compNode, "Name") != "")
+                name = Utility.Xml.Value(compNode, "Name");
+
+            newNode = ImportObject(destParent, newNode, mywater, name);
 
             return newNode;
         }
@@ -636,11 +644,11 @@ namespace Importer
             newNode = this.AddCompNode(destParent, "SoilOrganicMatter", Utility.Xml.NameAttr(compNode));
 
             XmlNode childNode;
-            this.CopyNodeAndValue(compNode, newNode, "RootCN", "RootCN", true);
-            this.CopyNodeAndValue(compNode, newNode, "RootWt", "RootWt", true);
-            this.CopyNodeAndValue(compNode, newNode, "SoilCN", "SoilCN", true);
-            this.CopyNodeAndValue(compNode, newNode, "EnrACoeff", "EnrACoeff", true);
-            this.CopyNodeAndValue(compNode, newNode, "EnrBCoeff", "EnrBCoeff", true);
+            this.CopyNodeAndValue(compNode, newNode, "RootCN", "RootCN", false);
+            this.CopyNodeAndValue(compNode, newNode, "RootWt", "RootWt", false);
+            this.CopyNodeAndValue(compNode, newNode, "SoilCN", "SoilCN", false);
+            this.CopyNodeAndValue(compNode, newNode, "EnrACoeff", "EnrACoeff", false);
+            this.CopyNodeAndValue(compNode, newNode, "EnrBCoeff", "EnrBCoeff", false);
 
             // thickness array
             childNode = Utility.Xml.Find(compNode, "Thickness");
@@ -755,6 +763,10 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportSample(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
+            string name = Utility.Xml.NameAttr(compNode);
+            if (Utility.Xml.Value(compNode, "Name") != "")
+                name = Utility.Xml.Value(compNode, "Name");
+
             newNode = this.AddCompNode(destParent, "Sample", Utility.Xml.NameAttr(compNode));
 
             string date = this.GetInnerText(compNode, "Date");

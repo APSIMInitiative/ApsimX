@@ -56,6 +56,24 @@ namespace UserInterface.Commands
                     APSIMImporter importer = new APSIMImporter();
                     importer.ImportSoil(doc.DocumentElement, newDoc.DocumentElement, newDoc.DocumentElement);
                     soilNode = Utility.Xml.FindByType(newDoc.DocumentElement, "Soil");
+                    if (Utility.Xml.FindByType(soilNode, "Sample") == null &&
+                        Utility.Xml.FindByType(soilNode, "InitialWater") == null)
+                    {
+                        // Add in an initial water and initial conditions models.
+                        XmlNode initialWater = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("InitialWater"));
+                        Utility.Xml.SetValue(initialWater, "Name", "Initial water");
+                        Utility.Xml.SetValue(initialWater, "PercentMethod", "FilledFromTop");
+                        Utility.Xml.SetValue(initialWater, "FractionFull", "1");
+                        Utility.Xml.SetValue(initialWater, "DepthWetSoil", "NaN");
+                        XmlNode initialConditions = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("Sample"));
+                        Utility.Xml.SetValue(initialConditions, "Name", "Initial conditions");
+                        Utility.Xml.SetValue(initialConditions, "Thickness/double", "1800");
+                        Utility.Xml.SetValue(initialConditions, "NO3/double", "10");
+                        Utility.Xml.SetValue(initialConditions, "NH4/double", "1");
+                        Utility.Xml.SetValue(initialConditions, "NO3Units", "kgha");
+                        Utility.Xml.SetValue(initialConditions, "NH4Units", "kgha");
+                        Utility.Xml.SetValue(initialConditions, "SWUnits", "Volumetric");
+                    }
                 }
 
                 this.modelToAdd = Apsim.Add(this.toParent, soilNode) as Model;

@@ -334,11 +334,11 @@ namespace UserInterface.Views
                         {
                             this.Grid[col, row].Value = this.DataSource.Rows[row][col];
 
-                            if (row == 0)
-                            {
-                                this.Grid.Columns[col].Width = Math.Max(this.Grid.Columns[col].MinimumWidth,
-                                                                        this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true));
-                            }
+                            //if (row == 0)
+                            //{
+                            //    this.Grid.Columns[col].Width = Math.Max(this.Grid.Columns[col].MinimumWidth,
+                            //                                            this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true));
+                            //}
                         }
 
                         this.Grid.RowCount = this.DataSource.Rows.Count;
@@ -351,7 +351,12 @@ namespace UserInterface.Views
                 // Turn on autosizing.
                 foreach (DataGridViewColumn col in this.Grid.Columns)
                 {
-                    col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                    col.Width = Convert.ToInt32(col.GetPreferredWidth(DataGridViewAutoSizeColumnMode.DisplayedCells, true) * 1.2);
+
+                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                    //int newWidth = Convert.ToInt32(col.Width * 1.0);
+                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    //col.Width = newWidth;
                 }
 
                 // Reinstate Grid.CellValueChanged event.
