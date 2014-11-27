@@ -15,9 +15,9 @@ VersionInfoVersion={#AppVerNo}
 PrivilegesRequired=poweruser
 ;LicenseFile=..\license.txt
 AppVersion={#AppVerNo}
-AppID=apsim
-DefaultDirName={pf}\Apsim
-DefaultGroupName=APSIM
+AppID=APSIM{#AppVerNo}
+DefaultDirName={pf}\APSIM{#AppVerNo}
+DefaultGroupName=APSIM{#AppVerNo}
 UninstallDisplayIcon={app}\Bin\Userinterface.exe
 Compression=lzma/Max
 ChangesAssociations=true
@@ -196,10 +196,9 @@ Name: commondesktopicon; Description: Create a &desktop icon for all users; Flag
 Name: associate; Description: &Associate .apsimx with Apsim; GroupDescription: Other tasks:
 
 [Icons]
-Name: {commonprograms}\Apsim; Filename: {app}\Bin\UserInterface.exe
-;Name: {commonprograms}\CSIRO\Apsim Tutorial; Filename: {app}\docs\Apsim tutorial.pdf
-Name: {userdesktop}\Apsim; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
-Name: {commondesktop}\Apsim; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
+Name: {commonprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\UserInterface.exe
+Name: {userdesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\UserInterface.exe; Tasks: desktopicon
+Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\UserInterface.exe; Tasks: commondesktopicon
 
 [Registry]
 

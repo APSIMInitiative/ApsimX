@@ -202,10 +202,20 @@ namespace UserInterface.Classes
             {
                 OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
             }
-            XmlDocument doc = new XmlDocument();
             string contents = Utility.Xml.Value(N, "MemoText");
-            doc.LoadXml(contents);
-            string line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
+            string line;
+            if (contents.Contains('<'))
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(contents);
+                line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
+            }
+            else
+            {
+                // Maybe not xml - assume plain text.
+                line = contents;
+            }
+
             line = line.Replace("\r\n", "<br/><br/>");
             OutputFile.WriteLine(line);
         }
