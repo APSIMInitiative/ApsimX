@@ -719,7 +719,7 @@ namespace UserInterface.Presenters
                     series.Type = Series.SeriesType.Scatter;
 
                 string title = Title;
-                if (!series.Title.StartsWith("Series"))
+                if (series.Title != null && !series.Title.StartsWith("Series") && numSeries == 1)
                     title = series.Title;
 
                 // Create the series and populate it with data.

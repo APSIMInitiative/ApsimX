@@ -125,7 +125,7 @@ namespace UserInterface.Classes
             if (N.Name.Contains("Leaf") || N.Name.Contains("Root")) //Nodes to add parameter doc to
                 paramTable = DocumentParams(OutputFile, N);
             OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
-            
+
             WriteDescriptionForTypeName(OutputFile, N, parentModel);
 
             OutputFile.WriteLine(ClassDescription(N));
@@ -140,7 +140,7 @@ namespace UserInterface.Classes
 
         private static void DocumentNode(StreamWriter OutputFile, XmlNode N, int NextLevel, Model parentModel)
         {
-            
+
             if (N.Name == "Name")
                 return;
 
@@ -209,7 +209,7 @@ namespace UserInterface.Classes
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(contents);
                 line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
-            } 
+            }
             else
             {
                 // Maybe not xml - assume plain text.
@@ -549,7 +549,7 @@ namespace UserInterface.Classes
             else
                 GraphName = Utility.Xml.Value(N.ParentNode.ParentNode, "Name") + Utility.Xml.Value(N, "Name") + "Graph";
 
-            OutputFile.WriteLine(Header(Utility.Xml.Value(N.ParentNode, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+            OutputFile.WriteLine(Header(Utility.Xml.Value(N.ParentNode, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode.ParentNode, "Name")));
 
             WriteDescriptionForTypeName(OutputFile, N.ParentNode, parentModel);
             TryDocumentMemo(OutputFile, N.ParentNode, NextLevel);
@@ -617,7 +617,7 @@ namespace UserInterface.Classes
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(400, 400);
             graph.Export(image);
-            
+
             image.Save(GifFileName, System.Drawing.Imaging.ImageFormat.Gif);
         }
 
@@ -630,7 +630,7 @@ namespace UserInterface.Classes
             OutputFile.WriteLine("<th>Name</th><th>Units</th><th>Data type</th><th>Description</th>");
             foreach (PropertyInfo property in parentModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                
+
                 string unitsString = string.Empty;
                 UnitsAttribute units = Utility.Reflection.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (units != null)
@@ -653,7 +653,7 @@ namespace UserInterface.Classes
                 OutputFile.Write("<td id=\"properties\" >" + descriptionString + "</td>");
 
 
-                OutputFile.WriteLine("</tr>");   
+                OutputFile.WriteLine("</tr>");
             }
 
             OutputFile.WriteLine("</table>");
