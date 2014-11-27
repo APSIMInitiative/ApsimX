@@ -209,7 +209,7 @@ namespace UserInterface.Classes
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(contents);
                 line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
-            }
+            } 
             else
             {
                 // Maybe not xml - assume plain text.
