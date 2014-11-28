@@ -73,6 +73,7 @@ namespace UserInterface.Views
             if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
                 Environment.OSVersion.Platform == PlatformID.Win32Windows)
             {
+                content = content.Replace("&", "and");
                 this.htmlView1.MemoText = content;
             }
         }

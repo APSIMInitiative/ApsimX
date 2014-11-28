@@ -611,13 +611,16 @@ namespace UserInterface.Views
             foreach (DataGridViewCell cell in this.Grid.SelectedCells)
             {
                 // Save change in data source
-                this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
+                if (cell.RowIndex < this.DataSource.Rows.Count)
+                {
+                    this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
 
-                // Delete cell in grid.
-                this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
+                    // Delete cell in grid.
+                    this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
 
-                // Put a cell into the cells changed member.
-                cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                    // Put a cell into the cells changed member.
+                    cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                }
             }
 
             // If some cells were changed then send out an event.

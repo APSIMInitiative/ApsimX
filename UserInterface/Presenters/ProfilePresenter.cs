@@ -389,10 +389,13 @@ namespace UserInterface.Presenters
                         values = Utility.DataTable.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
                         if (!Utility.Math.ValuesInArray((double[])values))
                             values = null;
+                        else
+                            values = Utility.Math.RemoveMissingValuesFromBottom((double[])values);
                     }
                     else
                     {
                         values = Utility.DataTable.GetColumnAsStrings(data, data.Columns[i].ColumnName);
+                        values = Utility.Math.RemoveMissingValuesFromBottom((string[])values);
                     }
 
                     // Is the value any different to the former property value?
@@ -437,7 +440,7 @@ namespace UserInterface.Presenters
             // a give to profile grid.
             for (int i = 0; i < this.propertiesInGrid.Count; i++)
             {
-                if (this.propertiesInGrid[i].IsReadOnly)
+                if (this.propertiesInGrid[i].IsReadOnly && i > 0)
                 {
                     VariableProperty property = this.propertiesInGrid[i];
                     int col = i;

@@ -1086,6 +1086,29 @@ namespace Utility
         }
 
         /// <summary>
+        /// Return an array of values where the missing values have been removed.
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
+        static public string[] RemoveMissingValuesFromBottom(string[] Values)
+        {
+            if (Values == null) return null;
+            // Find the last non missing value.
+            int i;
+            for (i = Values.Length - 1; i >= 0; i--)
+            {
+                if (Values[i] != "")
+                    break;
+            }
+            if (i < 0)
+                return new string[0];
+            string[] ReturnValues = new string[i + 1];
+            for (int j = 0; j <= i; j++)
+                ReturnValues[j] = Values[j];
+            return ReturnValues;
+        }
+
+        /// <summary>
         /// Remove a value from the specified array.
         /// </summary>
         /// <param name="Values"></param>
