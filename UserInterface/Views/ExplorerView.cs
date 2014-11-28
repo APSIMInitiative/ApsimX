@@ -207,6 +207,7 @@ namespace UserInterface.Views
                 }
 
                 TreeView.AfterSelect += TreeView_AfterSelect;
+                PopulatePopupMenu();
             }
         }
 
@@ -465,6 +466,7 @@ namespace UserInterface.Views
         /// </summary>
         public void InvalidateNode(string NodePath, NodeDescriptionArgs.Description Description)
         {
+            AddRightHandView(null);
             TreeNode Node = FindNode(NodePath);
             ConfigureNode(Node, Description);
             PopulateNodes(Node);
@@ -574,7 +576,7 @@ namespace UserInterface.Views
         /// User has right clicked on a node, opening the context popup menu. Go create that menu
         /// by asking the presenter what to put on the menu.
         /// </summary>
-        private void OnPopupMenuOpening(object sender, CancelEventArgs e)
+        private void PopulatePopupMenu()
         {
             if (PopulateContextMenu != null)
             {
@@ -597,7 +599,6 @@ namespace UserInterface.Views
                     Button.Enabled = Description.Enabled;
                 }
             }
-            e.Cancel = false;
         }
 
 

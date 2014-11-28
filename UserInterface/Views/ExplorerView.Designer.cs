@@ -115,7 +115,6 @@
             // 
             this.PopupMenu.Name = "ContextMenu";
             this.PopupMenu.Size = new System.Drawing.Size(61, 4);
-            this.PopupMenu.Opening += new System.ComponentModel.CancelEventHandler(this.OnPopupMenuOpening);
             // 
             // TreeImageList
             // 
