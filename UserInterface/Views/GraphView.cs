@@ -41,6 +41,12 @@ namespace UserInterface.Views
         /// </summary>
         private const int TopMargin = 75;
 
+        /// <summary>The smallest date used on any axis.</summary>
+        private DateTime smallestDate = DateTime.MaxValue;
+
+        /// <summary>The largest date used on any axis</summary>
+        private DateTime largestDate = DateTime.MinValue;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
         /// </summary>
@@ -50,6 +56,8 @@ namespace UserInterface.Views
             this.plot1.Model = new PlotModel();
             this.splitter.Visible = false;
             this.bottomPanel.Visible = false;
+            smallestDate = DateTime.MaxValue;
+            largestDate = DateTime.MinValue;
         }
 
         /// <summary>
@@ -445,6 +453,22 @@ namespace UserInterface.Views
         {
             axis.IntervalLength = 100;
 
+            if (axis is DateTimeAxis)
+            {
+                DateTimeAxis dateAxis = axis as DateTimeAxis;
+
+                int numDays = (largestDate - smallestDate).Days;
+                if (numDays < 100)
+                    dateAxis.IntervalType = DateTimeIntervalType.Days;
+                else if (numDays <= 366)
+                {
+                    dateAxis.IntervalType = DateTimeIntervalType.Months;
+                    dateAxis.StringFormat = "dd-MMM";
+                }
+                else
+                    dateAxis.IntervalType = DateTimeIntervalType.Years;
+            }
+
             if (axis is LinearAxis && 
                 (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
             {
@@ -512,7 +536,14 @@ namespace UserInterface.Views
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
                 do
-                    dataPointValues.Add(DateTimeAxis.ToDouble(Convert.ToDateTime(enumerator.Current)));
+                {
+                    DateTime d = Convert.ToDateTime(enumerator.Current);
+                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                    if (d < smallestDate)
+                        smallestDate = d;
+                    if (d > largestDate)
+                        largestDate = d;
+                }
                 while (enumerator.MoveNext());
             }
             else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
