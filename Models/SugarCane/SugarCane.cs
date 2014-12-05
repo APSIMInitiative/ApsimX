@@ -23,7 +23,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SugarCane : Model
+    public class SugarCane : Model, ICrop
         {
 
 
@@ -41,8 +41,8 @@ namespace Models
         private Weather Weather;
 
         
-        [Link]
-        private MicroClimate MicroClim; //added for fr_intc_radn_ , but don't know what the corresponding variable is in MicroClimate.
+        //[Link]
+        //private MicroClimate MicroClim; //added for fr_intc_radn_ , but don't know what the corresponding variable is in MicroClimate.
 
         
         /// <summary>The soil</summary>
@@ -433,15 +433,15 @@ namespace Models
         //[Param(MaxVal = 0.0, MinVal = 1.0)]
         //! eXtension rate Factor (0-1)
         [XmlIgnore]
-        private double[] xf
-            {
-            get
-                {
-                ISoilCrop ISugarCane = Soil.Crop("SugarCane");
-                SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
-                return SugarCane.XF; 
-                }
-            }
+        private double[] xf;
+            //{
+            //get
+            //    {
+            //    ISoilCrop ISugarCane = Soil.Crop("SugarCane");
+            //    SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            //    return SugarCane.XF; 
+            //    }
+            //}
 
 
         //! sugar_sw_supply
@@ -449,15 +449,15 @@ namespace Models
         //TODO: Either find a way to use this or remove 'll_ub' from the ini file.
         //[MinVal = 0.0, MaxVal = ll_ub]
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 1000.0)]
-        private double[] ll
-            {
-            get
-                {
-                ISoilCrop ISugarCane = Soil.Crop("SugarCane");
-                SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
-                return SugarCane.LL;
-                }
-            }
+        private double[] ll;
+            //{
+            //get
+            //    {
+            //    ISoilCrop ISugarCane = Soil.Crop("SugarCane");
+            //    SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            //    return SugarCane.LL;
+            //    }
+            //}
 
 
         //ll15 is an INPUT not a PARAM
@@ -468,15 +468,15 @@ namespace Models
         //[Param(MinVal = 0.0, MaxVal = 1.0)]
         //! root length density factor for water
         [XmlIgnore]
-        private double[] kl
-            {
-            get
-                {
-                ISoilCrop ISugarCane = Soil.Crop("SugarCane");
-                SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
-                return SugarCane.KL;
-                }
-            }
+        private double[] kl;
+            //{
+            //get
+            //    {
+            //    ISoilCrop ISugarCane = Soil.Crop("SugarCane");
+            //    SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            //    return SugarCane.KL;
+            //    }
+            //}
 
 
 
@@ -572,58 +572,52 @@ namespace Models
         //! Soil Water module
         //! -----------------
 
+        //sugar_get_soil_variables() is where these variables are initialised.
+
+
         ////[ MinVal=dlayer_lb, MaxVal=dlayer_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
-        //double[] dlayer = new double[max_layer];
+        [XmlIgnore]
+        public double[] dlayer = new double[max_layer];
 
 
-
-        int num_layers
-            {
-            get
-                {
-                if (Soil.Thickness.Length == max_layer)
-                    {
-                    //! we assume dlayer hasn't been initialised yet.
-                    return Soil.Thickness.Length;
-                    }
-                else
-                    {
-                    return Soil.Thickness.Length;   //this is a temporary fix. remove it later.
-                    }
-                }
-            }
-
+        [XmlIgnore]
+        public int num_layers { get { return Soil.Thickness.Length; } }
 
 
         ////[ MinVal=0.0, MaxVal=2.65]
         //[Input(IsOptional = true)]
         //[Units("g/cc")]
-        //double[] bd = new double[max_layer];
+        [XmlIgnore]
+        public double[] bd = new double[max_layer];
 
 
 
         ////[MinVal=dul_dep_lb, MaxVal=dul_dep_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
-        //double[] dul_dep = new double[max_layer];
+        [XmlIgnore]
+        public double[] dul_dep = new double[max_layer];
 
 
         ////[MinVal=sw_dep_lb, MaxValsw_dep_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
-        //double[] sw_dep = new double[max_layer];
+        [XmlIgnore]
+        public double[] sw_dep = new double[max_layer];
 
         ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
-        //double[] sat_dep = new double[max_layer];
+        [XmlIgnore]
+        public double[] sat_dep = new double[max_layer];
 
         ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
-        //double[] ll15_dep = new double[max_layer];
+        [XmlIgnore]
+        public double[] ll15_dep = new double[max_layer];
 
 
 
@@ -1064,7 +1058,7 @@ namespace Models
 
             //            //! zero pools etc.
 
-            Summary.WriteMessage(this, "ZERO DAILY VARIABLES");
+            //Summary.WriteMessage(this, "ZERO DAILY VARIABLES");
 
             ZeroArray(ref g_dlt_dm_green);
             ZeroArray(ref g_dlt_dm_green_retrans);
@@ -1261,13 +1255,13 @@ namespace Models
             // Find the soil layer in which the indicated depth is located
             // If the depth is not reached, the last element is used
             double depth_cum = 0.0;
-            for (int i = 0; i < Soil.Thickness.Length; i++)
+            for (int i = 0; i < dlayer.Length; i++)
                 {
-                depth_cum = depth_cum + Soil.Thickness[i];
+                depth_cum = depth_cum + dlayer[i];
                 if (depth_cum >= Depth)
                     return i + 1;    //convert to one based  
                 }
-            return Soil.Thickness.Length;   //one based
+            return dlayer.Length;   //one based
             }
 
 
@@ -2752,7 +2746,7 @@ namespace Models
             double l_afps;
             bool l_didInterpolate;
 
-            l_afps = Utility.Math.Divide((Soil.SoilWater.SATmm[zb(i_layer_ob)] - Soil.Water[zb(i_layer_ob)]), Soil.Thickness[zb(i_layer_ob)], 0.0);
+            l_afps = Utility.Math.Divide((sat_dep[zb(i_layer_ob)] - sw_dep[zb(i_layer_ob)]), dlayer[zb(i_layer_ob)], 0.0);
 
             return Utility.Math.LinearInterpReal(l_afps, crop.x_afps, crop.y_afps_fac, out l_didInterpolate);
 
@@ -5757,8 +5751,8 @@ namespace Models
                 {
                 l_fixation_determinant = SumArray(g_dm_green, max_part) - g_dm_green[root];
 
-                cproc_n_supply2(Soil.Thickness, max_layer,
-                                g_dlt_sw_dep, g_no3gsm, g_no3gsm_min, g_root_depth, Soil.Water, ref g_no3gsm_mflow_avail,
+                cproc_n_supply2(dlayer, max_layer,
+                                g_dlt_sw_dep, g_no3gsm, g_no3gsm_min, g_root_depth, sw_dep, ref g_no3gsm_mflow_avail,
                                 g_sw_avail, g_sw_avail_pot, ref g_no3gsm_diffn_pot,
                                 g_current_stage, crop.n_fix_rate, l_fixation_determinant, g_swdef_fixation, ref g_n_fix_pot);
                 }
@@ -5766,7 +5760,7 @@ namespace Models
                 {
                 l_fixation_determinant = SumArray(g_dm_green, max_part) - g_dm_green[root];
 
-                cproc_n_supply4(Soil.Thickness, Soil.BD, max_layer,
+                cproc_n_supply4(dlayer, bd, max_layer,
                                 g_no3gsm, g_no3gsm_min, ref g_no3gsm_uptake_pot,
                                 g_nh4gsm, g_nh4gsm_min, ref g_nh4gsm_uptake_pot,
                                 g_root_depth,
@@ -6166,7 +6160,7 @@ namespace Models
             if (i_option == 1)
                 {
                 cproc_N_uptake1(NO3_diffn_const,
-                                    Soil.Thickness, max_layer,
+                                    dlayer, max_layer,
                                     g_no3gsm_diffn_pot, g_no3gsm_mflow_avail,
                                     g_n_fix_pot, n_supply_preference,
                                     g_n_demand, g_n_demand,   //!sugar does not have n_max
@@ -6175,7 +6169,7 @@ namespace Models
                 }
             else if (i_option == 2)
                 {
-                cproc_n_uptake3(Soil.Thickness, max_layer,
+                cproc_n_uptake3(dlayer, max_layer,
                                     g_no3gsm_uptake_pot, g_nh4gsm_uptake_pot,
                                     g_n_fix_pot, n_supply_preference,
                                     g_n_demand, g_n_demand,
@@ -7801,10 +7795,10 @@ namespace Models
             double l_N_green_conc_percent;  //! n% of tops less flower (incl grain)
 
 
-            //sv- I added this to mimic what the fortran infrastructure does.
-            //"13 July 1991(Day of year=194), sugar: ");
-            //http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
-            Summary.WriteMessage(this, string.Format("{0}{1}{2}{3}", Clock.Today.ToString("d MMMM yyy").ToString(), "(Day of year=", g_day_of_year, "), SugarCane: "));
+            ////sv- I added this to mimic what the fortran infrastructure does.
+            ////"13 July 1991(Day of year=194), sugar: ");
+            ////http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
+            //Summary.WriteMessage(this, string.Format("{0}{1}{2}{3}", Clock.Today.ToString("d MMMM yyy").ToString(), "(Day of year=", g_day_of_year, "), SugarCane: "));
 
 
             l_stage_no = (int)i_current_stage;
@@ -8260,11 +8254,11 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_rlv = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     {
-                    l_rlv[layer] = Utility.Math.Divide(g_root_length[layer], Soil.Thickness[layer], 0.0) * sugar_afps_fac(layer);
+                    l_rlv[layer] = Utility.Math.Divide(g_root_length[layer], dlayer[layer], 0.0) * sugar_afps_fac(layer);
                     }
                 return l_rlv;
                 }
@@ -8278,11 +8272,11 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_rlv = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     {
-                    l_rlv[layer] = Utility.Math.Divide(g_root_length[layer], Soil.Thickness[layer], 0.0);
+                    l_rlv[layer] = Utility.Math.Divide(g_root_length[layer], dlayer[layer], 0.0);
                     }
                 return l_rlv;
                 }
@@ -8296,7 +8290,7 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_ll_dep = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     {
@@ -8789,7 +8783,7 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double l_ep = Math.Abs(SumArray(g_dlt_sw_dep, num_layers));
                 return l_ep;
                 }
@@ -8810,7 +8804,7 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_rwu = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     {
@@ -8854,14 +8848,14 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_esw_layr = new double[num_layers];
 
                 if (g_crop_status != crop_out)
                     {
                     for (int layer = 0; layer < num_layers; layer++)
                         {
-                        l_esw_layr[layer] = Math.Max(0.0, Soil.Water[layer] - g_ll_dep[layer]);
+                        l_esw_layr[layer] = Math.Max(0.0, sw_dep[layer] - g_ll_dep[layer]);
                         }
                     }
                 else
@@ -8955,7 +8949,7 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NO3_uptake = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     {
@@ -8973,7 +8967,7 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NH4_uptake = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     {
@@ -8992,7 +8986,7 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NO3_uptake_pot = new double[num_layers];
                 Array.Copy(g_no3gsm_uptake_pot, l_NO3_uptake_pot, num_layers);
                 return l_NO3_uptake_pot;
@@ -9007,7 +9001,7 @@ namespace Models
             {
             get
                 {
-                int num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NH4_uptake_pot = new double[num_layers];
                 Array.Copy(g_nh4gsm_uptake_pot, l_NH4_uptake_pot, num_layers);
                 return l_NH4_uptake_pot;
@@ -9021,6 +9015,124 @@ namespace Models
         #endregion
 
 
+
+        #region Implement the ICrop Interface
+
+
+        /// <summary>
+        /// Provides canopy data to SoilWater.
+        /// </summary>
+        [XmlIgnore]
+        public NewCanopyType CanopyData 
+            {
+            get
+                {
+                NewCanopyType data = new NewCanopyType();
+                data.cover = cover_green;
+                data.cover_tot = cover_tot;
+                data.height = height;
+                data.depth = height;   //sv- all the other crop modules tend to set the depth to the height of the crop.
+                data.lai = lai;
+                data.lai_tot = tlai;
+                return data; 
+                }
+            }
+
+        /// <summary>
+        /// MicroClimate will get 'CropType' and use it to look up
+        /// canopy properties for this crop.
+        /// </summary>
+        [XmlIgnore]
+        public string CropType { get { return crop_type; } }
+
+        /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        [XmlIgnore]
+        public bool IsAlive 
+            {
+            get
+                {
+                if (g_crop_status == crop_alive)
+                    return true;
+                else
+                    return false;
+                }
+            
+            }
+
+        /// <summary>
+        /// Crop specific relative growth stress factor (0-1). MicroClimate
+        /// uses this to calculate the crop canopy conductance
+        /// </summary>
+        [XmlIgnore]
+        public double FRGR { get { return 0; } }  //TODO: don't know how to implement FRGR in SugarCane. So just return 0.
+
+        /// <summary>
+        /// Potential evapotranspiration. MicroClimate calculates this and sets
+        /// this property in the crop.
+        /// </summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
+
+        /// <summary>
+        /// MicroClimate calculates a layered canopy energy balance and sets
+        /// this property in the crop.
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } //TODO: don't know how to implement LightProfile in SugarCane
+
+        /// <summary>
+        /// Gets a list of cultivar names
+        /// </summary>
+        [XmlIgnore]
+        public string[] CultivarNames 
+            {
+            get
+                {
+                string[] returnArray = new string[cultivars.Length];
+                for(int i=0; i < cultivars.Length; i++)
+                    {
+                    returnArray[i] = cultivars[i].cultivar_name;
+                    }
+                return returnArray;
+                }
+            }
+
+
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)  
+            {
+            return info;   //sv- other crop modules seem to do this, so I just copied it. (Only Plant15 seems to use SoilArbitrator though)
+            }
+
+
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        { }    //sv- other crop modules seem to do this, so I just copied it. (used by SoilArbitrator) (Only Plant15 seems to use SoilArbitrator though)
+
+
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar">The cultivar.</param>
+        /// <param name="population">The population.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="maxCover">The maximum cover.</param>
+        /// <param name="budNumber">The bud number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+            {
+            Sow(population, depth, cultivar);
+            }
+       
+
+
+
+
+        #endregion
 
 
 
@@ -9072,6 +9184,85 @@ namespace Models
             //sv- See Erosion Event Handler for where this has been moved to and commented out. 
 
             //Figure out a .NET event way to implement this.
+
+            
+            //      if (g%num_layers.eq.0) then
+            //            ! we assume dlayer hasn't been initialised yet.
+            //         call add_real_array (dlayer, g%dlayer, numvals)
+            //         g%num_layers = numvals
+
+            //      else
+
+            //           ! dlayer may be changed from its last setting
+            //           ! due to erosion
+
+            //         profile_depth = sum_real_array (dlayer, numvals)
+
+            //         if (g%root_depth.gt.profile_depth) then
+            //            root_depth_new = profile_depth
+            //            call crop_root_redistribute
+            //     :                        ( g%root_length
+            //     :                        , g%root_depth
+            //     :                        , g%dlayer
+            //     :                        , g%num_layers
+            //     :                        , root_depth_new
+            //     :                        , dlayer
+            //     :                        , numvals)
+
+            //            g%root_depth = root_depth_new
+            //         else
+            //            ! roots are ok.
+            //         endif
+
+            //         do 1000 layer = 1, numvals
+            //            ! What happens if crop not in ground and p%ll_dep is empty
+            //            p%ll_dep(layer) = divide (p%ll_dep(layer)
+            //     :                              , g%dlayer(layer), 0.0)
+            //     :                      * dlayer(layer)
+
+            //            g%dlayer(layer) = dlayer(layer)
+            //1000     continue
+            //         g%num_layers = numvals
+
+            //      endif
+
+            // call get_real_array (unknown_module, 'dlayer', max_layer
+            //:                                    , '(mm)'
+            //:                                    , dlayer, numvals
+            //:                                    , c%dlayer_lb, c%dlayer_ub)
+
+            // call get_real_array (unknown_module, 'bd', max_layer
+            //:                                    , '(g/cc)'
+            //:                                    , g%bd, numvals
+            //:                                    , 0.0, 2.65)
+
+            // call get_real_array (unknown_module, 'dul_dep', max_layer
+            //:                                    , '(mm)'
+            //:                                    , g%dul_dep, numvals
+            //:                                    , c%dul_dep_lb, c%dul_dep_ub)
+            // call get_real_array (unknown_module, 'sw_dep', max_layer
+            //:                                    , '(mm)'
+            //:                                    , g%sw_dep, numvals
+            //:                                    , c%sw_dep_lb, c%sw_dep_ub)
+            // call get_real_array (unknown_module, 'sat_dep', max_layer
+            //:                                    , '(mm)'
+            //:                                    , g%sat_dep, numvals
+            //:                                    , c%sw_dep_lb, c%sw_dep_ub)
+            // call get_real_array (unknown_module, 'll15_dep', max_layer
+            //:                                    , '(mm)'
+            //:                                    , g%ll15_dep, numvals
+            //:                                    , c%sw_dep_lb, c%sw_dep_ub)
+
+            dlayer = Soil.Thickness;
+            //num_layers = dlayer.Length;
+
+            bd = Soil.BD;           //Soil.BDMapped;
+            dul_dep = Soil.SoilWater.DULmm;
+            sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
+            sat_dep = Soil.SoilWater.SATmm;
+            ll15_dep = Soil.SoilWater.LL15mm;
+
+
 
 
 
@@ -9179,7 +9370,7 @@ namespace Models
             g_year = Clock.Today.Year;
             sugar_zero_daily_variables();
 
-            Summary.WriteMessage(this, "day of year: " + g_day_of_year);
+            //Summary.WriteMessage(this, "day of year: " + g_day_of_year);
 
 
 
@@ -9260,7 +9451,7 @@ namespace Models
                 //WATER LOGGING     //sv- also called in Process Event.
 
                 //sugar_water_log(1);       
-                g_oxdef_photo = crop_oxdef_photo1(crop.oxdef_photo, crop.oxdef_photo_rtfr, Soil.SoilWater.LL15mm, Soil.SoilWater.SATmm, Soil.Water, Soil.Thickness, g_root_length, g_root_depth);
+                g_oxdef_photo = crop_oxdef_photo1(crop.oxdef_photo, crop.oxdef_photo_rtfr, ll15_dep, sat_dep, sw_dep, dlayer, g_root_length, g_root_depth);
 
 
 
@@ -9283,7 +9474,7 @@ namespace Models
 
                 //sugar_water_demand(1);
                 g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, Soil.SoilWater.Eo);
-
+ 
 
 
 
@@ -9324,16 +9515,16 @@ namespace Models
                 //ROOT GROWTH
 
                 //sugar_root_depth(1)
-                sugar_root_depth_growth(Soil.Thickness,
+                sugar_root_depth_growth(dlayer,
                                          crop.x_sw_ratio, crop.y_sw_fac_root,
                                          crop.x_afps, crop.y_afps_fac,
-                                         Soil.SoilWater.DULmm, Soil.Water, g_ll_dep,
+                                         dul_dep, sw_dep, g_ll_dep,
                                          crop.root_depth_rate, g_current_stage, xf,
                                          out g_dlt_root_depth, g_root_depth);
 
 
                 //sugar_root_Depth_init(1)  //! after because it sets the delta //!NOTE THIS IS STILL THE DELTA
-                sugar_init_root_depth(Soil.Thickness, g_root_length, g_root_depth, ref g_dlt_root_depth);
+                sugar_init_root_depth(dlayer, g_root_length, g_root_depth, ref g_dlt_root_depth);
 
 
 
@@ -9344,7 +9535,7 @@ namespace Models
                 //sugar_water_supply(1)
 
                 //c+!!!!!!!!! check order dependency of delta
-                cproc_sw_supply1(sw_dep_lb, Soil.Thickness, g_ll_dep, Soil.SoilWater.DULmm, Soil.Water, g_root_depth, kl
+                cproc_sw_supply1(sw_dep_lb, dlayer, g_ll_dep, dul_dep, sw_dep, g_root_depth, kl
                                 , ref g_sw_avail
                                 , ref g_sw_avail_pot
                                 , ref g_sw_supply
@@ -9370,7 +9561,7 @@ namespace Models
 
                 if (uptake_source == "calc")
                     {
-                    cproc_sw_uptake1(Soil.Thickness, g_root_depth, g_sw_demand, g_sw_supply, ref g_dlt_sw_dep);
+                    cproc_sw_uptake1(dlayer, g_root_depth, g_sw_demand, g_sw_supply, ref g_dlt_sw_dep);
                     }
                 else
                     {
@@ -9426,7 +9617,7 @@ namespace Models
 
                     g_phase_devel = crop_phase_devel(sowing, sprouting, flowering,
                                                         crop.pesw_germ, crop.fasw_emerg, crop.rel_emerg_rate, crop.num_fasw_emerg, g_current_stage, g_days_tot,
-                                                        Soil.Thickness, max_layer, g_sowing_depth, Soil.Water, Soil.SoilWater.DULmm, g_ll_dep, ref g_dlt_tt, g_phase_tt, g_tt_tot);
+                                                        dlayer, max_layer, g_sowing_depth, sw_dep, dul_dep, g_ll_dep, ref g_dlt_tt, g_phase_tt, g_tt_tot);
 
 
                     crop_devel(g_current_stage, max_stage, g_phase_devel, out g_dlt_stage, ref g_current_stage);
@@ -9437,9 +9628,9 @@ namespace Models
                     accumulate_ob(g_dlt_tt, ref g_tt_tot, g_previous_stage, g_dlt_stage);
 
                     accumulate_ob(1.0, ref g_days_tot, g_previous_stage, g_dlt_stage);
-                    Summary.WriteMessage(this, "das: " + sum_between_zb(zb(sowing), zb(now), g_days_tot));
+                    //Summary.WriteMessage(this, "das: " + sum_between_zb(zb(sowing), zb(now), g_days_tot));
                     //PrintArray("days_tot: ", g_days_tot);
-                    Summary.WriteMessage(this, "dlt_stage: " + g_dlt_stage);
+                    //Summary.WriteMessage(this, "dlt_stage: " + g_dlt_stage);
 
                     //End - cproc_phenology1 ()
 
@@ -9496,7 +9687,7 @@ namespace Models
                     //WATER LOGGING
 
                     //sugar_water_log(1)
-                    g_oxdef_photo = crop_oxdef_photo1(crop.oxdef_photo, crop.oxdef_photo_rtfr, Soil.SoilWater.LL15mm, Soil.SoilWater.SATmm, Soil.Water, Soil.Thickness, g_root_length, g_root_depth);
+                    g_oxdef_photo = crop_oxdef_photo1(crop.oxdef_photo, crop.oxdef_photo_rtfr, ll15_dep, sat_dep, sw_dep, dlayer, g_root_length, g_root_depth);
 
 
 
@@ -9508,7 +9699,7 @@ namespace Models
 
                     //sugar_bio_actual(1); //sv- get initial value
                     sugar_dm_init(crop.dm_cabbage_init, crop.dm_leaf_init, crop.dm_sstem_init, crop.dm_sucrose_init, crop.specific_root_length,
-                                g_current_stage, Soil.Thickness, g_plants, g_root_length,
+                                g_current_stage, dlayer, g_plants, g_root_length,
                                 ref g_dm_green, ref g_leaf_dm_zb);
 
 
@@ -9586,10 +9777,10 @@ namespace Models
 
                     //sugar_root_dist(1)
                     cproc_root_length_growth1(ref g_dlt_root_length,
-                                             crop.specific_root_length, Soil.Thickness,
+                                             crop.specific_root_length, dlayer,
                                              g_dlt_dm_green[root], g_dlt_root_depth, g_root_depth, g_root_length, g_plants, xf,
                                              crop.x_sw_ratio, crop.y_sw_fac_root, crop.x_plant_rld, crop.y_rel_root_rate,
-                                             Soil.SoilWater.DULmm, Soil.Water, g_ll_dep, max_layer);
+                                             dul_dep, sw_dep, g_ll_dep, max_layer);
 
 
 
@@ -9660,7 +9851,7 @@ namespace Models
                     //ROOT LENGTH SENESCENCE (root length lost)
 
                     //sugar_sen_root_length (1)
-                    cproc_root_length_senescence1(crop.specific_root_length, Soil.Thickness, g_dlt_dm_senesced[root], g_root_length, g_root_depth, ref g_dlt_root_length_senesced);
+                    cproc_root_length_senescence1(crop.specific_root_length, dlayer, g_dlt_dm_senesced[root], g_root_length, g_root_depth, ref g_dlt_root_length_senesced);
 
 
 
@@ -9685,7 +9876,7 @@ namespace Models
                     //sugar_nit_partition (1)
                     //*+  Mission Statement
                     //*     Get the nitrogen partitioning information
-                    sugar_N_partition(Soil.Thickness, g_dlt_no3gsm, g_dlt_nh4gsm, g_n_demand, g_root_depth, ref g_dlt_n_green);
+                    sugar_N_partition(dlayer, g_dlt_no3gsm, g_dlt_nh4gsm, g_n_demand, g_root_depth, ref g_dlt_n_green);
 
 
 
@@ -9774,12 +9965,12 @@ namespace Models
                          );
 
 
-                sugar_totals(g_current_stage, g_days_tot, g_day_of_year, Soil.Thickness, g_dlt_sw_dep, g_dm_green, ref g_isdate,
+                sugar_totals(g_current_stage, g_days_tot, g_day_of_year, dlayer, g_dlt_sw_dep, g_dm_green, ref g_isdate,
                             g_lai, ref g_lai_max, ref g_n_conc_act_stover_tot, g_n_demand, ref g_n_demand_tot, g_n_green, g_root_depth, ref g_transpiration_tot);
 
 
                 sugar_event(crop.stage_code_list, crop.stage_names, g_current_stage, g_days_tot, g_day_of_year,
-                            Soil.Thickness, g_dm_dead, g_dm_green, g_dm_senesced, g_lai, g_n_green, g_root_depth, Soil.Water, g_year, g_ll_dep);
+                            dlayer, g_dm_dead, g_dm_green, g_dm_senesced, g_lai, g_n_green, g_root_depth, sw_dep, g_year, g_ll_dep);
 
 
 
@@ -9980,27 +10171,38 @@ namespace Models
 
             //!       sugar_sw_supply
 
+            ISoilCrop ISugarCane = Soil.Crop("SugarCane");
+            SoilCrop SugarCane = (SoilCrop)ISugarCane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+
+            xf = SugarCane.XF;
+            ll = SugarCane.LL;
+            kl = SugarCane.KL;
+
+
             //work out what ll_dep is
 
-            //if ll for sugar was specified then use it.
+            //if ll for SugarCane was specified then use it.
             if (ll.Length < max_layer)
                 {
                 for (int layer = 0; layer < num_layers; layer++)
                     {
-                    g_ll_dep[layer] = ll[layer] * Soil.Thickness[layer];
+                    g_ll_dep[layer] = ll[layer] * dlayer[layer];
                     }
                 Array.Resize(ref g_ll_dep, num_layers);
                 }
             else
                 {
                 //else if ll15 was specified then use that.
-                if (Soil.LL15.Length < max_layer)
+                if (ll15_dep.Length < max_layer)
                     {
-                    for (int layer = 0; layer < num_layers; layer++)
-                        {
-                        g_ll_dep[layer] = Soil.LL15[layer] * Soil.Thickness[layer];
-                        }
-                    Array.Resize(ref g_ll_dep, num_layers);
+                    g_ll_dep = ll15_dep;
+                //if (Soil.SoilWater.LL15.Length < max_layer)
+                //    {
+                //    for (int layer = 0; layer < num_layers; layer++)
+                //        {
+                //        g_ll_dep[layer] = Soil.SoilWater.LL15[layer] * dlayer[layer];
+                //        }
+                //    Array.Resize(ref g_ll_dep, num_layers);
                     Summary.WriteMessage(this, "Using externally supplied Lower Limit (ll15)");
                     }
                 else
@@ -10016,7 +10218,7 @@ namespace Models
             ZeroArray(ref g_root_length);
             for (int layer = 0; layer < rlv_init.Length; layer++)      //rlv.Length may be less than num_layers
                 {
-                g_root_length[layer] = rlv_init[layer] * Soil.Thickness[layer];
+                g_root_length[layer] = rlv_init[layer] * dlayer[layer];
                 }
             Array.Resize(ref g_root_length, num_layers);  //g_root_length has max_layer number of elements, so now shorten this to num_layer
 
@@ -10084,7 +10286,7 @@ namespace Models
                 Array.Copy(rlv_init, l_rlv_init, rlv_init.Length);
 
                 Summary.WriteMessage(this, string.Format(" {0,12:F0}{1,12:0.000}{2,12:0.000}{3,12:0.000}{4,12:0.000}{5,12:0.000}",
-                    Soil.Thickness[layer], l_rlv_init[layer], g_root_length[layer], ll[layer], kl[layer], xf[layer]));
+                    dlayer[layer], l_rlv_init[layer], g_root_length[layer], ll[layer], kl[layer], xf[layer]));
                 }
 
             line = "   ----------------------------------------------------------------------";
@@ -10306,7 +10508,7 @@ namespace Models
 
 
 
-                crop_root_incorp(l_dm_root, l_N_root, Soil.Thickness, g_root_length, g_root_depth, crop_type, max_layer);
+                crop_root_incorp(l_dm_root, l_N_root, dlayer, g_root_length, g_root_depth, crop_type, max_layer);
 
                 for (int p = 0; p < max_part; p++)
                     {
@@ -10471,7 +10673,7 @@ namespace Models
 
                 l_N_root = g_n_green[root] + g_n_dead[root] + g_n_senesced[root];
 
-                crop_root_incorp(l_dm_root, l_N_root, Soil.Thickness, g_root_length, g_root_depth, crop_type, max_layer);
+                crop_root_incorp(l_dm_root, l_N_root, dlayer, g_root_length, g_root_depth, crop_type, max_layer);
 
 
                 //! put stover into surface residue
@@ -10866,7 +11068,7 @@ namespace Models
             if (uptake_source == "calc")
                 {
 
-                num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                num_layers = count_of_real_vals(dlayer, max_layer);
 
                 //sv- I added this resize, from max_layer to num_layer. 
                 //    Done so the NitrogenChanges.DeltaNO3 etc. gets an array of a sensible size.
@@ -10898,7 +11100,7 @@ namespace Models
                 }
             else if (uptake_source == "swim3")
                 {
-                num_layers = count_of_real_vals(Soil.Thickness, max_layer);
+                num_layers = count_of_real_vals(dlayer, max_layer);
 
                 //sv- I added this resize, from max_layer to num_layer
                 //    Done so the NitrogenChanges.DeltaNO3 etc. gets an array of the sensible size.
@@ -10981,7 +11183,7 @@ namespace Models
 
             crop_root_incorp((i_dlt_dm_detached[root] + i_dlt_dm_dead_detached[root]),
                                 (i_dlt_n_detached[root] + i_dlt_n_dead_detached[root]),
-                                Soil.Thickness, i_root_length, i_root_depth, crop_type, max_layer);
+                                dlayer, i_root_length, i_root_depth, crop_type, max_layer);
 
 
             }
@@ -11083,9 +11285,9 @@ namespace Models
                     //    This is silly naming but I think that this is what they have done.
                     //    They should have called it FOMInSoil or something, rather than FOMLayer.
 
-                    FOMLayerLayerType[] allLayers = new FOMLayerLayerType[Soil.Thickness.Length];
+                    FOMLayerLayerType[] allLayers = new FOMLayerLayerType[dlayer.Length];
 
-                    for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                    for (int layer = 0; layer < dlayer.Length; layer++)
                         {
                         FOMType fom_in_layer = new FOMType();
                         fom_in_layer.amount = (float)l_dlt_dm_incorp[layer];
@@ -11156,9 +11358,9 @@ namespace Models
 
                 //do dotnet event sending
 
-                FOMLayerLayerType[] allLayers = new FOMLayerLayerType[Soil.Thickness.Length];
+                FOMLayerLayerType[] allLayers = new FOMLayerLayerType[dlayer.Length];
 
-                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                for (int layer = 0; layer < dlayer.Length; layer++)
                     {
                     FOMType fom_in_layer = new FOMType();
                     fom_in_layer.amount = (float)fom[layer];
