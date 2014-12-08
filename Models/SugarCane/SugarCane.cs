@@ -8924,7 +8924,7 @@ namespace Models
             get
                 {
                 double l_N_demand = SumArray(g_n_demand, max_part) * 10.0;
-                return Math.Round(l_N_demand,1);
+                return Math.Round(l_N_demand,2);
                 }
             }
 
@@ -8955,7 +8955,7 @@ namespace Models
                     {
                     l_NO3_uptake[layer] = -g_dlt_no3gsm[layer];
                     }
-                return l_NO3_uptake;
+                return mu.RoundArray(l_NO3_uptake,2);
                 }
             }
 
@@ -8973,7 +8973,7 @@ namespace Models
                     {
                     l_NH4_uptake[layer] = -g_dlt_nh4gsm[layer];
                     }
-                return l_NH4_uptake;
+                return mu.RoundArray(l_NH4_uptake,2);
                 }
             }
 
@@ -8989,7 +8989,7 @@ namespace Models
                 int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NO3_uptake_pot = new double[num_layers];
                 Array.Copy(g_no3gsm_uptake_pot, l_NO3_uptake_pot, num_layers);
-                return l_NO3_uptake_pot;
+                return mu.RoundArray(l_NO3_uptake_pot,2);
                 }
             }
 
@@ -9004,7 +9004,7 @@ namespace Models
                 int num_layers = count_of_real_vals(dlayer, max_layer);
                 double[] l_NH4_uptake_pot = new double[num_layers];
                 Array.Copy(g_nh4gsm_uptake_pot, l_NH4_uptake_pot, num_layers);
-                return l_NH4_uptake_pot;
+                return mu.RoundArray(l_NH4_uptake_pot, 2);
                 }
             }
 
@@ -9066,7 +9066,7 @@ namespace Models
         /// uses this to calculate the crop canopy conductance
         /// </summary>
         [XmlIgnore]
-        public double FRGR { get { return 0; } }  //TODO: don't know how to implement FRGR in SugarCane. So just return 0.
+        public double FRGR { get { return 1; } }  //TODO: don't know how to implement FRGR in SugarCane. So just return 1.
 
         /// <summary>
         /// Potential evapotranspiration. MicroClimate calculates this and sets

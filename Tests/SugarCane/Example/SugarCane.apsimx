@@ -3410,6 +3410,10 @@ namespace Models
           <string>[Soil].SoilWater.Eo as eo</string>
           <string>[Soil].SoilWater.Eos as eos</string>
           <string>[Soil].SoilWater.Es as es</string>
+          <string>[SurfaceOrganicMatter].Cover as surfaceom_cover</string>
+          <string>[SugarCane].stage as stage</string>
+          <string>[SugarCane].stage_code as stage_code</string>
+          <string>[SugarCane].stagename as stagename</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
