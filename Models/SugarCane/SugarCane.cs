@@ -7274,9 +7274,9 @@ namespace Models
 
 
             l_dlt_leaf_area = Utility.Math.Divide(i_dlt_lai, io_plants, 0.0) * sm2smm;
-            //Console.WriteLine("leaf area before accumulate : " + io_leaf_area[0] + " , " + l_dlt_leaf_area + " , " + l_node_no_ob + " , " + i_dlt_node_no);
+            Summary.WriteMessage(this, "leaf area before accumulate : " + io_leaf_area[0] + " , " + l_dlt_leaf_area + " , " + l_node_no_ob + " , " + i_dlt_node_no);
             accumulate_zb(l_dlt_leaf_area, ref io_leaf_area, zb_d(l_node_no_ob), i_dlt_node_no);
-            //Console.WriteLine("leaf area after accumulate : " + io_leaf_area[0]);
+            Summary.WriteMessage(this, "leaf area after accumulate : " + io_leaf_area[0]);
 
             l_dlt_dm_plant_leaf = Utility.Math.Divide(i_dlt_dm_green[leaf], io_plants, 0.0);
             accumulate_zb(l_dlt_dm_plant_leaf, ref io_leaf_dm, zb_d(l_node_no_ob), i_dlt_node_no);
