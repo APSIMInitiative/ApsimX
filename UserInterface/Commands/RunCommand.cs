@@ -81,7 +81,7 @@ namespace UserInterface.Commands
                 ExplorerPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
 
             SoundPlayer player = new SoundPlayer();
-            if (DateTime.Now.Month == 12)
+            if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
                 player.Stream = Properties.Resources.notes;
             else
                 player.Stream = Properties.Resources.success;
