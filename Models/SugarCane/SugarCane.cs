@@ -3791,7 +3791,7 @@ namespace Models
             bool l_didInterpolate;
 
 
-            l_current_phase = (int)i_current_stage;
+            l_current_phase = (int)Math.Floor(i_current_stage);
 
             if (l_current_phase == i_germ_phase)
                 {
@@ -3832,7 +3832,7 @@ namespace Models
 
             int l_phase;                 //! phase number containing stage
 
-            l_phase = (int)i_stage_no;
+            l_phase = (int)Math.Floor(i_stage_no);
 
             return Utility.Math.Divide(i_tt_tot[zb(l_phase)] + i_dlt_tt, i_phase_tt[zb(l_phase)], 1.0);
 
@@ -3842,7 +3842,7 @@ namespace Models
 
         void crop_devel(double i_current_stage, int i_max_stage, double i_phase_devel, out double o_dlt_stage, ref double io_current_stage)
             {
-
+            //TODO: Remove i_current_stage or io_curreent_stage. This is just stupid.
             //!     ===========================================================
             //      subroutine crop_devel()
             //!     ===========================================================
@@ -3869,13 +3869,13 @@ namespace Models
 
             //sv- replaced aint() fortran with explicit cast to int. Apparently it is supposed to work.
 
-            l_new_stage = (int)i_current_stage + i_phase_devel;   //add the phase development to the current stage to get the new stage.
+            l_new_stage = Math.Floor(i_current_stage) + i_phase_devel;   //add the phase development to the current stage to get the new stage.
             o_dlt_stage = l_new_stage - i_current_stage;
 
             if (i_phase_devel >= 1.0)
                 {
-                io_current_stage = (int)(io_current_stage + 1.0);
-                if ((int)io_current_stage == i_max_stage)
+                io_current_stage = Math.Floor(io_current_stage + 1.0);
+                if (Math.Floor(io_current_stage) == i_max_stage)
                     {
                     io_current_stage = 1.0;
                     }
@@ -4060,13 +4060,11 @@ namespace Models
             bool l_didInterpolate;
 
 
-            l_node_no_now_ob = sum_between_zb(zb(i_start_node_app), zb(i_end_node_app), i_node_no_zb);
-
+            l_node_no_now_ob = sum_between(i_start_node_app, i_end_node_app, i_node_no_zb);
 
             l_node_app_rate = Utility.Math.LinearInterpReal(l_node_no_now_ob, c_x_node_no_app, c_y_node_app_rate, out l_didInterpolate);
 
             l_leaves_per_node = Utility.Math.LinearInterpReal(l_node_no_now_ob, c_x_node_no_leaf, c_y_leaves_per_node, out l_didInterpolate);
-
 
             if (stage_is_between(i_start_node_app, i_end_node_app, i_current_stage))
                 {
@@ -4085,7 +4083,7 @@ namespace Models
                 }
             else if (stage_is_between(i_emerg, i_end_node_app, i_current_stage))
                 {
-                o_dlt_leaf_no_pot = o_dlt_node_no_pot * l_leaves_per_node;
+                o_dlt_leaf_no_pot = o_dlt_node_no_pot * l_leaves_per_node;  //sv- with sugarcane there is only 1 leaf per node, so node_no is always the same as leaf_no
                 }
             else
                 {
@@ -7274,9 +7272,8 @@ namespace Models
 
 
             l_dlt_leaf_area = Utility.Math.Divide(i_dlt_lai, io_plants, 0.0) * sm2smm;
-            Summary.WriteMessage(this, "leaf area before accumulate : " + io_leaf_area[0] + " , " + l_dlt_leaf_area + " , " + l_node_no_ob + " , " + i_dlt_node_no);
             accumulate_zb(l_dlt_leaf_area, ref io_leaf_area, zb_d(l_node_no_ob), i_dlt_node_no);
-            Summary.WriteMessage(this, "leaf area after accumulate : " + io_leaf_area[0]);
+
 
             l_dlt_dm_plant_leaf = Utility.Math.Divide(i_dlt_dm_green[leaf], io_plants, 0.0);
             accumulate_zb(l_dlt_dm_plant_leaf, ref io_leaf_dm, zb_d(l_node_no_ob), i_dlt_node_no);
@@ -7297,8 +7294,8 @@ namespace Models
             l_num_leaves = count_of_real_vals(io_leaf_area, max_leaf);   //sv- this is pointless, considering what the next line does.
             l_num_leaves = max_leaf;
 
-            bool l_found_last_senesced = false;
-            int l_rec_last_senesced = 0;       //! number of empty leaf records    
+            bool l_found_first_nonsenesced = false;
+            int l_empty_leaves_ob = 0;       //! number of empty leaf records    
             //int l_leaf_rec;                   //! leaf record number
 
             //sv- keep looping through all the leaves starting from the bottom, until delta is all used up.
@@ -7334,49 +7331,57 @@ namespace Models
                 //SET THE LAST SENESCED LEAF
                 //sv- if this leaf has not fully senesced, and it is the first one we have come across that has not. (starting from the bottom leaf)
                 //    (due to the loop not terminating, We will come across all the other leaves above this leaf, that are not senesced as well.)                                                              
-                if ((io_leaf_dm[leaf_rec] > 0.0) && (l_found_last_senesced == false))
+                if ((io_leaf_dm[leaf_rec] > 0.0) && (l_found_first_nonsenesced == false))
                     {
-                    l_found_last_senesced = true;
-                    l_rec_last_senesced = leaf_rec - 1;         //sv- the leaf below, the leaf that has not fully senesced.
+                    l_found_first_nonsenesced = true;
+                    l_empty_leaves_ob = ob(leaf_rec) - 1;   //sv- number of array elements we will have to move the leaves down by when we detach leaves.
+                                                     //sv- we minus 1 because we want the index just below the first non sensensed leave
                     }
                 }
 
             //sv- Remove the leaf, by removing it's information from leaf_area and leaf_dm, 
             //    by moving all the elements in the array down by one index, and then throwing away the first element.
-            if (l_found_last_senesced && (l_rec_last_senesced >= 0))
+            if (l_found_first_nonsenesced && (l_empty_leaves_ob > 0))
                 {
-                io_node_no_detached_ob = io_node_no_detached_ob + ob(l_rec_last_senesced);
+                io_node_no_detached_ob = io_node_no_detached_ob + l_empty_leaves_ob;
                 //!kludgy solution for now
 
-                //for all the leaves greater then the last senesced leaf
-                for (int leaf_rec = l_rec_last_senesced; leaf_rec < (l_num_leaves - 1); leaf_rec++)
+                int leaf_rec_to_drop_to;
+                int nonsensced_ob = l_empty_leaves_ob + 1;
+                for (int leaf_rec = zb(nonsensced_ob); leaf_rec < l_num_leaves; leaf_rec++)
                     {
-                    //sv- starts at 1 and goes up, eg. 2,3 etc.
+                    leaf_rec_to_drop_to = leaf_rec - l_empty_leaves_ob;
 
                     //sv- move the values down one index.
-                    io_leaf_dm[leaf_rec] = io_leaf_dm[leaf_rec + 1];
-                    io_leaf_area[leaf_rec] = io_leaf_area[leaf_rec + 1];
+                    io_leaf_dm[leaf_rec_to_drop_to] = io_leaf_dm[leaf_rec];
+                    io_leaf_area[leaf_rec_to_drop_to] = io_leaf_area[leaf_rec];
 
                     //sv- zero the old indexes 
-                    io_leaf_dm[leaf_rec + 1] = 0.0;
-                    io_leaf_area[leaf_rec + 1] = 0.0;
+                    io_leaf_dm[leaf_rec] = 0.0;
+                    io_leaf_area[leaf_rec] = 0.0;
+
                     }
+              
                 }
 
-            //for (int leaf_rec = l_rec_last_senesced+1; leaf_rec < l_num_leaves; leaf_rec++)  
+
+
+            ////for all the leaves greater then the last senesced leaf
+            //for (int leaf_rec = l_rec_last_senesced; leaf_rec < (l_num_leaves+1); leaf_rec++)
             //    {
-            //    //sv- "leaf_rec_new" starts at 1 and goes up, eg. 2,3 etc.
-            //    leaf_rec_new = leaf_rec - l_rec_last_senesced;    
+            //    //sv- starts at 1 and goes up, eg. 2,3 etc.
 
             //    //sv- move the values down one index.
-            //    io_leaf_dm[leaf_rec_new] = io_leaf_dm[leaf_rec];   
-            //    io_leaf_area[leaf_rec_new] = io_leaf_area[leaf_rec];
+            //    io_leaf_dm[leaf_rec] = io_leaf_dm[leaf_rec + 1];
+            //    io_leaf_area[leaf_rec] = io_leaf_area[leaf_rec + 1];
 
             //    //sv- zero the old indexes 
-            //    io_leaf_dm[leaf_rec] = 0.0;                       
-            //    io_leaf_area[leaf_rec] = 0.0;
+            //    io_leaf_dm[leaf_rec + 1] = 0.0;
+            //    io_leaf_area[leaf_rec + 1] = 0.0;
             //    }
-            //}
+
+
+
 
 
 
@@ -9619,7 +9624,6 @@ namespace Models
                                                         crop.pesw_germ, crop.fasw_emerg, crop.rel_emerg_rate, crop.num_fasw_emerg, g_current_stage, g_days_tot,
                                                         dlayer, max_layer, g_sowing_depth, sw_dep, dul_dep, g_ll_dep, ref g_dlt_tt, g_phase_tt, g_tt_tot);
 
-
                     crop_devel(g_current_stage, max_stage, g_phase_devel, out g_dlt_stage, ref g_current_stage);
 
 
@@ -9649,6 +9653,7 @@ namespace Models
 
                     //sugar_leaf_no_init(1)
                     cproc_leaf_no_init1(crop.leaf_no_at_emerg, g_current_stage, emerg, ref g_leaf_no_zb, ref g_node_no_zb);     //! initialise total leaf number
+    
 
                     //sugar_leaf_no_pot(1)
                     cproc_leaf_no_pot1(crop.x_node_no_app, crop.y_node_app_rate, crop.x_node_no_leaf, crop.y_leaves_per_node,

@@ -9,7 +9,7 @@
  The Agricultural Production Systems Simulator
              Copyright(c) APSRU               
 
-Version                = 7.6
+Version                = 7.7
 Title                  = Sugar
    Component                        "clock" = %apsim%\Model\Clock.dll
    Component                          "met" = %apsim%\Model\Input.dll
@@ -19,7 +19,9 @@ Paddock:
    Component                   "fertiliser" = %apsim%\Model\Fertiliser.dll
    Component             "SUGAR management" = %apsim%\Model\Manager.dll
    Component      "Fertilise on fixed date" = %apsim%\Model\Manager.dll
+   Component                "Empty manager" = %apsim%\Model\Manager.dll
    Component                   "Soil Water" = %apsim%\Model\SoilWat.dll
+   Component         "SurfaceOrganicMatter" = %apsim%\Model\SurfaceOM.dll
    Component                "Soil Nitrogen" = %apsim%\Model\SoilN.dll
    Component                        "sugar" = %apsim%\Model\Sugar.dll
 
@@ -47,6 +49,7 @@ Paddock:
      Output frequency:
         post
      Output variables:
+        SimulationName
         dd/mm/yyyy as Date
         biomass
         cane_wt
@@ -66,6 +69,81 @@ Paddock:
         maxt
         mint
         tt_tot
+        leaf_no
+        node_no_dead
+        node_no_detached
+        leaves
+        green_leaves
+        dead_leaves
+        leaf_area
+        leaf_dm
+        height
+        cover_green
+        radn_int
+        cover_tot
+        lai_sum
+        tlai
+        tla
+        slai
+        rlv_tot
+        ll_dep
+        lai2
+        leaf_wt2
+        rootgreenwt
+        leafgreenwt
+        sstem_wt
+        cane_dmf
+        ccs
+        scmstf
+        scmst
+        cabbage_wt
+        green_biomass
+        greenwt
+        senescedwt
+        dm_dead
+        dlt_dm
+        partition_xs
+        dlt_dm_green
+        dlt_dm_detached
+        n_critical
+        n_minimum
+        n_conc_leaf
+        n_conc_cab
+        n_conc_cane
+        n_leaf_crit
+        n_leaf_min
+        biomass_n
+        plant_n_tot
+        green_biomass_n
+        n_green
+        greenn
+        sensescedn
+        dlt_n_green
+        swdef_pheno
+        swdef_expan
+        swdef_stalk
+        nfact_expan
+        oxdef_photo
+        ep
+        cep
+        sw_uptake
+        sw_demand_te
+        fasw
+        esw_layr
+        no3_tot
+        n_demand
+        no3_demand
+        n_supply
+        no3_uptake
+        nh4_uptake
+        no3_uptake_pot
+        nh4_uptake_pot
+        sw_dep
+        eo
+        eos
+        es
+        surfaceom_cover
+        stage
 
      Output file = Sugar.out
      Format = normal
@@ -129,6 +207,15 @@ Paddock:
      END of rules
      
 
+------- paddock.Empty manager Initialisation ----------------------------------
+     Manager rules:
+     
+     SECTION:- init
+     simulationname = 'sugarcane'
+     END of rules
+     
+     Manager creating a new local string variable : simulationname = sugarcane
+
 ------- paddock.Soil Water Initialisation -------------------------------------
      
          - Reading constants
@@ -145,11 +232,11 @@ Paddock:
               Depth  Air_Dry  LL15   Dul    Sat     Sw     BD   Runoff  SWCON
                 mm     mm/mm  mm/mm  mm/mm  mm/mm  mm/mm  g/cc    wf
         ---------------------------------------------------------------------
-            0.-  150.  0.140  0.290  0.540  0.590  0.540  1.020  0.762  0.300
-          150.-  300.  0.260  0.290  0.530  0.580  0.530  1.030  0.190  0.300
-          300.-  600.  0.290  0.290  0.540  0.590  0.540  1.020  0.048  0.300
-          600.-  900.  0.290  0.290  0.540  0.580  0.540  1.020  0.000  0.300
-          900.- 1200.  0.300  0.300  0.520  0.570  0.458  1.060  0.000  0.300
+            0.-  150.  0.140  0.290  0.540  0.590  0.290  1.020  0.762  0.300
+          150.-  300.  0.260  0.290  0.530  0.580  0.290  1.030  0.190  0.300
+          300.-  600.  0.290  0.290  0.540  0.590  0.290  1.020  0.048  0.300
+          600.-  900.  0.290  0.290  0.540  0.580  0.290  1.020  0.000  0.300
+          900.- 1200.  0.300  0.300  0.520  0.570  0.300  1.060  0.000  0.300
          1200.- 1500.  0.310  0.310  0.500  0.550  0.310  1.110  0.000  0.300
          1500.- 1800.  0.320  0.320  0.500  0.550  0.320  1.120  0.000  0.300
          1800.- 2100.  0.330  0.330  0.480  0.530  0.330  1.150  0.000  0.300
@@ -166,11 +253,11 @@ Paddock:
                           (LL15)   (SW-LL15)  (DUL-LL15)  (SAT-DUL)
                             mm        mm          mm         mm
           ---------------------------------------------------------
-            0.-  150.      43.50      37.50      37.50       7.50
-          150.-  300.      43.50      36.00      36.00       7.50
-          300.-  600.      87.00      75.00      75.00      15.00
-          600.-  900.      87.00      75.00      75.00      12.00
-          900.- 1200.      90.00      47.40      66.00      15.00
+            0.-  150.      43.50       0.00      37.50       7.50
+          150.-  300.      43.50       0.00      36.00       7.50
+          300.-  600.      87.00       0.00      75.00      15.00
+          600.-  900.      87.00       0.00      75.00      12.00
+          900.- 1200.      90.00       0.00      66.00      15.00
          1200.- 1500.      93.00       0.00      57.00      15.00
          1500.- 1800.      96.00       0.00      54.00      15.00
          1800.- 2100.      99.00       0.00      45.00      15.00
@@ -178,7 +265,7 @@ Paddock:
          2400.- 2700.     105.00       0.00      33.00      15.00
          2700.- 3000.     108.00       0.00      24.00      15.00
           ---------------------------------------------------------
-               Totals     954.00     270.90     541.50     147.00
+               Totals     954.00       0.00     541.50     147.00
           ---------------------------------------------------------
      
      
@@ -208,6 +295,25 @@ Paddock:
             Cuml evap (U):            6.00 (mm^0.5)
             CONA:                     3.50 ()
             Eo from priestly-taylor
+
+------- paddock.SurfaceOrganicMatter Initialisation ---------------------------
+     
+         - Reading constants
+     
+         - Reading parameters
+     
+     
+     
+                         Initial Surface Organic Matter Data
+         ----------------------------------------------------------------------
+            Name   Type        Dry matter   C        N        P    Cover  Standing_fr
+                                (kg/ha)  (kg/ha)  (kg/ha)  (kg/ha) (0-1)     (0-1)
+         ----------------------------------------------------------------------
+          wheat_stubwheat            0.0     0.0     0.0     0.0   0.000     0.0
+         ----------------------------------------------------------------------
+     
+                      Effective Cover from Surface Materials =   0.0
+     
 
 ------- paddock.Soil Nitrogen Initialisation ----------------------------------
      
@@ -326,7 +432,7 @@ Paddock:
                           biomass =           3.530000       lai =    0.1000000E-01
                           stover N conc =    2.529745       extractable sw =    213.0289
 1 September 1990(Day of year=244), paddock.Fertilise on fixed date: 
-     Manager creating a new local real variable : n_topsoil = 0.59705
+     Manager creating a new local real variable : n_topsoil = 0.63251
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1990(Day of year=244), fertiliser: 
      
@@ -335,8 +441,8 @@ Paddock:
                                          added at depth   50.00 (layer   1)
 3 October 1990(Day of year=276), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           1637.404       lai =     4.469775
-                          stover N conc =   0.8742534       extractable sw =    75.69785
+                          biomass =           1635.623       lai =     4.471488
+                          stover N conc =   0.8733670       extractable sw =    74.58297
 25 June 1991(Day of year=176), paddock.SUGAR management: 
      Manager sending message :- sugar harvest
 25 June 1991(Day of year=176), paddock.sugar: 
@@ -344,45 +450,45 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 6.015
-      total above ground biomass (kg/ha) =   49110.3
-      live above ground biomass (kg/ha) =   49110.3
-      green above ground biomass (kg/ha) =   47585.2
-      senesced above ground biomass (kg/ha) =    1525.1
+      maximum lai = 6.062
+      total above ground biomass (kg/ha) =   49407.7
+      live above ground biomass (kg/ha) =   49407.7
+      green above ground biomass (kg/ha) =   47877.3
+      senesced above ground biomass (kg/ha) =    1530.3
       dead above ground biomass (kg/ha) =       0.0
       number of leaves =  52.4
-      total N content (kg/ha) =    174.24    senesced N content (kg/ha) =      5.59
-      green N content (kg/ha) =    168.65    dead N content (kg/ha) =      0.00
+      total N content (kg/ha) =    157.17    senesced N content (kg/ha) =      5.61
+      green N content (kg/ha) =    151.56    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =   0.1680885E-01   nitrogen stress 1 =   0.1456274
-      water stress 2 =   0.6953757E-02
+      water stress 1 =   0.1752293E-01   nitrogen stress 1 =   0.1453001
+      water stress 2 =   0.7224659E-02
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.2556161       nitrogen stress 1 =    0.000000
-      water stress 2 =   0.2602109
+      water stress 1 =   0.2523234       nitrogen stress 1 =    0.000000
+      water stress 2 =   0.2558322
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue =10381.9 kg/ha
-                                               straw N =   59.1 kg/ha
-                                               root residue = 1690.6 kg/ha
-                                               root N =   13.1 kg/ha
+                                               straw residue =10454.2 kg/ha
+                                               straw N =   57.5 kg/ha
+                                               root residue = 1696.1 kg/ha
+                                               root N =   12.0 kg/ha
      
          - Reading constants from ratoon_crop
      
          - Reading constants from q117_ratoon
-13 July 1991(Day of year=194), paddock.sugar: 
+7 July 1991(Day of year=188), paddock.sugar: 
       stage    3.0 emergence
                           biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    106.3630
+                          stover N conc =    2.529745       extractable sw =    179.5956
 1 September 1991(Day of year=244), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1991(Day of year=244), fertiliser: 
@@ -390,10 +496,10 @@ Paddock:
    - Reading Fertiliser Type Parameters
        200.00 of N as urea (urea_n)
                                          added at depth   50.00 (layer   1)
-30 November 1991(Day of year=334), paddock.sugar: 
+26 November 1991(Day of year=330), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           65.22934       lai =    0.3350358
-                          stover N conc =    1.030815       extractable sw =    117.0719
+                          biomass =           966.2957       lai =     3.506253
+                          stover N conc =   0.9353324       extractable sw =    71.12901
 19 July 1992(Day of year=201), paddock.SUGAR management: 
      Manager sending message :- sugar harvest
 19 July 1992(Day of year=201), paddock.sugar: 
@@ -401,41 +507,41 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 5.138
-      total above ground biomass (kg/ha) =   31181.5
-      live above ground biomass (kg/ha) =   31181.5
-      green above ground biomass (kg/ha) =   29757.9
-      senesced above ground biomass (kg/ha) =    1423.6
+      maximum lai = 5.676
+      total above ground biomass (kg/ha) =   43749.7
+      live above ground biomass (kg/ha) =   43749.7
+      green above ground biomass (kg/ha) =   42027.2
+      senesced above ground biomass (kg/ha) =    1722.5
       dead above ground biomass (kg/ha) =       0.0
-      number of leaves =  48.1
-      total N content (kg/ha) =    158.65    senesced N content (kg/ha) =      5.21
-      green N content (kg/ha) =    153.44    dead N content (kg/ha) =      0.00
+      number of leaves =  48.5
+      total N content (kg/ha) =     94.48    senesced N content (kg/ha) =      6.31
+      green N content (kg/ha) =     88.17    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =    0.000000       nitrogen stress 1 =   0.6563342
-      water stress 2 =    0.000000
+      water stress 1 =   0.1940746       nitrogen stress 1 =   0.1834658
+      water stress 2 =   0.1709010
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.1958258       nitrogen stress 1 =    0.000000
-      water stress 2 =   0.1614575
+      water stress 1 =   0.2312803       nitrogen stress 1 =   0.8954002E-02
+      water stress 2 =   0.2156101
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue = 7789.4 kg/ha
-                                               straw N =   52.9 kg/ha
-                                               root residue = 1327.0 kg/ha
-                                               root N =   13.4 kg/ha
-18 August 1992(Day of year=231), paddock.sugar: 
+                                               straw residue =10083.4 kg/ha
+                                               straw N =   45.3 kg/ha
+                                               root residue = 1681.8 kg/ha
+                                               root N =   11.1 kg/ha
+6 August 1992(Day of year=219), paddock.sugar: 
       stage    3.0 emergence
                           biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    8.014469
+                          stover N conc =    2.529745       extractable sw =    91.97765
 1 September 1992(Day of year=245), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1992(Day of year=245), fertiliser: 
@@ -443,10 +549,10 @@ Paddock:
    - Reading Fertiliser Type Parameters
        200.00 of N as urea (urea_n)
                                          added at depth   50.00 (layer   1)
-17 December 1992(Day of year=352), paddock.sugar: 
+9 December 1992(Day of year=344), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           37.58126       lai =    0.1384952
-                          stover N conc =   0.5292397       extractable sw =    2.499249
+                          biomass =           691.3449       lai =     2.583232
+                          stover N conc =    1.086142       extractable sw =    20.30498
 13 August 1993(Day of year=225), paddock.SUGAR management: 
      Manager sending message :- sugar harvest
 13 August 1993(Day of year=225), paddock.sugar: 
@@ -454,41 +560,41 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 4.279
-      total above ground biomass (kg/ha) =   24057.4
-      live above ground biomass (kg/ha) =   24057.4
-      green above ground biomass (kg/ha) =   23638.1
-      senesced above ground biomass (kg/ha) =     419.3
+      maximum lai = 5.304
+      total above ground biomass (kg/ha) =   47877.2
+      live above ground biomass (kg/ha) =   47877.2
+      green above ground biomass (kg/ha) =   45287.1
+      senesced above ground biomass (kg/ha) =    2590.0
       dead above ground biomass (kg/ha) =       0.0
-      number of leaves =  47.4
-      total N content (kg/ha) =    123.03    senesced N content (kg/ha) =      1.54
-      green N content (kg/ha) =    121.49    dead N content (kg/ha) =      0.00
+      number of leaves =  48.3
+      total N content (kg/ha) =    149.06    senesced N content (kg/ha) =      9.49
+      green N content (kg/ha) =    139.57    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =   0.6081192       nitrogen stress 1 =   0.3266216
-      water stress 2 =   0.5761012
+      water stress 1 =   0.3414436       nitrogen stress 1 =   0.2779084E-01
+      water stress 2 =   0.2987741
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.1717007E-02   nitrogen stress 1 =   0.3293242E-02
-      water stress 2 =   0.1722681E-02
+      water stress 1 =   0.3743644E-01   nitrogen stress 1 =   0.1142463
+      water stress 2 =   0.3268816E-01
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue = 6686.3 kg/ha
-                                               straw N =   44.7 kg/ha
-                                               root residue = 1049.9 kg/ha
-                                               root N =   10.4 kg/ha
-31 August 1993(Day of year=243), paddock.sugar: 
+                                               straw residue =10464.0 kg/ha
+                                               straw N =   47.7 kg/ha
+                                               root residue = 1711.2 kg/ha
+                                               root N =   13.3 kg/ha
+28 August 1993(Day of year=240), paddock.sugar: 
       stage    3.0 emergence
                           biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    106.0775
+                          stover N conc =    2.529745       extractable sw =    73.46422
 1 September 1993(Day of year=244), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1993(Day of year=244), fertiliser: 
@@ -496,10 +602,10 @@ Paddock:
    - Reading Fertiliser Type Parameters
        200.00 of N as urea (urea_n)
                                          added at depth   50.00 (layer   1)
-30 December 1993(Day of year=364), paddock.sugar: 
+28 December 1993(Day of year=362), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           638.5046       lai =     2.916400
-                          stover N conc =    1.071521       extractable sw =    30.59815
+                          biomass =           868.6326       lai =     3.692940
+                          stover N conc =    1.052828       extractable sw =    28.28836
 1 September 1994(Day of year=244), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1994(Day of year=244), fertiliser: 
@@ -514,45 +620,45 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 6.187
-      total above ground biomass (kg/ha) =   46644.9
-      live above ground biomass (kg/ha) =   46644.9
-      green above ground biomass (kg/ha) =   43692.0
-      senesced above ground biomass (kg/ha) =    2952.9
+      maximum lai = 5.801
+      total above ground biomass (kg/ha) =   50774.7
+      live above ground biomass (kg/ha) =   50774.7
+      green above ground biomass (kg/ha) =   47934.3
+      senesced above ground biomass (kg/ha) =    2840.4
       dead above ground biomass (kg/ha) =       0.0
-      number of leaves =  47.0
-      total N content (kg/ha) =    194.07    senesced N content (kg/ha) =     10.82
-      green N content (kg/ha) =    183.26    dead N content (kg/ha) =      0.00
+      number of leaves =  47.3
+      total N content (kg/ha) =    158.72    senesced N content (kg/ha) =     10.40
+      green N content (kg/ha) =    148.31    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =   0.3438237       nitrogen stress 1 =   0.6309490E-03
-      water stress 2 =   0.2972278
+      water stress 1 =   0.2820877       nitrogen stress 1 =   0.3917484E-03
+      water stress 2 =   0.2351881
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.1833096       nitrogen stress 1 =    0.000000
-      water stress 2 =   0.1706212
+      water stress 1 =   0.1279788       nitrogen stress 1 =   0.6232395E-01
+      water stress 2 =   0.1019190
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue = 9964.4 kg/ha
-                                               straw N =   60.4 kg/ha
-                                               root residue = 1425.1 kg/ha
-                                               root N =   12.3 kg/ha
+                                               straw residue =10680.7 kg/ha
+                                               straw N =   51.8 kg/ha
+                                               root residue = 1781.1 kg/ha
+                                               root N =   13.8 kg/ha
 2 October 1994(Day of year=275), paddock.sugar: 
       stage    3.0 emergence
                           biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    18.52296
+                          stover N conc =    2.529745       extractable sw =    23.31781
 26 January 1995(Day of year=26), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           458.9993       lai =     2.695079
-                          stover N conc =    1.093351       extractable sw =    58.23241
+                          biomass =           1071.594       lai =     4.762589
+                          stover N conc =   0.8570946       extractable sw =    64.50157
 1 September 1995(Day of year=244), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1995(Day of year=244), fertiliser: 
@@ -567,44 +673,44 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 5.662
-      total above ground biomass (kg/ha) =   46250.7
-      live above ground biomass (kg/ha) =   46250.7
-      green above ground biomass (kg/ha) =   43485.2
-      senesced above ground biomass (kg/ha) =    2765.4
+      maximum lai = 5.968
+      total above ground biomass (kg/ha) =   53573.8
+      live above ground biomass (kg/ha) =   53573.8
+      green above ground biomass (kg/ha) =   50314.6
+      senesced above ground biomass (kg/ha) =    3259.3
       dead above ground biomass (kg/ha) =       0.0
       number of leaves =  47.2
-      total N content (kg/ha) =    193.64    senesced N content (kg/ha) =     10.13
-      green N content (kg/ha) =    183.51    dead N content (kg/ha) =      0.00
+      total N content (kg/ha) =    240.36    senesced N content (kg/ha) =     11.94
+      green N content (kg/ha) =    228.42    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =   0.9268841E-01   nitrogen stress 1 =   0.3502890
-      water stress 2 =   0.5771140E-01
+      water stress 1 =   0.1964777       nitrogen stress 1 =   0.6083773E-01
+      water stress 2 =   0.1285860
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.1520320       nitrogen stress 1 =   0.1891985E-01
-      water stress 2 =   0.1245832
+      water stress 1 =   0.1272210       nitrogen stress 1 =   0.1911491E-01
+      water stress 2 =   0.1018800
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue =10006.8 kg/ha
-                                               straw N =   60.1 kg/ha
-                                               root residue = 1546.7 kg/ha
-                                               root N =   13.7 kg/ha
+                                               straw residue =11136.4 kg/ha
+                                               straw N =   68.7 kg/ha
+                                               root residue = 1887.1 kg/ha
+                                               root N =   17.7 kg/ha
      Manager sending message :- sugar kill_crop
          crop_kill. Standing above-ground dm =     0.0 (kg/ha)
      Manager sending message :- sugar end_crop
                                                straw residue =    0.0 kg/ha
                                                straw N =    0.0 kg/ha
-                                               root residue = 7463.6 kg/ha
-                                               root N =   66.4 kg/ha
+                                               root residue = 9106.3 kg/ha
+                                               root N =   86.0 kg/ha
 1 April 1996(Day of year=92), paddock.SUGAR management: 
      Manager sending message :- sugar sow  plants = 10, cultivar = q117, sowing_depth = 150
 1 April 1996(Day of year=92), paddock.sugar: 
@@ -656,7 +762,7 @@ Paddock:
 23 April 1996(Day of year=114), paddock.sugar: 
       stage    3.0 emergence
                           biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    191.7937
+                          stover N conc =    2.529745       extractable sw =    191.6722
 1 September 1996(Day of year=245), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1996(Day of year=245), fertiliser: 
@@ -666,8 +772,8 @@ Paddock:
                                          added at depth   50.00 (layer   1)
 25 September 1996(Day of year=269), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           1545.044       lai =     4.097346
-                          stover N conc =   0.8923441       extractable sw =    44.85708
+                          biomass =           1545.506       lai =     4.098950
+                          stover N conc =   0.8952115       extractable sw =    44.89997
 25 June 1997(Day of year=176), paddock.SUGAR management: 
      Manager sending message :- sugar harvest
 25 June 1997(Day of year=176), paddock.sugar: 
@@ -675,45 +781,45 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 6.214
-      total above ground biomass (kg/ha) =   57282.5
-      live above ground biomass (kg/ha) =   57282.5
-      green above ground biomass (kg/ha) =   55050.4
-      senesced above ground biomass (kg/ha) =    2232.1
+      maximum lai = 6.248
+      total above ground biomass (kg/ha) =   58093.8
+      live above ground biomass (kg/ha) =   58093.8
+      green above ground biomass (kg/ha) =   55798.1
+      senesced above ground biomass (kg/ha) =    2295.7
       dead above ground biomass (kg/ha) =       0.0
       number of leaves =  52.9
-      total N content (kg/ha) =    233.99    senesced N content (kg/ha) =      8.18
-      green N content (kg/ha) =    225.82    dead N content (kg/ha) =      0.00
+      total N content (kg/ha) =    250.58    senesced N content (kg/ha) =      8.41
+      green N content (kg/ha) =    242.18    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =   0.1453265       nitrogen stress 1 =   0.3356776E-03
-      water stress 2 =   0.1286477
+      water stress 1 =   0.1452442       nitrogen stress 1 =   0.3356776E-03
+      water stress 2 =   0.1285245
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.2464652       nitrogen stress 1 =    0.000000
-      water stress 2 =   0.2465110
+      water stress 1 =   0.2424592       nitrogen stress 1 =    0.000000
+      water stress 2 =   0.2431095
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue =11809.0 kg/ha
-                                               straw N =   59.5 kg/ha
-                                               root residue = 1853.0 kg/ha
-                                               root N =   17.2 kg/ha
+                                               straw residue =11948.7 kg/ha
+                                               straw N =   62.9 kg/ha
+                                               root residue = 1869.5 kg/ha
+                                               root N =   18.1 kg/ha
      
          - Reading constants from ratoon_crop
      
          - Reading constants from q117_ratoon
-6 July 1997(Day of year=187), paddock.sugar: 
+5 July 1997(Day of year=186), paddock.sugar: 
       stage    3.0 emergence
                           biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    169.1430
+                          stover N conc =    2.529745       extractable sw =    211.3701
 1 September 1997(Day of year=244), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1997(Day of year=244), fertiliser: 
@@ -721,10 +827,10 @@ Paddock:
    - Reading Fertiliser Type Parameters
        200.00 of N as urea (urea_n)
                                          added at depth   50.00 (layer   1)
-29 November 1997(Day of year=333), paddock.sugar: 
+28 November 1997(Day of year=332), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           1233.569       lai =     4.149937
-                          stover N conc =   0.9715664       extractable sw =    50.34696
+                          biomass =           1764.543       lai =     5.589175
+                          stover N conc =   0.7153988       extractable sw =    83.42331
 20 July 1998(Day of year=201), paddock.SUGAR management: 
      Manager sending message :- sugar harvest
 20 July 1998(Day of year=201), paddock.sugar: 
@@ -732,41 +838,41 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 5.985
-      total above ground biomass (kg/ha) =   53971.5
-      live above ground biomass (kg/ha) =   53971.5
-      green above ground biomass (kg/ha) =   50985.2
-      senesced above ground biomass (kg/ha) =    2986.3
+      maximum lai = 5.703
+      total above ground biomass (kg/ha) =   59911.9
+      live above ground biomass (kg/ha) =   59911.9
+      green above ground biomass (kg/ha) =   56384.3
+      senesced above ground biomass (kg/ha) =    3527.6
       dead above ground biomass (kg/ha) =       0.0
       number of leaves =  49.2
-      total N content (kg/ha) =    161.91    senesced N content (kg/ha) =     10.94
-      green N content (kg/ha) =    150.97    dead N content (kg/ha) =      0.00
+      total N content (kg/ha) =    129.34    senesced N content (kg/ha) =     12.92
+      green N content (kg/ha) =    116.42    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =   0.1726730       nitrogen stress 1 =   0.7405886E-01
-      water stress 2 =   0.1431589
+      water stress 1 =   0.1007478       nitrogen stress 1 =   0.3003714E-01
+      water stress 2 =   0.6711908E-01
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.5397633E-01   nitrogen stress 1 =   0.1303999E-02
-      water stress 2 =   0.4879199E-01
+      water stress 1 =   0.4538666E-01   nitrogen stress 1 =   0.2852398E-01
+      water stress 2 =   0.3456492E-01
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue =11722.2 kg/ha
-                                               straw N =   54.8 kg/ha
-                                               root residue = 1965.9 kg/ha
-                                               root N =   14.6 kg/ha
-29 July 1998(Day of year=210), paddock.sugar: 
+                                               straw residue =11948.3 kg/ha
+                                               straw N =   50.9 kg/ha
+                                               root residue = 2109.7 kg/ha
+                                               root N =   13.2 kg/ha
+27 July 1998(Day of year=208), paddock.sugar: 
       stage    3.0 emergence
                           biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    152.7100
+                          stover N conc =    2.529745       extractable sw =    216.7983
 1 September 1998(Day of year=244), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1998(Day of year=244), fertiliser: 
@@ -774,10 +880,10 @@ Paddock:
    - Reading Fertiliser Type Parameters
        200.00 of N as urea (urea_n)
                                          added at depth   50.00 (layer   1)
-30 November 1998(Day of year=334), paddock.sugar: 
+28 November 1998(Day of year=332), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           1483.663       lai =     6.130063
-                          stover N conc =   0.9791953       extractable sw =    246.1154
+                          biomass =           1426.351       lai =     5.841155
+                          stover N conc =   0.6688443       extractable sw =    310.8389
 14 August 1999(Day of year=226), paddock.SUGAR management: 
      Manager sending message :- sugar harvest
 14 August 1999(Day of year=226), paddock.sugar: 
@@ -785,37 +891,41 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 6.758
-      total above ground biomass (kg/ha) =   64855.9
-      live above ground biomass (kg/ha) =   64855.9
-      green above ground biomass (kg/ha) =   61048.7
-      senesced above ground biomass (kg/ha) =    3807.3
+      maximum lai = 6.251
+      total above ground biomass (kg/ha) =   60940.3
+      live above ground biomass (kg/ha) =   60940.3
+      green above ground biomass (kg/ha) =   57443.2
+      senesced above ground biomass (kg/ha) =    3497.1
       dead above ground biomass (kg/ha) =       0.0
-      number of leaves =  50.0
-      total N content (kg/ha) =    132.29    senesced N content (kg/ha) =     13.95
-      green N content (kg/ha) =    118.34    dead N content (kg/ha) =      0.00
+      number of leaves =  50.2
+      total N content (kg/ha) =    101.57    senesced N content (kg/ha) =     12.81
+      green N content (kg/ha) =     88.76    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =    0.000000       nitrogen stress 1 =   0.5191747E-01
+      water stress 1 =    0.000000       nitrogen stress 1 =   0.7153074E-01
       water stress 2 =    0.000000
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.5811230E-01   nitrogen stress 1 =    0.000000
-      water stress 2 =   0.3107791E-01
+      water stress 1 =    0.000000       nitrogen stress 1 =   0.1084869
+      water stress 2 =    0.000000
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue =12403.8 kg/ha
-                                               straw N =   67.0 kg/ha
-                                               root residue = 2214.3 kg/ha
+                                               straw residue =11226.1 kg/ha
+                                               straw N =   44.9 kg/ha
+                                               root residue = 2179.8 kg/ha
                                                root N =   13.1 kg/ha
+26 August 1999(Day of year=238), paddock.sugar: 
+      stage    3.0 emergence
+                          biomass =           3.530000       lai =    0.1000000E-01
+                          stover N conc =    2.529745       extractable sw =    114.9464
 1 September 1999(Day of year=244), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 1999(Day of year=244), fertiliser: 
@@ -823,14 +933,10 @@ Paddock:
    - Reading Fertiliser Type Parameters
        200.00 of N as urea (urea_n)
                                          added at depth   50.00 (layer   1)
-11 September 1999(Day of year=254), paddock.sugar: 
-      stage    3.0 emergence
-                          biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    37.94248
-8 January 2000(Day of year=8), paddock.sugar: 
+27 December 1999(Day of year=361), paddock.sugar: 
       stage    4.0 begin_cane
-                          biomass =           788.5463       lai =     4.001265
-                          stover N conc =    1.029273       extractable sw =    288.7551
+                          biomass =           1737.412       lai =     6.692623
+                          stover N conc =   0.7060359       extractable sw =    380.1671
 1 September 2000(Day of year=245), paddock.Fertilise on fixed date: 
      Manager sending message :- fertiliser apply  amount = 200 (kg/ha), depth = 50 (mm), type = urea_n
 1 September 2000(Day of year=245), fertiliser: 
@@ -845,41 +951,41 @@ Paddock:
      
      
       flowering day  =    0
-      maximum lai = 6.023
-      total above ground biomass (kg/ha) =   54367.9
-      live above ground biomass (kg/ha) =   54367.9
-      green above ground biomass (kg/ha) =   50997.3
-      senesced above ground biomass (kg/ha) =    3370.7
+      maximum lai = 6.727
+      total above ground biomass (kg/ha) =   66010.9
+      live above ground biomass (kg/ha) =   66010.9
+      green above ground biomass (kg/ha) =   62192.3
+      senesced above ground biomass (kg/ha) =    3818.6
       dead above ground biomass (kg/ha) =       0.0
-      number of leaves =  47.0
-      total N content (kg/ha) =    123.76    senesced N content (kg/ha) =     12.35
-      green N content (kg/ha) =    111.42    dead N content (kg/ha) =      0.00
+      number of leaves =  48.4
+      total N content (kg/ha) =    122.64    senesced N content (kg/ha) =     13.99
+      green N content (kg/ha) =    108.65    dead N content (kg/ha) =      0.00
      
      
      
       stress indices for emergence
-      water stress 1 =    0.000000       nitrogen stress 1 =   0.2549209
-      water stress 2 =    0.000000
+      water stress 1 =   0.2371437E-01   nitrogen stress 1 =   0.4620136E-02
+      water stress 2 =   0.4496965E-02
      
      
      
       stress indices for begin_cane
-      water stress 1 =   0.8043753E-01   nitrogen stress 1 =    0.000000
-      water stress 2 =   0.6784643E-01
+      water stress 1 =   0.5178120E-01   nitrogen stress 1 =   0.1501984E-01
+      water stress 2 =   0.4370986E-01
      
      
      
       stress indices for flowering
       water stress 1 =    0.000000       nitrogen stress 1 =    0.000000
       water stress 2 =    0.000000
-                                               straw residue =11314.1 kg/ha
-                                               straw N =   59.5 kg/ha
-                                               root residue = 2052.4 kg/ha
-                                               root N =   13.9 kg/ha
-1 October 2000(Day of year=275), paddock.sugar: 
+                                               straw residue =12143.0 kg/ha
+                                               straw N =   56.0 kg/ha
+                                               root residue = 2331.5 kg/ha
+                                               root N =   14.1 kg/ha
+28 September 2000(Day of year=272), paddock.sugar: 
       stage    3.0 emergence
                           biomass =           3.530000       lai =    0.1000000E-01
-                          stover N conc =    2.529745       extractable sw =    30.62549
+                          stover N conc =    2.529745       extractable sw =    43.90498
 31 December 2000(Day of year=366), clock: 
      Simulation is terminating due to end criteria being met.
 
