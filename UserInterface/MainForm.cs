@@ -11,7 +11,6 @@ namespace UserInterface
 {
     public partial class MainForm : Form
     {
-        private Utility.Configuration Configuration;
         private TabbedExplorerPresenter Presenter1;
         private TabbedExplorerPresenter Presenter2;
         private string[] commandLineArguments;
@@ -29,16 +28,21 @@ namespace UserInterface
             InitializeComponent();
             Application.EnableVisualStyles();
 
-            Configuration = new Utility.Configuration();
-            
+            // Adjust font size for MONO.
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
+                Environment.OSVersion.Platform != PlatformID.Win32Windows)
+            {
+                this.Font = new Font(this.Font.FontFamily, 10.2F);
+            }
+            tabbedExplorerView1.Font = this.Font;
+            tabbedExplorerView2.Font = this.Font;
+
             Presenter1 = new TabbedExplorerPresenter();
             Presenter1.Attach(tabbedExplorerView1);
-            Presenter1.config = Configuration;
-
+        
             Presenter2 = new TabbedExplorerPresenter();
             Presenter2.Attach(tabbedExplorerView2);
-            Presenter2.config = Configuration;
-
+        
             SplitContainer.Panel2Collapsed = true;
             commandLineArguments = args;
         }
@@ -53,12 +57,9 @@ namespace UserInterface
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            Configuration.Settings.MainFormLocation = Location; 
-            Configuration.Settings.MainFormSize = Size;
-            Configuration.Settings.MainFormWindowState = WindowState;
-            //store settings on closure
-            Configuration.Save();
-
+            Utility.Configuration.Settings.MainFormLocation = Location; 
+            Utility.Configuration.Settings.MainFormSize = Size;
+            Utility.Configuration.Settings.MainFormWindowState = WindowState;
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -75,9 +76,9 @@ namespace UserInterface
 
             try
             {
-                Location = Configuration.Settings.MainFormLocation;
-                Size = Configuration.Settings.MainFormSize;
-                WindowState = Configuration.Settings.MainFormWindowState;
+                Location = Utility.Configuration.Settings.MainFormLocation;
+                Size = Utility.Configuration.Settings.MainFormSize;
+                WindowState = Utility.Configuration.Settings.MainFormWindowState;
             }
             catch (System.Exception)
             {
@@ -86,23 +87,36 @@ namespace UserInterface
 
             ResumeLayout();
 
-            // Look for a script specified on the command line.
-            if (commandLineArguments != null && commandLineArguments.Length > 0 &&
-                commandLineArguments[0].EndsWith(".cs"))
-            {
-                try
-                {
+            // Look for version information to display.
+            Version version = new Version(Application.ProductVersion);
+            if (version.Major == 0)
+                this.Text = "APSIM (Custom Build)";
+            else
+                this.Text = "APSIM " + version.Major + "." + version.Minor;                
 
-                    ProcessStartupScript(commandLineArguments[0]);
-                }
-                catch (Exception err)
+            // Look for a script specified on the command line.
+            if (commandLineArguments != null && commandLineArguments.Length > 0)
+            {
+                if (commandLineArguments[0].EndsWith(".cs"))
                 {
-                    ErrorMessage = err.Message;
-                    if (err.InnerException != null)
-                        ErrorMessage += "\r\n" + err.InnerException.Message;
-                    ErrorMessage += "\r\n" + err.StackTrace;
-                    DialogResult = System.Windows.Forms.DialogResult.Cancel;
-                    Close();
+                    try
+                    {
+
+                        ProcessStartupScript(commandLineArguments[0]);
+                    }
+                    catch (Exception err)
+                    {
+                        ErrorMessage = err.Message;
+                        if (err.InnerException != null)
+                            ErrorMessage += "\r\n" + err.InnerException.Message;
+                        ErrorMessage += "\r\n" + err.StackTrace;
+                        DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                        Close();
+                    }
+                }
+                else if (commandLineArguments[0].EndsWith(".apsimx"))
+                {
+                    Presenter1.OpenApsimXFileInTab(commandLineArguments[0]);
                 }
             }
         }

@@ -33,6 +33,7 @@
             this.FileNameLabel = new System.Windows.Forms.Label();
             this.BrowseButton = new System.Windows.Forms.Button();
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.warningText = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,16 +84,29 @@
             this.OpenFileDialog.Filter = "All files|*.*";
             this.OpenFileDialog.Multiselect = true;
             // 
+            // warningText
+            // 
+            this.warningText.AutoSize = true;
+            this.warningText.ForeColor = System.Drawing.Color.Red;
+            this.warningText.Location = new System.Drawing.Point(3, 35);
+            this.warningText.Name = "warningText";
+            this.warningText.Size = new System.Drawing.Size(35, 13);
+            this.warningText.TabIndex = 2;
+            this.warningText.Text = "label1";
+            this.warningText.Visible = false;
+            // 
             // InputView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.warningText);
             this.Controls.Add(this.Grid);
             this.Controls.Add(this.panel1);
             this.Name = "InputView";
             this.Size = new System.Drawing.Size(644, 508);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -103,5 +117,6 @@
         private System.Windows.Forms.Label FileNameLabel;
         private System.Windows.Forms.Button BrowseButton;
         private System.Windows.Forms.OpenFileDialog OpenFileDialog;
+        private System.Windows.Forms.Label warningText;
     }
 }

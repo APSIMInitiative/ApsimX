@@ -12,20 +12,20 @@ using System.Xml.Serialization;
 
 namespace Models
 {
+    /// <summary>
+    /// A data storage model
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.DataStoreView")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     public class DataStore : Model
     {
-        /// <summary>
-        /// A SQLite connection shared between all instances of this DataStore.
-        /// </summary>
+        /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
         [NonSerialized]
         private Utility.SQLite Connection = null;
 
-        /// <summary>
-        /// The filename of the SQLite .db
-        /// </summary>
+        /// <summary>The filename of the SQLite .db</summary>
+        /// <value>The filename.</value>
         [XmlIgnore]
         public string Filename { get; set; }
 
@@ -33,42 +33,41 @@ namespace Models
         /// Gets or sets a value indicating whether the data store should export to text files
         /// automatically when all simulations finish.
         /// </summary>
+        /// <value><c>true</c> if [automatic export]; otherwise, <c>false</c>.</value>
         public bool AutoExport { get; set; }
 
-        /// <summary>
-        /// A flag that when true indicates that the DataStore is in post processing model.
-        /// </summary>
+        /// <summary>A flag that when true indicates that the DataStore is in post processing model.</summary>
         private bool DoingPostProcessing = false;
 
-        /// <summary>
-        /// A sub class for holding information about a table write.
-        /// </summary>
+        /// <summary>A sub class for holding information about a table write.</summary>
         private class TableToWrite
         {
+            /// <summary>The file name</summary>
             public string FileName;
+            /// <summary>The simulation name</summary>
             public string SimulationName;
+            /// <summary>The simulation identifier</summary>
             public int SimulationID = int.MaxValue;
+            /// <summary>The table name</summary>
             public string TableName;
+            /// <summary>The data</summary>
             public DataTable Data;
         }
 
-        /// <summary>
-        /// A collection of datatables that need writing.
-        /// </summary>
+        /// <summary>A collection of datatables that need writing.</summary>
         private static List<TableToWrite> TablesToWrite = new List<TableToWrite>();
 
 
         /// <summary>
-        /// This class encapsulates a simple lock mechanism. It is used by DataStore to 
+        /// This class encapsulates a simple lock mechanism. It is used by DataStore to
         /// apply file level locking.
         /// </summary>
         private class DbMutex
         {
+            /// <summary>The locked</summary>
             private bool Locked = false;
 
-            /// <summary>
-            /// Aquire a lock. If already locked then wait a bit.
-            /// </summary>
+            /// <summary>Aquire a lock. If already locked then wait a bit.</summary>
             public void Aquire()
             {
                 lock (this)
@@ -79,29 +78,33 @@ namespace Models
                 }
             }
 
-            /// <summary>
-            /// Release a lock.
-            /// </summary>
+            /// <summary>Release a lock.</summary>
             public void Release()
             {
                 Locked = false;
             }
         }
 
-        /// <summary>
-        /// A static dictionary of locks, one for each filename.
-        /// </summary>
+        /// <summary>A static dictionary of locks, one for each filename.</summary>
         private static Dictionary<string, DbMutex> Locks = new Dictionary<string, DbMutex>();
 
-        /// <summary>
-        /// Is the .db file open for writing?
-        /// </summary>
+        /// <summary>Is the .db file open for writing?</summary>
         private bool ForWriting = false;
 
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
         /// </summary>
-        public enum ErrorLevel { Information, Warning, Error };
+        public enum ErrorLevel 
+        {
+            /// <summary>Information</summary>
+            Information,
+
+            /// <summary>Warning</summary>
+            Warning,
+
+            /// <summary>Error</summary>
+            Error 
+        };
 
         /// <summary>
         /// A parameterless constructor purely for the XML serialiser. Other models
@@ -111,9 +114,9 @@ namespace Models
         {
         }
 
-        /// <summary>
-        /// A constructor that needs to know the calling model.
-        /// </summary>
+        /// <summary>A constructor that needs to know the calling model.</summary>
+        /// <param name="ownerModel">The owner model.</param>
+        /// <param name="baseline">if set to <c>true</c> [baseline].</param>
         public DataStore(Model ownerModel, bool baseline = false)
         {
             Simulation simulation = Apsim.Parent(ownerModel, typeof(Simulation)) as Simulation;
@@ -130,17 +133,13 @@ namespace Models
                 Filename += ".baseline";
         }
 
-        /// <summary>
-        /// Destructor. Close our DB connection.
-        /// </summary>
+        /// <summary>Destructor. Close our DB connection.</summary>
         ~DataStore()
         {
             Disconnect();
         }
 
-        /// <summary>
-        /// Disconnect from the SQLite database.
-        /// </summary>
+        /// <summary>Disconnect from the SQLite database.</summary>
         public void Disconnect()
         {
             if (Connection != null)
@@ -150,9 +149,9 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// All simulations have run - write all tables
-        /// </summary>
+        /// <summary>All simulations have run - write all tables</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("AllCompleted")]
         private void OnAllSimulationsCompleted(object sender, EventArgs e)
         {
@@ -201,9 +200,8 @@ namespace Models
             Disconnect();
         }
 
-        /// <summary>
-        /// Remove all simulations from the database that don't exist in 'simulationsToKeep'
-        /// </summary>
+        /// <summary>Remove all simulations from the database that don't exist in 'simulationsToKeep'</summary>
+        /// <param name="simulationsToKeep">The simulations to keep.</param>
         public void RemoveUnwantedSimulations(Simulations simulationsToKeep)
         {
             Open(forWriting: true);
@@ -257,9 +255,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Delete all tables
-        /// </summary>
+        /// <summary>Delete all tables</summary>
         public void DeleteAllTables()
         {
             foreach (string tableName in this.TableNames)
@@ -267,9 +263,9 @@ namespace Models
                     DeleteTable(tableName);
         }
 
-        /// <summary>
-        /// Determine whether a table exists in the database
-        /// </summary>
+        /// <summary>Determine whether a table exists in the database</summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <returns></returns>
         public bool TableExists(string tableName)
         {
             Open(forWriting: false);
@@ -278,9 +274,8 @@ namespace Models
                                                     tableName + "'", 0) > 0;
         }
 
-        /// <summary>
-        /// Delete the specified table.
-        /// </summary>
+        /// <summary>Delete the specified table.</summary>
+        /// <param name="tableName">Name of the table.</param>
         public void DeleteTable(string tableName)
         {
             Open(forWriting: true);
@@ -291,9 +286,10 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Create a table in the database based on the specified one.
-        /// </summary>
+        /// <summary>Create a table in the database based on the specified one.</summary>
+        /// <param name="simulationName">Name of the simulation.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="table">The table.</param>
         public void WriteTable(string simulationName, string tableName, DataTable table)
         {
             if (DoingPostProcessing)
@@ -319,9 +315,12 @@ namespace Models
 
         }
 
-        /// <summary>
-        /// Write a message to the DataStore.
-        /// </summary>
+        /// <summary>Write a message to the DataStore.</summary>
+        /// <param name="simulationName">Name of the simulation.</param>
+        /// <param name="date">The date.</param>
+        /// <param name="componentName">Name of the component.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="type">The type.</param>
         public void WriteMessage(string simulationName, DateTime date, string componentName, string message, ErrorLevel type)
         {
             Open(forWriting: true);
@@ -337,10 +336,9 @@ namespace Models
 
             RunQueryWithNoReturnData(sql);
         }
-        
-        /// <summary>
-        /// Return a list of simulations names or empty string[]. Never returns null.
-        /// </summary>
+
+        /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
+        /// <value>The simulation names.</value>
         public string[] SimulationNames
         {
             get
@@ -362,9 +360,8 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Return a list of table names or empty string[]. Never returns null.
-        /// </summary>
+        /// <summary>Return a list of table names or empty string[]. Never returns null.</summary>
+        /// <value>The table names.</value>
         public string[] TableNames
         {
             get
@@ -401,6 +398,10 @@ namespace Models
         /// Return all data from the specified simulation and table name. If simulationName = "*"
         /// the all simulation data will be returned.
         /// </summary>
+        /// <param name="simulationName">Name of the simulation.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="includeSimulationName">if set to <c>true</c> [include simulation name].</param>
+        /// <returns></returns>
         public DataTable GetData(string simulationName, string tableName, bool includeSimulationName = false)
         {
             Open(forWriting: false);
@@ -434,6 +435,9 @@ namespace Models
         /// Return all data from the specified simulation and table name. If simulationName = "*"
         /// the all simulation data will be returned.
         /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="filter">The filter.</param>
+        /// <returns></returns>
         public DataTable GetFilteredData(string tableName, string filter)
         {
             Open(forWriting: false);
@@ -458,9 +462,9 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Return all data from the specified simulation and table name.
-        /// </summary>
+        /// <summary>Return all data from the specified simulation and table name.</summary>
+        /// <param name="sql">The SQL.</param>
+        /// <returns></returns>
         public DataTable RunQuery(string sql)
         {
             Open(forWriting: false);
@@ -468,9 +472,8 @@ namespace Models
             return Connection.ExecuteQuery(sql);
         }
 
-        /// <summary>
-        /// Return all data from the specified simulation and table name.
-        /// </summary>
+        /// <summary>Return all data from the specified simulation and table name.</summary>
+        /// <param name="sql">The SQL.</param>
         public void RunQueryWithNoReturnData(string sql)
         {
             Open(forWriting: true);
@@ -488,9 +491,9 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Remove all rows from the specified table for the specified simulation
-        /// </summary>
+        /// <summary>Remove all rows from the specified table for the specified simulation</summary>
+        /// <param name="simulationName">Name of the simulation.</param>
+        /// <param name="tableName">Name of the table.</param>
         public void DeleteOldContentInTable(string simulationName, string tableName)
         {
             if (TableExists(tableName))
@@ -502,9 +505,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Write all outputs to a text file (.csv)
-        /// </summary>
+        /// <summary>Write all outputs to a text file (.csv)</summary>
         public void WriteToTextFiles()
         {
             string originalFileName = Filename;
@@ -540,9 +541,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Write a single summary file.
-        /// </summary>
+        /// <summary>Write a single summary file.</summary>
         /// <param name="dataStore">The data store containing the data</param>
         /// <param name="fileName">The file name to create</param>
         private static void WriteSummaryFile(DataStore dataStore, string fileName)
@@ -558,9 +557,7 @@ namespace Models
             report.Close();
         }
 
-        /// <summary>
-        /// Run all post processing tools.
-        /// </summary>
+        /// <summary>Run all post processing tools.</summary>
         public void RunPostProcessingTools()
         {
             try
@@ -569,11 +566,8 @@ namespace Models
                 Open(forWriting: true);
 
                 DoingPostProcessing = true;
-                foreach (Model child in Children)
-                {
-                    if (child is IPostSimulationTool)
-                        (child as IPostSimulationTool).Run(this);
-                }
+                foreach (IPostSimulationTool tool in Apsim.Children(this, typeof(IPostSimulationTool)))
+                    tool.Run(this);
             }
             finally
             {
@@ -583,9 +577,9 @@ namespace Models
 
         #region Privates
 
-        /// <summary>
-        /// Connect to the SQLite database.
-        /// </summary>
+        /// <summary>Connect to the SQLite database.</summary>
+        /// <param name="forWriting">if set to <c>true</c> [for writing].</param>
+        /// <exception cref="Models.Core.ApsimXException">Cannot find name of .db file</exception>
         private void Open(bool forWriting)
         {
             lock (Locks)
@@ -593,7 +587,8 @@ namespace Models
                 if (Filename == null)
                 {
                     Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                    Filename = Path.ChangeExtension(simulations.FileName, ".db");
+                    if (simulations != null)
+                        Filename = Path.ChangeExtension(simulations.FileName, ".db");
                 }
 
                 if (Filename != null && 
@@ -643,9 +638,10 @@ namespace Models
             }
         }
 
-        /// <summary>
-        ///  Go create a table in the DataStore with the specified field names and types.
-        /// </summary>
+        /// <summary>Go create a table in the DataStore with the specified field names and types.</summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="names">The names.</param>
+        /// <param name="types">The types.</param>
         private void CreateTable(string tableName, string[] names, Type[] types)
         {
             Open(forWriting: true);
@@ -681,6 +677,7 @@ namespace Models
         /// Write the specified tables to a single table in the DB. i.e. merge
         /// all columns and rows in all specified tables into a single table.
         /// </summary>
+        /// <param name="tables">The tables.</param>
         private void WriteTable(TableToWrite[] tables)
         {
             // Open the .db for writing.
@@ -761,9 +758,11 @@ namespace Models
 
         /// <summary>
         /// Return the simulation id (from the simulations table) for the specified name.
-        /// If this name doesn't exist in the table then append a new row to the table and 
+        /// If this name doesn't exist in the table then append a new row to the table and
         /// returns its id.
         /// </summary>
+        /// <param name="simulationName">Name of the simulation.</param>
+        /// <returns></returns>
         private int GetSimulationID(string simulationName)
         {
             if (!TableExists("Simulations"))
@@ -793,9 +792,9 @@ namespace Models
             return ID;
         }
 
-        /// <summary>
-        /// Create a text report from tables in this data store.
-        /// </summary>
+        /// <summary>Create a text report from tables in this data store.</summary>
+        /// <param name="dataStore">The data store.</param>
+        /// <param name="fileName">Name of the file.</param>
         private static void WriteAllTables(DataStore dataStore, string fileName)
         {
             
@@ -832,9 +831,13 @@ namespace Models
         }
 
         /// <summary>
-        /// Go through the specified names and add them to the specified table if they are not 
+        /// Go through the specified names and add them to the specified table if they are not
         /// already there.
         /// </summary>
+        /// <param name="Connection">The connection.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="names">The names.</param>
+        /// <param name="types">The types.</param>
         private static void AddMissingColumnsToTable(Utility.SQLite Connection, string tableName, string[] names, Type[] types)
         {
             List<string> columnNames = Connection.GetColumnNames(tableName);
@@ -850,9 +853,11 @@ namespace Models
             }
         }
 
-        /// <summary>
-        ///  Go prepare an insert into query and return the query.
-        /// </summary>
+        /// <summary>Go prepare an insert into query and return the query.</summary>
+        /// <param name="Connection">The connection.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="names">The names.</param>
+        /// <returns></returns>
         private static IntPtr PrepareInsertIntoTable(Utility.SQLite Connection, string tableName, string[] names)
         {
             string Cmd = "INSERT INTO " + tableName + "(";
@@ -874,12 +879,13 @@ namespace Models
             Cmd += ")";
             return Connection.Prepare(Cmd);
         }
-        
+
         /// <summary>
         /// Using the SimulationName column in the specified 'table', add a
         /// SimulationID column.
         /// </summary>
-        /// <param name="table"></param>
+        /// <param name="table">The table.</param>
+        /// <exception cref="Models.Core.ApsimXException">Cannot find Simulations table</exception>
         private void AddSimulationIDColumnToTable(DataTable table)
         {
             DataTable idTable = Connection.ExecuteQuery("SELECT * FROM Simulations");
@@ -911,9 +917,9 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Convert the specified type to a SQL type.
-        /// </summary>
+        /// <summary>Convert the specified type to a SQL type.</summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
         private static string GetSQLColumnType(Type type)
         {
             if (type == null)

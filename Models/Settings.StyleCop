@@ -1,4 +1,8 @@
 <StyleCopSettings Version="105">
+  <GlobalSettings>
+    <IntegerProperty Name="MaxViolationCount">10000</IntegerProperty>
+    <StringProperty Name="Culture">en-GB</StringProperty>
+  </GlobalSettings>
   <Analyzers>
     <Analyzer AnalyzerId="StyleCop.CSharp.DocumentationRules">
       <Rules>

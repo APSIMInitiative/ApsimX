@@ -51,6 +51,7 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.cumulativeCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label2
@@ -314,10 +315,23 @@
             this.checkBox4.UseVisualStyleBackColor = true;
             this.checkBox4.CheckedChanged += new System.EventHandler(this.OnCheckBox4Changed);
             // 
+            // cumulativeCheckBox
+            // 
+            this.cumulativeCheckBox.AutoSize = true;
+            this.cumulativeCheckBox.Location = new System.Drawing.Point(477, 85);
+            this.cumulativeCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.cumulativeCheckBox.Name = "cumulativeCheckBox";
+            this.cumulativeCheckBox.Size = new System.Drawing.Size(105, 21);
+            this.cumulativeCheckBox.TabIndex = 36;
+            this.cumulativeCheckBox.Text = "cumulative?";
+            this.cumulativeCheckBox.UseVisualStyleBackColor = true;
+            this.cumulativeCheckBox.CheckedChanged += new System.EventHandler(this.OnCheckedChanged);
+            // 
             // SeriesEditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cumulativeCheckBox);
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
@@ -373,5 +387,6 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox cumulativeCheckBox;
     }
 }

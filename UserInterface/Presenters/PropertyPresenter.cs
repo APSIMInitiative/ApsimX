@@ -8,13 +8,12 @@ namespace UserInterface.Presenters
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
     using System.Reflection;
-    using Models.Core;
-    using Views;
-    using Models;
-    using Interfaces;
     using EventArguments;
-    using Classes;
+    using Interfaces;
+    using Models;
+    using Models.Core;
 
     /// <summary>
     /// <para>
@@ -96,6 +95,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to examine for properties</param>
         public void PopulateGrid(Model model)
         {
+            IGridCell selectedCell = this.grid.GetCurrentCell;
             this.model = model;
             DataTable table = new DataTable();
             table.Columns.Add("Description", typeof(string));
@@ -104,6 +104,8 @@ namespace UserInterface.Presenters
             this.FillTable(table);
             this.grid.DataSource = table;
             this.FormatGrid();
+            if (selectedCell != null)
+                this.grid.GetCurrentCell = selectedCell;
         }
         
         /// <summary>
@@ -184,12 +186,10 @@ namespace UserInterface.Presenters
                         
                 if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
                 {
-                    DataStore dataStore = Apsim.Find(this.model, typeof(DataStore)) as DataStore;
-                    if (dataStore != null)
-                    {
-                        cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = dataStore.TableNames;
-                    }
+                    DataStore dataStore = new DataStore(this.model);
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    cell.DropDownStrings = dataStore.TableNames;
+                    dataStore.Disconnect();
                 }
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
                 {
@@ -227,6 +227,12 @@ namespace UserInterface.Presenters
                         }
                         cell.DropDownStrings = cropNames.ToArray();
                     }
+                    else if (this.properties[i].DataType == typeof(ICrop))
+                    {
+                        List<string> plantNames = Apsim.FindAll(this.model, typeof(ICrop)).Select(m => m.Name).ToList();
+                        cell.EditorType = EditorTypeEnum.DropDown;
+                        cell.DropDownStrings = plantNames.ToArray();
+                    }
                     else
                     {
                         cell.EditorType = EditorTypeEnum.TextBox;
@@ -254,7 +260,9 @@ namespace UserInterface.Presenters
             {
                 if (property.DataType == typeof(ICrop))
                 {
-                    return Apsim.Get(this.model, property.Value.ToString()) as ICrop;
+                    ICrop plant = property.Value as ICrop;
+                    if (plant != null)
+                        return plant;
                 }
             }
 
@@ -309,6 +317,10 @@ namespace UserInterface.Presenters
                 {
                     throw new ApsimXException(this.model, "Invalid property type: " + property.DataType.ToString());
                 }
+            }
+            else if (typeof(ICrop).IsAssignableFrom(property.DataType))
+            {
+                value = Apsim.Find(this.model, value.ToString()) as ICrop;
             }
 
             Commands.ChangeProperty cmd = new Commands.ChangeProperty(this.model, property.Name, value);

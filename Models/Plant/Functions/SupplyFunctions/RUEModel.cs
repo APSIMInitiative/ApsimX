@@ -6,32 +6,39 @@ using Models.Core;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
+    /// <summary>
+    /// An RUE model
+    /// </summary>
     [Serializable]
     public class RUEModel : Model
     {
-        [Link]
-        Plant Plant = null;
-
+        /// <summary>The rue</summary>
         [Link]
         Function RUE = null;
 
+        /// <summary>The fc o2</summary>
         [Link]
         Function FCO2 = null;
 
+        /// <summary>The function</summary>
         [Link]
         Function FN = null;
 
+        /// <summary>The ft</summary>
         [Link]
         public Function FT = null;
 
+        /// <summary>The fw</summary>
         [Link]
         Function FW = null;
 
+        /// <summary>The FVPD</summary>
         [Link]
         public Function FVPD = null;
 
+        /// <summary>The met data</summary>
         [Link]
-        WeatherFile MetData = null;
+        Weather MetData = null;
 
 
         #region Class Data Members
@@ -41,7 +48,9 @@ namespace Models.PMF.Functions.SupplyFunctions
         #endregion
 
         #region Associated variables
-        
+
+        /// <summary>Gets the VPD.</summary>
+        /// <value>The VPD.</value>
         public double VPD
         {
             get
@@ -61,8 +70,9 @@ namespace Models.PMF.Functions.SupplyFunctions
         #endregion
 
         /// <summary>
-        /// Total plant "actual" radiation use efficiency (for the day) corrected by reducing factors (g biomass/MJ global solar radiation) CHCK-EIT 
+        /// Total plant "actual" radiation use efficiency (for the day) corrected by reducing factors (g biomass/MJ global solar radiation) CHCK-EIT
         /// </summary>
+        /// <value>The rue act.</value>
         [Units("gDM/MJ")]
         private double RueAct
         {
@@ -72,9 +82,7 @@ namespace Models.PMF.Functions.SupplyFunctions
                 return RUE.Value * RueReductionFactor;
             }
         }
-        /// <summary>
-        /// Daily growth increment of total plant biomass
-        /// </summary>
+        /// <summary>Daily growth increment of total plant biomass</summary>
         /// <param name="RadnInt">intercepted radiation</param>
         /// <returns>g dry matter/m2 soil/day</returns>
         public double Growth(double RadnInt)
@@ -82,6 +90,8 @@ namespace Models.PMF.Functions.SupplyFunctions
             return RadnInt * RueAct;
         }
 
+        /// <summary>Gets the FRGR.</summary>
+        /// <value>The FRGR.</value>
         public double FRGR
         {
             get

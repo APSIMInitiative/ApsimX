@@ -9,14 +9,23 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// This class encapsulates an array of biomass objects
+    /// </summary>
     [Serializable]
     public class ArrayBiomass : Model
     {
+        /// <summary>The propertys</summary>
         public string[] Propertys = null;
 
+        /// <summary>The array size</summary>
         public string ArraySize = null;
+        /// <summary>The array size number</summary>
         private int ArraySizeNumber = -1;
 
+        /// <summary>Gets or sets the non structural n.</summary>
+        /// <value>The non structural n.</value>
+        /// <exception cref="System.Exception">Cannot set NonStructuralN in ArrayBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         public double[] NonStructuralN
@@ -29,6 +38,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set NonStructuralN in ArrayBiomass"); }
         }
 
+        /// <summary>Gets or sets the structural n.</summary>
+        /// <value>The structural n.</value>
+        /// <exception cref="System.Exception">Cannot set StructuralN in ArrayBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         public double[] StructuralN
@@ -41,6 +53,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set StructuralN in ArrayBiomass"); }
         }
 
+        /// <summary>Gets or sets the metabolic n.</summary>
+        /// <value>The metabolic n.</value>
+        /// <exception cref="System.Exception">Cannot set MetabolicN in ArrayBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         public double[] MetabolicN
@@ -53,6 +68,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set MetabolicN in ArrayBiomass"); }
         }
 
+        /// <summary>Gets or sets the non structural wt.</summary>
+        /// <value>The non structural wt.</value>
+        /// <exception cref="System.Exception">Cannot set NonStructuralWt in ArrayBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         public double[] NonStructuralWt
@@ -64,6 +82,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set NonStructuralWt in ArrayBiomass"); }
         }
 
+        /// <summary>Gets or sets the structural wt.</summary>
+        /// <value>The structural wt.</value>
+        /// <exception cref="System.Exception">Cannot set StructuralWt in ArrayBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         public double[] StructuralWt
@@ -76,6 +97,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set StructuralWt in ArrayBiomass"); }
         }
 
+        /// <summary>Gets or sets the metabolic wt.</summary>
+        /// <value>The metabolic wt.</value>
+        /// <exception cref="System.Exception">Cannot set MetabolicWt in ArrayBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         public double[] MetabolicWt
@@ -88,6 +112,8 @@ namespace Models.PMF
             set { throw new Exception("Cannot set MetabolicWt in ArrayBiomass"); }
         }
 
+        /// <summary>Gets the n conc.</summary>
+        /// <value>The n conc.</value>
         [XmlIgnore]
         [Units("g/g")]
         public double[] NConc
@@ -98,6 +124,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the structural n conc.</summary>
+        /// <value>The structural n conc.</value>
         [XmlIgnore]
         [Units("g/g")]
         public double[] StructuralNConc
@@ -108,6 +136,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the non structural n conc.</summary>
+        /// <value>The non structural n conc.</value>
         [XmlIgnore]
         [Units("g/g")]
         public double[] NonStructuralNConc
@@ -118,6 +148,8 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the metabolic n conc.</summary>
+        /// <value>The metabolic n conc.</value>
         [XmlIgnore]
         [Units("g/g")]
         public double[] MetabolicNConc
@@ -129,9 +161,10 @@ namespace Models.PMF
         }
 
 
-        /// <summary>
-        /// Helper method to go find the value(s) of a property and put into a List<double>
-        /// </summary>
+        /// <summary>Adds the values to list.</summary>
+        /// <param name="SubPropertyName">Name of the sub property.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot find:  + PropertyName +  in ArrayBiomass:  + this.Name</exception>
         private double[] AddValuesToList(string SubPropertyName)
         {
             if (ArraySizeNumber == -1)

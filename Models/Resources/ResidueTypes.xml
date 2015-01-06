@@ -414,7 +414,7 @@
   </ResidueType>
   <ResidueType>
     <derived_from>base_type</derived_from>
-    <fom_type>sugar</fom_type>
+    <fom_type>sugarcane</fom_type>
     <specific_area description="specific area of residue (ha/kg">0.0007  </specific_area>
   </ResidueType>
   <ResidueType>

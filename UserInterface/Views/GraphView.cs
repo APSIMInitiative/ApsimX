@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Drawing;
     using System.Windows.Forms;
     using Interfaces;
@@ -40,6 +41,12 @@ namespace UserInterface.Views
         /// </summary>
         private const int TopMargin = 75;
 
+        /// <summary>The smallest date used on any axis.</summary>
+        private DateTime smallestDate = DateTime.MaxValue;
+
+        /// <summary>The largest date used on any axis</summary>
+        private DateTime largestDate = DateTime.MinValue;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
         /// </summary>
@@ -49,6 +56,8 @@ namespace UserInterface.Views
             this.plot1.Model = new PlotModel();
             this.splitter.Visible = false;
             this.bottomPanel.Visible = false;
+            smallestDate = DateTime.MaxValue;
+            largestDate = DateTime.MinValue;
         }
 
         /// <summary>
@@ -212,7 +221,8 @@ namespace UserInterface.Views
             series.FillColor = ConverterExtensions.ToOxyColor(colour);
             series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
             series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
-
+            series.XAxisKey = xAxisType.ToString();
+            series.YAxisKey = yAxisType.ToString();
             this.plot1.Model.Series.Add(series);
         }
 
@@ -443,6 +453,22 @@ namespace UserInterface.Views
         {
             axis.IntervalLength = 100;
 
+            if (axis is DateTimeAxis)
+            {
+                DateTimeAxis dateAxis = axis as DateTimeAxis;
+
+                int numDays = (largestDate - smallestDate).Days;
+                if (numDays < 100)
+                    dateAxis.IntervalType = DateTimeIntervalType.Days;
+                else if (numDays <= 366)
+                {
+                    dateAxis.IntervalType = DateTimeIntervalType.Months;
+                    dateAxis.StringFormat = "dd-MMM";
+                }
+                else
+                    dateAxis.IntervalType = DateTimeIntervalType.Years;
+            }
+
             if (axis is LinearAxis && 
                 (axis.ActualStringFormat == null || !axis.ActualStringFormat.Contains("yyyy")))
             {
@@ -477,89 +503,77 @@ namespace UserInterface.Views
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType)
         {
-            List<string> xLabels = new List<string>();
-            List<string> yLabels = new List<string>();
-            Type xDataType = null;
-            Type yDataType = null;
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && x != null && y != null)
             {
+                // Create a new data point for each x.
                 IEnumerator xEnum = x.GetEnumerator();
-                IEnumerator yEnum = y.GetEnumerator();
-                while (xEnum.MoveNext() && yEnum.MoveNext())
-                {
-                    bool xIsMissing = false;
-                    bool yIsMissing = false;
+                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
+                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
 
-                    DataPoint p = new DataPoint();
-                    if (xEnum.Current.GetType() == typeof(DateTime))
-                    {
-                        p.X = DateTimeAxis.ToDouble(Convert.ToDateTime(xEnum.Current));
-                        xDataType = typeof(DateTime);
-                    }
-                    else if (xEnum.Current.GetType() == typeof(double) || xEnum.Current.GetType() == typeof(float))
-                    {
-                        p.X = Convert.ToDouble(xEnum.Current);
-                        xDataType = typeof(double);
-                        xIsMissing = double.IsNaN(p.X);
-                    }
-                    else
-                    {
-                        xLabels.Add(xEnum.Current.ToString());
-                        xDataType = typeof(string);
-                    }
-
-                    if (yEnum.Current.GetType() == typeof(DateTime))
-                    {
-                        p.Y = DateTimeAxis.ToDouble(Convert.ToDateTime(yEnum.Current));
-                        yDataType = typeof(DateTime);
-                    }
-                    else if (yEnum.Current.GetType() == typeof(double) || yEnum.Current.GetType() == typeof(float))
-                    {
-                        p.Y = Convert.ToDouble(yEnum.Current);
-                        yDataType = typeof(double);
-                        yIsMissing = double.IsNaN(p.Y);
-                    }
-                    else
-                    {
-                        yLabels.Add(yEnum.Current.ToString());
-                        yDataType = typeof(string);
-                    }
-
-                    if (!xIsMissing && !yIsMissing)
-                    {
-                        points.Add(p);
-                    }
-                }
-
-                // Get the axes right for this data.
-                if (xDataType != null)
-                {
-                    this.EnsureAxisExists(xAxisType, xDataType);
-                }
-
-                if (yDataType != null)
-                {
-                    this.EnsureAxisExists(yAxisType, yDataType);
-                }
-
-                if (xLabels.Count > 0)
-                {
-                    (this.GetAxis(xAxisType) as CategoryAxis).Labels.AddRange(xLabels);
-                }
-
-                if (yLabels.Count > 0)
-                {
-                    (this.GetAxis(yAxisType) as CategoryAxis).Labels.AddRange(yLabels);
-                }
+                // Create data points
+                for (int i = 0; i < xValues.Length; i++)
+                    if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
+                        points.Add(new DataPoint(xValues[i], yValues[i]));
 
                 return points;
             }
             else
-            {
                 return null;
-            }
         }
+
+        /// <summary>Gets an array of values for the given enumerator</summary>
+        /// <param name="xEnum">The enumumerator</param>
+        /// <param name="axisType">Type of the axis.</param>
+        /// <returns></returns>
+        private double[] GetDataPointValues(IEnumerator enumerator, Models.Graph.Axis.AxisType axisType)
+        {
+            List<double> dataPointValues = new List<double>();
+
+            enumerator.MoveNext();
+
+            if (enumerator.Current.GetType() == typeof(DateTime))
+            {
+                this.EnsureAxisExists(axisType, typeof(DateTime));
+                do
+                {
+                    DateTime d = Convert.ToDateTime(enumerator.Current);
+                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
+                    if (d < smallestDate)
+                        smallestDate = d;
+                    if (d > largestDate)
+                        largestDate = d;
+                }
+                while (enumerator.MoveNext());
+            }
+            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
+            {
+                this.EnsureAxisExists(axisType, typeof(double));
+                do 
+                    dataPointValues.Add(Convert.ToDouble(enumerator.Current));
+                while (enumerator.MoveNext());
+            }
+            else
+            {
+                this.EnsureAxisExists(axisType, typeof(string));
+                CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
+                do
+                {
+                    int index = axis.Labels.IndexOf(enumerator.Current.ToString());
+                    if (index == -1)
+                    {
+                        axis.Labels.Add(enumerator.Current.ToString());
+                        index = axis.Labels.IndexOf(enumerator.Current.ToString());
+                    }
+
+                    dataPointValues.Add(index);
+                }
+                while (enumerator.MoveNext());
+            }
+
+            return dataPointValues.ToArray();
+        }
+
 
         /// <summary>
         /// Ensure the specified X exists. Uses the 'DataType' property of the DataColumn
@@ -743,21 +757,24 @@ namespace UserInterface.Views
         /// <param name="enable">Enable the series?</param>
         public void EnableSeries(int seriesIndex, bool enable)
         {
-            LineSeries series = this.plot1.Model.Series[seriesIndex] as LineSeries;
-            if (series != null)
+            if (seriesIndex < this.plot1.Model.Series.Count)
             {
-                if (enable && series.Tag != null)
+                LineSeries series = this.plot1.Model.Series[seriesIndex] as LineSeries;
+                if (series != null)
                 {
-                    series.Color = (OxyColor)series.Tag;
-                    series.Tag = null;
-                }
-                else if (!enable && series.Tag == null)
-                {
-                    series.Tag = series.Color;
-                    series.Color = OxyColors.Transparent;
-                }
+                    if (enable && series.Tag != null)
+                    {
+                        series.Color = (OxyColor)series.Tag;
+                        series.Tag = null;
+                    }
+                    else if (!enable && series.Tag == null)
+                    {
+                        series.Tag = series.Color;
+                        series.Color = OxyColors.Transparent;
+                    }
 
-                this.plot1.Refresh();
+                    this.plot1.Refresh();
+                }
             }
         }
 

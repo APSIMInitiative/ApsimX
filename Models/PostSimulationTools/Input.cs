@@ -24,16 +24,30 @@ namespace Models.PostSimulationTools
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     public class Input : Model, IPostSimulationTool
     {
-        private string[] fileNames;
-        public string[] FileNames
+        /// <summary>
+        /// Gets or sets the file name to read from.
+        /// </summary>
+        public string FileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// </summary>
+        [XmlIgnore]
+        [Description("EXCEL file name")]
+        public string FullFileName
         {
             get
             {
-                return fileNames;
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                if (simulations != null && simulations.FileName != null && this.FileName != null)
+                    return Utility.PathUtils.GetAbsolutePath(this.FileName, simulations.FileName);
+                return null;
             }
+
             set
             {
-                fileNames = value;
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                this.FileName = Utility.PathUtils.GetRelativePath(value, simulations.FileName);
             }
         }
 
@@ -41,62 +55,64 @@ namespace Models.PostSimulationTools
         /// Main run method for performing our calculations and storing data.
         /// </summary>
         public void Run(DataStore dataStore)
-        {     
-            if (FileNames != null)
+        {
+            string fullFileName = FullFileName;
+            if (fullFileName != null)
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
                 dataStore.DeleteTable(Name);
-                DataTable data = GetTable(simulations.FileName);
-                for (int i=0;i< FileNames.Length; i++)
-                {
-                    if (FileNames[i] == null)
-                        continue;
-
-                    dataStore.WriteTable(null, this.Name, data);
-                }
+                DataTable data = GetTable();
+                dataStore.WriteTable(null, this.Name, data);
             }
         }
+
+        /// <summary>
+        /// Provides an error message to display if something is wrong.
+        /// </summary>
+        public string ErrorMessage = string.Empty;
 
         /// <summary>
         /// Return a datatable for this input file. Returns null if no data.
         /// </summary>
         /// <returns></returns>
-        public DataTable GetTable(string SimPath)
+        public DataTable GetTable()
         {
             DataTable returnDataTable = null;
-            if (FileNames != null)
+            string fullFileName = FullFileName;
+            if (fullFileName != null)
             {
-                for (int i=0;i <FileNames.Length;i++)
+                if (File.Exists(fullFileName))
                 {
-                    if (FileNames[i] == null)
-                        continue;
-
-                    string file = Utility.PathUtils.GetAbsolutePath(fileNames[i], SimPath);
-
-                    if ( File.Exists(file))
+                    Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
+                    try
                     {
-                        Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
-                        textFile.Open(file);
-                        DataTable table = textFile.ToTable();
-                        textFile.Close();
-
-                        if (returnDataTable == null)
-                            returnDataTable = table;
-                        else
-                            returnDataTable.Merge(table);
+                        textFile.Open(fullFileName);
                     }
+                    catch (Exception err)
+                    {
+                        ErrorMessage = err.Message;
+                        return null;
+                    }
+                    DataTable table = textFile.ToTable();
+                    textFile.Close();
+
+                    if (returnDataTable == null)
+                        returnDataTable = table;
+                    else
+                        returnDataTable.Merge(table);
+                }
+                else
+                {
+                    ErrorMessage = "The specified file does not exist.";
                 }
             }
+            else
+            {
+                ErrorMessage = "Please select a file to use.";
+            }
+
             return returnDataTable;
-
-        }
-
-
-
+        }       
     }
-
-
-
-
 }

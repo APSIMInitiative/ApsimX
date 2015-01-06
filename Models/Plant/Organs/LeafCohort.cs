@@ -8,141 +8,236 @@ using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// A leaf cohort model
+    /// </summary>
     [Serializable]
     public class LeafCohort : Model
     {
         #region Paramater Input Classes
+        /// <summary>The plant</summary>
         [Link]
         private Plant Plant = null;
+        /// <summary>The structure</summary>
         [Link]
         private Structure Structure = null;
+        /// <summary>The leaf</summary>
         [Link]
         private Leaf Leaf = null;
 
+        /// <summary>The live</summary>
         [XmlIgnore]
         public Biomass Live = new Biomass();
+        /// <summary>The dead</summary>
         [XmlIgnore]
         public Biomass Dead = new Biomass();
+        /// <summary>The live start</summary>
         private Biomass LiveStart = null;
         #endregion
 
         #region Class Fields
+        /// <summary>The rank</summary>
         public int Rank = 0;  // 1 based ranking
+        /// <summary>The area</summary>
         public double Area = 0;
         //Leaf coefficients
+        /// <summary>The age</summary>
         [XmlIgnore]
         public double Age = 0;
+        /// <summary>The n reallocation factor</summary>
         private double NReallocationFactor = 0;
+        /// <summary>The dm reallocation factor</summary>
         private double DMReallocationFactor = 0;
+        /// <summary>The n retranslocation factor</summary>
         private double NRetranslocationFactor = 0;
+        /// <summary>The dm retranslocation factor</summary>
         private double DMRetranslocationFactor = 0;
+        /// <summary>The functional n conc</summary>
         private double FunctionalNConc = 0;
+        /// <summary>The luxary n conc</summary>
         private double LuxaryNConc = 0;
+        /// <summary>The structural fraction</summary>
         [XmlIgnore]
         public double StructuralFraction = 0;
+        /// <summary>The non structural fraction</summary>
         [XmlIgnore]
         public double NonStructuralFraction = 0;
+        /// <summary>The maximum live area</summary>
         [XmlIgnore]
         public double MaxLiveArea = 0;
+        /// <summary>The growth duration</summary>
         [XmlIgnore]
         public double GrowthDuration = 0;
+        /// <summary>The lag duration</summary>
         [XmlIgnore]
         public double LagDuration = 0;
+        /// <summary>The senescence duration</summary>
         [XmlIgnore]
         public double SenescenceDuration = 0;
+        /// <summary>The detachment lag duration</summary>
         [XmlIgnore]
         public double DetachmentLagDuration = 0;
+        /// <summary>The detachment duration</summary>
         [XmlIgnore]
         public double DetachmentDuration = 0;
+        /// <summary>The specific leaf area maximum</summary>
         [XmlIgnore]
         public double SpecificLeafAreaMax = 0;
+        /// <summary>The specific leaf area minimum</summary>
         [XmlIgnore]
         public double SpecificLeafAreaMin = 0;
+        /// <summary>The maximum n conc</summary>
         [XmlIgnore]
         public double MaximumNConc = 0;
+        /// <summary>The minimum n conc</summary>
         [XmlIgnore]
         public double MinimumNConc = 0;
+        /// <summary>The initial n conc</summary>
         [XmlIgnore]
         public double InitialNConc = 0;
+        /// <summary>The live area</summary>
         [XmlIgnore]
         public double LiveArea = 0;
+        /// <summary>The dead area</summary>
         [XmlIgnore]
         public double DeadArea = 0;
+        /// <summary>The maximum area</summary>
         [XmlIgnore]
         public double MaxArea = 0;
+        /// <summary>Gets or sets the cover above.</summary>
+        /// <value>The cover above.</value>
         [XmlIgnore]
         public double CoverAbove { get; set; }
+        /// <summary>The shade induced sen rate</summary>
         private double ShadeInducedSenRate = 0;
+        /// <summary>The senesced frac</summary>
         private double SenescedFrac = 0;
+        /// <summary>The detached frac</summary>
         private double DetachedFrac = 0;
+        /// <summary>The cohort population</summary>
         [XmlIgnore]
         public double CohortPopulation = 0; //Number of leaves in this cohort
+        /// <summary>The cell division stress factor</summary>
         [XmlIgnore]
         public double CellDivisionStressFactor = 1;
+        /// <summary>The cell division stress accumulation</summary>
         [XmlIgnore]
         public double CellDivisionStressAccumulation = 0;
+        /// <summary>The cell division stress days</summary>
         [XmlIgnore]
         public double CellDivisionStressDays = 0;
         //Leaf Initial status paramaters
+        /// <summary>The leaf start n retranslocation supply</summary>
         [XmlIgnore]
         public double LeafStartNRetranslocationSupply = 0;
+        /// <summary>The leaf start n reallocation supply</summary>
         [XmlIgnore]
         public double LeafStartNReallocationSupply = 0;
+        /// <summary>The leaf start dm retranslocation supply</summary>
         [XmlIgnore]
         public double LeafStartDMRetranslocationSupply = 0;
+        /// <summary>The leaf start dm reallocation supply</summary>
         [XmlIgnore]
         public double LeafStartDMReallocationSupply = 0;
+        /// <summary>The leaf start area</summary>
         [XmlIgnore]
         public double LeafStartArea = 0;
+        /// <summary>
+        /// The leaf start metabolic n reallocation supply
+        /// </summary>
         [XmlIgnore]
         public double LeafStartMetabolicNReallocationSupply = 0;
+        /// <summary>
+        /// The leaf start non structural n reallocation supply
+        /// </summary>
         [XmlIgnore]
         public double LeafStartNonStructuralNReallocationSupply = 0;
+        /// <summary>
+        /// The leaf start metabolic n retranslocation supply
+        /// </summary>
         [XmlIgnore]
         public double LeafStartMetabolicNRetranslocationSupply = 0;
+        /// <summary>
+        /// The leaf start non structural n retranslocation supply
+        /// </summary>
         [XmlIgnore]
         public double LeafStartNonStructuralNRetranslocationSupply = 0;
+        /// <summary>
+        /// The leaf start metabolic dm reallocation supply
+        /// </summary>
         [XmlIgnore]
         public double LeafStartMetabolicDMReallocationSupply = 0;
+        /// <summary>
+        /// The leaf start non structural dm reallocation supply
+        /// </summary>
         [XmlIgnore]
         public double LeafStartNonStructuralDMReallocationSupply = 0;
+        /// <summary>
+        /// The leaf start metabolic dm retranslocation supply
+        /// </summary>
         [XmlIgnore]
         public double LeafStartMetabolicDMRetranslocationSupply = 0;
+        /// <summary>
+        /// The leaf start non structural dm retranslocation supply
+        /// </summary>
         [XmlIgnore]
         public double LeafStartNonStructuralDMRetranslocationSupply = 0;
         //variables used in calculating daily supplies and deltas
+        /// <summary>The delta wt</summary>
         [XmlIgnore]
         public double DeltaWt = 0;
         //public double StructuralNDemand = 0;
         //public double MetabolicNDemand = 0;
         //public double NonStructuralNDemand = 0;
+        /// <summary>The potential area growth</summary>
         [XmlIgnore]
         public double PotentialAreaGrowth = 0;
+        /// <summary>The delta potential area</summary>
         private double DeltaPotentialArea = 0;
+        /// <summary>The delta water constrained area</summary>
         private double DeltaWaterConstrainedArea = 0;
         //private double StructuralDMDemand = 0;
         //private double MetabolicDMDemand = 0;
+        /// <summary>The potential structural dm allocation</summary>
         private double PotentialStructuralDMAllocation = 0;
+        /// <summary>The potential metabolic dm allocation</summary>
         private double PotentialMetabolicDMAllocation = 0;
+        /// <summary>The metabolic n reallocated</summary>
         private double MetabolicNReallocated = 0;
+        /// <summary>The metabolic wt reallocated</summary>
         private double MetabolicWtReallocated = 0;
+        /// <summary>The non structural n reallocated</summary>
         private double NonStructuralNReallocated = 0;
+        /// <summary>The non structural wt reallocated</summary>
         private double NonStructuralWtReallocated = 0;
+        /// <summary>The metabolic n retranslocated</summary>
         private double MetabolicNRetranslocated = 0;
+        /// <summary>The non structural n retrasnlocated</summary>
         private double NonStructuralNRetrasnlocated = 0;
+        /// <summary>The dm retranslocated</summary>
         private double DMRetranslocated = 0;
+        /// <summary>The metabolic n allocation</summary>
         private double MetabolicNAllocation = 0;
+        /// <summary>The structural dm allocation</summary>
         private double StructuralDMAllocation = 0;
+        /// <summary>The metabolic dm allocation</summary>
         private double MetabolicDMAllocation = 0;
         #endregion
 
         #region Class Properties
+        /// <summary>Gets the node age.</summary>
+        /// <value>The node age.</value>
         public double NodeAge
         {
             get { return Age; }
         }
+        /// <summary>The is initialised</summary>
         [XmlIgnore]
         public bool IsInitialised = false;
+        /// <summary>Gets a value indicating whether this instance is not appeared.</summary>
+        /// <value>
+        /// <c>true</c> if this instance is not appeared; otherwise, <c>false</c>.
+        /// </value>
         public bool IsNotAppeared
         {
             get
@@ -150,12 +245,24 @@ namespace Models.PMF.Organs
                 return (IsInitialised && Age == 0);
             }
         }
+        /// <summary>Gets a value indicating whether this instance is growing.</summary>
+        /// <value>
+        /// <c>true</c> if this instance is growing; otherwise, <c>false</c>.
+        /// </value>
         public bool IsGrowing
         {
             get { return (Age < GrowthDuration); }
         }
+        /// <summary>Gets or sets a value indicating whether this instance is appeared.</summary>
+        /// <value>
+        /// <c>true</c> if this instance is appeared; otherwise, <c>false</c>.
+        /// </value>
         [XmlIgnore]
         public bool IsAppeared { get; set; }
+        /// <summary>Gets a value indicating whether this instance is fully expanded.</summary>
+        /// <value>
+        /// <c>true</c> if this instance is fully expanded; otherwise, <c>false</c>.
+        /// </value>
         public bool IsFullyExpanded
         {
             get
@@ -163,22 +270,38 @@ namespace Models.PMF.Organs
                 return (IsAppeared && Age > GrowthDuration);
             }
         }
+        /// <summary>Gets a value indicating whether this instance is green.</summary>
+        /// <value><c>true</c> if this instance is green; otherwise, <c>false</c>.</value>
         public bool IsGreen
         {
             get { return (Age < (GrowthDuration + LagDuration + SenescenceDuration)); }
         }
+        /// <summary>Gets a value indicating whether this instance is senescing.</summary>
+        /// <value>
+        /// <c>true</c> if this instance is senescing; otherwise, <c>false</c>.
+        /// </value>
         public bool IsSenescing
         {
             get { return IsGreen && (Age > (GrowthDuration + LagDuration)); }
         }
+        /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
+        /// <value>
+        /// <c>true</c> if this instance is not senescing; otherwise, <c>false</c>.
+        /// </value>
         public bool IsNotSenescing
         {
             get { return (Age < (GrowthDuration + LagDuration)); }
         }
+        /// <summary>
+        /// Gets a value indicating whether [should be dead].
+        /// </summary>
+        /// <value><c>true</c> if [should be dead]; otherwise, <c>false</c>.</value>
         public bool ShouldBeDead
         {
             get { return !IsGreen; }
         }
+        /// <summary>Gets a value indicating whether this <see cref="LeafCohort"/> is finished.</summary>
+        /// <value><c>true</c> if finished; otherwise, <c>false</c>.</value>
         public bool Finished
         {
             get
@@ -186,10 +309,14 @@ namespace Models.PMF.Organs
                 return IsAppeared && !IsGreen;
             }
         }
+        /// <summary>Gets a value indicating whether this instance is alive.</summary>
+        /// <value><c>true</c> if this instance is alive; otherwise, <c>false</c>.</value>
         public bool IsAlive
         {
             get { return ((Age >= 0) && (Age < (GrowthDuration + LagDuration + SenescenceDuration))); }
         }
+        /// <summary>Gets a value indicating whether this instance is dead.</summary>
+        /// <value><c>true</c> if this instance is dead; otherwise, <c>false</c>.</value>
         public bool IsDead
         {
             get
@@ -197,6 +324,8 @@ namespace Models.PMF.Organs
                 return Utility.Math.FloatsAreEqual(LiveArea, 0.0) && !Utility.Math.FloatsAreEqual(DeadArea, 0.0);
             }
         }
+        /// <summary>Gets the maximum size.</summary>
+        /// <value>The maximum size.</value>
         public double MaxSize
         {
             get
@@ -209,6 +338,8 @@ namespace Models.PMF.Organs
                     return MaxLiveArea / CohortPopulation;
             }
         }
+        /// <summary>Gets the live population.</summary>
+        /// <value>The live population.</value>
         public double LivePopulation
         {
             get
@@ -216,6 +347,8 @@ namespace Models.PMF.Organs
                 return CohortPopulation;
             }
         }
+        /// <summary>Gets the size.</summary>
+        /// <value>The size.</value>
         public double Size
         {
             get
@@ -226,6 +359,8 @@ namespace Models.PMF.Organs
                     return 0;
             }
         }
+        /// <summary>Gets the fraction expanded.</summary>
+        /// <value>The fraction expanded.</value>
         public double FractionExpanded
         {
             get
@@ -238,6 +373,8 @@ namespace Models.PMF.Organs
                     return Age / GrowthDuration;
             }
         }
+        /// <summary>ns the fac.</summary>
+        /// <returns></returns>
         private double NFac()
         {
             if (IsAppeared)
@@ -249,6 +386,8 @@ namespace Models.PMF.Organs
             else
                 return 0;
         }
+        /// <summary>Gets the specific area.</summary>
+        /// <value>The specific area.</value>
         public double SpecificArea
         {
             get
@@ -262,6 +401,8 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitration methods
+        /// <summary>Gets the structural dm demand.</summary>
+        /// <value>The structural dm demand.</value>
         virtual public double StructuralDMDemand
         {
             get
@@ -274,6 +415,8 @@ namespace Models.PMF.Organs
                 else return 0;
             }
         }
+        /// <summary>Gets the metabolic dm demand.</summary>
+        /// <value>The metabolic dm demand.</value>
         virtual public double MetabolicDMDemand
         {
             get
@@ -286,6 +429,8 @@ namespace Models.PMF.Organs
                 else return 0;
             }
         }
+        /// <summary>Gets the non structural dm demand.</summary>
+        /// <value>The non structural dm demand.</value>
         virtual public double NonStructuralDMDemand
         {
             get
@@ -299,6 +444,8 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
+        /// <summary>Gets the total dm demand.</summary>
+        /// <value>The total dm demand.</value>
         virtual public double TotalDMDemand
         {
             get
@@ -306,6 +453,8 @@ namespace Models.PMF.Organs
                 return StructuralDMDemand + MetabolicDMDemand + NonStructuralDMDemand;
             }
         }
+        /// <summary>Gets the structural n demand.</summary>
+        /// <value>The structural n demand.</value>
         virtual public double StructuralNDemand
         {
             get
@@ -316,6 +465,8 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
+        /// <summary>Gets the non structural n demand.</summary>
+        /// <value>The non structural n demand.</value>
         virtual public double NonStructuralNDemand
         {
             get
@@ -326,6 +477,8 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
+        /// <summary>Gets the metabolic n demand.</summary>
+        /// <value>The metabolic n demand.</value>
         virtual public double MetabolicNDemand
         {
             get
@@ -336,6 +489,8 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
+        /// <summary>Gets the total n demand.</summary>
+        /// <value>The total n demand.</value>
         virtual public double TotalNDemand
         {
             get
@@ -343,6 +498,21 @@ namespace Models.PMF.Organs
                 return StructuralNDemand + NonStructuralNDemand + MetabolicNDemand;
             }
         }
+        /// <summary>Sets the dm allocation.</summary>
+        /// <value>The dm allocation.</value>
+        /// <exception cref="System.Exception">
+        /// -ve DM Allocation to Leaf Cohort
+        /// or
+        /// DM Allocated to Leaf Cohort is in excess of its Demand
+        /// or
+        /// A leaf cohort cannot supply that amount for DM Reallocation
+        /// or
+        /// Leaf cohort given negative DM Reallocation
+        /// or
+        /// Negative DM retranslocation from a Leaf Cohort
+        /// or
+        /// A leaf cohort cannot supply that amount for DM retranslocation
+        /// </exception>
         virtual public BiomassAllocationType DMAllocation
         {
             set
@@ -404,6 +574,17 @@ namespace Models.PMF.Organs
                 }
             }
         }*/
+        /// <summary>Sets the n allocation.</summary>
+        /// <value>The n allocation.</value>
+        /// <exception cref="System.Exception">
+        /// A leaf cohort cannot supply that amount for N Reallocation
+        /// or
+        /// Leaf cohort given negative N Reallocation
+        /// or
+        /// A leaf cohort cannot supply that amount for N Retranslocation
+        /// or
+        /// Leaf cohort given negative N Retranslocation
+        /// </exception>
         virtual public BiomassAllocationType NAllocation
         {
             set
@@ -438,6 +619,8 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        /// <summary>Gets the n retranslocation supply.</summary>
+        /// <value>The n retranslocation supply.</value>
         virtual public double NRetranslocationSupply
         {
             get
@@ -462,6 +645,8 @@ namespace Models.PMF.Organs
                 }
             }
         }*/
+        /// <summary>Gets the dm retranslocation supply.</summary>
+        /// <value>The dm retranslocation supply.</value>
         public double DMRetranslocationSupply
         {
             get
@@ -469,6 +654,8 @@ namespace Models.PMF.Organs
                 return LeafStartDMRetranslocationSupply;
             }
         }
+        /// <summary>Gets the n reallocation supply.</summary>
+        /// <value>The n reallocation supply.</value>
         public double NReallocationSupply
         {
             get
@@ -476,6 +663,8 @@ namespace Models.PMF.Organs
                 return LeafStartNonStructuralNReallocationSupply + LeafStartMetabolicNReallocationSupply;
             }
         }
+        /// <summary>Gets the dm reallocation supply.</summary>
+        /// <value>The dm reallocation supply.</value>
         public double DMReallocationSupply
         {
             get
@@ -483,6 +672,17 @@ namespace Models.PMF.Organs
                 return LeafStartNonStructuralDMReallocationSupply + LeafStartMetabolicDMReallocationSupply;
             }
         }
+        /// <summary>Sets the dm potential allocation.</summary>
+        /// <value>The dm potential allocation.</value>
+        /// <exception cref="System.Exception">
+        /// -ve Potential DM Allocation to Leaf Cohort
+        /// or
+        /// Potential DM Allocation to Leaf Cohortis in excess of its Demand
+        /// or
+        /// -ve Potential DM Allocation to Leaf Cohort
+        /// or
+        /// Potential DM Allocation to Leaf Cohortis in excess of its Demand
+        /// </exception>
         virtual public BiomassPoolType DMPotentialAllocation
         {
             set
@@ -534,27 +734,28 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
-        /// <summary>
-        /// The default constuctor that will be called by the APSIM infrastructure.
-        /// </summary>
+        /// <summary>The default constuctor that will be called by the APSIM infrastructure.</summary>
         public LeafCohort()
         {
         }
-        /// <summary>
-        /// Returns a clone of this object
-        /// </summary>
-        public new virtual LeafCohort Clone()
+        /// <summary>Returns a clone of this object</summary>
+        /// <returns></returns>
+        public virtual LeafCohort Clone()
         {
             LeafCohort NewLeaf = (LeafCohort)this.MemberwiseClone();
             NewLeaf.Live = new Biomass();
             NewLeaf.Dead = new Biomass();
             return NewLeaf;
         }
+        /// <summary>Does the initialisation.</summary>
         public void DoInitialisation()
         {
             IsInitialised = true;
             Age = 0;
         }
+        /// <summary>Does the appearance.</summary>
+        /// <param name="LeafFraction">The leaf fraction.</param>
+        /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
         public void DoAppearance(double LeafFraction, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
         {
             Name = "Leaf" + Rank.ToString();
@@ -597,6 +798,9 @@ namespace Models.PMF.Organs
                 DMRetranslocationFactor = LeafCohortParameters.DMRetranslocationFactor.Value;
             else DMRetranslocationFactor = 0;
         }
+        /// <summary>Does the potential growth.</summary>
+        /// <param name="TT">The tt.</param>
+        /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
         virtual public void DoPotentialGrowth(double TT, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
         {
             //Reduce leaf Population in Cohort due to plant mortality
@@ -698,6 +902,9 @@ namespace Models.PMF.Organs
             }
 
         }
+        /// <summary>Does the actual growth.</summary>
+        /// <param name="TT">The tt.</param>
+        /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
         virtual public void DoActualGrowth(double TT, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
         {
             if (IsAppeared)
@@ -711,7 +918,7 @@ namespace Models.PMF.Organs
                 //Growing leaf area after DM allocated
                 double DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation) * SpecificLeafAreaMax;  //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
                 double DeltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
-                LiveArea += DeltaActualArea; /// Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
+                LiveArea += DeltaActualArea; // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
 
                 //Senessing leaf area
                 double AreaSenescing = LiveArea * SenescedFrac;
@@ -807,6 +1014,8 @@ namespace Models.PMF.Organs
                 }
             }
         }
+        /// <summary>Does the kill.</summary>
+        /// <param name="fraction">The fraction.</param>
         virtual public void DoKill(double fraction)
         {
             if (IsInitialised)
@@ -833,14 +1042,14 @@ namespace Models.PMF.Organs
                 Dead.NonStructuralN += change;
             }
         }
+        /// <summary>Does the frost.</summary>
+        /// <param name="fraction">The fraction.</param>
         virtual public void DoFrost(double fraction)
         {
             if (IsAppeared)
                 DoKill(fraction);
         }
-        /// <summary>
-        /// Potential delta LAI
-        /// </summary>
+        /// <summary>Potential delta LAI</summary>
         /// <param name="TT">thermal-time</param>
         /// <returns>(mm2 leaf/cohort position/m2 soil/day)</returns>
         virtual public double PotentialAreaGrowthFunction(double TT)
@@ -850,9 +1059,7 @@ namespace Models.PMF.Organs
             double growth = CohortPopulation * leafSizeDelta; // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
             return growth;                              // FIXME-EIT Unit conversion to m2/m2 could happen here and population could be considered at higher level only (?)
         }
-        /// <summary>
-        /// Potential average leaf size for today per cohort (no stress)
-        /// </summary>
+        /// <summary>Potential average leaf size for today per cohort (no stress)</summary>
         /// <param name="TT">Thermal-time accumulation since cohort initiation</param>
         /// <returns>Average leaf size (mm2/leaf)</returns>
         protected double SizeFunction(double TT)
@@ -862,6 +1069,11 @@ namespace Models.PMF.Organs
             return leafsize;
 
         }
+        /// <summary>Fractions the senescing.</summary>
+        /// <param name="TT">The tt.</param>
+        /// <param name="StemMortality">The stem mortality.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Bad Fraction Senescing</exception>
         public double FractionSenescing(double TT, double StemMortality)
         {
             //Calculate fraction of leaf area senessing based on age and shading.  This is used to to calculate change in leaf area and Nreallocation supply.
@@ -904,6 +1116,10 @@ namespace Models.PMF.Organs
             else
                 return 0;
         }
+        /// <summary>Fractions the detaching.</summary>
+        /// <param name="TT">The tt.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Bad Fraction Detaching</exception>
         public double FractionDetaching(double TT)
         {
             double FracDetach = 0;
@@ -926,6 +1142,9 @@ namespace Models.PMF.Organs
             return FracDetach;
 
         }
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -934,7 +1153,8 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Event Handelers
-        
+
+        /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
         #endregion
     }

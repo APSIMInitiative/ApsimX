@@ -9,25 +9,40 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// A value is returned via Akima spline interpolation of a given set of XY pairs
+    /// </summary>
     [Serializable]
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
     public class SplineInterpolationFunction : Function
     {
+        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <value>The xy pairs.</value>
         public XYPairs XYPairs { get; set; }
 
+        /// <summary>The x property</summary>
         public string XProperty = "";
 
+        /// <summary>The spline</summary>
         [NonSerialized]
         private CubicSpline spline = null;
+        /// <summary>The property name</summary>
         private string PropertyName;
+        /// <summary>The array spec</summary>
         private string ArraySpec;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SplineInterpolationFunction"/> class.
+        /// </summary>
         public SplineInterpolationFunction()
         {
             PropertyName = XProperty;
             ArraySpec = Utility.String.SplitOffBracketedValue(ref PropertyName, '[', ']');
         }
-        
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
         public override double Value
         {
             get
@@ -54,6 +69,9 @@ namespace Models.PMF.Functions
             }
         }
 
+        /// <summary>Interpolates the specified x.</summary>
+        /// <param name="x">The x.</param>
+        /// <returns></returns>
         private double Interpolate(double x)
         {
             return spline.Interpolate(x);

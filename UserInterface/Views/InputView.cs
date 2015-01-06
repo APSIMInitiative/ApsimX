@@ -24,6 +24,11 @@ namespace UserInterface.Views
         string FileName { get; set; }
 
         /// <summary>
+        /// Property to provide access to the warning text label.
+        /// </summary>
+        string WarningText { get; set; }
+        
+        /// <summary>
         /// Property to provide access to the grid.
         /// </summary>
         IGridView GridView { get; }
@@ -62,6 +67,22 @@ namespace UserInterface.Views
             set
             {
                 FileNameLabel.Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Property to provide access to the warning text label.
+        /// </summary>
+        public string WarningText
+        {
+            get
+            {
+                return warningText.Text;
+            }
+            set
+            {
+                warningText.Text = value;
+                warningText.Visible = !string.IsNullOrWhiteSpace(value);
             }
         }
 

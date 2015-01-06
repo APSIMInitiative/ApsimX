@@ -9,19 +9,22 @@ using System.IO;
 
 namespace Models.Core
 {
-    /// <summary>
-    /// This class loads a model from a resource
-    /// </summary>
+    /// <summary>This class loads a model from a resource</summary>
     [Serializable]
     public class ModelCollectionFromResource : Model
     {
+        /// <summary>Gets or sets the name of the resource.</summary>
+        /// <value>The name of the resource.</value>
         public string ResourceName { get; set; }
+
+        /// <summary>All models</summary>
         private List<Model> allModels;
 
         /// <summary>
         /// We're about to be serialised. Remove our 'ModelFromResource' model from the list
-        /// of all models so that is isn't serialised. 
+        /// of all models so that is isn't serialised.
         /// </summary>
+        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
         [EventSubscribe("Serialising")]
         protected void OnSerialising(bool xmlSerialisation)
         {
@@ -43,9 +46,8 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Serialisation has completed. Reinstate 'ModelFromResource' if necessary.
-        /// </summary>
+        /// <summary>Serialisation has completed. Reinstate 'ModelFromResource' if necessary.</summary>
+        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
         [EventSubscribe("Serialised")]
         protected void OnSerialised(bool xmlSerialisation)
         {
@@ -59,6 +61,7 @@ namespace Models.Core
         /// We have just been deserialised. If from XML then load our model
         /// from resource.
         /// </summary>
+        /// <param name="xmlSerialisation">if set to <c>true</c> [XML serialisation].</param>
         [EventSubscribe("Deserialised")]
         protected void OnDeserialised(bool xmlSerialisation)
         {
@@ -81,6 +84,8 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Sets the not visible.</summary>
+        /// <param name="ModelFromResource">The model from resource.</param>
         private static void SetNotVisible(Model ModelFromResource)
         {
             foreach (Model child in ModelFromResource.Children)

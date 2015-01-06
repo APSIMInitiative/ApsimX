@@ -33,11 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\apsim_logo32.ico</ApplicationIcon>
+    <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClosedXML">
-      <HintPath>..\packages\ClosedXML.0.74.0\lib\net40-client\ClosedXML.dll</HintPath>
+    <Reference Include="ClosedXML, Version=0.75.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ClosedXML.0.75.0\lib\net40-client\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>..\packages\ICSharpCode.NRefactory.5.4.0\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
@@ -55,6 +59,9 @@
     <Reference Include="Mono.Cecil">
       <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="NRtfTree">
+      <HintPath>..\..\temp\NRtfTree.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot, Version=2013.1.1.1, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\OxyPlot.Core.2014.1.464\lib\portable-net4+sl4+wp71+win8\OxyPlot.dll</HintPath>
@@ -66,6 +73,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -75,6 +83,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Models\Properties\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="..\Utility\ColumnXYSeries.cs">
       <Link>Utility\ColumnXYSeries.cs</Link>
     </Compile>
@@ -88,6 +99,7 @@
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\GridColumn.cs" />
+    <Compile Include="Classes\HtmlEditor.cs" />
     <Compile Include="Classes\PMFDocumentation.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
@@ -106,6 +118,11 @@
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utility\FindAndReplaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -188,6 +205,7 @@
     <Compile Include="Views\HTMLView.Designer.cs">
       <DependentUpon>HTMLView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Views\PredictedObservedView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -199,6 +217,12 @@
     </Compile>
     <Compile Include="Views\SeriesEditorView.Designer.cs">
       <DependentUpon>SeriesEditorView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SummaryView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\SummaryView.Designer.cs">
+      <DependentUpon>SummaryView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TestView.cs">
       <SubType>UserControl</SubType>
@@ -340,6 +364,9 @@
     <EmbeddedResource Include="Views\SeriesEditorView.resx">
       <DependentUpon>SeriesEditorView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\SummaryView.resx">
+      <DependentUpon>SummaryView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\TestView.resx">
       <DependentUpon>TestView.cs</DependentUpon>
     </EmbeddedResource>
@@ -370,14 +397,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="Views\AxisView.resx">
       <DependentUpon>AxisView.cs</DependentUpon>
     </EmbeddedResource>
@@ -414,109 +436,78 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\apsim logo32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\folder_document.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GraphToolbox.apsimx" />
-    <None Include="Resources\ManagementToolbox.apsimx" />
-    <None Include="Resources\StandardToolbox.apsimx">
+    <EmbeddedResource Include="Resources\Toolboxes\ManagementToolbox.apsimx" />
+    <EmbeddedResource Include="Resources\Toolboxes\StandardToolbox.apsimx">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\Test.xshd" />
-    <None Include="Resources\undo.png" />
+    </EmbeddedResource>
+    <None Include="Resources\SyntaxHighlighting\Report.xshd" />
+    <None Include="Resources\SyntaxHighlighting\Test.xshd" />
+    <EmbeddedResource Include="Resources\MenuImages\Undo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\redo.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Redo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\clock.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\folder.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Folder.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Simulation16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Simulation.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\document16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SummaryFile.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\fertiliser16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Fertiliser.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\layout_center16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SurfaceOrganicMatter.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\shovel16.bmp" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Report.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SOM16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Weather.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\table_selection_column16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Manager.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\thermometer16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Graph.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\manager16.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Run APSIM.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\chart.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DataStore.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\media_play.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Copy.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\data.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Paste.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\folders.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Save As.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\copy.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Tests.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\paste.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Summary.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\save_as.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Split screen.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\disk_blue.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Water.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\bug_green.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\scroll.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\box.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\window_split_hor.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\delete2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\drink_blue16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\drink_yellow16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\drop16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\drop161.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\view.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Analysis.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Soil.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilCropOilPalm.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Models\Importer\Importer.csproj">
@@ -529,13 +520,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ShovelOk.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Check Soil.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Toolboxes\TrainingToolbox.apsimx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Resources\window_delete.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\line-chart16.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Close.png" />
@@ -544,92 +535,93 @@
     <None Include="Resources\WaterGraph.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\N.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogen.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\H2O.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilWater.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SoilOrganicMatter16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilOrganicMatter.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Axis.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Axis.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Series16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Series.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GraphData.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SoilCrop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilCrop.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Apsim.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\MicroClimate16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MicroClimate.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Input16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Input.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Irrigation16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Irrigation.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\calendar.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Operations.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\bug_red.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Log.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\notes.wav" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\document_exchange.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Experiment.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Creator16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Factors.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Microscope.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Factor.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Factorial.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\cube_molecule.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Factor.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\element.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\element_edit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\link.png" />
-    <None Include="Resources\Apsim.ico" />
-    <Content Include="apsim_logo32.ico" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Simulations.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\InitialWater.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AgPasture.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Potato.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Sample.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Slurp.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Wheat.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Zone.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PredictedObserved.png" />
+    <Content Include="ApsimLogo.ico" />
     <EmbeddedResource Include="Resources\apsim_logo.png" />
-    <Content Include="Resources\apsim_logo32.ico" />
-    <None Include="Resources\calculator.png" />
-    <None Include="Resources\export2.png" />
-    <None Include="Resources\ExportToHTML.gif" />
-    <None Include="Resources\ExportToHTML.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\Toolbox.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Export to CSV.png" />
     <None Include="Resources\InitialWaterGraph.xml" />
-    <None Include="Resources\Excel16.png" />
-    <None Include="Resources\cultivar16.png" />
-    <None Include="Resources\gfolder_32.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ExcelInput.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Cultivar.png" />
+    <EmbeddedResource Include="Resources\Toolboxes\OpenExample.png" />
     <EmbeddedResource Include="Resources\Export.css" />
     <EmbeddedResource Include="Resources\hd_bg.png" />
-    <None Include="Resources\Excel161.png" />
-    <Content Include="Resources\memo16.png" />
-    <None Include="Resources\MicroClimate161.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Memo.png" />
     <None Include="Resources\Plant2.css" />
-    <None Include="Resources\palm16.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OilPalm.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Delete.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Refresh.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Export to EXCEL.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Export to HTML.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Save.png" />
+    <EmbeddedResource Include="Resources\MenuImages\Help.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup />

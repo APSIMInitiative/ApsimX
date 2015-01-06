@@ -151,8 +151,14 @@ namespace UserInterface.Views
             
             set 
             {
-                this.isAutoFilterOn = value;
-                this.PopulateGrid();
+
+                // MONO doesn't seem to like the auto filter option.
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                    Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                {
+                    this.isAutoFilterOn = value;
+                    this.PopulateGrid();
+                }    
             }
         }
 
@@ -173,7 +179,9 @@ namespace UserInterface.Views
 
             set
             {
-                if (value != null)
+                if (value != null && 
+                    value.ColumnIndex < this.Grid.ColumnCount &&
+                    value.RowIndex < this.Grid.RowCount)
                 {
                     this.Grid.CurrentCell = this.Grid[value.ColumnIndex, value.RowIndex];
                 }
@@ -244,6 +252,10 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateGrid()
         {
+            this.Grid.DefaultCellStyle.Font = this.Grid.Font;
+            this.popupMenu.Font = this.Font;
+            this.Grid.ColumnHeadersDefaultCellStyle.Font = this.Grid.Font;
+
             // The DataGridViewAutoFilterColumnHeaderCell class needs DataSource to be set.
             this.Grid.DataSource = null;
             this.Grid.Columns.Clear();
@@ -288,14 +300,26 @@ namespace UserInterface.Views
                     }
 
                     // Populate the grid headers.
+                    bool headersContainLineFeeds = false;
                     for (int col = 0; col < this.DataSource.Columns.Count; col++)
                     {
                         this.Grid.Columns[col].HeaderText = this.DataSource.Columns[col].ColumnName;
+                        if (this.Grid.Columns[col].HeaderText.Contains("\n"))
+                            headersContainLineFeeds = true;
+
                         this.Grid.Columns[col].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         this.Grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         this.Grid.Columns[col].SortMode = DataGridViewColumnSortMode.NotSortable;
 
                         this.NumericFormat = this.defaultNumericFormat;
+                    }
+
+                    // Looks like MONO ignores ColumnHeadersHeightSizeMode property.
+                    if (headersContainLineFeeds)
+                    {
+                        this.Grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+                        this.Grid.ColumnHeadersHeight = Convert.ToInt32(this.Grid.RowTemplate.Height * 3.5);
+
                     }
 
                     // Populate the grid cells with new rows.
@@ -310,11 +334,11 @@ namespace UserInterface.Views
                         {
                             this.Grid[col, row].Value = this.DataSource.Rows[row][col];
 
-                            if (row == 0)
-                            {
-                                this.Grid.Columns[col].Width = Math.Max(this.Grid.Columns[col].MinimumWidth,
-                                                                        this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true));
-                            }
+                            //if (row == 0)
+                            //{
+                            //    this.Grid.Columns[col].Width = Math.Max(this.Grid.Columns[col].MinimumWidth,
+                            //                                            this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true));
+                            //}
                         }
 
                         this.Grid.RowCount = this.DataSource.Rows.Count;
@@ -323,6 +347,17 @@ namespace UserInterface.Views
 
                 // ColIndex doesn't matter since we're resizing all of them.
                 this.GetColumn(0).Width = -1;
+
+                // Turn on autosizing.
+                foreach (DataGridViewColumn col in this.Grid.Columns)
+                {
+                    col.Width = Convert.ToInt32(col.GetPreferredWidth(DataGridViewAutoSizeColumnMode.DisplayedCells, true) * 1.2);
+
+                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                    //int newWidth = Convert.ToInt32(col.Width * 1.0);
+                    //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    //col.Width = newWidth;
+                }
 
                 // Reinstate Grid.CellValueChanged event.
                 this.Grid.CellValueChanged += this.OnCellValueChanged;
@@ -576,13 +611,16 @@ namespace UserInterface.Views
             foreach (DataGridViewCell cell in this.Grid.SelectedCells)
             {
                 // Save change in data source
-                this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
+                if (cell.RowIndex < this.DataSource.Rows.Count)
+                {
+                    this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
 
-                // Delete cell in grid.
-                this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
+                    // Delete cell in grid.
+                    this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
 
-                // Put a cell into the cells changed member.
-                cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                    // Put a cell into the cells changed member.
+                    cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                }
             }
 
             // If some cells were changed then send out an event.

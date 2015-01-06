@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using UserInterface.Commands;
+using System.Reflection;
 
 namespace UserInterface.Views
 {
@@ -16,7 +17,6 @@ namespace UserInterface.Views
         event EventHandler<PopulateStartPageArgs> PopulateStartPage;
 
         event EventHandler MruFileClick;
-        event EventHandler ReloadMruView;
        
         event EventHandler TabClosing;
 
@@ -66,7 +66,6 @@ namespace UserInterface.Views
 
         public event EventHandler<PopulateStartPageArgs> PopulateStartPage;
         public event EventHandler MruFileClick;
-        public event EventHandler ReloadMruView;
         public event EventHandler TabClosing;
         
         /// <summary>
@@ -76,7 +75,7 @@ namespace UserInterface.Views
         {
             InitializeComponent();
             
-            recentFilesGroup = new ListViewGroup("Recent files", HorizontalAlignment.Left);           
+            recentFilesGroup = new ListViewGroup("Recent files", HorizontalAlignment.Left);
         }
 
 
@@ -105,6 +104,7 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateStartPageList()
         {
+            listViewMain.Clear();
             listViewMain.Groups.Insert(0, new ListViewGroup("Standard", HorizontalAlignment.Left));
             PopulateStartPageArgs Args = new PopulateStartPageArgs();
             listViewMain.Items.Clear();
@@ -120,7 +120,8 @@ namespace UserInterface.Views
                 int ImageIndex = ListViewImages.Images.IndexOfKey(Description.ResourceNameForImage);
                 if (ImageIndex == -1)
                 {
-                    Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
+                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                    Bitmap Icon = new Bitmap(s); // Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
                     if (Icon != null)
                     {
                         ListViewImages.Images.Add(Description.ResourceNameForImage, Icon);
@@ -143,12 +144,16 @@ namespace UserInterface.Views
             // cleanup the list so it can be reshown in the correct order
             foreach (ListViewItem item in listViewMain.Items)
             {
+                item.Selected = false;
                 if (item.Group == recentFilesGroup)
                 {
+                    
                     item.Remove();
                 }
             }
-            listViewMain.Groups.Add(recentFilesGroup);
+
+            if (!listViewMain.Groups.Contains(recentFilesGroup))
+                listViewMain.Groups.Add(recentFilesGroup);
             // now add each item from the list of files
             foreach (string xfile in files)
             {
@@ -239,19 +244,19 @@ namespace UserInterface.Views
         /// </summary>
         public void AddTab(string TabText, Image TabImage, UserControl Contents, bool SelectTab)
         {
+            listViewMain.Clear();
+            //foreach (ListViewItem item in listViewMain.Items)
+            //    item.Selected = false;
+
             TabPage OriginalTab = TabControl.SelectedTab;
             TabPage NewTabPage = new TabPage();
             int i = TabControl.TabPages.Count - 1;
-            TabControl.TabPages.Insert(i, NewTabPage);
+            TabControl.TabPages.Add(NewTabPage);
             SetupTab(NewTabPage, TabText, TabImage, Contents);
-            if (SelectTab)
-            {
-                // On MONO OSX: The screen doesn't redraw properly when a tab is 'inserted' in the
-                // tab pages collections. The 3 lines below seem to work.
-                TabControl.SelectedTab = NewTabPage;
-                TabControl.SelectedTab = OriginalTab;
-                TabControl.SelectedTab = NewTabPage;
-            }
+
+            // On MONO OSX: The screen doesn't redraw properly when a tab is 'inserted'.
+            TabControl.SelectedTab = NewTabPage;
+            //NewTabPage.Invalidate();
         }
 
         /// <summary>
@@ -310,12 +315,42 @@ namespace UserInterface.Views
         /// </summary>
         public string AskUserForFileName(string initialDir, string fileSpec)
         {
+            string fileName = null;
             OpenFileDialog.Filter = fileSpec;
             if (initialDir.Length > 0)
                 OpenFileDialog.InitialDirectory = initialDir;
+            else
+                OpenFileDialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
+
             if (OpenFileDialog.ShowDialog() == DialogResult.OK)
-                return OpenFileDialog.FileName;
-            return null;
+            {
+                fileName = OpenFileDialog.FileName;
+                string dir = Path.GetDirectoryName(fileName);
+                if (!dir.Contains(@"ApsimX\Examples"))
+                    Utility.Configuration.Settings.PreviousFolder = dir;
+            }
+
+            return fileName;
+        }
+
+        /// <summary>
+        /// A helper function that asks user for a SaveAs name and returns their new choice.
+        /// </summary>
+        /// <returns>Returns the new file name or null if action cancelled by user.</returns>
+        public string AskUserForSaveFileName(string OldFilename)
+        {
+            SaveFileDialog.FileName = Path.GetFileName(OldFilename);
+            SaveFileDialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
+
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string dir = Path.GetDirectoryName(SaveFileDialog.FileName);
+                if (!dir.Contains(@"ApsimX\Examples"))
+                    Utility.Configuration.Settings.PreviousFolder = dir;
+                return SaveFileDialog.FileName;
+            }
+            else
+                return null;
         }
 
         /// <summary>
@@ -338,13 +373,16 @@ namespace UserInterface.Views
         /// <returns>The full path name for the file</returns>
         public string SelectedMruFileName()
         {
-            ListViewItem item = listViewMain.SelectedItems[0];
-            if (item.Group == recentFilesGroup)
+            if (listViewMain.SelectedItems.Count > 0)
             {
-                return item.ToolTipText;    // full path for the file
+                ListViewItem item = listViewMain.SelectedItems[0];
+                if (item.Group == recentFilesGroup)
+                {
+                    return item.ToolTipText;    // full path for the file
+                }
             }
-            else
-                return "";  //invalid item
+
+            return "";  //invalid item
         }
 
         /// <summary>
@@ -354,10 +392,8 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if (e.TabPage.Text == " ")
-            {
-                ReloadMruView(sender, e);
-            }
+            if (e.TabPage.Text == "+")
+                PopulateStartPageList();
         }
     }
 

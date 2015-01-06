@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using System.Data;
-using System.IO;
-using Models.Core;
-using System.Reflection;
-using System.Configuration;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="Soil.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Models.Soils
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Xml.Serialization;
+    using Models.Core;
+
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
-    /// the methods in this class that return double[] always return using the 
+    /// the methods in this class that return double[] always return using the
     /// "Standard layer structure" i.e. the layer structure as defined by the Water child object.
     /// method. Mapping will occur to achieve this if necessary.
     /// To obtain the "raw", unmapped, values use the child classes e.g. SoilWater, Analysis and Sample.
@@ -23,208 +24,150 @@ namespace Models.Soils
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Soil : Model
     {
-        private static bool PathFixed = false;
+        /// <summary>Gets the water.</summary>
+        private Water waterNode;
 
+        /// <summary>A reference to the layer structure node or null if not present.</summary>
+        private LayerStructure structure;
+
+        /// <summary>Gets or sets the record number.</summary>
         [Summary]
         [Description("Record number")]
         public int RecordNumber { get; set; }
 
+        /// <summary>Gets or sets the asc order.</summary>
         [Summary]
         [Description("Australian Soil Classification Order")]
         public string ASCOrder { get; set; }
 
+        /// <summary>Gets or sets the asc sub order.</summary>
         [Summary]
         [Description("Australian Soil Classification Sub-Order")]
         public string ASCSubOrder { get; set; }
 
+        /// <summary>Gets or sets the type of the soil.</summary>
         [Summary]
         [Description("Soil texture or other descriptor")]
         public string SoilType { get; set; }
 
+        /// <summary>Gets or sets the name of the local.</summary>
         [Summary]
         [Description("Local name")]
         public string LocalName { get; set; }
 
+        /// <summary>Gets or sets the site.</summary>
         [Summary]
         [Description("Site")]
         public string Site { get; set; }
 
+        /// <summary>Gets or sets the nearest town.</summary>
         [Summary]
         [Description("Nearest town")]
         public string NearestTown { get; set; }
 
+        /// <summary>Gets or sets the region.</summary>
         [Summary]
         [Description("Region")]
         public string Region { get; set; }
 
+        /// <summary>Gets or sets the state.</summary>
         [Summary]
         [Description("State")]
         public string State { get; set; }
 
+        /// <summary>Gets or sets the country.</summary>
         [Summary]
         [Description("Country")]
         public string Country { get; set; }
 
+        /// <summary>Gets or sets the natural vegetation.</summary>
         [Summary]
         [Description("Natural vegetation")]
         public string NaturalVegetation { get; set; }
 
+        /// <summary>Gets or sets the apsoil number.</summary>
         [Summary]
         [Description("APSoil number")]
         public string ApsoilNumber { get; set; }
 
+        /// <summary>Gets or sets the latitude.</summary>
         [Summary]
         [Description("Latitude (WGS84)")]
         public double Latitude { get; set; }
 
+        /// <summary>Gets or sets the longitude.</summary>
         [Summary]
         [Description("Longitude (WGS84)")]
         public double Longitude { get; set; }
 
+        /// <summary>Gets or sets the location accuracy.</summary>
         [Summary]
         [Description("Location accuracy")]
         public string LocationAccuracy { get; set; }
 
+        /// <summary>Gets or sets the data source.</summary>
         [Summary]
         [Description("Data source")]
         public string DataSource { get; set; }
 
+        /// <summary>Gets or sets the comments.</summary>
         [Summary]
         [Description("Comments")]
         public string Comments { get; set; }
 
-        [XmlIgnore] public Water Water { get; private set; }
+        /// <summary>Gets the soil water.</summary>
         [XmlIgnore] public SoilWater SoilWater { get; private set; }
+
+        /// <summary>Gets the soil organic matter.</summary>
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
+
+        /// <summary>Gets the soil nitrogen.</summary>
         [XmlIgnore] public SoilNitrogen SoilNitrogen { get; private set; }
-        [XmlIgnore] public Analysis Analysis { get; private set; }
-        [XmlIgnore] public InitialWater InitialWater { get; private set; }
-        [XmlIgnore] public Phosphorus Phosphorus { get; private set; }
-        [XmlIgnore] public Swim3 Swim { get; private set; }
-        [XmlIgnore] public LayerStructure LayerStructure { get; private set; }
-        [XmlIgnore] public SoilTemperature SoilTemperature { get; private set; }
-        [XmlIgnore] public SoilTemperature2 SoilTemperature2 { get; private set; }
 
-        [XmlIgnore] public List<Sample> Samples { get; private set; }
-        
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Soil()
-        {
-            Name = "Soil";                
-        }
-
-        /// <summary>
-        /// Create a soil object from the XML passed in.
-        /// </summary>
-        public static Soil Create(string Xml)
-        {
-            FixTempPathForSerializer();
-            XmlSerializer x = new XmlSerializer(typeof(Soil));
-            StringReader F = new StringReader(Xml);
-            return x.Deserialize(F) as Soil;
-        }
-
+        /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
             FindChildren();
         }
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             FindChildren();
         }
 
-        /// <summary>
-        /// Find our children.
-        /// </summary>
+        /// <summary>Find our children.</summary>
         private void FindChildren()
         {
-            Water = Apsim.Child(this, typeof(Water)) as Water;
+            waterNode = Apsim.Child(this, typeof(Water)) as Water;
+            structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(SoilWater)) as SoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
-            Analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-            InitialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
-            Phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
-            Swim = Apsim.Child(this, typeof(Swim3)) as Swim3;
-            LayerStructure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
-            SoilTemperature = Apsim.Child(this, typeof(SoilTemperature)) as SoilTemperature;
-            SoilTemperature2 = Apsim.Child(this, typeof(SoilTemperature2)) as SoilTemperature2;
-
-            if (Samples == null)
-                Samples = new List<Sample>();
-            Samples.Clear();
-            foreach (Sample sample in Apsim.Children(this, typeof(Sample)))
-                Samples.Add(sample);
-        }
-
-        /// <summary>
-        /// The condor cluster execute nodes in Toowoomba (and elsewhere?) do not have permission 
-        /// to write in the temp folder (c:\windows\temp). XmlSerializer needs to create files in
-        /// the temp folder. The code below works around this. This code should be put somewhere
-        /// else - but where? YieldProphet uses a manager2 component to create a soil object so
-        /// the code needs to be in manager2, ApsimUI and ApsimToSim.
-        /// </summary>
-        private static void FixTempPathForSerializer()
-        {
-            if (!PathFixed)
-            {
-                PathFixed = true;
-                try
-                {
-                    Directory.GetFiles(Path.GetTempPath());                    
-                }
-                catch (Exception)
-                {
-                    Environment.SetEnvironmentVariable("TEMP", Directory.GetCurrentDirectory());
-                }
             }
-        }
-
-        /// <summary>
-        /// Write soil to XML
-        /// </summary>
-        public string ToXml()
-        {
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-            XmlSerializer x = new XmlSerializer(typeof(Soil));
-
-            StringWriter Out = new StringWriter();
-            x.Serialize(Out, this, ns);
-            string st = Out.ToString();
-            if (st.Length > 5 && st.Substring(0, 5) == "<?xml")
-            {
-                // remove the first line: <?xml version="1.0"?>/n
-                int posEol = st.IndexOf("\n");
-                if (posEol != -1)
-                    return st.Substring(posEol + 1);
-            }
-            return st;
-        }
 
         #region Water
 
-        /// <summary>
-        /// Return the thicknesses to run APSIM.
-        /// </summary>
+        /// <summary>Return the soil layer thicknesses (mm)</summary>
         public double[] Thickness 
         {
             get
             {
-                if (LayerStructure != null)
-                    return LayerStructure.Thickness;
+                if (structure != null)
+                    return structure.Thickness;
                 else
-                    return Water.Thickness;
+                    return waterNode.Thickness;
             }
         }
 
+        /// <summary>Gets the depth mid points (mm).</summary>
         public double[] DepthMidPoints { get { return Soil.ToMidPoints(Thickness); } }
 
+        /// <summary>Gets the depths (mm) of each layer.</summary>
         [Description("Depth")]
         public string[] Depth
         {
@@ -234,38 +177,49 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Bulk density at standard thickness. Units: mm/mm
-        /// </summary>
-        internal double[] BD { get { return Map(Water.BD, Water.Thickness, Thickness, MapType.Concentration, Water.BD.Last()); } }
+        /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
+        internal double[] BD { get { return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last()); } }
 
-        /// <summary>
-        /// Soil water at standard thickness. Units: mm/mm
-        /// </summary>
-        public double[] SW
+        /// <summary>Soil water at standard thickness. Units: mm/mm</summary>
+        public double[] InitialWaterVolumetric
         {
             get
             {
-                return SWMapped(SWAtWaterThickness, Water.Thickness, Thickness);
+                return SWMapped(SWAtWaterThickness, waterNode.Thickness, Thickness);
             }
         }
 
-        /// <summary>
-        /// Calculate and return SW relative to the Water node thicknesses.
-        /// </summary>
+        /// <summary>Gets or sets the soil water for each layer (mm)</summary>
+        [XmlIgnore]
+        public double[] Water
+        {
+            get
+            {
+                return SoilWater.SWmm;
+            }
+
+            set
+            {
+                SoilWater.SWmm = value;
+            }
+        }
+
+        /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
         public double[] SWAtWaterThickness
         {
             get
             {
-                if (InitialWater != null)
-                    return InitialWater.SW(Water.Thickness, Water.LL15, Water.DUL, null);
+                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
+
+                if (initialWater != null)
+                    return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
                 else
                 {
-                    foreach (Sample Sample in Samples)
+                    foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     {
                         if (Utility.Math.ValuesInArray(Sample.SW))
                         {
-                            return SWMapped(Sample.SWVolumetric, Sample.Thickness, Water.Thickness);
+                            return SWMapped(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness);
                         }
                     }
                 }
@@ -273,34 +227,22 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Return AirDry at standard thickness. Units: mm/mm
-        /// </summary>
-        public double[] AirDry { get { return Map(Water.AirDry, Water.Thickness, Thickness, MapType.Concentration); } }
+        /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
+        public double[] AirDry { get { return Map(waterNode.AirDry, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// Return lower limit at standard thickness. Units: mm/mm
-        /// </summary>
-        public double[] LL15 { get { return Map(Water.LL15, Water.Thickness, Thickness, MapType.Concentration); } }
+        /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
+        public double[] LL15 { get { return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// Return drained upper limit at standard thickness. Units: mm/mm
-        /// </summary>
-        public double[] DUL { get { return Map(Water.DUL, Water.Thickness, Thickness, MapType.Concentration); } }
+        /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
+        public double[] DUL { get { return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// Return saturation at standard thickness. Units: mm/mm
-        /// </summary>
-        public double[] SAT { get { return Map(Water.SAT, Water.Thickness, Thickness, MapType.Concentration); } }
+        /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
+        public double[] SAT { get { return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// KS at standard thickness. Units: mm/mm
-        /// </summary>
-        internal double[] KS { get { return Map(Water.KS, Water.Thickness, Thickness, MapType.Concentration); } }
+        /// <summary>KS at standard thickness. Units: mm/mm</summary>
+        internal double[] KS { get { return Map(waterNode.KS, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
-        /// <summary>
-        /// SWCON at standard thickness. Units: 0-1
-        /// </summary>
+        /// <summary>SWCON at standard thickness. Units: 0-1</summary>
         internal double[] SWCON 
         { 
             get 
@@ -311,8 +253,20 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Return the plant available water CAPACITY at standard thickness. Units: mm/mm
+        /// KLAT at standard thickness. Units: 0-1
         /// </summary>
+        internal double[] KLAT
+            {
+            get
+                {
+                if (SoilWater == null) return null;
+                return Map(SoilWater.KLAT, SoilWater.Thickness, Thickness, MapType.Concentration, 0);
+                }
+            }
+
+
+
+        /// <summary>Return the plant available water CAPACITY at standard thickness. Units: mm/mm</summary>
         public double[] PAWC
         {
             get
@@ -324,9 +278,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Gets unavailable water at standard thickness. Units:mm
-        /// </summary>
+        /// <summary>Gets unavailable water at standard thickness. Units:mm</summary>
         [Description("Unavailable LL15")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
@@ -338,9 +290,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Gets available water at standard thickness (SW-LL15). Units:mm
-        /// </summary>
+        /// <summary>Gets available water at standard thickness (SW-LL15). Units:mm</summary>
         [Description("Available SW-LL15")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
@@ -350,7 +300,7 @@ namespace Models.Soils
             {
                 return Utility.Math.Multiply(CalcPAWC(Thickness,
                                                       LL15,
-                                                      SW,
+                                                      InitialWaterVolumetric,
                                                       null),
                                              Thickness);
             }
@@ -370,9 +320,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Gets the drainable water at standard thickness (SAT-DUL). Units: mm
-        /// </summary>
+        /// <summary>Gets the drainable water at standard thickness (SAT-DUL). Units: mm</summary>
         [Description("Drainable\r\nPAWC SAT-DUL")]
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
@@ -384,56 +332,46 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Plant available water at standard thickness. Units:mm/mm
-        /// </summary>
+        /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
         public double[] PAW
         {
             get
             {
                 return CalcPAWC(Thickness,
                                 LL15,
-                                SW,
+                                InitialWaterVolumetric,
                                 null);
             }
         }
 
-
-
-        /// <summary>
-        /// Return the plant available water CAPACITY at water node thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
         public double[] PAWCAtWaterThickness
         {
             get
             {
-                return CalcPAWC(Water.Thickness,
-                                Water.LL15,
-                                Water.DUL,
+                return CalcPAWC(waterNode.Thickness,
+                                waterNode.LL15,
+                                waterNode.DUL,
                                 null);
             }
         }
 
-        /// <summary>
-        /// Return the plant available water CAPACITY at water node thickenss. Units: mm
-        /// </summary>
+        /// <summary>Return the plant available water CAPACITY at water node thickenss. Units: mm</summary>
         public double[] PAWCmmAtWaterThickness
         {
             get
             {
-                return Utility.Math.Multiply(PAWCAtWaterThickness, Water.Thickness);
+                return Utility.Math.Multiply(PAWCAtWaterThickness, waterNode.Thickness);
             }
         }
 
-        /// <summary>
-        /// Plant available water at standard thickness at water node thickness. Units:mm/mm
-        /// </summary>
+        /// <summary>Plant available water at standard thickness at water node thickness. Units:mm/mm</summary>
         public double[] PAWAtWaterThickness
         {
             get
             {
-                return CalcPAWC(Water.Thickness,
-                                Water.LL15,
+                return CalcPAWC(waterNode.Thickness,
+                                waterNode.LL15,
                                 SWAtWaterThickness,
                                 null);
             }
@@ -442,18 +380,21 @@ namespace Models.Soils
 
         #region Crops
 
-        /// <summary>
-        /// A list of crop names.
-        /// </summary>
+        /// <summary>A list of crop names.</summary>
+        /// <value>The crop names.</value>
         [XmlIgnore]
-        public string[] CropNames { get { return Water.CropNames; } }
+        public string[] CropNames { get { return waterNode.CropNames; } }
 
-        /// <summary>
-        /// Return a specific crop to caller. Will throw if crop doesn't exist.
-        /// </summary>
+        /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Soil could not find crop:  + CropName</exception>
         public ISoilCrop Crop(string CropName) 
         {
-            ISoilCrop MeasuredCrop = Water.Crop(CropName); 
+            if (!CropName.EndsWith("Soil"))
+                CropName += "Soil";
+
+            ISoilCrop MeasuredCrop = waterNode.Crop(CropName); 
             if (MeasuredCrop != null)
                 return MeasuredCrop;
             ISoilCrop Predicted = PredictedCrop(CropName);
@@ -513,89 +454,136 @@ namespace Models.Soils
         //    return Utility.Math.Multiply(PAWCrop(CropName), Thickness);
         //}
 
-        /// <summary>
-        /// Return the plant available water CAPACITY at water node thickness. Units: mm/mm
-        /// </summary>
+        /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         public double[] PAWCCropAtWaterThickness(string CropName)
         {
-            return CalcPAWC(Water.Thickness,
-                            LLMapped(CropName, Water.Thickness),
-                            DULMapped(Water.Thickness),
-                            XFMapped(CropName, Water.Thickness));
+            return CalcPAWC(waterNode.Thickness,
+                            LLMapped(CropName, waterNode.Thickness),
+                            DULMapped(waterNode.Thickness),
+                            XFMapped(CropName, waterNode.Thickness));
         }
 
         /// <summary>
         /// Plant available water for the specified crop at water node thickness. Will throw if crop not found. Units: mm/mm
         /// </summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         public double[] PAWCropAtWaterThickness(string CropName)
         {
-            return CalcPAWC(Water.Thickness,
-                            LLMapped(CropName, Water.Thickness),
+            return CalcPAWC(waterNode.Thickness,
+                            LLMapped(CropName, waterNode.Thickness),
                             SWAtWaterThickness,
-                            XFMapped(CropName, Water.Thickness));
+                            XFMapped(CropName, waterNode.Thickness));
         }
 
         /// <summary>
         /// Plant available water for the specified crop at water node thickness. Will throw if crop not found. Units: mm
         /// </summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         public double[] PAWmmAtWaterThickness(string CropName)
         {
-            return Utility.Math.Multiply(PAWCropAtWaterThickness(CropName), Water.Thickness);
+            return Utility.Math.Multiply(PAWCropAtWaterThickness(CropName), waterNode.Thickness);
         }
         #endregion
 
         #region Predicted Crops
+        /// <summary>The black vertosol crop list</summary>
         static string[] BlackVertosolCropList = new string[] { "Wheat", "Sorghum", "Cotton" };
+        /// <summary>The grey vertosol crop list</summary>
         static string[] GreyVertosolCropList = new string[] { "Wheat", "Sorghum", "Cotton" };
+        /// <summary>The predicted thickness</summary>
         static double[] PredictedThickness  = new double[] { 150, 150, 300, 300, 300, 300, 300 };
+        /// <summary>The predicted xf</summary>
         static double[] PredictedXF = new double[] { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
+        /// <summary>The wheat kl</summary>
         static double[] WheatKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
+        /// <summary>The sorghum kl</summary>
         static double[] SorghumKL = new double[] { 0.07, 0.07, 0.07, 0.05, 0.05, 0.04, 0.03 };
+        /// <summary>The barley kl</summary>
         static double[] BarleyKL = new double[] { 0.07, 0.07, 0.07, 0.05, 0.05, 0.03, 0.02 };
+        /// <summary>The chickpea kl</summary>
         static double[] ChickpeaKL = new double[] { 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06 };
+        /// <summary>The mungbean kl</summary>
         static double[] MungbeanKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.00, 0.00 };
+        /// <summary>The cotton kl</summary>
         static double[] CottonKL = new double[] { 0.10, 0.10, 0.10, 0.10, 0.09, 0.07, 0.05 };
+        /// <summary>The canola kl</summary>
         static double[] CanolaKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
+        /// <summary>The pigeon pea kl</summary>
         static double[] PigeonPeaKL = new double[] { 0.06, 0.06, 0.06, 0.05, 0.04, 0.02, 0.01 };
+        /// <summary>The maize kl</summary>
         static double[] MaizeKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
+        /// <summary>The cowpea kl</summary>
         static double[] CowpeaKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
+        /// <summary>The sunflower kl</summary>
         static double[] SunflowerKL = new double[] { 0.01, 0.01, 0.08, 0.06, 0.04, 0.02, 0.01 };
+        /// <summary>The fababean kl</summary>
         static double[] FababeanKL = new double[] { 0.08, 0.08, 0.08, 0.08, 0.06, 0.04, 0.03 };
+        /// <summary>The lucerne kl</summary>
         static double[] LucerneKL = new double[] { 0.01, 0.01, 0.01, 0.01, 0.09, 0.09, 0.09 };
+        /// <summary>The perennial kl</summary>
         static double[] PerennialKL = new double[] { 0.01, 0.01, 0.01, 0.01, 0.09, 0.07, 0.05 };
 
+        /// <summary>
+        /// 
+        /// </summary>
         class BlackVertosol
         {
+            /// <summary>The cotton a</summary>
             internal static double[] CottonA = new double[] { 0.832, 0.868, 0.951, 0.988, 1.043, 1.095, 1.151 };
+            /// <summary>The sorghum a</summary>
             internal static double[] SorghumA = new double[] { 0.699, 0.802, 0.853, 0.907, 0.954, 1.003, 1.035 };
+            /// <summary>The wheat a</summary>
             internal static double[] WheatA = new double[] { 0.124, 0.049, 0.024, 0.029, 0.146, 0.246, 0.406 };
 
+            /// <summary>The cotton b</summary>
             internal static double CottonB = -0.0070;
+            /// <summary>The sorghum b</summary>
             internal static double SorghumB = -0.0038;
+            /// <summary>The wheat b</summary>
             internal static double WheatB = 0.0116;
 
         }
+        /// <summary>
+        /// 
+        /// </summary>
         class GreyVertosol
         {
+            /// <summary>The cotton a</summary>
             internal static double[] CottonA = new double[] { 0.853, 0.851, 0.883, 0.953, 1.022, 1.125, 1.186 };
+            /// <summary>The sorghum a</summary>
             internal static double[] SorghumA = new double[] { 0.818, 0.864, 0.882, 0.938, 1.103, 1.096, 1.172 };
+            /// <summary>The wheat a</summary>
             internal static double[] WheatA = new double[] { 0.660, 0.655, 0.701, 0.745, 0.845, 0.933, 1.084 };
+            /// <summary>The barley a</summary>
             internal static double[] BarleyA = new double[] { 0.847, 0.866, 0.835, 0.872, 0.981, 1.036, 1.152 };
+            /// <summary>The chickpea a</summary>
             internal static double[] ChickpeaA = new double[] { 0.435, 0.452, 0.481, 0.595, 0.668, 0.737, 0.875 };
+            /// <summary>The fababean a</summary>
             internal static double[] FababeanA = new double[] { 0.467, 0.451, 0.396, 0.336, 0.190, 0.134, 0.084 };
+            /// <summary>The mungbean a</summary>
             internal static double[] MungbeanA = new double[] { 0.779, 0.770, 0.834, 0.990, 1.008, 1.144, 1.150 };
+            /// <summary>The cotton b</summary>
             internal static double CottonB = -0.0082;
+            /// <summary>The sorghum b</summary>
             internal static double SorghumB = -0.007;
+            /// <summary>The wheat b</summary>
             internal static double WheatB = -0.0032;
+            /// <summary>The barley b</summary>
             internal static double BarleyB = -0.0051;
+            /// <summary>The chickpea b</summary>
             internal static double ChickpeaB = 0.0029;
+            /// <summary>The fababean b</summary>
             internal static double FababeanB = 0.02455;
+            /// <summary>The mungbean b</summary>
             internal static double MungbeanB = -0.0034;
         }
 
-        /// <summary>
-        /// Return a list of predicted crop names or an empty string[] if none found.
-        /// </summary>
+        /// <summary>Return a list of predicted crop names or an empty string[] if none found.</summary>
+        /// <value>The predicted crop names.</value>
         public string[] PredictedCropNames
         {
             get
@@ -611,9 +599,9 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Return a predicted SoilCrop for the specified crop name or null if not found.
-        /// </summary>
+        /// <summary>Return a predicted SoilCrop for the specified crop name or null if not found.</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <returns></returns>
         private ISoilCrop PredictedCrop(string CropName)
         {
             double[] A = null;
@@ -695,10 +683,10 @@ namespace Models.Soils
                 return null;
 
             double[] LL = PredictedLL(A, B);
-            LL = Map(LL, PredictedThickness, Water.Thickness, MapType.Concentration, LL.Last());
-            KL = Map(KL, PredictedThickness, Water.Thickness, MapType.Concentration, KL.Last());
-            double[] XF = Map(PredictedXF, PredictedThickness, Water.Thickness, MapType.Concentration, PredictedXF.Last());
-            string[] Metadata = Utility.String.CreateStringArray("Estimated", Water.Thickness.Length);
+            LL = Map(LL, PredictedThickness, waterNode.Thickness, MapType.Concentration, LL.Last());
+            KL = Map(KL, PredictedThickness, waterNode.Thickness, MapType.Concentration, KL.Last());
+            double[] XF = Map(PredictedXF, PredictedThickness, waterNode.Thickness, MapType.Concentration, PredictedXF.Last());
+            string[] Metadata = Utility.String.CreateStringArray("Estimated", waterNode.Thickness.Length);
 
             SoilCrop soilCrop = new SoilCrop()
             {
@@ -712,9 +700,10 @@ namespace Models.Soils
             return soilCrop as ISoilCrop;
         }
 
-        /// <summary>
-        /// Calculate and return a predicted LL from the specified A and B values.
-        /// </summary>
+        /// <summary>Calculate and return a predicted LL from the specified A and B values.</summary>
+        /// <param name="A">a.</param>
+        /// <param name="B">The b.</param>
+        /// <returns></returns>
         private double[] PredictedLL(double[] A, double B)
         {
             double[] DepthCentre = ToMidPoints(PredictedThickness);
@@ -745,9 +734,8 @@ namespace Models.Soils
         #endregion
 
         #region Soil organic matter
-        /// <summary>
-        /// Organic carbon. Units: %
-        /// </summary>
+        /// <summary>Organic carbon. Units: %</summary>
+        /// <value>The oc.</value>
         public double[] OC
         {
             get
@@ -756,7 +744,7 @@ namespace Models.Soils
                 double[] SoilOCThickness = SoilOrganicMatter.Thickness;
 
                 // Try and find a sample with OC in it.
-                foreach (Sample Sample in Samples)
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
                         break;
                 if (SoilOC == null)
@@ -766,9 +754,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// FBiom. Units: 0-1
-        /// </summary>
+        /// <summary>FBiom. Units: 0-1</summary>
+        /// <value>The f biom.</value>
         public double[] FBiom
         {
             get
@@ -779,9 +766,8 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// FInert. Units: 0-1
-        /// </summary>
+        /// <summary>FInert. Units: 0-1</summary>
+        /// <value>The f inert.</value>
         public double[] FInert
         {
             get
@@ -794,72 +780,78 @@ namespace Models.Soils
         #endregion
 
         #region Analysis
-        /// <summary>
-        /// Rocks. Units: %
-        /// </summary>
-        public double[] Rocks { get { return Map(Analysis.Rocks, Analysis.Thickness, Thickness, MapType.Concentration); } }
+        /// <summary>Rocks. Units: %</summary>
+        /// <value>The rocks.</value>
+        public double[] Rocks 
+        { 
+            get 
+            {
+                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+                return Map(analysis.Rocks, analysis.Thickness, Thickness, MapType.Concentration);
+            } 
+        }
 
-        /// <summary>
-        /// Particle size sand
-        /// </summary>
+        /// <summary>Particle size sand</summary>
+        /// <value>The particle size sand.</value>
         public double[] ParticleSizeSand
         {
             get
             {
-                if (Analysis.ParticleSizeSand == null) return null;
-                return Map(Analysis.ParticleSizeSand, Analysis.Thickness, Thickness,
-                           MapType.Concentration, LastValue(Analysis.ParticleSizeSand));
+                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+                if (analysis.ParticleSizeSand == null) return null;
+                return Map(analysis.ParticleSizeSand, analysis.Thickness, Thickness,
+                           MapType.Concentration, LastValue(analysis.ParticleSizeSand));
             }
         }
 
-        /// <summary>
-        /// Particle size silt
-        /// </summary>
+        /// <summary>Particle size silt</summary>
+        /// <value>The particle size silt.</value>
         public double[] ParticleSizeSilt
         {
             get
             {
-                if (Analysis.ParticleSizeSilt == null) return null;
-                return Map(Analysis.ParticleSizeSilt, Analysis.Thickness, Thickness,
-                           MapType.Concentration, LastValue(Analysis.ParticleSizeSilt));
+                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+                if (analysis.ParticleSizeSilt == null) return null;
+                return Map(analysis.ParticleSizeSilt, analysis.Thickness, Thickness,
+                           MapType.Concentration, LastValue(analysis.ParticleSizeSilt));
             }
         }
 
-        /// <summary>
-        /// Particle size silt
-        /// </summary>
+        /// <summary>Particle size silt</summary>
+        /// <value>The particle size clay.</value>
         public double[] ParticleSizeClay
         {
             get
             {
-                if (Analysis.ParticleSizeClay == null) return null;
-                return Map(Analysis.ParticleSizeClay, Analysis.Thickness, Thickness,
-                           MapType.Concentration, LastValue(Analysis.ParticleSizeClay));
+                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+                
+                if (analysis.ParticleSizeClay == null) return null;
+                return Map(analysis.ParticleSizeClay, analysis.Thickness, Thickness,
+                           MapType.Concentration, LastValue(analysis.ParticleSizeClay));
             }
         }
         #endregion
 
         #region Sample
 
-        /// <summary>
-        /// Find the specified sample. Will throw if not found.
-        /// </summary>
+        /// <summary>Find the specified sample. Will throw if not found.</summary>
+        /// <param name="SampleName">Name of the sample.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot find soil sample named:  + SampleName</exception>
         public Sample FindSample(string SampleName)
         {
-            foreach (Sample Sample in Samples)
+            foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                 if (Sample.Name.Equals(SampleName, StringComparison.CurrentCultureIgnoreCase))
                     return Sample;
             throw new Exception("Cannot find soil sample named: " + SampleName);
         }
 
-        /// <summary>
-        /// Nitrate (ppm).
-        /// </summary>
-        public double[] NO3
+        /// <summary>Nitrate (ppm).</summary>
+        public double[] InitialNO3N
         {
             get
             {
-                foreach (Sample Sample in Samples)
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                 {
                     if (Utility.Math.ValuesInArray(Sample.NO3ppm))
                     {
@@ -872,14 +864,21 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Nitrate (ppm).
-        /// </summary>
-        public double[] NH4
+        /// <summary>Gets or sets the nitrate N for each layer (kg/ha)</summary>
+        public double[] NO3N { get { return SoilNitrogen.NO3; } set { SoilNitrogen.NO3 = value; } }
+
+        /// <summary>Gets the ammonia N for each layer (kg/ha)</summary>
+        public double[] NH4N { get { return SoilNitrogen.NH4; } }
+
+        /// <summary>Gets the temperature of each layer</summary>
+        public double[] Temperature { get { return SoilNitrogen.st; } }
+
+        /// <summary>Ammonia (ppm).</summary>
+        public double[] InitialNH4N
         {
             get
             {
-                foreach (Sample Sample in Samples)
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                 {
                     if (Utility.Math.ValuesInArray(Sample.NH4))
                     {
@@ -892,18 +891,18 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Cloride from either a sample or from Analysis. Units: mg/kg
-        /// </summary>
+        /// <summary>Cloride from either a sample or from Analysis. Units: mg/kg</summary>
         public double[] Cl
         {
             get
             {
-                double[] Values = Analysis.CL;
-                double[] Thicknesses = Analysis.Thickness;
+                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+                
+                double[] Values = analysis.CL;
+                double[] Thicknesses = analysis.Thickness;
 
                 // Try and find a sample with CL in it.
-                foreach (Sample Sample in Samples)
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.CL, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
@@ -913,18 +912,18 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// ESP from either a sample or from Analysis. Units: %
-        /// </summary>
+        /// <summary>ESP from either a sample or from Analysis. Units: %</summary>
         public double[] ESP
         {
             get
             {
-                double[] Values = Analysis.ESP;
-                double[] Thicknesses = Analysis.Thickness;
+                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+                
+                double[] Values = analysis.ESP;
+                double[] Thicknesses = analysis.Thickness;
 
                 // Try and find a sample with ESP in it.
-                foreach (Sample Sample in Samples)
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.ESP, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
@@ -934,18 +933,18 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// EC from either a sample or from Analysis. Units: 1:5 dS/m
-        /// </summary>
+        /// <summary>EC from either a sample or from Analysis. Units: 1:5 dS/m</summary>
         public double[] EC
         {
             get
             {
-                double[] Values = Analysis.EC;
-                double[] Thicknesses = Analysis.Thickness;
+                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+                
+                double[] Values = analysis.EC;
+                double[] Thicknesses = analysis.Thickness;
 
                 // Try and find a sample with EC in it.
-                foreach (Sample Sample in Samples)
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.EC, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
@@ -955,18 +954,18 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// PH from either a sample or from Analysis. Units: 1:5 Water
-        /// </summary>
+        /// <summary>PH from either a sample or from Analysis. Units: 1:5 Water</summary>
         public double[] PH
         {
             get
             {
-                double[] Values = Analysis.PHWater;
-                double[] Thicknesses = Analysis.Thickness;
+                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
+                
+                double[] Values = analysis.PHWater;
+                double[] Thicknesses = analysis.Thickness;
 
                 // Try and find a sample with PH in it.
-                foreach (Sample Sample in Samples)
+                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.PHWater, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
@@ -979,454 +978,103 @@ namespace Models.Soils
         #endregion
 
         #region Phosphorus
-        /// <summary>
-        /// LabileP at standard thickness
-        /// </summary>
+        /// <summary>LabileP at standard thickness</summary>
+        /// <value>The labile p.</value>
         public double[] LabileP
         {
             get
             {
-                if (Phosphorus == null)
+                Phosphorus phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
+                if (phosphorus == null)
                     return null;
-                return Map(Phosphorus.LabileP, Phosphorus.Thickness, Thickness, MapType.Concentration);
+                return Map(phosphorus.LabileP, phosphorus.Thickness, Thickness, MapType.Concentration);
             }
         }
-        /// <summary>
-        /// Sorption at standard thickness
-        /// </summary>
+
+        /// <summary>Sorption at standard thickness</summary>
+        /// <value>The sorption.</value>
         public double[] Sorption
         {
             get
             {
-                if (Phosphorus == null)
+                Phosphorus phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
+                
+                if (phosphorus == null)
                     return null;
-                return Map(Phosphorus.Sorption, Phosphorus.Thickness, Thickness, MapType.Concentration);
+                return Map(phosphorus.Sorption, phosphorus.Thickness, Thickness, MapType.Concentration);
             }
         }
 
-        /// <summary>
-        /// BandedP at standard thickness
-        /// </summary>
+        /// <summary>BandedP at standard thickness</summary>
+        /// <value>The banded p.</value>
         public double[] BandedP
         {
             get
             {
-                if (Phosphorus == null)
+                Phosphorus phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
+                
+                if (phosphorus == null)
                     return null;
-                return Map(Phosphorus.BandedP, Phosphorus.Thickness, Thickness, MapType.Concentration);
+                return Map(phosphorus.BandedP, phosphorus.Thickness, Thickness, MapType.Concentration);
             }
         }
 
-        /// <summary>
-        /// RockP at standard thickness
-        /// </summary>
+        /// <summary>RockP at standard thickness</summary>
+        /// <value>The rock p.</value>
         public double[] RockP
         {
             get
             {
-                if (Phosphorus == null)
+                Phosphorus phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
+                
+                if (phosphorus == null)
                     return null;
-                return Map(Phosphorus.RockP, Phosphorus.Thickness, Thickness, MapType.Concentration);
+                return Map(phosphorus.RockP, phosphorus.Thickness, Thickness, MapType.Concentration);
             }
         }
 
 
-        #endregion
-
-        #region SWIM
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NO3Exco at standard thickness
-        /// </summary>
-        public double[] NO3Exco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.NO3Exco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NO3FIP at standard thickness
-        /// </summary>
-        public double[] NO3FIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.NO3FIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NH4Exco at standard thickness
-        /// </summary>
-        public double[] NH4Exco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.NH4Exco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NH4FIP at standard thickness
-        /// </summary>
-        public double[] NH4FIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.NH4FIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.UreaExco at standard thickness
-        /// </summary>
-        public double[] UreaExco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.UreaExco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.UreaFIP at standard thickness
-        /// </summary>
-        public double[] UreaFIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.UreaFIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.ClExco at standard thickness
-        /// </summary>
-        public double[] ClExco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.ClExco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.ClFIP at standard thickness
-        /// </summary>
-        public double[] ClFIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.ClFIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.TracerExco at standard thickness
-        /// </summary>
-        public double[] TracerExco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.TracerExco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.TracerFIP at standard thickness
-        /// </summary>
-        public double[] TracerFIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.TracerFIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-
-
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.MineralisationInhibitorExco at standard thickness
-        /// </summary>
-        public double[] MineralisationInhibitorExco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.MineralisationInhibitorExco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.MineralisationInhibitorFIP at standard thickness
-        /// </summary>
-        public double[] MineralisationInhibitorFIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.MineralisationInhibitorFIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.UreaseInhibitorExco at standard thickness
-        /// </summary>
-        public double[] UreaseInhibitorExco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.UreaseInhibitorExco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.UreaseInhibitorFIP at standard thickness
-        /// </summary>
-        public double[] UreaseInhibitorFIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.UreaseInhibitorFIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NitrificationInhibitorExco at standard thickness
-        /// </summary>
-        public double[] NitrificationInhibitorExco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.NitrificationInhibitorExco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.NitrificationInhibitorFIP at standard thickness
-        /// </summary>
-        public double[] NitrificationInhibitorFIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.NitrificationInhibitorFIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.DenitrificationInhibitorExco at standard thickness
-        /// </summary>
-        public double[] DenitrificationInhibitorExco
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.DenitrificationInhibitorExco, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>
-        /// Swim.SwimSoluteParameters.DenitrificationInhibitorFIP at standard thickness
-        /// </summary>
-        public double[] DenitrificationInhibitorFIP
-        {
-            get
-            {
-                if (Swim == null || Swim.SwimSoluteParameters == null)
-                    return null;
-                return Map(Swim.SwimSoluteParameters.DenitrificationInhibitorFIP, Swim.SwimSoluteParameters.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        #endregion
-
-        #region Soil Temperature
-
-        public double BoundaryLayerConductance
-        {
-            get
-            {
-                if (SoilTemperature != null)
-                    return SoilTemperature.BoundaryLayerConductance;
-                else if (SoilTemperature2 != null)
-                    return SoilTemperature2.BoundaryLayerConductance; 
-                else
-                    return 0;
-            }
-        }
-
-        public double[] InitialSoilTemperature
-        {
-            get
-            {
-                if (SoilTemperature != null)
-                    return Map(SoilTemperature.InitialSoilTemperature, SoilTemperature.Thickness, Thickness, MapType.Concentration, SoilTemperature.InitialSoilTemperature.Last());
-                else
-                    return null;
-            }
-        }
-
-        #endregion
-
-        #region Soil Temperature2
-        public double MaxTTimeDefault
-        {
-            get
-            {
-                if (SoilTemperature2 != null)
-                    return SoilTemperature2.MaxTTimeDefault;
-                else
-                    return 0;
-            }
-        }
-
-        public string BoundaryLayerConductanceSource
-        {
-            get
-            {
-                if (SoilTemperature2 != null)
-                    return SoilTemperature2.BoundaryLayerConductanceSource;
-                else
-                    return "";
-            }
-        }
-
-        public int BoundaryLayerConductanceIterations
-        {
-            get
-            {
-                if (SoilTemperature2 != null)
-                    return SoilTemperature2.BoundaryLayerConductanceIterations;
-                else
-                    return 0;
-            }
-        }
-
-        public string NetRadiationSource
-        {
-            get
-            {
-                if (SoilTemperature2 != null)
-                    return SoilTemperature2.NetRadiationSource;
-                else
-                    return "";
-            }
-        }
-
-        public double DefaultWindSpeed
-        {
-            get
-            {
-                if (SoilTemperature2 != null)
-                    return SoilTemperature2.DefaultWindSpeed;
-                else
-                    return 0;
-            }
-        }
-
-        public double DefaultAltitude
-        {
-            get
-            {
-                if (SoilTemperature2 != null)
-                    return SoilTemperature2.DefaultAltitude;
-                else
-                    return 0;
-            }
-        }
-
-        public double DefaultInstrumentHeight
-        {
-            get
-            {
-                if (SoilTemperature2 != null)
-                    return SoilTemperature2.DefaultInstrumentHeight;
-                else
-                    return 0;
-            }
-        }
-
-        public double BareSoilHeight
-        {
-            get
-            {
-                if (SoilTemperature2 != null)
-                    return SoilTemperature2.BareSoilHeight;
-                else
-                    return 0;
-            }
-        }
         #endregion
 
         #region Mapping
-        /// <summary>
-        /// Bulk density - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>Bulk density - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         internal double[] BDMapped(double[] ToThickness)
         {
-            return Map(Water.BD, Water.Thickness, ToThickness, MapType.Concentration, Water.BD.Last());
+            return Map(waterNode.BD, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.BD.Last());
         }
 
-        /// <summary>
-        /// AirDry - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         public double[] AirDryMapped(double[] ToThickness)
         {
-            return Map(Water.AirDry, Water.Thickness, ToThickness, MapType.Concentration, Water.AirDry.Last());
+            return Map(waterNode.AirDry, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.AirDry.Last());
         }
 
-        /// <summary>
-        /// Lower limit 15 bar - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>Lower limit 15 bar - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         public double[] LL15Mapped(double[] ToThickness)
         {
-            return Map(Water.LL15, Water.Thickness, ToThickness, MapType.Concentration, Water.LL15.Last());
+            return Map(waterNode.LL15, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.LL15.Last());
         }
 
-        /// <summary>
-        /// Drained upper limit - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>Drained upper limit - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         public double[] DULMapped(double[] ToThickness)
         {
-            return Map(Water.DUL, Water.Thickness, ToThickness, MapType.Concentration, Water.DUL.Last());
+            return Map(waterNode.DUL, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.DUL.Last());
         }
 
-        /// <summary>
-        /// SW - mapped to the specified layer structure. Units: mm/mm
-        /// </summary>
+        /// <summary>SW - mapped to the specified layer structure. Units: mm/mm</summary>
+        /// <param name="Values">The values.</param>
+        /// <param name="Thicknesses">The thicknesses.</param>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot find crop lower limit or LL15 in soil</exception>
         public double[] SWMapped(double[] Values, double[] Thicknesses, double[] ToThickness)
         {
             if (Thicknesses == ToThickness)
@@ -1450,8 +1098,8 @@ namespace Models.Soils
 
             // Get the first crop ll or ll15.
             double[] LowerBound;
-            if (Water.Crops.Count > 0)
-                LowerBound = LLMapped(Water.Crops[0].Name, Thicknesses);
+            if (waterNode.Crops.Count > 0)
+                LowerBound = LLMapped(waterNode.Crops[0].Name, Thicknesses);
             else
                 LowerBound = LL15Mapped(Thicknesses);
             if (LowerBound == null)
@@ -1465,15 +1113,16 @@ namespace Models.Soils
             return Map(Values, Thicknesses, ToThickness, MapType.Concentration);
         }
 
-        /// <summary>
-        /// Crop lower limit mapped. Units: mm/mm
-        /// </summary>
+        /// <summary>Crop lower limit mapped. Units: mm/mm</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         internal double[] LLMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (Utility.Math.AreEqual(Water.Thickness, ToThickness))
+            if (Utility.Math.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.LL;
-            double[] Values = Map(SoilCrop.LL, Water.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
+            double[] Values = Map(SoilCrop.LL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
             if (Values == null) return null;
             double[] AirDry = AirDryMapped(ToThickness);
             double[] DUL = DULMapped(ToThickness);
@@ -1487,21 +1136,29 @@ namespace Models.Soils
             return Values;
         }
 
-        /// <summary>
-        /// Crop XF mapped. Units: 0-1
-        /// </summary>
+        /// <summary>Crop XF mapped. Units: 0-1</summary>
+        /// <param name="CropName">Name of the crop.</param>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <returns></returns>
         internal double[] XFMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (Utility.Math.AreEqual(Water.Thickness, ToThickness))
+            if (Utility.Math.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.XF;
-            return Map(SoilCrop.XF, Water.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
+            return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
         }
 
-        private enum MapType { Mass, Concentration, UseBD }
         /// <summary>
-        /// Map soil variables from one layer structure to another.
+        /// 
         /// </summary>
+        private enum MapType { Mass, Concentration, UseBD }
+        /// <summary>Map soil variables from one layer structure to another.</summary>
+        /// <param name="FValues">The f values.</param>
+        /// <param name="FThickness">The f thickness.</param>
+        /// <param name="ToThickness">To thickness.</param>
+        /// <param name="MapType">Type of the map.</param>
+        /// <param name="DefaultValueForBelowProfile">The default value for below profile.</param>
+        /// <returns></returns>
         private double[] Map(double[] FValues, double[] FThickness,
                              double[] ToThickness, MapType MapType,
                              double DefaultValueForBelowProfile = double.NaN)
@@ -1550,7 +1207,7 @@ namespace Models.Soils
                 FromValues = Utility.Math.Multiply(FromValues, FromThickness);
             else if (MapType == Soil.MapType.UseBD)
             {
-                double[] BD = Water.BD;
+                double[] BD = waterNode.BD;
                 for (int Layer = 0; Layer < FromValues.Length; Layer++)
                     FromValues[Layer] = FromValues[Layer] * BD[Layer] * FromThickness[Layer] / 100;
             }
@@ -1604,13 +1261,11 @@ namespace Models.Soils
 
         // <param name="units">The units of the associated field or property</param>
 
-        /// <summary>
-        /// Overlay sample values onto soil values.
-        /// </summary>
-        /// <param name="SampleValues"></param>
-        /// <param name="SampleThickness"></param>
-        /// <param name="SoilValues"></param>
-        /// <param name="SoilThickness"></param>
+        /// <summary>Overlay sample values onto soil values.</summary>
+        /// <param name="SampleValues">The sample values.</param>
+        /// <param name="SampleThickness">The sample thickness.</param>
+        /// <param name="SoilValues">The soil values.</param>
+        /// <param name="SoilThickness">The soil thickness.</param>
         /// <returns></returns>
         private static bool OverlaySampleOnTo(double[] SampleValues, double[] SampleThickness,
                                                ref double[] SoilValues, ref double[] SoilThickness)
@@ -1628,9 +1283,11 @@ namespace Models.Soils
         }
 
 
-        /// <summary>
-        /// Takes values from SoilValues and puts them at the bottom of SampleValues.  
-        /// </summary>
+        /// <summary>Takes values from SoilValues and puts them at the bottom of SampleValues.</summary>
+        /// <param name="SampleValues">The sample values.</param>
+        /// <param name="SampleThickness">The sample thickness.</param>
+        /// <param name="SoilValues">The soil values.</param>
+        /// <param name="SoilThickness">The soil thickness.</param>
         private static void InFillValues(ref double[] SampleValues, ref double[] SampleThickness,
                                          double[] SoilValues, double[] SoilThickness)
         {
@@ -1695,10 +1352,9 @@ namespace Models.Soils
         #endregion
 
         #region Utility
-        /// <summary>
-        /// Convert an array of thickness (mm) to depth strings (cm)
-        //    e.g. "0-10", "10-30"
-        /// </summary>
+        /// <summary>Convert an array of thickness (mm) to depth strings (cm)</summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <returns></returns>
         static public string[] ToDepthStrings(double[] Thickness)
         {
             if (Thickness == null)
@@ -1722,10 +1378,14 @@ namespace Models.Soils
         }
         /// <summary>
         /// Convert an array of depth strings (cm) to thickness (mm) e.g.
-        ///     "0-10", "10-30" 
-        /// To 
-        ///     100, 200
+        /// "0-10", "10-30"
+        /// To
+        /// 100, 200
         /// </summary>
+        /// <param name="DepthStrings">The depth strings.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Invalid layer string:  + DepthStrings[i] +
+        ///                                   . String must be of the form: 10-30</exception>
         static public double[] ToThickness(string[] DepthStrings)
         {
             double[] Thickness = new double[DepthStrings.Length];
@@ -1747,6 +1407,9 @@ namespace Models.Soils
             }
             return Thickness;
         }
+        /// <summary>To the mid points.</summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <returns></returns>
         static public double[] ToMidPoints(double[] Thickness)
         {
             //-------------------------------------------------------------------------
@@ -1763,6 +1426,9 @@ namespace Models.Soils
             }
             return MidPoints;
         }
+        /// <summary>To the cum thickness.</summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <returns></returns>
         static public double[] ToCumThickness(double[] Thickness)
         {
             // ------------------------------------------------
@@ -1777,6 +1443,9 @@ namespace Models.Soils
             }
             return CumThickness;
         }
+        /// <summary>Codes to meta data.</summary>
+        /// <param name="Codes">The codes.</param>
+        /// <returns></returns>
         static public string[] CodeToMetaData(string[] Codes)
         {
             string[] Metadata = new string[Codes.Length];
@@ -1807,13 +1476,18 @@ namespace Models.Soils
         /// <summary>
         /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
         /// </summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <param name="LL">The ll.</param>
+        /// <param name="DUL">The dul.</param>
+        /// <param name="XF">The xf.</param>
+        /// <returns></returns>
         public static double[] CalcPAWC(double[] Thickness, double[] LL, double[] DUL, double[] XF)
         {
             double[] PAWC = new double[Thickness.Length];
             if (LL == null)
                 return PAWC;
             if (Thickness.Length != DUL.Length || Thickness.Length != LL.Length)
-                return null;
+                throw new ApsimXException(null, "Number of soil layers in SoilWater is different to number of layers in SoilWater.Crop");
 
             for (int layer = 0; layer != Thickness.Length; layer++)
                 if (DUL[layer] == Utility.Math.MissingValue ||
@@ -1832,9 +1506,9 @@ namespace Models.Soils
             return PAWC;
         }
 
-        /// <summary>
-        /// Return the last value that isn't a missing value.
-        /// </summary>
+        /// <summary>Return the last value that isn't a missing value.</summary>
+        /// <param name="Values">The values.</param>
+        /// <returns></returns>
         private double LastValue(double[] Values)
         {
             if (Values == null) return double.NaN;
@@ -1852,6 +1526,9 @@ namespace Models.Soils
         /// This is a port of the soilwat2_check_profile routine. Returns a blank string if
         /// no errors were found.
         /// </summary>
+        /// <param name="IgnoreStartingWaterN">if set to <c>true</c> [ignore starting water n].</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot find OC values in soil</exception>
         public string Check(bool IgnoreStartingWaterN)
         {
             const double min_sw = 0.0;
@@ -1870,7 +1547,7 @@ namespace Models.Soils
                 SoilCrop soilCrop = this.Crop(Crop) as SoilCrop;
                 if (soilCrop != null)
                 {
-                    double[] LL = this.LLMapped(Crop, Water.Thickness);
+                    double[] LL = this.LLMapped(Crop, waterNode.Thickness);
                     double[] KL = soilCrop.KL;
                     double[] XF = soilCrop.XF;
 
@@ -1881,7 +1558,7 @@ namespace Models.Soils
 
                     else
                     {
-                        for (int layer = 0; layer != Water.Thickness.Length; layer++)
+                        for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
                         {
                             int RealLayerNumber = layer + 1;
 
@@ -1907,14 +1584,14 @@ namespace Models.Soils
                                 Msg += Crop + " LL value missing"
                                          + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                            else if (Utility.Math.LessThan(LL[layer], Water.AirDry[layer], 3))
+                            else if (Utility.Math.LessThan(LL[layer], waterNode.AirDry[layer], 3))
                                 Msg += Crop + " LL of " + LL[layer].ToString("f3")
-                                             + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + Water.AirDry[layer].ToString("f3")
+                                             + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + waterNode.AirDry[layer].ToString("f3")
                                            + "\r\n";
 
-                            else if (Utility.Math.GreaterThan(LL[layer], Water.DUL[layer], 3))
+                            else if (Utility.Math.GreaterThan(LL[layer], waterNode.DUL[layer], 3))
                                 Msg += Crop + " LL of " + LL[layer].ToString("f3")
-                                             + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + Water.DUL[layer].ToString("f3")
+                                             + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + waterNode.DUL[layer].ToString("f3")
                                            + "\r\n";
                         }
                     }
@@ -1922,63 +1599,63 @@ namespace Models.Soils
             }
 
             // Check other profile variables.
-            for (int layer = 0; layer != Water.Thickness.Length; layer++)
+            for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
             {
-                double max_sw = Utility.Math.Round(1.0 - Water.BD[layer] / specific_bd, 3);
+                double max_sw = Utility.Math.Round(1.0 - waterNode.BD[layer] / specific_bd, 3);
                 int RealLayerNumber = layer + 1;
 
-                if (Water.AirDry[layer] == Utility.Math.MissingValue)
+                if (waterNode.AirDry[layer] == Utility.Math.MissingValue)
                     Msg += " Air dry value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.LessThan(Water.AirDry[layer], min_sw, 3))
-                    Msg += " Air dry lower limit of " + Water.AirDry[layer].ToString("f3")
+                else if (Utility.Math.LessThan(waterNode.AirDry[layer], min_sw, 3))
+                    Msg += " Air dry lower limit of " + waterNode.AirDry[layer].ToString("f3")
                                        + " in layer " + RealLayerNumber.ToString() + " is below acceptable value of " + min_sw.ToString("f3")
                                + "\r\n";
 
-                if (Water.LL15[layer] == Utility.Math.MissingValue)
+                if (waterNode.LL15[layer] == Utility.Math.MissingValue)
                     Msg += "15 bar lower limit value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.LessThan(Water.LL15[layer], Water.AirDry[layer], 3))
-                    Msg += "15 bar lower limit of " + Water.LL15[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + Water.AirDry[layer].ToString("f3")
+                else if (Utility.Math.LessThan(waterNode.LL15[layer], waterNode.AirDry[layer], 3))
+                    Msg += "15 bar lower limit of " + waterNode.LL15[layer].ToString("f3")
+                                 + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + waterNode.AirDry[layer].ToString("f3")
                                + "\r\n";
 
-                if (Water.DUL[layer] == Utility.Math.MissingValue)
+                if (waterNode.DUL[layer] == Utility.Math.MissingValue)
                     Msg += "Drained upper limit value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.LessThan(Water.DUL[layer], Water.LL15[layer], 3))
-                    Msg += "Drained upper limit of " + Water.DUL[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is at or below lower limit of " + Water.LL15[layer].ToString("f3")
+                else if (Utility.Math.LessThan(waterNode.DUL[layer], waterNode.LL15[layer], 3))
+                    Msg += "Drained upper limit of " + waterNode.DUL[layer].ToString("f3")
+                                 + " in layer " + RealLayerNumber.ToString() + " is at or below lower limit of " + waterNode.LL15[layer].ToString("f3")
                                + "\r\n";
 
-                if (Water.SAT[layer] == Utility.Math.MissingValue)
+                if (waterNode.SAT[layer] == Utility.Math.MissingValue)
                     Msg += "Saturation value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.LessThan(Water.SAT[layer], Water.DUL[layer], 3))
-                    Msg += "Saturation of " + Water.SAT[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is at or below drained upper limit of " + Water.DUL[layer].ToString("f3")
+                else if (Utility.Math.LessThan(waterNode.SAT[layer], waterNode.DUL[layer], 3))
+                    Msg += "Saturation of " + waterNode.SAT[layer].ToString("f3")
+                                 + " in layer " + RealLayerNumber.ToString() + " is at or below drained upper limit of " + waterNode.DUL[layer].ToString("f3")
                                + "\r\n";
 
-                else if (Utility.Math.GreaterThan(Water.SAT[layer], max_sw, 3))
+                else if (Utility.Math.GreaterThan(waterNode.SAT[layer], max_sw, 3))
                 {
-                    double max_bd = (1.0 - Water.SAT[layer]) * specific_bd;
-                    Msg += "Saturation of " + Water.SAT[layer].ToString("f3")
+                    double max_bd = (1.0 - waterNode.SAT[layer]) * specific_bd;
+                    Msg += "Saturation of " + waterNode.SAT[layer].ToString("f3")
                                  + " in layer " + RealLayerNumber.ToString() + " is above acceptable value of  " + max_sw.ToString("f3")
                                + ". You must adjust bulk density to below " + max_bd.ToString("f3")
                                + " OR saturation to below " + max_sw.ToString("f3")
                                + "\r\n";
                 }
 
-                if (Water.BD[layer] == Utility.Math.MissingValue)
+                if (waterNode.BD[layer] == Utility.Math.MissingValue)
                     Msg += "BD value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (Utility.Math.GreaterThan(Water.BD[layer], 2.65, 3))
-                    Msg += "BD value of " + Water.BD[layer].ToString("f3")
+                else if (Utility.Math.GreaterThan(waterNode.BD[layer], 2.65, 3))
+                    Msg += "BD value of " + waterNode.BD[layer].ToString("f3")
                                  + " in layer " + RealLayerNumber.ToString() + " is greater than the theoretical maximum of 2.65"
                                + "\r\n";
             }
@@ -1986,7 +1663,7 @@ namespace Models.Soils
             if (OC.Length == 0)
                 throw new Exception("Cannot find OC values in soil");
 
-            for (int layer = 0; layer != Water.Thickness.Length; layer++)
+            for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
             {
                 int RealLayerNumber = layer + 1;
                 if (OC[layer] == Utility.Math.MissingValue)
@@ -2014,31 +1691,31 @@ namespace Models.Soils
 
             if (!IgnoreStartingWaterN)
             {
-                if (!Utility.Math.ValuesInArray(SW))
+                if (!Utility.Math.ValuesInArray(InitialWaterVolumetric))
                     Msg += "No starting soil water values found.\r\n";
                 else
-                    for (int layer = 0; layer != Water.Thickness.Length; layer++)
+                    for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
                     {
                         int RealLayerNumber = layer + 1;
 
-                        if (SW[layer] == Utility.Math.MissingValue)
+                        if (InitialWaterVolumetric[layer] == Utility.Math.MissingValue)
                             Msg += "Soil water value missing"
                                         + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                        else if (Utility.Math.GreaterThan(SW[layer], Water.SAT[layer], 3))
-                            Msg += "Soil water of " + SW[layer].ToString("f3")
-                                            + " in layer " + RealLayerNumber.ToString() + " is above saturation of " + Water.SAT[layer].ToString("f3")
+                        else if (Utility.Math.GreaterThan(InitialWaterVolumetric[layer], waterNode.SAT[layer], 3))
+                            Msg += "Soil water of " + InitialWaterVolumetric[layer].ToString("f3")
+                                            + " in layer " + RealLayerNumber.ToString() + " is above saturation of " + waterNode.SAT[layer].ToString("f3")
                                             + "\r\n";
 
-                        else if (Utility.Math.LessThan(SW[layer], Water.AirDry[layer], 3))
-                            Msg += "Soil water of " + SW[layer].ToString("f3")
-                                            + " in layer " + RealLayerNumber.ToString() + " is below air-dry value of " + Water.AirDry[layer].ToString("f3")
+                        else if (Utility.Math.LessThan(InitialWaterVolumetric[layer], waterNode.AirDry[layer], 3))
+                            Msg += "Soil water of " + InitialWaterVolumetric[layer].ToString("f3")
+                                            + " in layer " + RealLayerNumber.ToString() + " is below air-dry value of " + waterNode.AirDry[layer].ToString("f3")
                                             + "\r\n";
                     }
 
-                if (!Utility.Math.ValuesInArray(NO3))
+                if (!Utility.Math.ValuesInArray(InitialNO3N))
                     Msg += "No starting NO3 values found.\r\n";
-                if (!Utility.Math.ValuesInArray(NH4))
+                if (!Utility.Math.ValuesInArray(InitialNH4N))
                     Msg += "No starting NH4 values found.\r\n";
 
 

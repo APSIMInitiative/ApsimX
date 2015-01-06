@@ -22,7 +22,6 @@ namespace UserInterface.Views
 
         string MemoText { get; set; }
         bool ReadOnly { get; set; }
-        string LabelText { get; set; }
     }
 
     /// <summary>
@@ -93,16 +92,6 @@ namespace UserInterface.Views
                 tooledControl1.modelEdit.toolContainer.visible = tooledControl1.editControl.Enabled;
             }
         }
-
-        /// <summary>
-        /// Get or set the label text.
-        /// </summary>
-        public string LabelText 
-        {
-            get { return label1.Text; }
-            set { label1.Text = value; }
-        }
-
 
         /// <summary>
         /// The memo has been updated and now send the changed text to the model.

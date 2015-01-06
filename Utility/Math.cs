@@ -9,6 +9,8 @@ namespace Utility
     using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Data;
+    using System.Linq;
 
     /// <summary>
     /// Various math utilities.
@@ -309,51 +311,24 @@ namespace Utility
             bDidInterpolate = false;
             if (dXCoordinate == null || dYCoordinate == null)
                 return 0;
-            //find where x lies in the x coordinate
-            if (dXCoordinate.Length == 0 || dYCoordinate.Length == 0 || dXCoordinate.Length != dYCoordinate.Length)
-            {
-                throw new Exception("Utility.Math.LinearInterpReal: Lengths of passed in arrays are incorrect");
-            }
 
-            for (int iIndex = 0; iIndex < dXCoordinate.Length; iIndex++)
-            {
-                if (dX <= dXCoordinate[iIndex])
-                {
-                    //Chcek to see if dX is exactly equal to dXCoordinate[iIndex]
-                    //If so then don't calcuate dY.  This was added to remove roundoff error.
-                    if (dX == dXCoordinate[iIndex])
-                    {
-                        bDidInterpolate = false;
-                        return dYCoordinate[iIndex];
-                    }
-                    //Found position
-                    else if (iIndex == 0)
-                    {
-                        bDidInterpolate = true;
-                        return dYCoordinate[iIndex];
-                    }
-                    else
-                    {
-                        //interpolate - y = mx+c
-                        if ((dXCoordinate[iIndex] - dXCoordinate[iIndex - 1]) == 0)
-                        {
-                            bDidInterpolate = true;
-                            return dYCoordinate[iIndex - 1];
-                        }
-                        else
-                        {
-                            bDidInterpolate = true;
-                            return ((dYCoordinate[iIndex] - dYCoordinate[iIndex - 1]) / (dXCoordinate[iIndex] - dXCoordinate[iIndex - 1]) * (dX - dXCoordinate[iIndex - 1]) + dYCoordinate[iIndex - 1]);
-                        }
-                    }
-                }
-                else if (iIndex == (dXCoordinate.Length - 1))
-                {
-                    bDidInterpolate = true;
-                    return dYCoordinate[iIndex];
-                }
-            }// END OF FOR LOOP
-            return 0.0;
+            // find where x lies in the x coordinate
+            if (dXCoordinate.Length == 0 || dYCoordinate.Length == 0 || dXCoordinate.Length != dYCoordinate.Length)
+                throw new Exception("Utility.Math.LinearInterpReal: Lengths of passed in arrays are incorrect");
+
+            int pos = Array.BinarySearch(dXCoordinate, dX);
+            if (pos == -1)
+                return dYCoordinate[0];  // off the bottom
+            else if (pos >= 0)
+                return dYCoordinate[pos];   // exact match
+            else if (pos < 0)
+                pos = ~pos;
+            
+            if (pos == dXCoordinate.Length)
+                return dYCoordinate[dXCoordinate.Length - 1];  // off the top
+            
+            // pos should now point to the next largest value - interpolate
+            return (dYCoordinate[pos] - dYCoordinate[pos - 1]) / (dXCoordinate[pos] - dXCoordinate[pos - 1]) * (dX - dXCoordinate[pos - 1]) + dYCoordinate[pos - 1];
         }
 
         /// <summary>
@@ -373,9 +348,9 @@ namespace Utility
         /// <summary>
         /// Ensure that all values in dValues are within the specified lower and upper limits.
         /// </summary>
-        /// <param name="dValue"></param>
-        /// <param name="dLowerLimit"></param>
-        /// <param name="dUpperLimit"></param>
+        /// <param name="dValues"></param>
+        /// <param name="dLowerLimits"></param>
+        /// <param name="dUpperLimits"></param>
         /// <returns></returns>
         static public double[] Constrain(double[] dValues, double[] dLowerLimits, double[] dUpperLimits)
         {
@@ -404,7 +379,7 @@ namespace Utility
         /// <summary>
         /// Round all values in Values to the specified number of decimal places.
         /// </summary>
-        /// <param name="Value"></param>
+        /// <param name="Values"></param>
         /// <param name="NumDecPlaces"></param>
         /// <returns></returns>
         static public double[] Round(double[] Values, int NumDecPlaces)
@@ -711,9 +686,6 @@ namespace Utility
         /// <returns></returns>
         static public RegrStats CalcRegressionStats(IEnumerable X, IEnumerable Y)
         {
-            /// <summary>
-            ///    Calculate regression stats.   
-            /// </summary>
             RegrStats stats = new RegrStats();
             double SumX = 0;
             double SumY = 0;
@@ -781,7 +753,8 @@ namespace Utility
             {
                 double xValue = Convert.ToDouble(xEnum.Current);
                 double yValue = Convert.ToDouble(yEnum.Current);
-                SumOfSquaredSD += System.Math.Pow(xValue - Xbar, 2);
+                if (!double.IsNaN(xValue) && !double.IsNaN(yValue) )
+                    SumOfSquaredSD += System.Math.Pow(xValue - Xbar, 2);
             }
 
             CSSXY = SumXY - SumX * SumY / Num_points;     // Corrected SS for products
@@ -839,12 +812,12 @@ namespace Utility
         /// \parblock 
         /// Angle to measure time between such as twilight (deg).
         /// angular distance between 90 deg and end of twilight - altitude of sun. +ve up, -ve down.
-        /// Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6&deg;. e.g SunAngle = -6&deg;
-        /// Nautical twilight : 12&deg;
-        /// Astronomical twilight : 18&deg;
+        /// Civil twilight ends after sunset or begins before sunrise when the solar depression angle is 6deg;. e.g SunAngle = -6deg;
+        /// Nautical twilight : 12deg;
+        /// Astronomical twilight : 18deg;
         /// \endparblock
-        /// \param Latitude Latitude to calculate the day length (&deg;)
-        /// \return Day length in hours between the specified sun angle from 90&deg; in am and pm.
+        /// \param Latitude Latitude to calculate the day length (deg;)
+        /// \return Day length in hours between the specified sun angle from 90deg; in am and pm.
         static public double DayLength(double DayOfYear, double SunAngle, double Latitude)
         {
             //+ Constant Values
@@ -1050,7 +1023,7 @@ namespace Utility
         /// <summary>
         /// Return true if all specified strings can be converted to a double.
         /// </summary>
-        /// <param name="StringValue"></param>
+        /// <param name="Values"></param>
         /// <returns></returns>
         static public bool IsNumerical(string[] Values)
         {
@@ -1077,7 +1050,7 @@ namespace Utility
         /// <summary>
         /// Return true if all specified strings can be converted to a double given the US culture
         /// </summary>
-        /// <param name="StringValue"></param>
+        /// <param name="Values"></param>
         /// <returns></returns>
         static public bool IsNumericalenUS(string[] Values)
         {
@@ -1107,6 +1080,29 @@ namespace Utility
             if (i < 0)
                 return new double[0];
             double[] ReturnValues = new double[i + 1];
+            for (int j = 0; j <= i; j++)
+                ReturnValues[j] = Values[j];
+            return ReturnValues;
+        }
+
+        /// <summary>
+        /// Return an array of values where the missing values have been removed.
+        /// </summary>
+        /// <param name="Values"></param>
+        /// <returns></returns>
+        static public string[] RemoveMissingValuesFromBottom(string[] Values)
+        {
+            if (Values == null) return null;
+            // Find the last non missing value.
+            int i;
+            for (i = Values.Length - 1; i >= 0; i--)
+            {
+                if (Values[i] != "")
+                    break;
+            }
+            if (i < 0)
+                return new string[0];
+            string[] ReturnValues = new string[i + 1];
             for (int j = 0; j <= i; j++)
                 ReturnValues[j] = Values[j];
             return ReturnValues;
@@ -1237,7 +1233,10 @@ namespace Utility
 
             for (int i = 0; i < L1.Count; i++)
             {
-                if (!Math.FloatsAreEqual(L1[i], L2[i]))
+                if (double.IsNaN(L1[i]) && double.IsNaN(L2[i]))
+                {
+                }
+                else if (!Math.FloatsAreEqual(L1[i], L2[i]))
                 {
                     return false;
                 }
@@ -1307,25 +1306,53 @@ namespace Utility
         /// </summary>
         public class Stats
         {
+            /// <summary>Gets the residual.</summary>
+            /// <value>The residual.</value>
             public double Residual { get { return PredictedMean - ObservedMean; } }
+            /// <summary>Gets the s ds.</summary>
+            /// <value>The s ds.</value>
             public double SDs { get { return System.Math.Sqrt((1.0 / Count) * Y_YSquared); } }
+            /// <summary>Gets the s dm.</summary>
+            /// <value>The s dm.</value>
             public double SDm { get { return System.Math.Sqrt((1.0 / Count) * X_XSquared); } }
+            /// <summary>Gets the r.</summary>
+            /// <value>The r.</value>
             public double r { get { return (1.0 / Count) * Y_YxX_X / (SDs * SDm); } }
+            /// <summary>Gets the r2.</summary>
+            /// <value>The r2.</value>
             public double R2 { get { return System.Math.Pow(r, 2); } }
+            /// <summary>Gets the LCS.</summary>
+            /// <value>The LCS.</value>
             public double LCS { get { return 2.0 * SDs * SDm * (1.0 - r); } }
+            /// <summary>Gets the SDSD.</summary>
+            /// <value>The SDSD.</value>
             public double SDSD { get { return System.Math.Pow(SDs - SDm, 2.0); } }
+            /// <summary>Gets the sb.</summary>
+            /// <value>The sb.</value>
             public double SB { get { return System.Math.Pow(PredictedMean - ObservedMean, 2); } }
+            /// <summary>Gets the MSD.</summary>
+            /// <value>The MSD.</value>
             public double MSD { get { return SB + SDSD + LCS; } }
+            /// <summary>Gets the RMSD.</summary>
+            /// <value>The RMSD.</value>
             public double RMSD { get { return System.Math.Sqrt(MSD); } }
+            /// <summary>Gets the percent.</summary>
+            /// <value>The percent.</value>
             public double Percent { get { return (RMSD / ObservedMean)*100; } }
 
 
             // Low level pre calculations.
+            /// <summary>The observed mean</summary>
             public double ObservedMean;
+            /// <summary>The predicted mean</summary>
             public double PredictedMean;
+            /// <summary>The x_ x squared</summary>
             public double X_XSquared; // sum of (observed - observedmean) ^ 2
+            /// <summary>The y_ y squared</summary>
             public double Y_YSquared; // sum of (predicted - predictedmean) ^ 2
+            /// <summary>The y_ yx x_ x</summary>
             public double Y_YxX_X;    // sum of (predicted - predictedmean) * (observed - observedmean)
+            /// <summary>The count</summary>
             public int Count;
         }
 
@@ -1350,6 +1377,186 @@ namespace Utility
             }
            
             return stats;
+        }
+
+        /// <summary>
+        /// Return longterm average monthly totals for the given variable. 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Assumes a a date can be derived from the data table using the 
+        /// Utility.DataTable.GetDateFromRow function.
+        /// </remarks>
+        /// <param name="table">The data table containing the data</param>
+        /// <param name="fieldName">The field name to look at</param>
+        /// <param name="firstDate">Only data after this date will be used</param>
+        /// <param name="lastDate">Only data before this date will be used</param>
+        /// <returns>An array of 12 numbers or null if no data in table.</returns>
+        public static double[] AverageMonthlyTotals(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
+        {
+            if (table.Rows.Count > 0)
+            {
+                // This first query gives monthly totals for each year.
+                var result = from row in table.AsEnumerable()
+                             where (Utility.DataTable.GetDateFromRow(row) >= firstDate &&
+                                    Utility.DataTable.GetDateFromRow(row) <= lastDate)
+                             group row by new
+                             {
+                                 Year = Utility.DataTable.GetDateFromRow(row).Year,
+                                 Month = Utility.DataTable.GetDateFromRow(row).Month,
+                             } into grp
+                             select new
+                             {
+                                 Year = grp.Key.Year,
+                                 Month = grp.Key.Month,
+                                 Total = grp.Sum(row => row.Field<float>(fieldName))
+
+
+
+                             };
+
+                // This second query gives average monthly totals using the first query.
+                var result2 = from row in result
+                              group row by new
+                              {
+                                  Month = row.Month,
+                              } into grp
+                              select new
+                              {
+                                  Month = grp.Key.Month,
+                                  Avg = grp.Average(row => row.Total)
+                              };
+
+
+                List<double> totals = new List<double>();
+                foreach (var row in result2)
+                {
+                    totals.Add(row.Avg);
+                }
+
+                return totals.ToArray();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Return yearly totals for the given variable. 
+        /// </summary>
+        /// <remarks>
+        /// Assumes a a date can be derived from the data table using the 
+        /// Utility.DataTable.GetDateFromRow function.
+        /// </remarks>
+        /// <param name="table">The data table containing the data</param>
+        /// <param name="fieldName">The field name to look at</param>
+        /// <param name="firstDate">Only data after this date will be used</param>
+        /// <param name="lastDate">Only data before this date will be used</param>
+        /// <returns>An array of yearly totals or null if no data in table.</returns>
+        public static double[] YearlyTotals(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
+        {
+            if (table.Rows.Count > 0)
+            {
+                var result = from row in table.AsEnumerable()
+                             where (Utility.DataTable.GetDateFromRow(row) >= firstDate &&
+                                    Utility.DataTable.GetDateFromRow(row) <= lastDate)
+                             group row by new
+                             {
+                                 Year = Utility.DataTable.GetDateFromRow(row).Year,
+                             } into grp
+                             select new
+                             {
+                                 Year = grp.Key.Year,
+                                 Total = grp.Sum(row => row.Field<float>(fieldName))
+                             };
+
+                List<double> totals = new List<double>();
+                foreach (var row in result)
+                    totals.Add(row.Total);
+
+                return totals.ToArray();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Return average daily totals for each month for the the given variable. 
+        /// </summary>
+        /// <remarks>
+        /// Assumes a a date can be derived from the data table using the 
+        /// Utility.DataTable.GetDateFromRow function.
+        /// </remarks>
+        /// <param name="table">The data table containing the data</param>
+        /// <param name="fieldName">The field name to look at</param>
+        /// <param name="firstDate">Only data after this date will be used</param>
+        /// <param name="lastDate">Only data before this date will be used</param>
+        /// <returns>An array of monthly averages or null if no data in table.</returns>
+        public static double[] AverageDailyTotalsForEachMonth(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
+        {
+            if (table.Rows.Count > 0)
+            {
+                var result = from row in table.AsEnumerable()
+                             where (Utility.DataTable.GetDateFromRow(row) >= firstDate &&
+                                    Utility.DataTable.GetDateFromRow(row) <= lastDate)
+                             group row by new
+                             {
+                                 Month = Utility.DataTable.GetDateFromRow(row).Month,
+                                 Year = Utility.DataTable.GetDateFromRow(row).Year,
+                             } into grp
+                             select new
+                             {
+                                 Year = grp.Key.Year,
+                                 Total = grp.Average(row => row.Field<float>(fieldName))
+                             };
+
+                List<double> totals = new List<double>();
+                foreach (var row in result)
+                    totals.Add(row.Total);
+
+                return totals.ToArray();
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// Calculate the std deviation
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns>Std deviation</returns>
+        public static double StandardDeviation(IEnumerable<double> values)
+        {
+            double sumOfDerivation = 0;
+            int count = 0;
+            foreach (double value in values)
+            {
+                sumOfDerivation += (value) * (value);
+                count++;
+            }
+
+            double mean = Sum(values) / count;
+            double sumOfDerivationAverage = sumOfDerivation / count;
+            return System.Math.Sqrt(sumOfDerivationAverage - (mean * mean));
+        }
+
+        /// <summary>Cumulates the specified values.</summary>
+        /// <param name="values">The values.</param>
+        /// <returns>The cumulated values</returns>
+        public static IEnumerable<double> Cumulative(IEnumerable<double> values)
+        {
+            if (values == null)
+                return null;
+
+            List<double> newValues = new List<double>();
+            double sumSoFar = 0.0;
+            foreach (double value in values)
+            {
+                sumSoFar += value;
+                newValues.Add(sumSoFar);
+            }
+
+            return newValues;
         }
     }
 }

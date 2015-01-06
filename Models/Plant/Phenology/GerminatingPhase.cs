@@ -6,16 +6,16 @@ using Models.Core;
 
 namespace Models.PMF.Phen
 {
-	/// <summary>
-	/// Germinating phase in phenology
-	/// </summary>
-	/// \pre A \ref Models.Soils.Soil "Soil" function has to exist to 
-	/// provide the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)" 
-	/// in the soil profile.
-	/// <remarks>
-	/// Crop will germinate in the next day if the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)"
-	/// is more than zero.
-	/// </remarks>
+    /// <summary>
+    /// Germinating phase in phenology
+    /// </summary>
+    /// \pre A \ref Models.Soils.Soil "Soil" function has to exist to 
+    /// provide the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)" 
+    /// in the soil profile.
+    /// <remarks>
+    /// Crop will germinate in the next day if the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)"
+    /// is more than zero.
+    /// </remarks>
     [Serializable]
     public class GerminatingPhase : Phase
     {
@@ -28,7 +28,7 @@ namespace Models.PMF.Phen
         public override double DoTimeStep(double PropOfDayToUse)
         {
 
-            bool CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.SoilWater.esw > 0;
+            bool CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.SoilWater.ESW > 0;
 
             if (CanGerminate)
                 return 0.999;

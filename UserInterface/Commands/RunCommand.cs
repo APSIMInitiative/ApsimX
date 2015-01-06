@@ -29,7 +29,7 @@ namespace UserInterface.Commands
             this.ExplorerPresenter = presenter;
 
             JobManager = new Utility.JobManager();
-            JobManager.OnComplete += OnComplete;
+            JobManager.AllJobsCompleted += OnComplete;
         }
 
         /// <summary>
@@ -52,6 +52,7 @@ namespace UserInterface.Commands
                 Simulations.SimulationToRun = ModelClicked;
            
             JobManager.AddJob(Simulations);
+            JobManager.AllJobsCompleted += OnComplete;
             JobManager.Start(waitUntilFinished: false);
         }
 
@@ -65,27 +66,27 @@ namespace UserInterface.Commands
         /// <summary>
         /// Called whenever a job completes.
         /// </summary>
-        private void OnComplete(object sender, Utility.JobManager.JobCompleteArgs e)
+        private void OnComplete(object sender, EventArgs e)
         {
-            if (ExplorerPresenter != null && e.ErrorMessage != null)
-                ExplorerPresenter.ShowMessage(e.ErrorMessage, Models.DataStore.ErrorLevel.Error);
-            if (e.PercentComplete == 100)
-            {
-                Timer.Stop();
+            Timer.Stop();
 
-                if (!JobManager.SomeHadErrors)
-                    ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
+            string errorMessage = string.Empty;
+
+            for (int j = 0; j < JobManager.CountOfJobs; j++)
+                errorMessage += JobManager.GetJobErrorMessage(j);
+            if (errorMessage == string.Empty)
+                ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
                         + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
+            else
+                ExplorerPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
 
-                SoundPlayer player = new SoundPlayer();
-                if (DateTime.Now.Month == 12)
-                    player.Stream = Properties.Resources.notes;
-                else
-                    player.Stream = Properties.Resources.success;
-                player.Play();
-                IsRunning = false;
-            }
-
+            SoundPlayer player = new SoundPlayer();
+            if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
+                player.Stream = Properties.Resources.notes;
+            else
+                player.Stream = Properties.Resources.success;
+            player.Play();
+            IsRunning = false;
         }
     }
 }

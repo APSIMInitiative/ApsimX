@@ -1,35 +1,62 @@
-﻿using System;
-using System.Data;
-using UserInterface.Views;
-using Models;
-using System.IO;
-using UserInterface.Interfaces;
-using UserInterface.EventArguments;
-using System.Collections.Generic;
-using Models.Core;
+﻿// -----------------------------------------------------------------------
+// <copyright file="TestPresenter.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
-    class TestPresenter : IPresenter
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using EventArguments;
+    using Interfaces;
+    using Models;
+    using Models.Core;
+    using Views;
+
+    /// <summary>
+    /// The presenter for the Test object
+    /// </summary>
+    public class TestPresenter : IPresenter
     {
+        /// <summary>
+        /// The view object
+        /// </summary>
         private ITestView view;
+
+        /// <summary>
+        /// The tests object
+        /// </summary>
         private Tests tests;
+
+        /// <summary>
+        /// The explorer presenter used
+        /// </summary>
         private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// The data storage object
+        /// </summary>
         private DataStore dataStore = null;
 
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <param name="model">The model object</param>
+        /// <param name="view">The view used</param>
+        /// <param name="explorerPresenter">The explorer presenter</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.view = View as ITestView;
-            this.tests = Model as Tests;
+            this.view = view as ITestView;
+            this.tests = model as Tests;
             this.explorerPresenter = explorerPresenter;
 
             this.dataStore = Apsim.Find(this.tests, typeof(DataStore)) as DataStore;
             this.view.Editor.IntelliSenseChars = " :";
-            this.view.Editor.ContextItemsNeeded += OnContextItemsNeeded;
-            this.view.TableNameChanged += OnTableNameChanged;
+            this.view.Editor.ContextItemsNeeded += this.OnContextItemsNeeded;
+            this.view.TableNameChanged += this.OnTableNameChanged;
 
             this.PopulateView();
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
@@ -40,7 +67,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.view.Editor.ContextItemsNeeded -= OnContextItemsNeeded;
+            this.view.Editor.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
             this.SaveViewToModel();
         }
@@ -51,9 +78,9 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             // Populate the table list.
-            if (dataStore != null)
+            if (this.dataStore != null)
             {
-                this.view.TableNames = dataStore.TableNames;
+                this.view.TableNames = this.dataStore.TableNames;
 
                 // Set the name of the table.
                 if (this.tests.AllTests != null && this.tests.AllTests.Length > 0)
@@ -62,7 +89,6 @@ namespace UserInterface.Presenters
                     this.view.Data = this.dataStore.GetData("*", this.tests.AllTests[0].TableName);
                 }
             }
-
 
             if (this.tests.AllTests != null && this.tests.AllTests.Length > 0)
             {
@@ -85,7 +111,7 @@ namespace UserInterface.Presenters
         {
             // The ChangePropertyCommand below will trigger a call to OnModelChanged. We don't need to 
             // repopulate the grid so stop the event temporarily until end of this method.
-            this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             List<Test> tests = new List<Test>();
             for (int lineNumber = 0; lineNumber < this.view.Editor.Lines.Length; lineNumber++)
@@ -99,18 +125,16 @@ namespace UserInterface.Presenters
 
             // Store 'tests' in model via a command.
             Commands.ChangeProperty command = new Commands.ChangeProperty(this.tests, "AllTests", tests.ToArray());
-            explorerPresenter.CommandHistory.Add(command, true);
+            this.explorerPresenter.CommandHistory.Add(command, true);
 
             // Reinstate the model changed event.
-            this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
-
-       
 
         /// <summary>
         /// Convert a test type to an operator string.
         /// </summary>
-        /// <param name="testType">The test type</param>
+        /// <param name="test">The test type</param>
         /// <returns>The operator string</returns>
         private string TestToString(Test test)
         {
@@ -257,7 +281,7 @@ namespace UserInterface.Presenters
                         test.Type = Test.TestType.Mean;
                         if (parameterBits.Length > 1)
                         {
-                            test.Parameters = parameterBits[1].Replace("%", "") + "," + parameterBits[0];
+                            test.Parameters = parameterBits[1].Replace("%", string.Empty) + "," + parameterBits[0];
                         }
                     }
                     else if (operatorString == "tolerance=")
@@ -265,7 +289,7 @@ namespace UserInterface.Presenters
                         test.Type = Test.TestType.Tolerance;
                         if (parameterBits.Length > 0)
                         {
-                            test.Parameters = "1," + parameterBits[0].Replace("%", "");
+                            test.Parameters = "1," + parameterBits[0].Replace("%", string.Empty);
                         }
                     }
                     else if (operatorString == "CompareToInput=")
@@ -273,7 +297,7 @@ namespace UserInterface.Presenters
                         test.Type = Test.TestType.Tolerance;
                         if (parameterBits.Length > 0)
                         {
-                            test.Parameters = "1," + parameterBits[0].Replace("%", "");
+                            test.Parameters = "1," + parameterBits[0].Replace("%", string.Empty);
                         }
                     }
                     
@@ -288,22 +312,25 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
+        public void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
             if (e.ObjectName.Trim() == "Simulation")
             {
-                e.Items.Add("All");
-                e.Items.AddRange(dataStore.SimulationNames);
+                e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "All" });
+
+                foreach (string simulationName in this.dataStore.SimulationNames)
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = simulationName });
             }
             else if (e.ObjectName.Trim() == "Test")
             {
                 string tableName = this.view.TableName;
                 if (tableName != null)
                 {
-                    DataTable data = dataStore.GetData("*", tableName);
+                    DataTable data = this.dataStore.GetData("*", tableName);
                     if (data != null)
                     {
-                        e.Items.AddRange(Utility.DataTable.GetColumnNames(data));
+                        foreach (string columnName in Utility.DataTable.GetColumnNames(data))
+                            e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = columnName });
                     }
                 }
             }
@@ -313,14 +340,14 @@ namespace UserInterface.Presenters
                 string testName = this.GetWordFromLine(this.view.Editor.CurrentLineNumber, "Test:", false);
                 if (simulationName != null && testName != null)
                 {
-                    e.Items.Add("=");
-                    e.Items.Add("<");
-                    e.Items.Add(">");
-                    e.Items.Add("AllPositive");
-                    e.Items.Add("between");
-                    e.Items.Add("mean=");
-                    e.Items.Add("tolerance=");
-                    e.Items.Add("CompareToInput=");
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "=" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "<" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = ">" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "AllPositive" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "between" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "mean=" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "tolerance=" });
+                    e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = "CompareToInput=" });
                 }
             }
         }
@@ -329,7 +356,8 @@ namespace UserInterface.Presenters
         /// Return the name of the table from the specified line.
         /// </summary>
         /// <param name="lineNumber">The line number to parse</param>
-        /// <param name="toEndOfLine">If true then the remainder of the line will be returned, othewise a space is used as a delimiter</param>
+        /// <param name="keyWord">The keyword</param>
+        /// <param name="toEndOfLine">If true then the remainder of the line will be returned, otherwise a space is used as a delimiter</param>
         /// <returns>Returns the table name or null if none was specified</returns>
         private string GetWordFromLine(int lineNumber, string keyWord, bool toEndOfLine)
         {
@@ -364,19 +392,20 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The model has changed, update the grid.
         /// </summary>
-        private void OnModelChanged(object ChangedModel)
+        /// <param name="changedModel">The changed model</param>
+        private void OnModelChanged(object changedModel)
         {
-            if (ChangedModel == tests)
+            if (changedModel == this.tests)
             {
-                PopulateView();
+                this.PopulateView();
             }
         }
 
         /// <summary>
         /// User has changed the table name.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
         private void OnTableNameChanged(object sender, EventArgs e)
         {
             this.view.Data = this.dataStore.GetData("*", this.view.TableName);

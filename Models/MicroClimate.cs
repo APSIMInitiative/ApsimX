@@ -12,49 +12,87 @@ using System.Xml.Serialization;
 
 namespace Models
 {
+    /// <summary>
+    /// A new canopy type
+    /// </summary>
     [Serializable]
     public class NewCanopyType
     {
+        /// <summary>The sender</summary>
         public string sender = "";
+        /// <summary>The height</summary>
         public double height;
+        /// <summary>The depth</summary>
         public double depth;
+        /// <summary>The lai</summary>
         public double lai;
+        /// <summary>The lai_tot</summary>
         public double lai_tot;
+        /// <summary>The cover</summary>
         public double cover;
+        /// <summary>The cover_tot</summary>
         public double cover_tot;
     }
+    /// <summary>
+    /// A canopy energy balance type
+    /// </summary>
     [Serializable]
     public class CanopyEnergyBalanceInterceptionlayerType
     {
+        /// <summary>The thickness</summary>
         public double thickness;
+        /// <summary>The amount</summary>
         public double amount;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class KeyValueArraypair_listType
     {
+        /// <summary>The key</summary>
         public string key = "";
+        /// <summary>The value</summary>
         public double value;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ChangeGSMaxType
     {
+        /// <summary>The component</summary>
         public string component = "";
+        /// <summary>The DLT</summary>
         public double dlt;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class KeyValueArrayType
     {
+        /// <summary>The pair_list</summary>
         public KeyValueArraypair_listType[] pair_list;
     }
-    
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Data">The data.</param>
     public delegate void KeyValueArraypair_listDelegate(KeyValueArraypair_listType Data);
 
 
+    /// <summary>
+    /// A more-or-less direct port of the Fortran MicroMet model
+    /// Ported by Eric Zurcher Jun 2011, first to C#, then automatically
+    /// to VB via the converter in SharpDevelop.
+    /// Ported back to C# by Dean Holzworth
+    /// </summary>
     /// <remarks>
     /// <para>
     /// I have generally followed the original division of interface code and "science" code
     /// into different units (formerly MicroMet.for and MicroScience.for)
     /// </para>
-    ///
     /// <para>
     /// Function routines were changed slightly as part of the conversion process. The "micromet_"
     /// prefixes were dropped, as the functions are now members of a MicroMet class, and that class
@@ -62,8 +100,7 @@ namespace Models
     /// some function names (e.g., CalcAverageT) if, after dropping the old "micromet_" prefix, there
     /// was potential confusion between the function name and a variable name.
     /// </para>
-    ///
-    /// <para> The following Fortran routines, originally in MicroScience.for, were NOT converted, 
+    /// <para> The following Fortran routines, originally in MicroScience.for, were NOT converted,
     /// because they were not actively being used:</para>
     /// <para>    micromet_PenmanMonteith (the converted routine below was originally micromet_Penman_Monteith from MicroMet.for)</para>
     /// <para>    micromet_ActualCanopyCond (the routine below was originally micromet_CanopyConductance)</para>
@@ -74,31 +111,27 @@ namespace Models
     /// <para>    micromet_FreeEvapRate</para>
     /// <para>    micromet_AerodynamicConductance (the routine below was originally micromet_AerodynamicConductanceFAO)</para>
     /// </remarks>
-    /// <summary>
-    /// A more-or-less direct port of the Fortran MicroMet model
-    /// Ported by Eric Zurcher Jun 2011, first to C#, then automatically
-    /// to VB via the converter in SharpDevelop.
-    /// Ported back to C# by Dean Holzworth
-    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public partial class MicroClimate : Model
     {
+        /// <summary>The zone</summary>
         [Link]
         Zone zone = null;
 
+        /// <summary>The clock</summary>
         [Link]
         Clock Clock = null;
 
+        /// <summary>The weather</summary>
         [Link]
-        WeatherFile Weather = null;
+        Weather Weather = null;
 
+        /// <summary>The _albedo</summary>
         private double _albedo = 0;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         public MicroClimate()
         {
             a_interception = 0.0;
@@ -111,25 +144,35 @@ namespace Models
 
         #region "Parameters used to initialise the model"
         #region "Parameters set in the GUI by the user"
+        /// <summary>Gets or sets the a_interception.</summary>
+        /// <value>The a_interception.</value>
         [Description("a_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm/mm")]
         public double a_interception { get; set; }
 
+        /// <summary>Gets or sets the b_interception.</summary>
+        /// <value>The b_interception.</value>
         [Description("b_interception")]
         [Bounds(Lower = 0.0, Upper = 5.0)]
         public double b_interception {get; set;}
 
+        /// <summary>Gets or sets the c_interception.</summary>
+        /// <value>The c_interception.</value>
         [Description("c_interception")]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         public double c_interception { get; set; }
 
+        /// <summary>Gets or sets the d_interception.</summary>
+        /// <value>The d_interception.</value>
         [Description("d_interception")]
         [Bounds(Lower = 0.0, Upper = 20.0)]
         [Units("mm")]
         public double d_interception { get; set; }
 
+        /// <summary>Gets or sets the soil_albedo.</summary>
+        /// <value>The soil_albedo.</value>
         [Description("soil albedo")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double soil_albedo { get; set; }
@@ -137,57 +180,68 @@ namespace Models
         #endregion
 
         #region "Parameters not normally settable from the GUI by the user"
+        /// <summary>The air_pressure</summary>
         [Bounds(Lower = 900.0, Upper = 1100.0)]
         [Units("hPa")]
         [Description("")]
 
         public double air_pressure = 1010;
+        /// <summary>The soil_emissivity</summary>
         [Bounds(Lower = 0.9, Upper = 1.0)]
         [Units("")]
         [Description("")]
 
         public double soil_emissivity = 0.96;
 
+        /// <summary>The sun_angle</summary>
         [Bounds(Lower = -20.0, Upper = 20.0)]
         [Units("deg")]
         [Description("")]
 
         public double sun_angle = 15.0;
+        /// <summary>The soil_heat_flux_fraction</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
         [Description("")]
 
         public double soil_heat_flux_fraction = 0.4;
+        /// <summary>The night_interception_fraction</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
         [Description("")]
 
         public double night_interception_fraction = 0.5;
+        /// <summary>The windspeed_default</summary>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m/s")]
         [Description("")]
 
         public double windspeed_default = 3.0;
+        /// <summary>The refheight</summary>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("m")]
         [Description("")]
 
         public double refheight = 2.0;
+        /// <summary>The albedo</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("")]
 
         public double albedo = 0.15;
+        /// <summary>The emissivity</summary>
         [Bounds(Lower = 0.9, Upper = 1.0)]
         [Units("0-1")]
         [Description("")]
 
         public double emissivity = 0.96;
+        /// <summary>The gsmax</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("m/s")]
         [Description("")]
 
         public double gsmax = 0.01;
+        /// <summary>The R50</summary>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("W/m^2")]
         [Description("")]
@@ -199,6 +253,8 @@ namespace Models
 
         #region "Outputs we make available"
 
+        /// <summary>Gets the interception.</summary>
+        /// <value>The interception.</value>
         [Units("mm")]
         public double interception
         {
@@ -216,18 +272,24 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the gc.</summary>
+        /// <value>The gc.</value>
         public double gc
         {
             // Should this be returning a sum or an array instead of just the first value???
             get { return ((ComponentData.Count > 0) && (numLayers > 0)) ? ComponentData[0].Gc[0] : 0.0; }
         }
 
+        /// <summary>Gets the ga.</summary>
+        /// <value>The ga.</value>
         public double ga
         {
             // Should this be returning a sum or an array instead of just the first value???
             get { return ((ComponentData.Count > 0) && (numLayers > 0)) ? ComponentData[0].Ga[0] : 0.0; }
         }
 
+        /// <summary>Gets the petr.</summary>
+        /// <value>The petr.</value>
         public double petr
         {
             get
@@ -244,6 +306,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the peta.</summary>
+        /// <value>The peta.</value>
         public double peta
         {
             get
@@ -260,27 +324,37 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the net_radn.</summary>
+        /// <value>The net_radn.</value>
         public double net_radn
         {
             get { return radn * (1.0 - _albedo) + netLongWave; }
         }
 
+        /// <summary>Gets the net_rs.</summary>
+        /// <value>The net_rs.</value>
         public double net_rs
         {
             get { return radn * (1.0 - _albedo); }
         }
 
+        /// <summary>Gets the net_rl.</summary>
+        /// <value>The net_rl.</value>
         public double net_rl
         {
             get { return netLongWave; }
         }
 
+        /// <summary>The soil_heat</summary>
         [XmlIgnore]
         public double soil_heat = 0.0;
 
+        /// <summary>The dryleaffraction</summary>
         [XmlIgnore]
         public double dryleaffraction = 0.0;
 
+        /// <summary>Gets the gsmax_array.</summary>
+        /// <value>The gsmax_array.</value>
         public KeyValueArrayType gsmax_array
         {
             get
@@ -300,6 +374,9 @@ namespace Models
 
         #region "Events to which we subscribe, and their handlers"
 
+        /// <summary>Called when [do daily initialisation].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
@@ -308,6 +385,9 @@ namespace Models
             //DateUtility.JulianDayNumberToDayOfYear(time.startday, day, year)
         }
 
+        /// <summary>Called when [change gs maximum].</summary>
+        /// <param name="ChangeGSMax">The change gs maximum.</param>
+        /// <exception cref="System.Exception">Unknown Canopy Component:  + Convert.ToString(ChangeGSMax.component)</exception>
         [EventSubscribe("ChangeGSMax")]
         private void OnChangeGSMax(ChangeGSMaxType ChangeGSMax)
         {
@@ -321,9 +401,9 @@ namespace Models
 
 
 
-        /// <summary>
-        /// Obtain all relevant met data
-        /// </summary>
+        /// <summary>Obtain all relevant met data</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
@@ -335,6 +415,9 @@ namespace Models
             wind = Weather.MetData.Wind;
         }
 
+        /// <summary>Called when [do canopy].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCanopy")]
         private void OnDoCanopy(object sender, EventArgs e)
         {
@@ -347,6 +430,14 @@ namespace Models
             SendEnergyBalanceEvent();
         }
 
+        /// <summary>Called when [do canopy energy balance].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="System.Exception">
+        /// Unknown Canopy Component:  + crop.CropType
+        /// or
+        /// Unknown Canopy Component:  + crop2.CropType
+        /// </exception>
         [EventSubscribe("DoCanopyEnergyBalance")]
         private void OnDoCanopyEnergyBalance(object sender, EventArgs e)
         {
@@ -387,9 +478,10 @@ namespace Models
             SendEnergyBalanceEvent();
         }
 
-        /// <summary>
-        /// Register presence of a new crop
-        /// </summary>
+        /// <summary>Register presence of a new crop</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">Cannot find MicroClimate definition for crop ' + newCrop.Name + '</exception>
         [EventSubscribe("Sowing")]
         private void OnSowing(object sender, EventArgs e)
         {
@@ -426,6 +518,8 @@ namespace Models
             Clear(ComponentData[senderIdx]);
         } */
 
+        /// <summary>Clears the specified c.</summary>
+        /// <param name="c">The c.</param>
         private void Clear(ComponentDataStruct c)
         {
             c.CoverGreen = 0;
@@ -453,6 +547,9 @@ namespace Models
             Util.ZeroArray(c.interception);
         }
 
+        /// <summary>Called when [new canopy].</summary>
+        /// <param name="newCanopy">The new canopy.</param>
+        /// <exception cref="System.Exception">Unknown Canopy Component:  + Convert.ToString(newCanopy.sender)</exception>
         [EventSubscribe("NewCanopy")]
         private void OnNewCanopy(NewCanopyType newCanopy)
         {
@@ -471,6 +568,7 @@ namespace Models
             // Round off a bit and convert mm to m
         }
 
+        /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
@@ -480,6 +578,9 @@ namespace Models
             AddCropTypes();
         }
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -504,149 +605,215 @@ namespace Models
 
         #region "Useful constants"
         // Teten coefficients
+        /// <summary>The SVP_ a</summary>
         private const double svp_A = 6.106;
         // Teten coefficients
+        /// <summary>The SVP_ b</summary>
         private const double svp_B = 17.27;
         // Teten coefficients
+        /// <summary>The SVP_ c</summary>
         private const double svp_C = 237.3;
         // 0 C in Kelvin (g_k)
+        /// <summary>The abs_temp</summary>
         private const double abs_temp = 273.16;
         // universal gas constant (J/mol/K)
+        /// <summary>The r_gas</summary>
         private const double r_gas = 8.3143;
         // molecular weight water (kg/mol)
+        /// <summary>The mwh2o</summary>
         private const double mwh2o = 0.018016;
         // molecular weight air (kg/mol)
+        /// <summary>The mwair</summary>
         private const double mwair = 0.02897;
         // molecular fraction of water to air ()
+        /// <summary>The molef</summary>
         private const double molef = mwh2o / mwair;
         // Specific heat of air at constant pressure (J/kg/K)
+        /// <summary>The cp</summary>
         private const double Cp = 1010.0;
         // Stefan-Boltzman constant
+        /// <summary>The stef_boltz</summary>
         private const double stef_boltz = 5.67E-08;
         // constant for cloud effect on longwave radiation
+        /// <summary>The c_cloud</summary>
         private const double c_cloud = 0.1;
         // convert degrees to radians
+        /// <summary>The deg2 RAD</summary>
         private const double Deg2Rad = Math.PI / 180.0;
         // kg/m3
+        /// <summary>The rho w</summary>
         private const double RhoW = 998.0;
         // weights vpd towards vpd at maximum temperature
+        /// <summary>The svp_fract</summary>
         private const double svp_fract = 0.66;
+        /// <summary>The sun set angle</summary>
         private const double SunSetAngle = 0.0;
         // hours to seconds
+        /// <summary>The HR2S</summary>
         private const double hr2s = 60.0 * 60.0;
         #endregion
         #region "Various class variables"
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         public class ComponentDataStruct
         {
+            /// <summary>The name</summary>
             public string Name;
+            /// <summary>The type</summary>
             public string Type;
+            /// <summary>The crop</summary>
             public ICrop Crop;
+            /// <summary>The crop2</summary>
             public ICrop2 Crop2;
 
+            /// <summary>The lai</summary>
             [XmlIgnore]
             public double LAI;
+            /// <summary>The la itot</summary>
             [XmlIgnore]
             public double LAItot;
+            /// <summary>The cover green</summary>
             [XmlIgnore]
             public double CoverGreen;
+            /// <summary>The cover tot</summary>
             [XmlIgnore]
             public double CoverTot;
+            /// <summary>The ktot</summary>
             [XmlIgnore]
             public double Ktot;
+            /// <summary>The k</summary>
             [XmlIgnore]
             public double K;
+            /// <summary>The height</summary>
             [XmlIgnore]
             public double Height;
+            /// <summary>The depth</summary>
             [XmlIgnore]
             public double Depth;
+            /// <summary>Gets or sets the albedo.</summary>
+            /// <value>The albedo.</value>
             [XmlIgnore]
             public double Albedo {get; set;}
+            /// <summary>Gets or sets the emissivity.</summary>
+            /// <value>The emissivity.</value>
             [XmlIgnore]
             public double Emissivity {get; set;}
+            /// <summary>Gets or sets the gsmax.</summary>
+            /// <value>The gsmax.</value>
             [XmlIgnore]
             public double Gsmax {get; set;}
+            /// <summary>Gets or sets the R50.</summary>
+            /// <value>The R50.</value>
             [XmlIgnore]
             public double R50 {get; set;}
+            /// <summary>The FRGR</summary>
             [XmlIgnore]
             public double Frgr;
+            /// <summary>The layer lai</summary>
             [XmlIgnore]
             public double[] layerLAI;
+            /// <summary>The layer la itot</summary>
             [XmlIgnore]
             public double[] layerLAItot;
+            /// <summary>The ftot</summary>
             [XmlIgnore]
             public double[] Ftot;
+            /// <summary>The fgreen</summary>
             [XmlIgnore]
             public double[] Fgreen;
+            /// <summary>The rs</summary>
             [XmlIgnore]
             public double[] Rs;
+            /// <summary>The rl</summary>
             [XmlIgnore]
             public double[] Rl;
+            /// <summary>The rsoil</summary>
             [XmlIgnore]
             public double[] Rsoil;
+            /// <summary>The gc</summary>
             [XmlIgnore]
             public double[] Gc;
+            /// <summary>The ga</summary>
             [XmlIgnore]
             public double[] Ga;
+            /// <summary>The pet</summary>
             [XmlIgnore]
             public double[] PET;
+            /// <summary>The pe tr</summary>
             [XmlIgnore]
             public double[] PETr;
+            /// <summary>The pe ta</summary>
             [XmlIgnore]
             public double[] PETa;
+            /// <summary>The omega</summary>
             [XmlIgnore]
             public double[] Omega;
+            /// <summary>The interception</summary>
             [XmlIgnore]
             public double[] interception;
         }
 
+        /// <summary>Adds the crop types.</summary>
         private void AddCropTypes()
         {
-            SetupCropTypes("crop", "Crop");
-            SetupCropTypes("broccoli", "Crop");
-            SetupCropTypes("tree", "Tree");
-            SetupCropTypes("eucalyptus", "Tree");
-            SetupCropTypes("SimpleTree", "Tree");
-            SetupCropTypes("oilpalm", "Tree");
-            SetupCropTypes("oilmallee", "Tree");
-            SetupCropTypes("globulus", "Tree");
-            SetupCropTypes("camaldulensis", "Tree");
-            SetupCropTypes("grass", "Grass");
-            SetupCropTypes("wheat", "Crop");
-            SetupCropTypes("barley", "Crop");
-            SetupCropTypes("canola", "Crop");
-            SetupCropTypes("raphanus_raphanistrum", "Crop");
-            SetupCropTypes("lolium_rigidum", "Crop");
-            SetupCropTypes("chickpea", "Crop");
-            SetupCropTypes("weed", "Crop");
-            SetupCropTypes("oats", "Crop");
-            SetupCropTypes("chickpea", "Crop");
-            SetupCropTypes("fieldpea", "Crop");
-            SetupCropTypes("sugar", "Crop");
-            SetupCropTypes("potato", "Potato");
-            SetupCropTypes("frenchbean", "Crop");
+            // Could we keep this list in alphabetical order, please
+            ComponentDataDefinitions.Clear();
+            SetupCropTypes("AgPasture", "Crop");
             SetupCropTypes("bambatsi", "C4grass");
+            SetupCropTypes("banksia", "Tree");
+            SetupCropTypes("barley", "Crop");
+            SetupCropTypes("broccoli", "Crop");
+            SetupCropTypes("Browntop", "Grass");
+            SetupCropTypes("camaldulensis", "Tree");
+            SetupCropTypes("canola", "Crop");
+            SetupCropTypes("Carrots4", "Crop");
+            SetupCropTypes("chickpea", "Crop");
+            SetupCropTypes("Chicory", "Forage");
+            SetupCropTypes("Cocksfoot", "Grass");
+            SetupCropTypes("crop", "Crop");
+            SetupCropTypes("danthonia", "Grass");
+            SetupCropTypes("eucalyptus", "Tree");
+            SetupCropTypes("fieldpea", "Crop");
+            SetupCropTypes("frenchbean", "Crop");
+            SetupCropTypes("globulus", "Tree");
+            SetupCropTypes("grass", "Grass");
+            SetupCropTypes("kale2", "Crop");
+            SetupCropTypes("lolium_rigidum", "Crop");
             SetupCropTypes("lucerne", "Crop");
             SetupCropTypes("maize", "Crop");
-            SetupCropTypes("banksia", "Tree");
-            SetupCropTypes("understorey", "Crop");
-            SetupCropTypes("ryegrass", "Grass");
-            SetupCropTypes("vine", "Crop");
-            SetupCropTypes("saltbush", "Tree");
-            SetupCropTypes("sorghum", "Crop");
-            SetupCropTypes("danthonia", "Grass");
             SetupCropTypes("nativepasture", "C4Grass");
-            SetupCropTypes("raphanus_raphanistrum", "Crop");
-            SetupCropTypes("canola", "Crop");
-            SetupCropTypes("kale2", "Crop");
-            SetupCropTypes("Carrots4", "Crop");
+            SetupCropTypes("oats", "Crop");
+            SetupCropTypes("oilmallee", "Tree");
+            SetupCropTypes("oilpalm", "Tree");
+            SetupCropTypes("Paspalum", "Grass");
+            SetupCropTypes("Plantain", "Forage");
             SetupCropTypes("PMFSlurp", "Crop");
+            SetupCropTypes("potato", "Potato");
+            SetupCropTypes("Kikuyu", "Grass");
+            SetupCropTypes("raphanus_raphanistrum", "Crop");
+            SetupCropTypes("ryegrass", "Grass");
+            SetupCropTypes("saltbush", "Tree");
+            SetupCropTypes("SimpleTree", "Tree");
             SetupCropTypes("Slurp", "Crop");
-            SetupCropTypes("AgPasture", "Crop");
+            SetupCropTypes("sorghum", "Crop");
+            SetupCropTypes("sugar", "Crop");
+            SetupCropTypes("Sward", "Pasture");
+            SetupCropTypes("tree", "Tree");
+            SetupCropTypes("TallFescue", "Grass");
+            SetupCropTypes("understorey", "Crop");
+            SetupCropTypes("vine", "Crop");
+            SetupCropTypes("weed", "Crop");
+            SetupCropTypes("wheat", "Crop");
             SetupCropTypes("WheatPMFPrototype", "Crop");
+            SetupCropTypes("WhiteClover", "Legume");
         }
 
+        /// <summary>Setups the crop types.</summary>
+        /// <param name="Name">The name.</param>
+        /// <param name="Type">The type.</param>
         private void SetupCropTypes(string Name, string Type)
         {
             ComponentDataStruct CropType = new ComponentDataStruct();
@@ -689,40 +856,76 @@ namespace Models
                 CropType.Albedo = 0.15;
                 CropType.R50 = 100;
             }
+            else if (Type.Equals("Pasture") || Type.Equals("Legume") || Type.Equals("Forage"))
+            { // added by rcichota when spliting species in agpasture, still setting all parameters the same, will change in the future
+                CropType.Albedo = 0.26;
+                CropType.Gsmax = 0.011;
+            }
 
-            ComponentData.Add(CropType);
+            ComponentDataDefinitions.Add(CropType);
         }
 
+        /// <summary>The maxt</summary>
         private double maxt;
+        /// <summary>The mint</summary>
         private double mint;
+        /// <summary>The radn</summary>
         private double radn;
+        /// <summary>The rain</summary>
         private double rain;
+        /// <summary>The vp</summary>
         private double vp;
+        /// <summary>The wind</summary>
         private double wind;
+        /// <summary>The use_external_windspeed</summary>
         private bool use_external_windspeed;
 
+        /// <summary>The windspeed_checked</summary>
         private bool windspeed_checked = false;
+        /// <summary>The day</summary>
         private int day;
 
+        /// <summary>The year</summary>
         private int year;
+        /// <summary>The net long wave</summary>
         private double netLongWave;
+        /// <summary>The sum rs</summary>
         private double sumRs;
+        /// <summary>The average t</summary>
         private double averageT;
+        /// <summary>The sunshine hours</summary>
         private double sunshineHours;
+        /// <summary>The fraction clear sky</summary>
         private double fractionClearSky;
+        /// <summary>The day length</summary>
         private double dayLength;
+        /// <summary>The day length light</summary>
         private double dayLengthLight;
+        /// <summary>The delta z</summary>
         private double[] DeltaZ = new double[-1 + 1];
+        /// <summary>The layer ktot</summary>
         private double[] layerKtot = new double[-1 + 1];
+        /// <summary>The layer la isum</summary>
         private double[] layerLAIsum = new double[-1 + 1];
+        /// <summary>The number layers</summary>
         private int numLayers;
 
+        private List<ComponentDataStruct> ComponentDataDefinitions = new List<ComponentDataStruct>();
+
+        /// <summary>Gets or sets the component data.</summary>
+        /// <value>The component data.</value>
         [XmlElement("ComponentData")]
         [XmlIgnore]
         public List<ComponentDataStruct> ComponentData { get; set; }
 
         #endregion
 
+        /// <summary>Fetches the table value.</summary>
+        /// <param name="field">The field.</param>
+        /// <param name="compNo">The comp no.</param>
+        /// <param name="layerNo">The layer no.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Unknown table element:  + field</exception>
         private double FetchTableValue(string field, int compNo, int layerNo)
         {
             if (field == "LAI")
@@ -775,6 +978,9 @@ namespace Models
             }
         }
 
+        /// <summary>Finds the index of the component.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         private int FindComponentIndex(string name)
         {
             for (int i = 0; i <= ComponentData.Count - 1; i++)
@@ -784,18 +990,22 @@ namespace Models
                     return i;
                 }
             }
-            // Couldn't find
-
-            if (name.Equals("wheat", StringComparison.CurrentCultureIgnoreCase))
+            // Couldn't find - see if the name is in the ComponentDataDefinitions. If it
+            // is then add it as a componentdata that we need to handle.
+            for (int i = 0; i <= ComponentDataDefinitions.Count - 1; i++)
             {
-                // crop type
-                ComponentData.Add(new ComponentDataStruct());
-                return ComponentData.Count - 1;
+                if (ComponentDataDefinitions[i].Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // found
+                    ComponentData.Add(ComponentDataDefinitions[i]);
+                    return ComponentData.Count - 1;
+                }
             }
             return -1;
         }
 
 
+        /// <summary>Canopies the compartments.</summary>
         private void CanopyCompartments()
         {
             DefineLayers();
@@ -803,6 +1013,7 @@ namespace Models
             LightExtinction();
         }
 
+        /// <summary>Mets the variables.</summary>
         private void MetVariables()
         {
             // averageT = (maxt + mint) / 2.0;
@@ -821,9 +1032,7 @@ namespace Models
             fractionClearSky = Utility.Math.Divide(sunshineHours, dayLengthLight, 0.0);
         }
 
-        /// <summary>
-        /// Break the combined Canopy into layers
-        /// </summary>
+        /// <summary>Break the combined Canopy into layers</summary>
         private void DefineLayers()
         {
             double[] nodes = new double[2 * ComponentData.Count];
@@ -875,9 +1084,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Break the components into layers
-        /// </summary>
+        /// <summary>Break the components into layers</summary>
         private void DivideComponents()
         {
             double[] Ld = new double[ComponentData.Count];
@@ -925,9 +1132,8 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Calculate light extinction parameters
-        /// </summary>
+        /// <summary>Calculate light extinction parameters</summary>
+        /// <exception cref="System.Exception">Unrealistically high cover value in MicroMet i.e. > -.9999</exception>
         private void LightExtinction()
         {
             // Calculate effective K from LAI and cover
@@ -960,9 +1166,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Perform the overall Canopy Energy Balance
-        /// </summary>
+        /// <summary>Perform the overall Canopy Energy Balance</summary>
         private void BalanceCanopyEnergy()
         {
             ShortWaveRadiation();
@@ -971,9 +1175,7 @@ namespace Models
             SoilHeatRadiation();
         }
 
-        /// <summary>
-        /// Calculate the canopy conductance for system compartments
-        /// </summary>
+        /// <summary>Calculate the canopy conductance for system compartments</summary>
         private void CalculateGc()
         {
             double Rin = radn;
@@ -995,9 +1197,7 @@ namespace Models
                 Rin -= Rint;
             }
         }
-        /// <summary>
-        /// Calculate the aerodynamic conductance for system compartments
-        /// </summary>
+        /// <summary>Calculate the aerodynamic conductance for system compartments</summary>
         private void CalculateGa()
         {
             double windspeed = windspeed_default;
@@ -1031,9 +1231,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Calculate the interception loss of water from the canopy
-        /// </summary>
+        /// <summary>Calculate the interception loss of water from the canopy</summary>
         private void CalculateInterception()
         {
             double sumLAI = 0.0;
@@ -1060,9 +1258,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Calculate the Penman-Monteith water demand
-        /// </summary>
+        /// <summary>Calculate the Penman-Monteith water demand</summary>
         private void CalculatePM()
         {
             // zero a few things, and sum a few others
@@ -1105,6 +1301,8 @@ namespace Models
                     // MJ/J
                     netRadiation = Math.Max(0.0, netRadiation);
 
+                    if (j == 39) 
+                        netRadiation += 0.0;
                     componentData.PETr[i] = CalcPETr(netRadiation * dryleaffraction, mint, maxt, air_pressure, componentData.Ga[i], componentData.Gc[i]);
 
                     componentData.PETa[i] = CalcPETa(mint, maxt, vp, air_pressure, dayLength * dryleaffraction, componentData.Ga[i], componentData.Gc[i]);
@@ -1114,9 +1312,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Calculate the aerodynamic decoupling for system compartments
-        /// </summary>
+        /// <summary>Calculate the aerodynamic decoupling for system compartments</summary>
         private void CalculateOmega()
         {
             for (int i = 0; i <= numLayers - 1; i++)
@@ -1130,9 +1326,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// Send an energy balance event
-        /// </summary>
+        /// <summary>Send an energy balance event</summary>
         private void SendEnergyBalanceEvent()
         {
             for (int j = 0; j <= ComponentData.Count - 1; j++)

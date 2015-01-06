@@ -10,7 +10,7 @@
   <title></title>
  </head>
  <body>
-  <p>This is the potato validation</p>
+  <p></p>
  </body>
 </html>]]></MemoText>
   </Memo>
@@ -18,21 +18,15 @@
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
-      <FileNames>
-        <string>Observed\potato_observations.txt</string>
-      </FileNames>
+      <FileName>Observed\potato_observations.txt</FileName>
     </Input>
     <Input>
       <Name>InputRadInd</Name>
-      <FileNames>
-        <string>Observed\Potato_radint_observations.txt</string>
-      </FileNames>
+      <FileName>Observed\Potato_radint_observations.txt</FileName>
     </Input>
     <Input>
       <Name>InputNodeNo</Name>
-      <FileNames>
-        <string>Observed\cultivar_nodenumber.txt</string>
-      </FileNames>
+      <FileName>Observed\cultivar_nodenumber.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
@@ -195,10 +189,10 @@
     </Factors>
     <Simulation>
       <Name>RussetBurbank</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2003-10-20T00:00:00</StartDate>
@@ -214,7 +208,7 @@
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -291,70 +285,23 @@
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>4.4</SummerCona>
-            <SummerU>9</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>4.4</WinterCona>
-            <WinterU>9</WinterU>
+            <SummerU>9</SummerU>
+            <SummerCona>4.4</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.18</Salb>
             <CN2Bare>0</CN2Bare>
             <CNRed>-9E-05</CNRed>
             <CNCov>0</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -621,7 +568,7 @@
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -712,7 +659,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;
@@ -773,29 +720,29 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NO3N = Utility.Math.Sum(Soil.NO3N);
+			NH4N = Utility.Math.Sum(Soil.NH4N);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            int layers = Soil.SoilWater.dlayer.Length;
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSurfaceOMN = SOM.N;
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -820,17 +767,17 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
-			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
-			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }
@@ -1017,6 +964,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -1236,6 +1185,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -1475,6 +1426,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -1734,6 +1687,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -1833,6 +1788,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>BottomRight</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -1953,7 +1910,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>SoilWater.eo</FieldName>
+                <FieldName>SoilWater.Eo</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -2000,6 +1957,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -2127,6 +2086,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>BottomRight</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -2306,6 +2267,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -2432,6 +2395,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>BottomRight</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -2558,6 +2523,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -2684,6 +2651,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -2783,6 +2752,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Report>
@@ -2802,12 +2773,12 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
             <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.eo</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[ExtraVariables].Script.SWC</string>
             <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.drain</string>
-            <string>[Soil].SoilWater.runoff</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
             <string>[ExtraVariables].Script.OutFlowLat</string>
             <string>[Soil].SoilWater.pond</string>
             <string>[ExtraVariables].Script.AccumEO</string>
@@ -2889,8 +2860,8 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -3070,6 +3041,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -3130,6 +3103,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -3190,6 +3165,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -3250,6 +3227,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -3310,6 +3289,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -3370,6 +3351,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -3430,6 +3413,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -3490,6 +3475,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -3550,6 +3537,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -3610,6 +3599,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -3670,6 +3661,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -3730,6 +3723,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -3788,6 +3783,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -3848,6 +3845,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -3908,6 +3907,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -3948,6 +3949,8 @@ namespace Models
           <SplitOn>Experiment</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -4007,10 +4010,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>BaxtersBase</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1998-10-14T00:00:00</StartDate>
@@ -4053,7 +4056,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -4080,7 +4083,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -4157,70 +4160,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>4.4</SummerCona>
-            <SummerU>9</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>4.4</WinterCona>
-            <WinterU>9</WinterU>
+            <SummerU>9</SummerU>
+            <SummerCona>4.4</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.18</Salb>
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -4461,7 +4417,7 @@ namespace Models
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -4494,7 +4450,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;    
@@ -4555,29 +4511,29 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NO3N = Utility.Math.Sum(Soil.NO3N);
+			NH4N = Utility.Math.Sum(Soil.NH4N);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            int layers = Soil.SoilWater.dlayer.Length;
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSurfaceOMN = SOM.N;
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -4602,17 +4558,17 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
-			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
-			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }
@@ -4799,6 +4755,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -5018,6 +4976,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -5257,6 +5217,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -5516,6 +5478,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -5615,6 +5579,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -5735,7 +5701,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>SoilWater.eo</FieldName>
+                <FieldName>SoilWater.Eo</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -5782,6 +5748,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -5909,6 +5877,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -6088,6 +6058,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -6214,6 +6186,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -6340,6 +6314,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -6466,6 +6442,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -6565,6 +6543,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Report>
@@ -6584,12 +6564,12 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
             <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.eo</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[ExtraVariables].Script.SWC</string>
             <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.drain</string>
-            <string>[Soil].SoilWater.runoff</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
             <string>[ExtraVariables].Script.OutFlowLat</string>
             <string>[Soil].SoilWater.pond</string>
             <string>[ExtraVariables].Script.AccumEO</string>
@@ -6671,8 +6651,8 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -6945,6 +6925,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -7005,6 +6987,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -7065,6 +7049,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -7125,6 +7111,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -7185,6 +7173,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -7245,6 +7235,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -7305,6 +7297,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -7365,6 +7359,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -7425,6 +7421,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -7485,6 +7483,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -7545,6 +7545,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -7605,6 +7607,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -7663,6 +7667,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -7723,6 +7729,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -7783,6 +7791,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -7823,6 +7833,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -7895,10 +7907,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>FSPBase</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Pukehohe.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2000-05-01T00:00:00</StartDate>
@@ -7941,7 +7953,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -7968,7 +7980,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -8045,70 +8057,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>0</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>4.4</SummerCona>
-            <SummerU>9</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>4.4</WinterCona>
-            <WinterU>9</WinterU>
+            <SummerU>9</SummerU>
+            <SummerCona>4.4</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.18</Salb>
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -8397,7 +8362,7 @@ namespace Models
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -8430,7 +8395,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;  
@@ -8491,29 +8456,29 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NO3N = Utility.Math.Sum(Soil.NO3N);
+			NH4N = Utility.Math.Sum(Soil.NH4N);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            int layers = Soil.SoilWater.dlayer.Length;
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSurfaceOMN = SOM.N;
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -8538,17 +8503,17 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
-			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
-			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }
@@ -8735,6 +8700,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -8954,6 +8921,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -9193,6 +9162,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -9452,6 +9423,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -9551,6 +9524,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -9671,7 +9646,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>SoilWater.eo</FieldName>
+                <FieldName>SoilWater.Eo</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -9718,6 +9693,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -9845,6 +9822,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -10024,6 +10003,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -10150,6 +10131,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -10276,6 +10259,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -10402,6 +10387,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -10501,6 +10488,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Report>
@@ -10520,12 +10509,12 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
             <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.eo</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[ExtraVariables].Script.SWC</string>
             <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.drain</string>
-            <string>[Soil].SoilWater.runoff</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
             <string>[ExtraVariables].Script.OutFlowLat</string>
             <string>[Soil].SoilWater.pond</string>
             <string>[ExtraVariables].Script.AccumEO</string>
@@ -10607,8 +10596,8 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -10808,6 +10797,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -10868,6 +10859,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -10928,6 +10921,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -10988,6 +10983,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -11048,6 +11045,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -11108,6 +11107,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -11168,6 +11169,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -11228,6 +11231,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -11288,6 +11293,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -11348,6 +11355,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -11408,6 +11417,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -11468,6 +11479,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -11526,6 +11539,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -11586,6 +11601,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -11646,6 +11663,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -11686,6 +11705,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -11747,10 +11768,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>FUE_NI_base</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Pukehohe.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>2004-05-10T00:00:00</StartDate>
@@ -11793,7 +11814,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11820,7 +11841,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>potato2</Name>
+              <Name>potato2Soil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11847,7 +11868,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -11924,70 +11945,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>0</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>4.4</SummerCona>
-            <SummerU>9</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>4.4</WinterCona>
-            <WinterU>9</WinterU>
+            <SummerU>9</SummerU>
+            <SummerCona>4.4</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.18</Salb>
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -12327,7 +12301,7 @@ namespace Models
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -12361,7 +12335,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;
@@ -12422,29 +12396,29 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NO3N = Utility.Math.Sum(Soil.NO3N);
+			NH4N = Utility.Math.Sum(Soil.NH4N);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            int layers = Soil.SoilWater.dlayer.Length;
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSurfaceOMN = SOM.N;
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -12469,17 +12443,17 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
-			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
-			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }
@@ -12502,12 +12476,12 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
             <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.eo</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[ExtraVariables].Script.SWC</string>
             <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.drain</string>
-            <string>[Soil].SoilWater.runoff</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
             <string>[ExtraVariables].Script.OutFlowLat</string>
             <string>[Soil].SoilWater.pond</string>
             <string>[ExtraVariables].Script.AccumEO</string>
@@ -12589,8 +12563,8 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -12848,6 +12822,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -13067,6 +13043,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -13306,6 +13284,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -13565,6 +13545,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -13664,6 +13646,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -13784,7 +13768,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>SoilWater.eo</FieldName>
+                <FieldName>SoilWater.Eo</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -13831,6 +13815,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -13958,6 +13944,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -14137,6 +14125,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -14263,6 +14253,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -14389,6 +14381,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -14515,6 +14509,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -14614,6 +14610,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Manager>
@@ -14723,6 +14721,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -14783,6 +14783,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -14843,6 +14845,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -14903,6 +14907,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -14963,6 +14969,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -15023,6 +15031,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -15083,6 +15093,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -15143,6 +15155,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -15203,6 +15217,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -15263,6 +15279,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -15323,6 +15341,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -15383,6 +15403,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -15441,6 +15463,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -15501,6 +15525,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -15561,6 +15587,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -15601,6 +15629,8 @@ namespace Models
           <SplitOn>Experiment</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -15701,10 +15731,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>FUE_base</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1999-10-19T00:00:00</StartDate>
@@ -15747,7 +15777,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -15774,7 +15804,7 @@ namespace Models
               </XF>
             </SoilCrop>
             <SoilCrop>
-              <Name>Potato</Name>
+              <Name>PotatoSoil</Name>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -15851,70 +15881,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>4.4</SummerCona>
-            <SummerU>9</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>4.4</WinterCona>
-            <WinterU>9</WinterU>
+            <SummerU>9</SummerU>
+            <SummerCona>4.4</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.18</Salb>
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -16240,7 +16223,7 @@ namespace Models
 				double PlantPopulation = 1/((RowWidth/1000)*(RowSpace/1000));
 
 				if (Clock.Today.Date == SowingDate)
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Required  Seeds sowing/m2
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -16368,7 +16351,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;          
@@ -16429,29 +16412,29 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NO3N = Utility.Math.Sum(Soil.NO3N);
+			NH4N = Utility.Math.Sum(Soil.NH4N);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            int layers = Soil.SoilWater.dlayer.Length;
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSurfaceOMN = SOM.N;
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -16476,17 +16459,17 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
-			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
-			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 
 		}
 	}
@@ -16510,12 +16493,12 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
             <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.eo</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[ExtraVariables].Script.SWC</string>
             <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.drain</string>
-            <string>[Soil].SoilWater.runoff</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
             <string>[ExtraVariables].Script.OutFlowLat</string>
             <string>[Soil].SoilWater.pond</string>
             <string>[ExtraVariables].Script.AccumEO</string>
@@ -16597,8 +16580,8 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -16798,6 +16781,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -17017,6 +17002,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -17256,6 +17243,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -17515,6 +17504,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -17614,6 +17605,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -17734,7 +17727,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>SoilWater.eo</FieldName>
+                <FieldName>SoilWater.Eo</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -17781,6 +17774,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -17908,6 +17903,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -18087,6 +18084,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -18213,6 +18212,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -18339,6 +18340,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -18465,6 +18468,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -18564,6 +18569,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Manager>
@@ -18737,6 +18744,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -18797,6 +18806,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -18857,6 +18868,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -18917,6 +18930,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -18977,6 +18992,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -19037,6 +19054,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -19097,6 +19116,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -19157,6 +19178,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -19217,6 +19240,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -19277,6 +19302,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -19337,6 +19364,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -19397,6 +19426,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -19455,6 +19486,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -19515,6 +19548,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -19575,6 +19610,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -19615,6 +19652,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -19787,10 +19826,10 @@ namespace Models
     </Factors>
     <Simulation>
       <Name>Parilla_base</Name>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Lameroo.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Clock>
         <Name>clock</Name>
         <StartDate>2007-11-22T00:00:00</StartDate>
@@ -19833,7 +19872,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>potato</Name>
+              <Name>potatoSoil</Name>
               <LL>
                 <double>0.06</double>
                 <double>0.06</double>
@@ -19910,70 +19949,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>4.4</SummerCona>
-            <SummerU>9</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>4.4</WinterCona>
-            <WinterU>9</WinterU>
+            <SummerU>9</SummerU>
+            <SummerCona>4.4</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.18</Salb>
             <CN2Bare>68</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -20320,7 +20312,7 @@ namespace Models
 
 				if (Clock.Today.Date == SowingDate)
 				{
-                    Potato.Sow(Population:PlantPopulation, Cultivar:CultivarName, Depth:PlantingDepth, BudNumber:StemNumberPerSeedTuber);
+                    Potato.Sow(population:PlantPopulation, cultivar:CultivarName, depth:PlantingDepth, rowSpacing:150, budNumber:StemNumberPerSeedTuber);
                  }
                     
                 //Potato.Sow(... Contains the following arguements:
@@ -21039,7 +21031,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Soils.Soil Soil;
 		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] WeatherFile Met;   
+		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
 		[Link] Plant Potato;
@@ -21101,29 +21093,29 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.SoilNitrogen.no3);
-			NH4N = Utility.Math.Sum(Soil.SoilNitrogen.nh4);
+			NO3N = Utility.Math.Sum(Soil.NO3N);
+			NH4N = Utility.Math.Sum(Soil.NH4N);
 			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
 			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            int layers = Soil.SoilWater.dlayer.Length;
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
-				InitialSurfaceOMN = SOM.surfaceom_n;
+				InitialSurfaceOMN = SOM.N;
 				InitialSoilOMN = OrganicN;
 				InitialMineralN = MineralN;
 				InitialDay = false;
 			}
 			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -21148,17 +21140,17 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.fom_n);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.hum_n);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.biom_n);
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
-			AccumEO -= Soil.SoilWater.eo;
-			AccumES -= Soil.SoilWater.es; 
-			AccumDrainage -= Soil.SoilWater.drain;
-			AccumRunoff -= Soil.SoilWater.runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.sw_dep);
-			DUL = Utility.Math.Sum(Soil.SoilWater.dul_dep);
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 
 		}
 	}
@@ -21182,12 +21174,12 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
             <string>Potato.Root.NSupplyUptake</string>
-            <string>[Soil].SoilWater.eo</string>
-            <string>[Soil].SoilWater.es</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
             <string>[ExtraVariables].Script.SWC</string>
             <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.drain</string>
-            <string>[Soil].SoilWater.runoff</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
             <string>[ExtraVariables].Script.OutFlowLat</string>
             <string>[Soil].SoilWater.pond</string>
             <string>[ExtraVariables].Script.AccumEO</string>
@@ -21269,8 +21261,8 @@ namespace Models
             <string>Potato.Stem.Live.NonStructuralWt</string>
             <string>Potato.Leaf.SpecificArea</string>
             <string>Potato.Leaf.ExpandedCohortNo</string>
-            <string>[Soil].SoilWater.sw_dep</string>
-            <string>[Soil].SoilNitrogen.no3</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>Potato.Arbitrator.NDemand</string>
             <string>[MicroClimate].net_radn</string>
@@ -21470,6 +21462,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -21689,6 +21683,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -21928,6 +21924,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -22187,6 +22185,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -22286,6 +22286,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -22406,7 +22408,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>SoilWater.eo</FieldName>
+                <FieldName>SoilWater.Eo</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -22453,6 +22455,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -22580,6 +22584,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -22759,6 +22765,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -22885,6 +22893,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -23011,6 +23021,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -23137,6 +23149,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -23236,6 +23250,8 @@ namespace Models
               <SplitOn>Simulation</SplitOn>
             </Series>
             <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
           </Graph>
         </Folder>
         <Manager>
@@ -23346,6 +23362,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -23406,6 +23424,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -23466,6 +23486,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -23526,6 +23548,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -23586,6 +23610,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -23646,6 +23672,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -23706,6 +23734,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -23766,6 +23796,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -23826,6 +23858,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -23886,6 +23920,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -23946,6 +23982,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -24006,6 +24044,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -24064,6 +24104,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -24124,6 +24166,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -24184,6 +24228,8 @@ namespace Models
           <SplitOn>Simulation</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -24224,6 +24270,8 @@ namespace Models
           <SplitOn>*</SplitOn>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
       </Graph>
     </Folder>
   </Experiment>
@@ -24261,11 +24309,13 @@ namespace Models
         <TableName>FinalYieldData</TableName>
         <FieldName>Predicted.Potato.Tuber.LiveFWt</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>Tuber Biomass Comparison</Name>
@@ -24301,11 +24351,13 @@ namespace Models
         <TableName>FinalYieldData</TableName>
         <FieldName>Predicted.Potato.Tuber.Live.Wt</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>LeafAreaIndex</Name>
@@ -24341,11 +24393,13 @@ namespace Models
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Potato.Leaf.LAI</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>Tuber Nitrogen</Name>
@@ -24381,11 +24435,13 @@ namespace Models
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.Potato.Tuber.Live.N</FieldName>
       </Y>
-      <ShowRegressionLine>true</ShowRegressionLine>
+      <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
       <SplitOn>Experiment</SplitOn>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <ExplorerWidth>351</ExplorerWidth>
 </Simulations>

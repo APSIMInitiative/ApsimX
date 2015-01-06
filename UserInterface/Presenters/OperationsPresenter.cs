@@ -100,7 +100,7 @@ namespace UserInterface.Presenters
 
                 if (o != null)
                 {
-                    e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true));
+                    e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true, false));
                 }
             }
         }

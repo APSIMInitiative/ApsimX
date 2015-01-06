@@ -8,35 +8,54 @@ using Models.Core;
 namespace Models.Soils
 {
 
-    /// <summary>
-    /// This partial class contains the various methods to handle patches
-    /// </summary>
-
+    /// <summary>This partial class contains the various methods to handle patches</summary>
     public partial class SoilNitrogen
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class AddSoilCNPatchType
         {
+            /// <summary>The sender</summary>
             public String Sender = "";
+            /// <summary>The deposition type</summary>
             public String DepositionType = "";
+            /// <summary>The affected patches_nm</summary>
             public String[] AffectedPatches_nm;
+            /// <summary>The affected patches_id</summary>
             public Int32[] AffectedPatches_id;
+            /// <summary>The area fraction</summary>
             public Double AreaFraction;
+            /// <summary>The patch name</summary>
             public String PatchName = "";
+            /// <summary>The water</summary>
             public Double[] Water;
+            /// <summary>The urea</summary>
             public Double[] Urea;
+            /// <summary>The n h4</summary>
             public Double[] NH4;
+            /// <summary>The n o3</summary>
             public Double[] NO3;
+            /// <summary>The pox</summary>
             public Double[] POX;
+            /// <summary>The s o4</summary>
             public Double[] SO4;
+            /// <summary>The ash alk</summary>
             public Double[] AshAlk;
+            /// <summary>The fo m_ c</summary>
             public Double[] FOM_C;
+            /// <summary>The fo m_ c_pool1</summary>
             public Double[] FOM_C_pool1;
+            /// <summary>The fo m_ c_pool2</summary>
             public Double[] FOM_C_pool2;
+            /// <summary>The fo m_ c_pool3</summary>
             public Double[] FOM_C_pool3;
+            /// <summary>The fo m_ n</summary>
             public Double[] FOM_N;
         }
 
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
 
@@ -45,10 +64,10 @@ namespace Models.Soils
 
 
 
-        /// <summary>
-        /// Handles the addition of new CNPatches
-        /// </summary>
+        /// <summary>Handles the addition of new CNPatches</summary>
         /// <param name="PatchtoAdd">Patch data</param>
+        /// <exception cref="System.Exception"> Cannot create new patch, area of selected patches ( + AreaAffected.ToString(#0.00#)
+        ///                                    + ) is smaller than area of new patch( + PatchtoAdd.AreaFraction.ToString(#0.00#) + )</exception>
         private void AddNewCNPatch(AddSoilCNPatchType PatchtoAdd)
         {
             // Data passed from OnAddSoilCNPatch event:
@@ -165,7 +184,7 @@ namespace Models.Soils
         /// <summary>
         /// Split an existing patch in two. That is, creates a new patch (k) based on an existing one (j)
         /// </summary>
-        /// <param name="j"></param>
+        /// <param name="j">The j.</param>
         private void SplitPatch(int j)
         {
             // create new patch
@@ -199,9 +218,7 @@ namespace Models.Soils
             Patch[k].InitCalc();
         }
 
-        /// <summary>
-        /// Controls the merging of a group of patches into a single one
-        /// </summary>
+        /// <summary>Controls the merging of a group of patches into a single one</summary>
         /// <param name="PatchesToMerge">List of patches to merge</param>
         private void AmalgamatePatches(List<int> PatchesToMerge)
         {
@@ -212,9 +229,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Merges two patches
-        /// </summary>
+        /// <summary>Merges two patches</summary>
         /// <param name="recipient">Patch which will recieve the areas and the status of the disappearing patch</param>
         /// <param name="disappearing">Patch that will no longer exist</param>
         private void MergePatches(int recipient, int disappearing)
@@ -257,9 +272,7 @@ namespace Models.Soils
             Patch.RemoveAt(disappearing);
         }
 
-        /// <summary>
-        /// Delete patches in the list
-        /// </summary>
+        /// <summary>Delete patches in the list</summary>
         /// <param name="PatchesToDelete">List of patches to delete</param>
         private void DeletePatches(List<int> PatchesToDelete)
         {
@@ -270,21 +283,19 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>
-        /// Check the list of patch names and ids passed by 'AddSoilCNPatch' event
-        /// </summary>
+        /// <summary>Check the list of patch names and ids passed by 'AddSoilCNPatch' event</summary>
+        /// <param name="IDsToCheck">IDs or indices of patches</param>
+        /// <param name="NamesToCheck">Name of patches</param>
+        /// <returns>List of patch IDs, or indices</returns>
         /// <remarks>
         /// Verify whether the names correspond to existing patches, verify whether there are replicates
         /// </remarks>
         /// <documentation>
         /// With the AddSoilCNPatch event the user can tell the index or the name of the patch to which urine (or whatever) is added;
-        ///  this function will then check whether the patch(es) exist or not and filter out any replicates.
-        ///  User can pass ids (indices) or names of patches, or even both. This function will check both, eliminate replicates and
-        ///   non-existent references. The output is only the indices of selected patches
+        /// this function will then check whether the patch(es) exist or not and filter out any replicates.
+        /// User can pass ids (indices) or names of patches, or even both. This function will check both, eliminate replicates and
+        /// non-existent references. The output is only the indices of selected patches
         /// </documentation>
-        /// <param name="IDsToCheck">IDs or indices of patches</param>
-        /// <param name="NamesToCheck">Name of patches</param>
-        /// <returns>List of patch IDs, or indices</returns>
         private int[] CheckPatchIDs(int[] IDsToCheck, string[] NamesToCheck)
         {
             // List of patch ids for output
@@ -396,9 +407,7 @@ namespace Models.Soils
             return result;
         }
 
-        /// <summary>
-        /// Compare the diffs for all existing patches
-        /// </summary>
+        /// <summary>Compare the diffs for all existing patches</summary>
         /// <returns>The IDs of pairs that can be merged</returns>
         private PatchIDs ComparePatches()
         {
@@ -429,9 +438,7 @@ namespace Models.Soils
             return Patches;
         }
 
-        /// <summary>
-        /// Controls the addition of several variables to the especified patches
-        /// </summary>
+        /// <summary>Controls the addition of several variables to the especified patches</summary>
         /// <param name="PatchesToAdd">The list of patches to which the stuff will be added</param>
         /// <param name="StuffToAdd">The values of the variables to add (supplied as deltas)</param>
         private void AddStuffToPatches(List<int> PatchesToAdd, AddSoilCNPatchType StuffToAdd)
@@ -481,12 +488,17 @@ namespace Models.Soils
 
         }
 
-        /// <summary>
-        /// calculate how the dlt's (C and N) are partitioned amongst patches
-        /// </summary>
+        /// <summary>calculate how the dlt's (C and N) are partitioned amongst patches</summary>
         /// <param name="incomingDelta">The dlt to be partioned amongst patches</param>
         /// <param name="SoluteName">The solute or pool that is changing</param>
+        /// <param name="PartitionType">Type of the partition.</param>
         /// <returns>The values of dlt for each existing patch</returns>
+        /// <exception cref="System.Exception">
+        ///  The solute + SoluteName
+        ///                                 +  is not recognised by SoilNitrogen -  solute partition
+        /// or
+        ///  problems with partitioning  + SoluteName + -  + e.ToString()
+        /// </exception>
         private double[][] partitionDelta(double[] incomingDelta, string SoluteName, string PartitionType)
         {
             // 1- initialise the result to zero
@@ -505,10 +517,10 @@ namespace Models.Soils
                         case "urea":
                             alreadyThere[k] = Patch[k].urea;
                             break;
-                        case "nh4":
+                        case "NH4":
                             alreadyThere[k] = Patch[k].nh4;
                             break;
-                        case "no3":
+                        case "NO3":
                             alreadyThere[k] = Patch[k].no3;
                             break;
                         default:

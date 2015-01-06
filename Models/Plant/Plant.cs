@@ -14,87 +14,180 @@ using System.Xml;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class WaterUptakesCalculatedUptakesType
     {
+        /// <summary>The name</summary>
         public String Name = "";
+        /// <summary>The amount</summary>
         public Double[] Amount;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class WaterUptakesCalculatedType
     {
+        /// <summary>The uptakes</summary>
         public WaterUptakesCalculatedUptakesType[] Uptakes;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Data">The data.</param>
     public delegate void WaterUptakesCalculatedDelegate(WaterUptakesCalculatedType Data);
+    /// <summary>
+    /// 
+    /// </summary>
     public class WaterChangedType
     {
+        /// <summary>The delta water</summary>
         public Double[] DeltaWater;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Data">The data.</param>
     public delegate void WaterChangedDelegate(WaterChangedType Data);
+    /// <summary>
+    /// 
+    /// </summary>
     public class PruneType
     {
+        /// <summary>The bud number</summary>
         public Double BudNumber;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class KillLeafType
     {
+        /// <summary>The kill fraction</summary>
         public Single KillFraction;
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="NewCanopyData">The new canopy data.</param>
     public delegate void NewCanopyDelegate(NewCanopyType NewCanopyData);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Data">The data.</param>
     public delegate void FOMLayerDelegate(FOMLayerType Data);
+    /// <summary>
+    /// 
+    /// </summary>
     public delegate void NullTypeDelegate();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Data">The data.</param>
     public delegate void NewCropDelegate(NewCropType Data);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Data">The data.</param>
     public delegate void BiomassRemovedDelegate(BiomassRemovedType Data);
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class SowPlant2Type
     {
+        /// <summary>The cultivar</summary>
         public String Cultivar = "";
+        /// <summary>The population</summary>
         public Double Population = 100;
+        /// <summary>The depth</summary>
         public Double Depth = 100;
+        /// <summary>The row spacing</summary>
         public Double RowSpacing = 150;
+        /// <summary>The maximum cover</summary>
         public Double MaxCover = 1;
+        /// <summary>The bud number</summary>
         public Double BudNumber = 1;
-        public String CropClass = "Plant";
+        /// <summary>The skip row</summary>
         public Double SkipRow; //Not yet handled in Code
+        /// <summary>The skip plant</summary>
         public Double SkipPlant; //Not yet handled in Code
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class BiomassRemovedType
     {
+        /// <summary>The crop_type</summary>
         public String crop_type = "";
+        /// <summary>The dm_type</summary>
         public String[] dm_type;
+        /// <summary>The dlt_crop_dm</summary>
         public Single[] dlt_crop_dm;
+        /// <summary>The DLT_DM_N</summary>
         public Single[] dlt_dm_n;
+        /// <summary>The DLT_DM_P</summary>
         public Single[] dlt_dm_p;
+        /// <summary>The fraction_to_residue</summary>
         public Single[] fraction_to_residue;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class NewCropType
     {
+        /// <summary>The sender</summary>
         public String sender = "";
+        /// <summary>The crop_type</summary>
         public String crop_type = "";
     }
 
-	/// <summary>
-	/// </summary>
-	/// \param CropType The crop type defined in the Plant function.
-	/// <remarks>
-	/// 
-	/// </remarks>
+    /*! <summary>
+    The root function of plant model framework.
+    </summary>
+    \param CropType The crop type defined in the Plant function.
+    <remarks>
+    
+    </remarks>
+    */
+    /// <summary>
+    /// The generic plant model
+    /// </summary>
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop2
     {
         #region Class links and lists
+        /// <summary>The summary</summary>
         [Link] ISummary Summary = null;
+        /// <summary>The phenology</summary>
         [Link(IsOptional = true)] public Phenology Phenology = null;
+        /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
-        [Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
+        ///// <summary>The rue model</summary>
+        //[Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
+        /// <summary>The structure</summary>
         [Link(IsOptional=true)] public Structure Structure = null;
+        /// <summary>The soil</summary>
         [Link] Soils.Soil Soil = null;
+        /// <summary>The leaf</summary>
         [Link(IsOptional=true)] public Leaf Leaf = null;
+        /// <summary>The root</summary>
         [Link(IsOptional=true)] public Root Root = null;
         #endregion
 
         #region Class properties and fields
+        /// <summary>
+        /// MicroClimate will get 'CropType' and use it to look up
+        /// canopy properties for this crop.
+        /// </summary>
         public string CropType { get; set; }
+        /// <summary>The sowing data</summary>
         [XmlIgnore]
         public SowPlant2Type SowingData;
+        /// <summary>The _ organs</summary>
         private Organ[] _Organs = null;
+        /// <summary>Gets the organs.</summary>
+        /// <value>The organs.</value>
         [XmlIgnore]
         public Organ[] Organs 
         { 
@@ -111,15 +204,18 @@ namespace Models.PMF
                 return _Organs;
             } 
         }
+        /// <summary>Gets the canopy data.</summary>
+        /// <value>The canopy data.</value>
         [XmlIgnore]
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        /// <summary>The local canopy data</summary>
         [XmlIgnore]
         public NewCanopyType LocalCanopyData;
+        /// <summary>The local canopy data2</summary>
         private CanopyProperties LocalCanopyData2;
+        /// <summary>The local root data</summary>
         private RootProperties LocalRootData;
-        /// <summary>
-        /// Gets a list of cultivar names
-        /// </summary>
+        /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
         {
             get
@@ -138,9 +234,8 @@ namespace Models.PMF
                 return new List<string>(cultivarNames).ToArray();
             }
         }
-        /// <summary>
-        /// A property to return all cultivar definitions.
-        /// </summary>
+        /// <summary>A property to return all cultivar definitions.</summary>
+        /// <value>The cultivars.</value>
         private List<Cultivar> Cultivars
         {
             get
@@ -154,13 +249,10 @@ namespace Models.PMF
                 return cultivars;
             }
         }
-        /// <summary>
-        /// The current cultivar definition.
-        /// </summary>
+        /// <summary>The current cultivar definition.</summary>
         private Cultivar cultivarDefinition;
-        /// <summary>
-        /// MicroClimate needs FRGR.
-        /// </summary>
+        /// <summary>MicroClimate needs FRGR.</summary>
+        /// <value>The FRGR.</value>
         public double FRGR 
         { 
             get 
@@ -174,23 +266,16 @@ namespace Models.PMF
                 return frgr; 
             } 
         }
-        /// <summary>
-        /// Root system information
-        /// </summary>
-        [XmlIgnore]
-        public Models.Soils.RootSystem RootSystem { get { return new Models.Soils.RootSystem(); } }
-
-        /// <summary>
-        /// MicroClimate supplies light profile.
-        /// </summary>
+        /// <summary>MicroClimate supplies light profile.</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        /// <summary>
-        /// MicroClimate supplies Potential EP
-        /// </summary>
+        /// <summary>MicroClimate supplies Potential EP</summary>
+        /// <value>The potential ep.</value>
         [XmlIgnore]
         public double PotentialEP {get; set;}
 
+        /// <summary>Gets the water supply demand ratio.</summary>
+        /// <value>The water supply demand ratio.</value>
         [XmlIgnore]
         public double WaterSupplyDemandRatio
         {
@@ -204,22 +289,22 @@ namespace Models.PMF
                 return F;
             }
         }
+        /// <summary>Gets or sets the population.</summary>
+        /// <value>The population.</value>
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
         public double Population { get; set; }
+        /// <summary>Gets or sets the plant transpiration.</summary>
+        /// <value>The plant transpiration.</value>
         [XmlIgnore]
         public double PlantTranspiration { get; set; }
         #endregion
 
         #region Interface properties
-        /// <summary>
-        /// Provides canopy data to Arbitrator.
-        /// </summary>
+        /// <summary>Provides canopy data to Arbitrator.</summary>
         public CanopyProperties CanopyProperties { get { return LocalCanopyData2; } }
-        /// <summary>
-        /// Provides root data to Arbitrator.
-        /// </summary>
+        /// <summary>Provides root data to Arbitrator.</summary>
         public RootProperties RootProperties { get { return LocalRootData; } }
         /// <summary>
         /// Potential evapotranspiration. Arbitrator calculates this and sets this property in the crop.
@@ -231,9 +316,7 @@ namespace Models.PMF
         /// </summary>
         [XmlIgnore]
         public double[] uptakeWater { get; set; }
-        /// <summary>
-        /// Crop calculates potentialNitrogenDemand after getting its water allocation
-        /// </summary>
+        /// <summary>Crop calculates potentialNitrogenDemand after getting its water allocation</summary>
         [XmlIgnore]
         public double demandNitrogen { get; set; }
         /// <summary>
@@ -241,22 +324,18 @@ namespace Models.PMF
         /// </summary>
         [XmlIgnore]
         public double[] uptakeNitrogen { get; set; }
-        /// <summary>
-        /// The proportion of supplyNitrogen that is supplied as NO3, the remainder is NH4
-        /// </summary>
+        /// <summary>The proportion of supplyNitrogen that is supplied as NO3, the remainder is NH4</summary>
         [XmlIgnore]
         public double[] uptakeNitrogenPropNO3 { get;  set; }
         /// <summary>
         /// The initial value of the extent to which the roots have penetrated the soil layer (0-1)
         /// </summary>
+        /// <value>The local root exploration by layer.</value>
         [XmlIgnore] public double[] localRootExplorationByLayer { get; set; }
-        /// <summary>
-        /// The initial value of the root length densities for each soil layer (mm/mm3)
-        /// </summary>
+        /// <summary>The initial value of the root length densities for each soil layer (mm/mm3)</summary>
+        /// <value>The local root length density by volume.</value>
         [XmlIgnore] public double[] localRootLengthDensityByVolume { get; set; }
-        /// <summary>
-        /// Is the plant in the ground?
-        /// </summary>
+        /// <summary>Is the plant in the ground?</summary>
         [XmlIgnore]
         public bool PlantInGround
         {
@@ -265,9 +344,7 @@ namespace Models.PMF
                 return SowingData != null;
             }
         }
-        /// <summary>
-        /// Test if the plant has emerged
-        /// </summary>
+        /// <summary>Test if the plant has emerged</summary>
         [XmlIgnore]
         public bool PlantEmerged
         {
@@ -284,27 +361,35 @@ namespace Models.PMF
         #endregion
 
         #region Class Events
+        /// <summary>Occurs when [sowing].</summary>
         public event EventHandler Sowing;
+        /// <summary>Occurs when [harvesting].</summary>
         public event EventHandler Harvesting;
+        /// <summary>Occurs when [cutting].</summary>
         public event EventHandler Cutting;
+        /// <summary>Occurs when [plant ending].</summary>
         public event EventHandler PlantEnding;
+        /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
-        /// <summary>
-        /// Sow the crop with the specified parameters.
-        /// </summary>
-        public void Sow(string Cultivar, double Population = 1, double Depth = 100, double RowSpacing = 150, double MaxCover = 1, double BudNumber = 1, string CropClass = "Plant")
+        /// <summary>Sow the crop with the specified parameters.</summary>
+        /// <param name="cultivar">The cultivar.</param>
+        /// <param name="population">The population.</param>
+        /// <param name="depth">The depth.</param>
+        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="maxCover">The maximum cover.</param>
+        /// <param name="budNumber">The bud number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             SowingData = new SowPlant2Type();
-            SowingData.Population = Population;
-            SowingData.Depth = Depth;
-            SowingData.Cultivar = Cultivar;
-            SowingData.MaxCover = MaxCover;
-            SowingData.BudNumber = BudNumber;
-            SowingData.RowSpacing = RowSpacing;
-            SowingData.CropClass = CropClass;
+            SowingData.Population = population;
+            SowingData.Depth = depth;
+            SowingData.Cultivar = cultivar;
+            SowingData.MaxCover = maxCover;
+            SowingData.BudNumber = budNumber;
+            SowingData.RowSpacing = rowSpacing;
 
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
@@ -316,7 +401,7 @@ namespace Models.PMF
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            this.Population = Population;
+            this.Population = population;
 
             // tell all our children about sow
             foreach (Organ Child in Organs)
@@ -328,11 +413,9 @@ namespace Models.PMF
 
             
        
-            Summary.WriteMessage(this, string.Format("A crop of " + CropType +" (cultivar = " + Cultivar + " Class = " + CropClass + ") was sown today at a population of " + Population + " plants/m2 with " + BudNumber + " buds per plant at a row spacing of " + RowSpacing + " and a depth of " + Depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of " + CropType +" (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
-        /// <summary>
-        /// Harvest the crop.
-        /// </summary>
+        /// <summary>Harvest the crop.</summary>
         public void Harvest()
         {
             // Invoke a harvesting event.
@@ -347,9 +430,7 @@ namespace Models.PMF
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today, Yeahhh"));
         }
-        /// <summary>
-        /// End the crop.
-        /// </summary>
+        /// <summary>End the crop.</summary>
         public void EndCrop()
         {
             Summary.WriteMessage(this, "Crop ending");
@@ -394,6 +475,7 @@ namespace Models.PMF
 
             cultivarDefinition.Unapply();
         }
+        /// <summary>Clears this instance.</summary>
         private void Clear()
         {
             SowingData = null;
@@ -406,9 +488,7 @@ namespace Models.PMF
             if (Arbitrator != null)
                Arbitrator.Clear();
         }
-        /// <summary>
-        /// Cut the crop.
-        /// </summary>
+        /// <summary>Cut the crop.</summary>
         public void Cut()
         {
             if (Cutting != null)
@@ -418,9 +498,9 @@ namespace Models.PMF
             foreach (Organ Child in Organs)
                 Child.OnCut();
         }
-        /// <summary>
-        /// Things the plant model does when the simulation starts
-        /// </summary>
+        /// <summary>Things the plant model does when the simulation starts</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -431,11 +511,9 @@ namespace Models.PMF
             }
             InitialiseInterfaceTypes();
         }
-        /// <summary>
-        /// Things that happen when the clock broadcasts DoPlantGrowth Event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         
         
         [EventSubscribe("DoPotentialPlantGrowth")]
@@ -459,6 +537,9 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Called when [do water arbitration].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoWaterArbitration")]
         private void OnDoWaterArbitration(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
         {
@@ -475,7 +556,10 @@ namespace Models.PMF
                     DoWater();
                 }  */
         }
-        
+
+        /// <summary>Called when [do nutrient arbitration].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoNutrientArbitration")]
         private void OnDoNutrientArbitration(object sender, EventArgs e)
         {
@@ -504,6 +588,9 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Called when [do actual plant growth].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
@@ -526,11 +613,13 @@ namespace Models.PMF
         #endregion
 
         #region Internal Communications.  Method calls
+        /// <summary>Does the phenology.</summary>
         private void DoPhenology()
         {
             if (Phenology != null)
                 Phenology.DoTimeStep();
         }
+        /// <summary>Does the dm set up.</summary>
         private void DoDMSetUp()
         {
             if (Structure != null)
@@ -538,11 +627,13 @@ namespace Models.PMF
             foreach (Organ o in Organs)
                 o.DoPotentialDM();
         }
+        /// <summary>Does the nutrient set up.</summary>
         private void DoNutrientSetUp()
         {
             foreach (Organ o in Organs)
                 o.DoPotentialNutrient();
         }
+        /// <summary>Does the water.</summary>
         private void DoWater()
         {
             double Supply = 0;
@@ -573,6 +664,7 @@ namespace Models.PMF
             foreach (Organ o in Organs)
                 o.DoWaterUptake(FractionUsed * Supply);
         }
+        /// <summary>Does the actual growth.</summary>
         private void DoActualGrowth()
         {
             if (Structure != null)
@@ -580,11 +672,12 @@ namespace Models.PMF
             foreach (Organ o in Organs)
                 o.DoActualGrowth();
         }
+        /// <summary>Initialises the interface types.</summary>
         private void InitialiseInterfaceTypes()
         {
-            uptakeWater = new double[Soil.SoilWater.dlayer.Length];
-            uptakeNitrogen = new double[Soil.SoilWater.dlayer.Length];
-            uptakeNitrogenPropNO3 = new double[Soil.SoilWater.dlayer.Length];
+            uptakeWater = new double[Soil.Thickness.Length];
+            uptakeNitrogen = new double[Soil.Thickness.Length];
+            uptakeNitrogenPropNO3 = new double[Soil.Thickness.Length];
 
             //Set up CanopyData and root data types
             LocalCanopyData = new NewCanopyType();
@@ -621,8 +714,8 @@ namespace Models.PMF
             RootProperties.KNO3 = Root.KNO3;
             RootProperties.KNH4 = Root.KNH4;
 
-            localRootExplorationByLayer = new double[Soil.SoilWater.dlayer.Length];
-            localRootLengthDensityByVolume = new double[Soil.SoilWater.dlayer.Length];
+            localRootExplorationByLayer = new double[Soil.Thickness.Length];
+            localRootLengthDensityByVolume = new double[Soil.Thickness.Length];
 
             demandWater = 0;
             demandNitrogen = 0;

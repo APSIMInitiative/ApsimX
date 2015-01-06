@@ -10,6 +10,8 @@ using System.Data;
 using System.IO;
 using UserInterface.Interfaces;
 using UserInterface.EventArguments;
+using Models.Report;
+using Models.Factorial;
 
 namespace UserInterface.Presenters
 {
@@ -39,6 +41,7 @@ namespace UserInterface.Presenters
 
             Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
             DataStore = new DataStore(Report);
+            this.View.VariableList.SetSyntaxHighlighter("Report");
 
             PopulateDataGrid();
         }
@@ -63,11 +66,11 @@ namespace UserInterface.Presenters
         {
             if (e.ObjectName == "")
                 e.ObjectName = ".";
-            object o = Report.Get(e.ObjectName);
+            object o = Apsim.Get(Report, e.ObjectName);
 
             if (o != null)
             {
-                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true));
+                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, true, true, true));
             }
         }
 
@@ -76,12 +79,11 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnNeedEventNames(object Sender, NeedContextItemsArgs e)
         {
-            object o = Report.Get(e.ObjectName);
+            object o = Apsim.Get(Report, e.ObjectName);
 
             if (o != null)
             {
-                foreach (EventInfo Event in o.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-                    e.Items.Add(Event.Name);
+                e.AllItems.AddRange(NeedContextItemsArgs.ExamineObjectForContextItems(o, false, false, true));
             }
         }
 
@@ -123,9 +125,19 @@ namespace UserInterface.Presenters
         private void PopulateDataGrid()
         {
             Simulation simulation = Apsim.Parent(Report, typeof(Simulation)) as Simulation;
-            
-            View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
 
+            if (simulation != null)
+            {
+                if (simulation.Parent is Experiment)
+                {
+                    Experiment experiment = simulation.Parent as Experiment;
+                    string filter = "NAME IN " + "(" + Utility.String.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                    View.DataGrid.DataSource = DataStore.GetFilteredData(Report.Name, filter);
+                    View.DataGrid.AutoFilterOn = true;
+                }
+                else
+                    View.DataGrid.DataSource = DataStore.GetData(simulation.Name, Report.Name);
+            }
             if (View.DataGrid.DataSource != null)
             {
                 // Make all numeric columns have a format of N3

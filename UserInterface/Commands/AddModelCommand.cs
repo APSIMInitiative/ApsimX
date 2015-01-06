@@ -1,71 +1,102 @@
-﻿using UserInterface.Views;
-using Models.Core;
-using System.Xml;
-using System;
-using System.Collections.Generic;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="AddModelCommand.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Commands
 {
+    using System;
+    using System.Xml;
+    using Importer;
+    using Models.Core;
+
     /// <summary>
     /// This command changes the 'CurrentNode' in the ExplorerView.
     /// </summary>
-    class AddModelCommand : ICommand
+    public class AddModelCommand : ICommand
     {
-        private string FromModelXml;
-        private Model ToParent;
-        private Model FromModel;
-        private bool ModelAdded;
+        /// <summary>The XML of the model we're to add</summary>
+        private string modelXmlToAdd;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public AddModelCommand(string FromModelXml, Model ToParent)
+        /// <summary>The parent model to add the model to</summary>
+        private Model toParent;
+
+        /// <summary>The model we're to add</summary>
+        private Model modelToAdd;
+
+        /// <summary>True if model was added</summary>
+        private bool modelAdded;
+
+        /// <summary>Initializes a new instance of the <see cref="AddModelCommand"/> class.</summary>
+        /// <param name="xmlOfModelToAdd">The XML of the model to add</param>
+        /// <param name="toParent">The parent model to add the child to</param>
+        public AddModelCommand(string xmlOfModelToAdd, Model toParent)
         {
-            this.FromModelXml = FromModelXml;
-            this.ToParent = ToParent;
+            this.modelXmlToAdd = xmlOfModelToAdd;
+            this.toParent = toParent;
         }
 
-        /// <summary>
-        /// Perform the command
-        /// </summary>
-        public void Do(CommandHistory CommandHistory)
+        /// <summary>Perform the command</summary>
+        /// <param name="commandHistory">The command history.</param>
+        public void Do(CommandHistory commandHistory)
         {
             try
             {
-                XmlDocument Doc = new XmlDocument();
-                Doc.LoadXml(FromModelXml);
-                FromModel = Utility.Xml.Deserialise(Doc.DocumentElement) as Model;
-                FromModel.Parent = ToParent;
-                Apsim.ParentAllChildren(FromModel);
+                // Load the model xml
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(this.modelXmlToAdd);
+                XmlNode soilNode = doc.DocumentElement;
 
-                ToParent.Children.Add(FromModel);
-                Apsim.EnsureNameIsUnique(FromModel);
-                CommandHistory.InvokeModelStructureChanged(ToParent);
+                // If the model xml is a soil object then try and convert from old
+                // APSIM format to new.
+                if (doc.DocumentElement.Name == "Soil")
+                {
+                    XmlDocument newDoc = new XmlDocument();
+                    newDoc.AppendChild(newDoc.CreateElement("D"));
+                    APSIMImporter importer = new APSIMImporter();
+                    importer.ImportSoil(doc.DocumentElement, newDoc.DocumentElement, newDoc.DocumentElement);
+                    soilNode = Utility.Xml.FindByType(newDoc.DocumentElement, "Soil");
+                    if (Utility.Xml.FindByType(soilNode, "Sample") == null &&
+                        Utility.Xml.FindByType(soilNode, "InitialWater") == null)
+                    {
+                        // Add in an initial water and initial conditions models.
+                        XmlNode initialWater = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("InitialWater"));
+                        Utility.Xml.SetValue(initialWater, "Name", "Initial water");
+                        Utility.Xml.SetValue(initialWater, "PercentMethod", "FilledFromTop");
+                        Utility.Xml.SetValue(initialWater, "FractionFull", "1");
+                        Utility.Xml.SetValue(initialWater, "DepthWetSoil", "NaN");
+                        XmlNode initialConditions = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("Sample"));
+                        Utility.Xml.SetValue(initialConditions, "Name", "Initial conditions");
+                        Utility.Xml.SetValue(initialConditions, "Thickness/double", "1800");
+                        Utility.Xml.SetValue(initialConditions, "NO3/double", "10");
+                        Utility.Xml.SetValue(initialConditions, "NH4/double", "1");
+                        Utility.Xml.SetValue(initialConditions, "NO3Units", "kgha");
+                        Utility.Xml.SetValue(initialConditions, "NH4Units", "kgha");
+                        Utility.Xml.SetValue(initialConditions, "SWUnits", "Volumetric");
+                    }
+                }
 
-                // Call OnLoaded
-                Apsim.CallEventHandler(FromModel, "Loaded", null);
+                this.modelToAdd = Apsim.Add(this.toParent, soilNode) as Model;
 
-                ModelAdded = true;
+                commandHistory.InvokeModelStructureChanged(this.toParent);
+
+                this.modelAdded = true;
             }
-            catch (Exception exp)
+            catch (Exception)
             {
-                Console.WriteLine(exp.Message);
-                ModelAdded = false;
+                this.modelAdded = false;
             }
-
         }
 
-        /// <summary>
-        /// Undo the command
-        /// </summary>
-        public void Undo(CommandHistory CommandHistory)
+        /// <summary>Undoes the command</summary>
+        /// <param name="commandHistory">The command history.</param>
+        public void Undo(CommandHistory commandHistory)
         {
-            if (ModelAdded && FromModel != null)
+            if (this.modelAdded && this.modelToAdd != null)
             {
-                ToParent.Children.Remove(FromModel);
-                CommandHistory.InvokeModelStructureChanged(ToParent);
+                this.toParent.Children.Remove(this.modelToAdd);
+                commandHistory.InvokeModelStructureChanged(this.toParent);
             }
         }
-
     }
 }

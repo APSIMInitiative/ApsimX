@@ -118,9 +118,11 @@ namespace Models.Core
             {
                 return null;
             }
-            else if (namePath.StartsWith("evaluate", StringComparison.CurrentCultureIgnoreCase))
+            else if (namePath[0] != '.' && namePath[0] != '.' &&
+                     namePath.IndexOfAny("(+*/".ToCharArray()) != -1)
             {
-                returnVariable = new VariableExpression(namePath.Remove(0, 8), relativeToModel);
+                // expression - need a better way of detecting an expression
+                returnVariable = new VariableExpression(namePath, relativeToModel);
             }
             else
             {
@@ -135,11 +137,19 @@ namespace Models.Core
                     }
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
-                    relativeToModel = this.Find(modelName, relativeToModel);
-                    if (relativeToModel == null)
+                    Model foundModel = this.Find(modelName, relativeToModel);
+                    if (foundModel == null)
                     {
-                        throw new Exception("Cannot find model: " + modelName);
+                        // Didn't find a model with a name matching the square bracketed string so
+                        // now try and look for a model with a type matching the square bracketed string.
+                        Type[] modelTypes = Utility.Reflection.GetTypeWithoutNameSpace(modelName);
+                        if (modelTypes.Length == 1)
+                            foundModel = this.Find(modelTypes[0], relativeToModel);
                     }
+                    if (foundModel == null)
+                        return null;
+                    else
+                        relativeToModel = foundModel;
                 }
                 else if (namePath.StartsWith("."))
                 {

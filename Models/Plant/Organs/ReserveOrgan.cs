@@ -5,6 +5,9 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// A reserve organ
+    /// </summary>
     [Serializable]
     public class ReserveOrgan : GenericOrgan  //Neither above or below ground for now
     {

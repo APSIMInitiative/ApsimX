@@ -66,9 +66,12 @@ namespace UserInterface.Classes
 
                 List<XmlNode> children = Utility.Xml.ChildNodes(image, "");
 
+                OutputFile.WriteLine("<h2>Validation</h2>");
+                OutputFile.WriteLine("<A HREF=\"Index.html\">Model validation can be found here.<A>");
+
                 OutputFile.WriteLine("<table style=\"text-align: left; width: 100%;\" border=\"1\" cellpadding=\"2\"\ncellspacing=\"2\">\n<tbody>\n<tr>\n<td id=\"toc\"style=\"vertical-align: top;\">");
                 OutputFile.WriteLine("<A NAME=\"toc\"></A>");
-                OutputFile.WriteLine("<h2>Table of Contents</h2><br>"); //ToC added after the rest of the file is created. See CreateTOC()
+                OutputFile.WriteLine("<h2>Model Documentation</h2><br>"); //ToC added after the rest of the file is created. See CreateTOC()
                 OutputFile.WriteLine("</td>\n<td>");
                 foreach (XmlNode n in children)
                 {
@@ -122,7 +125,7 @@ namespace UserInterface.Classes
             if (N.Name.Contains("Leaf") || N.Name.Contains("Root")) //Nodes to add parameter doc to
                 paramTable = DocumentParams(OutputFile, N);
             OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
-            
+
             WriteDescriptionForTypeName(OutputFile, N, parentModel);
 
             OutputFile.WriteLine(ClassDescription(N));
@@ -137,7 +140,7 @@ namespace UserInterface.Classes
 
         private static void DocumentNode(StreamWriter OutputFile, XmlNode N, int NextLevel, Model parentModel)
         {
-            
+
             if (N.Name == "Name")
                 return;
 
@@ -199,10 +202,20 @@ namespace UserInterface.Classes
             {
                 OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
             }
-            XmlDocument doc = new XmlDocument();
             string contents = Utility.Xml.Value(N, "MemoText");
-            doc.LoadXml(contents);
-            string line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
+            string line;
+            if (contents.Contains('<'))
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(contents);
+                line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
+            }
+            else
+            {
+                // Maybe not xml - assume plain text.
+                line = contents;
+            }
+
             line = line.Replace("\r\n", "<br/><br/>");
             OutputFile.WriteLine(line);
         }
@@ -325,7 +338,7 @@ namespace UserInterface.Classes
             {
                 inject += s + "\n";
             }
-            return fullText.Insert(30 + fullText.IndexOf("<h2>Table of Contents</h2><br>"), inject); //21 length of index string
+            return fullText.Insert(30 + fullText.IndexOf("<h2>Model Documentation</h2><br>"), inject); //21 length of index string
         }
 
         private static void ChillingPhaseFunction(StreamWriter OutputFile, XmlNode N, int Level)
@@ -536,7 +549,7 @@ namespace UserInterface.Classes
             else
                 GraphName = Utility.Xml.Value(N.ParentNode.ParentNode, "Name") + Utility.Xml.Value(N, "Name") + "Graph";
 
-            OutputFile.WriteLine(Header(Utility.Xml.Value(N.ParentNode, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+            OutputFile.WriteLine(Header(Utility.Xml.Value(N.ParentNode, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode.ParentNode, "Name")));
 
             WriteDescriptionForTypeName(OutputFile, N.ParentNode, parentModel);
             TryDocumentMemo(OutputFile, N.ParentNode, NextLevel);
@@ -604,7 +617,7 @@ namespace UserInterface.Classes
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(400, 400);
             graph.Export(image);
-            
+
             image.Save(GifFileName, System.Drawing.Imaging.ImageFormat.Gif);
         }
 
@@ -617,7 +630,7 @@ namespace UserInterface.Classes
             OutputFile.WriteLine("<th>Name</th><th>Units</th><th>Data type</th><th>Description</th>");
             foreach (PropertyInfo property in parentModel.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                
+
                 string unitsString = string.Empty;
                 UnitsAttribute units = Utility.Reflection.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (units != null)
@@ -640,7 +653,7 @@ namespace UserInterface.Classes
                 OutputFile.Write("<td id=\"properties\" >" + descriptionString + "</td>");
 
 
-                OutputFile.WriteLine("</tr>");   
+                OutputFile.WriteLine("</tr>");
             }
 
             OutputFile.WriteLine("</table>");

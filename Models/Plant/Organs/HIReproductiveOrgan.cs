@@ -6,23 +6,36 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// A harvest index reproductive organ
+    /// </summary>
     [Serializable]
     public class HIReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
     {
+        /// <summary>The plant</summary>
         [Link]
         Plant Plant = null;
 
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
 
+        /// <summary>Gets or sets the above ground.</summary>
+        /// <value>The above ground.</value>
         public Biomass AboveGround { get; set; }
 
+        /// <summary>The water content</summary>
         [Link] Function WaterContent = null;
+        /// <summary>The hi increment</summary>
         [Link] Function HIIncrement = null;
+        /// <summary>The n conc</summary>
         [Link] Function NConc = null;
 
+        /// <summary>The daily growth</summary>
         private double DailyGrowth = 0;
 
+        /// <summary>Gets the live f wt.</summary>
+        /// <value>The live f wt.</value>
         [Units("g/m^2")]
         public double LiveFWt
         {
@@ -35,8 +48,10 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
-        
+
+        /// <summary>Occurs when [harvesting].</summary>
         public event NullTypeDelegate Harvesting;
+        /// <summary>Called when [harvest].</summary>
         public override void OnHarvest()
         {
             Harvesting.Invoke();
@@ -50,7 +65,9 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
-        
+
+        /// <summary>Gets the hi.</summary>
+        /// <value>The hi.</value>
         public double HI
         {
             get
@@ -62,6 +79,8 @@ namespace Models.PMF.Organs
                     return 0.0;
             }
         }
+        /// <summary>Gets or sets the dm demand.</summary>
+        /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
         {
             get
@@ -74,10 +93,14 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType { Structural = Demand };
             }
         }
+        /// <summary>Sets the dm allocation.</summary>
+        /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
             set { Live.StructuralWt += value.Structural; DailyGrowth = value.Structural; }
         }
+        /// <summary>Gets or sets the n demand.</summary>
+        /// <value>The n demand.</value>
         public override BiomassPoolType NDemand
         {
             get
@@ -87,6 +110,8 @@ namespace Models.PMF.Organs
             }
 
         }
+        /// <summary>Sets the n allocation.</summary>
+        /// <value>The n allocation.</value>
         public override BiomassAllocationType NAllocation
         {
             set

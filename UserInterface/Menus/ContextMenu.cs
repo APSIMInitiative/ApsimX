@@ -209,18 +209,18 @@ namespace UserInterface.Presenters
 
                 string workingFolder = Path.Combine(new string[] { binFolder, ".." });
 
-                Process process = new Process();
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.WorkingDirectory = workingFolder;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.FileName = pathToR;
-                process.StartInfo.Arguments = "\"" + scriptFileName + "\" " + "\"" + this.explorerPresenter.ApsimXFile.FileName + "\"";
-                process.Start();
-                process.WaitForExit();
-                this.explorerPresenter.ShowMessage(process.StandardOutput.ReadToEnd(), DataStore.ErrorLevel.Information);
-                this.explorerPresenter.ShowMessage(process.StandardError.ReadToEnd(), DataStore.ErrorLevel.Warning);
+                string arguments = "\"" + scriptFileName + "\" " + "\"" + this.explorerPresenter.ApsimXFile.FileName + "\"";
+                Process process = Utility.Process.RunProcess(pathToR, arguments, workingFolder);
+                try
+                {
+                    string message = Utility.Process.CheckProcessExitedProperly(process);
+                    this.explorerPresenter.ShowMessage(message, DataStore.ErrorLevel.Information);
+                }
+                catch (Exception err)
+                {
+                    this.explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                }
+                
             }
             else
             {
@@ -306,7 +306,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to .csv",
+        [ContextMenu(MenuName = "Export to CSV",
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void ExportDataStoreToCSV(object sender, EventArgs e)
         {
@@ -357,20 +357,27 @@ namespace UserInterface.Presenters
             string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
             if (destinationFolder != null)
             {
-                Model modelClicked = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                if (modelClicked != null)
-                {
-                    if (modelClicked is Simulations)
-                    {
-                        ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
-                        this.explorerPresenter.CommandHistory.Add(command, true);
-                    }
-                    else
-                    {
-                        string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
+                ExportToHTML(destinationFolder);
+            }
+        }
 
-                        Classes.PMFDocumentation.Go(fileName, modelClicked);
-                    }
+        /// <summary>Exports the currently selected model to HTML.</summary>
+        /// <param name="destinationFolder">The destination folder.</param>
+        public void ExportToHTML(string destinationFolder)
+        {
+            Model modelClicked = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+            if (modelClicked != null)
+            {
+                if (modelClicked is Simulations)
+                {
+                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
+                    this.explorerPresenter.CommandHistory.Add(command, true);
+                }
+                else
+                {
+                    string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
+
+                    Classes.PMFDocumentation.Go(fileName, modelClicked);
                 }
             }
         }

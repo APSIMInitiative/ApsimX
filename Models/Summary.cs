@@ -17,7 +17,7 @@ namespace Models
     /// It also provides an API for writing messages to the DataStore.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.HTMLView")]
+    [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     public class Summary : Model, ISummary
     {      
@@ -264,11 +264,11 @@ namespace Models
 
                     if (errorLevel == DataStore.ErrorLevel.Error)
                     {
-                        message += "FATAL ERROR: " + message;
+                        previousMessage += "FATAL ERROR: " + message;
                     }
                     else if (errorLevel == DataStore.ErrorLevel.Warning)
                     {
-                        message += "WARNING: " + message;
+                        previousMessage += "WARNING: " + message;
                     }
                     else
                     {

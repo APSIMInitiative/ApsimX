@@ -10,6 +10,7 @@ namespace Models.Core
     using System.Linq;
     using System.Reflection;
     using Models.Soils;
+    using System.Globalization;
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
@@ -99,9 +100,12 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.Object is SoilCrop)
+                if (this.Object is ISoilCrop)
                 {
-                    return (this.Object as SoilCrop).Name + " " + descriptionAttribute.ToString();
+                    string cropName = (this.Object as ISoilCrop).Name;
+                    if (cropName.EndsWith("Soil"))
+                        cropName = cropName.Replace("Soil", "");
+                    return cropName + " " + descriptionAttribute.ToString();
                 }
 
                 return descriptionAttribute.ToString();
@@ -225,7 +229,7 @@ namespace Models.Core
             {
                 object obj = this.property.GetValue(this.Object, null);
 
-                if (obj != null && obj.GetType().IsArray && this.lowerArraySpecifier != 0)
+                if (this.lowerArraySpecifier != 0 && obj != null && obj.GetType().IsArray)
                 {
                     Array array = obj as Array;
                     if (array.Length == 0)
@@ -247,6 +251,7 @@ namespace Models.Core
                     }
                     if (values.Length == 1)
                     {
+                        return values.GetValue(0);
                     }
 
                     return values;
@@ -345,7 +350,10 @@ namespace Models.Core
             {
                 if (this.Object is ISoilCrop)
                 {
-                    return (this.Object as ISoilCrop).Name;
+                    ISoilCrop soilCrop = this.Object as ISoilCrop;
+                    if (soilCrop.Name.EndsWith("Soil"))
+                        return soilCrop.Name.Substring(0, soilCrop.Name.Length - 4);
+                    return soilCrop.Name;
                 }
 
                 return null;
@@ -362,7 +370,7 @@ namespace Models.Core
             {
                 DisplayAttribute displayFormatAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
                 bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
-                if (hasDisplayTotal && this.Value != null)
+                if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
                 {
                     double sum = 0.0;
                     foreach (double doubleValue in this.Value as IEnumerable<double>)
@@ -429,11 +437,11 @@ namespace Models.Core
             {
                 if (this.DataType == typeof(double))
                 {
-                    this.Value = Convert.ToDouble(value);
+                    this.Value = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                 }
                 else if (this.DataType == typeof(int))
                 {
-                    this.Value = Convert.ToInt32(value);
+                    this.Value = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                 }
                 else if (this.DataType == typeof(string))
                 {

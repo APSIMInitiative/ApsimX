@@ -45,7 +45,7 @@ namespace Models.PMF
         /// <summary>
         /// Relative uptake preference (0-1) as additional mulitplicative factor that can be used to account for longitudinal root resistances or 
         /// for uptake from zones distance from the main stem.  If not needed then set equal to 1.0
-        /// 
+        /// </summary>
         public double[] UptakePreferenceByLayer { get; set; }
 
         /// <summary>

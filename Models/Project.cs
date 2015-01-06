@@ -1,8 +1,4 @@
 ﻿// <copyright file="Program.cs" company="Apsim"> The APSIM Initiative 2014. </copyright>
-
-/// <summary>
-/// Program Models.exe. The execution engine of apsim.
-/// </summary>
 namespace Models
 {
     using System;
@@ -17,6 +13,7 @@ namespace Models
     using System.Text;
     using System.Xml;
     using Models.Core;
+    using System.Threading;
 
     /// <summary>
     /// Class to hold a static main entry point.
@@ -30,6 +27,7 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+            int exitCode = 0 ;
             try
             {
                 string fileName = null;
@@ -93,17 +91,30 @@ namespace Models
                     runApsim.FileSpec = fileName;
                     runApsim.DoRecurse = args.Contains("/Recurse");
                     Utility.JobManager jobManager = new Utility.JobManager();
-                    jobManager.OnComplete += OnError;
                     jobManager.AddJob(runApsim);
-                    jobManager.Start(waitUntilFinished: true);
-                    if (jobManager.SomeHadErrors)
+                    jobManager.Start(waitUntilFinished: false);
+
+                    double percentComplete;
+                    do 
                     {
-                        Console.WriteLine("Errors found");
-                        return 1;
+                        percentComplete = Math.Truncate(jobManager.CountOfJobsFinished * 1.0 / jobManager.CountOfJobs) * 100;
+                        Thread.Sleep(200);
+                    }
+                    while (percentComplete < 100);
+
+                    exitCode = 0;
+                    for (int j = 0; j < jobManager.CountOfJobs; j++)
+                    {
+                        string errorMessage = jobManager.GetJobErrorMessage(j);
+                        if (errorMessage != null && errorMessage != string.Empty)
+                        {
+                            Console.WriteLine(errorMessage);
+                            exitCode = 1;
+                        }
                     }
 
                     // Write out the number of simulations run to the console.
-                    numSimulations = jobManager.NumberOfJobs - 1;
+                    numSimulations = jobManager.CountOfJobs - 1;
                 }
 
                 timer.Stop();
@@ -112,10 +123,10 @@ namespace Models
             catch (Exception err)
             {
                 Console.WriteLine(err.ToString());
-                return 1;
+                exitCode = 1;
             }
 
-            return 0;
+            return exitCode;
         }
 
         /// <summary>
@@ -264,19 +275,6 @@ namespace Models
                 }
 
                 ApServer.Utility.ReceiveNetworkFiles(ns, client, Path.GetDirectoryName(fileName));
-            }
-        }
-
-        /// <summary>
-        /// When an error is encountered, this handler will be called.
-        /// </summary>
-        /// <param name="sender">The system object sending me this message</param>
-        /// <param name="e">The error message</param>
-        private static void OnError(object sender, Utility.JobManager.JobCompleteArgs e)
-        {
-            if (e.ErrorMessage != null)
-            {
-                Console.WriteLine(e.ErrorMessage);
             }
         }
 

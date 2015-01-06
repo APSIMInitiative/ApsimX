@@ -14,9 +14,7 @@ using Models.Soils;
 namespace Models
 {
 
-    /// <summary>
-    /// A multi-species pasture model 
-    /// </summary>
+    /// <summary>A multi-species pasture model</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -24,44 +22,72 @@ namespace Models
     {
         #region Links and event declarations
 
+        /// <summary>The clock</summary>
         [Link]
         private Clock clock = null;
 
+        /// <summary>The soil</summary>
         [Link]
         private Soils.Soil Soil = null;
 
+        /// <summary>The met data</summary>
         [Link]
-        private WeatherFile MetData = null;
-
-        [Link]
-        private ISummary Summary = null;
+        private Weather MetData = null;
 
         //Events
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void NewCropDelegate(PMF.NewCropType Data);
+        /// <summary>Occurs when [new crop].</summary>
         public event NewCropDelegate NewCrop;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void NewCanopyDelegate(NewCanopyType Data);
+        /// <summary>Occurs when [new canopy].</summary>
         public event NewCanopyDelegate NewCanopy;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);
+        /// <summary>Occurs when [incorp fom].</summary>
         public event FOMLayerDelegate IncorpFOM;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void BiomassRemovedDelegate(PMF.BiomassRemovedType Data);
+        /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void WaterChangedDelegate(PMF.WaterChangedType Data);
+        /// <summary>Occurs when [water changed].</summary>
         public event WaterChangedDelegate WaterChanged;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data">The data.</param>
         public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
+        /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
         #endregion
 
         #region Inputs
 
-        /// <summary>
-        /// MicroClimate supplies PotentialEP
-        /// </summary>
+        /// <summary>MicroClimate supplies PotentialEP</summary>
         [XmlIgnore]
         public double PotentialEP
         {
@@ -75,9 +101,7 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// MicroClimate supplies LightProfile
-        /// </summary>
+        /// <summary>MicroClimate supplies LightProfile</summary>
         [XmlIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
         {
@@ -107,7 +131,10 @@ namespace Models
         // = General parameters  ==================================================================
         // * Parameters that are set via user interface -------------------------------------------
 
+        /// <summary>The sward name</summary>
         private string swardName = "AgPasture";
+        /// <summary>Gets or sets the name of the sward.</summary>
+        /// <value>The name of the sward.</value>
         [Description("Sward name (as shown on the simulation tree)")]
         public string SwardName
         {
@@ -115,7 +142,10 @@ namespace Models
             set { swardName = value; }
         }
 
+        /// <summary>The number species</summary>
         private int numSpecies = 1;
+        /// <summary>Gets or sets the number species.</summary>
+        /// <value>The number species.</value>
         [Description("Number of species")]
         public int NumSpecies
         {
@@ -123,7 +153,10 @@ namespace Models
             set { numSpecies = value; }
         }
 
+        /// <summary>The water uptake source</summary>
         private string waterUptakeSource = "calc";
+        /// <summary>Gets or sets the water uptake source.</summary>
+        /// <value>The water uptake source.</value>
         [Description("Water uptake done by AgPasture (calc) or by apsim?")]
         public string WaterUptakeSource
         {
@@ -132,7 +165,10 @@ namespace Models
         }
 
         // * Parameters that may be set via Manager  ----------------------------------------------
+        /// <summary>The n uptake source</summary>
         private string nUptakeSource = "calc";
+        /// <summary>Gets or sets the n uptake source.</summary>
+        /// <value>The n uptake source.</value>
         [XmlIgnore]
         public string NUptakeSource
         {
@@ -140,7 +176,10 @@ namespace Models
             set { nUptakeSource = value; }
         }
 
+        /// <summary>The alt_ n_uptake</summary>
         public string alt_N_uptake = "no";
+        /// <summary>Gets or sets the use alternative n uptake.</summary>
+        /// <value>The use alternative n uptake.</value>
         [XmlIgnore]
         public string UseAlternativeNUptake
         {
@@ -150,7 +189,10 @@ namespace Models
 
         // = Parameters for each species  =========================================================
         // * Inputs from user interface -----------------------------------------------------------
+        /// <summary>The species name</summary>
         private string[] speciesName = new string[] { "Ryegrass", "WhiteClover", "Paspalum" };
+        /// <summary>Gets or sets the name of the species.</summary>
+        /// <value>The name of the species.</value>
         [Description("Name of pasture species")]
         public string[] SpeciesName
         {
@@ -164,7 +206,10 @@ namespace Models
             }
         }
 
+        /// <summary>The species n type</summary>
         private string[] speciesNType = new string[] { "grass", "legume", "grass" };
+        /// <summary>Gets or sets the type of the species n.</summary>
+        /// <value>The type of the species n.</value>
         [Description("Type of plant with respect to N fixation (legume/grass)")]
         public string[] SpeciesNType
         {
@@ -178,7 +223,10 @@ namespace Models
             }
         }
 
+        /// <summary>The species c type</summary>
         private string[] speciesCType = new string[] { "C3", "C3", "C4" };
+        /// <summary>Gets or sets the type of the species c.</summary>
+        /// <value>The type of the species c.</value>
         [Description("Type of plant with respect to photosynthesis")]
         public string[] SpeciesCType
         {
@@ -192,7 +240,10 @@ namespace Models
             }
         }
 
-        private double[] iniDMshoot = new double[] { 1000.0, 500.0, 500.0 };
+        /// <summary>The ini d mshoot</summary>
+        private double[] iniDMshoot = new double[] { 2000.0, 500.0, 500.0 };
+        /// <summary>Gets or sets the initial dm shoot.</summary>
+        /// <value>The initial dm shoot.</value>
         [Description("Initial above ground DM")]
         public double[] InitialDMShoot
         {
@@ -206,7 +257,10 @@ namespace Models
             }
         }
 
-        private double[] iniDMroot = new double[] { 250.0, 100.0, 100.0 };
+        /// <summary>The ini d mroot</summary>
+        private double[] iniDMroot = new double[] { 500.0, 250.0, 100.0 };
+        /// <summary>Gets or sets the initial dm root.</summary>
+        /// <value>The initial dm root.</value>
         [Description("Initial below ground DM")]
         public double[] InitialDMRoot
         {
@@ -220,21 +274,10 @@ namespace Models
             }
         }
 
-        private double[] minimumGreenWt = new double[] { 300.0, 100.0, 100.0 };
-        [Description("Minimum above ground green DM")]
-        public double[] MinimumGreenWt
-        {
-            get { return minimumGreenWt; }
-            set
-            {
-                int NSp = value.Length;
-                minimumGreenWt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    minimumGreenWt[sp] = value[sp];
-            }
-        }
-
+        /// <summary>The ini root depth</summary>
         private double[] iniRootDepth = new double[] { 750.0, 350.0, 950.0 };
+        /// <summary>Gets or sets the initial root depth.</summary>
+        /// <value>The initial root depth.</value>
         [Description("Initial depth for roots")]
         public double[] InitialRootDepth
         {
@@ -250,10 +293,10 @@ namespace Models
 
         // * Parameters that may be set via manager -----------------------------------------------
 
-        private double[] maxPhotosynthesisRate = new double[] { 1.0, 1.0, 1.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The maximum photosynthesis rate</summary>
+        private double[] maxPhotosynthesisRate = new double[] { 1.0, 1.0, 1.2 };
+        /// <summary>Gets or sets the maximum photosynthesis rate.</summary>
+        /// <value>The maximum photosynthesis rate.</value>
         [XmlIgnore]
         public double[] MaxPhotosynthesisRate
         {
@@ -267,10 +310,10 @@ namespace Models
             }
         }
 
+        /// <summary>The maintenance respiration coef</summary>
         private double[] maintenanceRespirationCoef = new double[] { 3.0, 3.0, 3.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the maintenance respiration coef.</summary>
+        /// <value>The maintenance respiration coef.</value>
         [XmlIgnore]
         public double[] MaintenanceRespirationCoef
         {
@@ -284,10 +327,10 @@ namespace Models
             }
         }
 
+        /// <summary>The growth efficiency</summary>
         private double[] growthEfficiency = new double[] { 0.75, 0.75, 0.75 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the growth efficiency.</summary>
+        /// <value>The growth efficiency.</value>
         [XmlIgnore]
         public double[] GrowthEfficiency
         {
@@ -300,11 +343,11 @@ namespace Models
                     growthEfficiency[sp] = value[sp];
             }
         }
-        
+
+        /// <summary>The light extention coeff</summary>
         private double[] lightExtentionCoeff = new double[] { 0.5, 0.8, 0.6 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the light extention coeff.</summary>
+        /// <value>The light extention coeff.</value>
         [XmlIgnore]
         public double[] LightExtentionCoeff
         {
@@ -318,27 +361,10 @@ namespace Models
             }
         }
 
-        private double[] maxAssimilationRate = new double[] { 330.0, 330.0, 330.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MaxAssimilationRate
-        {
-            get { return maxAssimilationRate; }
-            set
-            {
-                int NSp = value.Length;
-                maxAssimilationRate = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    maxAssimilationRate[sp] = value[sp];
-            }
-        }
-
+        /// <summary>The growth tmin</summary>
         private double[] growthTmin = new double[] { 2.0, 4.0, 10.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the growth tmin.</summary>
+        /// <value>The growth tmin.</value>
         [XmlIgnore]
         public double[] GrowthTmin
         {
@@ -351,11 +377,11 @@ namespace Models
                     growthTmin[sp] = value[sp];
             }
         }
-        
+
+        /// <summary>The growth tmax</summary>
         private double[] growthTmax = new double[] { 32.0, 32.0, 40.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the growth tmax.</summary>
+        /// <value>The growth tmax.</value>
         [XmlIgnore]
         public double[] GrowthTmax
         {
@@ -369,10 +395,10 @@ namespace Models
             }
         }
 
-        private double[] growthTopt = new double[] { 20.0, 20.0, 20.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The growth topt</summary>
+        private double[] growthTopt = new double[] { 20.0, 20.0, 22.0 };
+        /// <summary>Gets or sets the growth topt.</summary>
+        /// <value>The growth topt.</value>
         [XmlIgnore]
         public double[] GrowthTopt
         {
@@ -385,11 +411,11 @@ namespace Models
                     growthTopt[sp] = value[sp];
             }
         }
-       
-        private double[] growthTq = new double[] { 2.0, 2.0, 1.2 };
-        /// <summary>
-        /// 
-        /// </summary>
+
+        /// <summary>The growth tq</summary>
+        private double[] growthTq = new double[] { 1.75, 1.75, 2.0 };
+        /// <summary>Gets or sets the growth tq.</summary>
+        /// <value>The growth tq.</value>
         [XmlIgnore]
         public double[] GrowthTq
         {
@@ -402,79 +428,11 @@ namespace Models
                     growthTq[sp] = value[sp];
             }
         }
-        
-        private double[] massFluxTmin = new double[] { 2.0, 2.0, 5.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxTmin
-        {
-            get { return massFluxTmin; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxTmin = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxTmin[sp] = value[sp];
-            }
-        }
 
-        private double[] massFluxTopt = new double[] { 20.0, 20.0, 20.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxTopt
-        {
-            get { return massFluxTopt; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxTopt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxTopt[sp] = value[sp];
-            }
-        }
-
-        private double[] massFluxW0 = new double[] { 2.0, 2.0, 2.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxW0
-        {
-            get { return massFluxW0; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxW0 = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxW0[sp] = value[sp];
-            }
-        }
-
-        private double[] massFluxWopt = new double[] { 0.5, 0.5, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MassFluxWopt
-        {
-            get { return massFluxWopt; }
-            set
-            {
-                int NSp = value.Length;
-                massFluxWopt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    massFluxWopt[sp] = value[sp];
-            }
-        }
-
-        private double[] heatOnsetT = new double[] { 60.0, 60.0, 60.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The heat onset t</summary>
+        private double[] heatOnsetT = new double[] { 28.0, 28.0, 40.0 };
+        /// <summary>Gets or sets the heat onset t.</summary>
+        /// <value>The heat onset t.</value>
         [XmlIgnore]
         public double[] HeatOnsetT
         {
@@ -488,10 +446,10 @@ namespace Models
             }
         }
 
-        private double[] heatFullT = new double[] { 70.0, 70.0, 70.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The heat full t</summary>
+        private double[] heatFullT = new double[] { 35.0, 35.0, 50.0 };
+        /// <summary>Gets or sets the heat full t.</summary>
+        /// <value>The heat full t.</value>
         [XmlIgnore]
         public double[] HeatFullT
         {
@@ -505,10 +463,10 @@ namespace Models
             }
         }
 
-        private double[] heatSumT = new double[] { 50.0, 50.0, 50.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The heat sum t</summary>
+        private double[] heatSumT = new double[] { 30.0, 30.0, 50.0 };
+        /// <summary>Gets or sets the heat sum t.</summary>
+        /// <value>The heat sum t.</value>
         [XmlIgnore]
         public double[] HeatSumT
         {
@@ -522,10 +480,10 @@ namespace Models
             }
         }
 
-        private double[] coldOnsetT = new double[] { -20.0, -20.0, -20.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The cold onset t</summary>
+        private double[] coldOnsetT = new double[] { 0.0, 0.0, 8.0 };
+        /// <summary>Gets or sets the cold onset t.</summary>
+        /// <value>The cold onset t.</value>
         [XmlIgnore]
         public double[] ColdOnsetT
         {
@@ -539,10 +497,10 @@ namespace Models
             }
         }
 
-        private double[] coldFullT = new double[] { -30.0, -30.0, -30.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The cold full t</summary>
+        private double[] coldFullT = new double[] { -3.0, -3.0, 3.0 };
+        /// <summary>Gets or sets the cold full t.</summary>
+        /// <value>The cold full t.</value>
         [XmlIgnore]
         public double[] ColdFullT
         {
@@ -556,10 +514,10 @@ namespace Models
             }
         }
 
-        private double[] coldSumT = new double[] { 20.0, 20.0, 20.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The cold sum t</summary>
+        private double[] coldSumT = new double[] { 20.0, 20.0, 50.0 };
+        /// <summary>Gets or sets the cold sum t.</summary>
+        /// <value>The cold sum t.</value>
         [XmlIgnore]
         public double[] ColdSumT
         {
@@ -573,10 +531,10 @@ namespace Models
             }
         }
 
+        /// <summary>The specific leaf area</summary>
         private double[] specificLeafArea = new double[] { 20.0, 20.0, 20.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the specific leaf area.</summary>
+        /// <value>The specific leaf area.</value>
         [XmlIgnore]
         public double[] SpecificLeafArea
         {
@@ -590,10 +548,10 @@ namespace Models
             }
         }
 
+        /// <summary>The specific root length</summary>
         private double[] specificRootLength = new double[] { 75.0, 75.0, 75.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the length of the specific root.</summary>
+        /// <value>The length of the specific root.</value>
         [XmlIgnore]
         public double[] SpecificRootLength
         {
@@ -607,10 +565,10 @@ namespace Models
             }
         }
 
+        /// <summary>The maximum root fraction</summary>
         private double[] maxRootFraction = new double[] { 0.25, 0.25, 0.25 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the maximum root fraction.</summary>
+        /// <value>The maximum root fraction.</value>
         [XmlIgnore]
         public double[] MaxRootFraction
         {
@@ -624,10 +582,10 @@ namespace Models
             }
         }
 
+        /// <summary>The allocation season f</summary>
         private double[] allocationSeasonF = new double[] { 0.8, 0.8, 0.8 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the allocation season f.</summary>
+        /// <value>The allocation season f.</value>
         [XmlIgnore]
         public double[] AllocationSeasonF
         {
@@ -641,10 +599,10 @@ namespace Models
             }
         }
 
+        /// <summary>The frac to leaf</summary>
         private double[] fracToLeaf = new double[] { 0.7, 0.56, 0.7 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the frac to leaf.</summary>
+        /// <value>The frac to leaf.</value>
         [XmlIgnore]
         public double[] FracToLeaf
         {
@@ -658,10 +616,10 @@ namespace Models
             }
         }
 
+        /// <summary>The frac to stolon</summary>
         private double[] fracToStolon = new double[] { 0.0, 0.2, 0.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the frac to stolon.</summary>
+        /// <value>The frac to stolon.</value>
         [XmlIgnore]
         public double[] FracToStolon
         {
@@ -675,10 +633,10 @@ namespace Models
             }
         }
 
-        private double[] turnoverRateLive2Dead = new double[] { 0.05, 0.05, 0.05 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>The turnover rate live2 dead</summary>
+        private double[] turnoverRateLive2Dead = new double[] { 0.025, 0.025, 0.025 };
+        /// <summary>Gets or sets the turnover rate live2 dead.</summary>
+        /// <value>The turnover rate live2 dead.</value>
         [XmlIgnore]
         public double[] TurnoverRateLive2Dead
         {
@@ -692,10 +650,10 @@ namespace Models
             }
         }
 
+        /// <summary>The turnover rate dead2 litter</summary>
         private double[] turnoverRateDead2Litter = new double[] { 0.11, 0.11, 0.11 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the turnover rate dead2 litter.</summary>
+        /// <value>The turnover rate dead2 litter.</value>
         [XmlIgnore]
         public double[] TurnoverRateDead2Litter
         {
@@ -709,10 +667,10 @@ namespace Models
             }
         }
 
+        /// <summary>The turnover rate root senescence</summary>
         private double[] turnoverRateRootSenescence = new double[] { 0.02, 0.02, 0.02 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the turnover rate root senescence.</summary>
+        /// <value>The turnover rate root senescence.</value>
         [XmlIgnore]
         public double[] TurnoverRateRootSenescence
         {
@@ -726,10 +684,78 @@ namespace Models
             }
         }
 
+        /// <summary>The mass flux tmin</summary>
+        private double[] massFluxTmin = new double[] { 2.0, 3.0, 7.5 };
+        /// <summary>Gets or sets the mass flux tmin.</summary>
+        /// <value>The mass flux tmin.</value>
+        [XmlIgnore]
+        public double[] MassFluxTmin
+        {
+            get { return massFluxTmin; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxTmin = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxTmin[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The mass flux topt</summary>
+        private double[] massFluxTopt = new double[] { 20.0, 20.0, 22.0 };
+        /// <summary>Gets or sets the mass flux topt.</summary>
+        /// <value>The mass flux topt.</value>
+        [XmlIgnore]
+        public double[] MassFluxTopt
+        {
+            get { return massFluxTopt; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxTopt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxTopt[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The mass flux w0</summary>
+        private double[] massFluxW0 = new double[] { 2.0, 2.0, 2.0 };
+        /// <summary>Gets or sets the mass flux w0.</summary>
+        /// <value>The mass flux w0.</value>
+        [XmlIgnore]
+        public double[] MassFluxW0
+        {
+            get { return massFluxW0; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxW0 = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxW0[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The mass flux wopt</summary>
+        private double[] massFluxWopt = new double[] { 0.5, 0.5, 0.5 };
+        /// <summary>Gets or sets the mass flux wopt.</summary>
+        /// <value>The mass flux wopt.</value>
+        [XmlIgnore]
+        public double[] MassFluxWopt
+        {
+            get { return massFluxWopt; }
+            set
+            {
+                int NSp = value.Length;
+                massFluxWopt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    massFluxWopt[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The stock parameter</summary>
         private double[] stockParameter = new double[] { 0.05, 0.05, 0.05 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the stock parameter.</summary>
+        /// <value>The stock parameter.</value>
         [XmlIgnore]
         public double[] StockParameter
         {
@@ -743,10 +769,10 @@ namespace Models
             }
         }
 
+        /// <summary>The digestibility live</summary>
         private double[] digestibilityLive = new double[] { 0.6, 0.6, 0.6 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the digestibility live.</summary>
+        /// <value>The digestibility live.</value>
         [XmlIgnore]
         public double[] DigestibilityLive
         {
@@ -760,10 +786,10 @@ namespace Models
             }
         }
 
+        /// <summary>The digestibility dead</summary>
         private double[] digestibilityDead = new double[] { 0.2, 0.2, 0.2 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the digestibility dead.</summary>
+        /// <value>The digestibility dead.</value>
         [XmlIgnore]
         public double[] DigestibilityDead
         {
@@ -777,10 +803,27 @@ namespace Models
             }
         }
 
+        /// <summary>The minimum green wt</summary>
+        private double[] minimumGreenWt = new double[] { 300.0, 100.0, 100.0 };
+        /// <summary>Gets or sets the minimum green wt.</summary>
+        /// <value>The minimum green wt.</value>
+        [Description("Minimum above ground green DM")]
+        public double[] MinimumGreenWt
+        {
+            get { return minimumGreenWt; }
+            set
+            {
+                int NSp = value.Length;
+                minimumGreenWt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    minimumGreenWt[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The minimum dead wt</summary>
         private double[] minimumDeadWt = new double[] { 0.0, 0.0, 0.0 };
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the minimum dead wt.</summary>
+        /// <value>The minimum dead wt.</value>
         [XmlIgnore]
         public double[] MinimumDeadWt
         {
@@ -794,380 +837,10 @@ namespace Models
             }
         }
 
-        private double[] leafNopt = new double[] { 4.0, 4.5, 3.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] LeafNopt
-        {
-            get { return leafNopt; }
-            set
-            {
-                int NSp = value.Length;
-                leafNopt = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    leafNopt[sp] = value[sp];
-            }
-        }
-
-        private double[] leafNmax = new double[] { 5.0, 5.5, 3.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] LeafNmax
-        {
-            get { return leafNmax; }
-            set
-            {
-                int NSp = value.Length;
-                leafNmax = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    leafNmax[sp] = value[sp];
-            }
-        }
-
-        private double[] leafNmin = new double[] { 1.2, 2.5, 0.8 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] LeafNmin
-        {
-            get { return leafNmin; }
-            set
-            {
-                int NSp = value.Length;
-                leafNmin = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    leafNmin[sp] = value[sp];
-            }
-        }
-
-        private double[] relativeNStems = new double[] { 0.5, 0.5, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] RelativeNStems
-        {
-            get { return relativeNStems; }
-            set
-            {
-                int NSp = value.Length;
-                relativeNStems = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    relativeNStems[sp] = value[sp];
-            }
-        }
-
-        private double[] relativeNStolons = new double[] { 0.5, 0.5, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] RelativeNStolons
-        {
-            get { return relativeNStolons; }
-            set
-            {
-                int NSp = value.Length;
-                relativeNStolons = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    relativeNStolons[sp] = value[sp];
-            }
-        }
-
-        private double[] relativeNRoots = new double[] { 0.5, 0.5, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] RelativeNRoots
-        {
-            get { return relativeNRoots; }
-            set
-            {
-                int NSp = value.Length;
-                relativeNRoots = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    relativeNRoots[sp] = value[sp];
-            }
-        }
-
-        private double[] relativeNStage2 = new double[] { 1.0, 1.0, 1.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] RelativeNStage2
-        {
-            get { return relativeNStage2; }
-            set
-            {
-                int NSp = value.Length;
-                relativeNStage2 = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    relativeNStage2[sp] = value[sp];
-            }
-        }
-
-        private double[] relativeNStage3 = new double[] { 1.0, 1.0, 1.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] RelativeNStage3
-        {
-            get { return relativeNStage3; }
-            set
-            {
-                int NSp = value.Length;
-                relativeNStage3 = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    relativeNStage3[sp] = value[sp];
-            }
-        }
-
-        private double[] minimumNFixation = new double[] { 0.0, 0.2, 0.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MinimumNFixation
-        {
-            get { return minimumNFixation; }
-            set
-            {
-                int NSp = value.Length;
-                minimumNFixation = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    minimumNFixation[sp] = value[sp];
-            }
-        }
-
-        private double[] maximumNFixation = new double[] { 0.0, 0.6, 0.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MaximumNFixation
-        {
-            get { return maximumNFixation; }
-            set
-            {
-                int NSp = value.Length;
-                maximumNFixation = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    maximumNFixation[sp] = value[sp];
-            }
-        }
-
-        private double[] dillutionCoefN = new double[] { 0.5, 1.0, 0.5 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] DillutionCoefN
-        {
-            get { return dillutionCoefN; }
-            set
-            {
-                int NSp = value.Length;
-                dillutionCoefN = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    dillutionCoefN[sp] = value[sp];
-            }
-        }
-
-        private double[] kappa2Remob = new double[] { 0.0, 0.0, 0.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] Kappa2Remob
-        {
-            get { return kappa2Remob; }
-            set
-            {
-                int NSp = value.Length;
-                kappa2Remob = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    kappa2Remob[sp] = value[sp];
-            }
-        }
-        private double[] kappa3Remob = new double[] { 0.0, 0.0, 0.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] Kappa3Remob
-        {
-            get { return kappa3Remob; }
-            set
-            {
-                int NSp = value.Length;
-                kappa3Remob = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    kappa3Remob[sp] = value[sp];
-            }
-        }
-
-        private double[] kappa4Remob = new double[] { 0.0, 0.0, 0.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] Kappa4Remob
-        {
-            get { return kappa4Remob; }
-            set
-            {
-                int NSp = value.Length;
-                kappa4Remob = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    kappa4Remob[sp] = value[sp];
-            }
-        }
-
-        private double[] glfGeneric = new double[] { 1.0, 1.0, 1.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] GlfGeneric
-        {
-            get { return glfGeneric; }
-            set
-            {
-                int NSp = value.Length;
-                glfGeneric = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    glfGeneric[sp] = value[sp];
-            }
-        }
-
-        private double[] waterStressFactor = new double[] { 1.0, 1.0, 1.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] WaterStressFactor
-        {
-            get { return waterStressFactor; }
-            set
-            {
-                int NSp = value.Length;
-                waterStressFactor = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    waterStressFactor[sp] = value[sp];
-            }
-        }
-
-        private double[] waterLoggingFactor = new double[] { 0.1, 0.1, 0.1 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] WaterLoggingFactor
-        {
-            get { return waterLoggingFactor; }
-            set
-            {
-                int NSp = value.Length;
-                waterLoggingFactor = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    waterLoggingFactor[sp] = value[sp];
-            }
-        }
-
-        private double[] referenceCO2 = new double[] { 380.0, 380.0, 380.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] ReferenceCO2
-        {
-            get { return referenceCO2; }
-            set
-            {
-                int NSp = value.Length;
-                referenceCO2 = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    referenceCO2[sp] = value[sp];
-            }
-        }
-
-        private double[] offsetCO2EffectOnPhotosynthesis = new double[] { 700.0, 700.0, 700.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] OffsetCO2EffectOnPhotosynthesis
-        {
-            get { return offsetCO2EffectOnPhotosynthesis; }
-            set
-            {
-                int NSp = value.Length;
-                offsetCO2EffectOnPhotosynthesis = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    offsetCO2EffectOnPhotosynthesis[sp] = value[sp];
-            }
-        }
-
-        private double[] offsetCO2EffectOnNuptake = new double[] { 600.0, 600.0, 600.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] OffsetCO2EffectOnNuptake
-        {
-            get { return offsetCO2EffectOnNuptake; }
-            set
-            {
-                int NSp = value.Length;
-                offsetCO2EffectOnNuptake = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    offsetCO2EffectOnNuptake[sp] = value[sp];
-            }
-        }
-
-        private double[] minimumCO2EffectOnNuptake = new double[] { 0.7, 0.7, 0.7 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] MinimumCO2EffectOnNuptake
-        {
-            get { return minimumCO2EffectOnNuptake; }
-            set
-            {
-                int NSp = value.Length;
-                minimumCO2EffectOnNuptake = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    minimumCO2EffectOnNuptake[sp] = value[sp];
-            }
-        }
-
-        private double[] exponentCO2EffectOnNuptake = new double[] { 2.0, 2.0, 2.0 };
-        /// <summary>
-        /// 
-        /// </summary>
-        [XmlIgnore]
-        public double[] ExponentCO2EffectOnNuptake
-        {
-            get { return exponentCO2EffectOnNuptake; }
-            set
-            {
-                int NSp = value.Length;
-                exponentCO2EffectOnNuptake = new double[NSp];
-                for (int sp = 0; sp < NSp; sp++)
-                    exponentCO2EffectOnNuptake[sp] = value[sp];
-            }
-        }
-
+        /// <summary>The preference for green dm</summary>
         private double[] preferenceForGreenDM = new double[] { 1.0, 1.0, 1.0 };
+        /// <summary>Gets or sets the preference for green dm.</summary>
+        /// <value>The preference for green dm.</value>
         [XmlIgnore]
         public double[] PreferenceForGreenDM
         {
@@ -1181,7 +854,10 @@ namespace Models
             }
         }
 
+        /// <summary>The preference for dead dm</summary>
         private double[] preferenceForDeadDM = new double[] { 1.0, 1.0, 1.0 };
+        /// <summary>Gets or sets the preference for dead dm.</summary>
+        /// <value>The preference for dead dm.</value>
         [XmlIgnore]
         public double[] PreferenceForDeadDM
         {
@@ -1195,10 +871,388 @@ namespace Models
             }
         }
 
+        /// <summary>The leaf nopt</summary>
+        private double[] leafNopt = new double[] { 4.0, 4.5, 3.0 };
+        /// <summary>Gets or sets the leaf nopt.</summary>
+        /// <value>The leaf nopt.</value>
+        [XmlIgnore]
+        public double[] LeafNopt
+        {
+            get { return leafNopt; }
+            set
+            {
+                int NSp = value.Length;
+                leafNopt = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    leafNopt[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The leaf nmax</summary>
+        private double[] leafNmax = new double[] { 5.0, 5.5, 3.5 };
+        /// <summary>Gets or sets the leaf nmax.</summary>
+        /// <value>The leaf nmax.</value>
+        [XmlIgnore]
+        public double[] LeafNmax
+        {
+            get { return leafNmax; }
+            set
+            {
+                int NSp = value.Length;
+                leafNmax = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    leafNmax[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The leaf nmin</summary>
+        private double[] leafNmin = new double[] { 1.2, 2.0, 0.5 };
+        /// <summary>Gets or sets the leaf nmin.</summary>
+        /// <value>The leaf nmin.</value>
+        [XmlIgnore]
+        public double[] LeafNmin
+        {
+            get { return leafNmin; }
+            set
+            {
+                int NSp = value.Length;
+                leafNmin = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    leafNmin[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The relative n stems</summary>
+        private double[] relativeNStems = new double[] { 0.5, 0.5, 0.5 };
+        /// <summary>Gets or sets the relative n stems.</summary>
+        /// <value>The relative n stems.</value>
+        [XmlIgnore]
+        public double[] RelativeNStems
+        {
+            get { return relativeNStems; }
+            set
+            {
+                int NSp = value.Length;
+                relativeNStems = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    relativeNStems[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The relative n stolons</summary>
+        private double[] relativeNStolons = new double[] { 0.0, 0.5, 0.0 };
+        /// <summary>Gets or sets the relative n stolons.</summary>
+        /// <value>The relative n stolons.</value>
+        [XmlIgnore]
+        public double[] RelativeNStolons
+        {
+            get { return relativeNStolons; }
+            set
+            {
+                int NSp = value.Length;
+                relativeNStolons = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    relativeNStolons[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The relative n roots</summary>
+        private double[] relativeNRoots = new double[] { 0.5, 0.5, 0.5 };
+        /// <summary>Gets or sets the relative n roots.</summary>
+        /// <value>The relative n roots.</value>
+        [XmlIgnore]
+        public double[] RelativeNRoots
+        {
+            get { return relativeNRoots; }
+            set
+            {
+                int NSp = value.Length;
+                relativeNRoots = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    relativeNRoots[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The relative n stage2</summary>
+        private double[] relativeNStage2 = new double[] { 1.0, 1.0, 1.0 };
+        /// <summary>Gets or sets the relative n stage2.</summary>
+        /// <value>The relative n stage2.</value>
+        [XmlIgnore]
+        public double[] RelativeNStage2
+        {
+            get { return relativeNStage2; }
+            set
+            {
+                int NSp = value.Length;
+                relativeNStage2 = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    relativeNStage2[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The relative n stage3</summary>
+        private double[] relativeNStage3 = new double[] { 1.0, 1.0, 1.0 };
+        /// <summary>Gets or sets the relative n stage3.</summary>
+        /// <value>The relative n stage3.</value>
+        [XmlIgnore]
+        public double[] RelativeNStage3
+        {
+            get { return relativeNStage3; }
+            set
+            {
+                int NSp = value.Length;
+                relativeNStage3 = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    relativeNStage3[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The minimum n fixation</summary>
+        private double[] minimumNFixation = new double[] { 0.0, 0.2, 0.0 };
+        /// <summary>Gets or sets the minimum n fixation.</summary>
+        /// <value>The minimum n fixation.</value>
+        [XmlIgnore]
+        public double[] MinimumNFixation
+        {
+            get { return minimumNFixation; }
+            set
+            {
+                int NSp = value.Length;
+                minimumNFixation = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    minimumNFixation[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The maximum n fixation</summary>
+        private double[] maximumNFixation = new double[] { 0.0, 0.6, 0.0 };
+        /// <summary>Gets or sets the maximum n fixation.</summary>
+        /// <value>The maximum n fixation.</value>
+        [XmlIgnore]
+        public double[] MaximumNFixation
+        {
+            get { return maximumNFixation; }
+            set
+            {
+                int NSp = value.Length;
+                maximumNFixation = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    maximumNFixation[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The kappa2 remob</summary>
+        private double[] kappa2Remob = new double[] { 0.0, 0.0, 0.0 };
+        /// <summary>Gets or sets the kappa2 remob.</summary>
+        /// <value>The kappa2 remob.</value>
+        [XmlIgnore]
+        public double[] Kappa2Remob
+        {
+            get { return kappa2Remob; }
+            set
+            {
+                int NSp = value.Length;
+                kappa2Remob = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    kappa2Remob[sp] = value[sp];
+            }
+        }
+        /// <summary>The kappa3 remob</summary>
+        private double[] kappa3Remob = new double[] { 0.0, 0.0, 0.0 };
+        /// <summary>Gets or sets the kappa3 remob.</summary>
+        /// <value>The kappa3 remob.</value>
+        [XmlIgnore]
+        public double[] Kappa3Remob
+        {
+            get { return kappa3Remob; }
+            set
+            {
+                int NSp = value.Length;
+                kappa3Remob = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    kappa3Remob[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The kappa4 remob</summary>
+        private double[] kappa4Remob = new double[] { 0.0, 0.0, 0.0 };
+        /// <summary>Gets or sets the kappa4 remob.</summary>
+        /// <value>The kappa4 remob.</value>
+        [XmlIgnore]
+        public double[] Kappa4Remob
+        {
+            get { return kappa4Remob; }
+            set
+            {
+                int NSp = value.Length;
+                kappa4Remob = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    kappa4Remob[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The dillution coef n</summary>
+        private double[] dillutionCoefN = new double[] { 0.5, 1.0, 0.5 };
+        /// <summary>Gets or sets the dillution coef n.</summary>
+        /// <value>The dillution coef n.</value>
+        [XmlIgnore]
+        public double[] DillutionCoefN
+        {
+            get { return dillutionCoefN; }
+            set
+            {
+                int NSp = value.Length;
+                dillutionCoefN = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    dillutionCoefN[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The GLF generic</summary>
+        private double[] glfGeneric = new double[] { 1.0, 1.0, 1.0 };
+        /// <summary>Gets or sets the GLF generic.</summary>
+        /// <value>The GLF generic.</value>
+        [XmlIgnore]
+        public double[] GlfGeneric
+        {
+            get { return glfGeneric; }
+            set
+            {
+                int NSp = value.Length;
+                glfGeneric = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    glfGeneric[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The water stress factor</summary>
+        private double[] waterStressFactor = new double[] { 1.0, 1.0, 1.0 };
+        /// <summary>Gets or sets the water stress factor.</summary>
+        /// <value>The water stress factor.</value>
+        [XmlIgnore]
+        public double[] WaterStressFactor
+        {
+            get { return waterStressFactor; }
+            set
+            {
+                int NSp = value.Length;
+                waterStressFactor = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    waterStressFactor[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The water logging factor</summary>
+        private double[] waterLoggingFactor = new double[] { 0.1, 0.1, 0.1 };
+        /// <summary>Gets or sets the water logging factor.</summary>
+        /// <value>The water logging factor.</value>
+        [XmlIgnore]
+        public double[] WaterLoggingFactor
+        {
+            get { return waterLoggingFactor; }
+            set
+            {
+                int NSp = value.Length;
+                waterLoggingFactor = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    waterLoggingFactor[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The reference c o2</summary>
+        private double[] referenceCO2 = new double[] { 380.0, 380.0, 380.0 };
+        /// <summary>Gets or sets the reference c o2.</summary>
+        /// <value>The reference c o2.</value>
+        [XmlIgnore]
+        public double[] ReferenceCO2
+        {
+            get { return referenceCO2; }
+            set
+            {
+                int NSp = value.Length;
+                referenceCO2 = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    referenceCO2[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The offset c o2 effect on photosynthesis</summary>
+        private double[] offsetCO2EffectOnPhotosynthesis = new double[] { 700.0, 700.0, 150.0 };
+        /// <summary>Gets or sets the offset c o2 effect on photosynthesis.</summary>
+        /// <value>The offset c o2 effect on photosynthesis.</value>
+        [XmlIgnore]
+        public double[] OffsetCO2EffectOnPhotosynthesis
+        {
+            get { return offsetCO2EffectOnPhotosynthesis; }
+            set
+            {
+                int NSp = value.Length;
+                offsetCO2EffectOnPhotosynthesis = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    offsetCO2EffectOnPhotosynthesis[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The offset c o2 effect on nuptake</summary>
+        private double[] offsetCO2EffectOnNuptake = new double[] { 600.0, 600.0, 600.0 };
+        /// <summary>Gets or sets the offset c o2 effect on nuptake.</summary>
+        /// <value>The offset c o2 effect on nuptake.</value>
+        [XmlIgnore]
+        public double[] OffsetCO2EffectOnNuptake
+        {
+            get { return offsetCO2EffectOnNuptake; }
+            set
+            {
+                int NSp = value.Length;
+                offsetCO2EffectOnNuptake = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    offsetCO2EffectOnNuptake[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The minimum c o2 effect on nuptake</summary>
+        private double[] minimumCO2EffectOnNuptake = new double[] { 0.7, 0.7, 0.7 };
+        /// <summary>Gets or sets the minimum c o2 effect on nuptake.</summary>
+        /// <value>The minimum c o2 effect on nuptake.</value>
+        [XmlIgnore]
+        public double[] MinimumCO2EffectOnNuptake
+        {
+            get { return minimumCO2EffectOnNuptake; }
+            set
+            {
+                int NSp = value.Length;
+                minimumCO2EffectOnNuptake = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    minimumCO2EffectOnNuptake[sp] = value[sp];
+            }
+        }
+
+        /// <summary>The exponent c o2 effect on nuptake</summary>
+        private double[] exponentCO2EffectOnNuptake = new double[] { 2.0, 2.0, 2.0 };
+        /// <summary>Gets or sets the exponent c o2 effect on nuptake.</summary>
+        /// <value>The exponent c o2 effect on nuptake.</value>
+        [XmlIgnore]
+        public double[] ExponentCO2EffectOnNuptake
+        {
+            get { return exponentCO2EffectOnNuptake; }
+            set
+            {
+                int NSp = value.Length;
+                exponentCO2EffectOnNuptake = new double[NSp];
+                for (int sp = 0; sp < NSp; sp++)
+                    exponentCO2EffectOnNuptake[sp] = value[sp];
+            }
+        }
+
+
         // * Other parameters (changed via manager) -----------------------------------------------
 
+        /// <summary>The root distribution method</summary>
         private string rootDistributionMethod = "ExpoLinear";
         //[Description("Root distribution method")]
+        /// <summary>Gets or sets the root distribution method.</summary>
+        /// <value>The root distribution method.</value>
+        /// <exception cref="System.Exception">No valid method for computing root distribution was selected</exception>
         [XmlIgnore]
         public string RootDistributionMethod
         {
@@ -1219,7 +1273,10 @@ namespace Models
             }
         }
 
-        private double expoLinearDepthParam = 0.1;
+        /// <summary>The expo linear depth parameter</summary>
+        private double expoLinearDepthParam = 0.12;
+        /// <summary>Gets or sets the expo linear depth parameter.</summary>
+        /// <value>The expo linear depth parameter.</value>
         [Description("Fraction of root depth where its proportion starts to decrease")]
         public double ExpoLinearDepthParam
         {
@@ -1232,7 +1289,10 @@ namespace Models
             }
         }
 
-        private double expoLinearCurveParam = 0.1;
+        /// <summary>The expo linear curve parameter</summary>
+        private double expoLinearCurveParam = 3.2;
+        /// <summary>Gets or sets the expo linear curve parameter.</summary>
+        /// <value>The expo linear curve parameter.</value>
         [Description("Exponent to determine mass distribution in the soil profile")]
         public double ExpoLinearCurveParam
         {
@@ -1245,17 +1305,14 @@ namespace Models
             }
         }
 
+        /// <summary>The initial dm fractions_grass</summary>
         [XmlIgnore]
         public double[] initialDMFractions_grass = new double[] { 0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
+        /// <summary>The initial dm fractions_legume</summary>
         [XmlIgnore]
         public double[] initialDMFractions_legume = new double[] { 0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12 };
 
-        [XmlIgnore]
-        public LinearInterpolation FVPDFunction = new LinearInterpolation
-        {
-            X = new double[3] { 0.0, 10.0, 50.0 },
-            Y = new double[3] { 1.0, 1.0, 1.0 }
-        };
+        /// <summary>The height mass function</summary>
         [XmlIgnore]
         public LinearInterpolation HeightMassFN = new LinearInterpolation
         {
@@ -1263,13 +1320,19 @@ namespace Models
             Y = new double[5] { 0, 25, 75, 150, 250 }
         };
 
+        /// <summary>The FVPD function</summary>
+        [XmlIgnore]
+        public LinearInterpolation FVPDFunction = new LinearInterpolation
+        {
+            X = new double[3] { 0.0, 10.0, 50.0 },
+            Y = new double[3] { 1.0, 1.0, 1.0 }
+        };
+
         #endregion
 
         #region Output properties
 
-        /// <summary>
-        /// Gets a list of cultivar names
-        /// </summary>
+        /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
         {
             get
@@ -1278,6 +1341,10 @@ namespace Models
             }
         }
 
+        /// <summary>
+        /// MicroClimate will get 'CropType' and use it to look up
+        /// canopy properties for this crop.
+        /// </summary>
         [Description("Generic type of crop")]
         [Units("")]
         public string CropType
@@ -1286,22 +1353,15 @@ namespace Models
         }
 
         /// <summary>
-        /// Root system information
+        /// Is the plant alive?
         /// </summary>
-        [XmlIgnore]
-        public Soils.RootSystem RootSystem
+        public bool IsAlive
         {
-            get
-            {
-                return rootSystem;
-            }
-            set
-            {
-                rootSystem = value;
-            }
+            get { return PlantStatus == "alive"; }
         }
-        private Soils.RootSystem rootSystem;
 
+        /// <summary>Gets the plant status.</summary>
+        /// <value>The plant status.</value>
         [Description("Plant status (dead, alive, etc)")]
         [Units("")]
         public string PlantStatus
@@ -1312,7 +1372,9 @@ namespace Models
                 else return "out";
             }
         }
-        
+
+        /// <summary>Gets the stage.</summary>
+        /// <value>The stage.</value>
         [Description("Plant development stage number")]
         [Units("")]
         public int Stage
@@ -1332,7 +1394,9 @@ namespace Models
                 return cropStage;
             }
         }
-        
+
+        /// <summary>Gets the name of the stage.</summary>
+        /// <value>The name of the stage.</value>
         [Description("Plant development stage name")]
         [Units("")]
         public string StageName
@@ -1351,6 +1415,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the total plant c.</summary>
+        /// <value>The total plant c.</value>
         [Description("Total amount of C in plants")]
         [Units("kgDM/ha")]
         public double TotalPlantC
@@ -1358,6 +1424,8 @@ namespace Models
             get { return 0.4 * (p_totalDM + p_rootMass); }
         }
 
+        /// <summary>Gets the total plant wt.</summary>
+        /// <value>The total plant wt.</value>
         [Description("Total dry matter weight of plants")]
         [Units("kgDM/ha")]
         public double TotalPlantWt
@@ -1365,6 +1433,8 @@ namespace Models
             get { return (AboveGroundWt + BelowGroundWt); }
         }
 
+        /// <summary>Gets the above ground wt.</summary>
+        /// <value>The above ground wt.</value>
         [Description("Total dry matter weight of plants above ground")]
         [Units("kgDM/ha")]
         public double AboveGroundWt
@@ -1377,14 +1447,18 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the below ground wt.</summary>
+        /// <value>The below ground wt.</value>
         [Description("Total dry matter weight of plants below ground")]
         [Units("kgDM/ha")]
         public double BelowGroundWt
         {
             get { return p_rootMass; }
         }
-        
+
+        /// <summary>Gets the standing plant wt.</summary>
+        /// <value>The standing plant wt.</value>
         [Description("Total dry matter weight of standing plants parts")]
         [Units("kgDM/ha")]
         public double StandingPlantWt
@@ -1398,6 +1472,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the above ground live wt.</summary>
+        /// <value>The above ground live wt.</value>
         [Description("Total dry matter weight of plants alive above ground")]
         [Units("kgDM/ha")]
         public double AboveGroundLiveWt
@@ -1411,13 +1487,17 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the above ground dead wt.</summary>
+        /// <value>The above ground dead wt.</value>
         [Description("Total dry matter weight of dead plants above ground")]
         [Units("kgDM/ha")]
         public double AboveGroundDeadWt
         {
             get { return p_deadDM; }
         }
-        
+
+        /// <summary>Gets the leaf wt.</summary>
+        /// <value>The leaf wt.</value>
         [Description("Total dry matter weight of plant's leaves")]
         [Units("kgDM/ha")]
         public double LeafWt
@@ -1430,7 +1510,9 @@ namespace Models
                 return result;
             }
         }
-       
+
+        /// <summary>Gets the leaf live wt.</summary>
+        /// <value>The leaf live wt.</value>
         [Description("Total dry matter weight of plant's leaves alive")]
         [Units("kgDM/ha")]
         public double LeafLiveWt
@@ -1443,7 +1525,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the leaf dead wt.</summary>
+        /// <value>The leaf dead wt.</value>
         [Description("Total dry matter weight of plant's leaves dead")]
         [Units("kgDM/ha")]
         public double LeafDeadWt
@@ -1457,6 +1541,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the stem wt.</summary>
+        /// <value>The stem wt.</value>
         [Description("Total dry matter weight of plant's stems")]
         [Units("kgDM/ha")]
         public double StemWt
@@ -1470,6 +1556,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the stem live wt.</summary>
+        /// <value>The stem live wt.</value>
         [Description("Total dry matter weight of plant's stems alive")]
         [Units("kgDM/ha")]
         public double StemLiveWt
@@ -1482,7 +1570,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the stem dead wt.</summary>
+        /// <value>The stem dead wt.</value>
         [Description("Total dry matter weight of plant's stems dead")]
         [Units("kgDM/ha")]
         public double StemDeadWt
@@ -1496,6 +1586,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the stolon wt.</summary>
+        /// <value>The stolon wt.</value>
         [Description("Total dry matter weight of plant's stolons")]
         [Units("kgDM/ha")]
         public double StolonWt
@@ -1508,7 +1600,9 @@ namespace Models
                 return result;
             }
         }
-       
+
+        /// <summary>Gets the root wt.</summary>
+        /// <value>The root wt.</value>
         [Description("Total dry matter weight of plant's roots")]
         [Units("kgDM/ha")]
         public double RootWt
@@ -1522,20 +1616,33 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant gross potential growth wt.</summary>
+        /// <value>The plant gross potential growth wt.</value>
+        public double PlantGrossPotentialGrowthWt
+        {
+            get { return SP.Sum(x => x.Pgross) * 2.5; }
+        }
+
+        /// <summary>Gets the plant potential growth wt.</summary>
+        /// <value>The plant potential growth wt.</value>
         [Description("Potential plant growth, correct for extreme temperatures")]
         [Units("kgDM/ha")]
         public double PlantPotentialGrowthWt
         {
             get { return p_dGrowthPot; }
         }
-        
+
+        /// <summary>Gets the plant growth no n limit.</summary>
+        /// <value>The plant growth no n limit.</value>
         [Description("Potential plant growth, correct for temperature and water")]
         [Units("kgDM/ha")]
         public double PlantGrowthNoNLimit
         {
             get { return p_dGrowthW; }
         }
-        
+
+        /// <summary>Gets the plant growth wt.</summary>
+        /// <value>The plant growth wt.</value>
         [Description("Actual plant growth (before littering)")]
         [Units("kgDM/ha")]
         public double PlantGrowthWt
@@ -1544,6 +1651,15 @@ namespace Models
             get { return p_dGrowth; }
         }
 
+        /// <summary>Gets the plant effective growth wt.</summary>
+        /// <value>The plant effective growth wt.</value>
+        public double PlantEffectiveGrowthWt
+        {
+            get { return SP.Sum(x => x.dGrowth) - SP.Sum(x => x.dLitter) - SP.Sum(x => x.dRootSen); }
+        }
+
+        /// <summary>Gets the herbage growth wt.</summary>
+        /// <value>The herbage growth wt.</value>
         [Description("Actual herbage (shoot) growth")]
         [Units("kgDM/ha")]
         public double HerbageGrowthWt
@@ -1551,6 +1667,8 @@ namespace Models
             get { return p_dHerbage; }
         }
 
+        /// <summary>Gets the litter deposition wt.</summary>
+        /// <value>The litter deposition wt.</value>
         [Description("Dry matter amount of litter deposited onto soil surface")]
         [Units("kgDM/ha")]
         public double LitterDepositionWt
@@ -1558,6 +1676,8 @@ namespace Models
             get { return p_dLitter; }
         }
 
+        /// <summary>Gets the root senescence wt.</summary>
+        /// <value>The root senescence wt.</value>
         [Description("Dry matter amount of senescent roots added to soil FOM")]
         [Units("kgDM/ha")]
         public double RootSenescenceWt
@@ -1565,6 +1685,8 @@ namespace Models
             get { return p_dRootSen; }
         }
 
+        /// <summary>Gets the plant remobilised c.</summary>
+        /// <value>The plant remobilised c.</value>
         [Description("Plant C remobilisation")]
         [Units("kgC/ha")]
         public double PlantRemobilisedC
@@ -1578,6 +1700,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the harvestable wt.</summary>
+        /// <value>The harvestable wt.</value>
         [Description("Total dry matter amount available for removal (leaf+stem)")]
         [Units("kgDM/ha")]
         public double HarvestableWt
@@ -1592,6 +1716,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the harvest wt.</summary>
+        /// <value>The harvest wt.</value>
         [Description("Amount of plant dry matter removed by harvest")]
         [Units("kgDM/ha")]
         public double HarvestWt
@@ -1605,6 +1731,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the la i_green.</summary>
+        /// <value>The la i_green.</value>
         [Description("Leaf area index of green leaves")]
         [Units("m^2/m^2")]
         public double LAI_green
@@ -1612,6 +1740,8 @@ namespace Models
             get { return p_greenLAI; }
         }
 
+        /// <summary>Gets the la i_dead.</summary>
+        /// <value>The la i_dead.</value>
         [Description("Leaf area index of dead leaves")]
         [Units("m^2/m^2")]
         public double LAI_dead
@@ -1619,6 +1749,8 @@ namespace Models
             get { return p_deadLAI; }
         }
 
+        /// <summary>Gets the la i_total.</summary>
+        /// <value>The la i_total.</value>
         [Description("Total leaf area index")]
         [Units("m^2/m^2")]
         public double LAI_total
@@ -1626,6 +1758,8 @@ namespace Models
             get { return p_totalLAI; }
         }
 
+        /// <summary>Gets the cover_green.</summary>
+        /// <value>The cover_green.</value>
         [Description("Fraction of soil covered by green leaves")]
         [Units("%")]
         public double Cover_green
@@ -1638,6 +1772,8 @@ namespace Models
 
         }
 
+        /// <summary>Gets the cover_dead.</summary>
+        /// <value>The cover_dead.</value>
         [Description("Fraction of soil covered by dead leaves")]
         [Units("%")]
         public double Cover_dead
@@ -1649,6 +1785,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the cover_tot.</summary>
+        /// <value>The cover_tot.</value>
         [Description("Fraction of soil covered by plants")]
         [Units("%")]
         public double Cover_tot
@@ -1660,6 +1798,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the total plant n.</summary>
+        /// <value>The total plant n.</value>
         [Description("Total amount of N in plants")]
         [Units("kg/ha")]
         public double TotalPlantN
@@ -1667,6 +1807,8 @@ namespace Models
             get { return (AboveGroundN + BelowGroundN); }
         }
 
+        /// <summary>Gets the above ground n.</summary>
+        /// <value>The above ground n.</value>
         [Description("Total amount of N in plants above ground")]
         [Units("kgN/ha")]
         public double AboveGroundN
@@ -1680,6 +1822,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the below ground n.</summary>
+        /// <value>The below ground n.</value>
         [Description("Total amount of N in plants below ground")]
         [Units("kgN/ha")]
         public double BelowGroundN
@@ -1693,19 +1837,8 @@ namespace Models
             }
         }
 
-        [Description("Proportion of N above ground in relation to below ground")]
-        [Units("%")]
-        public double AboveGroundNPct
-        {
-            get
-            {
-                double result = 0;
-                if (AboveGroundWt != 0)
-                    result = 100 * AboveGroundN / AboveGroundWt;
-                return result;
-            }
-        }
-
+        /// <summary>Gets the standing plant n.</summary>
+        /// <value>The standing plant n.</value>
         [Description("Total amount of N in standing plants")]
         [Units("kgN/ha")]
         public double StandingPlantN
@@ -1718,7 +1851,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the standing plant n conc.</summary>
+        /// <value>The standing plant n conc.</value>
         [Description("Average N concentration of standing plants")]
         [Units("kgN/kgDM")]
         public double StandingPlantNConc
@@ -1737,6 +1872,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the above ground live n.</summary>
+        /// <value>The above ground live n.</value>
         [Description("Total amount of N in plants alive above ground")]
         [Units("kgN/ha")]
         public double AboveGroundLiveN
@@ -1749,7 +1886,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the above ground dead n.</summary>
+        /// <value>The above ground dead n.</value>
         [Description("Total amount of N in dead plants above ground")]
         [Units("kgN/ha")]
         public double AboveGroundDeadN
@@ -1763,6 +1902,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the leaf n.</summary>
+        /// <value>The leaf n.</value>
         [Description("Total amount of N in the plant's leaves")]
         [Units("kgN/ha")]
         public double LeafN
@@ -1776,6 +1917,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the stem n.</summary>
+        /// <value>The stem n.</value>
         [Description("Total amount of N in the plant's stems")]
         [Units("kgN/ha")]
         public double StemN
@@ -1789,6 +1932,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the stolon n.</summary>
+        /// <value>The stolon n.</value>
         [Description("Total amount of N in the plant's stolons")]
         [Units("kgN/ha")]
         public double StolonN
@@ -1802,6 +1947,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the root n.</summary>
+        /// <value>The root n.</value>
         [Description("Total amount of N in the plant's roots")]
         [Units("kgN/ha")]
         public double RootN
@@ -1815,6 +1962,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the leaf n conc.</summary>
+        /// <value>The leaf n conc.</value>
         [Description("Average N concentration of leaves")]
         [Units("kgN/kgDM")]
         public double LeafNConc
@@ -1832,6 +1981,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the stem n conc.</summary>
+        /// <value>The stem n conc.</value>
         [Description("Average N concentration in stems")]
         [Units("kgN/kgDM")]
         public double StemNConc
@@ -1849,6 +2000,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the stolon n conc.</summary>
+        /// <value>The stolon n conc.</value>
         [Description("Average N concentration in stolons")]
         [Units("kgN/kgDM")]
         public double StolonNConc
@@ -1865,6 +2018,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the root n conc.</summary>
+        /// <value>The root n conc.</value>
         [Description("Average N concentration in roots")]
         [Units("kgN/kgDM")]
         public double RootNConc
@@ -1879,6 +2034,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the harvest n.</summary>
+        /// <value>The harvest n.</value>
         [Description("Amount of N removed by harvest")]
         [Units("kgN/ha")]
         public double HarvestN
@@ -1894,7 +2051,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the herbage digestibility.</summary>
+        /// <value>The herbage digestibility.</value>
         [Description("Average herbage digestibility")]
         [Units("0-1")]
         public double HerbageDigestibility
@@ -1910,14 +2069,18 @@ namespace Models
                 return digest;
             }
         }
-        
+
+        /// <summary>Gets the defoliated digestibility.</summary>
+        /// <value>The defoliated digestibility.</value>
         [Description("Average digestibility of harvested material")]
         [Units("0-1")]
         public double DefoliatedDigestibility
         {
             get { return p_harvestDigest; }
         }
-        
+
+        /// <summary>Gets the herbage me.</summary>
+        /// <value>The herbage me.</value>
         [Description("Average ME of herbage")]
         [Units("(MJ/ha)")]
         public double HerbageME
@@ -1929,6 +2092,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant fixed n.</summary>
+        /// <value>The plant fixed n.</value>
         [Description("Amount of atmospheric N fixed")]
         [Units("kgN/ha")]
         public double PlantFixedN
@@ -1936,6 +2101,8 @@ namespace Models
             get { return p_Nfix; }
         }
 
+        /// <summary>Gets the plant remobilised n.</summary>
+        /// <value>The plant remobilised n.</value>
         [Description("Amount of N remobilised from senescing tissue")]
         [Units("kgN/ha")]
         public double PlantRemobilisedN
@@ -1949,6 +2116,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant luxury n remobilised.</summary>
+        /// <value>The plant luxury n remobilised.</value>
         [Description("Amount of luxury N remobilised")]
         [Units("kgN/ha")]
         public double PlantLuxuryNRemobilised
@@ -1962,6 +2131,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant remobilisable luxury n.</summary>
+        /// <value>The plant remobilisable luxury n.</value>
         [Description("Amount of luxury N potentially remobilisable")]
         [Units("kgN/ha")]
         public double PlantRemobilisableLuxuryN
@@ -1974,7 +2145,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the litter deposition n.</summary>
+        /// <value>The litter deposition n.</value>
         [Description("Amount of N deposited as litter onto soil surface")]
         [Units("kgN/ha")]
         public double LitterDepositionN
@@ -1982,6 +2155,8 @@ namespace Models
             get { return p_dNLitter; }
         }
 
+        /// <summary>Gets the root senescence n.</summary>
+        /// <value>The root senescence n.</value>
         [Description("Amount of N added to soil FOM by senescent roots")]
         [Units("kgN/ha")]
         public double RootSenescenceN
@@ -1989,6 +2164,8 @@ namespace Models
             get { return p_dNRootSen; }
         }
 
+        /// <summary>Gets the nitrogen required luxury.</summary>
+        /// <value>The nitrogen required luxury.</value>
         [Description("Plant nitrogen requirement with luxury uptake")]
         [Units("kgN/ha")]
         public double NitrogenRequiredLuxury
@@ -2004,6 +2181,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the nitrogen required optimum.</summary>
+        /// <value>The nitrogen required optimum.</value>
         [Description("Plant nitrogen requirement for optimum growth")]
         [Units("kgN/ha")]
         public double NitrogenRequiredOptimum
@@ -2019,6 +2198,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant growth n.</summary>
+        /// <value>The plant growth n.</value>
         [Description("Nitrogen amount in new growth")]
         [Units("kgN/ha")]
         public double PlantGrowthN
@@ -2034,6 +2215,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant growth nconc.</summary>
+        /// <value>The plant growth nconc.</value>
         [Description("Nitrogen concentration in new growth")]
         [Units("kgN/kgDM")]
         public double PlantGrowthNconc
@@ -2041,18 +2224,16 @@ namespace Models
             get
             {
                 double result = 0.0;
-                for (int s = 0; s < numSpecies; s++)
-                {
-                    result += SP[s].newGrowthN;
-                }
                 if (PlantGrowthWt > 0)
-                    result = result / PlantGrowthWt;
+                    result = PlantGrowthN / PlantGrowthWt;
                 else
                     result = 0.0;
                 return result;
             }
         }
 
+        /// <summary>Gets the nitrogen demand.</summary>
+        /// <value>The nitrogen demand.</value>
         [Description("Plant nitrogen demand from soil")]
         [Units("kgN/ha")]
         public double NitrogenDemand
@@ -2060,6 +2241,8 @@ namespace Models
             get { return p_soilNdemand; }
         }
 
+        /// <summary>Gets the nitrogen supply.</summary>
+        /// <value>The nitrogen supply.</value>
         [Description("Plant available nitrogen in soil")]
         [Units("kgN/ha")]
         public double NitrogenSupply
@@ -2067,6 +2250,8 @@ namespace Models
             get { return p_soilNavailable; }
         }
 
+        /// <summary>Gets the nitrogen supply layers.</summary>
+        /// <value>The nitrogen supply layers.</value>
         [Description("Plant available nitrogen in soil layers")]
         [Units("kgN/ha")]
         public double[] NitrogenSupplyLayers
@@ -2074,6 +2259,8 @@ namespace Models
             get { return SNSupply; }
         }
 
+        /// <summary>Gets the nitrogen uptake.</summary>
+        /// <value>The nitrogen uptake.</value>
         [Description("Plant nitrogen uptake")]
         [Units("kgN/ha")]
         public double NitrogenUptake
@@ -2081,6 +2268,8 @@ namespace Models
             get { return p_soilNuptake; }
         }
 
+        /// <summary>Gets the nitrogen uptake layers.</summary>
+        /// <value>The nitrogen uptake layers.</value>
         [Description("Plant nitrogen uptake from soil layers")]
         [Units("kgN/ha")]
         public double[] NitrogenUptakeLayers
@@ -2088,13 +2277,17 @@ namespace Models
             get { return SNUptake; }
         }
 
+        /// <summary>Gets the gl function.</summary>
+        /// <value>The gl function.</value>
         [Description("Plant growth limiting factor due to nitrogen stress")]
         [Units("0-1")]
         public double GLFn
         {
             get { return p_gfn; }
         }
-        
+
+        /// <summary>Gets the gl function concentration.</summary>
+        /// <value>The gl function concentration.</value>
         [Description("Plant growth limiting factor due to plant N concentration")]
         [Units("0-1")]
         public double GLFnConcentration
@@ -2107,7 +2300,9 @@ namespace Models
                 return (result / AboveGroundWt);
             }
         }
-        
+
+        /// <summary>Gets the dm to roots.</summary>
+        /// <value>The dm to roots.</value>
         [Description("Dry matter allocated to roots")]
         [Units("kgDM/ha")]
         public double DMToRoots
@@ -2122,7 +2317,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the dm to shoot.</summary>
+        /// <value>The dm to shoot.</value>
         [Description("Dry matter allocated to shoot")]
         [Units("kgDM/ha")]
         public double DMToShoot
@@ -2137,7 +2334,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the fraction growth to root.</summary>
+        /// <value>The fraction growth to root.</value>
         [Description("Fraction of growth allocated to roots")]
         [Units("0-1")]
         public double FractionGrowthToRoot
@@ -2145,12 +2344,14 @@ namespace Models
             get
             {
                 double result = 0.0;
-                if (p_dGrowth <= 0)
+                if (p_dGrowth > 0)
                     result = DMToRoots / p_dGrowth;
                 return result;
             }
         }
 
+        /// <summary>Gets the RLV.</summary>
+        /// <value>The RLV.</value>
         [Description("Root length density")]
         [Units("mm/mm^3")]
         public double[] Rlv
@@ -2170,7 +2371,10 @@ namespace Models
             }
         }
 
+        /// <summary>The root fraction</summary>
         private double[] RootFraction;
+        /// <summary>Gets the root wt fraction.</summary>
+        /// <value>The root wt fraction.</value>
         [Description("Fraction of root dry matter for each soil layer")]
         [Units("0-1")]
         public double[] RootWtFraction
@@ -2178,6 +2382,8 @@ namespace Models
             get { return RootFraction; }
         }
 
+        /// <summary>Gets the water demand.</summary>
+        /// <value>The water demand.</value>
         [Description("Plant water demand")]
         [Units("mm")]
         public double WaterDemand
@@ -2185,6 +2391,8 @@ namespace Models
             get { return p_waterDemand; }
         }
 
+        /// <summary>Gets the water supply.</summary>
+        /// <value>The water supply.</value>
         [Description("Plant available water in soil")]
         [Units("mm")]
         public double WaterSupply
@@ -2192,6 +2400,8 @@ namespace Models
             get { return p_waterSupply; }
         }
 
+        /// <summary>Gets the water supply layers.</summary>
+        /// <value>The water supply layers.</value>
         [Description("Plant available water in soil layers")]
         [Units("mm")]
         public double[] WaterSupplyLayers
@@ -2199,6 +2409,8 @@ namespace Models
             get { return SWSupply; }
         }
 
+        /// <summary>Gets the water uptake.</summary>
+        /// <value>The water uptake.</value>
         [Description("Plant water uptake")]
         [Units("mm")]
         public double WaterUptake
@@ -2206,6 +2418,8 @@ namespace Models
             get { return p_waterUptake; }
         }
 
+        /// <summary>Gets the water uptake layers.</summary>
+        /// <value>The water uptake layers.</value>
         [Description("Plant water uptake from soil layers")]
         [Units("mm")]
         public double[] WaterUptakeLayers
@@ -2213,6 +2427,8 @@ namespace Models
             get { return SWUptake; }
         }
 
+        /// <summary>Gets the gl fwater.</summary>
+        /// <value>The gl fwater.</value>
         [Description("Plant growth limiting factor due to water deficit")]
         [Units("0-1")]
         public double GLFwater
@@ -2221,6 +2437,8 @@ namespace Models
         }
 
         //**Stress factors
+        /// <summary>Gets the gl ftemp.</summary>
+        /// <value>The gl ftemp.</value>
         [Description("Plant growth limiting factor due to temperature")]
         [Units("0-1")]
         public double GLFtemp
@@ -2228,6 +2446,8 @@ namespace Models
             get { return p_gftemp; }
         }
 
+        /// <summary>Gets the gl FRGR.</summary>
+        /// <value>The gl FRGR.</value>
         [Description("Generic plant growth limiting factor, used for other factors")]
         [Units("0-1")]
         public double GLFrgr
@@ -2248,6 +2468,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the height.</summary>
+        /// <value>The height.</value>
         [Description("Sward average height")]                 //needed by micromet
         [Units("mm")]
         public double Height
@@ -2256,6 +2478,8 @@ namespace Models
         }
 
         //testing purpose
+        /// <summary>Gets the plant stage1 wt.</summary>
+        /// <value>The plant stage1 wt.</value>
         [Description("Dry matter of plant pools at stage 1 (young)")]
         [Units("kgN/ha")]
         public double PlantStage1Wt
@@ -2269,6 +2493,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant stage2 wt.</summary>
+        /// <value>The plant stage2 wt.</value>
         [Description("Dry matter of plant pools at stage 2 (developing)")]
         [Units("kgN/ha")]
         public double PlantStage2Wt
@@ -2281,7 +2507,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the plant stage3 wt.</summary>
+        /// <value>The plant stage3 wt.</value>
         [Description("Dry matter of plant pools at stage 3 (mature)")]
         [Units("kgN/ha")]
         public double PlantStage3Wt
@@ -2294,7 +2522,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the plant stage4 wt.</summary>
+        /// <value>The plant stage4 wt.</value>
         [Description("Dry matter of plant pools at stage 4 (senescent)")]
         [Units("kgN/ha")]
         public double PlantStage4Wt
@@ -2308,6 +2538,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the plant stage1 n.</summary>
+        /// <value>The plant stage1 n.</value>
         [Description("N content of plant pools at stage 1 (young)")]
         [Units("kgN/ha")]
         public double PlantStage1N
@@ -2320,7 +2552,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the plant stage2 n.</summary>
+        /// <value>The plant stage2 n.</value>
         [Description("N content of plant pools at stage 2 (developing)")]
         [Units("kgN/ha")]
         public double PlantStage2N
@@ -2333,7 +2567,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the plant stage3 n.</summary>
+        /// <value>The plant stage3 n.</value>
         [Description("N content of plant pools at stage 3 (mature)")]
         [Units("kgN/ha")]
         public double PlantStage3N
@@ -2346,7 +2582,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the plant stage4 n.</summary>
+        /// <value>The plant stage4 n.</value>
         [Description("N content of plant pools at stage 4 (senescent)")]
         [Units("kgN/ha")]
         public double PlantStage4N
@@ -2360,6 +2598,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the heightfrom dm.</summary>
+        /// <value>The heightfrom dm.</value>
         private double HeightfromDM        // height calculation from DM, not output
         {
             get
@@ -2370,7 +2610,9 @@ namespace Models
             }
 
         }
-        
+
+        /// <summary>Gets the vp d_out.</summary>
+        /// <value>The vp d_out.</value>
         [Description("Vapour pressure deficit")]
         [Units("kPa")]
         public double VPD_out              // VPD effect on Growth Interpolation Set
@@ -2378,6 +2620,8 @@ namespace Models
             get { return VPD(); }
         }
 
+        /// <summary>Gets the FVPD.</summary>
+        /// <value>The FVPD.</value>
         [Description("Effect of vapour pressure on growth (used by micromet)")]
         [Units("0-1")]
         public double FVPD              // VPD effect on Growth Interpolation Set
@@ -2385,6 +2629,8 @@ namespace Models
             get { return FVPDFunction.Value(VPD()); }
         }
 
+        /// <summary>Gets the species green lai.</summary>
+        /// <value>The species green lai.</value>
         [Description("Leaf area index of green leaves, for each species")]
         [Units("m^2/m^2")]
         public double[] SpeciesGreenLAI
@@ -2398,6 +2644,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species dead lai.</summary>
+        /// <value>The species dead lai.</value>
         [Description("Leaf area index of dead leaves, for each species")]
         [Units("m^2/m^2")]
         public double[] SpeciesDeadLAI
@@ -2410,7 +2658,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species total lai.</summary>
+        /// <value>The species total lai.</value>
         [Description("Total leaf area index, for each species")]
         [Units("m^2/m^2")]
         public double[] SpeciesTotalLAI
@@ -2424,6 +2674,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species total wt.</summary>
+        /// <value>The species total wt.</value>
         [Description("Total dry matter weight of plants for each plant species")]
         [Units("kgDM/ha")]
         public double[] SpeciesTotalWt
@@ -2436,7 +2688,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species above ground wt.</summary>
+        /// <value>The species above ground wt.</value>
         [Description("Dry matter weight of plants above ground, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesAboveGroundWt
@@ -2449,7 +2703,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species below ground wt.</summary>
+        /// <value>The species below ground wt.</value>
         [Description("Dry matter weight of plants below ground, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesBelowGroundWt
@@ -2462,7 +2718,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species standing wt.</summary>
+        /// <value>The species standing wt.</value>
         [Description("Dry matter weight of standing herbage, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingWt
@@ -2475,7 +2733,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species standing live wt.</summary>
+        /// <value>The species standing live wt.</value>
         [Description("Dry matter weight of live standing plants parts for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingLiveWt
@@ -2488,7 +2748,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species standing dead wt.</summary>
+        /// <value>The species standing dead wt.</value>
         [Description("Dry matter weight of dead standing plants parts for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesStandingDeadWt
@@ -2502,6 +2764,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species leaf wt.</summary>
+        /// <value>The species leaf wt.</value>
         [Description("Dry matter weight of leaves for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafWt
@@ -2514,7 +2778,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem wt.</summary>
+        /// <value>The species stem wt.</value>
         [Description("Dry matter weight of stems for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemWt
@@ -2527,7 +2793,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon wt.</summary>
+        /// <value>The species stolon wt.</value>
         [Description("Dry matter weight of stolons for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonWt
@@ -2540,7 +2808,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species root wt.</summary>
+        /// <value>The species root wt.</value>
         [Description("Dry matter weight of roots for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRootWt
@@ -2554,6 +2824,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species total n.</summary>
+        /// <value>The species total n.</value>
         [Description("Total N amount for each plant species")]
         [Units("kgN/ha")]
         public double[] SpeciesTotalN
@@ -2566,7 +2838,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species standing n.</summary>
+        /// <value>The species standing n.</value>
         [Description("N amount of standing herbage, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStandingN
@@ -2580,6 +2854,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species leaf n.</summary>
+        /// <value>The species leaf n.</value>
         [Description("N amount in the plant's leaves, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafN
@@ -2592,7 +2868,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem n.</summary>
+        /// <value>The species stem n.</value>
         [Description("N amount in the plant's stems, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemN
@@ -2605,7 +2883,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon n.</summary>
+        /// <value>The species stolon n.</value>
         [Description("N amount in the plant's stolons, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonN
@@ -2618,7 +2898,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species roots n.</summary>
+        /// <value>The species roots n.</value>
         [Description("N amount in the plant's roots, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRootsN
@@ -2632,6 +2914,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species leaf n conc.</summary>
+        /// <value>The species leaf n conc.</value>
         [Description("Average N concentration in leaves, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafNConc
@@ -2650,7 +2934,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem n conc.</summary>
+        /// <value>The species stem n conc.</value>
         [Description("Average N concentration in stems, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemNConc
@@ -2669,7 +2955,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon n conc.</summary>
+        /// <value>The species stolon n conc.</value>
         [Description("Average N concentration in stolons, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonNConc
@@ -2687,7 +2975,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species root n conc.</summary>
+        /// <value>The species root n conc.</value>
         [Description("Average N concentration in roots, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesRootNConc
@@ -2704,6 +2994,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species leaf stage1 wt.</summary>
+        /// <value>The species leaf stage1 wt.</value>
         [Description("Dry matter weight of leaves at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage1Wt
@@ -2716,7 +3008,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage2 wt.</summary>
+        /// <value>The species leaf stage2 wt.</value>
         [Description("Dry matter weight of leaves at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage2Wt
@@ -2729,7 +3023,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage3 wt.</summary>
+        /// <value>The species leaf stage3 wt.</value>
         [Description("Dry matter weight of leaves at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage3Wt
@@ -2742,7 +3038,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage4 wt.</summary>
+        /// <value>The species leaf stage4 wt.</value>
         [Description("Dry matter weight of leaves at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage4Wt
@@ -2755,7 +3053,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage1 wt.</summary>
+        /// <value>The species stem stage1 wt.</value>
         [Description("Dry matter weight of stems at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage1Wt
@@ -2768,7 +3068,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage2 wt.</summary>
+        /// <value>The species stem stage2 wt.</value>
         [Description("Dry matter weight of stems at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage2Wt
@@ -2781,7 +3083,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage3 wt.</summary>
+        /// <value>The species stem stage3 wt.</value>
         [Description("Dry matter weight of stems at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage3Wt
@@ -2794,7 +3098,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage4 wt.</summary>
+        /// <value>The species stem stage4 wt.</value>
         [Description("Dry matter weight of stems at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage4Wt
@@ -2807,7 +3113,9 @@ namespace Models
                 return result;
             }
         }
-       
+
+        /// <summary>Gets the species stolon stage1 wt.</summary>
+        /// <value>The species stolon stage1 wt.</value>
         [Description("Dry matter weight of stolons at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage1Wt
@@ -2820,7 +3128,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon stage2 wt.</summary>
+        /// <value>The species stolon stage2 wt.</value>
         [Description("Dry matter weight of stolons at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage2Wt
@@ -2833,7 +3143,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon stage3 wt.</summary>
+        /// <value>The species stolon stage3 wt.</value>
         [Description("Dry matter weight of stolons at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage3Wt
@@ -2847,6 +3159,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species leaf stage1 n.</summary>
+        /// <value>The species leaf stage1 n.</value>
         [Description("N amount in leaves at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage1N
@@ -2859,7 +3173,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage2 n.</summary>
+        /// <value>The species leaf stage2 n.</value>
         [Description("N amount in leaves at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage2N
@@ -2872,7 +3188,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage3 n.</summary>
+        /// <value>The species leaf stage3 n.</value>
         [Description("N amount in leaves at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage3N
@@ -2885,7 +3203,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage4 n.</summary>
+        /// <value>The species leaf stage4 n.</value>
         [Description("N amount in leaves at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLeafStage4N
@@ -2898,7 +3218,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage1 n.</summary>
+        /// <value>The species stem stage1 n.</value>
         [Description("N amount in stems at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage1N
@@ -2911,7 +3233,9 @@ namespace Models
                 return result;
             }
         }
-       
+
+        /// <summary>Gets the species stem stage2 n.</summary>
+        /// <value>The species stem stage2 n.</value>
         [Description("N amount in stems at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage2N
@@ -2924,7 +3248,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage3 n.</summary>
+        /// <value>The species stem stage3 n.</value>
         [Description("N amount in stems at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage3N
@@ -2937,7 +3263,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage4 n.</summary>
+        /// <value>The species stem stage4 n.</value>
         [Description("N amount in stems at stage 4 (dead) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStemStage4N
@@ -2950,7 +3278,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon stage1 n.</summary>
+        /// <value>The species stolon stage1 n.</value>
         [Description("N amount in stolons at stage 1 (young) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage1N
@@ -2963,7 +3293,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon stage2 n.</summary>
+        /// <value>The species stolon stage2 n.</value>
         [Description("N amount in stolons at stage 2 (developing) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage2N
@@ -2976,7 +3308,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon stage3 n.</summary>
+        /// <value>The species stolon stage3 n.</value>
         [Description("N amount in stolons at stage 3 (mature) for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesStolonStage3N
@@ -2990,6 +3324,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species leaf stage1 n conc.</summary>
+        /// <value>The species leaf stage1 n conc.</value>
         [Description("N concentration of leaves at stage 1 (young) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage1NConc
@@ -3002,7 +3338,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage2 n conc.</summary>
+        /// <value>The species leaf stage2 n conc.</value>
         [Description("N concentration of leaves at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage2NConc
@@ -3015,7 +3353,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage3 n conc.</summary>
+        /// <value>The species leaf stage3 n conc.</value>
         [Description("N concentration of leaves at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage3NConc
@@ -3028,7 +3368,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species leaf stage4 n conc.</summary>
+        /// <value>The species leaf stage4 n conc.</value>
         [Description("N concentration of leaves at stage 4 (dead) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesLeafStage4NConc
@@ -3041,7 +3383,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage1 n conc.</summary>
+        /// <value>The species stem stage1 n conc.</value>
         [Description("N concentration of stems at stage 1 (young) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage1NConc
@@ -3054,7 +3398,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage2 n conc.</summary>
+        /// <value>The species stem stage2 n conc.</value>
         [Description("N concentration of stems at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage2NConc
@@ -3067,7 +3413,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage3 n conc.</summary>
+        /// <value>The species stem stage3 n conc.</value>
         [Description("N concentration of stems at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage3NConc
@@ -3080,7 +3428,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stem stage4 n conc.</summary>
+        /// <value>The species stem stage4 n conc.</value>
         [Description("N concentration of stems at stage 4 (dead) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStemStage4NConc
@@ -3093,7 +3443,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon stage1 n conc.</summary>
+        /// <value>The species stolon stage1 n conc.</value>
         [Description("N concentration of stolons at stage 1 (young) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage1NConc
@@ -3106,7 +3458,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon stage2 n conc.</summary>
+        /// <value>The species stolon stage2 n conc.</value>
         [Description("N concentration of stolons at stage 2 (developing) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage2NConc
@@ -3119,7 +3473,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon stage3 n conc.</summary>
+        /// <value>The species stolon stage3 n conc.</value>
         [Description("N concentration of stolons at stage 3 (mature) for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesStolonStage3NConc
@@ -3133,6 +3489,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species growth wt.</summary>
+        /// <value>The species growth wt.</value>
         [Description("Actual growth for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesGrowthWt
@@ -3145,7 +3503,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species litter wt.</summary>
+        /// <value>The species litter wt.</value>
         [Description("Litter amount deposited onto soil surface, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesLitterWt
@@ -3158,7 +3518,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species root senesced wt.</summary>
+        /// <value>The species root senesced wt.</value>
         [Description("Amount of senesced roots added to soil FOM, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesRootSenescedWt
@@ -3172,6 +3534,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species harvestable wt.</summary>
+        /// <value>The species harvestable wt.</value>
         [Description("Amount of dry matter harvestable for each species (leaf+stem)")]
         [Units("kgDM/ha")]
         public double[] SpeciesHarvestableWt
@@ -3185,7 +3549,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species harvest wt.</summary>
+        /// <value>The species harvest wt.</value>
         [Description("Amount of plant dry matter removed by harvest, for each species")]
         [Units("kgDM/ha")]
         public double[] SpeciesHarvestWt
@@ -3199,6 +3565,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species harvest PCT.</summary>
+        /// <value>The species harvest PCT.</value>
         [Description("Proportion in the dry matter harvested of each species")]
         [Units("%")]
         public double[] SpeciesHarvestPct
@@ -3216,7 +3584,10 @@ namespace Models
             }
         }
 
+        /// <summary>The fraction to harvest</summary>
         private double[] FractionToHarvest;
+        /// <summary>Gets the species harvest fraction.</summary>
+        /// <value>The species harvest fraction.</value>
         [Description("Fraction to harvest for each species")]
         [Units("0-1")]
         public double[] SpeciesHarvestFraction
@@ -3224,6 +3595,8 @@ namespace Models
             get { return FractionToHarvest; }
         }
 
+        /// <summary>Gets the species live dm turnover rate.</summary>
+        /// <value>The species live dm turnover rate.</value>
         [Description("Rate of turnover for live DM, for each species")]
         [Units("0-1")]
         public double[] SpeciesLiveDMTurnoverRate
@@ -3238,7 +3611,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species dead dm turnover rate.</summary>
+        /// <value>The species dead dm turnover rate.</value>
         [Description("Rate of turnover for dead DM, for each species")]
         [Units("0-1")]
         public double[] SpeciesDeadDMTurnoverRate
@@ -3253,7 +3628,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species stolon dm turnover rate.</summary>
+        /// <value>The species stolon dm turnover rate.</value>
         [Description("Rate of DM turnover for stolons, for each species")]
         [Units("0-1")]
         public double[] SpeciesStolonDMTurnoverRate
@@ -3268,7 +3645,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species root dm turnover rate.</summary>
+        /// <value>The species root dm turnover rate.</value>
         [Description("Rate of DM turnover for roots, for each species")]
         [Units("0-1")]
         public double[] SpeciesRootDMTurnoverRate
@@ -3284,6 +3663,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species remobilised n.</summary>
+        /// <value>The species remobilised n.</value>
         [Description("Amount of N remobilised from senesced material, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRemobilisedN
@@ -3299,6 +3680,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species luxury n remobilised.</summary>
+        /// <value>The species luxury n remobilised.</value>
         [Description("Amount of luxury N remobilised, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLuxuryNRemobilised
@@ -3314,6 +3697,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species remobilisable luxury n.</summary>
+        /// <value>The species remobilisable luxury n.</value>
         [Description("Amount of luxury N potentially remobilisable, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRemobilisableLuxuryN
@@ -3329,6 +3714,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species fixed n.</summary>
+        /// <value>The species fixed n.</value>
         [Description("Amount of atmospheric N fixed, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesFixedN
@@ -3344,6 +3731,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species required n luxury.</summary>
+        /// <value>The species required n luxury.</value>
         [Description("Amount of N required with luxury uptake, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRequiredNLuxury
@@ -3359,6 +3748,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species required n optimum.</summary>
+        /// <value>The species required n optimum.</value>
         [Description("Amount of N required for optimum growth, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesRequiredNOptimum
@@ -3374,6 +3765,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species demand n.</summary>
+        /// <value>The species demand n.</value>
         [Description("Amount of N demaned from soil, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesDemandN
@@ -3389,6 +3782,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species growth n.</summary>
+        /// <value>The species growth n.</value>
         [Description("Amount of N in new growth, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesGrowthN
@@ -3398,12 +3793,14 @@ namespace Models
                 double[] result = new double[SP.Length];
                 for (int s = 0; s < numSpecies; s++)
                 {
-                    result[s] += SP[s].newGrowthN;
+                    result[s] = SP[s].newGrowthN;
                 }
                 return result;
             }
         }
 
+        /// <summary>Gets the species growth nconc.</summary>
+        /// <value>The species growth nconc.</value>
         [Description("Nitrogen concentration in new growth, for each species")]
         [Units("kgN/kgDM")]
         public double[] SpeciesGrowthNconc
@@ -3414,14 +3811,16 @@ namespace Models
                 for (int s = 0; s < numSpecies; s++)
                 {
                     if (SP[s].dGrowth > 0)
-                        result[s] += SP[s].newGrowthN / SP[s].dGrowth;
+                        result[s] = SP[s].newGrowthN / SP[s].dGrowth;
                     else
                         result[s] = 0.0;
                 }
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species uptake n.</summary>
+        /// <value>The species uptake n.</value>
         [Description("Amount of N uptake, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesUptakeN
@@ -3437,6 +3836,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species litter n.</summary>
+        /// <value>The species litter n.</value>
         [Description("Amount of N deposited as litter onto soil surface, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesLitterN
@@ -3451,7 +3852,9 @@ namespace Models
                 return result;
             }
         }
-       
+
+        /// <summary>Gets the species senesced n.</summary>
+        /// <value>The species senesced n.</value>
         [Description("Amount of N from senesced roots added to soil FOM, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesSenescedN
@@ -3467,6 +3870,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species harvest n.</summary>
+        /// <value>The species harvest n.</value>
         [Description("Amount of plant nitrogen removed by harvest, for each species")]
         [Units("kgN/ha")]
         public double[] SpeciesHarvestN
@@ -3480,6 +3885,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species GLFN.</summary>
+        /// <value>The species GLFN.</value>
         [Description("Growth limiting factor due to nitrogen, for each species")]
         [Units("0-1")]
         public double[] SpeciesGLFN
@@ -3492,7 +3899,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species GLFT.</summary>
+        /// <value>The species GLFT.</value>
         [Description("Growth limiting factor due to temperature, for each species")]
         [Units("0-1")]
         public double[] SpeciesGLFT
@@ -3500,11 +3909,14 @@ namespace Models
             get
             {
                 double[] result = new double[SP.Length];
+                double Tmnw = 0.75 * MetData.MaxT + 0.25 * MetData.MinT;  // weighted Tmean
                 for (int s = 0; s < numSpecies; s++)
-                    result[s] = SP[s].gftemp;
+                    result[s] = SP[s].GFTemperature(Tmnw);
                 return result;
             }
         }
+        /// <summary>Gets the species GLFW.</summary>
+        /// <value>The species GLFW.</value>
         [Description("Growth limiting factor due to water deficit, for each species")]
         [Units("0-1")]
         public double[] SpeciesGLFW
@@ -3518,6 +3930,8 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species irradiance top canopy.</summary>
+        /// <value>The species irradiance top canopy.</value>
         [Description("Irridance on the top of canopy")]
         [Units("W.m^2/m^2")]
         public double[] SpeciesIrradianceTopCanopy
@@ -3530,7 +3944,9 @@ namespace Models
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the species pot carbon assimilation.</summary>
+        /// <value>The species pot carbon assimilation.</value>
         [Description("Potential C assimilation, corrected for extreme temperatures")]
         [Units("kgC/ha")]
         public double[] SpeciesPotCarbonAssimilation
@@ -3543,6 +3959,8 @@ namespace Models
                 return result;
             }
         }
+        /// <summary>Gets the species carbon loss respiration.</summary>
+        /// <value>The species carbon loss respiration.</value>
         [Description("Loss of C via respiration")]
         [Units("kgC/ha")]
         public double[] SpeciesCarbonLossRespiration
@@ -3556,6 +3974,62 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the species gross pot growth.</summary>
+        /// <value>The species gross pot growth.</value>
+        public double[] SpeciesGrossPotGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].Pgross * 2.5;
+                return result;
+            }
+        }
+
+        /// <summary>Gets the species net pot growth.</summary>
+        /// <value>The species net pot growth.</value>
+        public double[] SpeciesNetPotGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowthPot;
+                return result;
+            }
+        }
+
+        /// <summary>Gets the species pot growth w.</summary>
+        /// <value>The species pot growth w.</value>
+        public double[] SpeciesPotGrowthW
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowthW;
+                return result;
+            }
+        }
+
+        /// <summary>Gets the species actual growth.</summary>
+        /// <value>The species actual growth.</value>
+        public double[] SpeciesActualGrowth
+        {
+            get
+            {
+                double[] result = new double[SP.Length];
+                for (int s = 0; s < numSpecies; s++)
+                    result[s] = SP[s].dGrowth;
+                return result;
+            }
+        }
+
+
+
+        /// <summary>Gets the GPP.</summary>
+        /// <value>The GPP.</value>
         [Description("Gross primary productivity")]
         [Units("kgDM/ha")]
         public double GPP
@@ -3564,11 +4038,13 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * 2.5;   // assume 40% C in DM
+                    result += SP[s].Pgross * 2.5;   // assume 40% C in DM
                 return result;
             }
         }
-       
+
+        /// <summary>Gets the NPP.</summary>
+        /// <value>The NPP.</value>
         [Description("Net primary productivity")]
         [Units("kgDM/ha")]
         public double NPP
@@ -3577,12 +4053,14 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * 0.75 + SP[s].Resp_m;
+                    result += SP[s].Pgross * 0.75 - SP[s].Resp_m;
                 result *= 2.5;   // assume 40% C in DM
                 return result;
             }
         }
-        
+
+        /// <summary>Gets the napp.</summary>
+        /// <value>The napp.</value>
         [Description("Net above-ground primary productivity")]
         [Units("kgDM/ha")]
         public double NAPP
@@ -3591,8 +4069,8 @@ namespace Models
             {
                 double result = 0.0;
                 for (int s = 0; s < numSpecies; s++)
-                    result = SP[s].Pgross * SP[s].fShoot * 0.75 + SP[s].Resp_m;
-                result /= 2.5;   // assume 40% C in DM
+                    result += (SP[s].Pgross * 0.75 - SP[s].Resp_m) * SP[s].fShoot;
+                result *= 2.5;   // assume 40% C in DM
                 return result;
             }
         }
@@ -3601,73 +4079,112 @@ namespace Models
 
         #region Internal variables
 
-        /// <summary>
-        /// Species in the simulated sward
-        /// </summary>
+        /// <summary>Species in the simulated sward</summary>
         private Species[] SP;
 
-        /// <summary>
-        /// Constant needed for vapour pressure
-        /// </summary>
+        /// <summary>Constant needed for vapour pressure</summary>
         private const double SVPfrac = 0.66;
 
+        /// <summary>The intercepted radn</summary>
         private double interceptedRadn;	// Intercepted Radn
+        /// <summary>My light profile</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 
+        /// <summary>The have initialised</summary>
         private bool HaveInitialised = false;
 
         //** Aggregated pasture parameters of all species (wiht a prefix 'p_')
         //p_d... variables are daily changes (delta)
+        /// <summary>The P_D growth pot</summary>
         private double p_dGrowthPot;	  //daily growth potential
+        /// <summary>The P_D growth w</summary>
         private double p_dGrowthW;		//daily growth with water-deficit incoprporated
+        /// <summary>The P_D growth</summary>
         private double p_dGrowth;		 //daily growth
+        /// <summary>The P_D herbage</summary>
         private double p_dHerbage;		//daily herbage (total standing DM) increae
+        /// <summary>The P_D litter</summary>
         private double p_dLitter;		 //daily litter formation
+        /// <summary>The P_D root sen</summary>
         private double p_dRootSen;		//daily root senescence
+        /// <summary>The P_D n litter</summary>
         private double p_dNLitter;		//daily litter formation
+        /// <summary>The P_D n root sen</summary>
         private double p_dNRootSen;	   //daily root senescence
 
         //p_... variables are pasture states at a given time (day)
-        private double p_fShoot;		  //actual fraction of dGrowth to shoot
+        
+        //private double p_fShoot;		  //actual fraction of dGrowth to shoot
+        /// <summary>The p_height</summary>
         private double p_height;		  // Canopy height (mm)
+        /// <summary>The p_green lai</summary>
         private double p_greenLAI;
+        /// <summary>The p_dead lai</summary>
         private double p_deadLAI;
+        /// <summary>The p_total lai</summary>
         private double p_totalLAI;
+        /// <summary>The p_light ext coeff</summary>
         private double p_lightExtCoeff;
+        /// <summary>The p_green dm</summary>
         private double p_greenDM;		 //green is the live aboveground herbage mass, kgDM/ha
+        /// <summary>The p_dead dm</summary>
         private double p_deadDM;
+        /// <summary>The p_total dm</summary>
         private double p_totalDM;
 
+        /// <summary>The p_root mass</summary>
         private double p_rootMass;		//total root mass
+        /// <summary>The p_root frontier</summary>
         private double p_rootFrontier;	//depth of root frontier
 
         //soil
+        /// <summary>The p_bottom root layer</summary>
         private double p_bottomRootLayer;   //the soil layer just below root zone
+        /// <summary>The p_soil ndemand</summary>
         private double p_soilNdemand;	   //plant N demand (shoot + root) for daily growth from soil (excludingfixation and remob)
         // private double p_soilNdemandMax;	//plant N demand with luxury uptake
+        /// <summary>The p_soil navailable</summary>
         private double p_soilNavailable;	//Plant available N in soil kgN/ha, at the present day
+        /// <summary>The p_soil nuptake</summary>
         private double p_soilNuptake;	   //Plant N uptake, daily
+        /// <summary>The sn supply</summary>
         private double[] SNSupply;
+        /// <summary>The sn uptake</summary>
         private double[] SNUptake;
+        /// <summary>The p_ nfix</summary>
         private double p_Nfix = 0;
+        /// <summary>The P_GFN</summary>
         private double p_gfn;			   // = effect of p_Nstress on growth
 
+        /// <summary>The p_water demand</summary>
         private double p_waterDemand;   // Daily Soil Water Demand (mm)
+        /// <summary>The p_water uptake</summary>
         private double p_waterUptake;   // Daily Soil Water uptake (mm)
+        /// <summary>The p_water supply</summary>
         private double p_waterSupply;   // plant extractable soil moisture (mm)
+        /// <summary>The sw supply</summary>
         private double[] SWSupply;
+        /// <summary>The sw uptake</summary>
         private double[] SWUptake;
+        /// <summary>The p_gfwater</summary>
         private double p_gfwater;	   // = effects of water stress on growth
+        /// <summary>The p_gftemp</summary>
         private double p_gftemp;
 
+        /// <summary>The p_harvest dm</summary>
         private double p_harvestDM;			  //daily harvested dm
+        /// <summary>The p_harvest n</summary>
         private double p_harvestN;			   //daily harvested n
+        /// <summary>The p_harvest digest</summary>
         private double p_harvestDigest;
         //private double p_herbageDigest;
+        /// <summary>The p_ live</summary>
         private bool p_Live = true;			  //flag signialling crop is live (not killed)
 
         //temporary testing, will be removed later when IL1 can be get from micromet
+        /// <summary>The canopies number</summary>
         private int canopiesNum = 1;			//number of canpy including this one
+        /// <summary>The canopies radn</summary>
         private double[] canopiesRadn = null;   //Radn intercepted by canopies
 
         #endregion
@@ -3675,9 +4192,7 @@ namespace Models
         #region Initial and daily settings
 
         //----------------------------------------------------------------
-        /// <summary>
-        /// Initialise parameters
-        /// </summary>
+        /// <summary>Initialise parameters</summary>
         private void InitParameters()
         {
             // zero out the global variables
@@ -3715,10 +4230,10 @@ namespace Models
             p_greenDM = 0.0;
             p_deadDM = 0.0;
 
-            SWSupply = new double[Soil.SoilWater.dlayer.Length];
-            SWUptake = new double[Soil.SoilWater.dlayer.Length];
-            SNSupply = new double[Soil.SoilWater.dlayer.Length];
-            SNUptake = new double[Soil.SoilWater.dlayer.Length];
+            SWSupply = new double[Soil.Thickness.Length];
+            SWUptake = new double[Soil.Thickness.Length];
+            SNSupply = new double[Soil.Thickness.Length];
+            SNUptake = new double[Soil.Thickness.Length];
 
             // check that initialisation fractions have been supplied accordingly
             Array.Resize(ref initialDMFractions_grass, 11);
@@ -3768,7 +4283,7 @@ namespace Models
         /// Set parameter values that each species need to know
         /// - from pasture to species
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="s">The s.</param>
         private void InitSpeciesValues(int s)
         {
             SP[s] = new Species(speciesName[s]);
@@ -3782,31 +4297,30 @@ namespace Models
                 SP[s].dmroot = iniDMshoot[s] * maxRootFraction[s] / (1 + maxRootFraction[s]);
             SP[s].rootDepth = iniRootDepth[s];
 
-            SP[s].Pm = MaxPhotosynthesisRate[s];
-            SP[s].maintRespiration = MaintenanceRespirationCoef[s];
-            SP[s].growthEfficiency = GrowthEfficiency[s];
-            SP[s].lightExtCoeff = LightExtentionCoeff[s];
-            SP[s].maxAssimiRate = MaxAssimilationRate[s];
-            SP[s].growthTmin = GrowthTmin[s];
-            SP[s].growthTmax = GrowthTmax[s];
-            SP[s].growthTopt = GrowthTopt[s];
-            SP[s].growthTq = GrowthTq[s];
-            SP[s].massFluxTmin = MassFluxTmin[s];
-            SP[s].massFluxTopt = MassFluxTopt[s];
-            SP[s].massFluxW0 = MassFluxW0[s];
+            SP[s].Pm = maxPhotosynthesisRate[s];
+            SP[s].maintRespiration = maintenanceRespirationCoef[s];
+            SP[s].growthEfficiency = growthEfficiency[s];
+            SP[s].lightExtCoeff = lightExtentionCoeff[s];
+            SP[s].growthTmin = growthTmin[s];
+            SP[s].growthTmax = growthTmax[s];
+            SP[s].growthTopt = growthTopt[s];
+            SP[s].growthTq = growthTq[s];
+            SP[s].massFluxTmin = massFluxTmin[s];
+            SP[s].massFluxTopt = massFluxTopt[s];
+            SP[s].massFluxW0 = massFluxW0[s];
             SP[s].massFluxWopt = MassFluxWopt[s];
-            SP[s].heatOnsetT = HeatOnsetT[s];
-            SP[s].heatFullT = HeatFullT[s];
-            SP[s].heatSumT = HeatSumT[s];
-            SP[s].coldOnsetT = ColdOnsetT[s];
-            SP[s].coldFullT = ColdFullT[s];
-            SP[s].coldSumT = ColdSumT[s];
-            SP[s].SLA = SpecificLeafArea[s];
-            SP[s].SRL = SpecificRootLength[s];
-            SP[s].maxSRratio = (1 - MaxRootFraction[s]) / MaxRootFraction[s];
-            SP[s].allocationSeasonF = AllocationSeasonF[s];
-            SP[s].fLeaf = FracToLeaf[s];
-            SP[s].fStolon = FracToStolon[s];
+            SP[s].heatOnsetT = heatOnsetT[s];
+            SP[s].heatFullT = heatFullT[s];
+            SP[s].heatSumT = heatSumT[s];
+            SP[s].coldOnsetT = coldOnsetT[s];
+            SP[s].coldFullT = coldFullT[s];
+            SP[s].coldSumT = coldSumT[s];
+            SP[s].SLA = specificLeafArea[s];
+            SP[s].SRL = specificRootLength[s];
+            SP[s].maxSRratio = (1 - maxRootFraction[s]) / maxRootFraction[s];
+            SP[s].allocationSeasonF = allocationSeasonF[s];
+            SP[s].fLeaf = fracToLeaf[s];
+            SP[s].fStolon = fracToStolon[s];
             SP[s].rateLive2Dead = TurnoverRateLive2Dead[s];
             SP[s].rateDead2Litter = TurnoverRateDead2Litter[s];
             SP[s].rateRootSen = TurnoverRateRootSenescence[s];
@@ -3831,7 +4345,7 @@ namespace Models
             SP[s].Kappa4 = Kappa4Remob[s];
             SP[s].gfGen = GlfGeneric[s];
             SP[s].referenceCO2 = ReferenceCO2[s];
-            SP[s].CO2PmaxScale = OffsetCO2EffectOnPhotosynthesis[s];
+            SP[s].CO2PmaxScale = offsetCO2EffectOnPhotosynthesis[s];
             SP[s].CO2NScale = OffsetCO2EffectOnNuptake[s];
             SP[s].CO2NMin = MinimumCO2EffectOnNuptake[s];
             SP[s].CO2NCurvature = ExponentCO2EffectOnNuptake[s];
@@ -3842,9 +4356,7 @@ namespace Models
         }
 
         //---------------------------------------------------------------------------
-        /// <summary>
-        /// Let species know weather conditions
-        /// </summary>
+        /// <summary>Let species know weather conditions</summary>
         /// <returns></returns>
         private bool SetPastureToSpeciesData()
         {
@@ -3912,14 +4424,14 @@ namespace Models
                 double Sat = 0;	 //water content at saturation
                 double FC = 0;	  //water contenct at field capacity
 
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
-                    spDepth += Soil.SoilWater.dlayer[layer];
+                    spDepth += Soil.Thickness[layer];
                     if (spDepth <= p_rootFrontier)
                     {
-                        SW += Soil.SoilWater.sw_dep[layer];
-                        Sat += Soil.SoilWater.sat_dep[layer];
-                        FC += Soil.SoilWater.dul_dep[layer];
+                        SW += Soil.Water[layer];
+                        Sat += Soil.SoilWater.SATmm[layer];
+                        FC += Soil.SoilWater.DULmm[layer];
                     }
                 }
                 if (SW > FC) //if saturated
@@ -3952,9 +4464,7 @@ namespace Models
         }
 
         //--------------------------------------------------------------------------
-        /// <summary>
-        /// plant growth and partitioning and tissue turnover
-        /// </summary>
+        /// <summary>plant growth and partitioning and tissue turnover</summary>
         private void GrowthAndPartition()
         {
             p_greenLAI = 0;
@@ -4008,9 +4518,7 @@ namespace Models
         # region EventSenders
 
         //--------------------------------------------------------------------------------------------
-        /// <summary>
-        /// Event publication - new crop
-        /// </summary>
+        /// <summary>Event publication - new crop</summary>
         private void DoNewCropEvent()
         {
             if (NewCrop != null)
@@ -4024,11 +4532,11 @@ namespace Models
         }
 
         //----------------------------------------------------------------
-        /// <summary>
-        /// Event publication - new canopy
-        /// </summary>
+        /// <summary>Event publication - new canopy</summary>
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+        /// <summary>The local canopy data</summary>
         NewCanopyType LocalCanopyData = new NewCanopyType();
+        /// <summary>Does the new canopy event.</summary>
         private void DoNewCanopyEvent()
         {
             if (NewCanopy != null)
@@ -4086,10 +4594,9 @@ namespace Models
         #endregion //EventSender
 
         #region EventHandlers
-        
-        /// <summary>
-        /// Eventhandeler - initialisation
-        /// </summary>
+
+        /// <summary>Eventhandeler - initialisation</summary>
+        /// <exception cref="System.Exception">When working with multiple species, 'ValsMode' must ALWAYS be 'none'</exception>
         [EventSubscribe("Initialised")]
         private void Initialise() //overrides Sub init2()
         {
@@ -4109,6 +4616,9 @@ namespace Models
                     throw new Exception("When working with multiple species, 'ValsMode' must ALWAYS be 'none'");
         }
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -4116,9 +4626,9 @@ namespace Models
         }
 
         //---------------------------------------------------------------------
-        /// <summary>
-        /// EventHandeler - preparation befor the main process
-        /// </summary>
+        /// <summary>EventHandeler - preparation befor the main process</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
@@ -4128,13 +4638,16 @@ namespace Models
                 HaveInitialised = true;
             }
 
-            for (int s = 0;s<numSpecies;s++)
+            for (int s = 0; s < numSpecies; s++)
                 SP[s].DailyRefresh();
 
             DoNewCanopyEvent();
         }
 
         //---------------------------------------------------------------------
+        /// <summary>Called when [do plant growth].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPlantGrowth")]
         private void OnDoPlantGrowth(object sender, EventArgs e)
         {
@@ -4197,6 +4710,8 @@ namespace Models
 
             //**actual daily growth
             p_dGrowth = 0;
+            if (clock.Today.Day >= 30)
+                p_dGrowth += 0.0;
             for (int s = 0; s < numSpecies; s++)
                 p_dGrowth += SP[s].DailyGrowthAct();
 
@@ -4205,6 +4720,8 @@ namespace Models
         }
 
         //----------------------------------------------------------------------
+        /// <summary>Onremove_crop_biomasses the specified rm.</summary>
+        /// <param name="rm">The rm.</param>
         [EventSubscribe("RemoveCropBiomass")]
         private void Onremove_crop_biomass(RemoveCropBiomassType rm)
         {
@@ -4326,6 +4843,9 @@ namespace Models
         }
 
         //----------------------------------------------------------------------
+        /// <summary>Harvests the specified type.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="amount">The amount.</param>
         public void Harvest(String type, double amount)  //Being called not by Event
         {
             GrazeType GZ = new GrazeType();
@@ -4334,6 +4854,9 @@ namespace Models
             OnGraze(GZ);
         }
 
+        /// <summary>Grazes the specified type.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="amount">The amount.</param>
         public void Graze(string type, double amount)
         {
             if ((!p_Live) || p_totalDM == 0)
@@ -4405,15 +4928,17 @@ namespace Models
         }
 
         //----------------------------------------------------------------------
+        /// <summary>Called when [graze].</summary>
+        /// <param name="GZ">The gz.</param>
         [EventSubscribe("Graze")]
         private void OnGraze(GrazeType GZ)
         {
-            Summary.WriteMessage(this, "Agpasture.OnGraze");
-            //Console.WriteLine("");
             Graze(GZ.type, GZ.amount);
         }
 
         //----------------------------------------------------------
+        /// <summary>Called when [water uptakes calculated].</summary>
+        /// <param name="SoilWater">The soil water.</param>
         [EventSubscribe("WaterUptakesCalculated")]
         private void OnWaterUptakesCalculated(PMF.WaterUptakesCalculatedType SoilWater)
         {
@@ -4434,9 +4959,15 @@ namespace Models
             }
         }
 
-        //----------------------------------------------------------------------
-        [EventSubscribe("Sow")]
-        private void OnSow(SowType PSow)
+        //----------------------------------------------------------------------        
+        /// <summary>Sows the plant</summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             /*SowType is our type and is defined like this:
             <type name="Sow">
@@ -4456,6 +4987,8 @@ namespace Models
         }
 
         //----------------------------------------------------------------------
+        /// <summary>Called when [kill crop].</summary>
+        /// <param name="PKill">The p kill.</param>
         [EventSubscribe("KillCrop")]
         private void OnKillCrop(KillCropType PKill)
         {
@@ -4474,6 +5007,7 @@ namespace Models
         }
 
         //-----------------------------------------------------------------------
+        /// <summary>Resets the zero.</summary>
         private void ResetZero()
         {
             //shoot
@@ -4503,12 +5037,14 @@ namespace Models
 
         }
         //-----------------------------------------------------------------------
+        /// <summary>Calculates the plant available n.</summary>
+        /// <returns></returns>
         private double calcPlantAvailableN()
         {
             p_soilNavailable = 0;
             double spDepth = 0;		 // depth before next soil layer
             int layer = 0;
-            for (layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 if (spDepth <= p_rootFrontier)
                 {
@@ -4522,8 +5058,8 @@ namespace Models
                     SNSupply[layer] = (no3[layer] * KNO3 + nh4[layer] * KNH4 ) * (double)swaf;
                     */
                     //original below
-                    p_soilNavailable += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]);
-                    SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]);
+                    p_soilNavailable += (Soil.NO3N[layer] + Soil.NH4N[layer]);
+                    SNSupply[layer] = (Soil.NO3N[layer] + Soil.NH4N[layer]);
                 }
                 else
                 {
@@ -4531,7 +5067,7 @@ namespace Models
                     break;
                 }
 
-                spDepth += Soil.SoilWater.dlayer[layer];
+                spDepth += Soil.Thickness[layer];
 
             }
 
@@ -4542,6 +5078,8 @@ namespace Models
         }
 
         //-----------------------------------------------------------------------
+        /// <summary>Calculates the plant extractable n.</summary>
+        /// <returns></returns>
         private double calcPlantExtractableN()	// not all minN is extractable
         {
             p_soilNavailable = 0;
@@ -4549,7 +5087,7 @@ namespace Models
             int layer = 0;
             SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
                     
-            for (layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (layer = 0; layer < Soil.Thickness.Length; layer++)
             {
                 if (spDepth <= p_rootFrontier)
                 {
@@ -4557,10 +5095,10 @@ namespace Models
                     const double KNO3 = 0.1;
                     const double KNH4 = 0.1;
                     double swaf = 1.0;
-                    swaf = (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.dul[layer] - soilCrop.LL[layer]);
+                    swaf = (Soil.Water[layer] - soilCrop.LL[layer]) / (Soil.SoilWater.DUL[layer] - soilCrop.LL[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    p_soilNavailable += (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
-                    SNSupply[layer] = (Soil.SoilNitrogen.no3[layer] * KNO3 + Soil.SoilNitrogen.nh4[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    p_soilNavailable += (Soil.NO3N[layer] * KNO3 + Soil.NH4N[layer] * KNH4) * Math.Pow(swaf, 0.25);
+                    SNSupply[layer] = (Soil.NO3N[layer] * KNO3 + Soil.NH4N[layer] * KNH4) * Math.Pow(swaf, 0.25);
 
                     //original below
                     //p_soilNavailable += (no3[layer] + nh4[layer]);
@@ -4572,7 +5110,7 @@ namespace Models
                     break;
                 }
 
-                spDepth += Soil.SoilWater.dlayer[layer];
+                spDepth += Soil.Thickness[layer];
 
             }
 
@@ -4583,6 +5121,9 @@ namespace Models
         }
 
         // RCichota, Jun 2014: cleaned up and add consideration for remobilisation of luxury N
+        /// <summary>ns the budget and uptake.</summary>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         private double NBudgetAndUptake()
         {
             //1) Get the total N demand (species by species)
@@ -4611,7 +5152,7 @@ namespace Models
                     p_Nfix += moreNfix;
                 }
             }
-
+            
             //3) Get N remobilised and calculate N demand from soil
             p_soilNdemand = 0.0;
             for (int s = 0; s < numSpecies; s++)
@@ -4719,6 +5260,8 @@ namespace Models
                 {
                     p_gfn += SP[s].gfn * SP[s].dGrowthW / p_dGrowthW;
                 }
+                if (SP[s].gfn < 1.0)
+                    p_soilNavailable += 0;
             }
 
             //5) Actual uptake, remove N from soil
@@ -4742,9 +5285,7 @@ namespace Models
 
         #region Functions
 
-        /// <summary>
-        /// Placeholder for SoilArbitrator
-        /// </summary>
+        /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
         public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
@@ -4752,12 +5293,18 @@ namespace Models
             return info;
         }
 
+        /// <summary>
+        /// Set the potential sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        { }
+
         //===============================================
         /// <summary>
         /// water uptake processes ...
         /// Rainss Notes 20010707
-        ///  - Should this be done per species? Is using the root frontier an acceptable solution?
-        ///  - Plant2 breaks this into two parts: WaterSupply and DoWaterUptake
+        /// - Should this be done per species? Is using the root frontier an acceptable solution?
+        /// - Plant2 breaks this into two parts: WaterSupply and DoWaterUptake
         /// </summary>
         /// <returns></returns>
         private double SWUptakeProcess()
@@ -4766,9 +5313,9 @@ namespace Models
 
             //find out soil available water
             p_waterSupply = 0;
-            for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
-                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.SoilWater.sw_dep[layer] - soilCrop.LL[layer] * (Soil.SoilWater.dlayer[layer])))
+                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * (Soil.Water[layer] - soilCrop.LL[layer] * (Soil.Thickness[layer])))
                                 * LayerFractionForRoots(layer, p_rootFrontier);
                 if (layer < p_bottomRootLayer)
                     p_waterSupply += SWSupply[layer];
@@ -4776,7 +5323,7 @@ namespace Models
 
             //uptake in proportion
             PMF.WaterChangedType WaterUptake = new PMF.WaterChangedType();
-            WaterUptake.DeltaWater = new double[Soil.SoilWater.dlayer.Length];
+            WaterUptake.DeltaWater = new double[Soil.Thickness.Length];
             //double[] SWUptake = new double[dlayer.Length];
             double Fraction = Math.Min(1.0, p_waterDemand / p_waterSupply);
             double actualUptake = 0.0;
@@ -4793,10 +5340,13 @@ namespace Models
             return actualUptake;
         }
 
-        /// <summary>
-        /// Compute the distribution of roots in the soil profile (sum is equal to one)
-        /// </summary>
+        /// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>
         /// <returns>The proportion of root mass in each soil layer</returns>
+        /// <exception cref="System.Exception">
+        /// No valid method for computing root distribution was selected
+        /// or
+        /// Could not calculate root distribution
+        /// </exception>
         private double[] RootProfileDistribution()
         {
             int nLayers = Soil.Thickness.Length;
@@ -4876,11 +5426,9 @@ namespace Models
             return result;
         }
 
-        /// <summary>
-        /// Compute how much of the layer is actually explored by roots
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="root_depth"></param>
+        /// <summary>Compute how much of the layer is actually explored by roots</summary>
+        /// <param name="layer">The layer.</param>
+        /// <param name="root_depth">The root_depth.</param>
         /// <returns>Fraction of layer explored by roots</returns>
         private double LayerFractionForRoots(int layer, double root_depth)
         {
@@ -4895,18 +5443,17 @@ namespace Models
             return Math.Min(1.0, Math.Max(0.0, fraction_in_layer));
         }
 
-        /// <summary>
-        /// Nitrogen uptake process
-        /// </summary>
+        /// <summary>Nitrogen uptake process</summary>
         /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         private double SNUptakeProcess()
         {
             //Uptake from the root_zone
             Soils.NitrogenChangedType NUptake = new Soils.NitrogenChangedType();
             NUptake.Sender = Name;
             NUptake.SenderType = "Plant";
-            NUptake.DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
-            NUptake.DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
+            NUptake.DeltaNO3 = new double[Soil.Thickness.Length];
+            NUptake.DeltaNH4 = new double[Soil.Thickness.Length];
 
             double Fraction = 0;
             if (p_soilNavailable > 0)
@@ -4923,27 +5470,27 @@ namespace Models
                     totSWUptake = SWUptake.Sum();
 
                 double[]
-                    availableNH4_bylayer = new double[Soil.SoilWater.dlayer.Length],
-                    availableNO3_bylayer = new double[Soil.SoilWater.dlayer.Length],
-                    diffNH4_bylayer = new double[Soil.SoilWater.dlayer.Length],
-                    diffNO3_bylayer = new double[Soil.SoilWater.dlayer.Length];
+                    availableNH4_bylayer = new double[Soil.Thickness.Length],
+                    availableNO3_bylayer = new double[Soil.Thickness.Length],
+                    diffNH4_bylayer = new double[Soil.Thickness.Length],
+                    diffNO3_bylayer = new double[Soil.Thickness.Length];
 
-                for (int layer = 0; layer < Soil.SoilWater.dlayer.Length; layer++)
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     double
-                        totN = Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.no3[layer],
+                        totN = Soil.NH4N[layer] + Soil.NO3N[layer],
                         fracH2O = SWUptake[layer] / totSWUptake;
 
                     if (totN > 0)
                     {
-                        availableNH4_bylayer[layer] = fracH2O * Soil.SoilNitrogen.nh4[layer] / totN;
-                        availableNO3_bylayer[layer] = fracH2O * Soil.SoilNitrogen.no3[layer] / totN;
+                        availableNH4_bylayer[layer] = fracH2O * Soil.NH4N[layer] / totN;
+                        availableNO3_bylayer[layer] = fracH2O * Soil.NO3N[layer] / totN;
 
                         //if we have no3 and nh4 in this layer then calculate our uptake multiplier, otherwise set it to 0
                         //the idea behind the multiplier is that it allows us to calculate the max amount of N we can extract
                         //without forcing any of the layers below 0 AND STILL MAINTAINING THE RATIO as calculated with fracH2O
                         //NOTE: it doesn't matter whether we use nh4 or no3 for this calculation, we will get the same answer regardless
-                        uptake_multiplier = Soil.SoilNitrogen.nh4[layer] * Soil.SoilNitrogen.no3[layer] > 0 ? Math.Min(uptake_multiplier, Soil.SoilNitrogen.nh4[layer] / availableNH4_bylayer[layer]) : 0;
+                        uptake_multiplier = Soil.NH4N[layer] * Soil.NO3N[layer] > 0 ? Math.Min(uptake_multiplier, Soil.NH4N[layer] / availableNH4_bylayer[layer]) : 0;
                     }
                     else
                     {
@@ -4957,8 +5504,8 @@ namespace Models
                 availableNO3_bylayer = availableNO3_bylayer.Select(x => x * uptake_multiplier).ToArray();
 
                 //calculate how much no3/nh4 will be left in the soil layers (diff_nxx[layer] = nxx[layer] - availableNH4_bylayer[layer])
-                diffNH4_bylayer = Soil.SoilNitrogen.nh4.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
-                diffNO3_bylayer = Soil.SoilNitrogen.no3.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
+                diffNH4_bylayer = Soil.NH4N.Select((x, layer) => Math.Max(0, x - availableNH4_bylayer[layer])).ToArray();
+                diffNO3_bylayer = Soil.NO3N.Select((x, layer) => Math.Max(0, x - availableNO3_bylayer[layer])).ToArray();
 
                 //adjust this by the sum of all leftover so we get a ratio we can use later
                 double sum_diff = diffNH4_bylayer.Sum() + diffNO3_bylayer.Sum();
@@ -4986,7 +5533,7 @@ namespace Models
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                     n_uptake += SNUptake[layer] = (NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]) * -1;
 
-                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.SoilNitrogen.no3[i] + x + 0.00000001, 0)).ToArray();
+                double[] diffs = NUptake.DeltaNO3.Select((x, i) => Math.Max(Soil.NO3N[i] + x + 0.00000001, 0)).ToArray();
                 if (diffs.Any(x => x == 0))
                     throw new Exception();
 
@@ -5005,11 +5552,11 @@ namespace Models
             {
                 for (int layer = 0; layer < p_bottomRootLayer; layer++)
                 {   //N are taken up only in top layers that root can reach (including buffer Zone).
-                    n_uptake += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
-                    SNUptake[layer] = (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer]) * Fraction;
+                    n_uptake += (Soil.NO3N[layer] + Soil.NH4N[layer]) * Fraction;
+                    SNUptake[layer] = (Soil.NO3N[layer] + Soil.NH4N[layer]) * Fraction;
 
-                    NUptake.DeltaNO3[layer] = -Soil.SoilNitrogen.no3[layer] * Fraction;
-                    NUptake.DeltaNH4[layer] = -Soil.SoilNitrogen.nh4[layer] * Fraction;
+                    NUptake.DeltaNO3[layer] = -Soil.NO3N[layer] * Fraction;
+                    NUptake.DeltaNH4[layer] = -Soil.NH4N[layer] * Fraction;
                 }
             }
 
@@ -5018,12 +5565,10 @@ namespace Models
             return n_uptake;
         }
 
-        /// <summary>
-        /// return plant litter to surface organic matter poor
-        /// </summary>
-        /// <param name="amtDM"></param>
-        /// <param name="amtN"></param>
-        /// <param name="frac"></param>
+        /// <summary>return plant litter to surface organic matter poor</summary>
+        /// <param name="amtDM">The amt dm.</param>
+        /// <param name="amtN">The amt n.</param>
+        /// <param name="frac">The frac.</param>
         private void DoSurfaceOMReturn(Double amtDM, Double amtN, Double frac)
         {
             if (BiomassRemoved != null)
@@ -5053,14 +5598,12 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// return scenescent roots into fresh organic matter pool in soil
-        /// </summary>
-        /// <param name="rootSen"></param>
-        /// <param name="NinRootSen"></param>
+        /// <summary>return scenescent roots into fresh organic matter pool in soil</summary>
+        /// <param name="rootSen">The root sen.</param>
+        /// <param name="NinRootSen">The nin root sen.</param>
         private void DoIncorpFomEvent(double rootSen, double NinRootSen)
         {
-            Soils.FOMLayerLayerType[] fomLL = new Soils.FOMLayerLayerType[Soil.SoilWater.dlayer.Length];
+            Soils.FOMLayerLayerType[] fomLL = new Soils.FOMLayerLayerType[Soil.Thickness.Length];
 
             // ****  RCichota, Jun, 2014 change how RootFraction (rlvp) is used in here ****************************************
             // root senesced are returned to soil (as FOM) considering return is proportional to root mass
@@ -5072,12 +5615,10 @@ namespace Models
                 dAmtLayer = rootSen * RootFraction[i];
                 dNLayer = NinRootSen * RootFraction[i];
 
-                float amt = (float)dAmtLayer;
-
                 Soils.FOMType fom = new Soils.FOMType();
-                fom.amount = amt;
+                fom.amount = dAmtLayer;
                 fom.N = dNLayer;// 0.03F * amt;	// N in dead root
-                fom.C = 0.40F * amt;	//40% of OM is C. Actually, 'C' is not used, as shown in DataTypes.xml
+                fom.C = 0.40 * dAmtLayer;	//40% of OM is C. Actually, 'C' is not used, as shown in DataTypes.xml
                 fom.P = 0;			  //to consider later
                 fom.AshAlk = 0;		 //to consider later
 
@@ -5102,9 +5643,7 @@ namespace Models
 
         #region Utilities
         //-----------------------------------------------------------------
-        /// <summary>
-        /// The following helper functions [VDP and svp] are for calculating Fvdp
-        /// </summary>
+        /// <summary>The following helper functions [VDP and svp] are for calculating Fvdp</summary>
         /// <returns></returns>
         private double VPD()
         {
@@ -5117,6 +5656,9 @@ namespace Models
             double vdp = SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
             return vdp;
         }
+        /// <summary>SVPs the specified temporary.</summary>
+        /// <param name="temp">The temporary.</param>
+        /// <returns></returns>
         private double svp(double temp)  // from Growth.for documented in MicroMet
         {
             return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
@@ -5128,294 +5670,512 @@ namespace Models
     //================================================================================
     // One species
     //================================================================================
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class Species
     {
+        /// <summary>The p s</summary>
         internal DMPools pS;				//for remember the status of previous day
         //constants
+        /// <summary>The c d2 c</summary>
         const double CD2C = 12.0 / 44.0;	//convert CO2 into C
+        /// <summary>The c2 dm</summary>
         const double C2DM = 2.5;			//C to DM convertion
+        /// <summary>The d m2 c</summary>
         const double DM2C = 0.4;			//DM to C converion
+        /// <summary>The n2 protein</summary>
         const double N2Protein = 6.25;	  //this is for plants... (higher amino acids)
+        /// <summary>The c2 n_protein</summary>
         const double C2N_protein = 3.5;	 //C:N in remobilised material
         //const double growthTref = 20.0;	  //reference temperature
 
         //internal static WeatherFile.NewMetType MetData = new WeatherFile.NewMetType();	//climate data applied to all species
         // From MetData
+        /// <summary>The tmean</summary>
         internal static double Tmean;
+        /// <summary>The tmax</summary>
         internal static double Tmax;
+        /// <summary>The tmin</summary>
         internal static double Tmin;
+        /// <summary>The ambient c o2</summary>
         internal static double ambientCO2;
+        /// <summary>The day length</summary>
         internal static double DayLength;
+        /// <summary>The local latitude</summary>
         internal static double localLatitude;
 
         // From Clock
+        /// <summary>The sim today</summary>
         internal static DateTime simToday;
 
         // From Others
+        /// <summary>The plant intercepted radn</summary>
         internal static double PlantInterceptedRadn;						  //total Radn intecepted by pasture
+        /// <summary>The plant cover green</summary>
         internal static double PlantCoverGreen;
+        /// <summary>The plant light ext coeff</summary>
         internal static double PlantLightExtCoeff;					//k of mixed pasture
+        /// <summary>The plant shoot wt</summary>
         internal static double PlantShootWt;
 
+        /// <summary>The int radn frac</summary>
         internal double intRadnFrac;	 //fraction of Radn intercepted by this species = intRadn/Radn
 
+        /// <summary>The species name</summary>
         public string speciesName;
+        /// <summary>The micromet type</summary>
         internal string micrometType = "grass";
 
+        /// <summary>The is annual</summary>
         internal bool isAnnual = false;		//Species type (1=annual,0=perennial)
+        /// <summary>The is legume</summary>
         public bool isLegume;		//Legume (0=no,1=yes)
+        /// <summary>The photo path</summary>
         public string photoPath;	   //Phtosynthesis pathways: 3=C3, 4=C4; //no consideration for CAM(=3)
 
+        /// <summary>The ini dm frac_grass</summary>
         internal static double[] iniDMFrac_grass;
+        /// <summary>The ini dm frac_legume</summary>
         internal static double[] iniDMFrac_legume;
 
         //annual species parameters
+        /// <summary>The day emerg</summary>
         public int dayEmerg = 0; 		//Earlist day of emergence (for annuals only)
+        /// <summary>The mon emerg</summary>
         public int monEmerg = 0;		//Earlist month of emergence (for annuals only)
+        /// <summary>The day anth</summary>
         public int dayAnth = 0;			//Earlist day of anthesis (for annuals only)
+        /// <summary>The mon anth</summary>
         public int monAnth = 0;			//Earlist month of anthesis (for annuals only)
+        /// <summary>The days to mature</summary>
         public int daysToMature = 0;	//Days from anthesis to maturity (for annuals only)
+        /// <summary>The days emg to anth</summary>
         internal int daysEmgToAnth = 0;   //Days from emergence to Anthesis (calculated, annual only)
+        /// <summary>The pheno stage</summary>
         internal int phenoStage = 1;  //pheno stages: 0 - pre_emergence, 1 - vegetative, 2 - reproductive
+        /// <summary>The pheno factor</summary>
         internal double phenoFactor = 1;
+        /// <summary>The daysfrom emergence</summary>
         internal int daysfromEmergence = 0;   //days
+        /// <summary>The daysfrom anthesis</summary>
         internal int daysfromAnthesis = 0;	//days
 
+        /// <summary>The b sown</summary>
         internal bool bSown = false;
+        /// <summary>The dd sfrom sowing</summary>
         internal double DDSfromSowing = 0;
 
+        /// <summary>The d root depth</summary>
         public int dRootDepth = 50;		//Daily root growth (mm)
+        /// <summary>The maximum root depth</summary>
         public int maxRootDepth = 900;	//Maximum root depth (mm)
+        /// <summary>The allocation season f</summary>
         public double allocationSeasonF; //factor for different biomass allocation among seasons
+        /// <summary>The ndilut coeff</summary>
         public double NdilutCoeff;
+        /// <summary>The root depth</summary>
         public double rootDepth;	   //current root depth (mm)
         //**public int rootFnType;		//Root function 0=default 1=Ritchie 2=power_law 3=proportional_depth
 
+        /// <summary>The growth tmin</summary>
         public double growthTmin;   //Minimum temperature (grtmin) - originally 0
+        /// <summary>The growth tmax</summary>
         public double growthTmax;   //Maximum temperature (grtmax) - originally 30
+        /// <summary>The growth topt</summary>
         public double growthTopt;   //Optimum temperature (grtopt) - originally 20
+        /// <summary>The growth tq</summary>
         public double growthTq;		//Temperature n (grtemn) --fyl: q curvature coefficient, 1.5 for c3 & 2 for c4 in IJ
 
+        /// <summary>The heat onset t</summary>
         public double heatOnsetT;			//onset tempeature for heat effects
+        /// <summary>The heat full t</summary>
         public double heatFullT;			//full temperature for heat effects
+        /// <summary>The heat sum t</summary>
         public double heatSumT;			//temperature sum for recovery - sum of (25-mean)
+        /// <summary>The cold onset t</summary>
         public double coldOnsetT;		  //onset tempeature for cold effects
+        /// <summary>The cold full t</summary>
         public double coldFullT;			//full tempeature for cold effects
+        /// <summary>The cold sum t</summary>
         public double coldSumT;			//temperature sum for recovery - sum of means
+        /// <summary>The pm</summary>
         public double Pm;					//reference leaf co2 g/m^2/s maximum
+        /// <summary>The maint respiration</summary>
         public double maintRespiration;	//in %
+        /// <summary>The growth efficiency</summary>
         public double growthEfficiency;
 
 
+        /// <summary>The high temporary effect</summary>
         private double highTempEffect = 1;  //fraction of growth rate due to high temp. effect
+        /// <summary>The low temporary effect</summary>
         private double lowTempEffect = 1;   //fraction of growth rate due to low temp. effect
+        /// <summary>The accum t</summary>
         private double accumT = 0;		  //accumulated temperature from previous heat strike = sum of '25-MeanT'(>0)
+        /// <summary>The accum t low</summary>
         private double accumTLow = 0;	   //accumulated temperature from previous cold strike = sum of MeanT (>0)
 
+        /// <summary>The mass flux tmin</summary>
         public double massFluxTmin;			//grfxt1	Mass flux minimum temperature
+        /// <summary>The mass flux topt</summary>
         public double massFluxTopt;			//grfxt2	Mass flux optimum temperature
+        /// <summary>The mass flux w0</summary>
         public double massFluxW0;			//grfw1		Mass flux scale factor at GLFwater=0 (must be > 1)
+        /// <summary>The mass flux wopt</summary>
         public double massFluxWopt;		 //grfw2		Mass flux optimum temperature
 
+        /// <summary>The sla</summary>
         public double SLA;				//Specific leaf area (m2/kg dwt)
+        /// <summary>The SRL</summary>
         public double SRL;				//Specific root length
+        /// <summary>The light ext coeff</summary>
         public double lightExtCoeff;	//Light extinction coefficient
+        /// <summary>The light ext coeff_ref</summary>
         private double lightExtCoeff_ref;
+        /// <summary>The rue</summary>
         public double rue;			  //radiaiton use efficiency
+        /// <summary>The maximum assimi rate</summary>
         public double maxAssimiRate;	//Maximum Assimulation rate at reference temp & daylength (20C & 12Hrs)
+        /// <summary>The rate live2 dead</summary>
         public double rateLive2Dead;	//Decay coefficient between live and dead
+        /// <summary>The rate dead2 litter</summary>
         public double rateDead2Litter;	//Decay coefficient between dead and litter
+        /// <summary>The rate root sen</summary>
         public double rateRootSen;	  //Decay reference root senescence rate (%/day)
+        /// <summary>The stock parameter</summary>
         public double stockParameter;   //Stock influence parameter
+        /// <summary>The maximum s rratio</summary>
         public double maxSRratio;	   //Shoot-Root ratio maximum
+        /// <summary>The leaf rate</summary>
         public double leafRate;		 //reference leaf appearance rate without stress
+        /// <summary>The f leaf</summary>
         public double fLeaf;			//Fixed growth partition to leaf (0-1)
+        /// <summary>The f stolon</summary>
         public double fStolon;			//Fixed growth partition to stolon (0-1)
 
+        /// <summary>The digest live</summary>
         public double digestLive;   //Digestibility of live plant material (0-1)
+        /// <summary>The digest dead</summary>
         public double digestDead;   //Digestibility of dead plant material (0-1)
 
         //CO2
+        /// <summary>The reference c o2</summary>
         public double referenceCO2;
+        /// <summary>The c o2 pmax scale</summary>
         public double CO2PmaxScale;
+        /// <summary>The c o2 n scale</summary>
         public double CO2NScale;
+        /// <summary>The c o2 n minimum</summary>
         public double CO2NMin;
+        /// <summary>The c o2 n curvature</summary>
         public double CO2NCurvature;
 
         //water
         //private double swuptake;
         //private double swdemandFrac;
+        /// <summary>The water stress factor</summary>
         public double waterStressFactor;
+        /// <summary>The soil sat factor</summary>
         public double soilSatFactor;
 
         //Nc - N concentration
+        /// <summary>The ncstem fr</summary>
         public double NcstemFr;   //stem Nc as % of leaf Nc
+        /// <summary>The ncstol fr</summary>
         public double NcstolFr;   //stolon Nc as % of leaf Nc
+        /// <summary>The ncroot fr</summary>
         public double NcrootFr;   //root Nc as % of leaf Nc
 
+        /// <summary>The nc rel2</summary>
         public double NcRel2;     //N concentration in tissue 2 relative to tissue 1
+        /// <summary>The nc rel3</summary>
         public double NcRel3;     //N concentration in tissue 3 relative to tissue 1
 
         //current
+        /// <summary>The ncleaf1</summary>
         internal double Ncleaf1;	//leaf 1  (critical N %)
+        /// <summary>The ncleaf2</summary>
         internal double Ncleaf2;	//leaf 2
+        /// <summary>The ncleaf3</summary>
         internal double Ncleaf3;	//leaf 3
+        /// <summary>The ncleaf4</summary>
         internal double Ncleaf4;	//leaf dead
+        /// <summary>The ncstem1</summary>
         internal double Ncstem1;	//sheath and stem 1
+        /// <summary>The ncstem2</summary>
         internal double Ncstem2;	//sheath and stem 2
+        /// <summary>The ncstem3</summary>
         internal double Ncstem3;	//sheath and stem 3
+        /// <summary>The ncstem4</summary>
         internal double Ncstem4;	//sheath and stem dead
+        /// <summary>The ncstol1</summary>
         internal double Ncstol1;	//stolon 1
+        /// <summary>The ncstol2</summary>
         internal double Ncstol2;	//stolon 2
+        /// <summary>The ncstol3</summary>
         internal double Ncstol3;	//stolon 3
+        /// <summary>The ncroot</summary>
         internal double Ncroot;		//root
+        /// <summary>The nclitter</summary>
         internal double Nclitter;	//Litter pool
 
         //Max, Min & Opt = critical N
+        /// <summary>The ncleaf opt</summary>
         public double NcleafOpt;	//leaf   (critical N %)
+        /// <summary>The ncstem opt</summary>
         internal double NcstemOpt;	//sheath and stem
+        /// <summary>The ncstol opt</summary>
         internal double NcstolOpt;	//stolon
+        /// <summary>The ncroot opt</summary>
         internal double NcrootOpt;	//root
+        /// <summary>The ncleaf maximum</summary>
         public double NcleafMax;	//leaf  (critical N %)
+        /// <summary>The ncstem maximum</summary>
         internal double NcstemMax;	//sheath and stem
+        /// <summary>The ncstol maximum</summary>
         internal double NcstolMax;	//stolon
+        /// <summary>The ncroot maximum</summary>
         internal double NcrootMax;	//root
+        /// <summary>The ncleaf minimum</summary>
         public double NcleafMin;
+        /// <summary>The ncstem minimum</summary>
         internal double NcstemMin;
+        /// <summary>The ncstol minimum</summary>
         internal double NcstolMin;
+        /// <summary>The ncroot minimum</summary>
         internal double NcrootMin;
+        /// <summary>The maximum fix</summary>
         public double MaxFix;   //N-fix fraction when no soil N available, read in later
+        /// <summary>The minimum fix</summary>
         public double MinFix;   //N-fix fraction when soil N sufficient
 
         //N in each pool (calculated as dm * Nc)
+        /// <summary>The nleaf1</summary>
         internal double Nleaf1 = 0;	//leaf 1 (kg/ha)
+        /// <summary>The nleaf2</summary>
         internal double Nleaf2 = 0;	//leaf 2 (kg/ha)
+        /// <summary>The nleaf3</summary>
         internal double Nleaf3 = 0;	//leaf 3 (kg/ha)
+        /// <summary>The nleaf4</summary>
         internal double Nleaf4 = 0;	//leaf dead (kg/ha)
+        /// <summary>The nstem1</summary>
         internal double Nstem1 = 0;	//sheath and stem 1 (kg/ha)
+        /// <summary>The nstem2</summary>
         internal double Nstem2 = 0;	//sheath and stem 2 (kg/ha)
+        /// <summary>The nstem3</summary>
         internal double Nstem3 = 0;	//sheath and stem 3 (kg/ha)
+        /// <summary>The nstem4</summary>
         internal double Nstem4 = 0;	//sheath and stem dead (kg/ha)
+        /// <summary>The nstol1</summary>
         internal double Nstol1 = 0;	//stolon 1 (kg/ha)
+        /// <summary>The nstol2</summary>
         internal double Nstol2 = 0;	//stolon 2 (kg/ha)
+        /// <summary>The nstol3</summary>
         internal double Nstol3 = 0;	//stolon 3 (kg/ha)
+        /// <summary>The nroot</summary>
         internal double Nroot = 0;	//root (kg/ha)
+        /// <summary>The nlitter</summary>
         internal double Nlitter = 0;	//Litter pool (kg/ha)
 
         //calculated
         //DM
+        /// <summary>The dmtotal</summary>
         internal double dmtotal;	  //=dmgreen + dmdead
+        /// <summary>The dmgreen</summary>
         internal double dmgreen;
+        /// <summary>The dmgreenmin</summary>
         internal double dmgreenmin;
+        /// <summary>The dmdead</summary>
         internal double dmdead;
+        /// <summary>The dmdeadmin</summary>
         internal double dmdeadmin;
+        /// <summary>The dmshoot</summary>
         internal double dmshoot;
+        /// <summary>The dmleaf</summary>
         internal double dmleaf;
+        /// <summary>The dmstem</summary>
         internal double dmstem;
+        /// <summary>The dmleaf_green</summary>
         internal double dmleaf_green;
+        /// <summary>The dmstem_green</summary>
         internal double dmstem_green;
+        /// <summary>The dmstol_green</summary>
         internal double dmstol_green;
+        /// <summary>The dmstol</summary>
         internal double dmstol;
+        /// <summary>The dmroot</summary>
         internal double dmroot;
 
+        /// <summary>The dmleaf1</summary>
         internal double dmleaf1;	//leaf 1 (kg/ha)
+        /// <summary>The dmleaf2</summary>
         internal double dmleaf2;	//leaf 2 (kg/ha)
+        /// <summary>The dmleaf3</summary>
         internal double dmleaf3;	//leaf 3 (kg/ha)
+        /// <summary>The dmleaf4</summary>
         internal double dmleaf4;	//leaf dead (kg/ha)
+        /// <summary>The dmstem1</summary>
         internal double dmstem1;	//sheath and stem 1 (kg/ha)
+        /// <summary>The dmstem2</summary>
         internal double dmstem2;	//sheath and stem 2 (kg/ha)
+        /// <summary>The dmstem3</summary>
         internal double dmstem3;	//sheath and stem 3 (kg/ha)
+        /// <summary>The dmstem4</summary>
         internal double dmstem4;	//sheath and stem dead (kg/ha)
+        /// <summary>The dmstol1</summary>
         internal double dmstol1;	//stolon 1 (kg/ha)
+        /// <summary>The dmstol2</summary>
         internal double dmstol2;	//stolon 2 (kg/ha)
+        /// <summary>The dmstol3</summary>
         internal double dmstol3;	//stolon 3 (kg/ha)
+        /// <summary>The dmlitter</summary>
         internal double dmlitter;	//Litter pool (kg/ha)
 
-        internal double dmdefoliated;
-        internal double Ndefoliated;
+        /// <summary>The dmdefoliated</summary>
+        internal double dmdefoliated = 0.0;
+        /// <summary>The ndefoliated</summary>
+        internal double Ndefoliated = 0.0;
+        /// <summary>The digest herbage</summary>
         internal double digestHerbage;
+        /// <summary>The digest defoliated</summary>
         internal double digestDefoliated;
         //LAI
+        /// <summary>The green lai</summary>
         internal double greenLAI; //sum of 3 pools
+        /// <summary>The dead lai</summary>
         internal double deadLAI;  //pool dmleaf4
+        /// <summary>The total lai</summary>
         internal double totalLAI;
         //N plant
+        /// <summary>The nshoot</summary>
         internal double Nshoot;	//above-ground total N (kg/ha)
+        /// <summary>The nleaf</summary>
         internal double Nleaf;	//leaf N
+        /// <summary>The nstem</summary>
         internal double Nstem;	//stem N
+        /// <summary>The ngreen</summary>
         internal double Ngreen;	//live N
+        /// <summary>The ndead</summary>
         internal double Ndead;	//in standing dead (kg/ha)
+        /// <summary>The nstolon</summary>
         internal double Nstolon;	//stolon
 
         //internal double NremobMax;  //maximum N remob of the day
+        /// <summary>The nremob</summary>
         internal double Nremob = 0;	   //N remobiliesd N during senesing
+        /// <summary>The cremob</summary>
         internal double Cremob = 0;
+        /// <summary>The nleaf3 remob</summary>
         internal double Nleaf3Remob = 0;
+        /// <summary>The nstem3 remob</summary>
         internal double Nstem3Remob = 0;
+        /// <summary>The nstol3 remob</summary>
         internal double Nstol3Remob = 0;
+        /// <summary>The nroot remob</summary>
         internal double NrootRemob = 0;
+        /// <summary>The remob2 new growth</summary>
         internal double remob2NewGrowth = 0;
+        /// <summary>The new growth n</summary>
         internal double newGrowthN = 0;	//N plant-soil
+        /// <summary>The ndemand lux</summary>
         internal double NdemandLux;	  //N demand for new growth
+        /// <summary>The ndemand opt</summary>
         internal double NdemandOpt;
         //internal double NdemandMax;   //luxury N demand for new growth
+        /// <summary>The nfix</summary>
         internal double Nfix;		 //N fixed by legumes
 
+        /// <summary>The kappa2</summary>
         internal double Kappa2 = 0.0;
+        /// <summary>The kappa3</summary>
         internal double Kappa3 = 0.0;
+        /// <summary>The kappa4</summary>
         internal double Kappa4 = 0.0;
+        /// <summary>The n luxury2</summary>
         internal double NLuxury2;		       // luxury N (above Nopt) potentially remobilisable
+        /// <summary>The n luxury3</summary>
         internal double NLuxury3;		       // luxury N (above Nopt)potentially remobilisable
+        /// <summary>The n fast remob2</summary>
         internal double NFastRemob2 = 0.0;   // amount of luxury N remobilised from tissue 2
+        /// <summary>The n fast remob3</summary>
         internal double NFastRemob3 = 0.0;   // amount of luxury N remobilised from tissue 3
 
         //internal double soilNAvail;   //N available to this species
+        /// <summary>The soil ndemand</summary>
         internal double soilNdemand;  //N demand from soil (=Ndemand-Nremob-Nfixed)
         //internal double soilNdemandMax;   //N demand for luxury uptake
+        /// <summary>The soil nuptake</summary>
         internal double soilNuptake;  //N uptake of the day
 
         //growth limiting factors
+        /// <summary>The gfwater</summary>
         internal double gfwater;  //from water stress
+        /// <summary>The gftemp</summary>
         internal double gftemp;   //from temperature
+        /// <summary>The GFN</summary>
         internal double gfn;	  //from N deficit
+        /// <summary>The gf gen</summary>
         internal double gfGen;
+        /// <summary>The ncfactor</summary>
         internal double Ncfactor;
         //internal double fNavail2Max; //demand/Luxruy uptake
 
         //calculated, species delta
+        /// <summary>The d growth pot</summary>
         internal double dGrowthPot;	//daily growth potential
+        /// <summary>The d growth w</summary>
         internal double dGrowthW;	  //daily growth with water-deficit incorporated
+        /// <summary>The d growth</summary>
         internal double dGrowth;	   //daily growth
+        /// <summary>The d growth root</summary>
         internal double dGrowthRoot;   //daily root growth
+        /// <summary>The d growth herbage</summary>
         internal double dGrowthHerbage; //daily growth shoot
 
+        /// <summary>The d litter</summary>
         internal double dLitter;	   //daily litter production
+        /// <summary>The d n litter</summary>
         internal double dNLitter;	  //N in dLitter
+        /// <summary>The d root sen</summary>
         internal double dRootSen;	  //daily root sennesce
+        /// <summary>The d nroot sen</summary>
         internal double dNrootSen;	 //N in dRootSen
 
+        /// <summary>The f shoot</summary>
         internal double fShoot;		 //actual fraction of dGrowth to shoot
- 
+
         // transfer coefficients 
+        /// <summary>The gama</summary>
         public double gama = 0.0;	// from tissue 1 to 2, then 3 then 4
+        /// <summary>The gamas</summary>
         public double gamas = 0.0;	// for stolons
+        /// <summary>The gamad</summary>
         public double gamad = 0.0;	// from dead to litter
+        /// <summary>The gamar</summary>
         public double gamar = 0.0;	// for roots (to dead/FOM)
 
+        /// <summary>The leaf preference</summary>
         internal double leafPref = 1;	//leaf preference
         // internal double accumtotalnewG = 0;
         // internal double accumtotalnewN = 0;
+        /// <summary>The i l1</summary>
         internal double IL1;
+        /// <summary>The pgross</summary>
         internal double Pgross;
+        /// <summary>The resp_m</summary>
         internal double Resp_m;
 
         //Species ------------------------------------------------------------
+        /// <summary>Initializes a new instance of the <see cref="Species"/> class.</summary>
+        /// <param name="name">The name.</param>
         public Species(string name)
         {
             speciesName = name;
         }
 
+        /// <summary>Initializes the values.</summary>
         public void InitValues()
         {
             pS = new DMPools();
@@ -5547,6 +6307,7 @@ namespace Models
         }
 
         //Species -----------------------
+        /// <summary>Dailies the refresh.</summary>
         public void DailyRefresh()
         {
             dmdefoliated = 0;
@@ -5556,6 +6317,12 @@ namespace Models
         }
 
         //Species -----------------------------
+        /// <summary>Removes the dm.</summary>
+        /// <param name="AmountToRemove">The amount to remove.</param>
+        /// <param name="PrefGreen">The preference green.</param>
+        /// <param name="PrefDead">The preference dead.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">  AgPasture - removal of DM resulted in loss of mass balance</exception>
         public double RemoveDM(double AmountToRemove, double PrefGreen, double PrefDead)
         {
 
@@ -5643,6 +6410,9 @@ namespace Models
             return Ndefoliated;
         }
 
+        /// <summary>Remove_originals the specified amt.</summary>
+        /// <param name="amt">The amt.</param>
+        /// <returns></returns>
         public double Remove_original(double amt)
         {
             //double pRest = 1 - (amt/dmtotal);
@@ -5670,7 +6440,7 @@ namespace Models
             //digestDefoliated = (1-deadFrac) * digestLive + deadFrac * digestDead;
             digestDefoliated = calcDigestability(); //because the defoliateion of different parts is in proportion to biomass
 
- 
+
             // 1)Removing without preference   Mar2011: using different pRest for maintain a 'dmgreenmin'
             dmleaf1 = pRest_green * dmleaf1;
             dmleaf2 = pRest_green * dmleaf2;
@@ -5707,6 +6477,8 @@ namespace Models
         }
 
         //Species ------------------------------------------------------------
+        /// <summary>Calculates the digestability.</summary>
+        /// <returns></returns>
         public double calcDigestability()
         {
             if ((dmleaf + dmstem) <= 0)
@@ -5746,6 +6518,9 @@ namespace Models
             return digestHerbage;
         }
         //Species ------------------------------------------------------------
+        /// <summary>Updates the aggregated.</summary>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Loss of mass balance of shoot plant dry matter</exception>
         public double updateAggregated()   //update DM, N & LAI
         {
             //DM
@@ -5766,7 +6541,7 @@ namespace Models
 
             if (Math.Abs((dmgreen + dmdead) - dmshoot) > 0.001)
                 throw new Exception("Loss of mass balance of shoot plant dry matter");
-  
+
             dmtotal = dmshoot + dmroot;
 
             //N
@@ -5780,7 +6555,6 @@ namespace Models
                     + Nstem1 + Nstem2 + Nstem3
                     + Nstol1 + Nstol2 + Nstol3;
             Ndead = Nleaf4 + Nstem4;
-
 
             //LAI								   //0.0001: kg/ha->kg/m2; SLA: m2/kg
             greenLAI = 0.0001 * dmleaf_green * SLA + 0.0001 * dmstol * 0.3 * SLA;   //insensitive? assuming Mass2GLA = 0.3*SLA
@@ -5803,6 +6577,8 @@ namespace Models
         }
 
         //Species --------------------------------------------
+        /// <summary>Roots the growth.</summary>
+        /// <returns></returns>
         public double rootGrowth()
         {
             if (isAnnual)
@@ -5814,6 +6590,8 @@ namespace Models
         }
 
         //Species -------------------------------------------------
+        /// <summary>Calculates the days emg to anth.</summary>
+        /// <returns></returns>
         public int CalcDaysEmgToAnth()
         {
             int numbMonths = monAnth - monEmerg;  //emergence & anthesis in the same calendar year: monEmerg < monAnth
@@ -5826,6 +6604,8 @@ namespace Models
         }
 
         //Species -------------------------------------------------------------
+        /// <summary>Phenologies this instance.</summary>
+        /// <returns></returns>
         public int Phenology()
         {
             const double DDSEmergence = 150;   // to be an input parameter
@@ -5846,6 +6626,8 @@ namespace Models
         }
 
         //Species -------------------------------------------------------------
+        /// <summary>Sets the state of the emergent.</summary>
+        /// <returns></returns>
         private double SetEmergentState()
         {
             dmleaf1 = 10;   //(kg/ha)
@@ -5897,16 +6679,16 @@ namespace Models
 
         }
 
-                /// <summary>
-        /// Placeholder for SoilArbitrator
-        /// </summary>
-        /// <param name="info"></param>
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="info">The information.</param>
         /// <returns></returns>
         public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
         {
             return info;
         }
 
+        /// <summary>Dailies the em growth pot.</summary>
+        /// <returns></returns>
         public double DailyEMGrowthPot()
         {
             //annual phebology
@@ -5942,7 +6724,7 @@ namespace Models
             //IL:  irridance on the top of canopy, with unit: J/(m^2 LAI)/(m^2 ground)/second.  PAR = 0.5*Radn; 1 MJ = 10^6 J
 
             //IL1 = 1.33333 * 0.5 * PIntRadn / (PCoverGreen*coverRF) * PLightExtCoeff * 1000000 / tau;
-            IL1 = 1.33333 * 0.5 * PlantInterceptedRadn * PlantLightExtCoeff * 1000000 / tau;					//ignore putting 2 species seperately for now
+            IL1 = 1.33333 * 0.5 * PlantInterceptedRadn * 1000000 * PlantLightExtCoeff / tau;					//ignore putting 2 species seperately for now
             double IL2 = IL1 / 2;					  //IL for early & late period of a day
 
             //Photosynthesis per LAI under full irridance at the top of the canopy
@@ -5950,7 +6732,7 @@ namespace Models
                          - Math.Sqrt((alfa * IL1 + Pm_day) * (alfa * IL1 + Pm_day) - 4 * theta * alfa * IL1 * Pm_day));
             double Pl2 = (0.5 / theta) * (alfa * IL2 + Pm_mean
                          - Math.Sqrt((alfa * IL2 + Pm_mean) * (alfa * IL2 + Pm_mean) - 4 * theta * alfa * IL2 * Pm_mean));
-
+            
             //Upscaling from 'per LAI' to 'per ground area'
             double carbon_m2 = 0.000001 * CD2C * 0.5 * tau * (Pl1 + Pl2) * PlantCoverGreen * intRadnFrac / lightExtCoeff;
             //tau: per second => per day; 0.000001: mg/m^2=> kg/m^2_ground/day;
@@ -6010,6 +6792,8 @@ namespace Models
 
         //Species --------------------------------------------------------------
         // phenology of anuual species
+        /// <summary>Annuals the phenology.</summary>
+        /// <returns></returns>
         public bool annualPhenology()
         {
             if (simToday.Month == monEmerg && simToday.Day == dayEmerg)
@@ -6048,6 +6832,8 @@ namespace Models
 
         //Species --------------------------------------------------------------
         // phenologically related reduction of annual species
+        /// <summary>Annuals the species reduction.</summary>
+        /// <returns></returns>
         public double annualSpeciesReduction()
         {
             double rFactor = 1;  // reduction factor of annual species
@@ -6067,6 +6853,8 @@ namespace Models
 
         //Species --------------------------------------------------------------
         //Plant photosynthesis increase to eleveated [CO2]
+        /// <summary>Pcs the o2 effects.</summary>
+        /// <returns></returns>
         public double PCO2Effects()
         {
             if (Math.Abs(ambientCO2 - referenceCO2) < 0.5)
@@ -6082,6 +6870,8 @@ namespace Models
 
         //Species --------------------------------------------------------------
         // Plant nitrogen [N] decline to elevated [CO2]
+        /// <summary>Ncs the o2 effects.</summary>
+        /// <returns></returns>
         public double NCO2Effects()
         {
             if (Math.Abs(ambientCO2 - referenceCO2) < 0.5)
@@ -6098,6 +6888,8 @@ namespace Models
 
         //Species --------------------------------------------------------------
         //Canopy conductiance decline to elevated [CO2]
+        /// <summary>Conductances the c o2 effects.</summary>
+        /// <returns></returns>
         public double ConductanceCO2Effects()
         {
             if (Math.Abs(ambientCO2 - referenceCO2) < 0.5)
@@ -6114,6 +6906,8 @@ namespace Models
 
         //Species ---------------------------------------------------------------
         //Calculate species N demand for potential growth (soilNdemand);
+        /// <summary>Calculates the ndemand.</summary>
+        /// <returns></returns>
         public double CalcNdemand()
         {
             fShoot = NewGrowthToShoot();
@@ -6121,8 +6915,8 @@ namespace Models
 
             double toRoot = dGrowthW * (1.0 - fShoot);
             double toStol = dGrowthW * fShoot * fStolon;
-            double toLeaf = dGrowthW * fShoot * (1.0 - fStolon) * fLeaf;
-            double toStem = dGrowthW * fShoot * (1.0 - fStolon) * (1.0 - fLeaf);
+            double toLeaf = dGrowthW * fShoot * fLeaf;
+            double toStem = dGrowthW * fShoot * (1.0 - fStolon - fLeaf);
 
             //N demand for new growth (kg/ha)
             NdemandOpt = toRoot * NcrootOpt + toStol * NcstolOpt + toLeaf * NcleafOpt + toStem * NcstemOpt;
@@ -6144,6 +6938,8 @@ namespace Models
 
 
         //------------------------------------------
+        /// <summary>Updatefs the leaf.</summary>
+        /// <returns></returns>
         public double UpdatefLeaf()
         {
             //temporary, need to do as interpolatiopon set
@@ -6168,6 +6964,8 @@ namespace Models
         }
 
         //Species -------------------------------------------------------------
+        /// <summary>Dailies the growth w.</summary>
+        /// <returns></returns>
         public double DailyGrowthW()
         {
             Ncfactor = PmxNeffect();
@@ -6180,6 +6978,8 @@ namespace Models
         }
 
         //Species -------------------------------------------------------------
+        /// <summary>Dailies the growth act.</summary>
+        /// <returns></returns>
         public double DailyGrowthAct()
         {
             double gfnit = 0.0;
@@ -6195,6 +6995,8 @@ namespace Models
         }
 
         //Species -------------------------------------------------------------
+        /// <summary>PMXs the neffect.</summary>
+        /// <returns></returns>
         public double PmxNeffect()
         {
             double Fn = NCO2Effects();
@@ -6225,6 +7027,8 @@ namespace Models
         }
 
         //Species -------------------------------------------------------------
+        /// <summary>ns the fix cost.</summary>
+        /// <returns></returns>
         public double NFixCost()
         {
             double costF = 1.0;	//  redcuiton fraction of net prodcution as cost of N-fixining
@@ -6241,6 +7045,8 @@ namespace Models
 
 
         //Species -------------------------------------------------------------
+        /// <summary>Partitions the turnover.</summary>
+        /// <returns></returns>
         public double PartitionTurnover()
         {
             double GFT = GFTemperature();	   // Temperature response
@@ -6259,8 +7065,8 @@ namespace Models
                 //Fractions [eq.4.13]
                 double toRoot = 1.0 - fShoot;
                 double toStol = fShoot * fStolon;
-                double toLeaf = fShoot * (1.0 - fStolon) * fLeaf;
-                double toStem = fShoot * (1.0 - fStolon) * (1.0 - fLeaf);
+                double toLeaf = fShoot * fLeaf;
+                double toStem = fShoot * (1.0 - fStolon - fLeaf);
 
                 //checking
                 double ToAll = toLeaf + toStem + toStol + toRoot;
@@ -6500,6 +7306,8 @@ namespace Models
 
 
         //Species ------------------------------------------------------------------
+        /// <summary>News the growth to shoot.</summary>
+        /// <returns></returns>
         private double NewGrowthToShoot()
         {
             //The input maxSRratio (maximum percentage allocated to roots = 20%) was converted into
@@ -6586,28 +7394,39 @@ namespace Models
         }
 
         //Species -------------------------------------------------------------------
+        /// <summary>Gets the cover green.</summary>
+        /// <value>The cover green.</value>
         public double coverGreen
         {
             get { return (1.0 - Math.Exp(-lightExtCoeff * greenLAI)); }
         }
         //Species -------------------------------------------------------------------
+        /// <summary>Gets the cover dead.</summary>
+        /// <value>The cover dead.</value>
         public double coverDead
         {
             get { return (1.0 - Math.Exp(-lightExtCoeff * deadLAI)); }
         }
         //Species -------------------------------------------------------------------
+        /// <summary>Gets the cover tot.</summary>
+        /// <value>The cover tot.</value>
         public double coverTot
         {
             get { return (1.0 - (Math.Exp(-lightExtCoeff * totalLAI))); }
         }
 
         //Species ---------------------------------------------------------------------
+        /// <summary>Gfs the temperature.</summary>
+        /// <returns></returns>
         public double GFTemperature()
         {
             if (photoPath == "C4") gftemp = GFTempC4();
             else gftemp = GFTempC3();			   //CAM path ?
             return gftemp;
         }
+        /// <summary>Gfs the temperature.</summary>
+        /// <param name="T">The t.</param>
+        /// <returns></returns>
         public double GFTemperature(double T)	   //passing T
         {
             if (photoPath == "C4") gftemp = GFTempC4(T);
@@ -6616,6 +7435,8 @@ namespace Models
         }
         //Species -------------------------------------------------
         // Photosynthesis temperature response curve for C3 plants
+        /// <summary>Gfs the temporary c3.</summary>
+        /// <returns></returns>
         public double GFTempC3()
         {
             double gft3 = 0.0;
@@ -6633,6 +7454,9 @@ namespace Models
         }
         //Species -------------------------------------------------
         // Photosynthesis temperature response curve for C3 plants, passing T
+        /// <summary>Gfs the temporary c3.</summary>
+        /// <param name="T">The t.</param>
+        /// <returns></returns>
         public double GFTempC3(double T)
         {
             double gft3 = 0.0;
@@ -6651,6 +7475,8 @@ namespace Models
 
         //Species ---------------------------------------------
         // Photosynthesis temperature response curve for C4 plants
+        /// <summary>Gfs the temporary c4.</summary>
+        /// <returns></returns>
         public double GFTempC4()
         {
             double gft4 = 0.0;		  // Assign value 0 for the case of T < Tmin
@@ -6673,6 +7499,9 @@ namespace Models
 
         //Species ---------------------------------------------
         // Photosynthesis temperature response curve for C4 plants, passing T
+        /// <summary>Gfs the temporary c4.</summary>
+        /// <param name="T">The t.</param>
+        /// <returns></returns>
         public double GFTempC4(double T)
         {
             double gft4 = 0.0;		  // Assign value 0 for the case of T < Tmin
@@ -6695,6 +7524,8 @@ namespace Models
 
         //Species ---------------------------------------------
         // Heat effect: reduction = (MaxT-28)/35, recovery after accumulating 50C of (meanT-25)
+        /// <summary>Heats the effect.</summary>
+        /// <returns></returns>
         private double HeatEffect()
         {
             //constants are now set from interface
@@ -6739,6 +7570,8 @@ namespace Models
 
         //Species ---------------------------------------------
         // Cold effect: reduction, recovery after accumulating 20C of meanT
+        /// <summary>Colds the effect.</summary>
+        /// <returns></returns>
         private double ColdEffect()
         {
             //recover from the previous high temp. effect
@@ -6781,6 +7614,8 @@ namespace Models
 
         //Species ----------------------------------------------------------
         // Tissue turnover rate's response to water stress (eq. 4.15h)
+        /// <summary>Gfs the water tissue.</summary>
+        /// <returns></returns>
         public double GFWaterTissue()
         {
             double gfwt = 1.0;
@@ -6796,8 +7631,10 @@ namespace Models
         //Species ------------------------------------------------------
         // Tissue turnover rate's response to temperature (eq 4.15f)
         // Tissue turnover: Tmin=5, Topt=20 - same for C3 & C4 plants ?
+        /// <summary>Gfs the temporary tissue.</summary>
+        /// <returns></returns>
         public double GFTempTissue()
-        {            
+        {
             double gftt = 0.0;		//default as T < massFluxTmin
             if (Tmean > massFluxTmin && Tmean <= massFluxTopt)
             {
@@ -6810,6 +7647,7 @@ namespace Models
             return gftt;
         }
         // Species ----------------------------------------------------------------------
+        /// <summary>Resets the zero.</summary>
         public void ResetZero()  //kill this crop
         {
             //Reset dm pools
@@ -6836,6 +7674,7 @@ namespace Models
 
 
         //Species ---------------------------------------------------------
+        /// <summary>Sets the in germination.</summary>
         public void SetInGermination()
         {
             bSown = true;
@@ -6843,6 +7682,8 @@ namespace Models
         }
 
         //Species ---------------------------------------------------------
+        /// <summary>Sets the previous pools.</summary>
+        /// <returns></returns>
         public bool SetPrevPools()
         {
             pS.dmleaf1 = dmleaf1;
@@ -6875,102 +7716,176 @@ namespace Models
     } //class Species
 
     //------ RemoveCropBiomassdm ------
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class RemoveCropBiomassdmType
     {
+        /// <summary>The pool</summary>
         public string pool = "";
+        /// <summary>The part</summary>
         public string[] part;
+        /// <summary>The DLT</summary>
         public double[] dlt;
     }
 
     //------ RemoveCropBiomass ------
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class RemoveCropBiomassType
     {
+        /// <summary>The dm</summary>
         public RemoveCropBiomassdmType[] dm;
     }
 
     //------ Sow ------
+    /// <summary>
+    /// 
+    /// </summary>
     public class SowType
     {
+        /// <summary>The cultivar</summary>
         public string Cultivar = "";
+        /// <summary>The plants</summary>
         public double plants;
+        /// <summary>The sowing_depth</summary>
         public double sowing_depth;
+        /// <summary>The row_spacing</summary>
         public double row_spacing;
+        /// <summary>The skip row</summary>
         public double SkipRow;
+        /// <summary>The skip plant</summary>
         public double SkipPlant;
+        /// <summary>The establishment</summary>
         public string Establishment = "";
+        /// <summary>The crop_class</summary>
         public string crop_class = "";
+        /// <summary>The tiller_no_fertile</summary>
         public string tiller_no_fertile = "";
+        /// <summary>The skip</summary>
         public string Skip = "";
+        /// <summary>The plants_pm</summary>
         public double plants_pm;
+        /// <summary>The ratoon</summary>
         public int Ratoon;
+        /// <summary>The sbdur</summary>
         public int sbdur;
+        /// <summary>The NPLH</summary>
         public double nplh;
+        /// <summary>The nh</summary>
         public double nh;
+        /// <summary>The NPLSB</summary>
         public double nplsb;
+        /// <summary>The NPLDS</summary>
         public double nplds;
     }
 
     //------ Graze ------
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class GrazeType
     {
+        /// <summary>The sender</summary>
         public string sender = "";
+        /// <summary>The amount</summary>
         public double amount;
+        /// <summary>The type</summary>
         public string type = "";
     }
 
     //------ KillCrop ------
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class KillCropType
     {
+        /// <summary>The kill fraction</summary>
         public double KillFraction;
     }
 
     //DMPools =================================================
     //for remember the pool status of previous day
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class DMPools
     {
+        /// <summary>The dmleaf1</summary>
         public double dmleaf1;
+        /// <summary>The dmleaf2</summary>
         public double dmleaf2;
+        /// <summary>The dmleaf3</summary>
         public double dmleaf3;
+        /// <summary>The dmleaf4</summary>
         public double dmleaf4;
+        /// <summary>The dmstem1</summary>
         public double dmstem1;
+        /// <summary>The dmstem2</summary>
         public double dmstem2;
+        /// <summary>The dmstem3</summary>
         public double dmstem3;
+        /// <summary>The dmstem4</summary>
         public double dmstem4;
+        /// <summary>The dmstol1</summary>
         public double dmstol1;
+        /// <summary>The dmstol2</summary>
         public double dmstol2;
+        /// <summary>The dmstol3</summary>
         public double dmstol3;
+        /// <summary>The dmlitter</summary>
         public double dmlitter;
+        /// <summary>The dmroot</summary>
         public double dmroot;
 
+        /// <summary>The dmleaf</summary>
         public double dmleaf;
+        /// <summary>The dmstem</summary>
         public double dmstem;
+        /// <summary>The dmleaf_green</summary>
         public double dmleaf_green;
+        /// <summary>The dmstem_green</summary>
         public double dmstem_green;
+        /// <summary>The dmstol_green</summary>
         public double dmstol_green;
+        /// <summary>The dmstol</summary>
         public double dmstol;
+        /// <summary>The dmshoot</summary>
         public double dmshoot;
+        /// <summary>The dmgreen</summary>
         public double dmgreen;
+        /// <summary>The dmdead</summary>
         public double dmdead;
+        /// <summary>The dmtotal</summary>
         public double dmtotal;
+        /// <summary>The dmdefoliated</summary>
         public double dmdefoliated;
+        /// <summary>The nremob</summary>
         public double Nremob;
 
+        /// <summary>Initializes a new instance of the <see cref="DMPools"/> class.</summary>
         public DMPools() { }
 
 
     } //class DMPools
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class LinearInterpolation
     {
         //public string[] XYs;
 
+        /// <summary>The x</summary>
         public double[] X;
+        /// <summary>The y</summary>
         public double[] Y;
 
         /*
@@ -6989,6 +7904,9 @@ namespace Models
                 Y[i] = Convert.ToDouble(XYBits[1]);
             }
         } */
+        /// <summary>Values the specified d x.</summary>
+        /// <param name="dX">The d x.</param>
+        /// <returns></returns>
         public double Value(double dX)
         {
             bool DidInterpolate = false;

@@ -13,6 +13,9 @@ namespace Utility
     /// </summary>
     public class Process
     {
+        /// <summary>
+        /// Enumeration for holding compilation modes
+        /// </summary>
         public enum CompilationMode
         {
             /// <summary>

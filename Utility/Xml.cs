@@ -9,10 +9,19 @@ using System.Reflection;
 
 namespace Utility
 {
+    /// <summary>
+    /// XML utility routines
+    /// </summary>
     public class Xml
     {
+        /// <summary>The delimiter</summary>
         public const char Delimiter = '/';
 
+        /// <summary>Creates the node.</summary>
+        /// <param name="Document">The document.</param>
+        /// <param name="Type">The type.</param>
+        /// <param name="Name">The name.</param>
+        /// <returns></returns>
         public static XmlNode CreateNode(XmlDocument Document, string Type, string Name)
         {
             // -----------------------------------------------------------------
@@ -38,6 +47,9 @@ namespace Utility
                 return Type(aNode);
         }
 
+        /// <summary>Names the attribute.</summary>
+        /// <param name="Node">The node.</param>
+        /// <returns></returns>
         public static string NameAttr(XmlNode Node)
         {
             // --------------------------------------
@@ -51,11 +63,17 @@ namespace Utility
             else
                 return value;
         }
+        /// <summary>Sets the name attribute.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="Name">The name.</param>
         public static void SetNameAttr(XmlNode Node, string Name)
         {
             if (Name != Utility.Xml.NameAttr(Node))
                 SetAttribute(Node, "name", Name);
         }
+        /// <summary>Types the specified node.</summary>
+        /// <param name="Node">The node.</param>
+        /// <returns></returns>
         public static string Type(XmlNode Node)
         {
             // ---------------------------------------
@@ -63,6 +81,10 @@ namespace Utility
             // ---------------------------------------
             return Node.Name;
         }
+        /// <summary>Changes the type.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="NewType">The new type.</param>
+        /// <returns></returns>
         public static XmlNode ChangeType(XmlNode Node, string NewType)
         {
             if (Node.ParentNode != null)
@@ -83,6 +105,9 @@ namespace Utility
             return null;
         }
 
+        /// <summary>Parents the specified node.</summary>
+        /// <param name="Node">The node.</param>
+        /// <returns></returns>
         public static XmlNode Parent(XmlNode Node)
         {
             // ---------------------------------------
@@ -112,6 +137,9 @@ namespace Utility
             return path.ToString();
         }
 
+        /// <summary>Fulls the path.</summary>
+        /// <param name="Node">The node.</param>
+        /// <returns></returns>
         public static string FullPath(XmlNode Node)
         {
             // --------------------------------------------------------
@@ -127,6 +155,14 @@ namespace Utility
             } while ((LocalData = Parent(LocalData)) != null);
             return FullPath.ToString();
         }
+        /// <summary>Parents the path.</summary>
+        /// <param name="NodePath">The node path.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">
+        /// Cannot get the parent of the specified node:  + NodePath
+        /// or
+        /// Cannot get the parent of the root node
+        /// </exception>
         public static string ParentPath(string NodePath)
         {
             int PosDelimiter = NodePath.LastIndexOf(Delimiter);
@@ -137,6 +173,11 @@ namespace Utility
                 throw new Exception("Cannot get the parent of the root node");
             return ParentName;
         }
+        /// <summary>Finds the specified node.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="NamePath">The name path.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot call FindByName with a blank path</exception>
         public static XmlNode Find(XmlNode Node, string NamePath)
         {
             // ----------------------------------------------------
@@ -203,6 +244,11 @@ namespace Utility
             }
             return null;
         }
+        /// <summary>Finds the type of the by.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="TypePath">The type path.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot call FindByType with a blank path</exception>
         public static XmlNode FindByType(XmlNode Node, string TypePath)
         {
             // ----------------------------------------------------
@@ -249,6 +295,10 @@ namespace Utility
             }
             return null;
         }
+        /// <summary>Finds the recursively.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="Name">The name.</param>
+        /// <returns></returns>
         public static XmlNode FindRecursively(XmlNode Node, string Name)
         {
             if (Utility.Xml.NameAttr(Node).ToLower() == Name.ToLower())
@@ -261,6 +311,10 @@ namespace Utility
             }
             return null;
         }
+        /// <summary>Finds all recursively.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="Name">The name.</param>
+        /// <param name="Nodes">The nodes.</param>
         public static void FindAllRecursively(XmlNode Node, string Name, ref List<XmlNode> Nodes)
         {
             if (Utility.Xml.NameAttr(Node).ToLower() == Name.ToLower())
@@ -268,6 +322,10 @@ namespace Utility
             foreach (XmlNode Child in Node.ChildNodes)
                 FindAllRecursively(Child, Name, ref Nodes);
         }
+        /// <summary>Finds the type of all recursively by.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="TypeName">Name of the type.</param>
+        /// <param name="Nodes">The nodes.</param>
         public static void FindAllRecursivelyByType(XmlNode Node, string TypeName, ref List<XmlNode> Nodes)
         {
             if (Utility.Xml.Type(Node).ToLower() == TypeName.ToLower())
@@ -276,6 +334,11 @@ namespace Utility
                 FindAllRecursivelyByType(Child, TypeName, ref Nodes);
         }
 
+        /// <summary>Childs the type of the by name and.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="NameFilter">The name filter.</param>
+        /// <param name="TypeFilter">The type filter.</param>
+        /// <returns></returns>
         public static XmlNode ChildByNameAndType(XmlNode Node, string NameFilter, string TypeFilter)
         {
             // ----------------------------------------------------
@@ -289,6 +352,11 @@ namespace Utility
             }
             return null;
         }
+        /// <summary>Childs the by type and value.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="TypeFilter">The type filter.</param>
+        /// <param name="ValueFilter">The value filter.</param>
+        /// <returns></returns>
         public static XmlNode ChildByTypeAndValue(XmlNode Node, string TypeFilter, string ValueFilter)
         {
             // ----------------------------------------------------
@@ -302,6 +370,10 @@ namespace Utility
             }
             return null;
         }
+        /// <summary>Childs the nodes.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="TypeFilter">The type filter.</param>
+        /// <returns></returns>
         public static List<XmlNode> ChildNodes(XmlNode Node, string TypeFilter)
         {
             // ----------------------------------------------------
@@ -321,6 +393,10 @@ namespace Utility
             }
             return MatchingChildren;
         }
+        /// <summary>Childs the name of the nodes by.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="NameFilter">The name filter.</param>
+        /// <returns></returns>
         public static List<XmlNode> ChildNodesByName(XmlNode Node, string NameFilter)
         {
             // ----------------------------------------------------
@@ -340,6 +416,10 @@ namespace Utility
             }
             return MatchingChildren;
         }
+        /// <summary>Childs the names.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="TypeFilter">The type filter.</param>
+        /// <returns></returns>
         public static string[] ChildNames(XmlNode Node, string TypeFilter)
         {
             List<XmlNode> Children = ChildNodes(Node, TypeFilter);
@@ -348,6 +428,10 @@ namespace Utility
                 Names[i] = NameAttr(Children[i]);
             return Names;
         }
+        /// <summary>Values the specified child.</summary>
+        /// <param name="Child">The child.</param>
+        /// <param name="NamePath">The name path.</param>
+        /// <returns></returns>
         public static string Value(XmlNode Child, string NamePath)
         {
             XmlNode FoundNode;
@@ -360,11 +444,19 @@ namespace Utility
             else
                 return "";
         }
+        /// <summary>Sets the value.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="NamePath">The name path.</param>
+        /// <param name="Value">The value.</param>
         public static void SetValue(XmlNode Node, string NamePath, string Value)
         {
             XmlNode ValueNode = EnsureNodeExists(Node, NamePath);
             ValueNode.InnerText = Value;
         }
+        /// <summary>Valueses the specified node.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="TypeFilter">The type filter.</param>
+        /// <returns></returns>
         public static List<string> Values(XmlNode Node, string TypeFilter)
         {
             int PosDelimiter = TypeFilter.LastIndexOf(Delimiter);
@@ -379,6 +471,10 @@ namespace Utility
                 ReturnValues.Add(Child.InnerText);
             return ReturnValues;
         }
+        /// <summary>Valueses the recursive.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="TypeFilter">The type filter.</param>
+        /// <returns></returns>
         public static List<string> ValuesRecursive(XmlNode Node, string TypeFilter)
         {
             int PosDelimiter = TypeFilter.LastIndexOf(Delimiter);
@@ -397,6 +493,10 @@ namespace Utility
             }
             return ReturnValues;
         }
+        /// <summary>Sets the values.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="NamePath">The name path.</param>
+        /// <param name="Values">The values.</param>
         public static void SetValues(XmlNode Node, string NamePath, List<string> Values)
         {
             int PosDelimiter = NamePath.LastIndexOf(Delimiter);
@@ -415,12 +515,20 @@ namespace Utility
                 i++;
             }
         }
+        /// <summary>Sets the values.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="NamePath">The name path.</param>
+        /// <param name="Values">The values.</param>
         public static void SetValues(XmlNode Node, string NamePath, string[] Values)
         {
             List<string> Vals = new List<string>();
             Vals.AddRange(Values);
             SetValues(Node, NamePath, Vals);
         }
+        /// <summary>Attributes the specified node.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="AttributeName">Name of the attribute.</param>
+        /// <returns></returns>
         public static string Attribute(XmlNode Node, string AttributeName)
         {
             // -----------------------------------------------------------------
@@ -436,18 +544,30 @@ namespace Utility
             }
             return "";
         }
+        /// <summary>Sets the attribute.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="AttributeName">Name of the attribute.</param>
+        /// <param name="AttributeValue">The attribute value.</param>
         public static void SetAttribute(XmlNode Node, string AttributeName, string AttributeValue)
         {
-            // ----------------------------------------
-            // Set the value of the specified attribute
-            // ----------------------------------------
-            if (Attribute(Node, AttributeName) != AttributeValue)
+            int posLastDelimiter = AttributeName.LastIndexOf(Delimiter);
+            if (posLastDelimiter != -1)
+            {
+                string attributePath = AttributeName.Substring(0, posLastDelimiter);
+                string attributeName = AttributeName.Substring(posLastDelimiter + 1);
+                XmlNode attributeNode = EnsureNodeExists(Node, attributePath);
+                SetAttribute(attributeNode, attributeName, AttributeValue);
+            }
+            else if (Attribute(Node, AttributeName) != AttributeValue)
             {
                 XmlNode attr = Node.OwnerDocument.CreateNode(XmlNodeType.Attribute, AttributeName, "");
                 attr.Value = AttributeValue;
                 Node.Attributes.SetNamedItem(attr);
             }
         }
+        /// <summary>Deletes the attribute.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="AttributeName">Name of the attribute.</param>
         public static void DeleteAttribute(XmlNode Node, string AttributeName)
         {
             // ----------------------------------------
@@ -460,6 +580,9 @@ namespace Utility
             }
         }
 
+        /// <summary>Deletes the value.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="ValueName">Name of the value.</param>
         public static void DeleteValue(XmlNode Node, string ValueName)
         {
             // ----------------------------------------
@@ -470,6 +593,9 @@ namespace Utility
                 ValueNode.ParentNode.RemoveChild(ValueNode);
         }
 
+        /// <summary>Formatteds the XML.</summary>
+        /// <param name="Xml">The XML.</param>
+        /// <returns></returns>
         public static string FormattedXML(string Xml)
         {
             // -------------------------------------------------
@@ -483,6 +609,9 @@ namespace Utility
             Doc.DocumentElement.WriteContentTo(Out);
             return TextWriter.ToString();
         }
+        /// <summary>Ensures the node is unique.</summary>
+        /// <param name="Node">The node.</param>
+        /// <exception cref="System.Exception">Cannot find a unique name for child:  + NameAttr(Node)</exception>
         public static void EnsureNodeIsUnique(XmlNode Node)
         {
             // -------------------------------------------------------------
@@ -505,6 +634,11 @@ namespace Utility
             }
             throw new Exception("Cannot find a unique name for child: " + NameAttr(Node));
         }
+        /// <summary>Ensures the number of children.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="ChildType">Type of the child.</param>
+        /// <param name="ChildName">Name of the child.</param>
+        /// <param name="NumChildren">The number children.</param>
         public static void EnsureNumberOfChildren(XmlNode Node, string ChildType, string ChildName, int NumChildren)
         {
             // -------------------------------------------------------------------------
@@ -526,9 +660,20 @@ namespace Utility
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private class XmlNodeComparer : System.Collections.IComparer
         {
             // Calls CaseInsensitiveComparer.Compare with the parameters reversed.
+            /// <summary>
+            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            /// </summary>
+            /// <param name="x">The first object to compare.</param>
+            /// <param name="y">The second object to compare.</param>
+            /// <returns>
+            /// A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.Value Meaning Less than zero <paramref name="x" /> is less than <paramref name="y" />. Zero <paramref name="x" /> equals <paramref name="y" />. Greater than zero <paramref name="x" /> is greater than <paramref name="y" />.
+            /// </returns>
             int System.Collections.IComparer.Compare(Object x, Object y)
             {
                 XmlNode yNode = (XmlNode)y;
@@ -537,6 +682,9 @@ namespace Utility
             }
 
         }
+        /// <summary>Sorts the specified node.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="Comparer">The comparer.</param>
         public static void Sort(XmlNode Node, IComparer Comparer)
         {
             XmlNode[] SortedNodes = new XmlNode[Node.ChildNodes.Count];
@@ -554,6 +702,10 @@ namespace Utility
                 Node.AppendChild(Child);
         }
 
+        /// <summary>Ensures the node exists.</summary>
+        /// <param name="Node">The node.</param>
+        /// <param name="NodePath">The node path.</param>
+        /// <returns></returns>
         public static XmlNode EnsureNodeExists(XmlNode Node, string NodePath)
         {
             // --------------------------------------------------------
@@ -588,6 +740,10 @@ namespace Utility
                 return EnsureNodeExists(NewChild, NodePath.Substring(PosDelimiter + 1));
         }
 
+        /// <summary>Determines whether the specified node1 is equal.</summary>
+        /// <param name="Node1">The node1.</param>
+        /// <param name="Node2">The node2.</param>
+        /// <returns></returns>
         public static bool IsEqual(XmlNode Node1, XmlNode Node2)
         {
             // Go through each attribute and each child node and make sure everything is the same.
@@ -646,6 +802,13 @@ namespace Utility
             }
         }
 
+        /// <summary>
+        /// Determines whether [is equal sequentially] [the specified node1].
+        /// </summary>
+        /// <param name="Node1">The node1.</param>
+        /// <param name="Node2">The node2.</param>
+        /// <param name="ChildType">Type of the child.</param>
+        /// <returns></returns>
         private static bool IsEqualSequentially(XmlNode Node1, XmlNode Node2, string ChildType)
         {
             List<XmlNode> Children1 = Utility.Xml.ChildNodes(Node1, ChildType);
@@ -660,10 +823,10 @@ namespace Utility
             return true;
         }
 
-        /// <summary>
-        /// Deserialise from the specified file (XML)
-        /// </summary>
+        /// <summary>Deserialise from the specified file (XML)</summary>
+        /// <param name="FileName">Name of the file.</param>
         /// <returns>Returns the newly created object or null if not found.</returns>
+        /// <exception cref="System.Exception">Cannot deserialise from file:  + FileName + . File does not exist.</exception>
         public static object Deserialise(string FileName)
         {
             if (!File.Exists(FileName))
@@ -675,9 +838,8 @@ namespace Utility
             return Deserialise(Doc.DocumentElement);
         }
 
-        /// <summary>
-        /// Deserialise from the specified XmlNode.
-        /// </summary>
+        /// <summary>Deserialise from the specified XmlNode.</summary>
+        /// <param name="Node">The node.</param>
         /// <returns>Returns the newly created object or null if not found.</returns>
         public static object Deserialise(XmlNode Node)
         {
@@ -686,10 +848,14 @@ namespace Utility
             return Deserialise(Reader);
         }
 
-        /// <summary>
-        /// Deserialise from the specified XmlReader.
-        /// </summary>
+        /// <summary>Deserialise from the specified XmlReader.</summary>
+        /// <param name="Reader">The reader.</param>
         /// <returns>Returns the newly created object or null if not found.</returns>
+        /// <exception cref="System.Exception">
+        /// Cannot deserialise because type:  + TypeName +  does not exist
+        /// or
+        /// Cannot deserialise because found two classes with class name:  + TypeName
+        /// </exception>
         public static object Deserialise(XmlReader Reader)
         {
             try
@@ -755,44 +921,11 @@ namespace Utility
         }
 
         /// <summary>
-        /// Add a child model as specified by the ModelXml. Will call ModelAdded event if successful. 
+        /// Add a child model as specified by the ModelXml. Will call ModelAdded event if successful.
         /// </summary>
+        /// <param name="Component">The component.</param>
+        /// <param name="WithNamespace">if set to <c>true</c> [with namespace].</param>
         /// <returns>Returns the full path of the added model if successful. Null otherwise.</returns>
-        //public string Add(string ModelXml)
-        //{
-        //    try
-        //    {
-        //        XmlReaderSettings settings = new XmlReaderSettings();
-        //        settings.ConformanceLevel = ConformanceLevel.Fragment;
-
-        //        XmlReader Reader = XmlReader.Create(new StringReader(ModelXml), settings);
-        //        while (!Reader.IsStartElement() && !Reader.EOF)
-        //            Reader.Read();
-
-        //        object NewModel = AddChild(Reader);
-
-        //        // Make sure model has a unique name.
-        //        EnsureNameIsUnique(NewModel);
-
-        //        string ChildFullPath = FullPath + "." + Utility.Reflection.Name(NewModel);
-        //        if (ModelAdded != null)
-        //            ModelAdded.Invoke(ChildFullPath);
-        //        return ChildFullPath;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        // Most likely invalid xml.
-        //    }
-        //    return null;
-        //}
-
-
-
-
-        /// <summary>
-        /// Serialises the specified component to a string. If WithNamespace is true
-        /// then a full xml namespace will be written.
-        /// </summary>
         public static string Serialise(object Component, bool WithNamespace)
         {
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();

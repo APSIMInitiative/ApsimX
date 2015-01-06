@@ -6,58 +6,6 @@
   <NSupplyPreference>active</NSupplyPreference>
   <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
   <RemovedByAnimal />
-  <Cultivar>
-    <Name>GattonHartog</Name>
-    <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
-    <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-  </Cultivar>
-  <Cultivar>
-    <Name>h45</Name>
-    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-    <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
-  </Cultivar>
-  <Cultivar>
-    <Name>Rongotea</Name>
-    <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
-    <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-    <Command>[Grain].MaxGrainSize = 0.047</Command>
-    <Command>[Grain].GrainsPerGramStem = 22</Command>
-  </Cultivar>      
-  <Cultivar>
-    <Name>Hartog</Name>
-    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-    <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
-  </Cultivar>
-  <Cultivar>
-    <Name>Gamenya</Name>
-    <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
-    <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
-    <Command>[Phenology].FloralInitiationToFlowering.Target = 630.0</Command>
-  </Cultivar>
-  <Cultivar>
-    <Name>Spear</Name>
-    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-    <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-    <Command>[Phenology].FloralInitiationToFlowering.Target = 555.0</Command>
-    <Command>[Grain].GrainsPerGramStem = 20</Command>
-    <Command>[Grain].MaxGrainSize = 0.045</Command>
-    <Command>[Phenology].StartGrainFillToEndGrainFill.Target = 580</Command>
-  </Cultivar>
-  <Cultivar>
-    <Name>Gutha</Name>
-    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-    <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
-    <Command>[Grain].GrainsPerGramStem = 20</Command>
-  </Cultivar>
-  <Cultivar>
-    <Name>Wilgoyne</Name>
-    <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
-    <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
-    <Command>[Phenology].FloralInitiationToFlowering.Target = 555.0</Command>
-    <Command>[Grain].GrainsPerGramStem = 20</Command>
-    <Command>[Grain].MaxGrainSize = 0.045</Command>
-    <Command>[Phenology].StartGrainFillToEndGrainFill.Target = 580</Command>
-  </Cultivar>
   <Population1>
     <Name>Population</Name>
     <PhaseBasedSwitch>
@@ -876,7 +824,7 @@
     </StageBasedInterpolation>
     <LinearInterpolationFunction>
       <Name>TEModifier</Name>
-      <XProperty>[WeatherFile].CO2</XProperty>
+      <XProperty>[Weather].CO2</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -893,7 +841,7 @@
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>NConcCriticalModifier</Name>
-      <XProperty>[WeatherFile].CO2</XProperty>
+      <XProperty>[Weather].CO2</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1009,7 +957,7 @@
     </PhaseBasedSwitch>
     <LinearInterpolationFunction>
       <Name>LeafSenescenceFrost</Name>
-      <XProperty>[WeatherFile].MinT</XProperty>
+      <XProperty>[Weather].MinT</XProperty>
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
@@ -1888,6 +1836,33 @@
       <string>[Grain].Dead</string>
     </Propertys>
   </CompositeBiomass>
+  <CompositeBiomass>
+    <Name>VegetativeLive</Name>
+    <Propertys>
+      <string>[Leaf].Live</string>
+      <string>[Stem].Live</string>
+      <string>[Pod].Live</string>
+    </Propertys>
+  </CompositeBiomass>
+  <CompositeBiomass>
+    <Name>VegetativeDead</Name>
+    <Propertys>
+      <string>[Leaf].Dead</string>
+      <string>[Stem].Dead</string>
+      <string>[Pod].Dead</string>
+    </Propertys>
+  </CompositeBiomass>
+  <CompositeBiomass>
+    <Name>Vegetative</Name>
+    <Propertys>
+      <string>[Leaf].Live</string>
+      <string>[Stem].Live</string>
+      <string>[Pod].Live</string>
+      <string>[Leaf].Dead</string>
+      <string>[Stem].Dead</string>
+      <string>[Pod].Dead</string>
+    </Propertys>
+  </CompositeBiomass>
   <StageBasedInterpolation>
     <Name>StageCode</Name>
     <Stages>
@@ -1931,10 +1906,66 @@
   <Zadok>
     <Name>Zadok</Name>
   </Zadok>
+  <Summariser>
+    
+  </Summariser>
   <AutoHarvest>false</AutoHarvest>
   <CropType>Wheat</CropType>
   <EOCropFactor>1.5</EOCropFactor>
   <NSupplyPreference>active</NSupplyPreference>
   <DoRetranslocationBeforeNDemand>false</DoRetranslocationBeforeNDemand>
   <RemovedByAnimal />
+
+  <Cultivar>
+    <Name>GattonHartog</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>h45</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Rongotea</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
+    <Command>[Grain].MaxGrainSize = 0.047</Command>
+    <Command>[Grain].GrainsPerGramStem = 22</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Hartog</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Gamenya</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
+    <Command>[Phenology].FloralInitiationToFlowering.Target = 630.0</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Spear</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+    <Command>[Phenology].FloralInitiationToFlowering.Target = 555.0</Command>
+    <Command>[Grain].GrainsPerGramStem = 20</Command>
+    <Command>[Grain].MaxGrainSize = 0.045</Command>
+    <Command>[Phenology].StartGrainFillToEndGrainFill.Target = 580</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Gutha</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
+    <Command>[Grain].GrainsPerGramStem = 20</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Wilgoyne</Name>
+    <Command>[Phenology].Vernalisation.VernSens = 1.4</Command>
+    <Command>[Phenology].Vernalisation.PhotopSens = 1.8</Command>
+    <Command>[Phenology].FloralInitiationToFlowering.Target = 555.0</Command>
+    <Command>[Grain].GrainsPerGramStem = 20</Command>
+    <Command>[Grain].MaxGrainSize = 0.045</Command>
+    <Command>[Phenology].StartGrainFillToEndGrainFill.Target = 580</Command>
+  </Cultivar>
 </Plant15>

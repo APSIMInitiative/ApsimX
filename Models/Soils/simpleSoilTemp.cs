@@ -121,6 +121,7 @@ public class simpleSoilTemp
         clear();
     }
 
+    /// <summary>Clears this instance.</summary>
     public void clear()
     {
         // need to initialise some values for surf_temp, repeat the value of ave_temp for the first day (RCichota: why not tav?)

@@ -25,27 +25,12 @@ namespace Models.ArbitratorGod
     {
 
         [Link]
-        Simulation Simulation;
-
-        [Link]
-        WeatherFile Weather = null;
-
-        [Link]
-        Summary Summary = null;
-
-        [Link]
-        Clock Clock = null;
+        Simulation Simulation = null;
 
         //[Link]
         //Zone mypaddock;
 
         //ICrop2[] plants;
-
-        /// <summary>
-        /// Reference to the soil in the Zone for convienience.
-        /// </summary>
-        //public Soil Soil;
-
 
         #region // initial definitions
 
@@ -55,20 +40,22 @@ namespace Models.ArbitratorGod
         [Description("Arbitration method: old / new - use old - new only for testing")]
         public string ArbitrationMethod { get; set; }
 
+        /// <summary>Gets or sets the nutrient uptake method.</summary>
+        /// <value>The nutrient uptake method.</value>
         [Description("Potential nutrient uptake method: 1=where the roots are; 2=PMF concentration based; 3=OilPalm amount based")]
         public int NutrientUptakeMethod { get; set; }
 
-        /// <summary>
-        /// Potential nutrient supply in layers (kgN/ha/layer) - this is the potential (demand-limited) supply if this was the only plant in the simualtion
-        /// </summary>
+        ///// <summary>
+        ///// Potential nutrient supply in layers (kgN/ha/layer) - this is the potential (demand-limited) supply if this was the only plant in the simualtion
+        ///// </summary>
         //[XmlIgnore]
         //[Description("Potential nutrient supply in layers for the first plant")]
         //public double[] Plant1potentialSupplyNitrogenPlantLayer
         //{
         //    get
         //    {
-        //        double[] result = new double[Soil.SoilWater.dlayer.Length];
-        //        for (int j = 0; j < Soil.SoilWater.dlayer.Length; j++)
+        //        double[] result = new double[Soil.Thickness.Length];
+        //        for (int j = 0; j < Soil.Thickness.Length; j++)
         //        {
         //            result[j] = potentialSupplyNitrogenPlantLayer[0, j];
         //        }
@@ -79,12 +66,12 @@ namespace Models.ArbitratorGod
 
 
         // these only (I think) used by the routines that Hamish using for testing - marked for deletion
-        double[,] potentialSupplyWaterPlantLayer;
-        double[,] uptakeWaterPlantLayer;
-        double[,] potentialSupplyNitrogenPlantLayer;
-        double[,] potentialSupplyPropNO3PlantLayer;
-        double[,] uptakeNitrogenPlantLayer;
-        double[,] uptakeNitrogenPropNO3PlantLayer;
+        //double[,] potentialSupplyWaterPlantLayer;
+        //double[,] uptakeWaterPlantLayer;
+        //double[,] potentialSupplyNitrogenPlantLayer;
+        //double[,] potentialSupplyPropNO3PlantLayer;
+        //double[,] uptakeNitrogenPlantLayer;
+        //double[,] uptakeNitrogenPropNO3PlantLayer;
 
         // soil water evaporation stuff
         //public double ArbitEOS { get; set; }  //
@@ -100,17 +87,17 @@ namespace Models.ArbitratorGod
         /// </summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
-        class CanopyProps
-        {
-            /// <summary>
-            /// Grean leaf area index (m2/m2)
-            /// </summary>
-            public double laiGreen;
-            /// <summary>
-            /// Total leaf area index (m2/m2)
-            /// </summary>
-            public double laiTotal;
-        }
+        //class CanopyProps
+        //{
+        //    /// <summary>
+        //    /// Grean leaf area index (m2/m2)
+        //    /// </summary>
+        //    public double laiGreen;
+        //    /// <summary>
+        //    /// Total leaf area index (m2/m2)
+        //    /// </summary>
+        //    public double laiTotal;
+        //}
         //public CanopyProps[,] myCanopy;
 
         // new Arbitration parameters from here
@@ -209,10 +196,10 @@ namespace Models.ArbitratorGod
         /// </summary>
         double[] extractableByPlant;
 
-        /// <summary>
-        /// This is "water" or "nitrogen" and holds the resource that is being arbitrated
-        /// </summary>
-        string resourceToArbitrate;
+        ///// <summary>
+        ///// This is "water" or "nitrogen" and holds the resource that is being arbitrated
+        ///// </summary>
+        ////string resourceToArbitrate;
 
         /// <summary>
         /// used as a counter for zones
@@ -260,7 +247,7 @@ namespace Models.ArbitratorGod
 
                 // Find soil in paddock.
                 Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
             }
             //zones = 1; // as a starting point - will we need to consider redimensioning?  Depends on when the root system information is available - or just allow for all zones beneath current location
@@ -308,7 +295,7 @@ namespace Models.ArbitratorGod
                 for (int p = 0; p < plants.Length; p++)
                 {
                     demandWater[p, z] = plants[p].demandWater;
-                    //string myString = "Hello " + Soil.SoilWater.dlayer[0];
+                    //string myString = "Hello " + Soil.Thickness[0];
                     //Summary.WriteMessage(FullPath, myString);
                 }
             }
@@ -341,7 +328,7 @@ namespace Models.ArbitratorGod
 
                 for (int p = 0; p < plants.Length; p++)
                 {
-                    for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                    for (int l = 0; l < Soil.Thickness.Length; l++)
                     {
                         plants[p].uptakeWater[l] = demandWater[p, z] + z;
                     }
@@ -473,7 +460,7 @@ namespace Models.ArbitratorGod
 
                     // Find soil in paddock.
                     Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                    maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                    maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
                     int[] tempBoundsArray = new int[plants.Count];
 
@@ -517,9 +504,9 @@ namespace Models.ArbitratorGod
 
                     // Find soil in paddock.
                     Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                    maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                    maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
-                    for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                    for (int l = 0; l < Soil.Thickness.Length; l++)
                     {
                         bounds = 1;  // assume they are all have the same lower bound
                         lowerBound[0, l, z, 0] = 0.0;
@@ -548,11 +535,11 @@ namespace Models.ArbitratorGod
 
                 // Find soil in paddock.
                 Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
                 for (int p = 0; p < maxPlants; p++)
                 {
-                    for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                    for (int l = 0; l < Soil.Thickness.Length; l++)
                     {
                         for (int b = 0; b < bounds; b++)
                         {
@@ -562,22 +549,22 @@ namespace Models.ArbitratorGod
                                 {
                                     if (b == 0)
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b])));
+                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.Water[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b])));
                                     }
                                     else
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.SoilWater.sw_dep[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b]))) - resource[p, l, z, b - 1, f];
+                                        resource[p, l, z, b, f] = Math.Max(0.0, (Soil.Water[l] - Math.Max(plants[p].RootProperties.LowerLimitDep[l], lowerBound[0, l, z, b]))) - resource[p, l, z, b - 1, f];
                                     }
                                 }
                                 else if (resourceToArbitrate.ToLower() == "nitrogen")
                                 {
                                     if (f == 0)
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.no3[l]);
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.NO3N[l]);
                                     }
                                     else
                                     {
-                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.SoilNitrogen.nh4[l]);
+                                        resource[p, l, z, b, f] = Math.Max(0.0, Soil.NH4N[l]);
                                     }
                                 }
                             }
@@ -608,11 +595,11 @@ namespace Models.ArbitratorGod
 
                 // Find soil in paddock.
                 Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
                 for (int p = 0; p < maxPlants; p++)
                 {
-                    for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)
+                    for (int l = 0; l < Soil.Thickness.Length; l++)
                     {
                         for (int b = 0; b < bounds; b++)
                         {
@@ -628,14 +615,14 @@ namespace Models.ArbitratorGod
                                 }
                                 else if (resourceToArbitrate.ToLower() == "nitrogen")
                                 {
-                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.SoilWater.sw_dep[l] - Soil.SoilWater.ll15_dep[l]), (Soil.SoilWater.dul_dep[l] - Soil.SoilWater.ll15_dep[l]), 0.0), 0.0, 1.0);
+                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.Water[l] - Soil.SoilWater.LL15mm[l]), (Soil.SoilWater.DULmm[l] - Soil.SoilWater.LL15mm[l]), 0.0), 0.0, 1.0);
                                     if (f == 0)
                                     {
                                         extractable[p, l, z, b, f] = relativeSoilWaterContent
                                                                    * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
                                                                    * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
                                                                    * plants[p].RootProperties.KNO3                        // later add in zone
-                                                                   * Soil.SoilNitrogen.no3ppm[l]
+                                                                   * Soil.SoilNitrogen.NO3ppm[l]
                                                                    * resource[p, l, z, b, f];
                                     }
                                     else
@@ -644,7 +631,7 @@ namespace Models.ArbitratorGod
                                                                    * plants[p].RootProperties.UptakePreferenceByLayer[l]   // later add in zone
                                                                    * plants[p].RootProperties.RootExplorationByLayer[l]    // later add in zone
                                                                    * plants[p].RootProperties.KNH4                        // later add in zone
-                                                                   * Soil.SoilNitrogen.nh4ppm[l]
+                                                                   * Soil.SoilNitrogen.NH4ppm[l]
                                                                    * resource[p, l, z, b, f];
                                     }
                                     extractableByPlant[p] += extractable[p, l, z, b, f];
@@ -679,7 +666,7 @@ namespace Models.ArbitratorGod
 
                 // Find soil in paddock.
                 Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
                 for (int p = 0; p < maxPlants; p++)
                 {
@@ -733,7 +720,7 @@ namespace Models.ArbitratorGod
 
                 // Find soil in paddock.
                 Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
                 for (int p = 0; p < maxPlants; p++)
                 {
@@ -773,10 +760,10 @@ namespace Models.ArbitratorGod
 
                 // Find soil in paddock.
                 Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
-                double[] dummyArray1 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
-                double[] dltSWdep = new double[Soil.SoilWater.dlayer.Length];   // to hold the changes in soil water depth
+                double[] dummyArray1 = new double[Soil.Thickness.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
+                double[] dltSWdep = new double[Soil.Thickness.Length];   // to hold the changes in soil water depth
                 for (int p = 0; p < maxPlants; p++)
                 {
                     for (int l = 0; l < maxLayers; l++)
@@ -812,17 +799,17 @@ namespace Models.ArbitratorGod
 
                 // Find soil in paddock.
                 Soil Soil = (Soil)Apsim.Find(zone, typeof(Soil));
-                maxLayers = Math.Max(Soil.SoilWater.dlayer.Length, maxLayers);
+                maxLayers = Math.Max(Soil.Thickness.Length, maxLayers);
 
-                double[] dummyArray1 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
-                double[] dummyArray2 = new double[Soil.SoilWater.dlayer.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
+                double[] dummyArray1 = new double[Soil.Thickness.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
+                double[] dummyArray2 = new double[Soil.Thickness.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
 
                 // move this inside the zone loop - needs to get zeroed for each seperate zone
                 NitrogenChangedType NUptakeType = new NitrogenChangedType();
                 NUptakeType.Sender = Name;
                 NUptakeType.SenderType = "Plant";
-                NUptakeType.DeltaNO3 = new double[Soil.SoilWater.dlayer.Length];
-                NUptakeType.DeltaNH4 = new double[Soil.SoilWater.dlayer.Length];
+                NUptakeType.DeltaNO3 = new double[Soil.Thickness.Length];
+                NUptakeType.DeltaNH4 = new double[Soil.Thickness.Length];
 
                 for (int p = 0; p < maxPlants; p++)
                 {
@@ -847,7 +834,7 @@ namespace Models.ArbitratorGod
                     }
                     // set uptakes in each plant
                     plants[p].uptakeNitrogen = dummyArray1;
-                    for (int l = 0; l < Soil.SoilWater.dlayer.Length; l++)  // don't forget to deal with zones at some point
+                    for (int l = 0; l < Soil.Thickness.Length; l++)  // don't forget to deal with zones at some point
                     {
                         dummyArray2[l] = Utility.Math.Divide(dummyArray2[l], dummyArray1[l], 0.0);  // would be nice to have a utility for this
                     }

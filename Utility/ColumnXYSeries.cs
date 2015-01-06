@@ -1,34 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OxyPlot.Series;
-using OxyPlot;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="ColumnXYSeries.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace Utility
 {
-    class ColumnXYSeries : RectangleBarSeries
+    using System;
+    using OxyPlot;
+    using OxyPlot.Axes;
+    using OxyPlot.Series;
+
+    /// <summary>
+    /// A column series for graphing that doesn't need a category axis.
+    /// </summary>
+    public class ColumnXYSeries : RectangleBarSeries
     {
-
-        public ColumnXYSeries()
-        {
-            ColumnWidth = 0.01;
-        }
-
-        /// <summary>
-        /// Gets the width of the column (as fraction of width of axis.)
-        /// </summary>
-        public double ColumnWidth { get; set; }
-
-        /// <summary>
-        /// Updates the data.
-        /// </summary>
+        /// <summary>Updates the data.</summary>
         protected override void UpdateData()
         {
-            MovePointsToItems();
+            this.MovePointsToItems();
         }
 
-         /// <summary>
+        /// <summary>
         /// Renders the Series on the specified rendering context.
         /// </summary>
         /// <param name="rc">
@@ -39,10 +32,7 @@ namespace Utility
         /// </param>
         public override void Render(IRenderContext rc, PlotModel model)
         {
-            if (this.Items.Count == 0)
-            {
-                return;
-            }
+            this.MovePointsToItems();
 
             // Let the base class draw the rectanges.
             base.Render(rc, model);
@@ -53,37 +43,25 @@ namespace Utility
         /// </summary>
         private void MovePointsToItems()
         {
-            if (ItemsSource != null)
+            if (this.ItemsSource != null && this.XAxis != null)
             {
-                double HalfBarWidth = XDataRange() * ColumnWidth / 2.0;
-
-                HalfBarWidth = 0.40; // slightly less that half of 1.0 cartesian coordinate
-                Items.Clear();
-                foreach (DataPoint P in ItemsSource)
+                //double halfBarWidth = this.XAxis.ActualMajorStep * 0.4;
+                double halfBarWidth =  0.4;
+                if (this.XAxis.ActualStringFormat != null && this.XAxis.ActualStringFormat.Contains("yyyy"))
                 {
-                    double x0 = P.X - HalfBarWidth;
-                    double x1 = P.X + HalfBarWidth;
-                    Items.Add(new RectangleBarItem(x0, 0.0, x1, P.Y));
+                    DateTime d1 = DateTimeAxis.ToDateTime(this.XAxis.ActualMinimum);
+                    DateTime d2 = DateTimeAxis.ToDateTime(this.XAxis.ActualMinimum + 1);
+                    halfBarWidth = (d2 - d1).Days / 2.0;
+                }
+
+                this.Items.Clear();
+                foreach (DataPoint p in this.ItemsSource)
+                {
+                    double x0 = p.X - halfBarWidth;
+                    double x1 = p.X + halfBarWidth;
+                    this.Items.Add(new RectangleBarItem(x0, 0.0, x1, p.Y));
                 }
             }
-        }
-
-        /// <summary>
-        /// Calculate the range of X data i.e. max - min.
-        /// </summary>
-        private double XDataRange()
-        {
-            double range = 0;
-
-            double Minimum = double.MaxValue;
-            double Maximum = double.MinValue;
-            foreach (DataPoint P in ItemsSource)
-            {
-                Minimum = System.Math.Min(Minimum, P.X);
-                Maximum = System.Math.Max(Maximum, P.X);
-                range = Maximum - Minimum;
-            }
-            return range;
         }
     }
 }

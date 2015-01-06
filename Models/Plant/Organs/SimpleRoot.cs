@@ -8,20 +8,31 @@ using Models.Soils;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// A simple root organ
+    /// </summary>
     [Serializable]
     public class SimpleRoot : BaseOrgan // FIXME HEB This was inheriting from organ but changed to base organ to fix bug. Need to check collatoral impacts
     {
+        /// <summary>The plant</summary>
         [Link]
         Plant Plant = null;
 
+        /// <summary>The dm demand function</summary>
         [Link]
         Function DMDemandFunction = null;
 
+        /// <summary>The uptake</summary>
         private double Uptake = 0;
+        /// <summary>The current paddock name</summary>
         private string CurrentPaddockName;
+        /// <summary>Our name</summary>
         private string OurName;
+        /// <summary>The talk directly to root</summary>
         private bool TalkDirectlyToRoot;
 
+        /// <summary>Gets or sets the dm demand.</summary>
+        /// <value>The dm demand.</value>
         public override BiomassPoolType DMDemand
         {
             get
@@ -34,7 +45,11 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets or sets the dm supply.</summary>
+        /// <value>The dm supply.</value>
         public override BiomassSupplyType DMSupply { get { return new BiomassSupplyType { Fixation = 0, Retranslocation = 0 }; } }
+        /// <summary>Sets the dm allocation.</summary>
+        /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
         {
             set
@@ -43,11 +58,19 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets or sets the n demand.</summary>
+        /// <value>The n demand.</value>
         public override BiomassPoolType NDemand { get { return new BiomassPoolType(); } }
+        /// <summary>Gets or sets the n supply.</summary>
+        /// <value>The n supply.</value>
         public override BiomassSupplyType NSupply { get { return new BiomassSupplyType(); } }
+        /// <summary>Gets or sets the water demand.</summary>
+        /// <value>The water demand.</value>
         public override double WaterDemand { get { return 0; } }
 
-        
+
+        /// <summary>Gets or sets the water uptake.</summary>
+        /// <value>The water uptake.</value>
         [Units("mm")]
         public override double WaterUptake
         {
@@ -56,6 +79,9 @@ namespace Models.PMF.Organs
                 return Uptake;
             }
         }
+        /// <summary>Gets or sets the water allocation.</summary>
+        /// <value>The water allocation.</value>
+        /// <exception cref="System.Exception">Cannot set water allocation for roots</exception>
         public override double WaterAllocation
         {
             get { return 0; }
@@ -65,6 +91,10 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether [root model exists].
+        /// </summary>
+        /// <value><c>true</c> if [root model exists]; otherwise, <c>false</c>.</value>
         private bool RootModelExists
         {
             get
@@ -76,7 +106,9 @@ namespace Models.PMF.Organs
             }
         }
 
-        
+
+        /// <summary>Gets or sets the water supply.</summary>
+        /// <value>The water supply.</value>
         public override double WaterSupply
         {
             get
@@ -112,6 +144,10 @@ namespace Models.PMF.Organs
 
 
 
+        /// <summary>Does the water uptake.</summary>
+        /// <param name="Amount">The amount.</param>
+        /// <exception cref="System.NotImplementedException">
+        /// </exception>
         public override void DoWaterUptake(double Amount)
         {
             Uptake = Amount;

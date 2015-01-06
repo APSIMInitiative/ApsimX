@@ -19,6 +19,7 @@ namespace UserInterface.Views
     using EventArguments;
     using Interfaces;
     using Views;
+    using System.Reflection;
 
     /// <summary>
     /// An ExplorerView is a "Windows Explorer" like control that displays a virtual tree control on the left
@@ -206,6 +207,7 @@ namespace UserInterface.Views
                 }
 
                 TreeView.AfterSelect += TreeView_AfterSelect;
+                PopulatePopupMenu();
             }
         }
 
@@ -218,15 +220,24 @@ namespace UserInterface.Views
             int imageIndex = TreeImageList.Images.IndexOfKey(Description.ResourceNameForImage);
             if (imageIndex == -1)
             {
-                Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
-                if (Icon != null)
+                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                if (s != null)
                 {
-                    TreeImageList.Images.Add(Description.ResourceNameForImage, Icon);
-                    imageIndex = TreeImageList.Images.Count - 1;
+                    Bitmap Icon = new Bitmap(s);
+
+                    if (Icon != null)
+                    {
+                        TreeImageList.Images.Add(Description.ResourceNameForImage, Icon);
+                        imageIndex = TreeImageList.Images.Count - 1;
+                    }
+                }
+                else
+                {
+
                 }
             }
-            Node.ImageKey = Description.ResourceNameForImage;
-            Node.SelectedImageKey = Description.ResourceNameForImage;
+            Node.ImageIndex = imageIndex;
+            Node.SelectedImageIndex = imageIndex;
             if (Description.HasChildren)
             {
                 if (Node.Nodes.Count == 0)
@@ -331,15 +342,44 @@ namespace UserInterface.Views
                 PopulateMainMenu(this, Args);
 
                 ToolStrip.Items.Clear();
+                ToolStrip.Font = this.Font;
                 foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
                 {
-                    Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
+                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                    Bitmap Icon = null;
+                    if (s != null)
+                        Icon = new Bitmap(s);
                     ToolStripItem Button = ToolStrip.Items.Add(Description.Name, Icon, Description.OnClick);
                     Button.TextImageRelation = TextImageRelation.ImageAboveText;
                 }
                 ToolStrip.Visible = ToolStrip.Items.Count > 0;
+
+
+                // Add in version information as a label.
+                Version version = new Version(Application.ProductVersion);
+                ToolStripLabel label = new ToolStripLabel();
+                label.ForeColor = Color.Gray;
+                label.Alignment = ToolStripItemAlignment.Right;
+                label.Text = "Custom Build";
+                
+                // Get assembly title.
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    AssemblyTitleAttribute titleAttribute = attributes[0] as AssemblyTitleAttribute;
+                    string[] titleBits = titleAttribute.Title.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (titleBits.Length == 2 && titleBits[1] != "0")
+                    {
+                        label.Text = "Official Build";
+                        label.ToolTipText = "Version: " + version.Major + "." + version.Minor + "." + version.Build;
+                        label.ToolTipText += "\nGIT hash: " + titleBits[1];
+                    }
+                }
+                   
+                ToolStrip.Items.Add(label);
             }
         }
+
 
         #endregion
 
@@ -404,11 +444,8 @@ namespace UserInterface.Views
         /// <returns>Returns the new file name or null if action cancelled by user.</returns>
         public string SaveAs(string OldFilename)
         {
-            SaveFileDialog.FileName = Path.GetFileName(OldFilename);
-            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
-                return SaveFileDialog.FileName;
-            else
-                return null;
+            TabbedExplorerView parentView = this.Parent.Parent.Parent as TabbedExplorerView;
+            return parentView.AskUserForSaveFileName(OldFilename);
         }
 
         /// <summary>
@@ -429,6 +466,7 @@ namespace UserInterface.Views
         /// </summary>
         public void InvalidateNode(string NodePath, NodeDescriptionArgs.Description Description)
         {
+            AddRightHandView(null);
             TreeNode Node = FindNode(NodePath);
             ConfigureNode(Node, Description);
             PopulateNodes(Node);
@@ -538,25 +576,29 @@ namespace UserInterface.Views
         /// User has right clicked on a node, opening the context popup menu. Go create that menu
         /// by asking the presenter what to put on the menu.
         /// </summary>
-        private void OnPopupMenuOpening(object sender, CancelEventArgs e)
+        private void PopulatePopupMenu()
         {
             if (PopulateContextMenu != null)
             {
                 MenuDescriptionArgs Args = new MenuDescriptionArgs();
                 PopulateContextMenu(this, Args);
 
+                PopupMenu.Font = this.Font;
                 PopupMenu.Items.Clear();
                 foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
                 {
-                    Bitmap Icon = Properties.Resources.ResourceManager.GetObject(Description.ResourceNameForImage) as Bitmap;
+                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                    Bitmap Icon = null;
+                    if (s != null)
+                        Icon = new Bitmap(s);
+
                     ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
-                    Button.TextImageRelation = TextImageRelation.ImageAboveText;
+                    Button.TextImageRelation = TextImageRelation.ImageBeforeText;
                     Button.Checked = Description.Checked;
                     Button.ShortcutKeys = Description.ShortcutKey;
                     Button.Enabled = Description.Enabled;
                 }
             }
-            e.Cancel = false;
         }
 
 

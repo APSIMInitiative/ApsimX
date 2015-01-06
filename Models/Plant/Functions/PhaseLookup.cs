@@ -5,12 +5,18 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// Determines which PhaseLookupValue child functions start and end stages bracket the current phenological stage and returns the value of the grand child function decending from the applicable PhaseLookupValue function.
+    /// </summary>
     [Serializable]
     [Description("Determines which PhaseLookupValue child functions start and end stages bracket the current phenological stage and returns the value of the grand child function decending from the applicable PhaseLookupValue function.")]
     public class PhaseLookup : Function
     {
+        /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
         public override double Value
         {
             get

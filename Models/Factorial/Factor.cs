@@ -12,6 +12,7 @@ namespace Models.Factorial
     using Models.Core;
     using System.Xml.Serialization;
     using System.Xml;
+    using System.Globalization;
 
     /// <summary>
     /// A class representing a series of factor values.
@@ -141,9 +142,9 @@ namespace Models.Factorial
             string rangeString = Utility.String.SplitOffAfterDelimiter(ref path, "=");
             string[] rangeBits = rangeString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-            double from = Convert.ToDouble(rangeBits[0]);
-            double to = Convert.ToDouble(rangeBits[2]);
-            double step = Convert.ToDouble(rangeBits[4]);
+            double from = Convert.ToDouble(rangeBits[0], CultureInfo.InvariantCulture);
+            double to = Convert.ToDouble(rangeBits[2], CultureInfo.InvariantCulture);
+            double step = Convert.ToDouble(rangeBits[4], CultureInfo.InvariantCulture);
 
             for (double value = from; value <= to; value += step)
             {

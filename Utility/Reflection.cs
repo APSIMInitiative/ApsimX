@@ -12,12 +12,16 @@ namespace Utility
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Globalization;
 
+    /// <summary>
+    /// Utility class with reflection functions
+    /// </summary>
     public class Reflection
     {
         /// <summary>
         /// Returns true if the specified type T is of type TypeName
-        /// <summary>
+        /// </summary>
         public static bool IsOfType(Type T, string TypeName)
         {
             while (T != null)
@@ -312,7 +316,9 @@ namespace Utility
                         CompilerParameters Params = new CompilerParameters();
 
                         if (assemblyFileName == null)
+                        {
                             Params.GenerateInMemory = true;
+                        }
                         else
                         {
                             Params.GenerateInMemory = false;
@@ -322,10 +328,11 @@ namespace Utility
                         Params.WarningLevel = 2;
                         Params.ReferencedAssemblies.Add("System.dll");
                         Params.ReferencedAssemblies.Add("System.Xml.dll");
+                        Params.ReferencedAssemblies.Add("System.Windows.Forms.dll");
                         Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetExecutingAssembly().Location));
                         if (Assembly.GetCallingAssembly() != Assembly.GetExecutingAssembly())
                             Params.ReferencedAssemblies.Add(System.IO.Path.Combine(Assembly.GetCallingAssembly().Location));
-                        Params.TempFiles = new TempFileCollection(".");
+                        Params.TempFiles = new TempFileCollection(Path.GetTempPath());  // ensure that any temp files are in a writeable area
                         Params.TempFiles.KeepFiles = false;
                         string[] source = new string[1];
                         source[0] = code;
@@ -397,21 +404,21 @@ namespace Utility
                     throw new Exception("Cannot convert '" + stringValue + "' into an object of type '" + type.ToString() + "'");
             }
             else if (type == typeof(double))
-                return Convert.ToDouble(stringValue);
+                return Convert.ToDouble(stringValue, CultureInfo.InvariantCulture);
             else if (type == typeof(float))
-                return Convert.ToSingle(stringValue);
+                return Convert.ToSingle(stringValue, CultureInfo.InvariantCulture);
             else if (type == typeof(int))
-                return Convert.ToInt32(stringValue);
+                return Convert.ToInt32(stringValue, CultureInfo.InvariantCulture);
             else if (type == typeof(DateTime))
-                return Convert.ToDateTime(stringValue);
+                return Convert.ToDateTime(stringValue, CultureInfo.InvariantCulture);
             else if (type == typeof(string))
                 return stringValue;
             else if (type == typeof(bool))
                 return Boolean.Parse(stringValue);
             else if (type.IsEnum)
                 return Enum.Parse(type, stringValue, true);
-
-            throw new Exception("Cannot convert the string '" + stringValue + "' to a " + type.ToString());
+            else
+                return null;
         }
 
         /// <summary>
@@ -437,7 +444,7 @@ namespace Utility
             }
             else
             {
-                return obj.ToString();
+                return Convert.ToString(obj, CultureInfo.InvariantCulture);
             }
         }
 

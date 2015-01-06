@@ -9,14 +9,23 @@ using System.Xml.Serialization;
 
 namespace Models.PMF
 {
+    /// <summary>
+    /// A composite biomass i.e. a biomass made up of 1 or more biomass objects.
+    /// </summary>
     [Serializable]
     public class CompositeBiomass : Biomass
     {
+        /// <summary>The propertys</summary>
         public string[] Propertys = null;
 
-        /// <summary>
-        ///  Update this biomass object.
-        /// </summary>
+        /// <summary>Update this biomass object.</summary>
+        /// <exception cref="System.Exception">
+        /// Cannot find:  + PropertyName +  in composite biomass:  + this.Name
+        /// or
+        /// Elements in the array:  + PropertyName +  are not Biomass objects in composition biomass:  + this.Name
+        /// or
+        /// Property:  + PropertyName +  is not a Biomass object in composition biomass:  + this.Name
+        /// </exception>
         public void Update()
         {
             base.Clear();
@@ -46,15 +55,18 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>
-        /// Clear ourselves.
-        /// </summary>
+        /// <summary>Clear ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
         }
 
+        /// <summary>Gets or sets the non structural n.</summary>
+        /// <value>The non structural n.</value>
+        /// <exception cref="System.Exception">Cannot set NonStructuralN in CompositeBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         override public double NonStructuralN
@@ -63,6 +75,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set NonStructuralN in CompositeBiomass"); }
         }
 
+        /// <summary>Gets or sets the structural n.</summary>
+        /// <value>The structural n.</value>
+        /// <exception cref="System.Exception">Cannot set StructuralN in CompositeBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         override public double StructuralN
@@ -71,6 +86,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set StructuralN in CompositeBiomass"); }
         }
 
+        /// <summary>Gets or sets the non structural wt.</summary>
+        /// <value>The non structural wt.</value>
+        /// <exception cref="System.Exception">Cannot set NonStructuralWt in CompositeBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         override public double NonStructuralWt
@@ -79,6 +97,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set NonStructuralWt in CompositeBiomass"); }
         }
 
+        /// <summary>Gets or sets the structural wt.</summary>
+        /// <value>The structural wt.</value>
+        /// <exception cref="System.Exception">Cannot set StructuralWt in CompositeBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         override public double StructuralWt
@@ -87,6 +108,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set StructuralWt in CompositeBiomass"); }
         }
 
+        /// <summary>Gets or sets the metabolic n.</summary>
+        /// <value>The metabolic n.</value>
+        /// <exception cref="System.Exception">Cannot set MetabolicN in CompositeBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         override public double MetabolicN
@@ -95,6 +119,9 @@ namespace Models.PMF
             set { throw new Exception("Cannot set MetabolicN in CompositeBiomass"); }
         }
 
+        /// <summary>Gets or sets the metabolic wt.</summary>
+        /// <value>The metabolic wt.</value>
+        /// <exception cref="System.Exception">Cannot set MetabolicWt in CompositeBiomass</exception>
         [XmlIgnore]
         [Units("g/m^2")]
         override public double MetabolicWt
@@ -103,6 +130,8 @@ namespace Models.PMF
             set { throw new Exception("Cannot set MetabolicWt in CompositeBiomass"); }
         }
 
+        /// <summary>Gets the wt.</summary>
+        /// <value>The wt.</value>
         [Units("g/m^2")]
         override public double Wt
         {
@@ -113,7 +142,9 @@ namespace Models.PMF
             }
         }
 
-        
+
+        /// <summary>Gets the n.</summary>
+        /// <value>The n.</value>
         [Units("g/m^2")]
         override public double N
         {

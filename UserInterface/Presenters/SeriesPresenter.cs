@@ -63,12 +63,6 @@ namespace UserInterface.Presenters
             // Populate the series names.
             PopulateSeriesNames();
 
-            // Trap events from the view.
-            ConnectViewEvents();
-
-            //this.PopulateDataSources();
-            //this.PopulateSeries();
-
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnGraphModelChanged2;
         }
 
@@ -105,6 +99,7 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.X2Changed += OnX2Changed;
             this.seriesView.SeriesEditor.Y2Changed += OnY2Changed;
             this.seriesView.SeriesEditor.ShowInLegendChanged += OnShowInLegendChanged;
+            this.seriesView.SeriesEditor.CumulativeChanged += OnCumulativeChanged;
         }
 
         /// <summary>
@@ -132,6 +127,7 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.X2Changed -= OnX2Changed;
             this.seriesView.SeriesEditor.Y2Changed -= OnY2Changed;
             this.seriesView.SeriesEditor.ShowInLegendChanged -= OnShowInLegendChanged;
+            this.seriesView.SeriesEditor.CumulativeChanged -= OnCumulativeChanged;
         }
 
         /// <summary>
@@ -258,6 +254,7 @@ namespace UserInterface.Presenters
                 counter++;
             }
             this.seriesView.SeriesNames = names.ToArray();
+            PopulateSeriesEditor();
         }
 
         #region Events from the view
@@ -385,6 +382,16 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Cumulative check box has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCumulativeChanged(object sender, EventArgs e)
+        {
+            this.SetModelProperty("Cumulative", this.seriesView.SeriesEditor.Cumulative);
+        }
+
+        /// <summary>
         /// X2 has been changed by the user.
         /// </summary>
         /// <param name="sender">Event sender</param>
@@ -489,6 +496,9 @@ namespace UserInterface.Presenters
 
                     this.seriesView.SeriesEditor.OverallRegression = this.graph.ShowRegressionLine;
 
+                    if (series.Type == Series.SeriesType.Line)
+                        series.Type = Series.SeriesType.Scatter;
+
                     this.seriesView.SeriesEditor.SeriesType = series.Type.ToString();
                     this.seriesView.SeriesEditor.SeriesLineType = series.Line.ToString();
                     this.seriesView.SeriesEditor.SeriesMarkerType = series.Marker.ToString();
@@ -497,6 +507,7 @@ namespace UserInterface.Presenters
                     this.seriesView.SeriesEditor.XOnTop = series.XAxis == Axis.AxisType.Top;
                     this.seriesView.SeriesEditor.YOnRight = series.YAxis == Axis.AxisType.Right;
                     this.seriesView.SeriesEditor.ShowInLegend = series.ShowInLegend;
+                    this.seriesView.SeriesEditor.Cumulative = series.Cumulative;
 
                     // Populate the editor with a list of data sources.
                     List<string> dataSources = new List<string>();

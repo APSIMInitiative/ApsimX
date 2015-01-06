@@ -18,20 +18,12 @@
     </PredictedObserved>
     <Input>
       <Name>NZObservations</Name>
-      <FileNames>
-        <string>RainShelterBiomass.txt</string>
-      </FileNames>
+      <FileName>RainShelterBiomass.txt</FileName>
     </Input>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
-    <Input>
-      <Name>Input</Name>
-      <FileNames>
-        <string>..\..\..\apsim\Tests\Validation\Wheat\Files\Wheat_APS14_LucN200.out</string>
-      </FileNames>
-    </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -143,10 +135,10 @@
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>APS26.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -232,7 +224,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -327,70 +319,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>3.5</SummerCona>
-            <SummerU>6</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>3.5</WinterCona>
-            <WinterU>6</WinterU>
+            <SummerU>6</SummerU>
+            <SummerCona>3.5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>6</WinterU>
+            <WinterCona>3.5</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -802,8 +747,8 @@ namespace Models
        [EventSubscribe("DoManagement")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.nit_tot);
-			CarbonTot = Utility.Math.Sum(Soil.SoilNitrogen.carbon_tot);
+			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
+			CarbonTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalC);
 		}
 	}
 }
@@ -851,11 +796,32 @@ namespace Models
           <FieldName>Wheat.Grain.Wt</FieldName>
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Observed</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Observed</TableName>
+          <FieldName>Wheat.Grain.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -893,11 +859,32 @@ namespace Models
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Observed</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Observed</TableName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -972,10 +959,10 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>APS6.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -1025,7 +1012,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -1111,70 +1098,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>3.5</SummerCona>
-            <SummerU>6</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>3.5</WinterCona>
-            <WinterU>6</WinterU>
+            <SummerU>6</SummerU>
+            <SummerCona>3.5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>6</WinterU>
+            <WinterCona>3.5</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1248,11 +1188,11 @@ namespace Models
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
-            <RootCN>0</RootCN>
-            <RootWt>0</RootWt>
-            <SoilCN>0</SoilCN>
-            <EnrACoeff>0</EnrACoeff>
-            <EnrBCoeff>0</EnrBCoeff>
+            <RootCN>60</RootCN>
+            <RootWt>2000</RootWt>
+            <SoilCN>14.5</SoilCN>
+            <EnrACoeff>1</EnrACoeff>
+            <EnrBCoeff>1</EnrBCoeff>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -1526,6 +1466,132 @@ namespace Models
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
+    <Graph>
+      <Name>Grain yield</Name>
+      <Title>APS26 Predicted vs Observed Yield</Title>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Yield</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Yield</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Wheat.Grain.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Observed</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Observed</TableName>
+          <FieldName>Wheat.Grain.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>Biomass</Name>
+      <Title>APS26 Predicted vs Observed Biomass</Title>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Line</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Observed</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Observed</TableName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <SplitOn>Simulation</SplitOn>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
   </Experiment>
   <Experiment>
     <Name>APS14</Name>
@@ -1615,10 +1681,10 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>APS14.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -1672,7 +1738,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.2</double>
                 <double>0.2</double>
@@ -1767,70 +1833,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>0</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>3.5</SummerCona>
-            <SummerU>6</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>3.5</WinterCona>
-            <WinterU>6</WinterU>
+            <SummerU>6</SummerU>
+            <SummerCona>3.5</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>6</WinterU>
+            <WinterCona>3.5</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -2225,7 +2244,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -2299,14 +2318,14 @@ DUL = 0;
 [EventSubscribe("DoManagementCalculations")]
 private void OnDoManagementCalculations(object sender, EventArgs e)
 {
-	int layers = Soil.SoilWater.dlayer.Length;
+	int layers = Soil.Thickness.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -2315,7 +2334,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -2324,23 +2343,23 @@ double OrganicN = 0;
 //AccumLeach = AccumLeach - Soil.SoilNitrogen.leach_urea - Soil.SoilNitrogen.leach_no3 - Soil.SoilNitrogen.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
-    AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.NO3N[layer];
+    TotalNH4 += Soil.NH4N[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -2348,8 +2367,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -2414,6 +2433,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -2687,10 +2707,10 @@ private void OnDoManagement(object sender, EventArgs e)
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>MER-86.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -2732,7 +2752,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.03</double>
                 <double>0.03</double>
@@ -2845,70 +2865,23 @@ private void OnDoManagement(object sender, EventArgs e)
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>2</SummerCona>
-            <SummerU>6</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>2</WinterCona>
-            <WinterU>6</WinterU>
+            <SummerU>6</SummerU>
+            <SummerCona>2</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>6</WinterU>
+            <WinterCona>2</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -3393,148 +3366,6 @@ private void OnDoManagement(object sender, EventArgs e)
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
-    <Graph>
-      <Name>Biomass</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Biomass</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Series 0</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title>Series 1</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title>Series 2</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <Series>
-        <Title>Series 3</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-    </Graph>
-    <Graph>
-      <Name>LAI</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>X axis title 2</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Y axis title</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Series 0</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.Leaf.LAI</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-    </Graph>
   </Experiment>
   <Experiment>
     <Name>Mer73</Name>
@@ -3718,10 +3549,10 @@ private void OnDoManagement(object sender, EventArgs e)
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>MER-73.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -3765,7 +3596,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.03</double>
                 <double>0.03</double>
@@ -3878,70 +3709,23 @@ private void OnDoManagement(object sender, EventArgs e)
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>2</SummerCona>
-            <SummerU>6</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>2</WinterCona>
-            <WinterU>6</WinterU>
+            <SummerU>6</SummerU>
+            <SummerCona>2</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>6</WinterU>
+            <WinterCona>2</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -4442,7 +4226,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -4516,14 +4300,14 @@ DUL = 0;
 [EventSubscribe("DoManagementCalculations")]
 private void OnDoManagementCalculations(object sender, EventArgs e)
 {
-	int layers = Soil.SoilWater.dlayer.Length;
+	int layers = Soil.Thickness.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -4532,7 +4316,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -4541,23 +4325,23 @@ double OrganicN = 0;
 //AccumLeach = AccumLeach - Soil.SoilNitrogen.leach_urea - Soil.SoilNitrogen.leach_no3 - Soil.SoilNitrogen.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
-    AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.NO3N[layer];
+    TotalNH4 += Soil.NH4N[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -4565,8 +4349,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -4690,6 +4474,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>LAI</Name>
@@ -4731,6 +4516,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -5702,10 +5488,10 @@ private void OnDoManagement(object sender, EventArgs e)
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>lincoln.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Folder>
@@ -5834,7 +5620,7 @@ namespace Models
 [System.Xml.Serialization.XmlInclude(typeof(Model))]
 public class Script : Model
  {      
-   [Link] WeatherFile Met;  
+   [Link] Weather Met;  
                
    [EventSubscribe("PreparingNewWeatherData")]
    private void OnPreparingNewWeatherData(object sender, EventArgs e)
@@ -5854,7 +5640,7 @@ public class Script : Model
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.07</double>
@@ -5949,70 +5735,23 @@ public class Script : Model
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>3</SummerCona>
-            <SummerU>7</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>3</WinterCona>
-            <WinterU>7</WinterU>
+            <SummerU>7</SummerU>
+            <SummerCona>3</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>7</WinterU>
+            <WinterCona>3</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.2</Salb>
             <CN2Bare>75</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -6382,11 +6121,11 @@ public class Script : Model
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <TableName>Outputfile</TableName>
+          <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <TableName>Outputfile</TableName>
+          <TableName>Report</TableName>
           <FieldName>Wheat.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -6415,6 +6154,7 @@ public class Script : Model
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -6442,11 +6182,11 @@ public class Script : Model
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <TableName>Outputfile</TableName>
+          <TableName>Report</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <TableName>Outputfile</TableName>
+          <TableName>Report</TableName>
           <FieldName>Wheat.AboveGround.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -6475,1859 +6215,8 @@ public class Script : Model
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
-    <Experiment>
-      <Name>RainShelter</Name>
-      <Factors>
-        <Name>Factors</Name>
-        <Factor>
-          <Name>Irrig</Name>
-          <Factor>
-            <Name>Control</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(12);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(22);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(14);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(27);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(18);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(30);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(42);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(33);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(28);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(37);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(51);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(36);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(38);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(35);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(47);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(40);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(41);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SpringD1</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(18);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(30);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(42);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(33);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(28);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(37);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(51);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(36);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(38);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(35);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(47);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(40);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(41);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SpringD2</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(42);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(33);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(28);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(37);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(51);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(36);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(38);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(35);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(47);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(40);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(41);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SpringD3</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(37);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(51);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(36);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(38);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(35);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(47);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(40);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(41);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SpringD4</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(12);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(14);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(35);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(47);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(40);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(41);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SummerD1</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(12);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(14);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SummerD2</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(12);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(14);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(27);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(18);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(30);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SummerD3</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(12);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(14);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(27);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(18);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(30);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(42);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(33);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SummerD4</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(12);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(14);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(27);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(18);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(30);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(42);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(33);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(28);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(37);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(51);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>SummerD5</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(12);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(14);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(27);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(18);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(30);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(42);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(33);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(28);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(37);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(51);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(36);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(38);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>Nil</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Factor>
-            <Name>Half</Name>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(22);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(18);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(42);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(37);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(36);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(35);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(40);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(0);</Action>
-              </Operation>
-            </Operations>
-            <Specifications />
-          </Factor>
-          <Specifications>
-            <string>[IrrigationEvents]</string>
-          </Specifications>
-        </Factor>
-      </Factors>
-      <Simulation>
-        <Name>Control_full_irrig</Name>
-        <Clock>
-          <Name>Clock</Name>
-          <StartDate>1991-06-08T00:00:00</StartDate>
-          <EndDate>1992-01-26T00:00:00</EndDate>
-        </Clock>
-        <Summary>
-          <Name>summaryfile</Name>
-        </Summary>
-        <WeatherFile>
-          <Name>WeatherFile</Name>
-          <FileName>lincoln.met</FileName>
-        </WeatherFile>
-        <Zone>
-          <Name>paddock</Name>
-          <Folder>
-            <Name>Manager folder</Name>
-            <Operations>
-              <Name>Operations</Name>
-              <Operation>
-                <Date>1991-06-08T00:00:00</Date>
-                <Action>[Wheat].Sow(population:300, cultivar:"GattonHartog", depth:40, rowSpacing:250);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>IrrigationEvents</Name>
-              <Operation>
-                <Date>1991-08-30T00:00:00</Date>
-                <Action>[Irrigation].Apply(20);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(12);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(22);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(14);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(27);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-11T00:00:00</Date>
-                <Action>[Irrigation].Apply(18);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-18T00:00:00</Date>
-                <Action>[Irrigation].Apply(30);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-10-25T00:00:00</Date>
-                <Action>[Irrigation].Apply(42);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-01T00:00:00</Date>
-                <Action>[Irrigation].Apply(33);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-08T00:00:00</Date>
-                <Action>[Irrigation].Apply(24);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-15T00:00:00</Date>
-                <Action>[Irrigation].Apply(28);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-22T00:00:00</Date>
-                <Action>[Irrigation].Apply(37);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-11-28T00:00:00</Date>
-                <Action>[Irrigation].Apply(51);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-06T00:00:00</Date>
-                <Action>[Irrigation].Apply(36);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-13T00:00:00</Date>
-                <Action>[Irrigation].Apply(38);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-20T00:00:00</Date>
-                <Action>[Irrigation].Apply(35);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-12-27T00:00:00</Date>
-                <Action>[Irrigation].Apply(47);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-04T00:00:00</Date>
-                <Action>[Irrigation].Apply(40);</Action>
-              </Operation>
-              <Operation>
-                <Date>1992-01-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(41);</Action>
-              </Operation>
-            </Operations>
-            <Operations>
-              <Name>FertiliserEvents</Name>
-              <Operation>
-                <Date>1991-06-10T00:00:00</Date>
-                <Action>[Fertiliser].Apply(60, Fertiliser.Types.UreaN, 0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-06-10T00:00:00</Date>
-                <Action>[Irrigation].Apply(7);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-08-16T00:00:00</Date>
-                <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN,0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-08-16T00:00:00</Date>
-                <Action>[Irrigation].Apply(7);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-26T00:00:00</Date>
-                <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN,0);</Action>
-              </Operation>
-              <Operation>
-                <Date>1991-09-26T00:00:00</Date>
-                <Action>[Irrigation].Apply(7);</Action>
-              </Operation>
-            </Operations>
-            <Manager>
-              <Name>PotatoSowingRule</Name>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-namespace Models
-{
-[Serializable] 
-[System.Xml.Serialization.XmlInclude(typeof(Model))]
-public class Script : Model
- {      
-   [Link] WeatherFile Met;  
-               
-   [EventSubscribe("PreparingNewWeatherData")]
-   private void OnPreparingNewWeatherData(object sender, EventArgs e)
-   {
-	Met.Rain = 0;		
-   }
- }
-}
-				]]></Code>
-            </Manager>
-          </Folder>
-          <Irrigation>
-            <Name>Irrigation</Name>
-          </Irrigation>
-          <Soil>
-            <Name>LincolnField</Name>
-            <Water>
-              <Name>Water</Name>
-              <SoilCrop>
-                <Name>Wheat</Name>
-                <LL>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.09</double>
-                  <double>0.11</double>
-                  <double>0.16</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                </LL>
-                <KL>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.06</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                </KL>
-                <XF>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0.6</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                </XF>
-              </SoilCrop>
-              <Thickness>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <BD>
-                <double>1.3</double>
-                <double>1.3</double>
-                <double>1.3</double>
-                <double>1.3</double>
-                <double>1.3</double>
-                <double>1.3</double>
-                <double>1.3</double>
-                <double>1.3</double>
-              </BD>
-              <AirDry>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-              </AirDry>
-              <LL15>
-                <double>0.08</double>
-                <double>0.07</double>
-                <double>0.07</double>
-                <double>0.09</double>
-                <double>0.11</double>
-                <double>0.16</double>
-                <double>0.15</double>
-                <double>0.12</double>
-              </LL15>
-              <DUL>
-                <double>0.31</double>
-                <double>0.3</double>
-                <double>0.28</double>
-                <double>0.31</double>
-                <double>0.3</double>
-                <double>0.28</double>
-                <double>0.3</double>
-                <double>0.34</double>
-              </DUL>
-              <SAT>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-                <double>0.44</double>
-              </SAT>
-            </Water>
-            <SoilWater>
-              <Name>SoilWater</Name>
-              <min_crit_temp>5</min_crit_temp>
-              <max_crit_temp>35</max_crit_temp>
-              <max_albedo>0.23</max_albedo>
-              <A_to_evap_fact>0.44</A_to_evap_fact>
-              <canopy_eos_coef>1.7</canopy_eos_coef>
-              <sw_top_crit>0.9</sw_top_crit>
-              <sumes1_max>100</sumes1_max>
-              <sumes2_max>25</sumes2_max>
-              <solute_flow_eff>
-                <double>1</double>
-              </solute_flow_eff>
-              <solute_flux_eff>
-                <double>1</double>
-              </solute_flux_eff>
-              <gravity_gradient>2E-05</gravity_gradient>
-              <specific_bd>2.65</specific_bd>
-              <hydrol_effective_depth>450</hydrol_effective_depth>
-              <mobile_solutes>
-                <string>no3</string>
-                <string>urea</string>
-                <string>cl</string>
-                <string>br</string>
-                <string>org_n</string>
-                <string>org_c_pool1</string>
-                <string>org_c_pool2</string>
-                <string>org_c_pool3</string>
-              </mobile_solutes>
-              <immobile_solutes>
-                <string>nh4</string>
-              </immobile_solutes>
-              <canopy_fact>
-                <double>1</double>
-                <double>1</double>
-                <double>0</double>
-                <double>0</double>
-              </canopy_fact>
-              <canopy_fact_height>
-                <double>0</double>
-                <double>600</double>
-                <double>1800</double>
-                <double>30000</double>
-              </canopy_fact_height>
-              <canopy_fact_default>0.5</canopy_fact_default>
-              <act_evap_method>ritchie</act_evap_method>
-              <irrigation_will_runoff>false</irrigation_will_runoff>
-              <irrigation_layer>1</irrigation_layer>
-              <obsrunoff_name />
-              <slope>0</slope>
-              <discharge_width>0</discharge_width>
-              <catchment_area>0</catchment_area>
-              <eo_source />
-              <max_pond>0</max_pond>
-              <SummerCona>3</SummerCona>
-              <SummerU>7</SummerU>
-              <SummerDate>1-Nov</SummerDate>
-              <WinterCona>3</WinterCona>
-              <WinterU>7</WinterU>
-              <WinterDate>1-Apr</WinterDate>
-              <DiffusConst>40</DiffusConst>
-              <DiffusSlope>16</DiffusSlope>
-              <Salb>0.2</Salb>
-              <CN2Bare>75</CN2Bare>
-              <CNRed>20</CNRed>
-              <CNCov>0.8</CNCov>
-              <Thickness>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <SWCON>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-                <double>0.6</double>
-              </SWCON>
-              <KLAT>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-              </KLAT>
-            </SoilWater>
-            <SoilNitrogen>
-              <Name>SoilNitrogen</Name>
-              <fom_type>
-                <string>default</string>
-                <string>manure</string>
-                <string>mucuna</string>
-                <string>lablab</string>
-                <string>shemp</string>
-                <string>stable</string>
-              </fom_type>
-              <fract_carb>
-                <double>0.2</double>
-                <double>0.3</double>
-                <double>0.54</double>
-                <double>0.57</double>
-                <double>0.45</double>
-                <double>0</double>
-              </fract_carb>
-              <fract_cell>
-                <double>0.7</double>
-                <double>0.3</double>
-                <double>0.37</double>
-                <double>0.37</double>
-                <double>0.47</double>
-                <double>0.1</double>
-              </fract_cell>
-              <fract_lign>
-                <double>0.1</double>
-                <double>0.4</double>
-                <double>0.09</double>
-                <double>0.06</double>
-                <double>0.08</double>
-                <double>0.9</double>
-              </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-            </SoilNitrogen>
-            <SoilOrganicMatter>
-              <Name>SoilOrganicMatter</Name>
-              <RootCN>0</RootCN>
-              <RootWt>0</RootWt>
-              <SoilCN>0</SoilCN>
-              <EnrACoeff>0</EnrACoeff>
-              <EnrBCoeff>0</EnrBCoeff>
-              <Thickness>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <Depth>
-                <string>0-10</string>
-                <string>10-30</string>
-                <string>30-50</string>
-                <string>50-70</string>
-                <string>70-90</string>
-                <string>90-110</string>
-                <string>110-130</string>
-                <string>130-150</string>
-              </Depth>
-              <OC>
-                <double>0.35</double>
-                <double>0.27</double>
-                <double>0.24</double>
-                <double>0.16</double>
-                <double>0.16</double>
-                <double>0.3</double>
-                <double>0.1</double>
-                <double>0.1</double>
-              </OC>
-              <FBiom>
-                <double>0.04</double>
-                <double>0.03</double>
-                <double>0.02</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-                <double>0.01</double>
-              </FBiom>
-              <FInert>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.31</double>
-                <double>0.25</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </FInert>
-              <OCUnits>Total</OCUnits>
-            </SoilOrganicMatter>
-            <Analysis>
-              <Name>Analysis</Name>
-              <Thickness>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <PH>
-                <double>8.5</double>
-                <double>8.5</double>
-                <double>8.6</double>
-                <double>8.6</double>
-                <double>8.6</double>
-                <double>8.6</double>
-                <double>8.6</double>
-                <double>8.6</double>
-              </PH>
-              <PHUnits>Water</PHUnits>
-              <BoronUnits>HotWater</BoronUnits>
-            </Analysis>
-            <Sample>
-              <Name>Initial nitrogen</Name>
-              <Thickness>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <NO3>
-                <double>24.9</double>
-                <double>16</double>
-                <double>9.8</double>
-                <double>9.8</double>
-                <double>2.1</double>
-                <double>2.1</double>
-                <double>2.1</double>
-                <double>2.1</double>
-              </NO3>
-              <NH4>
-                <double>1.3</double>
-                <double>1</double>
-                <double>1</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.5</double>
-                <double>0.5</double>
-                <double>0.5</double>
-              </NH4>
-              <NO3Units>ppm</NO3Units>
-              <NH4Units>ppm</NH4Units>
-              <SWUnits>Volumetric</SWUnits>
-              <OCUnits>Total</OCUnits>
-              <PHUnits>Water</PHUnits>
-            </Sample>
-            <Sample>
-              <Name>Initial water</Name>
-              <Thickness>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <SW>
-                <double>0.24</double>
-                <double>0.27</double>
-                <double>0.26</double>
-                <double>0.23</double>
-                <double>0.24</double>
-                <double>0.23</double>
-                <double>0.23</double>
-                <double>0.18</double>
-              </SW>
-              <NO3Units>ppm</NO3Units>
-              <NH4Units>ppm</NH4Units>
-              <SWUnits>Volumetric</SWUnits>
-              <OCUnits>Total</OCUnits>
-              <PHUnits>Water</PHUnits>
-            </Sample>
-            <RecordNumber>0</RecordNumber>
-            <SoilType>LincolnSoil</SoilType>
-            <LocalName>Lincoln</LocalName>
-            <Site>Lincoln</Site>
-            <NearestTown>Unknown</NearestTown>
-            <Region>NZ</Region>
-            <NaturalVegetation>Unknown</NaturalVegetation>
-            <Latitude>0</Latitude>
-            <Longitude>0</Longitude>
-          </Soil>
-          <Report>
-            <Name>Report</Name>
-            <VariableNames>
-              <string>[Clock].Today</string>
-              <string>Wheat.Zadok.Stage</string>
-              <string>Wheat.Phenology.CurrentStageName</string>
-              <string>Wheat.AboveGround.Wt</string>
-              <string>Wheat.AboveGround.N</string>
-              <string>Wheat.Grain.Yield</string>
-              <string>Wheat.Grain.Protein</string>
-              <string>Wheat.Grain.Size</string>
-              <string>Wheat.Grain.GrainsPerGramStem</string>
-              <string>Wheat.Grain.Wt</string>
-              <string>Wheat.Grain.N</string>
-              <string>Wheat.Leaf.LAI</string>
-              <string>Wheat.Leaf.Live.Wt</string>
-              <string>Wheat.Leaf.Live.N</string>
-              <string>Wheat.Head.Wt</string>
-              <string>Wheat.Head.N</string>
-              <string>Wheat.Stem.Live.Wt</string>
-              <string>Wheat.Stem.Live.N</string>
-              <string>Wheat.Root.RootDepth</string>
-              <string>Wheat.EP</string>
-              <string>Wheat.SWStress.Photo</string>
-              <string>Wheat.SWStress.Expansion</string>
-              <string>Wheat.NStress.Photo</string>
-              <string>Wheat.NStress.Expansion</string>
-              <string>Wheat.Total.Wt</string>
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-            </VariableNames>
-            <EventNames>
-              <string>[Clock].DoReport</string>
-            </EventNames>
-          </Report>
-          <SurfaceOrganicMatter>
-            <Name>Surface Organic Matter</Name>
-            <ResidueTypes>
-              <Name>ResidueTypes</Name>
-              <LoadFromResource>ResidueTypes</LoadFromResource>
-            </ResidueTypes>
-            <Pools>
-              <Pool>
-                <PoolName>wheat_stubble</PoolName>
-                <ResidueType>wheat</ResidueType>
-                <Mass>1000</Mass>
-                <CNRatio>80</CNRatio>
-                <CPRatio>NaN</CPRatio>
-                <StandingFraction>0</StandingFraction>
-              </Pool>
-            </Pools>
-            <PoolName>wheat_stubble</PoolName>
-            <type>wheat</type>
-            <mass>1000</mass>
-            <standing_fraction>0</standing_fraction>
-            <cpr />
-            <cnr>80</cnr>
-            <CriticalResidueWeight>2000</CriticalResidueWeight>
-            <OptimumDecompTemp>20</OptimumDecompTemp>
-            <MaxCumulativeEOS>20</MaxCumulativeEOS>
-            <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-            <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-            <TotalLeachRain>25</TotalLeachRain>
-            <MinRainToLeach>10</MinRainToLeach>
-            <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-            <DefaultCPRatio>0</DefaultCPRatio>
-            <DefaultStandingFraction>0</DefaultStandingFraction>
-            <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-            <FractionFaecesAdded>0.5</FractionFaecesAdded>
-          </SurfaceOrganicMatter>
-          <Plant15>
-            <Name>Wheat</Name>
-            <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
-            <CropType>Wheat</CropType>
-          </Plant15>
-          <Fertiliser>
-            <Name>Fertiliser</Name>
-          </Fertiliser>
-          <MicroClimate>
-            <Name>MicroClimate</Name>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
-            <refheight>2</refheight>
-            <albedo>0.29366217672824863</albedo>
-            <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
-            <a_interception>0</a_interception>
-            <b_interception>1</b_interception>
-            <c_interception>0</c_interception>
-            <d_interception>0</d_interception>
-            <soil_albedo>0.3</soil_albedo>
-          </MicroClimate>
-          <Area>1</Area>
-          <Slope>0</Slope>
-        </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
-      </Simulation>
-      <Graph>
-        <Name>LAI</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Leaf Area Index</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>0</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Outputfile</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Outputfile</TableName>
-            <FieldName>Wheat.Leaf.LAI</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>0</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>NZObservations</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>NZObservations</TableName>
-            <FieldName>Wheat.Leaf.LAI</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-      </Graph>
-      <Graph>
-        <Name>Biomass</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Leaf Area Index</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>0</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Outputfile</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Outputfile</TableName>
-            <FieldName>Wheat.AboveGround.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>0</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>NZObservations</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>NZObservations</TableName>
-            <FieldName>Wheat.AboveGroundLive.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-      </Graph>
-      <Graph>
-        <Name>Biomass1</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Leaf Area Index</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>0</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Outputfile</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Outputfile</TableName>
-            <FieldName>Wheat.Head.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>0</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>NZObservations</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>NZObservations</TableName>
-            <FieldName>Wheat.Head.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-      </Graph>
-    </Experiment>
   </Experiment>
   <Experiment>
     <Name>Lincoln9192</Name>
@@ -8683,10 +6572,10 @@ public class Script : Model
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Lincoln9192.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Folder>
@@ -8801,7 +6690,7 @@ public class Script : Model
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.07</double>
@@ -8896,70 +6785,23 @@ public class Script : Model
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>3</SummerCona>
-            <SummerU>7</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>3</WinterCona>
-            <WinterU>7</WinterU>
+            <SummerU>7</SummerU>
+            <SummerCona>3</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>7</WinterU>
+            <WinterCona>3</WinterCona>
             <DiffusConst>40</DiffusConst>
             <DiffusSlope>16</DiffusSlope>
             <Salb>0.2</Salb>
             <CN2Bare>75</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -9302,7 +7144,7 @@ public class Script : Model
             <string>Wheat.NStress.Photo</string>
             <string>Wheat.NStress.Expansion</string>
             <string>Wheat.Total.Wt</string>
-            <string>Evaluate sum([Soil].SoilWater.sw_dep) as TotalSW</string>
+            <string>sum([Soil].SoilWater.SWmm) as TotalSW</string>
             <string />
           </VariableNames>
           <EventNames>
@@ -9472,6 +7314,7 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
     <Graph>
       <Name>TotalSW</Name>
@@ -9512,6 +7355,7 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -9618,10 +7462,10 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Cunderdin.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -9668,7 +7512,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.07</double>
                 <double>0.07</double>
@@ -9844,70 +7688,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>0</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>3</SummerCona>
-            <SummerU>7.5</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>3</WinterCona>
-            <WinterU>7.5</WinterU>
+            <SummerU>7.5</SummerU>
+            <SummerCona>3</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>7.5</WinterU>
+            <WinterCona>3</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>25</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>50</double>
               <double>50</double>
@@ -10515,7 +8312,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -10589,14 +8386,14 @@ DUL = 0;
 [EventSubscribe("DoManagementCalculations")]
 private void OnDoManagementCalculations(object sender, EventArgs e)
 {
-	int layers = Soil.SoilWater.dlayer.Length;
+	int layers = Soil.Thickness.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -10605,7 +8402,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -10614,23 +8411,23 @@ double OrganicN = 0;
 //AccumLeach = AccumLeach - Soil.SoilNitrogen.leach_urea - Soil.SoilNitrogen.leach_no3 - Soil.SoilNitrogen.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
-    AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.NO3N[layer];
+    TotalNH4 += Soil.NH4N[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -10638,8 +8435,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -10733,7 +8530,7 @@ namespace Models
     </Simulation>
     <Graph>
       <Name>Biomass</Name>
-      <Title>APS26 Predicted vs Observed Biomass</Title>
+      <Title />
       <Axis>
         <Type>Bottom</Type>
         <Title>Date</Title>
@@ -10772,6 +8569,7 @@ namespace Models
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -10914,10 +8712,10 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>hall2002.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -10970,7 +8768,7 @@ namespace Models
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.073</double>
                 <double>0.075</double>
@@ -11173,70 +8971,23 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>2</SummerCona>
-            <SummerU>2</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>2</WinterCona>
-            <WinterU>2</WinterU>
+            <SummerU>2</SummerU>
+            <SummerCona>2</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>2</WinterU>
+            <WinterCona>2</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>72</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -11762,7 +9513,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -11836,14 +9587,14 @@ DUL = 0;
 [EventSubscribe("DoManagementCalculations")]
 private void OnDoManagementCalculations(object sender, EventArgs e)
 {
-	int layers = Soil.SoilWater.dlayer.Length;
+	int layers = Soil.Thickness.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -11852,7 +9603,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -11861,23 +9612,23 @@ double OrganicN = 0;
 //AccumLeach = AccumLeach - Soil.SoilNitrogen.leach_urea - Soil.SoilNitrogen.leach_no3 - Soil.SoilNitrogen.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
-    AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.NO3N[layer];
+    TotalNH4 += Soil.NH4N[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -11885,8 +9636,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -11958,6 +9709,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
     </Graph>
   </Experiment>
   <Experiment>
@@ -11971,7 +9723,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.08</double>
@@ -12084,70 +9836,23 @@ private void OnDoManagement(object sender, EventArgs e)
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>0</irrigation_layer>
-            <obsrunoff_name />
-            <slope>NaN</slope>
-            <discharge_width>NaN</discharge_width>
-            <catchment_area>NaN</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>2</SummerCona>
-            <SummerU>6</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>2</WinterCona>
-            <WinterU>6</WinterU>
+            <SummerU>6</SummerU>
+            <SummerCona>2</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>6</WinterU>
+            <WinterCona>2</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>50</double>
               <double>50</double>
@@ -12467,7 +10172,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Wheat</Name>
+              <Name>WheatSoil</Name>
               <LL>
                 <double>0.08</double>
                 <double>0.08</double>
@@ -12580,70 +10285,23 @@ private void OnDoManagement(object sender, EventArgs e)
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>0</irrigation_layer>
-            <obsrunoff_name />
-            <slope>NaN</slope>
-            <discharge_width>NaN</discharge_width>
-            <catchment_area>NaN</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>2</SummerCona>
-            <SummerU>6</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>2</WinterCona>
-            <WinterU>6</WinterU>
+            <SummerU>6</SummerU>
+            <SummerCona>2</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>6</WinterU>
+            <WinterCona>2</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>60</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>NaN</slope>
+            <discharge_width>NaN</discharge_width>
+            <catchment_area>NaN</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>50</double>
               <double>50</double>
@@ -12979,10 +10637,10 @@ private void OnDoManagement(object sender, EventArgs e)
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
-      <WeatherFile>
-        <Name>WeatherFile</Name>
+      <Weather>
+        <Name>Weather</Name>
         <FileName>Wongan83.met</FileName>
-      </WeatherFile>
+      </Weather>
       <Zone>
         <Name>paddock</Name>
         <Report>
@@ -13035,7 +10693,7 @@ private void OnDoManagement(object sender, EventArgs e)
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>wheat</Name>
+              <Name>wheatSoil</Name>
               <LL>
                 <double>0.073</double>
                 <double>0.075</double>
@@ -13238,70 +10896,23 @@ private void OnDoManagement(object sender, EventArgs e)
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <min_crit_temp>5</min_crit_temp>
-            <max_crit_temp>35</max_crit_temp>
-            <max_albedo>0.23</max_albedo>
-            <A_to_evap_fact>0.44</A_to_evap_fact>
-            <canopy_eos_coef>1.7</canopy_eos_coef>
-            <sw_top_crit>0.9</sw_top_crit>
-            <sumes1_max>100</sumes1_max>
-            <sumes2_max>25</sumes2_max>
-            <solute_flow_eff>
-              <double>1</double>
-            </solute_flow_eff>
-            <solute_flux_eff>
-              <double>1</double>
-            </solute_flux_eff>
-            <gravity_gradient>2E-05</gravity_gradient>
-            <specific_bd>2.65</specific_bd>
-            <hydrol_effective_depth>450</hydrol_effective_depth>
-            <mobile_solutes>
-              <string>no3</string>
-              <string>urea</string>
-              <string>cl</string>
-              <string>br</string>
-              <string>org_n</string>
-              <string>org_c_pool1</string>
-              <string>org_c_pool2</string>
-              <string>org_c_pool3</string>
-            </mobile_solutes>
-            <immobile_solutes>
-              <string>nh4</string>
-            </immobile_solutes>
-            <canopy_fact>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-            </canopy_fact>
-            <canopy_fact_height>
-              <double>0</double>
-              <double>600</double>
-              <double>1800</double>
-              <double>30000</double>
-            </canopy_fact_height>
-            <canopy_fact_default>0.5</canopy_fact_default>
-            <act_evap_method>ritchie</act_evap_method>
-            <irrigation_will_runoff>false</irrigation_will_runoff>
-            <irrigation_layer>1</irrigation_layer>
-            <obsrunoff_name />
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <eo_source />
-            <max_pond>0</max_pond>
-            <SummerCona>2</SummerCona>
-            <SummerU>2</SummerU>
+            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
-            <WinterCona>2</WinterCona>
-            <WinterU>2</WinterU>
+            <SummerU>2</SummerU>
+            <SummerCona>2</SummerCona>
             <WinterDate>1-Apr</WinterDate>
+            <WinterU>2</WinterU>
+            <WinterCona>2</WinterCona>
             <DiffusConst>88</DiffusConst>
             <DiffusSlope>35.4</DiffusSlope>
             <Salb>0.13</Salb>
             <CN2Bare>72</CN2Bare>
             <CNRed>20</CNRed>
             <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -13816,7 +11427,7 @@ public class Script : Model
 [Link] Soils.Soil Soil;
 [Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
 [Link] Plant15 Plant;          
-[Link] WeatherFile Met;   
+[Link] Weather Met;   
 [Link] Fertiliser Fert;
 [Link] Irrigation Irrig;  
                
@@ -13890,14 +11501,14 @@ DUL = 0;
 [EventSubscribe("DoManagementCalculations")]
 private void OnDoManagementCalculations(object sender, EventArgs e)
 {
-	int layers = Soil.SoilWater.dlayer.Length;
+	int layers = Soil.Thickness.Length;
     if (InitialDay)
 	{
-      InitialSurfaceOMN = SOM.surfaceom_n;
+      InitialSurfaceOMN = SOM.N;
       for (int layer = 0; layer < layers; layer++)
       { 
-      InitialSoilOMN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-      InitialMineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
+      InitialSoilOMN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+      InitialMineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
       }
       InitialDay = false;
     }
@@ -13906,7 +11517,7 @@ private void OnDoManagementCalculations(object sender, EventArgs e)
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
 //AccumPlantN -= (double)this.Get("[Plant].Root.NUptake");
 AccumFert += Fert.NitrogenApplied;
-DeltaSurfaceOMN = SOM.surfaceom_n - InitialSurfaceOMN;
+DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 AccumDetach = 0; //plant2 doesn't detach yet
 MineralN = 0;
 TotalNO3 = 0;
@@ -13915,23 +11526,23 @@ double OrganicN = 0;
 //AccumLeach = AccumLeach - Soil.SoilNitrogen.leach_urea - Soil.SoilNitrogen.leach_no3 - Soil.SoilNitrogen.leach_nh4; //Fails
    for (int layer = 0; layer < layers; layer++)
     { 
-    AccumMineralisation += (Soil.SoilNitrogen.dlt_n_min[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.dnit);
-    OrganicN += (Soil.SoilNitrogen.biom_n[layer] + Soil.SoilNitrogen.fom_n[layer] + Soil.SoilNitrogen.hum_n[layer]);
-    MineralN += (Soil.SoilNitrogen.no3[layer] + Soil.SoilNitrogen.nh4[layer] + Soil.SoilNitrogen.urea[layer]);
-    TotalNO3 += Soil.SoilNitrogen.no3[layer];
-    TotalNH4 += Soil.SoilNitrogen.nh4[layer];
+    AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
+    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
+    MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
+    TotalNO3 += Soil.NO3N[layer];
+    TotalNH4 += Soil.NH4N[layer];
     }
 DeltaSoilOMN = OrganicN - InitialSoilOMN;
 DeltaSoilMineralN = MineralN - InitialMineralN;
 SoilNitrogenContent = MineralN;
 //!!!!!! Water balance components !!!!!!
 //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-AccumEO -= Soil.SoilWater.eo;
+AccumEO -= Soil.SoilWater.Eo;
 //AccumEP -= (double)this.Get("[Plant].Leaf.Transpiration");
-AccumES -= Soil.SoilWater.es; 
-AccumDrainage -= Soil.SoilWater.drain; 
-AccumRunoff -= Soil.SoilWater.runoff; 
+AccumES -= Soil.SoilWater.Es; 
+AccumDrainage -= Soil.SoilWater.Drainage; 
+AccumRunoff -= Soil.SoilWater.Runoff; 
 AccumIrrigation += Irrig.IrrigationApplied; 
 AccumRainfall += Met.Rain;
 SWC = 0;
@@ -13939,8 +11550,8 @@ DUL = 0;
 double OutFlowLat = 0;
    for (int layer = 0; layer < layers; layer++)
    {
-     SWC += Soil.SoilWater.sw_dep[layer];
-     DUL += Soil.SoilWater.dul_dep[layer];
+     SWC += Soil.SoilWater.SWmm[layer];
+     DUL += Soil.SoilWater.DULmm[layer];
      OutFlowLat = Soil.SoilWater.outflow_lat[layer];
    }
 AccumOutflowLat -= OutFlowLat;
@@ -13967,7 +11578,7 @@ private void OnDoManagement(object sender, EventArgs e)
   </Experiment>
   <Graph>
     <Name>Yield</Name>
-    <Caption>This figure shows predicted vs observed wheat yields.</Caption>
+    <Caption />
     <Axis>
       <Type>Bottom</Type>
       <Title>Observed Yield</Title>
@@ -14006,6 +11617,7 @@ private void OnDoManagement(object sender, EventArgs e)
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>Biomass</Name>
@@ -14047,9 +11659,10 @@ private void OnDoManagement(object sender, EventArgs e)
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
-    <Name>BiomassN</Name>
+    <Name>MicrobialN</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Observed Above Ground N</Title>
@@ -14088,6 +11701,7 @@ private void OnDoManagement(object sender, EventArgs e)
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Graph>
     <Name>GrainNumber</Name>
@@ -14129,6 +11743,7 @@ private void OnDoManagement(object sender, EventArgs e)
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
   </Graph>
   <Tests>
     <Name>Tests</Name>

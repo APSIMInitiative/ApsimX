@@ -9,28 +9,46 @@ using Models.PMF.Functions;
 
 namespace Models.PMF.OldPlant
 {
+    /// <summary>
+    /// A generic arbitrator
+    /// </summary>
     [Serializable]
     public class GenericArbitratorXY : Model
     {
+        /// <summary>Gets or sets the partition organs.</summary>
+        /// <value>The partition organs.</value>
         public string[] PartitionOrgans { get; set; }
 
+        /// <summary>Gets or sets the partition rules.</summary>
+        /// <value>The partition rules.</value>
         public string[] PartitionRules { get; set; }
 
+        /// <summary>The ratio root shoot</summary>
         [Link]
         Function RatioRootShoot = null;
 
+        /// <summary>The leaf</summary>
         [Link]
         Leaf1 Leaf = null;
 
+        /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
 
+        /// <summary>The dm supply</summary>
          public double DMSupply;
 
+         /// <summary>Gets the DLT_DM.</summary>
+         /// <value>The DLT_DM.</value>
          public double dlt_dm { get { return DMSupply; } } // needed by GRAZ
 
+         /// <summary>Gets the ratio root plant.</summary>
+         /// <value>The ratio root plant.</value>
         public virtual double RatioRootPlant { get { return 0.0; } }
 
+        /// <summary>Partitions the dm.</summary>
+        /// <param name="Organs">The organs.</param>
+        /// <exception cref="System.Exception">Unknown Partition Rule  + PartitionRules[i]</exception>
         internal void PartitionDM(List<Organ1> Organs)
         {
             // Get all DM supply terms.
@@ -94,6 +112,8 @@ namespace Models.PMF.OldPlant
             Util.Debug("Arbitrator.dlt_dm_green_tot=%f", dlt_dm_green_tot);
         }
 
+        /// <summary>Retranslocates the dm.</summary>
+        /// <param name="Organs">The organs.</param>
         internal void RetranslocateDM(List<Organ1> Organs)
         {
             double dlt_dm_retrans_part;                    // carbohydrate removed from part (g/m^2)
@@ -160,6 +180,10 @@ namespace Models.PMF.OldPlant
             Util.Debug("Arbitrator.FinalRetranslocation=%f", -FinalRetranslocation);
         }
 
+        /// <summary>Fracs the dm remaining in part.</summary>
+        /// <param name="OrganName">Name of the organ.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">In arbitrator, cannot find FracDMRemainingIn + OrganName</exception>
         private double FracDMRemainingInPart(string OrganName)
         {
             Function F = Apsim.Find(this, "FracDMRemainingIn" + OrganName) as Function;
@@ -168,6 +192,11 @@ namespace Models.PMF.OldPlant
             return F.Value;
         }
 
+        /// <summary>Finds the organ.</summary>
+        /// <param name="OrganName">Name of the organ.</param>
+        /// <param name="Organs">The organs.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">In arbitrator, cannot find an organ with name:  + OrganName</exception>
         private Organ1 FindOrgan(string OrganName, List<Organ1> Organs)
         {
             foreach (Organ1 Organ in Organs)
@@ -176,6 +205,9 @@ namespace Models.PMF.OldPlant
             throw new Exception("In arbitrator, cannot find an organ with name: " + OrganName);
         }
 
+        /// <summary>Does the n retranslocate.</summary>
+        /// <param name="GrainNDemand">The grain n demand.</param>
+        /// <param name="Tops">The tops.</param>
         internal void DoNRetranslocate(double GrainNDemand, List<Organ1> Tops)
         {
             // Calculate the nitrogen retranslocation from the various plant parts
@@ -193,6 +225,10 @@ namespace Models.PMF.OldPlant
                 Organ.DoNRetranslocate(availableRetranslocateN, GrainNDemand);     //FIXME - divy up?
         }
 
+        /// <summary>Does the n partition.</summary>
+        /// <param name="n_fix_pot">The n_fix_pot.</param>
+        /// <param name="Organs">The organs.</param>
+        /// <returns></returns>
         internal double DoNPartition(double n_fix_pot, List<Organ1> Organs)
         {
             double NDemandTotal = 0;
@@ -257,9 +293,8 @@ namespace Models.PMF.OldPlant
             return NFixUptake;
         }
 
-        /// <summary>
-        /// Derives seneseced plant nitrogen (g N/m^2)
-        /// </summary>
+        /// <summary>Derives seneseced plant nitrogen (g N/m^2)</summary>
+        /// <param name="Organs">The organs.</param>
         internal void doNSenescedRetranslocation(List<Organ1> Organs)
         {
             //! now get N to retranslocate out of senescing leaves

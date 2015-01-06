@@ -39,7 +39,7 @@ using System.Text;
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
-        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods)
+        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool events)
         {
             List<ContextItem> allItems = new List<ContextItem>();
 
@@ -100,6 +100,22 @@ using System.Text;
                         }
                     }
                 }
+
+                if (events)
+                {
+                    foreach (EventInfo evnt in atype.GetEvents(BindingFlags.Instance | BindingFlags.Public))
+                    {
+                        NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                        item.Name = evnt.Name;
+                        item.IsProperty = true;
+                        item.IsEvent = true;
+                        item.IsWriteable = false;
+                        item.TypeName = evnt.ReflectedType.Name;
+                        item.Descr = "";
+                        item.Units = "";
+                        allItems.Add(item);
+                    }
+                }
             }
 
             allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
@@ -109,23 +125,26 @@ using System.Text;
         /// <summary>
         /// The view is asking for variable names for its intellisense.
         /// </summary>
-        public static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods)
+        public static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool events)
         {
-            List<ContextItem> allItems = ExamineTypeForContextItems(o.GetType(), properties, methods);
+            List<ContextItem> allItems = ExamineTypeForContextItems(o.GetType(), properties, methods, events);
 
             // add in the child models.
-            if (o != null)
+            if (o != null && o is IModel)
             {
                 foreach (IModel model in (o as IModel).Children)
                 {
-                    NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
-                    item.Name = model.Name;
-                    item.IsProperty = false;
-                    item.IsEvent = false;
-                    item.IsWriteable = false;
-                    item.TypeName = model.GetType().Name;
-                    item.Units = string.Empty;
-                    allItems.Add(item);
+                    if (allItems.Find(m => m.Name == model.Name) == null)
+                    {
+                        NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                        item.Name = model.Name;
+                        item.IsProperty = false;
+                        item.IsEvent = false;
+                        item.IsWriteable = false;
+                        item.TypeName = model.GetType().Name;
+                        item.Units = string.Empty;
+                        allItems.Add(item);
+                    }
                 }
 
                 allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
@@ -137,7 +156,7 @@ using System.Text;
         /// <summary>
         /// Complete context item information
         /// </summary>
-        public struct ContextItem
+        public class ContextItem
         {
             /// <summary>
             /// Name of the item

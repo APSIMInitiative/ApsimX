@@ -5,16 +5,41 @@ using Models.Core;
 
 namespace Models.PMF.Functions
 {
+    /// <summary>
+    /// An air temperature function
+    /// </summary>
     [Serializable]
     [Description("A value is calculated from the mean of 3-hourly estimates of air temperature calculated from daily max and min temperatures")]
     public class AirTemperatureFunction : Function
     {
-        #region Class Data Members
+        /// <summary>Gets or sets the xy pairs.</summary>
         public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
 
-        #endregion
+        /// <summary>Number of 3 hourly temperatures</summary>
+        private const int num3hr = 24 / 3;           // 
 
-        
+        /// <summary>Fraction_of of day's range_of for this 3 hr period</summary>
+        private double[] t_range_fract = null;
+
+        /// <summary>Initializes a new instance of the <see cref="AirTemperatureFunction"/> class.</summary>
+        public AirTemperatureFunction()
+        {
+            t_range_fract = new double[num3hr];
+
+            // pre calculate t_range_fract for speed reasons
+            for (int period = 1; period <= num3hr; period++)
+            {
+                double period_no = period;
+                t_range_fract[period-1] = 0.92105
+                                    + 0.1140 * period_no
+                                    - 0.0703 * Math.Pow(period_no, 2)
+                                    + 0.0053 * Math.Pow(period_no, 3);
+            }
+        }
+
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
         [Units("deg.day")]
         public override double Value
         {
@@ -24,7 +49,12 @@ namespace Models.PMF.Functions
                 return Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
             }
         }
-        static public double Linint3hrlyTemp(double tmax, double tmin, XYPairs ttFn)
+        /// <summary>Linint3hrlies the temporary.</summary>
+        /// <param name="tmax">The tmax.</param>
+        /// <param name="tmin">The tmin.</param>
+        /// <param name="ttFn">The tt function.</param>
+        /// <returns></returns>
+        public double Linint3hrlyTemp(double tmax, double tmin, XYPairs ttFn)
         {
             // --------------------------------------------------------------------------
             // Eight interpolations of the air temperature are
@@ -33,9 +63,6 @@ namespace Models.PMF.Functions
             // is calculated.  The eight three-hour estimates
             // are then averaged to obtain the daily value.
             // --------------------------------------------------------------------------
-
-            //Constants
-            int num3hr = 24 / 3;           // number of 3 hourly temperatures
 
             // Local Variables
             double tot = 0.0;            // sum_of of 3 hr interpolations
@@ -49,7 +76,17 @@ namespace Models.PMF.Functions
             return tot / (double)num3hr;
         }
 
-        static private double temp_3hr(double tmax, double tmin, int period)
+        /// <summary>Temp_3hrs the specified tmax.</summary>
+        /// <param name="tmax">The tmax.</param>
+        /// <param name="tmin">The tmin.</param>
+        /// <param name="period">The period.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">
+        /// 3 hr. period number is below 1
+        /// or
+        /// 3 hr. period number is above 8
+        /// </exception>
+        private double temp_3hr(double tmax, double tmin, int period)
         {
             // --------------------------------------------------------------------------
             //   returns the temperature for a 3 hour period.
@@ -63,17 +100,11 @@ namespace Models.PMF.Functions
 
             double period_no = period;
 
-            // fraction_of of day's range_of for this 3 hr period
-            double t_range_fract = 0.92105
-                                 + 0.1140 * period_no
-                                 - 0.0703 * Math.Pow(period_no, 2)
-                                 + 0.0053 * Math.Pow(period_no, 3);
-
             // diurnal temperature range for the day (oC)
             double diurnal_range = tmax - tmin;
 
             // deviation from day's minimum for this 3 hr period
-            double t_deviation = t_range_fract * diurnal_range;
+            double t_deviation = t_range_fract[period-1] * diurnal_range;
 
             return tmin + t_deviation;
         }

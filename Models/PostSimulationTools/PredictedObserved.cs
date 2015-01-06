@@ -12,11 +12,10 @@ namespace Models.PostSimulationTools
 
 
     /// <summary>
-    /// Reads the contents of a file (in apsim format) and stores into the DataStore. 
+    /// Reads the contents of a file (in apsim format) and stores into the DataStore.
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
     /// where the data in column 'SimulationName' matches the name of the simulation under which
-    /// this input model sits. 
-    /// 
+    /// this input model sits.
     /// If the file does NOT have a 'SimulationName' column then all data will be input.
     /// </summary>
     [Serializable]
@@ -24,14 +23,24 @@ namespace Models.PostSimulationTools
     [PresenterName("UserInterface.Presenters.PredictedObservedPresenter")]
     public class PredictedObserved : Model, IPostSimulationTool
     {
+        /// <summary>Gets or sets the name of the predicted table.</summary>
+        /// <value>The name of the predicted table.</value>
         public string PredictedTableName { get; set; }
+        /// <summary>Gets or sets the name of the observed table.</summary>
+        /// <value>The name of the observed table.</value>
         public string ObservedTableName { get; set; }
+        /// <summary>Gets or sets the field name used for match.</summary>
+        /// <value>The field name used for match.</value>
         public string FieldNameUsedForMatch { get; set; }
 
 
-        /// <summary>
-        /// Main run method for performing our calculations and storing data.
-        /// </summary>
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        /// <param name="dataStore">The data store.</param>
+        /// <exception cref="ApsimXException">
+        /// Could not find model data table:  + ObservedTableName
+        /// or
+        /// Could not find observed data table:  + ObservedTableName
+        /// </exception>
         public void Run(DataStore dataStore)
         {
             if (PredictedTableName != null && ObservedTableName != null)

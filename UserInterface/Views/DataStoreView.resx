@@ -117,16 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="htmlView1.MemoText" xml:space="preserve">
-    <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
- &lt;head&gt;
-  &lt;title&gt;&lt;/title&gt;
- &lt;/head&gt;
- &lt;body&gt;
-  &lt;p&gt;&lt;/p&gt;
- &lt;/body&gt;
-&lt;/html&gt;</value>
-  </data>
 </root>

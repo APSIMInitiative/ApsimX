@@ -52,24 +52,10 @@ namespace UserInterface.Presenters
         private bool advancedMode = false;
 
         /// <summary>
-        /// Link to the global configuration
-        /// </summary>
-        private Utility.Configuration config;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ExplorerPresenter" /> class.
         /// </summary>
         public ExplorerPresenter()
         {
-        }
-
-        /// <summary>
-        /// Gets or sets the link to the global configuration
-        /// </summary>
-        public Utility.Configuration Config
-        {
-            get { return this.config; }   // the main config
-            set { this.config = value; }
         }
 
         /// <summary>
@@ -269,10 +255,9 @@ namespace UserInterface.Presenters
                 try
                 {
                     if (this.ApsimXFile.FileName != null)
-                        this.config.Settings.DelMruFile(this.ApsimXFile.FileName);
+                        Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
 
-                    this.config.Settings.AddMruFile(newFileName);
-                    this.config.Save();
+                    Utility.Configuration.Settings.AddMruFile(newFileName);
                     this.ApsimXFile.Write(newFileName);
                     this.view.ChangeTabText(Path.GetFileNameWithoutExtension(newFileName));
                     return true;
@@ -348,7 +333,7 @@ namespace UserInterface.Presenters
 
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
-            if (this.view.CurrentNodePath == ".Simulations")
+            if (this.view.CurrentNodePath == ".Standard toolbox")
             {
                 this.view.CurrentNodePath = Apsim.FullPath(allModels[0]);
                 return true;
@@ -396,7 +381,7 @@ namespace UserInterface.Presenters
                 int i = 0;
                 while (valid && (i < str.Length))
                 {
-                    if (!char.IsLetter(str[i]) && !char.IsNumber(str[i]) && (str[i] != '_'))
+                    if (!char.IsLetter(str[i]) && !char.IsNumber(str[i]) && (str[i] != '_') && (str[i] != ' '))
                     {
                         valid = false;
                     }
@@ -469,7 +454,7 @@ namespace UserInterface.Presenters
                 {
                     MenuDescriptionArgs.Description desc = new MenuDescriptionArgs.Description();
                     desc.Name = mainMenuName.MenuName;
-                    desc.ResourceNameForImage = desc.Name.Replace(" ", string.Empty);
+                    desc.ResourceNameForImage = "UserInterface.Resources.MenuImages." + desc.Name + ".png";
 
                     EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
                     desc.OnClick = handler;
@@ -513,7 +498,7 @@ namespace UserInterface.Presenters
                     {
                         MenuDescriptionArgs.Description desc = new MenuDescriptionArgs.Description();
                         desc.Name = contextMenuAttr.MenuName;
-                        desc.ResourceNameForImage = desc.Name.Replace(" ", string.Empty);
+                        desc.ResourceNameForImage = "UserInterface.Resources.MenuImages." + desc.Name + ".png";
                         desc.ShortcutKey = contextMenuAttr.ShortcutKey;
 
                         // Check for an enabled method.
@@ -777,7 +762,16 @@ namespace UserInterface.Presenters
         {
             NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
             description.Name = model.Name;
-            description.ResourceNameForImage = model.GetType().Name + "16";
+
+            string imageFileName;
+            if (model is ModelCollectionFromResource)
+                imageFileName = (model as ModelCollectionFromResource).ResourceName;
+            else if (model.GetType().Name == "Plant" || model.GetType().Name == "OldPlant")
+                imageFileName = model.Name;
+            else
+                imageFileName = model.GetType().Name;
+
+            description.ResourceNameForImage = "UserInterface.Resources.TreeViewImages." + imageFileName + ".png";
             description.HasChildren = this.SomeChildrenVisible(model);
             return description;
         }

@@ -6,7 +6,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// Purpose: Return soil temperature (oC) from a specified soil profile layer.
+    /// Return soil temperature (oC) from a specified soil profile layer.
     /// The source of soil temperature array can be either SoilN ("st" property) or SoilTemp ("ave_soil_temp" property)
     /// </summary>
     [Serializable]
@@ -14,23 +14,30 @@ namespace Models.PMF.Functions
     public class SoilTemperatureDepthFunction : Function
     {
 
+        /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
 
 
+        /// <summary>The depth</summary>
         [Units("mm")]
         public double Depth = 0;
-               
 
+
+        /// <summary>The soil temporary source</summary>
         string soilTempSource = "Unknown"; //Flag for the name of soil temperature array
 
-        
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.Exception">
+        /// </exception>
         [Units("oC")]
         public override double Value
         {
             get
             {
-                int Layer = LayerIndex(Depth, Soil.SoilWater.dlayer);
+                int Layer = LayerIndex(Depth, Soil.Thickness);
 
                 if (soilTempSource == "Unknown")
                 {
@@ -61,12 +68,11 @@ namespace Models.PMF.Functions
 
             }
         }
-        /// <summary>
-        /// Returns the soil layer index for a specified soil depth (mm)
-        /// </summary>
+        /// <summary>Returns the soil layer index for a specified soil depth (mm)</summary>
         /// <param name="depth">Soil depth (mm)</param>
         /// <param name="dlayer">Array of soil layer depths in the profile (mm)</param>
         /// <returns>soil layer index</returns>
+        /// <exception cref="System.Exception"></exception>
         private int LayerIndex(double depth, double[] dlayer)
         {
             double CumDepth = 0.0;

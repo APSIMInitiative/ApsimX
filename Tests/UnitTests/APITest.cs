@@ -85,7 +85,7 @@ namespace UnitTests
             
             Assert.AreEqual(Apsim.FullPath(this.simulation), ".Simulations.Test");
             Assert.AreEqual(Apsim.FullPath(zone2), ".Simulations.Test.Field2");
-            Assert.AreEqual(Apsim.FullPath(soil.Water), ".Simulations.Test.Field2.Soil.Water");
+            Assert.AreEqual(Apsim.FullPath(soil), ".Simulations.Test.Field2.Soil");
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace UnitTests
             Assert.AreEqual(this.simulations.Children[0].Name, "Test");
 
             Assert.AreEqual(this.simulation.Children.Count, 5);
-            Assert.AreEqual(this.simulation.Children[0].Name, "WeatherFile");
+            Assert.AreEqual(this.simulation.Children[0].Name, "Weather");
             Assert.AreEqual(this.simulation.Children[1].Name, "Clock");
             Assert.AreEqual(this.simulation.Children[2].Name, "Summary");
             Assert.AreEqual(this.simulation.Children[3].Name, "Field1");
@@ -142,7 +142,7 @@ namespace UnitTests
             Assert.AreEqual(inScopeForGraph[2].Name, "SurfaceOrganicMatter");
             Assert.AreEqual(inScopeForGraph[3].Name, "Field2SubZone");
             Assert.AreEqual(inScopeForGraph[4].Name, "Field2");
-            Assert.AreEqual(inScopeForGraph[5].Name, "WeatherFile");
+            Assert.AreEqual(inScopeForGraph[5].Name, "Weather");
             Assert.AreEqual(inScopeForGraph[6].Name, "Clock");
             Assert.AreEqual(inScopeForGraph[7].Name, "Summary");
             Assert.AreEqual(inScopeForGraph[8].Name, "Field1");
@@ -165,11 +165,11 @@ namespace UnitTests
 
             // Make sure we can get a link to a local model from Field1
             Assert.AreEqual(Apsim.Find(field1, "Field1Report").Name, "Field1Report");
-            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Report)).Name, "Field1Report");
+            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Report.Report)).Name, "Field1Report");
 
             // Make sure we can get a link to a model in top level zone from Field1
-            Assert.AreEqual(Apsim.Find(field1, "WeatherFile").Name, "WeatherFile");
-            Assert.AreEqual(Apsim.Find(field1, typeof(Models.WeatherFile)).Name, "WeatherFile");
+            Assert.AreEqual(Apsim.Find(field1, "Weather").Name, "Weather");
+            Assert.AreEqual(Apsim.Find(field1, typeof(Models.Weather)).Name, "Weather");
 
             // Make sure we can't get a link to a model in Field2 from Field1
             Assert.IsNull(Apsim.Find(field1, "Graph"));
@@ -178,12 +178,12 @@ namespace UnitTests
             // Make sure we can get a link to a model in a child field.
             Zone field2 = this.simulation.Children[4] as Zone;
             Assert.IsNotNull(Apsim.Find(field2, "Field2SubZoneReport"));
-            Assert.IsNotNull(Apsim.Find(field2, typeof(Models.Report)));
+            Assert.IsNotNull(Apsim.Find(field2, typeof(Models.Report.Report)));
 
             // Make sure we can get a link from a child, child zone to the top level zone.
             Zone field2SubZone = field2.Children[3] as Zone;
-            Assert.AreEqual(Apsim.Find(field2SubZone, "WeatherFile").Name, "WeatherFile");
-            Assert.AreEqual(Apsim.Find(field2SubZone, typeof(Models.WeatherFile)).Name, "WeatherFile");
+            Assert.AreEqual(Apsim.Find(field2SubZone, "Weather").Name, "Weather");
+            Assert.AreEqual(Apsim.Find(field2SubZone, typeof(Models.Weather)).Name, "Weather");
         }
 
         /// <summary>
@@ -209,10 +209,10 @@ namespace UnitTests
             Assert.AreEqual(field1.Get(".Simulations.Test.Field1.Field1Report.Name"), "Field1Report");
 
             // Make sure we get a null when trying to link to a top level model from Field1
-            Assert.IsNull(field1.Get("WeatherFile"));
+            Assert.IsNull(field1.Get("Weather"));
 
             // Make sure we can get a top level model from Field1 using a full path.
-            Assert.AreEqual(Utility.Reflection.Name(field1.Get(".Simulations.Test.WeatherFile")), "WeatherFile");
+            Assert.AreEqual(Utility.Reflection.Name(field1.Get(".Simulations.Test.Weather")), "Weather");
 
             // Make sure we can get a model in Field2 from Field1 using a full path.
             Assert.AreEqual(Utility.Reflection.Name(field1.Get(".Simulations.Test.Field2.Graph1")), "Graph1");
@@ -234,10 +234,10 @@ namespace UnitTests
         [Test]
         public void SetTest()
         {
-            WeatherFile weather = this.simulation.Children[0] as WeatherFile;
-            Assert.AreEqual(this.simulation.Get("[WeatherFile].Rain"), 0.0);
-            this.simulation.Set("[WeatherFile].Rain", 111.0);
-            Assert.AreEqual(this.simulation.Get("[WeatherFile].Rain"), 111.0);
+            Weather weather = this.simulation.Children[0] as Weather;
+            Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 0.0);
+            this.simulation.Set("[Weather].Rain", 111.0);
+            Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 111.0);
         }
 
         /// <summary>
@@ -285,38 +285,7 @@ namespace UnitTests
             List<IModel> allSiblings = Apsim.Siblings(clock);
             Assert.AreEqual(allSiblings.Count, 4);
         }
-          
-        /// <summary>
-        /// Tests for the weather model 
-        /// </summary>
-        [Test]
-        public void WeatherSummary()
-        {
-            Assert.AreEqual(this.simulation.Children[0].Name, "WeatherFile");
-
-            foreach (Model model in this.simulation.Children) 
-            {
-                if (model.GetType() == typeof(WeatherFile)) 
-                {
-                    WeatherFile wtr = model as WeatherFile;
-                    Assert.AreNotEqual(wtr.GetAllData(), null, "Weather file stream");
-                    Assert.AreEqual(wtr.Amp, 15.96, "TAMP");
-                    Assert.AreEqual(wtr.Tav, 19.86, "TAV");
-                    
-                    // for the first day
-                    Assert.AreEqual(wtr.DayLength, 14.7821247010713, 0.0001, "Day length");
-                    
-                    // check yearly and monthly aggregations
-                    double[] yrtotal, avmonth;
-                    wtr.YearlyRainfall(out yrtotal, out avmonth);
-                    Assert.AreEqual(yrtotal[0], 420, 0.001, "Yearly 1 totals");
-                    Assert.AreEqual(yrtotal[49], 586.1, 0.001, "Yearly 50 totals");
-                    Assert.AreEqual(avmonth[0], 79.7, 0.001, "LTAV1 Monthly");
-                    Assert.AreEqual(avmonth[11], 62.8259, 0.001, "LTAV12 Monthly");
-                }
-            }
-        }
-        
+  
         /// <summary>
         /// Tests for the importer
         /// </summary>

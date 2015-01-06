@@ -12,6 +12,7 @@ using UserInterface.Interfaces;
 using System.Data;
 using Models;
 using UserInterface.EventArguments;
+using Models.Soils;
 
 namespace UserInterface.Presenters
 {
@@ -175,6 +176,13 @@ namespace UserInterface.Presenters
         /// <param name="series">The series to use</param>
         private void FillSeriesInfoFromSeries(Series series)
         {
+            Simulation parentSimulation = Apsim.Parent(this.Graph, typeof(Simulation)) as Simulation;
+            if (this.Graph.Parent is Soil)
+            {
+                FillSeriesInfoFromRawSeries(series);
+                return;
+            }
+
             // See if graph is inside an experiment. If so then graph all series in experiment.
             Experiment parentExperiment = Apsim.Parent(this.Graph, typeof(Experiment)) as Experiment;
             if (parentExperiment != null)
@@ -184,7 +192,6 @@ namespace UserInterface.Presenters
             }
 
             // See if graph is inside a simulation. If so then graph the simulation.
-            Simulation parentSimulation = Apsim.Parent(this.Graph, typeof(Simulation)) as Simulation;
             if (parentSimulation != null)
             {
                 FillSeriesInfoFromSimulations(new string[] {parentSimulation.Name}, series);
@@ -231,10 +238,9 @@ namespace UserInterface.Presenters
                     seriesIndex: seriesIndex,
                     numSeries: simulationNames.Length);
 
-                if (simulationNames.Length == 1)
-                {
+                if (!(this.Graph.Parent is Soil) && simulationNames.Length == 1)
                     info.Title = series.Y.FieldName;
-                }
+
                 seriesMetadata.Add(info);
             }
         }
@@ -267,6 +273,24 @@ namespace UserInterface.Presenters
                 }
                 seriesMetadata.Add(info);
             }
+        }
+
+        /// <summary>
+        /// Fill series information list from just the raw series
+        /// </summary>
+        /// <param name="simulationNames">List of simulation names</param>
+        /// <param name="series">Associated series</param>
+        private void FillSeriesInfoFromRawSeries(Series series)
+        {
+            SeriesInfo info = new SeriesInfo(
+                graph: Graph,
+                dataStore: DataStore,
+                series: series,
+                title: series.Title,
+                filter: null,
+                seriesIndex: 1,
+                numSeries: 1);
+            seriesMetadata.Add(info);
         }
 
         /// <summary>
@@ -349,9 +373,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnGraphModelChanged(object Model)
         {
-            if (Graph.Axes.Count >= 2 &&
-                (Model == Graph || Model == Graph.Axes[0] || Model == Graph.Axes[1] || Model is Series))
-                DrawGraph();
+            DrawGraph();
         }
 
         /// <summary>
@@ -533,8 +555,8 @@ namespace UserInterface.Presenters
                 double yPosition = largestAxisScale - seriesIndex * interval;
 
                 string equation = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
-                                                "NSE = {3:F2}, ME = {4:F2}, MAE = {5:F2}\r\n" +
-                                                "RSR = {6:F2}, RMSD = {7:F2}",
+                                                "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
+                                                "RSR = {7:F2}, RMSD = {8:F2}",
                                                 new object[] {stats.m,
                                                                           stats.c,
                                                                           stats.R2,
@@ -656,7 +678,13 @@ namespace UserInterface.Presenters
             {
                 get
                 {
-                    return GetData(series.Y);
+                    IEnumerable data = GetData(series.Y);
+                    if (series.Cumulative)
+                    {
+                        data = Utility.Math.Cumulative((IEnumerable<double>)data);
+                    }
+
+                    return data;
                 }
             }
 
@@ -687,20 +715,27 @@ namespace UserInterface.Presenters
             /// </summary>
             public void DrawOnView(IGraphView graphView)
             {
+                if (series.Type == Series.SeriesType.Line)
+                    series.Type = Series.SeriesType.Scatter;
+
+                string title = Title;
+                if (series.Title != null && !series.Title.StartsWith("Series") && numSeries == 1)
+                    title = series.Title;
+
                 // Create the series and populate it with data.
                 if (series.Type == Models.Graph.Series.SeriesType.Bar)
                 {
-                    graphView.DrawBar(Title, X, Y, series.XAxis, series.YAxis, Colour);
+                    graphView.DrawBar(title, X, Y, series.XAxis, series.YAxis, Colour);
                 }
 
-                else if (series.Type == Series.SeriesType.Line || series.Type == Series.SeriesType.Scatter)
+                else if (series.Type == Series.SeriesType.Scatter)
                 {
-                    graphView.DrawLineAndMarkers(Title, X, Y, series.XAxis, series.YAxis, Colour,
+                    graphView.DrawLineAndMarkers(title, X, Y, series.XAxis, series.YAxis, Colour,
                                                  series.Line, series.Marker);
                 }
                 else if (X2 != null && Y2 != null)
                 {
-                    graphView.DrawArea(Title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour);
+                    graphView.DrawArea(title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour);
                 }
             }
 
@@ -742,12 +777,12 @@ namespace UserInterface.Presenters
             /// </summary>
             private IEnumerable GetData(GraphValues graphValues)
             {
-                if (graphValues.TableName == null && graphValues.FieldName != null)
+                if (graphValues != null && graphValues.TableName == null && graphValues.FieldName != null)
                 {
                     // Use reflection to access a property.
                     return graphValues.GetData(this.graph);
                 }
-                else if (graphValues.TableName != null && graphValues.FieldName != null)
+                else if (graphValues != null && graphValues.TableName != null && graphValues.FieldName != null)
                 {
                     // Create the data if we haven't already
                     if (this.data == null && this.dataStore.TableExists(graphValues.TableName))

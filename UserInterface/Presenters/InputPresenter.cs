@@ -25,19 +25,7 @@ namespace UserInterface.Presenters
             View = view as IInputView;
             ExplorerPresenter = explorerPresenter;
 
-            View.FileName = Utility.String.BuildString(Input.FileNames, ",");
-            View.GridView.DataSource = Input.GetTable(explorerPresenter.ApsimXFile.FileName);
-
-            if (Input.FileNames != null)
-            {
-                for (int i = 0; i < Input.FileNames.Count(); i++)
-                {
-                    Input.FileNames[i] =  Utility.PathUtils.GetRelativePath(Input.FileNames[i], ExplorerPresenter.ApsimXFile.FileName);
-                }
-                    View.FileName = Utility.String.BuildString(Input.FileNames, ",");
-            }
-
-            View.GridView.DataSource = Input.GetTable(ExplorerPresenter.ApsimXFile.FileName);
+            OnModelChanged(model);  // Updates the view
 
             View.BrowseButtonClicked += OnBrowseButtonClicked;
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -60,7 +48,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Input, "FileNames", e.FileNames));
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Input, "FullFileName", e.FileNames[0]));
             }
             catch (Exception err)
             {
@@ -73,13 +61,12 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelChanged(object changedModel)
         {
-            for (int i = 0; i < Input.FileNames.Count(); i++)
-            {
-                Input.FileNames[i] = Utility.PathUtils.GetRelativePath(Input.FileNames[i], ExplorerPresenter.ApsimXFile.FileName);
-            }
-
-            View.FileName = Utility.String.BuildString(Input.FileNames, ",");
-            View.GridView.DataSource = Input.GetTable(ExplorerPresenter.ApsimXFile.FileName);
+            View.FileName = Input.FullFileName;
+            View.GridView.DataSource = Input.GetTable();
+            if (View.GridView.DataSource == null)
+                View.WarningText = Input.ErrorMessage;
+            else
+                View.WarningText = string.Empty;
         }
     }
 }

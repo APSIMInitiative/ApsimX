@@ -17,7 +17,7 @@ namespace Utility
         /// <summary>
         /// a list of month names in lower case.
         /// </summary>
-        static private List<string> LowerCaseMonths = new List<string>(new[] { null, "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" });
+        static public string[] LowerCaseMonths =  new string[] { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
 
         /// <summary>
         /// A regular expression
@@ -99,14 +99,22 @@ namespace Utility
         {
             try
             {
-                return new DateTime(
-                    year,
-                    LowerCaseMonths.IndexOf(rxMMM.Match(ddMMM).Value.ToLower()),
-                    int.Parse(rxDD.Match(ddMMM).Value),
-                    0,
-                    0,
-                    0
-                    );
+                int posDelimiter = ddMMM.IndexOfAny(new char[] {'/', '-'});
+                if (posDelimiter == -1)
+                    throw new ArgumentException();
+
+                int month = Utility.String.IndexOfCaseInsensitive(LowerCaseMonths, ddMMM.Substring(posDelimiter + 1)) + 1;
+                int day = Convert.ToInt32(ddMMM.Substring(0, posDelimiter));
+                return new DateTime(year, month, day);
+
+                //return new DateTime(
+                //    year,
+                //    Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1,
+                //    int.Parse(rxDD.Match(ddMMM).Value),
+                //    0,
+                //    0,
+                //    0
+                //    );
             }
             catch
             {
@@ -168,7 +176,7 @@ namespace Utility
         public static bool DatesEqual(string ddMMM, DateTime today)
         {
             return 
-                today.Month == LowerCaseMonths.IndexOf(rxMMM.Match(ddMMM).Value.ToLower())
+                today.Month == Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1
                 &&
                 today.Day == int.Parse(rxDD.Match(ddMMM).Value);
         }
@@ -179,7 +187,7 @@ namespace Utility
         /// <param name="ddMMM_start">The start date - a string containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <param name="today">The date to check</param>
         /// <param name="ddMMM_end">The end date - a string containing 'day of month' and at least the first 3 letters of a month's name</param>
-        /// <returns><paramref name="ddMMM_start"/> &lt;&eq; <paramref name="today"/> &lt;&eq; <paramref name="ddMMM_end"/></returns>
+        /// <returns>true if within date window</returns>
         public static bool WithinDates(string ddMMM_start, DateTime today, string ddMMM_end)
         {
             DateTime
@@ -204,7 +212,7 @@ namespace Utility
         /// <param name="start">The start date</param>
         /// <param name="today">The date to check</param>
         /// <param name="end">The end date</param>
-        /// <returns><paramref name="start"/> &lt;&eq; <paramref name="today"/> &lt;&eq; <paramref name="end"/></returns>
+        /// <returns>true if within date window</returns>
         public static bool WithinDates(DateTime start, DateTime today, DateTime end)
         {
             return today.CompareTo(start) >= 0 && today.CompareTo(end) <= 0;
@@ -251,6 +259,8 @@ namespace Utility
         /// Converts a Julian Day Number to Day of year. 
         /// </summary>
         /// <param name="JDN"> Julian day number.</param>
+        /// <param name="dyoyr">Day of year</param>
+        /// <param name="year">Year</param>
         /// <returns>Date time value.</returns>
         public static void JulianDayNumberToDayOfYear(int JDN, out int dyoyr, out int year)
         {

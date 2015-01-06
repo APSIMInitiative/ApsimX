@@ -5,16 +5,24 @@ using Models.Core;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// A root model for SWIM
+    /// </summary>
     [Serializable]
     public class RootSWIM : BaseOrgan, BelowGround
     {
+        /// <summary>The plant</summary>
         [Link]
         Plant Plant = null;
 
+        /// <summary>The uptake</summary>
         private double[] Uptake = null;
+        /// <summary>The RLV</summary>
         public double[] rlv = null;
 
-        
+
+        /// <summary>Gets or sets the water uptake.</summary>
+        /// <value>The water uptake.</value>
         [Units("mm")]
         public override double WaterUptake
         {
@@ -22,6 +30,8 @@ namespace Models.PMF.Organs
         }
 
 
+        /// <summary>Called when [water uptakes calculated].</summary>
+        /// <param name="Uptakes">The uptakes.</param>
         [EventSubscribe("WaterUptakesCalculated")]
         private void OnWaterUptakesCalculated(WaterUptakesCalculatedType Uptakes)
         {

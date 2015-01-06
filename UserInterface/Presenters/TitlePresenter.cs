@@ -1,19 +1,36 @@
-﻿using Models.Graph;
-using UserInterface.Views;
-using System;
-using System.Collections.Generic;
+﻿// -----------------------------------------------------------------------
+// <copyright file="TitlePresenter.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Graph;
+    using Views;
+
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 
     /// UserInterface.Views.AxisView
     /// </summary>
-    class TitlePresenter : IPresenter
+    public class TitlePresenter : IPresenter
     {
-        private Graph Graph;
-        private ITitleView View;
-        private ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// The graph object
+        /// </summary>
+        private Graph graph;
+
+        /// <summary>
+        /// The view object
+        /// </summary>
+        private ITitleView view;
+
+        /// <summary>
+        /// The explorer presenter used
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>
         /// Gets or sets a value indicating whether the graph footer should be shown.
@@ -23,28 +40,34 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
+        /// <param name="model">The model to use</param>
+        /// <param name="view">The view for this presenter</param>
+        /// <param name="explorerPresenter">The explorer presenter used</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Graph = model as Graph;
-            View = view as ITitleView;
-            ExplorerPresenter = explorerPresenter;
+            this.graph = model as Graph;
+            this.view = view as ITitleView;
+            this.explorerPresenter = explorerPresenter;
 
             // Trap change event from the model.
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
             // Trap events from the view.
-            View.OnTitleChanged += OnTitleChanged;
+            this.view.OnTitleChanged += this.OnTitleChanged;
 
             // Tell the view to populate the axis.
-            PopulateView();
+            this.PopulateView();
         }
 
+        /// <summary>
+        /// Populate the view object
+        /// </summary>
         private void PopulateView()
         {
-            if (ShowCaption)
-                View.Populate(Graph.Caption);
+            if (this.ShowCaption)
+                this.view.Populate(this.graph.Caption);
             else
-                View.Populate(Graph.Title);
+                this.view.Populate(this.graph.Title);
         }
 
         /// <summary>
@@ -53,32 +76,33 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             // Trap change event from the model.
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             // Trap events from the view.
-            View.OnTitleChanged -= OnTitleChanged;
+            this.view.OnTitleChanged -= this.OnTitleChanged;
         }
         
         /// <summary>
         /// The 'Model' has changed so we need to update the 'View'. Usually the result of an 'Undo' or 'Redo'
         /// </summary>
-        private void OnModelChanged(object Model)
+        /// <param name="model">The model object</param>
+        private void OnModelChanged(object model)
         {
-            if (Model == Graph)
-                PopulateView();
+            if (model == this.graph)
+                this.PopulateView();
         }
 
         /// <summary>
         /// The user has changed the title field on the form. Need to tell the model this via
-        /// executing a command.
+        /// executing a command. 
         /// </summary>
-        void OnTitleChanged(string NewText)
+        /// <param name="newText">The new title</param>
+        public void OnTitleChanged(string newText)
         {
-            if (ShowCaption)
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "Caption", NewText));
+            if (this.ShowCaption)
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Caption", newText));
             else
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "Title", NewText));
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Title", newText));
         }
-
     }
 }
