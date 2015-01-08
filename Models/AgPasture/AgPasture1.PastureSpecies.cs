@@ -99,7 +99,7 @@ namespace Models.AgPasture1
 		[Units("")]
 		public string CropType
 		{
-			get { return speciesFamily; }
+			get { return Name; }
 		}
 
 		/// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
@@ -112,12 +112,19 @@ namespace Models.AgPasture1
 		[XmlIgnore]
 		public double PotentialEP
 		{
-			get { return myWaterDemand; }
-			set { myWaterDemand = value; }
+			get
+			{
+				return myWaterDemand;
+			}
+			set
+			{
+				myWaterDemand = value;
+				demandWater = myWaterDemand;
+			}
 		}
 
 		/// <summary>The intercepted solar radiation</summary>
-		internal double interceptedRadn;
+		public double interceptedRadn;
 		/// <summary>Light profile (energy available for each canopy layer)</summary>
 		private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 		/// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate</summary>
@@ -343,7 +350,7 @@ namespace Models.AgPasture1
 		private double[] initialDMFractions_legume = new double[] { 0.20, 0.25, 0.25, 0.00, 0.02, 0.04, 0.04, 0.00, 0.06, 0.12, 0.12 };
 
 		/// <summary>
-		/// Initial DM fractions for each plant tissue (leaf1, leaf2, leaf3, leaf4, stem1, stem2, stem3, stem4, stolon1, stolon2, stolon3)
+		/// Initial DM fractions for each plant tissue (in order: leaf1, leaf2, leaf3, leaf4, stem1, stem2, stem3, stem4, stolon1, stolon2, stolon3)
 		/// </summary>
 		private double[] iniDMFraction;
 		/// <summary>Gets or sets the initial dm fractions.</summary>
@@ -1360,7 +1367,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double TotalC
 		{
-			get { return TotalWt * CinDM; }
+			get { return TotalWt * CarbonFractionInDM; }
 		}
 
 		/// <summary>Gets the plant total dry matter weight.</summary>
@@ -1643,7 +1650,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double GrossPotentialGrowthWt
 		{
-			get { return Pgross / CinDM; }
+			get { return Pgross / CarbonFractionInDM; }
 		}
 
 		/// <summary>Gets the respiration rate.</summary>
@@ -1652,7 +1659,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double RespirationWt
 		{
-			get { return Resp_m / CinDM; }
+			get { return Resp_m / CarbonFractionInDM; }
 		}
 
 		/// <summary>Gets the remobilisation rate.</summary>
@@ -1661,7 +1668,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double RemobilisationWt
 		{
-			get { return CRemobilised / CinDM; }
+			get { return CRemobilised / CarbonFractionInDM; }
 		}
 
 		/// <summary>Gets the net potential growth rate.</summary>
@@ -1742,7 +1749,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double GPP
 		{
-			get { return Pgross / CinDM; }
+			get { return Pgross / CarbonFractionInDM; }
 		}
 
 		/// <summary>Gets the net primary productivity.</summary>
@@ -1751,7 +1758,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double NPP
 		{
-			get { return (Pgross * (1 - growthRespirationCoef) - Resp_m) / CinDM; }
+			get { return (Pgross * (1 - growthRespirationCoef) - Resp_m) / CarbonFractionInDM; }
 		}
 
 		/// <summary>Gets the net above-ground primary productivity.</summary>
@@ -1760,7 +1767,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double NAPP
 		{
-			get { return (Pgross * (1 - growthRespirationCoef) - Resp_m) * fShoot / CinDM; }
+			get { return (Pgross * (1 - growthRespirationCoef) - Resp_m) * fShoot / CarbonFractionInDM; }
 		}
 
 		/// <summary>Gets the net below-ground primary productivity.</summary>
@@ -1769,7 +1776,7 @@ namespace Models.AgPasture1
 		[Units("kgDM/ha")]
 		public double NBPP
 		{
-			get { return (Pgross * (1 - growthRespirationCoef) - Resp_m) * (1 - fShoot) / CinDM; }
+			get { return (Pgross * (1 - growthRespirationCoef) - Resp_m) * (1 - fShoot) / CarbonFractionInDM; }
 		}
 		#endregion
 
@@ -2285,7 +2292,7 @@ namespace Models.AgPasture1
 		[Units("kgN/ha")]
 		public double[] UptakeN
 		{
-			get { return mySoilUptakeN; }
+			get { return mySoilNitrogenTakenUp; }
 		}
 
 		/// <summary>Gets the amount of N deposited as litter onto soil surface.</summary>
@@ -2462,7 +2469,7 @@ namespace Models.AgPasture1
 		[Units("mm")]
 		public double Height
 		{
-			get { return Math.Max(20.0, HeightFromMass.Value(StandingWt)); }  // minimum = 20mm  - TODO: update this function
+			get { return myHeight; }  // minimum = 20mm  - TODO: update this function
 		}
 		#endregion
 
@@ -2873,7 +2880,7 @@ namespace Models.AgPasture1
 		/// <summary>The amount of N actually taken up</summary>
 		internal double mySoilNuptake;
 		/// <summary>The amount of N uptake from each soil layer</summary>
-		internal double[] mySoilUptakeN;
+		internal double[] mySoilNitrogenTakenUp;
 
 		// water uptake process  --------------------------------------------------------------------------------------
 
@@ -2897,8 +2904,10 @@ namespace Models.AgPasture1
 		/// <summary>The fraction of standing DM harvested</summary>
 		internal double fractionHarvested = 0.0;
 
-		// LAI and cover  ---------------------------------------------------------------------------------------------
+		// Plant height, LAI and cover  -------------------------------------------------------------------------------
 
+		/// <summary>The plant's average height</summary>
+		private double myHeight;
 		/// <summary>The plant's green LAI</summary>
 		private double greenLAI;
 		/// <summary>The plant's dead LAI</summary>
@@ -2924,6 +2933,8 @@ namespace Models.AgPasture1
 		private double IL;
 		/// <summary>The gross photosynthesis rate (C assimilation)</summary>
 		private double Pgross = 0.0;
+		/// <summary>The growth respiration rate (C loss)</summary>
+		private double Resp_g = 0.0;
 		/// <summary>The maintenance respiration rate (C loss)</summary>
 		private double Resp_m = 0.0;
 		/// <summary>The amount of C remobilised from senesced tissue</summary>
@@ -2999,21 +3010,24 @@ namespace Models.AgPasture1
 		/// <summary>fraction of Radn intercepted by this species</summary>
 		internal double intRadnFrac = 1.0;
 		/// <summary>Light extintion coefficient for all species</summary>
-		internal double plantLightExtCoeff;
+		internal double swardLightExtCoeff;
 		/// <summary>average green cover for all species</summary>
-		internal double plantGreenCover;
+		internal double swardGreenCover;
 
 		#endregion
 
 		#region Constants  -------------------------------------------------------------------------------------------------
 
 		/// <summary>Average carbon content in plant dry matter</summary>
-		const double CinDM = 0.4;
-		/// <summary>Nitrogen to protein convertion factor</summary>
-		const double N2Protein = 6.25;
-		/// <summary>The C:N ratio of protein (for digestibility and C remobilisation)</summary>
+		const double CarbonFractionInDM = 0.4;
+
+		/// <summary>Factor for converting nitrogen to protein</summary>
+		const double NitrogenToProteinFactor = 6.25;
+
+		/// <summary>The C:N ratio of protein</summary>
 		const double CNratioProtein = 3.5;
-		/// <summary>The C:N ratio of cell wall (for digestibility)</summary>
+
+		/// <summary>The C:N ratio of cell wall</summary>
 		const double CNratioCellWall = 100.0;
 
 		#endregion
@@ -3030,22 +3044,37 @@ namespace Models.AgPasture1
 			nLayers = Soil.Thickness.Length;
 
 			// initialise soil water and N variables
+			InitiliaseSoilArrays();
+
+			// set initial plant state
+			SetInitialState();
+
+			// initialise the class which will hold yesterday's plant state
+			prevState = new SpeciesState();
+
+			// check whether uptake is done here or by another module
+			if (apsimArbitrator != null)
+			{
+				myWaterUptakeSource = "arbitrator";
+				myNitrogenUptakeSource = "arbitrator";
+			}
+
+			// tell other modules about the existence of this species
+			if (!isSwardControlled)
+				DoNewCropEvent();
+		}
+
+		/// <summary>
+		/// Initialise arrays to same length as soil layers
+		/// </summary>
+		private void InitiliaseSoilArrays()
+		{
 			mySoilAvailableWater = new double[nLayers];
 			mySoilWaterTakenUp = new double[nLayers];
 			mySoilNH4available = new double[nLayers];
 			mySoilNO3available = new double[nLayers];
 			mySoilAvailableN = new double[nLayers];
-			mySoilUptakeN = new double[nLayers];
-
-			// set initial plant state
-			SetInitialState();
-
-			// initialise the class which will hold info for yesterday's values
-			prevState = new SpeciesState();
-
-			// tell other modules about the existence of this species
-			if (!isSwardControlled)
-				DoNewCropEvent();
+			mySoilNitrogenTakenUp = new double[nLayers];
 		}
 
 		/// <summary>
@@ -3056,7 +3085,7 @@ namespace Models.AgPasture1
 			// 1. Initialise DM of various tissue pools, user should supply initial values for shoot and root
 			dmTotal = iniDMShoot + iniDMRoot;
 
-			// set initial DM fractions - Temporary??
+			// set initial DM fractions - Temporary?? TODO
 			if (initialDMFractions == null)
 			{
 				if (isLegume)
@@ -3124,8 +3153,11 @@ namespace Models.AgPasture1
 				}
 			}
 			rootFraction = RootProfileDistribution();
+			InitialiseRootsProperties();
 
-			// 5. compute/set other variables
+			// 5. Canopy height and related variables
+			myHeight = Math.Max(20.0, HeightFromMass.Value(StandingWt));  // TODO:update this approach
+			InitialiseCanopy();
 			// maximum shoot:root ratio
 			maxSRratio = (1 - MaxRootFraction) / MaxRootFraction;
 
@@ -3140,28 +3172,6 @@ namespace Models.AgPasture1
 
 			// 8. Calculate the values for LAI
 			EvaluateLAI();
-
-			InitialiseCanopy();
-			InitialiseRoots();
-
-			if (apsimArbitrator != null)
-			{
-				myWaterUptakeSource = "arbitrator";
-				myNitrogenUptakeSource = "arbitrator";
-			}
-		}
-
-		/// <summary>Calculates the days emg to anth.</summary>
-		/// <returns></returns>
-		private int CalcDaysEmgToAnth()
-		{
-			int numbMonths = monAnth - monEmerg;  //emergence & anthesis in the same calendar year: monEmerg < monAnth
-			if (monEmerg >= monAnth)			  //...across the calendar year
-				numbMonths += 12;
-
-			daysEmgToAnth = (int)(30.5 * numbMonths + (dayAnth - dayEmerg));
-
-			return daysEmgToAnth;
 		}
 
 		/// <summary>Initialise the variables in canopy properties</summary>
@@ -3170,8 +3180,8 @@ namespace Models.AgPasture1
 			myCanopyProperties.Name = Name;
 			myCanopyProperties.CoverGreen = GreenCover;
 			myCanopyProperties.CoverTot = TotalCover;
-			myCanopyProperties.CanopyDepth = Height;
-			myCanopyProperties.CanopyHeight = Height;
+			myCanopyProperties.CanopyDepth = myHeight;
+			myCanopyProperties.CanopyHeight = myHeight;
 			myCanopyProperties.LAIGreen = greenLAI;
 			myCanopyProperties.LAItot = TotalLAI;
 			myCanopyProperties.MaximumStomatalConductance = myStomatalConductanceMax;
@@ -3181,7 +3191,7 @@ namespace Models.AgPasture1
 		}
 
 		/// <summary>Initialise the variables in root properties</summary>
-		private void InitialiseRoots()
+		private void InitialiseRootsProperties()
 		{
 			SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
 
@@ -3206,6 +3216,19 @@ namespace Models.AgPasture1
 			myRootProperties.RootLengthDensityByVolume = RLD;
 		}
 
+		/// <summary>Calculates the days emg to anth.</summary>
+		/// <returns></returns>
+		private int CalcDaysEmgToAnth()
+		{
+			int numbMonths = monAnth - monEmerg;  //emergence & anthesis in the same calendar year: monEmerg < monAnth
+			if (monEmerg >= monAnth)			  //...across the calendar year
+				numbMonths += 12;
+
+			daysEmgToAnth = (int)(30.5 * numbMonths + (dayAnth - dayEmerg));
+
+			return daysEmgToAnth;
+		}
+
 		#endregion
 
 		#region Daily processes  -------------------------------------------------------------------------------------------
@@ -3221,7 +3244,7 @@ namespace Models.AgPasture1
 
 			// mean air temperature for today
 			Tmean = (MetData.MaxT + MetData.MinT) * 0.5;
-			TmeanW = MetData.MaxT * 0.75 + MetData.MinT * 0.25;
+			TmeanW = (MetData.MaxT * 0.75) + (MetData.MinT * 0.25);
 
 			// Send information about this species canopy, MicroClimate will compute intercepted radiation and water demand
 			if (!isSwardControlled)
@@ -3245,71 +3268,13 @@ namespace Models.AgPasture1
 					CalcPotentialGrowth();
 
 					// Water demand, supply, and uptake
-					if (myWaterUptakeSource == "species")
-					{ // this module will compute water uptake
-						DoWaterCalculations();
-
-						// get the drought effects
-						glfWater = WaterDeficitFactor();
-						// get the water logging effects (only if there is no drought effect)
-						if (glfWater > 0.999)
-							glfWater = WaterLoggingFactor();
-					}
-					//else if myWaterUptakeSource == "AgPasture"
-					//      myWaterDemand should have been supplied by MicroClimate (supplied as PotentialEP)
-					//      water supply is hold by AgPasture only
-					//      myWaterUptake should have been computed by AgPasture (set directly)
-					//      glfWater is computed and set by AgPasture
-					else if (myWaterUptakeSource == "arbitrator")
-					{ // water uptake has been calcualted by the resource arbitrator
-
-						// get the array with the amount of water taken up
-						GetWaterUptake();
-
-						// get the drought effects
-						glfWater = WaterDeficitFactor();
-						// get the water logging effects (only if there is no drought effect)
-						if (glfWater > 0.999)
-							glfWater = WaterLoggingFactor();
-					}
-					//else
-					//      water uptake be calculated by other modules (e.g. SWIM) and supplied as
-					//  Note: when AgPasture is doing the water uptake, it can do it using its own calculations or other module's...
+					DoWaterCalculations();
 
 					// step 02 - Potential growth after water limitations
 					CalcGrowthWithWaterLimitations();
 
 					// Nitrogen demand, supply, and uptake
-					if (myNitrogenUptakeSource == "species")
-					{ // this module will compute the N uptake
-						DoNitrogenCalculations();
-						if (newGrowthN > 0.0)
-							glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(newGrowthN, NdemandOpt, 1.0)));
-						else
-							glfN = 1.0;
-					}
-					//else if (myNitrogenUptakeSource == "AgPasture")
-					//{
-					//    NdemandOpt is called by AgPasture
-					//    NdemandLux is called by AgPasture
-					//    Nfix is called by AgPasture
-					//    myNitrogenSupply is hold by AgPasture
-					//    soilNdemand is computed by AgPasture
-					//    soilNuptake is computed by AgPasture
-					//    remob2NewGrowth is computed by AgPasture
-					//}
-					else if (myNitrogenUptakeSource == "arbitrator")
-					{ // Nitrogen uptake was computed by the resource arbitrator
-
-						// get the amount of N taken up
-						GetNitrogenUptake();
-						if (newGrowthN > 0.0)
-							glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(newGrowthN, NdemandOpt, 1.0)));
-						else
-							glfN = 1.0;
-					}
-					//else
-					//   N uptake is computed by another module (not implemented yet)
+					DoNitrogenCalculations();
 
 					// step 03 - Actual growth after nutrient limitations, but before senescence
 					CalcActualGrowthAndPartition();
@@ -3342,6 +3307,7 @@ namespace Models.AgPasture1
 				// Growth before germination is null
 				Pgross = 0.0;
 				Resp_m = 0.0;
+				Resp_g = 0.0;
 				CRemobilised = 0.0;
 				dGrowthPot = 0.0;
 			}
@@ -3352,6 +3318,7 @@ namespace Models.AgPasture1
 
 				// Respiration (kgC/ha/day)
 				Resp_m = DailyMaintenanceRespiration();
+				Resp_g = DailyGrowthRespiration();
 
 				// Remobilisation (kgC/ha/day) (got from previous day turnover)
 
@@ -3415,8 +3382,8 @@ namespace Models.AgPasture1
 			intRadnFrac = 1.0;
 			if (!isSwardControlled)
 			{
-				plantLightExtCoeff = lightExtentionCoeff;
-				plantGreenCover = CalcPlantCover(greenLAI);
+				swardLightExtCoeff = lightExtentionCoeff;
+				swardGreenCover = CalcPlantCover(greenLAI);
 			}
 			//else
 			//    Sward will set these values
@@ -3529,20 +3496,25 @@ namespace Models.AgPasture1
 		/// </summary>
 		private void EvaluateLAI()
 		{
+			double greenTissue = dmLeaf1 + dmLeaf2 + dmLeaf3 + (dmStolon * 0.3);  // assuming stolons have 0.3*SLA
+			greenTissue /= 10000;   // converted from kg/ha to kg/m2
+			greenLAI = greenTissue * specificLeafArea;
 
-			greenLAI = (dmLeaf1 + dmLeaf2 + dmLeaf3 + dmStolon * 0.3) * specificLeafArea / 10000;  // converted from kg/ha to kg/m2
-			// assuming stolon have 0.3*SLA
-
-			// Recover of grasses after unfavoured conditions:
-			//  Consider cover will be bigger for the same amount of DM when DM is low, i.e. stems become important for photosynthesis.
-			//  This can be explained by:
-			//  - higher light extinction coefficient - plant leaves will be more horizontal than in dense, tall swards
-			//  - more parts will turn green for photosysntheses (?)
-			//  - quick response of plant shoots to favoured conditions after release of stress
+			// Adjust accounting for resilience after unfavoured conditions
 			if (!isLegume && dmGreen < 1000)
-				greenLAI += ((dmStem1 + dmStem2 + dmStem3) * specificLeafArea / 10000) * Math.Sqrt((1000 - dmGreen) / 10000);
+			{
+				greenTissue = (dmStem1 + dmStem2 + dmStem3) / 10000;
+				greenLAI += greenTissue * specificLeafArea * Math.Sqrt((1000 - dmGreen) / 10000);
+			}
+			/* 
+			 This adjust assumes cover will be bigger for the same amount of DM when DM is low, due to:
+			 - light extinction coefficient will be bigger - plant leaves will be more horizontal than in dense high swards
+			 - more parts (stems) will turn green for photosysnthesis (?)
+			 - quick response of plant shoots to favoured conditions after release of stress
+			 » Specific leaf area should be reduced (RCichota2014) - TODO
+			 */
 
-			deadLAI = dmLeaf4 * specificLeafArea / 10000;
+			deadLAI = (dmLeaf4 / 10000) * specificLeafArea;
 		}
 
 		/// <summary>Compute the average digestibility of aboveground plant material</summary>
@@ -3554,26 +3526,32 @@ namespace Models.AgPasture1
 				return 0.0;
 			}
 
-			// fraction of sugar (soluble carbohydrates)  - RCichota: this seem to ignore any stored reserves
+			// fraction of sugar (soluble carbohydrates)  - RCichota: this ignores any stored reserves (TODO: revise this approach)
 			double fSugar = 0.5 * Utility.Math.Divide(dGrowthActual, dmGreen, 0.0);
 
 			//Live
 			double digestLive = 0.0;
-			double Ngreen = Nleaf1 + Nleaf2 + Nleaf3 + Nstem1 + Nstem2 + Nstem3 + Nstolon1 + Nstolon2 + Nstolon3;
+			double Ngreen = Nleaf1 + Nleaf2 + Nleaf3
+				          + Nstem1 + Nstem2 + Nstem3
+						  + Nstolon1 + Nstolon2 + Nstolon3;
 			if (dmGreen > 0.0 & Ngreen > 0.0)
 			{
-				double CNlive = Utility.Math.Divide(dmGreen * CinDM, Ngreen, 0.0);                            //CN ratio of live shoots
-				double fProteinLive = (CNratioCellWall / CNlive - (1 - fSugar)) / (CNratioCellWall / CNratioProtein - 1); //Fraction of protein in living shoots
-				double fWallLive = 1 - fSugar - fProteinLive;                          //Fraction of cell wall in living shoots
-				digestLive = fSugar + fProteinLive + digestibilityLive * fWallLive;
+				double CNlive = Utility.Math.Divide(dmGreen * CarbonFractionInDM, Ngreen, 0.0);   //CN ratio of live shoot tissue
+				double ratio1 = CNratioCellWall / CNlive;
+				double ratio2 = CNratioCellWall / CNratioProtein;
+				double fProteinLive = (ratio1 - (1 - fSugar)) / (ratio2 - 1);          //Fraction of protein in living shoot
+				double fWallLive = 1 - fSugar - fProteinLive;                          //Fraction of cell wall in living shoot
+				digestLive = fSugar + fProteinLive + (digestibilityLive * fWallLive);
 			}
 
 			//Dead
 			double digestDead = 0;
 			if (dmDead > 0.0 && (Nleaf4 + Nstem4) > 0.0)
 			{
-				double CNdead = Utility.Math.Divide(dmDead * CinDM, Nleaf4 + Nstem4, 0.0);                       //CN ratio of standing dead;
-				double fProteinDead = (CNratioCellWall / CNdead - 1) / (CNratioCellWall / CNratioProtein - 1); //Fraction of protein in standing dead
+				double CNdead = Utility.Math.Divide(dmDead * CarbonFractionInDM, Nleaf4 + Nstem4, 0.0);   //CN ratio of standing dead;
+				double ratio1 = CNratioCellWall / CNdead;
+				double ratio2 = CNratioCellWall / CNratioProtein;
+				double fProteinDead = (ratio1 - 1) / (ratio2 - 1);          //Fraction of protein in standing dead
 				double fWallDead = 1 - fProteinDead;                        //Fraction of cell wall in standing dead
 				digestDead = fProteinDead + digestibilityDead * fWallDead;
 			}
@@ -3609,6 +3587,7 @@ namespace Models.AgPasture1
 					if (cumDepth <= myRootDepth)
 					{
 						myRootFrontier = layer;
+						myRootExplorationFactor[layer] = LayerFractionWithRoots(layer);
 					}
 					else
 					{
@@ -3623,11 +3602,11 @@ namespace Models.AgPasture1
 		/// <returns>The potential amount of C assimilated via photosynthesis (kgC/ha)</returns>
 		private double DailyGrossPotentialGrowth()
 		{
-			// 1. compute photosynthesis rate for leaf area
+			// 1. compute photosynthesis rate per leaf area
 
 			// to be moved to parameter section
 			// Photochemical, or photosynthetic, efficiency (mg CO2/J) - typically with small variance and little effect
-			const double alfa = 0.01;
+			const double alpha = 0.01;
 			// Photosynthesis curvature parameter (J/kg^2/s) - typically with small variance and little effect
 			const double theta = 0.8;
 
@@ -3646,24 +3625,29 @@ namespace Models.AgPasture1
 			double Pmax_MiddleDay = referencePhotosynthesisRate * effTemp2 * efCO2 * NcFactor;
 
 			double myDayLength = 3600 * MetData.DayLength;  //conversion of hour to seconds
+
 			// Photosynthetically active radiation, PAR = 0.5*Radn, converted from MJ/m2 to J/2 (10^6)
 			double myPAR = 0.5 * interceptedRadn * 1000000;
 
 			// Irradiance, or radiation, on the canopy at the middle of the day (W/m^2)
-			//IL = (4.0 / 3.0) * myPAR * plantLightExtCoeff / myDayLength;  TODO: enable this
-			IL = 1.33333 * myPAR * plantLightExtCoeff / myDayLength;
+			//IL = (4.0 / 3.0) * myPAR * swardLightExtCoeff / myDayLength;  TODO: enable this
+			IL = 1.33333 * myPAR * swardLightExtCoeff / myDayLength;
+			double IL2 = IL / 2;                      //IL for early & late period of a day
 
-			// Photosynthesis per leaf area for middle and 'shoulders' of the day (mg CO2/m^2 leaf/s)
-			double Pl_MiddleDay = (0.5 / theta) * (alfa * IL + Pmax_MiddleDay
-								- Math.Sqrt(Math.Pow(alfa * IL + Pmax_MiddleDay, 2.0) - 4 * theta * alfa * IL * Pmax_MiddleDay));
-			double Pl_EarlyLateDay = (0.5 / theta) * (alfa * 0.5 * IL + Pmax_EarlyLateDay
-								- Math.Sqrt(Math.Pow(alfa * 0.5 * IL + Pmax_EarlyLateDay, 2.0) - 4 * theta * alfa * 0.5 * IL * Pmax_EarlyLateDay));
+			// Photosynthesis per LAI under full irradiance at the top of the canopy (mg CO2/m^2 leaf/s)
+			double photoAux1 = alpha * IL + Pmax_MiddleDay;
+			double photoAux2 = 4 * theta * alpha * IL * Pmax_MiddleDay;
+			double Pl_MiddleDay = (0.5 / theta) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2.0) - photoAux2));
+
+			photoAux1 = alpha * IL2 + Pmax_EarlyLateDay;
+			photoAux2 = 4 * theta * alpha * IL2 * Pmax_EarlyLateDay;
+			double Pl_EarlyLateDay = (0.5 / theta) * (photoAux1 - Math.Sqrt(Math.Pow(photoAux1, 2.0) - photoAux2));
 
 			// Photosynthesis per leaf area for the day (mg CO2/m^2 leaf/day)
 			double Pl_Daily = myDayLength * (Pl_MiddleDay + Pl_EarlyLateDay) * 0.5;
 
 			// Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
-			double Pc_Daily = Pl_Daily * plantGreenCover * intRadnFrac / lightExtentionCoeff;
+			double Pc_Daily = Pl_Daily * swardGreenCover * intRadnFrac / lightExtentionCoeff;
 
 			//  Carbon assimilation per leaf area (g C/m^2/day)
 			double CarbonAssim = Pc_Daily * 0.001 * (12.0 / 44.0);         // Convert to from mgCO2 to kgC           
@@ -3676,10 +3660,12 @@ namespace Models.AgPasture1
 
 			// Actual gross photosynthesis (gross potential growth - kg C/ha/day)
 			return BaseGrossPhotosynthesis * ExtremeTemperatureFactor;
+
+			// TODO: implement GLFGeneric...
 		}
 
 		/// <summary>Computes the plant's loss of C due to respiration</summary>
-		/// <returns>The ampount of C lost to atmosphere (kgC/ha)</returns>
+		/// <returns>The amount of C lost to atmosphere (kgC/ha)</returns>
 		private double DailyMaintenanceRespiration()
 		{
 			// Temperature effects on respiration
@@ -3687,17 +3673,28 @@ namespace Models.AgPasture1
 			if (Tmean > growthTmin)
 			{
 				if (Tmean < growthTopt)
+				{
 					Teffect = TemperatureLimitingFactor(Tmean);
+				}
 				else
+				{
 					Teffect = Math.Min(1.25, Tmean / growthTopt);		// Using growthTopt as reference temperature, and maximum of 1.25
+					Teffect *= TemperatureLimitingFactor(growthTopt);
+				}
 			}
 
 			// Total DM converted to C (kg/ha)
-			double dmLive = (dmGreen + dmRoot) * CinDM;
+			double dmLive = (dmGreen + dmRoot) * CarbonFractionInDM;
 			double result = dmLive * maintenanceRespirationCoef * Teffect * NcFactor;
 			return Math.Max(0.0, result);
 		}
 
+		/// <summary>Computes the plant's loss of C due to growth respiration</summary>
+		/// <returns>The amount of C lost to atmosphere (kgC/ha)</returns>
+		private double DailyGrowthRespiration()
+		{
+			return Pgross * growthRespirationCoef;
+		}
 		/// <summary>Compute the plant's net potential growth</summary>
 		/// <returns>The net potential growth (kg DM/ha)</returns>
 		private double DailyNetPotentialGrowth()
@@ -3705,10 +3702,11 @@ namespace Models.AgPasture1
 			// Net potential growth (C assimilation) for the day (excluding respiration)
 			double NetPotGrowth = 0.0;
 			NetPotGrowth = (1 - growthRespirationCoef) * (Pgross + CRemobilised - Resp_m);  // TODO: the respCoeff should only multiply Pgross
+			//NetPotGrowth = Pgross + CRemobilised - Resp_g - Resp_m;
 			NetPotGrowth = Math.Max(0.0, NetPotGrowth);
 
 			// Net daily potential growth (kg DM/ha)
-			NetPotGrowth /= CinDM;
+			NetPotGrowth /= CarbonFractionInDM;
 
 			// phenologically related reduction in growth of annual species (from IJ)
 			if (isAnnual)
@@ -3728,7 +3726,7 @@ namespace Models.AgPasture1
 			double glfNit = Math.Pow(glfN, dillutionCoefN);
 
 			// The generic limitation factor is assumed to be equivalent to a nutrient deficiency, so it is considered here
-			dGrowthActual = dGrowthWstress * Math.Min(glfNit, glfGeneric);
+			dGrowthActual = dGrowthWstress * Math.Min(glfNit, glfGeneric);   // TODO: uptade the use of GLFGeneric
 
 			return dGrowthActual;
 		}
@@ -3741,6 +3739,7 @@ namespace Models.AgPasture1
 		/// </exception>
 		private void PartitionNewGrowth()
 		{
+			// TODO: implement fLeaf
 			// Leaf appearance rate, as modified by temp & water stress  -  Not really used, should it??
 			//double effTemp = TemperatureLimitingFactor(Tmean);
 			//double effWater = Math.Pow(glfWater, 0.33333);
@@ -3769,7 +3768,10 @@ namespace Models.AgPasture1
 				dGrowthRoot = toRoot * dGrowthActual;
 
 				// Partitioning N based on DM fractions and on max [N] in plant parts
-				double Nsum = toLeaf * leafNmax + toStem * NcStemMax + toStolon * NcStolonMax + toRoot * NcRootMax;
+				double Nsum = toLeaf * leafNmax 
+					        + toStem * NcStemMax
+							+ toStolon * NcStolonMax
+							+ toRoot * NcRootMax;
 				double toLeafN = toLeaf * Utility.Math.Divide(leafNmax, Nsum, 0.0);
 				double toStemN = toStem * Utility.Math.Divide(NcStemMax, Nsum, 0.0);
 				double toStolonN = toStolon * Utility.Math.Divide(NcStolonMax, Nsum, 0.0);
@@ -3790,11 +3792,12 @@ namespace Models.AgPasture1
 				double leftoverNremob = NRemobilised * kappaNRemob4;
 				if ((leftoverNremob > 0.0) && (prevState.Nleaf4 + prevState.Nstem4 > 0.0))
 				{
-					Nleaf4 += leftoverNremob * prevState.Nleaf4 / (prevState.Nleaf4 + prevState.Nstem4);
-					Nstem4 += leftoverNremob * prevState.Nstem4 / (prevState.Nleaf4 + prevState.Nstem4);
+					Nsum = prevState.Nleaf4 + prevState.Nstem4;
+					Nleaf4 += leftoverNremob * Utility.Math.Divide(prevState.Nleaf4, Nsum, 0.0);
+					Nstem4 += leftoverNremob * Utility.Math.Divide(prevState.Nstem4, Nsum, 0.0);
+					// Note: this is only valid for leaf and stems, the remaining (1-kappaNRemob4) and the amounts in roots
+					//  and stolon is disposed (added to soil FOM or Surface OM via litter)
 				}
-				// Note: this is only valid for leaf and stems, the remaining (1-kappaNRemob4) and the amounts in roots
-				//  and stolon is disposed (added to soil FOM or Surface OM via litter)
 
 				// Check whether luxury N was remobilised during N balance
 				if (NFastRemob2 + NFastRemob3 > 0.0)
@@ -3934,7 +3937,8 @@ namespace Models.AgPasture1
 			//double gamad = gftt * gfwt * rateDead2Litter;
 
 			// Turnover rate for dead to litter (TODO: check the use of digestibility here)
-			gamaD = turnoverRateDead2Litter * WaterFac2Litter * digestibilityDead / 0.4 + StockFac2Litter;
+			gamaD = turnoverRateDead2Litter * WaterFac2Litter * digestibilityDead / 0.4;
+			gamaD += StockFac2Litter;
 
 			// Turnover rate for roots
 			gamaR = turnoverRateRootSenescence * TempFac * WaterFac2Root;
@@ -3959,7 +3963,7 @@ namespace Models.AgPasture1
 				double FracDefoliated = Utility.Math.Divide(dmDefoliated, dmDefoliated + prevState.dmLeaf + prevState.dmStem + prevState.dmStolon, 0.0);
 
 				// Adjust stolon turnover due to defoliation (increase stolon senescence)
-				gamaS = gama + FracDefoliated * (1 - gama);
+				gamaS += FracDefoliated * (1 - gama);
 
 				// Check whether todays senescence will result in dmGreen < dmGreenmin
 				//   if that is the case then adjust (reduce) the turnover rates
@@ -4081,7 +4085,7 @@ namespace Models.AgPasture1
 				ChRemobl += ChRemobSugar + ChRemobProtein;
 
 				// Remobilised C to be used in tomorrow's growth (converted from carbohydrate to C)
-				CRemobilised = ChRemobl * CinDM;
+				CRemobilised = ChRemobl * CarbonFractionInDM;
 
 				// Fraction of N remobilised yesterday that not used in new growth
 				//  it is added to today's litter
@@ -4102,12 +4106,12 @@ namespace Models.AgPasture1
 				NRemobilised = 0.0;
 			}
 			// N remobilisable from luxury N to be potentially used for growth tomorrow
-			NLuxury2 = Math.Max(0.0, Nleaf2 - dmLeaf2 * leafNopt * relativeNStage3)
-					 + Math.Max(0.0, Nstem2 - dmStem2 * NcStemOpt * relativeNStage3)
-					 + Math.Max(0.0, Nstolon2 - dmStolon2 * NcStolonOpt * relativeNStage3);
-			NLuxury3 = Math.Max(0.0, Nleaf3 - dmLeaf3 * leafNopt * relativeNStage3)
-					 + Math.Max(0.0, Nstem3 - dmStem3 * NcStemOpt * relativeNStage3)
-					 + Math.Max(0.0, Nstolon3 - dmStolon3 * NcStolonOpt * relativeNStage3);
+			NLuxury2 = Math.Max(0.0, Nleaf2 - (dmLeaf2 * leafNopt * relativeNStage3))
+					 + Math.Max(0.0, Nstem2 - (dmStem2 * NcStemOpt * relativeNStage3))
+					 + Math.Max(0.0, Nstolon2 - (dmStolon2 * NcStolonOpt * relativeNStage3));
+			NLuxury3 = Math.Max(0.0, Nleaf3 - (dmLeaf3 * leafNopt * relativeNStage3))
+					 + Math.Max(0.0, Nstem3 - (dmStem3 * NcStemOpt * relativeNStage3))
+					 + Math.Max(0.0, Nstolon3 - (dmStolon3 * NcStolonOpt * relativeNStage3));
 			// only a fraction of luxury N is actually available for remobilisation:
 			NLuxury2 *= kappaNRemob2;
 			NLuxury3 *= kappaNRemob3;
@@ -4124,11 +4128,11 @@ namespace Models.AgPasture1
 		{
 			if (NewCanopy != null)
 			{
-				myCanopyData.sender = "grass";
+				myCanopyData.sender = Name;
 				myCanopyData.lai = greenLAI;
 				myCanopyData.lai_tot = TotalLAI;
-				myCanopyData.height = Height;
-				myCanopyData.depth = Height;
+				myCanopyData.height = myHeight;
+				myCanopyData.depth = myHeight;
 				myCanopyData.cover = GreenCover;
 				myCanopyData.cover_tot = TotalCover;
 				NewCanopy.Invoke(myCanopyData);
@@ -4164,6 +4168,43 @@ namespace Models.AgPasture1
 		}
 
 		/// <summary>
+		/// Consider water uptake calculations (plus GLFWater)
+		/// </summary>
+		internal void DoWaterCalculations()
+		{
+			if (myWaterUptakeSource == "species")
+			{ // this module will compute water uptake
+				MyWaterCalculations();
+
+				// get the drought effects
+				glfWater = WaterDeficitFactor();
+				// get the water logging effects (only if there is no drought effect)
+				if (glfWater > 0.999)
+					glfWater = WaterLoggingFactor();
+			}
+			//else if myWaterUptakeSource == "AgPasture"
+			//      myWaterDemand should have been supplied by MicroClimate (supplied as PotentialEP)
+			//      water supply is hold by AgPasture only
+			//      myWaterUptake should have been computed by AgPasture (set directly)
+			//      glfWater is computed and set by AgPasture
+			else if (myWaterUptakeSource == "arbitrator")
+			{ // water uptake has been calcualted by the resource arbitrator
+
+				// get the array with the amount of water taken up
+				GetWaterUptake();
+
+				// get the drought effects
+				glfWater = WaterDeficitFactor();
+				// get the water logging effects (only if there is no drought effect)
+				if (glfWater > 0.999)
+					glfWater = WaterLoggingFactor();
+			}
+			//else
+			//      water uptake be calculated by other modules (e.g. SWIM) and supplied as
+			//  Note: when AgPasture is doing the water uptake, it can do it using its own calculations or other module's...
+		}
+
+		/// <summary>
 		/// Gather the amount of available eater and computes the water uptake for this species
 		/// </summary>
 		/// <remarks>
@@ -4171,7 +4212,7 @@ namespace Models.AgPasture1
 		/// might result in loss of mass balance or unbalanced supply, i.e. over-supply for one
 		/// while under-supply for other species (depending on the order that species are considered)
 		/// </remarks>
-		private void DoWaterCalculations()
+		private void MyWaterCalculations()
 		{
 			mySoilAvailableWater = GetSoilAvailableWater();
 			// myWaterDemand given by MicroClimate
@@ -4286,12 +4327,12 @@ namespace Models.AgPasture1
 			CalcSoilNDemand();
 
 			// get the amount of N taken up from soil
-			Array.Clear(mySoilUptakeN, 0, mySoilUptakeN.Length);
+			Array.Clear(mySoilNitrogenTakenUp, 0, mySoilNitrogenTakenUp.Length);
 			mySoilNuptake = 0.0;
 			for (int layer = 0; layer <= myRootFrontier; layer++)
 			{
-				mySoilUptakeN[layer] = uptakeNitrogen[layer];
-				mySoilNuptake += mySoilUptakeN[layer];
+				mySoilNitrogenTakenUp[layer] = uptakeNitrogen[layer];
+				mySoilNuptake += mySoilNitrogenTakenUp[layer];
 			}
 			newGrowthN = Nfixation + Nremob2NewGrowth + mySoilNuptake;
 
@@ -4300,8 +4341,45 @@ namespace Models.AgPasture1
 			newGrowthN += NFastRemob3 + NFastRemob2;
 		}
 
+		/// <summary>
+		/// Consider nitrogen uptake calculations (plus GLFN)
+		/// </summary>
+		internal void DoNitrogenCalculations()
+		{
+			if (myNitrogenUptakeSource == "species")
+			{ // this module will compute the N uptake
+				MyNitrogenCalculations();
+				if (newGrowthN > 0.0)
+					glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(newGrowthN, NdemandOpt, 1.0)));
+				else
+					glfN = 1.0;
+			}
+			//else if (myNitrogenUptakeSource == "AgPasture")
+			//{
+			//    NdemandOpt is called by AgPasture
+			//    NdemandLux is called by AgPasture
+			//    Nfix is called by AgPasture
+			//    myNitrogenSupply is hold by AgPasture
+			//    soilNdemand is computed by AgPasture
+			//    soilNuptake is computed by AgPasture
+			//    remob2NewGrowth is computed by AgPasture
+			//}
+			else if (myNitrogenUptakeSource == "arbitrator")
+			{ // Nitrogen uptake was computed by the resource arbitrator
+
+				// get the amount of N taken up
+				GetNitrogenUptake();
+				if (newGrowthN > 0.0)
+					glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(newGrowthN, NdemandOpt, 1.0)));
+				else
+					glfN = 1.0;
+			}
+			//else
+			//   N uptake is computed by another module (not implemented yet)
+		}
+
 		/// <summary>Performs the computations for N balance and uptake</summary>
-		private void DoNitrogenCalculations()
+		private void MyNitrogenCalculations()
 		{
 			// get soil available N
 			if (myNitrogenUptakeSource.ToLower() == "species")
@@ -4400,6 +4478,9 @@ namespace Models.AgPasture1
 				NRemobilised = 0.0;
 				mySoilNDemand = NdemandLux - (Nfixation + Nremob2NewGrowth);
 			}
+
+			// variable used by arbitrator
+			demandNitrogen = mySoilNDemand;
 		}
 
 		/// <summary>
@@ -4535,7 +4616,7 @@ namespace Models.AgPasture1
 					NUptake.DeltaNO3 = new double[nLayers];
 					NUptake.DeltaNH4 = new double[nLayers];
 
-					mySoilUptakeN = new double[nLayers];
+					mySoilNitrogenTakenUp = new double[nLayers];
 					double uptakeFraction = 0;
 
 					if (useAltNUptake == "no")
@@ -4548,7 +4629,7 @@ namespace Models.AgPasture1
 							NUptake.DeltaNH4[layer] = -Soil.NH4N[layer] * uptakeFraction;
 							NUptake.DeltaNO3[layer] = -Soil.NO3N[layer] * uptakeFraction;
 
-							mySoilUptakeN[layer] = -(NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]);
+							mySoilNitrogenTakenUp[layer] = -(NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer]);
 						}
 					}
 					else
@@ -4576,13 +4657,13 @@ namespace Models.AgPasture1
 							uptakeFraction = Math.Min(1.0, Utility.Math.Divide(fNO3Avail[layer] + fWUptake[layer], totFacNO3, 0.0));
 							NUptake.DeltaNO3[layer] = -Soil.NO3N[layer] * uptakeFraction;
 
-							mySoilUptakeN[layer] = NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer];
+							mySoilNitrogenTakenUp[layer] = NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer];
 						}
 					}
 
 					//mySoilUptakeN.Sum()	2.2427998752781684	double
 
-					if (Math.Abs(mySoilNuptake - mySoilUptakeN.Sum()) > 0.0001)
+					if (Math.Abs(mySoilNuptake - mySoilNitrogenTakenUp.Sum()) > 0.0001)
 						throw new Exception("Error on computing N uptake");
 
 					// do the actual N changes
@@ -4591,7 +4672,7 @@ namespace Models.AgPasture1
 				else
 				{
 					// no uptake, just zero out the array
-					mySoilUptakeN = new double[nLayers];
+					mySoilNitrogenTakenUp = new double[nLayers];
 				}
 			}
 			else
@@ -4654,7 +4735,7 @@ namespace Models.AgPasture1
 				Soils.FOMType fomData = new Soils.FOMType();
 				fomData.amount = amountDM * rootFraction[layer];
 				fomData.N = amountN * rootFraction[layer];
-				fomData.C = amountDM * rootFraction[layer] * CinDM;
+				fomData.C = amountDM * rootFraction[layer] * CarbonFractionInDM;
 				fomData.P = 0.0;			  // P not considered here
 				fomData.AshAlk = 0.0;		  // Ash not considered here
 
@@ -5022,22 +5103,22 @@ namespace Models.AgPasture1
 			{
 				if (Temp > growthTmin && Temp < growthTmax)
 				{
-					double nTmax = growthTopt + (growthTopt - growthTmin) / growthTq;
-					double val1 = Math.Pow((Temp - growthTmin), growthTq) * (nTmax - Temp);
-					double val2 = Math.Pow((growthTopt - growthTmin), growthTq) * (nTmax - growthTopt);
+					double growthTmax1 = growthTopt + (growthTopt - growthTmin) / growthTq;
+					double val1 = Math.Pow((Temp - growthTmin), growthTq) * (growthTmax1 - Temp);
+					double val2 = Math.Pow((growthTopt - growthTmin), growthTq) * (growthTmax1 - growthTopt);  // TODO: replace Topt with Tref here
 					result = val1 / val2;
 				}
 			}
 			else if (photosynthesisPathway == "C4")
 			{
-				if (Temp > growthTmin)		 // same as GFTempC3 for [Tmin,Topt], but T as Topt if T > Topt
+				if (Temp > growthTmin)
 				{
 					if (Temp > growthTopt)
 						Temp = growthTopt;
 
-					double nTmax = growthTopt + (growthTopt - growthTmin) / growthTq;
-					double val1 = Math.Pow((Temp - growthTmin), growthTq) * (nTmax - Temp);
-					double val2 = Math.Pow((growthTopt - growthTmin), growthTq) * (nTmax - growthTopt);
+					double growthTmax1 = growthTopt + (growthTopt - growthTmin) / growthTq;
+					double val1 = Math.Pow((Temp - growthTmin), growthTq) * (growthTmax1 - Temp);
+					double val2 = Math.Pow((growthTopt - growthTmin), growthTq) * (growthTmax1 - growthTopt);  // TODO: replace Topt with Tref here
 					result = val1 / val2;
 				}
 			}
@@ -5054,7 +5135,7 @@ namespace Models.AgPasture1
 			double result = 0.0;
 			if (Temp > tissueTurnoverTmin && Temp <= tissueTurnoverTopt)
 			{
-				result = (Temp - tissueTurnoverTmin) / (tissueTurnoverTopt - tissueTurnoverTmin);
+				result = (Temp - tissueTurnoverTmin) / (tissueTurnoverTopt - tissueTurnoverTmin);  // TODO: implement power function
 			}
 			else if (Temp > tissueTurnoverTopt)
 			{
@@ -5064,7 +5145,7 @@ namespace Models.AgPasture1
 		}
 
 		/// <summary>Photosynthesis reduction factor due to high temperatures (heat stress)</summary>
-		/// <returns>The reduction in potosynthesis rate (0-1)</returns>
+		/// <returns>The reduction in photosynthesis rate (0-1)</returns>
 		private double HeatStress()
 		{
 			// evaluate recovery from the previous high temperature effects
@@ -5095,7 +5176,7 @@ namespace Models.AgPasture1
 				recoverF = highTempEffect;
 			}
 
-			return recoverF;
+			return recoverF;  // TODO: revise this function
 		}
 
 		/// <summary>Photosynthesis reduction factor due to low temperatures (cold stress)</summary>
@@ -5129,7 +5210,7 @@ namespace Models.AgPasture1
 				recoverF = lowTempEffect;
 			}
 
-			return recoverF;
+			return recoverF; // TODO: revise this function
 		}
 
 		/// <summary>Photosynthesis factor (reduction or increase) to eleveated [CO2]</summary>
@@ -5160,9 +5241,14 @@ namespace Models.AgPasture1
 				if (NcleafGreen < leafNopt * fN)
 				{
 					if (NcleafGreen > leafNmin)
-						result = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(NcleafGreen - leafNmin, leafNopt * fN - leafNmin, 1.0)));
+					{
+						result = Utility.Math.Divide(NcleafGreen - leafNmin, (leafNopt * fN) - leafNmin, 1.0);
+						result = Math.Min(1.0, Math.Max(0.0, result));
+					}
 					else
+					{
 						result = 0.0;
+					}
 				}
 
 				return result;
@@ -5190,14 +5276,15 @@ namespace Models.AgPasture1
 		{
 			if (Math.Abs(MetData.CO2 - referenceCO2) < 0.5)
 				return 1.0;
-			//Hard coded here, not used, should go to Micromet!
+			//Hard coded here, not used, should go to Micromet!   - TODO
 			double Gmin = 0.2;      //Fc = Gmin when CO2->unlimited
 			double Gmax = 1.25;     //Fc = Gmax when CO2 = 0;
 			double beta = 2.5;      //curvature factor,
 
-			double Fc = Gmin + (Gmax - Gmin) * (1 - Gmin) * Math.Pow(referenceCO2, beta) /
-			((Gmax - 1) * Math.Pow(MetData.CO2, beta) + (1 - Gmin) * Math.Pow(referenceCO2, beta));
-			return Fc;
+			double aux1 = (1 - Gmin) * Math.Pow(referenceCO2, beta);
+			double aux2 = (Gmax - 1) * Math.Pow(MetData.CO2, beta);
+			double Fc = (Gmax - Gmin) * aux1 / (aux2 + aux1);
+			return Gmin + Fc;
 		}
 
 		/// <summary>Growth limiting factor due to soil moisture deficit</summary>
@@ -5249,8 +5336,11 @@ namespace Models.AgPasture1
 		{
 			double result = 1.0;
 			if (glfWater < tissueTurnoverGLFWopt)
-				result = 1 + (tissueTurnoverWFactorMax - 1.0) * ((tissueTurnoverGLFWopt - glfWater) / tissueTurnoverGLFWopt);
-			result = Math.Min(tissueTurnoverWFactorMax, Math.Max(1.0, result));
+			{
+				result = (tissueTurnoverGLFWopt - glfWater) / tissueTurnoverGLFWopt;
+				result = (tissueTurnoverWFactorMax - 1.0) * result;
+				result = Math.Min(tissueTurnoverWFactorMax, Math.Max(1.0, 1 + result));
+			}
 
 			return result;
 		}
