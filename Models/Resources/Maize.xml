@@ -342,7 +342,7 @@
 					<End>HarvestRipe</End>
 					<VariableReference>
 						<Name>PrimordiaNo</Name>
-						<VariableName>Structure.MainStemPrimordiaNo</VariableName>
+						<VariableName>[Structure].MainStemPrimordiaNo</VariableName>
 					</VariableReference>
 				</PhaseLookupValue>
 			</PhaseLookup>
@@ -729,7 +729,7 @@
 			<Rank>6</Rank>
 			<Area>0</Area>
 		</LeafCohort>
-        <CompositeBiomass>
+		<CompositeBiomass>
 			<Name>Live</Name>
 			<Propertys>
 				<string>[Leaf].CohortLive</string>
@@ -742,28 +742,19 @@
 			</Propertys>
 		</CompositeBiomass>
 		<ArrayBiomass>
-			<Name>Total</Name>
-			<ArraySize>[Structure].MaximumNodeNumber</ArraySize>
-			<Propertys>
-				<string>[Leaf].Live</string>
-				<string>[Leaf].Dead</string>
-			</Propertys>
-		</ArrayBiomass>
-		<ArrayBiomass>
-			<Name>CohortLive</Name>
-			<ArraySize>[Structure].MaximumNodeNumber</ArraySize>
+			<Name>CohortArrayLive</Name>
 			<Propertys>
 				<string>[Leaf].Live</string>
 			</Propertys>
+			<ArraySize>[Leaf].MaxNodeNo</ArraySize>
 		</ArrayBiomass>
 		<ArrayBiomass>
-			<Name>CohortDead</Name>
-			<ArraySize>[Structure].MaximumNodeNumber</ArraySize>
+			<Name>CohortArrayDead</Name>
 			<Propertys>
 				<string>[Leaf].Dead</string>
 			</Propertys>
+			<ArraySize>[Leaf].MaxNodeNo</ArraySize>
 		</ArrayBiomass>
-
 		<InitialLeafValues>
 			<BellCurveFunction>
 				<Name>MaxArea</Name>
@@ -1112,7 +1103,7 @@
 				</XYPairs>
 			</LinearInterpolationFunction>
 			<RUECO2Function>
-				<Name>Fco2</Name>
+				<Name>FCO2</Name>
 				<PhotosyntheticPathway>C4</PhotosyntheticPathway>
 			</RUECO2Function>
 		</RUEModel>
@@ -1168,8 +1159,6 @@
 			<Name>ThermalTime</Name>
 			<VariableName>[Phenology].ThermalTime.Value</VariableName>
 		</VariableReference>
-
-
 	</Leaf>
 	<GenericAboveGroundOrgan>
 		<Name>Husk</Name>
