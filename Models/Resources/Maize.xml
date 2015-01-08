@@ -329,7 +329,7 @@
 				<Name>FinalLeafNumber</Name>
 				<PhaseLookupValue>
 					<Name>PreFloral</Name>
-					<Start>Emergence</Start>
+					<Start>Sowing</Start>
 					<End>Floral_Initiation</End>
 					<Constant>
 						<Name>EstimateLeafNo</Name>
@@ -470,6 +470,228 @@
 			</PhaseLookupValue>
 		</PhaseLookup>
 	</Structure>
+	<ReproductiveOrgan>
+		<Name>Grain</Name>
+		<MaximumSize>0.1</MaximumSize>
+		<RipeStage>Ripe</RipeStage>
+		<Biomass>
+			<Name>Live</Name>
+		</Biomass>
+		<Biomass>
+			<Name>Dead</Name>
+		</Biomass>
+		<Constant>
+			<Name>MinimumNConc</Name>
+			<Value>0.02</Value>
+		</Constant>
+		<Constant>
+			<Name>MaximumNConc</Name>
+			<Value>0.01</Value>
+		</Constant>
+		<Constant>
+			<Name>MaxNConcDailyGrowth</Name>
+			<Value>0.03</Value>
+		</Constant>
+		<Constant>
+			<Name>WaterContent</Name>
+			<Value>0.12</Value>
+		</Constant>
+		<PhaseLookup>
+			<Name>NFillingRate</Name>
+			<PhaseLookupValue>
+				<Name>EarlyGrainGrowth</Name>
+				<Start>Flowering</Start>
+				<End>Maturity</End>
+				<AirTemperatureFunction>
+					<Name>Function</Name>
+					<XYPairs>
+						<Name>XYPairs</Name>
+						<X>
+							<double>0</double>
+							<double>25</double>
+							<double>30</double>
+							<double>35</double>
+						</X>
+						<Y>
+							<double>0</double>
+							<double>5.5E-05</double>
+							<double>5.5E-05</double>
+							<double>5.5E-05</double>
+						</Y>	
+					</XYPairs>
+				</AirTemperatureFunction>
+			</PhaseLookupValue>
+		</PhaseLookup>
+		<PhaseBasedSwitch>
+			<Name>NitrogenDemandSwitch</Name>
+			<Start>Germination</Start>
+			<End>Maturity</End>
+		</PhaseBasedSwitch>
+		<MultiplyFunction>
+			<Name>NumberFunction</Name>
+			<VariableReference>
+				<Name>StemNumber</Name>
+				<VariableName>[Structure].TotalStemPopn</VariableName>
+			</VariableReference>
+			<Constant>
+				<Name>KernalsPerCob</Name>
+				<Value>800</Value>
+			</Constant>
+			<Constant>
+				<Name>GrainPerKernal</Name>
+				<Value>1</Value>
+			</Constant>
+			<PhaseLookup>
+				<Name>CobsPerStem</Name>
+				<PhaseLookupValue>
+					<Start>StartGrainFill</Start>
+					<End>EndGrainFill</End>
+					<Constant>
+						<Name>CobsPerStem</Name>
+						<Value>1.1</Value>
+					</Constant>
+				</PhaseLookupValue>
+			</PhaseLookup>
+		</MultiplyFunction>
+		<AirTemperatureFunction>
+			<Name>FillingRate</Name>
+			<XYPairs>
+				<Name>XYPairs</Name>
+				<X>
+					<double>0</double>
+					<double>26</double>
+					<double>30</double>
+					<double>35</double>
+				</X>
+				<Y>
+					<double>0</double>
+					<double>0.001</double>
+					<double>0.001</double>
+					<double>0.001</double>
+				</Y>	
+			</XYPairs>
+		</AirTemperatureFunction>
+	</ReproductiveOrgan>
+	<Root>
+		<InitialDM>0.2</InitialDM>
+		<SpecificRootLength>40000</SpecificRootLength>
+		<KNO3>0.03</KNO3>
+		<KNH4>0.0</KNH4>
+		<CompositeBiomass>
+			<Name>Live</Name>
+			<Propertys>
+				<string>[Root].LayerLive</string>
+			</Propertys>
+		</CompositeBiomass>
+		<CompositeBiomass>
+			<Name>Dead</Name>
+			<Propertys>
+				<string>[Root].LayerDead</string>
+			</Propertys>
+		</CompositeBiomass>
+		<LinearInterpolationFunction>
+			<Name>KLModifier</Name>
+			<XProperty>[Leaf].LAI</XProperty>
+			<XYPairs>
+				<Name>XYPairs</Name>
+				<X>
+					<double>0</double>
+					<double>3</double>
+				</X>
+				<Y>
+					<double>1</double>
+					<double>1</double>
+				</Y>	
+			</XYPairs>
+		</LinearInterpolationFunction>
+		<Constant>
+			<Name>SoilWaterEffect</Name>
+			<Value>1.0</Value>
+		</Constant>
+		<AirTemperatureFunction>
+			<Name>TemperatureEffect</Name>
+			<XYPairs>
+				<Name>XYPairs</Name>
+				<X>
+					<double>0</double>
+					<double>26</double>
+					<double>35</double>
+				</X>
+				<Y>
+					<double>1</double>
+					<double>1</double>
+					<double>1</double>
+				</Y>	
+			</XYPairs>
+		</AirTemperatureFunction>
+		<Constant>
+			<Name>MaxDailyNUptake</Name>
+			<Value>20</Value>
+		</Constant>
+		<Constant>
+			<Name>SenescenceRate</Name>
+			<Value>0.0</Value>
+		</Constant>
+		<Constant>
+			<Name>StructuralFraction</Name>
+			<Value>1</Value>
+		</Constant>
+		<Constant>
+			<Name>MaximumNConc</Name>
+			<Value>0.01</Value>
+		</Constant>
+		<Constant>
+			<Name>MinimumNConc</Name>
+			<Value>0.01</Value>
+		</Constant>
+		<LinearInterpolationFunction>
+			<Name>PartitionFraction</Name>
+			<XProperty>[StageCode].Value</XProperty>
+			<XYPairs>
+				<Name>XYPairs</Name>
+				<X>
+					<double>0</double>
+					<double>2.99</double>
+					<double>3</double>
+					<double>4</double>
+					<double>5</double>
+				</X>
+				<Y>
+					<double>0</double>
+					<double>0</double>
+					<double>0.2</double>
+					<double>0.2</double>
+					<double>0</double>
+				</Y>	
+			</XYPairs>
+		</LinearInterpolationFunction>
+		<PhaseLookup>
+			<Name>RootFrontVelocity</Name>
+			<PhaseLookupValue>
+				<Name>PreEmergence</Name>
+				<Start>Germination</Start>
+				<End>Emergence</End>
+				<Constant>
+					<Name>Function</Name>
+					<Value>5</Value>
+				</Constant>
+			</PhaseLookupValue>
+			<PhaseLookupValue>
+				<Name>PostEmergence</Name>
+				<Start>Emergence</Start>
+				<End>Maturity</End>
+				<Constant>
+					<Name>Function</Name>
+					<Value>30</Value>
+				</Constant>
+			</PhaseLookupValue>
+		</PhaseLookup>
+		<PhaseBasedSwitch>
+			<Name>NitrogenDemandSwitch</Name>
+			<Start>Germination</Start>
+			<End>Maturity</End>
+		</PhaseBasedSwitch>
+	</Root>
 	<Leaf>
 		<MaxCover>1.0</MaxCover>
 		<KDead>.03</KDead>
@@ -507,20 +729,21 @@
 			<Rank>6</Rank>
 			<Area>0</Area>
 		</LeafCohort>
-		<CompositeBiomass>
+        <CompositeBiomass>
 			<Name>Live</Name>
 			<Propertys>
-				<string>[Leaf].CohortDead</string>
+				<string>[Leaf].CohortLive</string>
 			</Propertys>
 		</CompositeBiomass>
 		<CompositeBiomass>
 			<Name>Dead</Name>
 			<Propertys>
-				<string>[Leaf].CohortLive</string>
+				<string>[Leaf].CohortDead</string>
 			</Propertys>
 		</CompositeBiomass>
 		<ArrayBiomass>
 			<Name>Total</Name>
+			<ArraySize>[Structure].MaximumNodeNumber</ArraySize>
 			<Propertys>
 				<string>[Leaf].Live</string>
 				<string>[Leaf].Dead</string>
@@ -528,14 +751,14 @@
 		</ArrayBiomass>
 		<ArrayBiomass>
 			<Name>CohortLive</Name>
-			<ArraySize>[Leaf].MaxNodeNo</ArraySize>
+			<ArraySize>[Structure].MaximumNodeNumber</ArraySize>
 			<Propertys>
 				<string>[Leaf].Live</string>
 			</Propertys>
 		</ArrayBiomass>
 		<ArrayBiomass>
 			<Name>CohortDead</Name>
-			<ArraySize>[Leaf].MaxNodeNo</ArraySize>
+			<ArraySize>[Structure].MaximumNodeNumber</ArraySize>
 			<Propertys>
 				<string>[Leaf].Dead</string>
 			</Propertys>
@@ -948,228 +1171,6 @@
 
 
 	</Leaf>
-	<ReproductiveOrgan>
-		<Name>Grain</Name>
-		<MaximumSize>0.1</MaximumSize>
-		<RipeStage>Ripe</RipeStage>
-		<Biomass>
-			<Name>Live</Name>
-		</Biomass>
-		<Biomass>
-			<Name>Dead</Name>
-		</Biomass>
-		<Constant>
-			<Name>MinimumNConc</Name>
-			<Value>0.02</Value>
-		</Constant>
-		<Constant>
-			<Name>MaximumNConc</Name>
-			<Value>0.01</Value>
-		</Constant>
-		<Constant>
-			<Name>MaxNConcDailyGrowth</Name>
-			<Value>0.03</Value>
-		</Constant>
-		<Constant>
-			<Name>WaterContent</Name>
-			<Value>0.12</Value>
-		</Constant>
-		<PhaseLookup>
-			<Name>NFillingRate</Name>
-			<PhaseLookupValue>
-				<Name>EarlyGrainGrowth</Name>
-				<Start>Flowering</Start>
-				<End>Maturity</End>
-				<AirTemperatureFunction>
-					<Name>Function</Name>
-					<XYPairs>
-						<Name>XYPairs</Name>
-						<X>
-							<double>0</double>
-							<double>25</double>
-							<double>30</double>
-							<double>35</double>
-						</X>
-						<Y>
-							<double>0</double>
-							<double>5.5E-05</double>
-							<double>5.5E-05</double>
-							<double>5.5E-05</double>
-						</Y>	
-					</XYPairs>
-				</AirTemperatureFunction>
-			</PhaseLookupValue>
-		</PhaseLookup>
-		<PhaseBasedSwitch>
-			<Name>NitrogenDemandSwitch</Name>
-			<Start>Germination</Start>
-			<End>Maturity</End>
-		</PhaseBasedSwitch>
-		<MultiplyFunction>
-			<Name>NumberFunction</Name>
-			<VariableReference>
-				<Name>StemNumber</Name>
-				<VariableName>[Structure].TotalStemPopn</VariableName>
-			</VariableReference>
-			<Constant>
-				<Name>KernalsPerCob</Name>
-				<Value>800</Value>
-			</Constant>
-			<Constant>
-				<Name>GrainPerKernal</Name>
-				<Value>1</Value>
-			</Constant>
-			<PhaseLookup>
-				<Name>CobsPerStem</Name>
-				<PhaseLookupValue>
-					<Start>StartGrainFill</Start>
-					<End>EndGrainFill</End>
-					<Constant>
-						<Name>CobsPerStem</Name>
-						<Value>1.1</Value>
-					</Constant>
-				</PhaseLookupValue>
-			</PhaseLookup>
-		</MultiplyFunction>
-		<AirTemperatureFunction>
-			<Name>FillingRate</Name>
-			<XYPairs>
-				<Name>XYPairs</Name>
-				<X>
-					<double>0</double>
-					<double>26</double>
-					<double>30</double>
-					<double>35</double>
-				</X>
-				<Y>
-					<double>0</double>
-					<double>0.001</double>
-					<double>0.001</double>
-					<double>0.001</double>
-				</Y>	
-			</XYPairs>
-		</AirTemperatureFunction>
-	</ReproductiveOrgan>
-	<Root>
-		<InitialDM>0.2</InitialDM>
-		<SpecificRootLength>40000</SpecificRootLength>
-		<KNO3>0.03</KNO3>
-		<KNH4>0.0</KNH4>
-		<CompositeBiomass>
-			<Name>Live</Name>
-			<Propertys>
-				<string>[Root].LayerLive</string>
-			</Propertys>
-		</CompositeBiomass>
-		<CompositeBiomass>
-			<Name>Dead</Name>
-			<Propertys>
-				<string>[Root].LayerDead</string>
-			</Propertys>
-		</CompositeBiomass>
-		<LinearInterpolationFunction>
-			<Name>KLModifier</Name>
-			<XProperty>[Leaf].LAI</XProperty>
-			<XYPairs>
-				<Name>XYPairs</Name>
-				<X>
-					<double>0</double>
-					<double>3</double>
-				</X>
-				<Y>
-					<double>1</double>
-					<double>1</double>
-				</Y>	
-			</XYPairs>
-		</LinearInterpolationFunction>
-		<Constant>
-			<Name>SoilWaterEffect</Name>
-			<Value>1.0</Value>
-		</Constant>
-		<AirTemperatureFunction>
-			<Name>TemperatureEffect</Name>
-			<XYPairs>
-				<Name>XYPairs</Name>
-				<X>
-					<double>0</double>
-					<double>26</double>
-					<double>35</double>
-				</X>
-				<Y>
-					<double>1</double>
-					<double>1</double>
-					<double>1</double>
-				</Y>	
-			</XYPairs>
-		</AirTemperatureFunction>
-		<Constant>
-			<Name>MaxDailyNUptake</Name>
-			<Value>20</Value>
-		</Constant>
-		<Constant>
-			<Name>SenescenceRate</Name>
-			<Value>0.0</Value>
-		</Constant>
-		<Constant>
-			<Name>StructuralFraction</Name>
-			<Value>1</Value>
-		</Constant>
-		<Constant>
-			<Name>MaximumNConc</Name>
-			<Value>0.01</Value>
-		</Constant>
-		<Constant>
-			<Name>MinimumNConc</Name>
-			<Value>0.01</Value>
-		</Constant>
-		<LinearInterpolationFunction>
-			<Name>PartitionFraction</Name>
-			<XProperty>[StageCode].Value</XProperty>
-			<XYPairs>
-				<Name>XYPairs</Name>
-				<X>
-					<double>0</double>
-					<double>2.99</double>
-					<double>3</double>
-					<double>4</double>
-					<double>5</double>
-				</X>
-				<Y>
-					<double>0</double>
-					<double>0</double>
-					<double>0.2</double>
-					<double>0.2</double>
-					<double>0</double>
-				</Y>	
-			</XYPairs>
-		</LinearInterpolationFunction>
-		<PhaseLookup>
-			<Name>RootFrontVelocity</Name>
-			<PhaseLookupValue>
-				<Name>PreEmergence</Name>
-				<Start>Germination</Start>
-				<End>Emergence</End>
-				<Constant>
-					<Name>Function</Name>
-					<Value>5</Value>
-				</Constant>
-			</PhaseLookupValue>
-			<PhaseLookupValue>
-				<Name>PostEmergence</Name>
-				<Start>Emergence</Start>
-				<End>Maturity</End>
-				<Constant>
-					<Name>Function</Name>
-					<Value>30</Value>
-				</Constant>
-			</PhaseLookupValue>
-		</PhaseLookup>
-		<PhaseBasedSwitch>
-			<Name>NitrogenDemandSwitch</Name>
-			<Start>Germination</Start>
-			<End>Maturity</End>
-		</PhaseBasedSwitch>
-	</Root>
 	<GenericAboveGroundOrgan>
 		<Name>Husk</Name>
 		<PopulationBasedDemandFunction>
