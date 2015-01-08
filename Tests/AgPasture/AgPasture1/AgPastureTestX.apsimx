@@ -14,7 +14,7 @@
     </Clock>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\Ruakura.met</FileName>
+      <FileName>%root%\Tests\WeatherFiles\Ruakura.met</FileName>
     </Weather>
     <Manager>
       <Name>SetCO2</Name>
