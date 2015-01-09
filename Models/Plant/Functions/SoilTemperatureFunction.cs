@@ -14,8 +14,7 @@ namespace Models.PMF.Functions
     {
         #region Class Data Members
         /// <summary>The xy pairs</summary>
-        [Link]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        public XYPairs XYPairs { get; set; }    // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maxt_soil_surface</summary>
         public double maxt_soil_surface = 20; //Fixme.  These need to be connected to soil temp model when complete

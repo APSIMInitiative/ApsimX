@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
-  <DataStore>
-    <Name>DataStore</Name>
-    <AutoExport>false</AutoExport>
-  </DataStore>
   <Simulation>
-    <Name>PMFWheatTestBase</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>..\WeatherFiles\lincoln.met</FileName>
-    </Weather>
+    <Name>MaizeTest</Name>
     <Clock>
-      <Name>Clock</Name>
-      <StartDate>1998-10-14T00:00:00</StartDate>
-      <EndDate>1999-05-01T00:00:00</EndDate>
+      <Name>clock</Name>
+      <StartDate>2000-10-15T00:00:00</StartDate>
+      <EndDate>2001-06-01T00:00:00</EndDate>
     </Clock>
     <Summary>
-      <Name>Summary</Name>
+      <Name>summaryfile</Name>
     </Summary>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>%root%\Tests\Potato\lincoln.met</FileName>
+    </Weather>
     <Zone>
-      <Name>Field</Name>
+      <Name>paddock</Name>
       <Soil>
         <Name>Soil</Name>
         <Analysis>
@@ -53,7 +49,7 @@
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>WheatPMFPrototypeSoil</Name>
+            <Name>MaizeSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -170,9 +166,9 @@
           <CN2Bare>68</CN2Bare>
           <CNRed>20</CNRed>
           <CNCov>0.8</CNCov>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
+          <slope>NaN</slope>
+          <discharge_width>NaN</discharge_width>
+          <catchment_area>NaN</catchment_area>
           <max_pond>0</max_pond>
           <Thickness>
             <double>100</double>
@@ -190,14 +186,6 @@
             <double>0.55</double>
             <double>0.55</double>
           </SWCON>
-          <KLAT>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KLAT>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -241,14 +229,6 @@
             <double>0.1</double>
             <double>1</double>
           </wfpsN2N2O_y>
-          <oc>
-            <double>1.8357639381541626</double>
-            <double>1.4633395871468213</double>
-            <double>1.19883961231043</double>
-            <double>1.0301003107511837</double>
-            <double>0.47033832131876441</double>
-            <double>0.47013790174150383</double>
-          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -300,7 +280,7 @@
           <OCUnits>Total</OCUnits>
         </SoilOrganicMatter>
         <Sample>
-          <Name>Initial nitrogen</Name>
+          <Name>Sample</Name>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -333,7 +313,6 @@
         </Sample>
         <RecordNumber>0</RecordNumber>
         <SoilType />
-        <LocalName />
         <Site />
         <NearestTown />
         <Region />
@@ -342,9 +321,9 @@
         <Longitude>0</Longitude>
       </Soil>
       <Plant>
-        <Name>WheatPMFPrototype</Name>
-        <ResourceName>WheatPMFPrototype</ResourceName>
-        <CropType>Wheat</CropType>
+        <Name>Maize</Name>
+        <ResourceName>Maize</ResourceName>
+        <CropType>Maize</CropType>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -369,54 +348,15 @@
         <Name>Irrigation</Name>
       </Irrigation>
       <Fertiliser>
-        <Name>Fertiliser</Name>
+        <Name>fertiliser</Name>
       </Fertiliser>
-      <Manager>
-        <Name>WheatPMFPrototypeSowingRule</Name>
-        <Script>
-          <CultivarName>JerseyBenny</CultivarName>
-          <InitialRootDepth>600</InitialRootDepth>
-          <SowingDate>1998-10-14</SowingDate>
-        </Script>
-        <Code><![CDATA[
-        using System;
-        using Models.Core;
-        using Models.PMF;
-        namespace Models
-        {
-           [Serializable] 
-           [System.Xml.Serialization.XmlInclude(typeof(Model))]
-            public class Script : Model
-            {      
-               [Link] Plant WheatPMFPrototype;
-               [Link] Clock Clock;
-
-               [Description("Cultivar")]
-                public string CultivarName { get; set; }
-               [Description("Initial Root Depth")]
-               public double InitialRootDepth { get; set; }
-			   [Description("Sowing Date")]
-               public DateTime SowingDate { get; set; }
-
-               
-               [EventSubscribe("DoManagement")]
-               private void OnDoManagement(object sender, EventArgs e)
-               {
-				if (Clock.Today.Date == SowingDate)
-                    WheatPMFPrototype.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
-                //Potato.Sow(... Contains the following arguements:
-                //Population  double  Optional  Seeds sowing/m2.  Default is zero
-                //Cultivar    string  Required  "NameOfCultivar"
-                //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
-                //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
-                //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
-                //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
-                //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-			   }
-            }
-        }
-				]]></Code>
-      </Manager>
+      <Operations>
+        <Name>OpperationsSchedule</Name>
+        <Operation>
+          <Date>2000-10-15T00:00:00</Date>
+          <Action>[Maize].Sow(population:12, cultivar:"Pioneer_3153", depth:20, rowSpacing:720);</Action>
+        </Operation>
+      </Operations>
       <Manager>
         <Name>ExtraVariables</Name>
         <Script />
@@ -439,7 +379,7 @@ namespace Models
 		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant WheatPMFPrototype;          
+		[Link] Plant Maize;          
 		[Link] Zone zone;			
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -518,7 +458,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
             AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("WheatPMFPrototype.Root.NUptake");
+			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -528,8 +468,8 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[WheatPMFPrototype].Leaf.Transpiration");
-            AccumEP -= (double)zone.Get("WheatPMFPrototype.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[Maize].Leaf.Transpiration");
+            AccumEP -= (double)zone.Get("Maize.Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -556,22 +496,15 @@ namespace Models
       </Manager>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
-        <PondActive>no</PondActive>
-        <ReportAdditions>no</ReportAdditions>
-        <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
-          <Name>ResidueTypes</Name>
+          <Name>ResidueTypesList</Name>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
-        <TillageTypes>
-          <Name>TillageTypesList</Name>
-          <TillageType />
-        </TillageTypes>
         <Pools>
           <Pool>
             <PoolName>wheat</PoolName>
             <ResidueType>wheat</ResidueType>
-            <Mass>2000</Mass>
+            <Mass>0</Mass>
             <CNRatio>80</CNRatio>
             <CPRatio>NaN</CPRatio>
             <StandingFraction>0</StandingFraction>
@@ -579,7 +512,7 @@ namespace Models
         </Pools>
         <PoolName>wheat</PoolName>
         <type>wheat</type>
-        <mass>2000</mass>
+        <mass>0</mass>
         <standing_fraction>0</standing_fraction>
         <cpr />
         <cnr>80</cnr>
@@ -596,53 +529,6 @@ namespace Models
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
-      <Operations>
-        <Name>operations</Name>
-        <Operation>
-          <Date>1998-10-02T00:00:00</Date>
-          <Action>[Irrigation].Apply(40);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-10-26T00:00:00</Date>
-          <Action>[Irrigation].Apply(70);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-15T00:00:00</Date>
-          <Action>[Irrigation].Apply(70);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-29T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-30T00:00:00</Date>
-          <Action>[Irrigation].Apply(55);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-01-07T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-01-21T00:00:00</Date>
-          <Action>[Irrigation].Apply(40);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-02-10T00:00:00</Date>
-          <Action>[Irrigation].Apply(28);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-02-19T00:00:00</Date>
-          <Action>[Irrigation].Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-03-09T00:00:00</Date>
-          <Action>[Irrigation].Apply(25);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-29T00:00:00</Date>
-          <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
-        </Operation>
-      </Operations>
       <Report>
         <Name>Report</Name>
         <VariableNames>
@@ -656,7 +542,7 @@ namespace Models
           <string>[ExtraVariables].Script.DeltaSoilOMN</string>
           <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-          <string>[WheatPMFPrototype].Root.NSupply</string>
+          <string>[Maize].Root.NSupply</string>
           <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[ExtraVariables].Script.SWC</string>
@@ -674,32 +560,32 @@ namespace Models
           <string>[ExtraVariables].Script.AccumIrrigation</string>
           <string>[ExtraVariables].Script.AccumOutflowLat</string>
           <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-          <string>[WheatPMFPrototype].Grain.Live.Wt</string>
-          <string>[WheatPMFPrototype].Stem.Live.Wt</string>
-          <string>[WheatPMFPrototype].Spike.Live.N</string>
-          <string>[WheatPMFPrototype].Spike.Live.Wt</string>
-          <string>[WheatPMFPrototype].Grain.Live.N</string>
-          <string>[WheatPMFPrototype].Stem.Live.N</string>
-          <string>[WheatPMFPrototype].Leaf.Live.Wt</string>
-          <string>[WheatPMFPrototype].Root.Live.Wt</string>
-          <string>[WheatPMFPrototype].Leaf.Live.N</string>
-          <string>[WheatPMFPrototype].Root.Live.N</string>
-          <string>[WheatPMFPrototype].Leaf.Live.NConc</string>
-          <string>[WheatPMFPrototype].Root.Live.NConc</string>
-          <string>[WheatPMFPrototype].Root.WaterSupply</string>
-          <string>[WheatPMFPrototype].Root.WaterUptake</string>
-          <string>[WheatPMFPrototype].Leaf.Transpiration</string>
-          <string>[WheatPMFPrototype].Leaf.WaterDemand</string>
-          <string>[WheatPMFPrototype].Root.Depth</string>
-          <string>[WheatPMFPrototype].Leaf.CoverTotal</string>
-          <string>[WheatPMFPrototype].Leaf.CoverDead</string>
-          <string>[WheatPMFPrototype].Leaf.LAI</string>
-          <string>[WheatPMFPrototype].Leaf.Height</string>
-          <string>[WheatPMFPrototype].Leaf.PotentialBiomass.Value</string>
+          <string>[Maize].Grain.Live.Wt</string>
+          <string>[Maize].Stem.Live.Wt</string>
+          <string>[Maize].Spike.Live.N</string>
+          <string>[Maize].Spike.Live.Wt</string>
+          <string>[Maize].Grain.Live.N</string>
+          <string>[Maize].Stem.Live.N</string>
+          <string>[Maize].Leaf.Live.Wt</string>
+          <string>[Maize].Root.Live.Wt</string>
+          <string>[Maize].Leaf.Live.N</string>
+          <string>[Maize].Root.Live.N</string>
+          <string>[Maize].Leaf.Live.NConc</string>
+          <string>[Maize].Root.Live.NConc</string>
+          <string>[Maize].Root.WaterSupply</string>
+          <string>[Maize].Root.WaterUptake</string>
+          <string>[Maize].Leaf.Transpiration</string>
+          <string>[Maize].Leaf.WaterDemand</string>
+          <string>[Maize].Root.Depth</string>
+          <string>[Maize].Leaf.CoverTotal</string>
+          <string>[Maize].Leaf.CoverDead</string>
+          <string>[Maize].Leaf.LAI</string>
+          <string>[Maize].Leaf.Height</string>
+          <string>[Maize].Leaf.PotentialBiomass.Value</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[WheatPMFPrototype].Arbitrator.NDemand</string>
+          <string>[Maize].Arbitrator.NDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -708,67 +594,264 @@ namespace Models
           <string>[ExtraVariables].Script.BiomN</string>
           <string>[ExtraVariables].Script.DltNMinRes</string>
           <string>[ExtraVariables].Script.DltNMinTot</string>
-          <string>[WheatPMFPrototype].Leaf.Fw</string>
-          <string>[WheatPMFPrototype].Leaf.Fn</string>
-          <string>[WheatPMFPrototype].Phenology.CurrentPhaseName</string>
-          <string>[WheatPMFPrototype].Phenology.Stage</string>
+          <string>[Maize].Leaf.Fw</string>
+          <string>[Maize].Leaf.Fn</string>
+          <string>[Maize].Phenology.CurrentPhaseName</string>
+          <string>[Maize].Phenology.Stage</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <Graph>
-        <Name>Nitrogen supply and demand1</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Water (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Title>Length (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Series 0</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>WheatPMFPrototype.Leaf.Live.NConc</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-      </Graph>
-      <Area>0</Area>
+      <Arbitrator>
+        <Name>Arbitrator</Name>
+        <ArbitrationMethod>Old</ArbitrationMethod>
+        <NutrientUptakeMethod>2</NutrientUptakeMethod>
+      </Arbitrator>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
+    <Graph>
+      <Name>Plant Biomass components</Name>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Crop Biomass (g/m2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Leaf</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388608</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.Live.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Stem</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16760704</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Stem.Live.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Tuber</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Grain.Live.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Root</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65281</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Root.Live.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Dead Leaf</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388480</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.Dead.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Dead Step</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Stem.Dead.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Dead Tuber</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Tuber.Dead.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Root Dead</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711681</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Root.Dead.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Above Ground Wt</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8372160</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Summariser.AboveGround.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Below Ground Wt</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777088</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Summariser.BelowGround.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Total Wt</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388608</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Summariser.Total.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
     <Graph>
       <Name>N balance components</Name>
       <Axis>
@@ -789,7 +872,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>AccumPlantN</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -809,7 +892,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumMineralisation</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388353</ColourArgb>
@@ -829,7 +912,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumDenit</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744193</ColourArgb>
@@ -849,7 +932,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumFert</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
@@ -869,7 +952,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumLeach</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -889,7 +972,7 @@ namespace Models
       </Series>
       <Series>
         <Title>DeltaSoilOMN</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
@@ -909,7 +992,7 @@ namespace Models
       </Series>
       <Series>
         <Title>DeltaSurfaceOMN</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -929,7 +1012,7 @@ namespace Models
       </Series>
       <Series>
         <Title>DeltaSoilMineralN</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777152</ColourArgb>
@@ -970,7 +1053,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Pond</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
@@ -990,7 +1073,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumEO</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1010,7 +1093,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumEP</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1030,7 +1113,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumES</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -1050,7 +1133,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumDrainage</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -1070,7 +1153,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumRunoff</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
@@ -1090,7 +1173,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumRainfall</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
@@ -1110,7 +1193,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumIrrigation</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-12582784</ColourArgb>
@@ -1130,7 +1213,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumLatOutFlow</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
@@ -1150,7 +1233,7 @@ namespace Models
       </Series>
       <Series>
         <Title>SoilWaterDeficit</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777056</ColourArgb>
@@ -1163,247 +1246,6 @@ namespace Models
         <Y>
           <TableName>Report</TableName>
           <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Plant Biomass components</Name>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Crop Biomass (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Leaf</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Stem</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16760704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Stem.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Tuber</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Grain.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65281</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Leaf</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388480</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Step</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Stem.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Tuber</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Tuber.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root Dead</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711681</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Above Ground Wt</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8372160</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Summariser.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Below Ground Wt</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777088</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Summariser.BelowGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Total Wt</Title>
-        <Type>Line</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Summariser.Total.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1432,7 +1274,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Leaf</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
@@ -1444,7 +1286,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.Live.N</FieldName>
+          <FieldName>Maize.Leaf.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1452,7 +1294,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Stem</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16760704</ColourArgb>
@@ -1464,7 +1306,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Stem.Live.N</FieldName>
+          <FieldName>Maize.Stem.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1472,7 +1314,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Tuber</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1484,7 +1326,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Tuber.Live.N</FieldName>
+          <FieldName>Maize.Tuber.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1492,7 +1334,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Root</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -1504,7 +1346,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.Live.N</FieldName>
+          <FieldName>Maize.Root.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1512,7 +1354,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Dead Leaf</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388480</ColourArgb>
@@ -1524,7 +1366,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.Dead.N</FieldName>
+          <FieldName>Maize.Leaf.Dead.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1532,7 +1374,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Dead Step</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1544,7 +1386,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Stem.Dead.N</FieldName>
+          <FieldName>Maize.Stem.Dead.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1552,7 +1394,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Dead Tuber</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
@@ -1564,7 +1406,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Tuber.Dead.N</FieldName>
+          <FieldName>Maize.Tuber.Dead.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1572,7 +1414,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Root Dead</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
@@ -1584,7 +1426,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.Dead.N</FieldName>
+          <FieldName>Maize.Root.Dead.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1592,7 +1434,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Above Ground Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372160</ColourArgb>
@@ -1604,7 +1446,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Summariser.AboveGround.N</FieldName>
+          <FieldName>Maize.Summariser.AboveGround.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1612,7 +1454,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Below Ground Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
@@ -1624,7 +1466,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Summariser.BelowGround.N</FieldName>
+          <FieldName>Maize.Summariser.BelowGround.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1632,7 +1474,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Total Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
@@ -1644,7 +1486,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Summariser.Total.N</FieldName>
+          <FieldName>Maize.Summariser.Total.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1652,7 +1494,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Total Live N</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
@@ -1664,7 +1506,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Summariser.TotalLive.N</FieldName>
+          <FieldName>Maize.Summariser.TotalLive.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1701,7 +1543,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Supply</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
@@ -1713,7 +1555,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.WaterSupply</FieldName>
+          <FieldName>Maize.Root.WaterSupply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1721,7 +1563,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Uptake</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
@@ -1733,7 +1575,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.WaterUptake</FieldName>
+          <FieldName>Maize.Root.WaterUptake</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1741,7 +1583,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Demand</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1753,7 +1595,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.WaterDemand</FieldName>
+          <FieldName>Maize.Leaf.WaterDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1761,7 +1603,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Transpiration</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1773,7 +1615,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.Transpiration</FieldName>
+          <FieldName>Maize.Leaf.Transpiration</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1781,7 +1623,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Potential</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -1801,7 +1643,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Root Depth</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -1813,7 +1655,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.Depth</FieldName>
+          <FieldName>Maize.Root.Depth</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1821,7 +1663,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Canopy Height</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-16711936</ColourArgb>
@@ -1833,7 +1675,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.Height</FieldName>
+          <FieldName>Maize.Leaf.Height</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1869,7 +1711,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Cover Dead</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
@@ -1881,7 +1723,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.CoverDead</FieldName>
+          <FieldName>Maize.Leaf.CoverDead</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1889,7 +1731,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Cover Green</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1901,7 +1743,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.CoverGreen</FieldName>
+          <FieldName>Maize.Leaf.CoverGreen</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1909,7 +1751,7 @@ namespace Models
       </Series>
       <Series>
         <Title>CoverTotal</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1921,7 +1763,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.CoverTotal</FieldName>
+          <FieldName>Maize.Leaf.CoverTotal</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1929,7 +1771,7 @@ namespace Models
       </Series>
       <Series>
         <Title>LAI</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
@@ -1941,7 +1783,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.LAI</FieldName>
+          <FieldName>Maize.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1949,7 +1791,7 @@ namespace Models
       </Series>
       <Series>
         <Title>LAI Dead</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -1961,7 +1803,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.LAIDead</FieldName>
+          <FieldName>Maize.Leaf.LAIDead</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1969,7 +1811,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Root depth</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -1981,7 +1823,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.Depth</FieldName>
+          <FieldName>Maize.Root.Depth</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -2018,7 +1860,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
@@ -2030,7 +1872,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Arbitrator.NDemand</FieldName>
+          <FieldName>Maize.Arbitrator.NDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -2038,7 +1880,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Series2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -2050,7 +1892,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Root.NSupply.Uptake</FieldName>
+          <FieldName>Maize.Root.NSupply.Uptake</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -2087,7 +1929,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
@@ -2099,7 +1941,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.Fw</FieldName>
+          <FieldName>Maize.Leaf.Fw</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -2107,7 +1949,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Series2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -2119,7 +1961,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>WheatPMFPrototype.Leaf.Fn</FieldName>
+          <FieldName>Maize.Leaf.Fn</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -2132,5 +1974,9 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>289</ExplorerWidth>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+  </DataStore>
+  <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
