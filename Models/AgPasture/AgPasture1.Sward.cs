@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="AgPasture1.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
+// <copyright file="AgPasture1.Sward.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
 //     Copyright (c) ASPIM initiative. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -119,8 +119,14 @@ namespace Models.AgPasture1
 
 				// partition the demand among species
 				if (isSwardControlled)
+				{
+					double spDemand = 0.0;
 					foreach (PastureSpecies mySpecies in mySward)
-						mySpecies.myWaterDemand = Utility.Math.Divide(swardWaterDemand * mySpecies.AboveGrounLivedWt, AboveGroundLiveWt, 0.0);
+					{
+						spDemand = Utility.Math.Divide(swardWaterDemand * mySpecies.AboveGrounLivedWt, AboveGroundLiveWt, 0.0);
+						mySpecies.PotentialEP = spDemand;
+					}
+				}
 			}
 		}
 
@@ -1668,7 +1674,7 @@ namespace Models.AgPasture1
 					double sumLAI = mySward.Sum(mySpecies => mySpecies.TotalLAI);
 					initialLightExtCoeff = sumLightExtCoeff / sumLAI;
 					foreach (PastureSpecies mySpecies in mySward)
-						mySpecies.plantLightExtCoeff = initialLightExtCoeff;
+						mySpecies.swardLightExtCoeff = initialLightExtCoeff;
 					//// TODO: check whether this should be updated every day
 
 					// tell other modules about the existence of this plant (whole sward)
@@ -1710,7 +1716,7 @@ namespace Models.AgPasture1
 					if (isSwardControlled)
 					{
 						// plant green cover
-						mySpecies.plantGreenCover = GreenCover;
+						mySpecies.swardGreenCover = GreenCover;
 
 						// fraction of light intercepted by each species
 						mySpecies.intRadnFrac = mySpecies.GreenCover / mySward.Sum(aSpecies => aSpecies.GreenCover);
@@ -1817,8 +1823,11 @@ namespace Models.AgPasture1
 					mySpecies.glfWater = waterLimitingFactor;
 				//mySpecies.glfWater = mySpecies.WaterLimitingFactor() * mySpecies.WaterLoggingFactor();
 			}
-			//else
-			//    Water uptake is done by each species or by another apsim module
+			else
+			{ //Water uptake is done by each species or by another apsim module
+				foreach (PastureSpecies mySpecies in mySward)
+					mySpecies.DoWaterCalculations();
+			}
 		}
 
 		/// <summary>Finds out the amount soil water available (consider all mySpecies)</summary>
@@ -2017,8 +2026,11 @@ namespace Models.AgPasture1
 						mySpecies.glfN = 1.0;
 				}
 			}
-			//else
-			//    N uptake is evaluated by the plant mySpecies or some other module
+			else
+			{ // N uptake is evaluated by the plant mySpecies or some other module
+				foreach (PastureSpecies mySpecies in mySward)
+					mySpecies.DoNitrogenCalculations();
+			}
 		}
 
 		/// <summary>
@@ -2153,12 +2165,12 @@ namespace Models.AgPasture1
 						// partition the amount taken up between species, considering amount actually taken up
 						foreach (PastureSpecies mySpecies in mySward)
 						{
-							mySpecies.mySoilUptakeN = new double[nLayers];
+							mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
 							if (swardSoilNuptake > 0.0)
 							{
 								speciesFraction = mySpecies.mySoilNuptake / swardSoilNuptake;
 								for (int layer = 0; layer <= RootFrontier; layer++)
-									mySpecies.mySoilUptakeN[layer] = -(NTakenUp.DeltaNH4[layer] + NTakenUp.DeltaNO3[layer]) * speciesFraction;
+									mySpecies.mySoilNitrogenTakenUp[layer] = -(NTakenUp.DeltaNH4[layer] + NTakenUp.DeltaNO3[layer]) * speciesFraction;
 							}
 						}
 					}
@@ -2192,10 +2204,10 @@ namespace Models.AgPasture1
 							uptakeFraction = Math.Min(1.0, mySpecies.mySoilNuptake / (adjustedNH4Available.Sum() + adjustedNO3Available.Sum()));
 
 							// get the actual amounts taken up from each layer
-							mySpecies.mySoilUptakeN = new double[nLayers];
+							mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
 							for (int layer = 0; layer <= mySpecies.RootFrontier; layer++)
 							{
-								mySpecies.mySoilUptakeN[layer] = (adjustedNH4Available[layer] + adjustedNO3Available[layer]) * uptakeFraction;
+								mySpecies.mySoilNitrogenTakenUp[layer] = (adjustedNH4Available[layer] + adjustedNO3Available[layer]) * uptakeFraction;
 								NTakenUp.DeltaNH4[layer] -= Soil.NH4N[layer] * uptakeFraction;
 								NTakenUp.DeltaNO3[layer] -= Soil.NO3N[layer] * uptakeFraction;
 							}
@@ -2212,7 +2224,7 @@ namespace Models.AgPasture1
 				{
 					// No uptake, just zero out the arrays
 					foreach (PastureSpecies mySpecies in mySward)
-						mySpecies.mySoilUptakeN = new double[nLayers];
+						mySpecies.mySoilNitrogenTakenUp = new double[nLayers];
 				}
 			}
 			else
