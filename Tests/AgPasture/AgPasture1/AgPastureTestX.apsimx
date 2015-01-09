@@ -4275,6 +4275,64 @@ namespace Models
     </Summary>
     <Zone>
       <Name>Field</Name>
+      <Manager>
+        <Name>CutRotation</Name>
+        <Script>
+          <CutRotationStartDate>0001-01-01</CutRotationStartDate>
+          <CutInterval>21</CutInterval>
+          <PastureAmount>1500</PastureAmount>
+        </Script>
+        <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{      
+		[Link] Clock Clock;
+		[Link] AgPasture1.PastureSpecies Pasture;
+		
+		[Description("Date to begin rotation:")]
+		public DateTime CutRotationStartDate {get; set;}
+		[Description("Rotation interval (days):")]
+		public int CutInterval {get; set;}
+		[Description("Residual amount of pasture (kg/ha):")]
+		public double PastureAmount {get; set;}
+		
+		private bool RotationAllowed = true;
+		private int DaysAfterCut { get; set; }
+		
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			DaysAfterCut = 1000;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if(RotationAllowed)
+			{
+				if (Clock.Today.Date >= CutRotationStartDate.Date)
+				{
+					if (DaysAfterCut >= CutInterval)
+					{
+						Pasture.Harvest(type:"SetResidueAmount",amount:PastureAmount);
+						DaysAfterCut = 0;
+					}
+					else
+					{
+						DaysAfterCut += 1;
+					}
+				}
+			}
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -8329,6 +8387,64 @@ namespace Models
     </Summary>
     <Zone>
       <Name>Field</Name>
+      <Manager>
+        <Name>CutRotation</Name>
+        <Script>
+          <CutRotationStartDate>0001-01-01</CutRotationStartDate>
+          <CutInterval>21</CutInterval>
+          <PastureAmount>1500</PastureAmount>
+        </Script>
+        <Code><![CDATA[
+using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{      
+		[Link] Clock Clock;
+		[Link] AgPasture1.PastureSpecies Pasture;
+		
+		[Description("Date to begin rotation:")]
+		public DateTime CutRotationStartDate {get; set;}
+		[Description("Rotation interval (days):")]
+		public int CutInterval {get; set;}
+		[Description("Residual amount of pasture (kg/ha):")]
+		public double PastureAmount {get; set;}
+		
+		private bool RotationAllowed = true;
+		private int DaysAfterCut { get; set; }
+		
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			DaysAfterCut = 1000;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if(RotationAllowed)
+			{
+				if (Clock.Today.Date >= CutRotationStartDate.Date)
+				{
+					if (DaysAfterCut >= CutInterval)
+					{
+						Pasture.Harvest(type:"SetResidueAmount",amount:PastureAmount);
+						DaysAfterCut = 0;
+					}
+					else
+					{
+						DaysAfterCut += 1;
+					}
+				}
+			}
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -11854,7 +11970,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Harvestable</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744193</ColourArgb>
@@ -11874,7 +11990,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Harvested</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -11894,7 +12010,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Digestibility</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-32704</ColourArgb>
@@ -11907,6 +12023,46 @@ namespace Models
           <Y>
             <TableName>Rep01sward</TableName>
             <FieldName>Sward.HerbageDigestibility</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>RyegrassHarvested</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Rep02ryegrass</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Rep02ryegrass</TableName>
+            <FieldName>Sward.Ryegrass.HarvestedWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>WhiteCloverHarvested</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>Sward.WhiteClover.HarvestedWt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -12565,6 +12721,107 @@ namespace Models
     </Summary>
     <Zone>
       <Name>Field</Name>
+      <Manager>
+        <Name>CutRotation</Name>
+        <Script>
+          <CutRotationStartDate>0001-01-01</CutRotationStartDate>
+          <CutInterval>21</CutInterval>
+          <ResidualAmount>1500</ResidualAmount>
+        </Script>
+        <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{      
+		[Link] Clock Clock;
+		//[Link] AgPasture1.PastureSpecies myPasture;
+		[Link] Zone myZone;
+		
+		[Description("Date to begin rotation:")]
+		public DateTime CutRotationStartDate {get; set;}
+		[Description("Rotation interval (days):")]
+		public int CutInterval {get; set;}
+		[Description("Residual amount of pasture (kg/ha):")]
+		public double ResidualAmount {get; set;}
+		
+		public double[] CutResidualWt;
+
+		private bool RotationAllowed = true;
+		private int DaysAfterCut { get; set; }
+		
+		private List<AgPasture1.PastureSpecies> myPasture = new List<AgPasture1.PastureSpecies>();
+
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			DaysAfterCut = 1000;
+			foreach (var plant in Apsim.FindAll(this, typeof(AgPasture1.PastureSpecies)))
+			{
+				myPasture.Add(plant as AgPasture1.PastureSpecies);
+			}
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if(RotationAllowed)
+			{
+				if (Clock.Today.Date >= CutRotationStartDate.Date)
+				{
+					if (DaysAfterCut >= CutInterval)
+					{
+						DoCuttings();
+						DaysAfterCut = 0;
+					}
+					else
+					{
+						DaysAfterCut += 1;
+					}
+				}
+			}
+		}
+		
+		private void DoCuttings()
+		{
+			CutResidualWt = new double[myPasture.Count];
+			double ExistingWt=0.0;
+			double LeftoffWt = 0.0;
+			double[] WtAmount = new double[myPasture.Count];
+			double[] WtMinimum = new double[myPasture.Count];
+			for (int p = 0; p < myPasture.Count; p++)
+			{ // get the existing amount and the minimum Wt
+				WtAmount[p] = myPasture[p].StandingWt;
+				WtMinimum[p] = myPasture[p].MinimumGreenWt + myPasture[p].MinimumDeadWt;
+				ExistingWt += WtAmount[p];
+			}
+			for (int p = 0; p < myPasture.Count; p++)
+			{ // compute residuals for each species (proportional to existing Wt)
+				CutResidualWt[p] = ResidualAmount *(WtAmount[p] / ExistingWt);
+				CutResidualWt[p] = Math.Max(CutResidualWt[p], WtMinimum[p]);
+				LeftoffWt += CutResidualWt[p];
+			}
+			if (LeftoffWt > ResidualAmount)
+			{
+				for (int p = 0;p<myPasture.Count;p++)
+				{ // Increase residual to match amount desired
+					CutResidualWt[p] *= ResidualAmount / LeftoffWt;
+				}
+			}
+
+			for (int p = 0; p < myPasture.Count; p++)
+			{
+				myPasture[p].Harvest(type:"SetResidueAmount",amount:CutResidualWt[p]);
+			}
+		}
+	}
+}
+]]></Code>
+      </Manager>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -13641,6 +13898,7 @@ namespace Models
           <string>Ryegrass.HarvestedFraction</string>
           <string>Ryegrass.HarvestedN</string>
           <string>Ryegrass.HerbageDigestibility</string>
+          <string>[CutRotation].Script.CutResidualWt[0] as RyegrassCutResidual</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
@@ -13740,6 +13998,7 @@ namespace Models
           <string>WhiteClover.HarvestedWt</string>
           <string>WhiteClover.HarvestedFraction</string>
           <string>WhiteClover.HarvestedN</string>
+          <string>[CutRotation].Script.CutResidualWt[1] as WhiteCloverCutResidual</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
@@ -13792,88 +14051,6 @@ namespace Models
         </EventNames>
       </Report>
       <Graph>
-        <Name>PlantWt</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>DM (kg/ha)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Top</Type>
-          <Title>Volumetric water (mm/mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>TotalPlantWt</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Rep02ryegrass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Rep02ryegrass</TableName>
-            <FieldName>Ryegrass.TotalWt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AboveGroundWt</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Rep02ryegrass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Rep02ryegrass</TableName>
-            <FieldName>Ryegrass.AboveGroundWt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>BelowGroundWt</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Rep02ryegrass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Rep02ryegrass</TableName>
-            <FieldName>Ryegrass.BelowGroundWt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
         <Name>SpeciesWt</Name>
         <Axis>
           <Type>Left</Type>
@@ -13892,27 +14069,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>TotalPlantWt</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Rep02ryegrass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Rep02ryegrass</TableName>
-            <FieldName>Ryegrass.TotalWt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>RyegrassTotal</Title>
+          <Title>RyegrassPlantWt</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -13925,7 +14082,7 @@ namespace Models
           </X>
           <Y>
             <TableName>Rep02ryegrass</TableName>
-            <FieldName>Sward.Ryegrass.TotalWt</FieldName>
+            <FieldName>Ryegrass.TotalWt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -13945,7 +14102,87 @@ namespace Models
           </X>
           <Y>
             <TableName>Rep02ryegrass</TableName>
-            <FieldName>Sward.Ryegrass.AboveGroundWt</FieldName>
+            <FieldName>Ryegrass.AboveGroundWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>CloverTotal</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>WhiteClover.TotalWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>CloverAbvGround</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16711936</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Dash</Line>
+          <X>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>WhiteClover.AboveGroundWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>RyegrassBlwGround</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Dot</Line>
+          <X>
+            <TableName>Rep02ryegrass</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Rep02ryegrass</TableName>
+            <FieldName>Ryegrass.BelowGroundWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>WhiteCloverBlwGround</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8355840</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Dot</Line>
+          <X>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>WhiteClover.BelowGroundWt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -14000,7 +14237,7 @@ namespace Models
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
-          <Title>Harvested</Title>
+          <Title>RyegrassHarvested</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -14034,6 +14271,26 @@ namespace Models
           <Y>
             <TableName>Rep02ryegrass</TableName>
             <FieldName>Ryegrass.HerbageDigestibility</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>CloverHarvested</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Rep03whiteclover</TableName>
+            <FieldName>WhiteClover.HarvestedWt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
