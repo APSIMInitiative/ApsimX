@@ -138,8 +138,6 @@ namespace Models.PMF.Phen
         #endregion
 
         #region Parameters
-        /// <summary>The stage code</summary>
-        [Link] public Function StageCode = null;
         /// <summary>The thermal time</summary>
         [Link] public Function ThermalTime = null;
 

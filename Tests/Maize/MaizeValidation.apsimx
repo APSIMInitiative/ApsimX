@@ -1401,7 +1401,7 @@ namespace Models
             <string>[Maize].Summariser.AboveGroundLive.Wt</string>
             <string>[Maize].Summariser.Total.N</string>
             <string>[Maize].Summariser.Total.Wt</string>
-            <string>[Maize].Phenology.StageCode.Value</string>
+            <string>[Maize].Phenology.Stage</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -1588,7 +1588,7 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>Maize.Phenology.StageCode.Value</FieldName>
+            <FieldName>Maize.Phenology.Stage</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>

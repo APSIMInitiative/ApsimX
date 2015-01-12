@@ -93,28 +93,6 @@
 	</Cultivar>
 	<Phenology>
 		<Name>Phenology</Name>
-		<StageBasedInterpolation>
-			<Name>StageCode</Name>
-			<Stages>
-				<string>Planting</string>
-				<string>Peeping</string>
-				<string>Emergence</string>
-				<string>TuberInitiation</string>
-				<string>FinalLeaf</string>
-				<string>FullSenescence</string>
-				<string>Maturity</string>
-			</Stages>
-			<Codes>
-				<double>1</double>
-				<double>2</double>
-				<double>3</double>
-				<double>4</double>
-				<double>5</double>
-				<double>6</double>
-				<double>7</double>
-			</Codes>
-			<Proportional>true</Proportional>
-		</StageBasedInterpolation>
 		<AirTemperatureFunction>
 			<Name>ThermalTime</Name>
 			<XYPairs>
@@ -518,7 +496,7 @@
 			<Name>DMDemandFunction</Name>
 			<LinearInterpolationFunction>
 				<Name>PotentialGrowthIncrement</Name>
-				<XProperty>[Phenology].StageCode.Value</XProperty>
+				<XProperty>[Phenology].Stage</XProperty>
 				<XYPairs>
 					<Name>XYPairs</Name>
 					<X>
@@ -580,7 +558,7 @@
 		</PotentialSizeDemandFunction>
 		<LinearInterpolationFunction>
 			<Name>DryMatterContent</Name>
-			<XProperty>[Phenology].StageCode.Value</XProperty>
+			<XProperty>[Phenology].Stage</XProperty>
 			<XYPairs>
 				<Name>XYPairs</Name>
 				<X>
@@ -595,7 +573,7 @@
 		</LinearInterpolationFunction>
 		<LinearInterpolationFunction>
 			<Name>MaximumNConc</Name>
-			<XProperty>[Phenology].StageCode.Value</XProperty>
+			<XProperty>[Phenology].Stage</XProperty>
 			<XYPairs>
 				<Name>XYPairs</Name>
 				<X>
@@ -614,7 +592,7 @@
 		</LinearInterpolationFunction>
 		<LinearInterpolationFunction>
 			<Name>MinimumNConc</Name>
-			<XProperty>[Phenology].StageCode.Value</XProperty>
+			<XProperty>[Phenology].Stage</XProperty>
 			<XYPairs>
 				<Name>XYPairs</Name>
 				<X>
@@ -1186,7 +1164,7 @@
 		</InternodeDemandFunction>
 		<LinearInterpolationFunction>
 			<Name>MaximumNConc</Name>
-			<XProperty>[Phenology].StageCode.Value</XProperty>
+			<XProperty>[Phenology].Stage</XProperty>
 			<XYPairs>
 				<Name>XYPairs</Name>
 				<X>

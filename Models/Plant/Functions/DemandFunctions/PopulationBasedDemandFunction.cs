@@ -51,7 +51,7 @@ namespace Models.PMF.Functions.DemandFunctions
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
-            if ((Phenology.StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+            if ((Phenology.Stage >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
             {
                 ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration - AccumulatedThermalTime);
                 AccumulatedThermalTime += ThermalTimeToday;
@@ -66,7 +66,7 @@ namespace Models.PMF.Functions.DemandFunctions
             get
             {
                 double Value = 0.0;
-                if ((Phenology.StageCode.Value >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+                if ((Phenology.Stage >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
                 {
                     double Rate = MaximumOrganWt / GrowthDuration;
                     Value = Rate * ThermalTimeToday * Structure.TotalStemPopn;

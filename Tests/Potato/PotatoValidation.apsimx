@@ -763,7 +763,7 @@ namespace Models
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Potato.Phenology.StageCode.Value >= 3)
+			if (Potato.Phenology.Stage >= 3)
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
@@ -2391,7 +2391,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -2519,7 +2519,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -2647,7 +2647,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -2765,7 +2765,8 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.Stage</string>
+            <string>Potato.Phenology.Stage</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -4554,7 +4555,7 @@ namespace Models
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Potato.Phenology.StageCode.Value >= 3)
+			if (Potato.Phenology.Stage >= 3)
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
@@ -6182,7 +6183,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -6310,7 +6311,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -6438,7 +6439,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -6556,7 +6557,7 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.Stage</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -6846,7 +6847,7 @@ namespace Models
                     FinalTag = "yield";
 					ReadyForHarvest = true;
                 }
-                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+                if((Potato.Phenology.Stage>=7)&&(Harvested==false))
 				{
 					FinalTag = "yield";
 					ReadyForHarvest = true;
@@ -8499,7 +8500,7 @@ namespace Models
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Potato.Phenology.StageCode.Value >= 3)
+			if (Potato.Phenology.Stage >= 3)
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
@@ -10127,7 +10128,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -10255,7 +10256,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -10383,7 +10384,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -10501,7 +10502,7 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.Stage</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -10718,7 +10719,7 @@ namespace Models
                     FinalTag = "yield";
 					ReadyForHarvest = true;
                 }
-                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+                if((Potato.Phenology.Stage>=7)&&(Harvested==false))
 				{
 					FinalTag = "yield";
 					ReadyForHarvest = true;
@@ -12439,7 +12440,7 @@ namespace Models
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Potato.Phenology.StageCode.Value >= 3)
+			if (Potato.Phenology.Stage >= 3)
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
@@ -12468,7 +12469,7 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.Stage</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -14249,7 +14250,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -14377,7 +14378,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -14505,7 +14506,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -16455,7 +16456,7 @@ namespace Models
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Potato.Phenology.StageCode.Value >= 3)
+			if (Potato.Phenology.Stage >= 3)
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
@@ -16485,7 +16486,7 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.Stage</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -18208,7 +18209,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -18336,7 +18337,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -18464,7 +18465,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -18665,7 +18666,7 @@ namespace Models
                     FinalTag = "yield";
 					ReadyForHarvest = true;
                 }
-                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+                if((Potato.Phenology.Stage>=7)&&(Harvested==false))
 				{
 					FinalTag = "yield";
 					ReadyForHarvest = true;
@@ -20256,7 +20257,7 @@ namespace Models
                     FinalTag = "yield";
 					ReadyForHarvest = true;
                 }
-                if((Potato.Phenology.StageCode.Value>=7)&&(Harvested==false))
+                if((Potato.Phenology.Stage>=7)&&(Harvested==false))
 				{
 					FinalTag = "yield";
 					ReadyForHarvest = true;
@@ -21136,7 +21137,7 @@ namespace Models
 			
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
-			if (Potato.Phenology.StageCode.Value >= 3)
+			if (Potato.Phenology.Stage >= 3)
 			AccumTtemerg += Potato.Phenology.ThermalTime.Value;
 		}
 		
@@ -21166,7 +21167,7 @@ namespace Models
             <string>[Clock].Today</string>
             <string>[ExtraVariables].Script.AccumTtemerg</string>
             <string>Potato.Phenology.CurrentPhaseName</string>
-            <string>Potato.Phenology.StageCode.Value</string>
+            <string>Potato.Phenology.Stage</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumMineralisation</string>
             <string>[ExtraVariables].Script.AccumDenit</string>
@@ -22889,7 +22890,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -23017,7 +23018,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>
@@ -23145,7 +23146,7 @@ namespace Models
               </X>
               <Y>
                 <TableName>Report</TableName>
-                <FieldName>Potato.Phenology.StageCode.Value</FieldName>
+                <FieldName>Potato.Phenology.Stage</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>false</ShowInLegend>

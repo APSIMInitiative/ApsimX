@@ -12,36 +12,6 @@
 	</OrganArbitrator>
 	<Phenology>
 		<Name>Phenology</Name>
-		<StageBasedInterpolation>
-			<Name>StageCode</Name>
-			<Stages>
-				<string>Sowing</string>
-				<string>Germination</string>
-				<string>Emergence</string>
-				<string>End_Juvenile</string>
-				<string>Floral_Initiation</string>
-				<string>Flag_Leaf</string>
-				<string>Flowering</string>
-				<string>StartGrainFill</string>
-				<string>EndGrainFill</string>
-				<string>Maturity</string>
-				<string>HarvestRipe</string>
-			</Stages>
-			<Codes>
-				<double>1</double>
-				<double>2</double>
-				<double>3</double>
-				<double>4</double>
-				<double>5</double>
-				<double>6</double>
-				<double>7</double>
-				<double>8</double>
-				<double>9</double>
-				<double>10</double>
-				<double>11</double>
-			</Codes>
-			<Proportional>true</Proportional>
-		</StageBasedInterpolation>
 		<MultiplyFunction>
 			<Name>ThermalTime</Name>
 			<PhaseLookup>
@@ -351,7 +321,7 @@
 			<Name>Height</Name>
 			<LinearInterpolationFunction>
 				<Name>PotentialHeight</Name>
-				<XProperty>[Phenology].StageCode.Value</XProperty>
+				<XProperty>[Phenology].Stage</XProperty>
 				<XYPairs>
 					<Name>XYPairs</Name>
 					<X>
@@ -646,7 +616,7 @@
 		</Constant>
 		<LinearInterpolationFunction>
 			<Name>PartitionFraction</Name>
-			<XProperty>[Phenology].StageCode.Value</XProperty>
+			<XProperty>[Phenology].Stage</XProperty>
 			<XYPairs>
 				<Name>XYPairs</Name>
 				<X>
@@ -1333,7 +1303,7 @@
 		</Constant>
 		<LinearInterpolationFunction>
 			<Name>MaximumNConc</Name>
-			<XProperty>[Phenology].StageCode.Value</XProperty>
+			<XProperty>[Phenology].Stage</XProperty>
 			<XYPairs>
 				<Name>XYPairs</Name>
 				<X>
@@ -1383,7 +1353,7 @@
 				</VariableReference>
 				<LinearInterpolationFunction>
 					<Name>PotentialInternodeWt</Name>
-					<XProperty>[Phenology].StageCode.Value</XProperty>
+					<XProperty>[Phenology].Stage</XProperty>
 					<XYPairs>
 						<Name>XYPairs</Name>
 						<X>

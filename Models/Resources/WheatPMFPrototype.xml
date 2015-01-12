@@ -245,34 +245,6 @@
 				<Twilight>-6</Twilight>
 			</PhotoperiodFunction>
 		</VernalisationCW>
-		<StageBasedInterpolation>
-			<Name>StageCode</Name>
-			<Stages>
-				<string>Sowing</string>
-				<string>Germination</string>
-				<string>Emergence</string>
-				<string>TerminalSpikelet</string>
-				<string>FlagLeaf</string>
-				<string>Flowering</string>
-				<string>StartGrainFill</string>
-				<string>EndGrainFill</string>
-				<string>Maturity</string>
-				<string>HarvestRipe</string>
-			</Stages>
-			<Codes>
-				<double>1</double>
-				<double>2</double>
-				<double>3</double>
-				<double>4</double>
-				<double>5</double>
-				<double>6</double>
-				<double>7</double>
-				<double>8</double>
-				<double>9</double>
-				<double>10</double>
-			</Codes>
-			<Proportional>true</Proportional>
-		</StageBasedInterpolation>
 	</Phenology>
 	<Structure>
 		<Name>Structure</Name>
@@ -327,7 +299,7 @@
 			<Name>HeightModel</Name>
 			<LinearInterpolationFunction>
 				<Name>PotentialHeight</Name>
-				<XProperty>[Phenology].StageCode.Value</XProperty>
+				<XProperty>[Phenology].Stage</XProperty>
 				<XYPairs>
 					<Name>XYPairs</Name>
 					<X>
@@ -1225,7 +1197,7 @@
 				<Name>NodeNumberLimitedDemand</Name>
 				<LinearInterpolationFunction>
 					<Name>SpecificStemDensityMax</Name>
-					<XProperty>[Phenology].StageCode.Value</XProperty>
+					<XProperty>[Phenology].Stage</XProperty>
 					<XYPairs>
 						<Name>XYPairs</Name>
 						<X>
@@ -1271,7 +1243,7 @@
 		</Constant>
 		<LinearInterpolationFunction>
 			<Name>MaximumNConc</Name>
-			<XProperty>[Phenology].StageCode.Value</XProperty>
+			<XProperty>[Phenology].Stage</XProperty>
 			<XYPairs>
 				<Name>XYPairs</Name>
 				<X>
