@@ -242,7 +242,7 @@
       </Memo>
       <Weather>
         <Name>Weather</Name>
-        <FileName>C:\ApsimX\Examples\WeatherFiles\lincoln.met</FileName>
+        <FileName>%root%\Tests\Maize\lincoln.met</FileName>
       </Weather>
       <Clock>
         <Name>clock</Name>
