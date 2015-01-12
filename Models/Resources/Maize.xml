@@ -1290,7 +1290,7 @@
 		</LinearInterpolationFunction>
 	</GenericAboveGroundOrgan>
 	<GenericAboveGroundOrgan>
-		<Name>Internodes</Name>
+		<Name>Stem</Name>
 		<Biomass>
 			<Name>Live</Name>
 		</Biomass>
@@ -1393,8 +1393,8 @@
 			<Propertys>
 				<string>[Leaf].Live</string>
 				<string>[Leaf].Dead</string>
-				<string>[Internodes].Live</string>
-				<string>[Internodes].Dead</string>
+				<string>[Stem].Live</string>
+				<string>[Stem].Dead</string>
 				<string>[Husk].Live</string>
 				<string>[Husk].Dead</string>
 				<string>[Grain].Live</string>
@@ -1417,8 +1417,8 @@
 			<Propertys>
 				<string>[Leaf].Live</string>
 				<string>[Leaf].Dead</string>
-				<string>[Internodes].Live</string>
-				<string>[Internodes].Dead</string>
+				<string>[Stem].Live</string>
+				<string>[Stem].Dead</string>
 				<string>[Husk].Live</string>
 				<string>[Husk].Dead</string>
 				<string>[Grain].Live</string>
@@ -1435,7 +1435,7 @@
 			<Name>TotalLive</Name>
 			<Propertys>
 				<string>[Leaf].Live</string>
-				<string>[Internodes].Live</string>
+				<string>[Stem].Live</string>
 				<string>[Husk].Live</string>
 				<string>[Grain].Live</string>
 				<string>[Rachis].Live</string>
@@ -1447,7 +1447,7 @@
 			<Name>TotalDead</Name>
 			<Propertys>
 				<string>[Leaf].Dead</string>
-				<string>[Internodes].Dead</string>
+				<string>[Stem].Dead</string>
 				<string>[Husk].Dead</string>
 				<string>[Grain].Dead</string>
 				<string>[Rachis].Dead</string>
@@ -1466,7 +1466,7 @@
 		<CompositeBiomass>
 			<Name>StemLive</Name>
 			<Propertys>
-				<string>[Internodes].Live</string>
+				<string>[Stem].Live</string>
 				<string>[Tastle].Live</string>
 			</Propertys>
 		</CompositeBiomass>
@@ -1474,7 +1474,7 @@
 			<Name>AboveGroundLive</Name>
 			<Propertys>
 				<string>[Leaf].Live</string>
-				<string>[Internodes].Live</string>
+				<string>[Stem].Live</string>
 				<string>[Husk].Live</string>
 				<string>[Grain].Live</string>
 				<string>[Rachis].Live</string>
@@ -1485,7 +1485,7 @@
 			<Name>AboveGroundDead</Name>
 			<Propertys>
 				<string>[Leaf].Dead</string>
-				<string>[Internodes].Dead</string>
+				<string>[Stem].Dead</string>
 				<string>[Husk].Dead</string>
 				<string>[Grain].Dead</string>
 				<string>[Rachis].Dead</string>

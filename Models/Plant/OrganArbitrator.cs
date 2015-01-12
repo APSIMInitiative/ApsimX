@@ -228,6 +228,7 @@ namespace Models.PMF
 
         /// <summary>Gets the dm supply.</summary>
         /// <value>The dm supply.</value>
+        [XmlIgnore]
         public double DMSupply
         {
             get
@@ -236,8 +237,27 @@ namespace Models.PMF
             }
         }
 
+        [XmlIgnore]
+        public double DMDemand
+        {
+            get
+            {
+                return DM.TotalPlantDemand;
+            }
+        }
+
+        [XmlIgnore]
+        public double DMAllocated
+        {
+            get
+            {
+                return DM.TotalAllocated;
+            }
+        }
+
         /// <summary>Gets the n demand.</summary>
         /// <value>The n demand.</value>
+        [XmlIgnore]
         public double NDemand
         {
             get

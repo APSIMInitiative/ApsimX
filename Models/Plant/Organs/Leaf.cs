@@ -464,6 +464,8 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the size of the cohort.</summary>
         /// <value>The size of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
         public double[] CohortSize
         {
             get
