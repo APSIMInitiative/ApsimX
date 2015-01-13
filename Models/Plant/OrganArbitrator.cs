@@ -174,6 +174,9 @@ namespace Models.PMF
             /// <summary>Gets or sets the sink limitation.</summary>
             /// <value>The sink limitation.</value>
             public double SinkLimitation { get; set; }
+            /// <summary>Gets or sets the limitation due to nutrient shortage</summary>
+            /// <value>The nutrient limitation.</value>
+            public double NutrientLimitation { get; set; }
             //Error checking variables
             /// <summary>Gets or sets the start.</summary>
             /// <value>The start.</value>
@@ -309,7 +312,7 @@ namespace Models.PMF
         }
 
 
-        /// <summary>Does the water limited dm allocations.</summary>
+        /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply</summary>
         /// <param name="Organs">The organs.</param>
         public void DoWaterLimitedDMAllocations(Organ[] Organs)
         {
@@ -347,6 +350,8 @@ namespace Models.PMF
         public void DoNutrientLimitedGrowth(Organ[] Organs)
         {
             //Work out how much DM can be assimilated by each organ based on the most limiting nutrient
+            DoNutrientConstrainedDMAllocation(Organs);
+            //Tell each organ how DM they are getting folling allocation
             SendDMAllocations(Organs);
             //Tell each organ how much nutrient they are getting following allocaition
             SendNutrientAllocations(Organs);
@@ -371,7 +376,7 @@ namespace Models.PMF
                 DM.FixationSupply[i] = Supply.Fixation;
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
             DM.Start += Organs[i].Live.Wt + Organs[i].Dead.Wt;
-        }
+            }
 
             DM.TotalReallocationSupply = Utility.Math.Sum(DM.ReallocationSupply);
             DM.TotalUptakeSupply = Utility.Math.Sum(DM.UptakeSupply);
@@ -404,8 +409,10 @@ namespace Models.PMF
             DM.TotalStructuralAllocation = 0;
             DM.TotalMetabolicAllocation = 0;
             DM.TotalNonStructuralAllocation = 0;
+            DM.SinkLimitation = 0;
+            DM.NutrientLimitation = 0;
 
-            //Set relative N demands of each organ
+            //Set relative DM demands of each organ
             for (int i = 0; i < Organs.Length; i++)
             {
                 if (DM.TotalStructuralDemand > 0)
@@ -507,7 +514,6 @@ namespace Models.PMF
                     BAT.RelativeNonStructuralDemand[i] = BAT.NonStructuralDemand[i] / BAT.TotalNonStructuralDemand;
             }
         }
-
         /// <summary>Does the nutrient uptake set up.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -524,7 +530,6 @@ namespace Models.PMF
         
             BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
         }
-
         /// <summary>Does the re allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -702,9 +707,9 @@ namespace Models.PMF
                 }
             }
         }
-        /// <summary>Sends the dm allocations.</summary>
+        /// <summary>Determines Nutrient limitations to DM allocations</summary>
         /// <param name="Organs">The organs.</param>
-        virtual public void SendDMAllocations(Organ[] Organs)
+        virtual public void DoNutrientConstrainedDMAllocation(Organ[] Organs)
         {
             for (int i = 0; i < Organs.Length; i++)
                 N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.NonStructuralAllocation[i];
@@ -733,7 +738,11 @@ namespace Models.PMF
                     DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * proportion);
                 }
             }
-
+        }
+        /// <summary>Sends the dm allocations.</summary>
+        /// <param name="Organs">The organs.</param>
+        virtual public void SendDMAllocations(Organ[] Organs)
+        {
             // Send DM allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
             {
