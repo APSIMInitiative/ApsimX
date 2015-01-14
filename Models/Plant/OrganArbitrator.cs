@@ -167,7 +167,7 @@ namespace Models.PMF
             public double[] TotalAllocation { get; set; }
             /// <summary>Gets or sets the total allocated.</summary>
             /// <value>The total allocated.</value>
-            public double TotalAllocated { get; set; }
+            public double Allocated { get; set; }
             /// <summary>Gets or sets the not allocated.</summary>
             /// <value>The not allocated.</value>
             public double NotAllocated { get; set; }
@@ -236,7 +236,19 @@ namespace Models.PMF
         {
             get
             {
-                return DM.TotalFixationSupply;
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.TotalFixationSupply;
+                        else return 0;
+                    }
+                    else
+                        return 0.0;
+                }
+                else
+                    return 0.0;
             }
         }
 
@@ -245,7 +257,19 @@ namespace Models.PMF
         {
             get
             {
-                return DM.TotalPlantDemand;
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.TotalPlantDemand;
+                        else return 0;
+                    }
+                    else
+                        return 0.0;
+                }
+                else
+                    return 0.0;
             }
         }
 
@@ -254,7 +278,61 @@ namespace Models.PMF
         {
             get
             {
-                return DM.TotalAllocated;
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.Allocated;
+                        else return 0;
+                    }
+                    else
+                        return 0.0;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+        [XmlIgnore]
+        public double DMSinkLimitation
+        {
+            get
+            {
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.SinkLimitation;
+                        else return 0;
+                    }
+                    else
+                        return 0.0;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+        [XmlIgnore]
+        public double DMNutrientLimitation
+        {
+            get
+            {
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.NutrientLimitation;
+                        else return 0;
+                    }
+                    else
+                        return 0.0;
+                }
+                else
+                    return 0.0;
             }
         }
 
@@ -267,14 +345,14 @@ namespace Models.PMF
             {
                 if (Plant.PlantInGround)
                 {
-                    //if (Plant.Phenology != null)
-                    //{
-                    //    if (Plant.Phenology.Emerged == true)
-                            return N.TotalPlantDemand;
-                    //    else return 0;
-                    //}
-                    //else
-                    //return 0.0;
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                          return N.TotalPlantDemand;
+                        else return 0;
+                    }
+                    else
+                    return 0.0;
                 }
                 else
                     return 0.0;
@@ -409,6 +487,7 @@ namespace Models.PMF
             DM.TotalStructuralAllocation = 0;
             DM.TotalMetabolicAllocation = 0;
             DM.TotalNonStructuralAllocation = 0;
+            DM.Allocated = 0;
             DM.SinkLimitation = 0;
             DM.NutrientLimitation = 0;
 
@@ -429,13 +508,14 @@ namespace Models.PMF
         virtual public void SendPotentialDMAllocations(Organ[] Organs)
         {
             //  Allocate to meet Organs demands
-            DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalReallocationSupply - DM.TotalAllocated);
             DM.TotalStructuralAllocation = Utility.Math.Sum(DM.StructuralAllocation);
             DM.TotalMetabolicAllocation = Utility.Math.Sum(DM.MetabolicAllocation);
             DM.TotalNonStructuralAllocation = Utility.Math.Sum(DM.NonStructuralAllocation);
-
+            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
+            DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalRetranslocationSupply - DM.Allocated);
+            
             // Then check it all adds up
-            DM.BalanceError = Math.Abs((DM.TotalAllocated + DM.SinkLimitation) - (DM.TotalFixationSupply + DM.TotalReallocationSupply));
+            DM.BalanceError = Math.Abs((DM.Allocated + DM.SinkLimitation) - (DM.TotalFixationSupply + DM.TotalRetranslocationSupply));
             if (DM.BalanceError > 0.00001 & DM.TotalStructuralDemand > 0)
                 throw new Exception("Mass Balance Error in Photosynthesis DM Allocation");
 
@@ -624,7 +704,7 @@ namespace Models.PMF
             double BiomassFixed = 0;
             if (BAT.TotalFixationSupply > 0.00000000001)
             {
-                // Calculate how much fixation N each demanding organ is allocated based on relative demands
+                // Calculate how much fixed resource each demanding organ is allocated based on relative demands
                 if (string.Compare(Option, "RelativeAllocation", true) == 0)
                     RelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
                 if (string.Compare(Option, "PriorityAllocation", true) == 0)
@@ -632,7 +712,7 @@ namespace Models.PMF
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
 
-                // Then calculate how much N is fixed from each supplying organ based on relative fixation supply
+                // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
                 if (BiomassFixed > 0)
                 {
                     for (int i = 0; i < Organs.Length; i++)
@@ -711,6 +791,7 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         virtual public void DoNutrientConstrainedDMAllocation(Organ[] Organs)
         {
+            double PreNStressDMAllocation = DM.Allocated;
             for (int i = 0; i < Organs.Length; i++)
                 N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.NonStructuralAllocation[i];
 
@@ -728,7 +809,6 @@ namespace Models.PMF
             }
 
             // Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation
-            //NutrientLimitatedWtAllocation = 0;
             for (int i = 0; i < Organs.Length; i++)
             {
                 if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
@@ -738,6 +818,12 @@ namespace Models.PMF
                     DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * proportion);
                 }
             }
+            //Recalculated DM Allocation totals
+            DM.TotalStructuralAllocation = Utility.Math.Sum(DM.StructuralAllocation);
+            DM.TotalMetabolicAllocation = Utility.Math.Sum(DM.MetabolicAllocation);
+            DM.TotalNonStructuralAllocation = Utility.Math.Sum(DM.NonStructuralAllocation);
+            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
+            DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }
         /// <summary>Sends the dm allocations.</summary>
         /// <param name="Organs">The organs.</param>
@@ -826,7 +912,7 @@ namespace Models.PMF
         private void RelativeAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
-            ////allocate to structural and metabolic N first
+            ////allocate to structural and metabolic Biomass first
             for (int i = 0; i < Organs.Length; i++)
             {
                 double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
@@ -842,7 +928,7 @@ namespace Models.PMF
                     TotalAllocated += (StructuralAllocation + MetabolicAllocation);
                 }
             }
-            // Second time round if there is still N to allocate let organs take N up to their Maximum
+            // Second time round if there is still Biomass to allocate let organs take N up to their Maximum
             for (int i = 0; i < Organs.Length; i++)
             {
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
