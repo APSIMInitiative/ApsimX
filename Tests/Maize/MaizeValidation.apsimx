@@ -5384,7 +5384,7 @@ namespace Models
           <string>[Maize].Phenology.Stage</string>
           <string>[Maize].Leaf.ExpandedCohortNo</string>
           <string>[Maize].Leaf.AppearedCohortNo</string>
-          <string>[Maize].Leaf.CohortArea[1:10]</string>
+          <string>[Maize].Leaf.CohortArea[1:30]</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -5424,7 +5424,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(1)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5444,7 +5444,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(2)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5464,7 +5464,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(3)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5484,7 +5484,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(4)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(4)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5504,7 +5504,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(5)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(5)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5524,7 +5524,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(6)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(6)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5544,7 +5544,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(7)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(7)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5564,7 +5564,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(8)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(8)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5584,7 +5584,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(9)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(9)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -5604,7 +5604,247 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Maize.Leaf.CohortArea1:10(10)</FieldName>
+          <FieldName>Maize.Leaf.CohortArea1:30(10)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>11</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(11)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>12</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(12)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>13</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(13)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>14</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(14)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>15</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388353</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(15)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>16</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711681</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(16)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>17</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8372160</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(17)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>18</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(18)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>19</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(19)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>20</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(20)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>21</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(20)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>22</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-256</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.CohortArea1:30(21)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
