@@ -7345,6 +7345,10 @@ namespace Models
           <string>[Maize].Leaf.ExpandedCohortNo</string>
           <string>[Maize].Leaf.AppearedCohortNo</string>
           <string>[Maize].Leaf.CohortArea[1:30]</string>
+          <string>[Maize].Leaf.InitialLeafValues.GrowthDuration.Value</string>
+          <string>[Maize].Leaf.InitialLeafValues.LagDuration.Value</string>
+          <string>[Maize].Leaf.InitialLeafValues.SenescenceDuration.Value</string>
+          <string>[Maize].Structure.MainStemNodeAppearanceRate.Value</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -7935,8 +7939,109 @@ namespace Models
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
     </Graph>
+    <Graph>
+      <Name>LeafParameters</Name>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Leaf Tips (n)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Growth Duration</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388608</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.InitialLeafValues.GrowthDuration.Value</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>LagDuration</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.InitialLeafValues.LagDuration.Value</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Senescence Duration</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Leaf.InitialLeafValues.SenescenceDuration.Value</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Phyllochron</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Structure.MainStemNodeAppearanceRate.Value</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>418</ExplorerWidth>
+  <ExplorerWidth>420</ExplorerWidth>
 </Simulations>

@@ -393,6 +393,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Maize.xml" />
+    <None Include="Resources\MCSP.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>

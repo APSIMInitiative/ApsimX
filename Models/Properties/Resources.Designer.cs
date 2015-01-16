@@ -88,6 +88,35 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;Plant&gt;
+        ///	&lt;Name&gt;MCSP&lt;/Name&gt;
+        ///	&lt;CropType&gt;Maize&lt;/CropType&gt;
+        ///	&lt;OrganArbitrator&gt;
+        ///		&lt;NArbitrationOption&gt;RelativeAllocation&lt;/NArbitrationOption&gt;
+        ///		&lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
+        ///	&lt;/OrganArbitrator&gt;
+        ///	&lt;Phenology&gt;
+        ///		&lt;Name&gt;Phenology&lt;/Name&gt;
+        ///		&lt;AirTemperatureFunction&gt;
+        ///			&lt;Name&gt;ThermalTime&lt;/Name&gt;
+        ///			&lt;XYPairs&gt;
+        ///				&lt;Name&gt;XYPairs&lt;/Name&gt;
+        ///				&lt;X&gt;
+        ///					&lt;double&gt;0&lt;/double&gt;
+        ///					&lt;double&gt;30&lt;/double&gt;
+        ///					&lt;double&gt;40&lt;/double&gt;
+        ///				&lt;/X&gt;
+        ///				&lt;Y&gt;
+        ///					&lt;double&gt;0&lt;/double&gt;
+        ///					&lt;double&gt;30&lt;/d [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string MCSP {
+            get {
+                return ResourceManager.GetString("MCSP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;OilPalm&gt;
         ///  &lt;Name&gt;OilPalm&lt;/Name&gt;
         ///  &lt;Cultivar&gt;
