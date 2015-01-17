@@ -591,9 +591,9 @@ namespace Models.PMF
             BAT.TotalNonStructuralDemand = Utility.Math.Sum(BAT.NonStructuralDemand);
             BAT.TotalPlantDemand = BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand;
 
-            DM.TotalStructuralAllocation = 0;
-            DM.TotalMetabolicAllocation = 0;
-            DM.TotalNonStructuralAllocation = 0;
+            BAT.TotalStructuralAllocation = 0;
+            BAT.TotalMetabolicAllocation = 0;
+            BAT.TotalNonStructuralAllocation = 0;
 
             //Set relative N demands of each organ
             for (int i = 0; i < Organs.Length; i++)
