@@ -280,13 +280,13 @@
 						<Name>XYPairs</Name>
 						<X>
 							<double>1</double>
-							<double>11</double>
-							<double>11.1</double>
+							<double>3.4</double>
+							<double>4</double>
 						</X>
 						<Y>
-							<double>65</double>
-							<double>65</double>
-							<double>36</double>
+							<double>40</double>
+							<double>40</double>
+							<double>46</double>
 						</Y>
 					</XYPairs>
 				</LinearInterpolationFunction>
@@ -295,27 +295,18 @@
 		<MainStemFinalNodeNumberFunction>
 			<Name>MainStemFinalNodeNumber</Name>
 			<MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
-			<PhaseLookup>
-				<Name>FinalLeafNumber</Name>
-				<PhaseLookupValue>
-					<Name>PreFloral</Name>
-					<Start>Sowing</Start>
-					<End>Floral_Initiation</End>
+      <OnEventFunction>
+        <SetEvent>End_Juvenile</SetEvent>
+        <Name>FinalLeafNumber</Name>
 					<Constant>
-						<Name>EstimateLeafNo</Name>
-						<Value>20</Value>
-					</Constant>
-				</PhaseLookupValue>
-				<PhaseLookupValue>
-					<Name>PostFloral</Name>
-					<Start>Floral_Initiation</Start>
-					<End>HarvestRipe</End>
-					<VariableReference>
-						<Name>PrimordiaNo</Name>
+						<Name>PreEventValue</Name>
+						<Value>25</Value>
+				  </Constant>
+				  <VariableReference>
+						<Name>PostEventValue</Name>
 						<VariableName>[Structure].MainStemPrimordiaNo</VariableName>
 					</VariableReference>
-				</PhaseLookupValue>
-			</PhaseLookup>
+			</OnEventFunction>
 		</MainStemFinalNodeNumberFunction>
 		<HeightFunction>
 			<Name>Height</Name>
@@ -837,9 +828,9 @@
 					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
-						<double>4</double>
-						<double>8</double>
-						<double>14</double>
+						<double>0.3</double>
+						<double>0.5</double>
+						<double>1</double>
 					</X>
 					<Y>
 						<double>0</double>
