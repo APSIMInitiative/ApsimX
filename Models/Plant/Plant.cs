@@ -525,10 +525,10 @@ namespace Models.PMF
                 if (Phenology != null)
                 {
                     DoPhenology();
-                    //if (Phenology.Emerged == true)
-                    //{
+                    if (Phenology.Emerged == true)
+                    {
                         DoDMSetUp();//Sets organs water limited DM supplys and demands
-                    //}
+                    }
                 }
                 else
                 {
@@ -576,12 +576,12 @@ namespace Models.PMF
         {
             if (PlantInGround)
             {
-                //if (Phenology != null)
-                //{
-                //    if (Phenology.Emerged == true)
-                //        DoActualGrowth();
-                //}
-                //else
+                if (Phenology != null)
+                {
+                    if (Phenology.Emerged == true)
+                        DoActualGrowth();
+                }
+                else
                     DoActualGrowth();
             }
         }
@@ -618,11 +618,6 @@ namespace Models.PMF
                 Supply += o.WaterSupply;
                 Demand += o.WaterDemand;
             }
-
-            /*if (Demand > 0)
-                WaterSupplyDemandRatio = Supply / Demand;
-            else
-                WaterSupplyDemandRatio = 1;*/
 
             double fraction = 1;
             if (Demand > 0)
