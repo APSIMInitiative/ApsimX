@@ -576,13 +576,7 @@ namespace Models.PMF
         {
             if (PlantInGround)
             {
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
-                        DoActualGrowth();
-                }
-                else
-                    DoActualGrowth();
+                DoActualGrowth();
             }
         }
         #endregion
