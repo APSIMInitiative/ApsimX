@@ -2482,14 +2482,14 @@ namespace Models.AgPasture1
 		/// <summary>Placeholder for SoilArbitrator</summary>
 		/// <param name="info">some info</param>
 		/// <returns>soil info</returns>
-		public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
+		public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)
 		{
 			return info;
 		}
 
 		/// <summary>Set the potential soil water uptake for today</summary>
 		/// <param name="info">Some info</param>
-		public void SetSWUptake(List<Soils.UptakeInfo> info)
+		public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
 		{
 		}
 
