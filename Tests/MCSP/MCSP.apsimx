@@ -599,6 +599,10 @@ namespace Models
       <Operations>
         <Name>operations</Name>
         <Operation>
+          <Date>1998-10-15T00:00:00</Date>
+          <Action>[Fertiliser].Apply(550, Fertiliser.Types.UreaN, 10);</Action>
+        </Operation>
+        <Operation>
           <Date>1998-10-02T00:00:00</Date>
           <Action>[Irrigation].Apply(40);</Action>
         </Operation>
@@ -676,10 +680,13 @@ namespace Models
           <string>[ExtraVariables].Script.SoilWaterDeficit</string>
           <string>[MCSP].Leaf.Live.Wt</string>
           <string>[MCSP].Root.Live.Wt</string>
+          <string>[MCSP].Product.Live.Wt</string>
           <string>[MCSP].Leaf.Live.N</string>
           <string>[MCSP].Root.Live.N</string>
+          <string>[MCSP].Product.Live.N</string>
           <string>[MCSP].Leaf.Live.NConc</string>
           <string>[MCSP].Root.Live.NConc</string>
+          <string>[MCSP].Product.Live.NConc</string>
           <string>[MCSP].Root.WaterSupply</string>
           <string>[MCSP].Root.WaterUptake</string>
           <string>[MCSP].Leaf.Transpiration</string>
@@ -690,6 +697,7 @@ namespace Models
           <string>[MCSP].Leaf.LAI</string>
           <string>[MCSP].Leaf.Height</string>
           <string>[MCSP].Leaf.PotentialBiomass.Value</string>
+          <string>[MCSP].Product.LiveFWt</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
@@ -1191,7 +1199,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
+        <ColourArgb>-16744448</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -1207,51 +1215,11 @@ namespace Models
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Stem</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16760704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Stem.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Tuber</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Tuber.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
         <Title>Root</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65281</ColourArgb>
+        <ColourArgb>-8388608</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -1267,11 +1235,11 @@ namespace Models
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Dead Leaf</Title>
+        <Title>Product</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8388480</ColourArgb>
+        <ColourArgb>-32768</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -1280,127 +1248,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Leaf.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Step</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Stem.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Tuber</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Tuber.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root Dead</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711681</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Root.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Above Ground Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8372160</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Below Ground Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777088</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.BelowGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Total Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.Total.Wt</FieldName>
+          <FieldName>MCSP.Product.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1432,7 +1280,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
+        <ColourArgb>-16744448</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -1448,51 +1296,11 @@ namespace Models
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Stem</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16760704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Stem.Live.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Tuber</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Tuber.Live.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
         <Title>Root</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65281</ColourArgb>
+        <ColourArgb>-8388608</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -1508,11 +1316,11 @@ namespace Models
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Dead Leaf</Title>
+        <Title>Product</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8388480</ColourArgb>
+        <ColourArgb>-32704</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -1521,147 +1329,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Leaf.Dead.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Step</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Stem.Dead.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Tuber</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Tuber.Dead.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root Dead</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711681</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Root.Dead.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Above Ground Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8372160</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.AboveGround.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Below Ground Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777088</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.BelowGround.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Total Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.Total.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Total Live N</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.TotalLive.N</FieldName>
+          <FieldName>MCSP.Product.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>

@@ -514,6 +514,18 @@
         </Constant>
       </PhaseLookupValue>
     </PhaseLookup>
+    <Constant>
+      <Name>FRGRFunction</Name>
+      <Value>1</Value>
+    </Constant>
+    <Constant>
+      <Name>HeightFunction</Name>
+      <Value>150</Value>
+    </Constant>
+    <Constant>
+      <Name>ExtinctionCoefficientFunction</Name>
+      <Value>0.5</Value>
+    </Constant>
   </SimpleLeaf>
   <GenericAboveGroundOrgan>
     <Name>Product</Name>

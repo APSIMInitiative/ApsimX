@@ -328,6 +328,16 @@ namespace Models.PMF.Organs
                 NewCanopy.Invoke(Plant.LocalCanopyData);
             }
         }
+        public void UpdateCanopyData()
+        {
+            Plant.CanopyProperties.CoverGreen = CoverGreen;
+            Plant.CanopyProperties.CoverTot = CoverTotal;
+            Plant.CanopyProperties.CanopyDepth = Height;
+            Plant.CanopyProperties.CanopyHeight = Height;
+            Plant.CanopyProperties.LAIGreen = LAI;
+            Plant.CanopyProperties.LAItot = LAI + LAIDead;
+            Plant.CanopyProperties.Frgr = FRGR;
+        }
         /// <summary>Called when [cut].</summary>
         public override void OnCut()
         {
@@ -385,6 +395,10 @@ namespace Models.PMF.Organs
             NDemand = new BiomassPoolType();           
             NDemand.Structural = StructuralDemand;
             NDemand.NonStructural = NDeficit;*/
+        }
+        public override void DoActualGrowth()
+        {
+            UpdateCanopyData();
         }
         #endregion
 
