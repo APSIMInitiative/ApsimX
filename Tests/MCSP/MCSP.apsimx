@@ -5,42 +5,6 @@
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Manager>
-    <Name>ResetMCSPProperties</Name>
-    <Script>
-      <OverRidePath>[MCSP].Leaf.LAIFunction.Value</OverRidePath>
-      <OverRideInterger>5</OverRideInterger>
-    </Script>
-    <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-	[Link] Plant Plant;  
-    [Link] Zone zone;
-					
-		[Description("Path for coefficient to be Overwritten")]
-		public string OverRidePath { get; set; }
-		[Description("Value for new coefficient Interger")]
-        public int OverRideInterger { get; set; }
-        
-		[EventSubscribe("Sowing")]
-		private void OnSowing(object sender, EventArgs e)
-		{
-			object ResetValue = OverRideInterger;
-			zone.Set(OverRidePath, ResetValue);
-	    }
-	}
-}
-	   ]]></Code>
-  </Manager>
   <Simulation>
     <Name>MCSPTestBase</Name>
     <Weather>
@@ -440,7 +404,7 @@ namespace Models
                {
 				if (Clock.Today.Date == SowingDate)
                     MCSP.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
-                //Potato.Sow(... Contains the following arguements:
+                //PMFCrop.Sow(... Contains the following arguements:
                 //Population  double  Optional  Seeds sowing/m2.  Default is zero
                 //Cultivar    string  Required  "NameOfCultivar"
                 //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
@@ -1901,30 +1865,10 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Cover Dead</Title>
+        <Title>Root Depth</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8372224</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Leaf.CoverDead</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Cover Green</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
+        <YAxis>Right</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
@@ -1934,7 +1878,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Leaf.CoverGreen</FieldName>
+          <FieldName>MCSP.Root.Depth</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1980,47 +1924,7 @@ namespace Models
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
-      <Series>
-        <Title>LAI Dead</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Leaf.LAIDead</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root depth</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Root.Depth</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
     </Graph>

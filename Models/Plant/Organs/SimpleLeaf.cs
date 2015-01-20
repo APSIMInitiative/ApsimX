@@ -45,16 +45,16 @@ namespace Models.PMF.Organs
         [Link]
         Function NConc = null;
         /// <summary>The lai function</summary>
-        [Link]
+        [Link(IsOptional = true)]
         Function LAIFunction = null;
         /// <summary>The extinction coefficient function</summary>
-        [Link]
+        [Link(IsOptional = true)]
         Function ExtinctionCoefficientFunction = null;
         /// <summary>The photosynthesis</summary>
         [Link(IsOptional = true)]
         RUEModel Photosynthesis = null;
         /// <summary>The height function</summary>
-        [Link]
+        [Link(IsOptional = true)]
         Function HeightFunction = null;
         /// <summary>The lai dead function</summary>
         [Link(IsOptional = true)]
