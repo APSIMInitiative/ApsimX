@@ -815,12 +815,28 @@ namespace Models.PMF.OilPalm
         /// <returns></returns>
         public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)
         {
+            // not yet correctly implemented
             return info;
         }
+
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info)
+        {
+            // not yet correctly implemented
+            return info;
+        }
+
         /// <summary>
-        /// Set the potential sw uptake for today
+        /// Set the sw uptake for today
         /// </summary>
         public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
+        { }
+        /// <summary>
+        /// Set the n uptake for today
+        /// </summary>
+        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
         { }
 
         /// <summary>Does the flower abortion.</summary>

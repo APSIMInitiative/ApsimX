@@ -55,9 +55,19 @@ namespace Models.Core
         List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info);
 
         /// <summary>
-        /// Set the potential sw uptake for today
+        /// Calculate the potential sw uptake for today
+        /// </summary>
+        List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info);
+
+
+        /// <summary>
+        /// Set the sw uptake for today
         /// </summary>
         void SetSWUptake(List<Soils.ZoneWaterAndN> info);
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        void SetNUptake(List<Soils.ZoneWaterAndN> info);
 
 
         /// <summary>Sows the plant</summary>
