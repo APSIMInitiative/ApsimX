@@ -5085,12 +5085,25 @@ namespace Models.AgPasture1
 		{
 			return info;
 		}
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info)
+        {
+            // not yet correctly implemented
+            return info;
+        }
 
 		/// <summary>
-		/// Set the potential sw uptake for today
+		/// Set the sw uptake for today
 		/// </summary>
 		public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
 		{ }
+        /// <summary>
+        /// Set the n uptake for today
+        /// </summary>
+        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        { }    
 
 		/// <summary>Growth limiting factor due to temperature</summary>
 		/// <param name="Temp">Temperature for which the limiting factor will be computed</param>

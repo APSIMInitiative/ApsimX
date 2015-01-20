@@ -9112,13 +9112,26 @@ namespace Models
             {
             return info;   //sv- other crop modules seem to do this, so I just copied it. (Only Plant15 seems to use SoilArbitrator though)
             }
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info)
+        {
+            // not yet correctly implemented
+            return info;
+        }
 
 
         /// <summary>
-        /// Set the potential sw uptake for today
+        /// Set the sw uptake for today
         /// </summary>
         public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
-        { }    //sv- other crop modules seem to do this, so I just copied it. (used by SoilArbitrator) (Only Plant15 seems to use SoilArbitrator though)
+        { }
+        /// <summary>
+        /// Set the n uptake for today
+        /// </summary>
+        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        { }    
 
 
         /// <summary>Sows the plant</summary>

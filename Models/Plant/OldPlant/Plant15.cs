@@ -573,8 +573,8 @@ namespace Models.PMF.OldPlant
         /// <summary>Old PLANT1 compat. process eventhandler.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void DoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // Dean: This call to OnPrepare used to be called at start of day. 
             // No need to separate the call into separate event (I think)
@@ -612,8 +612,6 @@ namespace Models.PMF.OldPlant
                 Root.DoSenescenceLength();
                 Grain.DoNDemandGrain();
 
-                //  g.n_fix_pot = _fixation->Potential(biomass, swStress->swDef.fixation);
-                double n_fix_pot = 0;
 
                 if (DoRetranslocationBeforeNDemand)
                     Arbitrator1.DoNRetranslocate(Grain.NDemand, Organ1s);
@@ -628,6 +626,22 @@ namespace Models.PMF.OldPlant
 
                 foreach (Organ1 Organ in Organ1s)
                     Organ.DoSoilNDemand();
+
+                }
+            }
+
+        /// <summary>Old PLANT1 compat. process eventhandler.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void DoActualPlantGrowth(object sender, EventArgs e)
+            {
+                if (SowingData != null)
+                {
+
+                    //  g.n_fix_pot = _fixation->Potential(biomass, swStress->swDef.fixation);
+                    double n_fix_pot = 0;
+
                 // PotNFix = _fixation->NFixPot();
                 double PotNFix = 0;
                 Root.DoNUptake(PotNFix);
@@ -1253,13 +1267,51 @@ namespace Models.PMF.OldPlant
             return Uptakes;
 
         }
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="zones"></param>
+        /// <returns></returns>
+        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> zones)
+        {
+            List<Soils.ZoneWaterAndN> Uptakes = new List<Soils.ZoneWaterAndN>();
+            Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
+
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name == this.Parent.Name)
+                    MyZone = Z;
+
+            double[] NO3N = MyZone.NO3N;
+            double[] NH4N = MyZone.NH4N;
+            //OnPrepare(null, null);  //DEAN!!!
+
+
+            double[] NO3NUp = new double[NO3N.Length];
+            double[] NH4NUp = new double[NH4N.Length];
+            Root.CalculateNUptake(NO3N, NH4N, ref NO3NUp, ref NH4NUp);
+            Uptake.NO3N = NO3NUp;
+            Uptake.NH4N = NH4NUp;
+            Uptake.Name = this.Parent.Name;
+
+            Uptakes.Add(Uptake);
+            return Uptakes;
+
+        }
+
         /// <summary>
-        /// Set the potential sw uptake for today
+        /// Set the sw uptake for today
         /// </summary>
         public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
         {
-            Root.AribtratorSWUptake = info[0].Water;
+            Root.ArbitratorSWUptake = info[0].Water;
         }
+        /// <summary>
+        /// Set the n uptake for today
+        /// </summary>
+        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        {
+            Root.ArbitratorNO3Uptake = info[0].NO3N;
+            Root.ArbitratorNH4Uptake = info[0].NH4N;
+        }    
 
         /// <summary>A property to return all cultivar definitions.</summary>
         /// <value>The cultivars.</value>

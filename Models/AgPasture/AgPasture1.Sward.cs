@@ -2486,12 +2486,25 @@ namespace Models.AgPasture1
 		{
 			return info;
 		}
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info)
+        {
+            // not yet correctly implemented
+            return info;
+        }
 
-		/// <summary>Set the potential soil water uptake for today</summary>
+		/// <summary>Set the soil water uptake for today</summary>
 		/// <param name="info">Some info</param>
 		public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
 		{
 		}
+        /// <summary>
+        /// Set the n uptake for today
+        /// </summary>
+        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        { }    
 
 		/// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>
 		/// <returns>The proportion of root mass in each soil layer</returns>

@@ -20,7 +20,7 @@ namespace Models.Soils
         /// <summary>The amount</summary>
         public double[] Water;
         public double[] NO3N;
-
+        public double[] NH4N;
     }
     public class CropWaterUptakes
     {
@@ -60,7 +60,7 @@ namespace Models.Soils
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="ApsimXException">Calculating Euler integration. Number of UptakeSums different to expected value of iterations.</exception>
         [EventSubscribe("DoWaterArbitration")]
-        private void OnDoSoilArbitration(object sender, EventArgs e)
+        private void OnDoWaterArbitration(object sender, EventArgs e)
         {
 
             // Start by recording the water content in all zones
@@ -72,20 +72,10 @@ namespace Models.Soils
                 Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
                 NewZ.Water = soil.Water;
                 NewZ.NO3N = soil.NO3N;
+                NewZ.NH4N = soil.NH4N;
                 SoilState1.Add(NewZ);
             }
 
-            // Modified Euler Method
-            //List<CropWaterUptakes> Estimate1 = new List<CropWaterUptakes>();
-            //Estimate1 = GetCropWaterUptakes(SoilState1);
-            //
-            //List<ZoneWaterAndN> SoilState2 = new List<ZoneWaterAndN>();
-            //SoilState2 = RemoveUptakeFromSW(Estimate1, SoilState1, 1.0);
-            //
-            //List<CropWaterUptakes> Estimate2 = new List<CropWaterUptakes>();
-            //Estimate2 = GetCropWaterUptakes(SoilState2);
-
-            //Runge Kutta
             List<CropWaterUptakes> Estimate1 = new List<CropWaterUptakes>();
             Estimate1 = GetCropWaterUptakes(SoilState1);
 
@@ -107,16 +97,11 @@ namespace Models.Soils
                 foreach (ZoneWaterAndN ZW1 in U.Zones)
                 {
                     ZoneWaterAndN NewZ = new ZoneWaterAndN();
-                    NewZ.Name = ZW1.Name;
-                    // Modifield Euler
-                    //Z.Water = Utility.Math.Add(Utility.Math.Multiply_Value(GetUptake(CWU.Crop.CropType, Z.Name, Estimate1),0.5),
-                    //                           Utility.Math.Multiply_Value(GetUptake(CWU.Crop.CropType, Z.Name, Estimate2),0.5));
-                    
-                    //Runge Kutta
-                    NewZ.Water = Utility.Math.Add(Utility.Math.Multiply_Value(GetUptake(CWU.Crop.CropType, NewZ.Name, Estimate1), 0.166666),
-                                               Utility.Math.Multiply_Value(GetUptake(CWU.Crop.CropType, NewZ.Name, Estimate2), 0.333333));
-                    NewZ.Water = Utility.Math.Add(NewZ.Water,Utility.Math.Multiply_Value(GetUptake(CWU.Crop.CropType, NewZ.Name, Estimate3), 0.333333));
-                    NewZ.Water = Utility.Math.Add(NewZ.Water, Utility.Math.Multiply_Value(GetUptake(CWU.Crop.CropType, NewZ.Name, Estimate4), 0.16666));
+                    NewZ.Name = ZW1.Name;                 
+                    NewZ.Water = Utility.Math.Add(Utility.Math.Multiply_Value(GetWaterUptake(CWU.Crop.CropType, NewZ.Name, Estimate1), 0.166666),
+                                               Utility.Math.Multiply_Value(GetWaterUptake(CWU.Crop.CropType, NewZ.Name, Estimate2), 0.333333));
+                    NewZ.Water = Utility.Math.Add(NewZ.Water,Utility.Math.Multiply_Value(GetWaterUptake(CWU.Crop.CropType, NewZ.Name, Estimate3), 0.333333));
+                    NewZ.Water = Utility.Math.Add(NewZ.Water, Utility.Math.Multiply_Value(GetWaterUptake(CWU.Crop.CropType, NewZ.Name, Estimate4), 0.16666));
                     
                     CWU.Zones.Add(NewZ);
                 }
@@ -128,11 +113,75 @@ namespace Models.Soils
             foreach (CropWaterUptakes Uptake in UptakesFinal)
             {
                 Uptake.Crop.SetSWUptake(Uptake.Zones);
-                //CropUptakeInfo CropUptake = Uptakes.Find(u => u.Crop == crop);
+            }
+        }
+
+        /// <summary>Called when [do soil arbitration].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">Calculating Euler integration. Number of UptakeSums different to expected value of iterations.</exception>
+        [EventSubscribe("DoNutrientArbitration")]
+        private void DoNutrientArbitration(object sender, EventArgs e)
+        {
+
+            // Start by recording the water and N content in all zones
+            List<ZoneWaterAndN> SoilState1 = new List<ZoneWaterAndN>();
+            foreach (Zone Z in Apsim.Children(Simulation, typeof(Zone)))
+            {
+                ZoneWaterAndN NewZ = new ZoneWaterAndN();
+                NewZ.Name = Z.Name;
+                Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
+                NewZ.Water = soil.Water;
+                NewZ.NO3N = soil.NO3N;
+                NewZ.NH4N = soil.NH4N;
+                SoilState1.Add(NewZ);
             }
 
+            List<CropWaterUptakes> Estimate1 = new List<CropWaterUptakes>();
+            Estimate1 = GetCropNUptakes(SoilState1);
 
+            List<CropWaterUptakes> Estimate2 = new List<CropWaterUptakes>();
+            Estimate2 = GetCropNUptakes(RemoveUptakeFromSoilN(Estimate1, SoilState1, 0.5));
+
+            List<CropWaterUptakes> Estimate3 = new List<CropWaterUptakes>();
+            Estimate3 = GetCropNUptakes(RemoveUptakeFromSoilN(Estimate2, SoilState1, 0.5));
+
+            List<CropWaterUptakes> Estimate4 = new List<CropWaterUptakes>();
+            Estimate4 = GetCropNUptakes(RemoveUptakeFromSoilN(Estimate3, SoilState1, 1.0));
+
+
+            List<CropWaterUptakes> UptakesFinal = new List<CropWaterUptakes>();
+            foreach (CropWaterUptakes U in Estimate1)
+            {
+                CropWaterUptakes CWU = new CropWaterUptakes();
+                CWU.Crop = U.Crop;
+                foreach (ZoneWaterAndN ZW1 in U.Zones)
+                {
+                    ZoneWaterAndN NewZ = new ZoneWaterAndN();
+                    NewZ.Name = ZW1.Name;
+                    NewZ.NO3N = Utility.Math.Add(Utility.Math.Multiply_Value(GetNO3Uptake(CWU.Crop.CropType, NewZ.Name, Estimate1), 0.166666),
+                                               Utility.Math.Multiply_Value(GetNO3Uptake(CWU.Crop.CropType, NewZ.Name, Estimate2), 0.333333));
+                    NewZ.NO3N = Utility.Math.Add(NewZ.NO3N, Utility.Math.Multiply_Value(GetNO3Uptake(CWU.Crop.CropType, NewZ.Name, Estimate3), 0.333333));
+                    NewZ.NO3N = Utility.Math.Add(NewZ.NO3N, Utility.Math.Multiply_Value(GetNO3Uptake(CWU.Crop.CropType, NewZ.Name, Estimate4), 0.16666));
+
+                    NewZ.NH4N = Utility.Math.Add(Utility.Math.Multiply_Value(GetNH4Uptake(CWU.Crop.CropType, NewZ.Name, Estimate1), 0.166666),
+                           Utility.Math.Multiply_Value(GetNH4Uptake(CWU.Crop.CropType, NewZ.Name, Estimate2), 0.333333));
+                    NewZ.NH4N = Utility.Math.Add(NewZ.NH4N, Utility.Math.Multiply_Value(GetNH4Uptake(CWU.Crop.CropType, NewZ.Name, Estimate3), 0.333333));
+                    NewZ.NH4N = Utility.Math.Add(NewZ.NH4N, Utility.Math.Multiply_Value(GetNH4Uptake(CWU.Crop.CropType, NewZ.Name, Estimate4), 0.16666));
+
+                    CWU.Zones.Add(NewZ);
+                }
+
+                UptakesFinal.Add(CWU);
+
+            }
+
+            foreach (CropWaterUptakes Uptake in UptakesFinal)
+            {
+                Uptake.Crop.SetNUptake(Uptake.Zones);
+            }
         }
+
         private List<CropWaterUptakes> GetCropWaterUptakes(List<ZoneWaterAndN> SWs)
         {
             List<CropWaterUptakes> Uptakes = new List<CropWaterUptakes>();
@@ -148,6 +197,22 @@ namespace Models.Soils
             }
             return Uptakes;
         }
+        private List<CropWaterUptakes> GetCropNUptakes(List<ZoneWaterAndN> Zones)
+        {
+            List<CropWaterUptakes> Uptakes = new List<CropWaterUptakes>();
+            foreach (ICrop crop in Apsim.ChildrenRecursively(Simulation, typeof(ICrop)))
+            {
+                if (crop.IsAlive)
+                {
+                    CropWaterUptakes Uptake = new CropWaterUptakes();
+                    Uptake.Crop = crop;
+                    Uptake.Zones = crop.GetNUptakes(Zones);
+                    Uptakes.Add(Uptake);
+                }
+            }
+            return Uptakes;
+        }
+
         private List<ZoneWaterAndN> RemoveUptakeFromSW(List<CropWaterUptakes> Uptakes, List<ZoneWaterAndN> SW, double fraction)
         {
             List<ZoneWaterAndN> NewSW = new List<ZoneWaterAndN>();
@@ -162,7 +227,24 @@ namespace Models.Soils
 
             return NewSW;
         }
-        private double[] GetUptake(string CropType, string ZoneName, List<CropWaterUptakes> Uptakes)
+        private List<ZoneWaterAndN> RemoveUptakeFromSoilN(List<CropWaterUptakes> Uptakes, List<ZoneWaterAndN> Zones, double fraction)
+        {
+            List<ZoneWaterAndN> NewSoil = new List<ZoneWaterAndN>();
+            foreach (ZoneWaterAndN Z in Zones)
+                NewSoil.Add(Z);
+
+            foreach (CropWaterUptakes C in Uptakes)
+                foreach (ZoneWaterAndN Z in C.Zones)
+                    foreach (ZoneWaterAndN NewZ in NewSoil)
+                        if (Z.Name == NewZ.Name)
+                        {
+                            NewZ.NO3N = Utility.Math.Subtract(NewZ.NO3N, Utility.Math.Multiply_Value(Z.NO3N, fraction));
+                            NewZ.NH4N = Utility.Math.Subtract(NewZ.NH4N, Utility.Math.Multiply_Value(Z.NH4N, fraction));
+                        }
+            return NewSoil;
+        }
+
+        private double[] GetWaterUptake(string CropType, string ZoneName, List<CropWaterUptakes> Uptakes)
         {
             bool found = false;
             double[] SW = null;
@@ -182,6 +264,48 @@ namespace Models.Soils
 
             
             return SW;
+        }
+        private double[] GetNO3Uptake(string CropType, string ZoneName, List<CropWaterUptakes> Uptakes)
+        {
+            bool found = false;
+            double[] NO3N = null;
+            foreach (CropWaterUptakes U in Uptakes)
+                if (U.Crop.CropType == CropType)
+                    foreach (ZoneWaterAndN Z in U.Zones)
+                        if (Z.Name == ZoneName)
+                        {
+                            if (found)
+                            { }
+                            found = true;
+                            NO3N = new double[Z.NO3N.Length];
+                            NO3N = Z.NO3N;
+                        }
+            if (!found)
+                throw (new Exception("Cannot find uptake for" + CropType + " " + ZoneName));
+
+
+            return NO3N;
+        }
+        private double[] GetNH4Uptake(string CropType, string ZoneName, List<CropWaterUptakes> Uptakes)
+        {
+            bool found = false;
+            double[] NH4N = null;
+            foreach (CropWaterUptakes U in Uptakes)
+                if (U.Crop.CropType == CropType)
+                    foreach (ZoneWaterAndN Z in U.Zones)
+                        if (Z.Name == ZoneName)
+                        {
+                            if (found)
+                            { }
+                            found = true;
+                            NH4N = new double[Z.NH4N.Length];
+                            NH4N = Z.NH4N;
+                        }
+            if (!found)
+                throw (new Exception("Cannot find uptake for" + CropType + " " + ZoneName));
+
+
+            return NH4N;
         }
 
     }
