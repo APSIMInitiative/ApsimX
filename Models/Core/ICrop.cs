@@ -52,12 +52,12 @@ namespace Models.Core
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info);
+        List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info);
 
         /// <summary>
         /// Set the potential sw uptake for today
         /// </summary>
-        void SetSWUptake(List<Soils.UptakeInfo> info);
+        void SetSWUptake(List<Soils.ZoneWaterAndN> info);
 
 
         /// <summary>Sows the plant</summary>

@@ -5288,7 +5288,7 @@ namespace Models
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
+        public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)
         {
             return info;
         }
@@ -5296,7 +5296,7 @@ namespace Models
         /// <summary>
         /// Set the potential sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
         { }
 
         //===============================================
@@ -6682,7 +6682,7 @@ namespace Models
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info">The information.</param>
         /// <returns></returns>
-        public Soils.UptakeInfo GetPotSWUptake(Soils.UptakeInfo info)
+        public Soils.ZoneWaterAndN GetPotSWUptake(Soils.ZoneWaterAndN info)
         {
             return info;
         }

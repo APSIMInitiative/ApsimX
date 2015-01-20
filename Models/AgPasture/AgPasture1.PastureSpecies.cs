@@ -5081,7 +5081,7 @@ namespace Models.AgPasture1
 		/// <summary>Placeholder for SoilArbitrator</summary>
 		/// <param name="info"></param>
 		/// <returns></returns>
-		public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
+		public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)
 		{
 			return info;
 		}
@@ -5089,7 +5089,7 @@ namespace Models.AgPasture1
 		/// <summary>
 		/// Set the potential sw uptake for today
 		/// </summary>
-		public void SetSWUptake(List<Soils.UptakeInfo> info)
+		public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
 		{ }
 
 		/// <summary>Growth limiting factor due to temperature</summary>

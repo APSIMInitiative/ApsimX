@@ -10,6 +10,7 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using System.IO;
+using Models.Soils;
 
 namespace Models.PMF.OldPlant
 {
@@ -1231,16 +1232,23 @@ namespace Models.PMF.OldPlant
         #endregion
 
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <param name="zones"></param>
         /// <returns></returns>
-        public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
+        public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> zones)
         {
-            List<Soils.UptakeInfo> Uptakes= new List<Soils.UptakeInfo>();
-            Soils.UptakeInfo Uptake = new Soils.UptakeInfo();
-            Uptake.ZoneName = info[0].ZoneName;
-            double[] SW = info[0].Amount;
+            List<Soils.ZoneWaterAndN> Uptakes= new List<Soils.ZoneWaterAndN>();
+            Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
+
+            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            foreach (ZoneWaterAndN Z in zones)
+                if (Z.Name==this.Parent.Name)
+                    MyZone = Z;
+
+            double[] SW = MyZone.Water;
             OnPrepare(null, null);  //DEAN!!!
-            Uptake.Amount = Root.CalculateWaterUptake(TopsSWDemand, SW);
+
+            Uptake.Name = this.Parent.Name;
+            Uptake.Water = Root.CalculateWaterUptake(TopsSWDemand, SW);
             Uptakes.Add(Uptake);
             return Uptakes;
 
@@ -1248,9 +1256,9 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Set the potential sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
         {
-            Root.AribtratorSWUptake = info[0].Amount;
+            Root.AribtratorSWUptake = info[0].Water;
         }
 
         /// <summary>A property to return all cultivar definitions.</summary>

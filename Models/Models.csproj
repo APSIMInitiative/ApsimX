@@ -389,7 +389,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\OilPalm.xml" />
+    <None Include="Resources\OilPalm.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Maize.xml" />

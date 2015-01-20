@@ -9108,7 +9108,7 @@ namespace Models
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)  
+        public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)  
             {
             return info;   //sv- other crop modules seem to do this, so I just copied it. (Only Plant15 seems to use SoilArbitrator though)
             }
@@ -9117,7 +9117,7 @@ namespace Models
         /// <summary>
         /// Set the potential sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
         { }    //sv- other crop modules seem to do this, so I just copied it. (used by SoilArbitrator) (Only Plant15 seems to use SoilArbitrator though)
 
 
