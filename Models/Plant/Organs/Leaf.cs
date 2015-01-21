@@ -481,7 +481,6 @@ namespace Models.PMF.Organs
                     values[i] = L.Size;
                     i++;
                 }
-
                 return values;
             }
         }

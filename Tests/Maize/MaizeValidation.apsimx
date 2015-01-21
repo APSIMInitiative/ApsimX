@@ -18,11 +18,18 @@
       </SheetNames>
     </Model>
     <PredictedObserved>
-      <Name>PredictedObserved</Name>
+      <Name>LeafAreas</Name>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>MaxLeafSize</ObservedTableName>
       <FieldNameUsedForMatch>ExtraVariables.Script.LeafExpandedPosition</FieldNameUsedForMatch>
     </PredictedObserved>
+    <Model xsi:type="ExcelInput">
+      <Name>SoilWater</Name>
+      <FileName>%root%\Tests\Maize\Observations\SoilWater.xlsx</FileName>
+      <SheetNames>
+        <string>SoilWater</string>
+      </SheetNames>
+    </Model>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -278,222 +285,6 @@
           <Water>
             <Name>Water</Name>
             <SoilCrop>
-              <Name>Barley</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.088</double>
-                <double>0.088</double>
-                <double>0.07</double>
-                <double>0.066</double>
-                <double>0.066</double>
-                <double>0.066</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Canola</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.075</double>
-                <double>0.075</double>
-                <double>0.06</double>
-                <double>0.049</double>
-                <double>0.049</double>
-                <double>0.049</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.51</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Cloverseed</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.04</double>
-                <double>0.016</double>
-                <double>0.016</double>
-                <double>0.016</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.73</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Fieldpea</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.054</double>
-                <double>0.009</double>
-                <double>0.009</double>
-                <double>0.009</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.3</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Fababean</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.08</double>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.1</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.51</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Foragebrassica</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.075</double>
-                <double>0.075</double>
-                <double>0.06</double>
-                <double>0.049</double>
-                <double>0.049</double>
-                <double>0.049</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.51</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Itallian_ryegrass</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.075</double>
-                <double>0.075</double>
-                <double>0.06</double>
-                <double>0.057</double>
-                <double>0.057</double>
-                <double>0.057</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.51</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Lucerne</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.038</double>
-                <double>0.038</double>
-                <double>0.03</double>
-                <double>0.019</double>
-                <double>0.019</double>
-                <double>0.019</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
               <Name>MaizeSoil</Name>
               <LL>
                 <double>0.154</double>
@@ -502,11 +293,15 @@
                 <double>0.06</double>
                 <double>0.06</double>
                 <double>0.06</double>
+                <double>0.06</double>
+                <double>0.06</double>
               </LL>
               <KL>
                 <double>0.075</double>
                 <double>0.075</double>
                 <double>0.06</double>
+                <double>0.049</double>
+                <double>0.049</double>
                 <double>0.049</double>
                 <double>0.049</double>
                 <double>0.049</double>
@@ -517,247 +312,6 @@
                 <double>0.51</double>
                 <double>1</double>
                 <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Oats</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.075</double>
-                <double>0.075</double>
-                <double>0.06</double>
-                <double>0.049</double>
-                <double>0.049</double>
-                <double>0.049</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.73</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Potato</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.1</double>
-                <double>0.057</double>
-                <double>0.023</double>
-                <double>0.002</double>
-                <double>0.002</double>
-                <double>0.002</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.3</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Grassseed</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.025</double>
-                <double>0.003</double>
-                <double>0.003</double>
-                <double>0.003</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.51</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>Wheat</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.075</double>
-                <double>0.075</double>
-                <double>0.06</double>
-                <double>0.049</double>
-                <double>0.049</double>
-                <double>0.049</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.73</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>ryegrass_whiteclover</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.025</double>
-                <double>0.003</double>
-                <double>0.003</double>
-                <double>0.003</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.51</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>ryegrass</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.025</double>
-                <double>0.003</double>
-                <double>0.003</double>
-                <double>0.003</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.51</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>whiteclover</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.1</double>
-                <double>0.1</double>
-                <double>0.054</double>
-                <double>0.009</double>
-                <double>0.009</double>
-                <double>0.009</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.3</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>kale</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>triticale</Name>
-              <LL>
-                <double>0.154</double>
-                <double>0.152</double>
-                <double>0.162</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </LL>
-              <KL>
-                <double>0.088</double>
-                <double>0.088</double>
-                <double>0.07</double>
-                <double>0.05</double>
-                <double>0.05</double>
-                <double>0.05</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.73</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -767,14 +321,18 @@
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
             </Thickness>
             <BD>
               <double>1.311</double>
               <double>1.474</double>
               <double>1.601</double>
+              <double>1.68</double>
+              <double>1.68</double>
               <double>1.68</double>
               <double>1.68</double>
               <double>1.68</double>
@@ -786,11 +344,15 @@
               <double>0.06</double>
               <double>0.06</double>
               <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
             </AirDry>
             <LL15>
               <double>0.154</double>
               <double>0.152</double>
               <double>0.162</double>
+              <double>0.06</double>
+              <double>0.06</double>
               <double>0.06</double>
               <double>0.06</double>
               <double>0.06</double>
@@ -802,11 +364,15 @@
               <double>0.15</double>
               <double>0.15</double>
               <double>0.15</double>
+              <double>0.15</double>
+              <double>0.15</double>
             </DUL>
             <SAT>
               <double>0.456</double>
               <double>0.413</double>
               <double>0.376</double>
+              <double>0.3</double>
+              <double>0.3</double>
               <double>0.3</double>
               <double>0.3</double>
               <double>0.3</double>
@@ -835,9 +401,11 @@
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
+              <double>200</double>
             </Thickness>
             <SWCON>
               <double>0.5</double>
@@ -1266,20 +834,23 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
-		//[XmlIgnore] public int LeafPosition {get, set;}
 		[XmlIgnore] public double LeafExpandedPosition {get; set;}
-        [XmlIgnore] public double LeafNoYesterday {get; set;}		
+        [XmlIgnore] public double LeafAppearedPosition {get; set;}
+        [XmlIgnore] public double ExpandedLeafNoYesterday {get; set;}
+        [XmlIgnore] public double AppearedLeafNoYesterday {get; set;}
         [XmlIgnore] public double MostRecentlyExpandedLeafArea {get; set;}
-        [XmlIgnore] public string variable {get; set;}
-        [XmlIgnore] public int leaf {get; set;}
+        [XmlIgnore] public double MostRecentlyAppearedLeafMaxArea {get; set;}
         
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
 			LeafExpandedPosition = 0;
-			LeafNoYesterday = 0;
+			LeafAppearedPosition = 0;
+			ExpandedLeafNoYesterday = 0;
+			AppearedLeafNoYesterday = 0;
 			MostRecentlyExpandedLeafArea = 0;
+			MostRecentlyAppearedLeafMaxArea = 0;
 		}	   
 		
 		[EventSubscribe("DoManagement")]
@@ -1327,7 +898,8 @@ namespace Models
 			AccumOutflowLat -= OutFlowLat;
 			
 			//Leaf number variable
-			LeafNoYesterday = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+			ExpandedLeafNoYesterday = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+			AppearedLeafNoYesterday = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -1345,15 +917,22 @@ namespace Models
 			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
 			
-			if ((double)zone.Get("Maize.Leaf.ExpandedCohortNo") > LeafNoYesterday)
+			if ((double)zone.Get("Maize.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
 			{
 			LeafExpandedPosition = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
-			leaf = (int)LeafExpandedPosition;
-			variable = "Maize.Leaf.CohortArea["+leaf+"]";
-			MostRecentlyExpandedLeafArea = (double)zone.Get(variable);
+			MostRecentlyExpandedLeafArea = (double)zone.Get("Maize.Leaf.CohortSize["+(int)LeafExpandedPosition+"]");
 			}
 			else
 			LeafExpandedPosition = 0;
+			
+			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
+			{
+			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
+			MostRecentlyAppearedLeafMaxArea = (double)zone.Get("Maize.Leaf.InitialLeafValues.MaxArea.Value");
+			}
+			//else
+			//LeafAppearedPosition = 0;
+			
 		}
 	}
 }
@@ -1417,7 +996,7 @@ namespace Models
             <string>[Maize].Leaf.LAI</string>
             <string>[Maize].Leaf.Height</string>
             <string>[Maize].Husk.Live.Wt</string>
-            <string>[Soil].SoilWater.SWmm</string>
+            <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
             <string>[Soil].NO3N</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
             <string>[Maize].Arbitrator.NDemand</string>
@@ -1444,6 +1023,10 @@ namespace Models
             <string>[ExtraVariables].Script.LeafExpandedPosition</string>
             <string>[ExtraVariables].Script.MostRecentlyExpandedLeafArea</string>
             <string>[ExtraVariables].Script.variable</string>
+            <string>[Soil].SoilWater.SW</string>
+            <string>[Maize].Leaf.InitialLeafValues.MaxArea.Value</string>
+            <string>[ExtraVariables].Script.LeafAppearedPosition</string>
+            <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxArea</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2007,688 +1590,6 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>LeafCohorts</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Stem Biomass (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>1</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(1)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>2</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(2)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>3</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(3)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>4</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(4)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>5</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(5)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>6</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(6)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>7</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(7)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>8</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(8)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>9</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(9)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>10</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:10(10)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>BottomRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>LeafCohorts1</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Stem Biomass (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>1</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(1)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>2</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(2)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>3</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(3)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>4</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711872</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(4)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>5</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(5)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>6</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-256</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(6)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>7</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388353</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(7)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>8</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711681</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(8)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>9</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8372160</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(9)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>10</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(10)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>11</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(11)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>12</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(12)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>13</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(13)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>14</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-256</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(14)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>15</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388353</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(15)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>16</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711681</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(16)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>17</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8372160</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(17)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>18</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(18)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>19</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(19)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>20</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(20)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>21</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(20)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>22</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-256</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Maize.Leaf.CohortArea1:30(21)</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>BottomRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
         <Name>Leaf size</Name>
         <Axis>
           <Type>Left</Type>
@@ -2741,6 +1642,87 @@ namespace Models
           <Y>
             <TableName>PredictedObserved</TableName>
             <FieldName>Observed.ExtraVariables.Script.MostRecentlyExpandedLeafArea</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>MaxArea</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.LeafAppearedPosition</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>ExtraVariables.Script.MostRecentlyAppearedLeafMaxArea</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>SoilWaterProfile</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Tips (n)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>ProfileWater</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>SoilWater</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>SoilWater</TableName>
+            <FieldName>ProfileWater</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
