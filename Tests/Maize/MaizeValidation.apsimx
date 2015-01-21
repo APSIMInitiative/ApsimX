@@ -276,12 +276,6 @@
         <Name>RainShelter</Name>
         <Soil>
           <Name>paparoa_silt_loam</Name>
-          <InitialWater>
-            <Name>Initial water</Name>
-            <PercentMethod>EvenlyDistributed</PercentMethod>
-            <FractionFull>0.24</FractionFull>
-            <DepthWetSoil>NaN</DepthWetSoil>
-          </InitialWater>
           <Water>
             <Name>Water</Name>
             <SoilCrop>
@@ -297,19 +291,19 @@
                 <double>0.06</double>
               </LL>
               <KL>
-                <double>0.075</double>
+                <double>0.1</double>
                 <double>0.075</double>
                 <double>0.06</double>
-                <double>0.049</double>
-                <double>0.049</double>
-                <double>0.049</double>
-                <double>0.049</double>
-                <double>0.049</double>
+                <double>0.03</double>
+                <double>0.02</double>
+                <double>0.005</double>
+                <double>0.002</double>
+                <double>0.001</double>
               </KL>
               <XF>
                 <double>1</double>
                 <double>1</double>
-                <double>0.51</double>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -338,39 +332,39 @@
               <double>1.68</double>
             </BD>
             <AirDry>
-              <double>0.077</double>
-              <double>0.152</double>
-              <double>0.162</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
+              <double>0.03</double>
+              <double>0.12</double>
+              <double>0.1</double>
+              <double>0.13</double>
+              <double>0.12</double>
+              <double>0.15</double>
+              <double>0.15</double>
+              <double>0.15</double>
             </AirDry>
             <LL15>
-              <double>0.154</double>
-              <double>0.152</double>
-              <double>0.162</double>
               <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
-              <double>0.06</double>
+              <double>0.12</double>
+              <double>0.1</double>
+              <double>0.13</double>
+              <double>0.12</double>
+              <double>0.15</double>
+              <double>0.15</double>
+              <double>0.15</double>
             </LL15>
             <DUL>
-              <double>0.374</double>
-              <double>0.32</double>
-              <double>0.325</double>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
-              <double>0.15</double>
+              <double>0.3</double>
+              <double>0.3</double>
+              <double>0.26</double>
+              <double>0.24</double>
+              <double>0.24</double>
+              <double>0.21</double>
+              <double>0.21</double>
+              <double>0.21</double>
             </DUL>
             <SAT>
-              <double>0.456</double>
-              <double>0.413</double>
-              <double>0.376</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.32</double>
               <double>0.3</double>
               <double>0.3</double>
               <double>0.3</double>
@@ -555,6 +549,14 @@
               <double>0.84000000000000163</double>
               <double>0.53999999999999926</double>
             </NH4>
+            <SW>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+              <double>0.2</double>
+            </SW>
             <NO3Units>kgha</NO3Units>
             <NH4Units>kgha</NH4Units>
             <SWUnits>Volumetric</SWUnits>
@@ -838,8 +840,8 @@ namespace Models
         [XmlIgnore] public double LeafAppearedPosition {get; set;}
         [XmlIgnore] public double ExpandedLeafNoYesterday {get; set;}
         [XmlIgnore] public double AppearedLeafNoYesterday {get; set;}
-        [XmlIgnore] public double MostRecentlyExpandedLeafArea {get; set;}
-        [XmlIgnore] public double MostRecentlyAppearedLeafMaxArea {get; set;}
+        [XmlIgnore] public double MostRecentlyExpandedLeafSize {get; set;}
+        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize {get; set;}
         
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -849,8 +851,8 @@ namespace Models
 			LeafAppearedPosition = 0;
 			ExpandedLeafNoYesterday = 0;
 			AppearedLeafNoYesterday = 0;
-			MostRecentlyExpandedLeafArea = 0;
-			MostRecentlyAppearedLeafMaxArea = 0;
+			MostRecentlyExpandedLeafSize = 0;
+			MostRecentlyAppearedLeafMaxSize = 0;
 		}	   
 		
 		[EventSubscribe("DoManagement")]
@@ -920,7 +922,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
 			{
 			LeafExpandedPosition = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
-			MostRecentlyExpandedLeafArea = (double)zone.Get("Maize.Leaf.CohortSize["+(int)LeafExpandedPosition+"]");
+			MostRecentlyExpandedLeafSize = (double)zone.Get("Maize.Leaf.CohortSize["+(int)LeafExpandedPosition+"]");
 			}
 			else
 			LeafExpandedPosition = 0;
@@ -928,7 +930,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxArea = (double)zone.Get("Maize.Leaf.InitialLeafValues.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.InitialLeafValues.MaxArea.Value");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -956,15 +958,9 @@ namespace Models
             <string>[ExtraVariables].Script.DeltaSoilOMN</string>
             <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
             <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Maize].Root.NSupply</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
             <string>[ExtraVariables].Script.SWC</string>
             <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
             <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
             <string>[ExtraVariables].Script.AccumEO</string>
             <string>[ExtraVariables].Script.AccumEP</string>
             <string>[ExtraVariables].Script.AccumES</string>
@@ -974,18 +970,34 @@ namespace Models
             <string>[ExtraVariables].Script.AccumIrrigation</string>
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+            <string>[ExtraVariables].Script.FomN</string>
+            <string>[ExtraVariables].Script.HumN</string>
+            <string>[ExtraVariables].Script.BiomN</string>
+            <string>[ExtraVariables].Script.DltNMinRes</string>
+            <string>[ExtraVariables].Script.DltNMinTot</string>
+            <string>[Soil].SoilWater.SW</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
+            <string>[Soil].SoilWater.pond</string>
+            <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+            <string>[Soil].NO3N</string>
+            <string>[MicroClimate].net_radn</string>
+            <string>[MicroClimate].peta</string>
+            <string>[MicroClimate].petr</string>
             <string>[Maize].Grain.Live.Wt</string>
             <string>[Maize].Stem.Live.Wt</string>
-            <string>[Maize].Spike.Live.N</string>
-            <string>[Maize].Spike.Live.Wt</string>
-            <string>[Maize].Grain.Live.N</string>
-            <string>[Maize].Stem.Live.N</string>
+            <string>[Maize].Summariser.EarLive.Wt</string>
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
+            <string>[Maize].Husk.Live.Wt</string>
+            <string>[Maize].Summariser.EarLive.N</string>
+            <string>[Maize].Grain.Live.N</string>
+            <string>[Maize].Stem.Live.N</string>
             <string>[Maize].Leaf.Live.N</string>
             <string>[Maize].Root.Live.N</string>
-            <string>[Maize].Leaf.Live.NConc</string>
-            <string>[Maize].Root.Live.NConc</string>
             <string>[Maize].Root.WaterSupply</string>
             <string>[Maize].Root.WaterUptake</string>
             <string>[Maize].Leaf.Transpiration</string>
@@ -995,19 +1007,7 @@ namespace Models
             <string>[Maize].Leaf.CoverDead</string>
             <string>[Maize].Leaf.LAI</string>
             <string>[Maize].Leaf.Height</string>
-            <string>[Maize].Husk.Live.Wt</string>
-            <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Maize].Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
+            <string>[Maize].Leaf.InitialLeafValues.MaxArea.Value</string>
             <string>[Maize].Leaf.Fw</string>
             <string>[Maize].Leaf.Fn</string>
             <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -1016,17 +1016,15 @@ namespace Models
             <string>[Maize].Summariser.AboveGroundLive.Wt</string>
             <string>[Maize].Summariser.Total.N</string>
             <string>[Maize].Summariser.Total.Wt</string>
+            <string>[Maize].Arbitrator.NDemand</string>
             <string>[Maize].Phenology.Stage</string>
             <string>[Maize].Leaf.ExpandedCohortNo</string>
             <string>[Maize].Leaf.AppearedCohortNo</string>
             <string>[Maize].Leaf.CohortArea[1:30]</string>
-            <string>[ExtraVariables].Script.LeafExpandedPosition</string>
-            <string>[ExtraVariables].Script.MostRecentlyExpandedLeafArea</string>
-            <string>[ExtraVariables].Script.variable</string>
-            <string>[Soil].SoilWater.SW</string>
-            <string>[Maize].Leaf.InitialLeafValues.MaxArea.Value</string>
             <string>[ExtraVariables].Script.LeafAppearedPosition</string>
-            <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxArea</string>
+            <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
+            <string>[ExtraVariables].Script.LeafExpandedPosition</string>
+            <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -1616,12 +1614,12 @@ namespace Models
           <Marker>None</Marker>
           <Line>Solid</Line>
           <X>
-            <TableName>PredictedObserved</TableName>
+            <TableName>LeafAreas</TableName>
             <FieldName>Predicted.ExtraVariables.Script.LeafExpandedPosition</FieldName>
           </X>
           <Y>
-            <TableName>PredictedObserved</TableName>
-            <FieldName>Predicted.ExtraVariables.Script.MostRecentlyExpandedLeafArea</FieldName>
+            <TableName>LeafAreas</TableName>
+            <FieldName>Predicted.ExtraVariables.Script.MostRecentlyExpandedLeafSize</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
@@ -1636,12 +1634,12 @@ namespace Models
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <TableName>PredictedObserved</TableName>
+            <TableName>LeafAreas</TableName>
             <FieldName>Observed.ExtraVariables.Script.LeafExpandedPosition</FieldName>
           </X>
           <Y>
-            <TableName>PredictedObserved</TableName>
-            <FieldName>Observed.ExtraVariables.Script.MostRecentlyExpandedLeafArea</FieldName>
+            <TableName>LeafAreas</TableName>
+            <FieldName>Observed.ExtraVariables.Script.MostRecentlyExpandedLeafSize</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -1661,7 +1659,7 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.MostRecentlyAppearedLeafMaxArea</FieldName>
+            <FieldName>ExtraVariables.Script.MostRecentlyAppearedLeafMaxSize</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
@@ -1732,6 +1730,497 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
       </Graph>
+      <Folder>
+        <Name>SWCLayers</Name>
+        <Graph>
+          <Name>SWC20cm</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Predicted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.SW(1)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>SoilWater</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>SoilWater</TableName>
+              <FieldName>Soil.SoilWater.SW(1)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SWC40cm</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Predicted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.SW(2)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>SoilWater</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>SoilWater</TableName>
+              <FieldName>Soil.SoilWater.SW(2)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SWC60cm</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Predicted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.SW(3)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>SoilWater</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>SoilWater</TableName>
+              <FieldName>Soil.SoilWater.SW(3)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SWC80cm</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Predicted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.SW(4)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>SoilWater</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>SoilWater</TableName>
+              <FieldName>Soil.SoilWater.SW(4)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SWC100cm</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Predicted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.SW(5)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>SoilWater</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>SoilWater</TableName>
+              <FieldName>Soil.SoilWater.SW(5)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SWC120cm</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Predicted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.SW(6)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>SoilWater</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>SoilWater</TableName>
+              <FieldName>Soil.SoilWater.SW(6)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SWC140cm</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Predicted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.SW(7)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>SoilWater</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>SoilWater</TableName>
+              <FieldName>Soil.SoilWater.SW(7)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SWC1600cm</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Predicted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.SW(8)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>SoilWater</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>SoilWater</TableName>
+              <FieldName>Soil.SoilWater.SW(8)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+      </Folder>
     </Folder>
   </Experiment>
   <Experiment>
@@ -2756,85 +3245,6 @@ TreatNo = 2
           <ArbitrationMethod>Old</ArbitrationMethod>
           <NutrientUptakeMethod>2</NutrientUptakeMethod>
         </Arbitrator>
-        <Report>
-          <Name>Report</Name>
-          <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Maize].Root.NSupply</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Maize].Grain.Live.Wt</string>
-            <string>[Maize].Stem.Live.Wt</string>
-            <string>[Maize].Spike.Live.N</string>
-            <string>[Maize].Spike.Live.Wt</string>
-            <string>[Maize].Grain.Live.N</string>
-            <string>[Maize].Stem.Live.N</string>
-            <string>[Maize].Leaf.Live.Wt</string>
-            <string>[Maize].Root.Live.Wt</string>
-            <string>[Maize].Leaf.Live.N</string>
-            <string>[Maize].Root.Live.N</string>
-            <string>[Maize].Leaf.Live.NConc</string>
-            <string>[Maize].Root.Live.NConc</string>
-            <string>[Maize].Root.WaterSupply</string>
-            <string>[Maize].Root.WaterUptake</string>
-            <string>[Maize].Leaf.Transpiration</string>
-            <string>[Maize].Leaf.WaterDemand</string>
-            <string>[Maize].Root.Depth</string>
-            <string>[Maize].Leaf.CoverTotal</string>
-            <string>[Maize].Leaf.CoverDead</string>
-            <string>[Maize].Leaf.LAI</string>
-            <string>[Maize].Leaf.Height</string>
-            <string>[Maize].Husk.Live.Wt</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Maize].Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[Maize].Leaf.Fw</string>
-            <string>[Maize].Leaf.Fn</string>
-            <string>[Maize].Phenology.CurrentPhaseName</string>
-            <string>[Maize].Phenology.Stage</string>
-            <string>[Maize].Summariser.AboveGroundLive.N</string>
-            <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-            <string>[Maize].Summariser.Total.N</string>
-            <string>[Maize].Summariser.Total.Wt</string>
-            <string>[Maize].Phenology.Stage</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Clock].DoReport</string>
-          </EventNames>
-        </Report>
         <Manager>
           <Name>ExtraVariables</Name>
           <Script />
@@ -2902,10 +3312,23 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
+		[XmlIgnore] public double LeafExpandedPosition {get; set;}
+        [XmlIgnore] public double LeafAppearedPosition {get; set;}
+        [XmlIgnore] public double ExpandedLeafNoYesterday {get; set;}
+        [XmlIgnore] public double AppearedLeafNoYesterday {get; set;}
+        [XmlIgnore] public double MostRecentlyExpandedLeafSize {get; set;}
+        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize {get; set;}
+        
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
+			LeafExpandedPosition = 0;
+			LeafAppearedPosition = 0;
+			ExpandedLeafNoYesterday = 0;
+			AppearedLeafNoYesterday = 0;
+			MostRecentlyExpandedLeafSize = 0;
+			MostRecentlyAppearedLeafMaxSize = 0;
 		}	   
 		
 		[EventSubscribe("DoManagement")]
@@ -2951,6 +3374,10 @@ namespace Models
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
+			
+			//Leaf number variable
+			ExpandedLeafNoYesterday = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+			AppearedLeafNoYesterday = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -2967,11 +3394,113 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
+			
+			if ((double)zone.Get("Maize.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
+			{
+			LeafExpandedPosition = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+			MostRecentlyExpandedLeafSize = (double)zone.Get("Maize.Leaf.CohortSize["+(int)LeafExpandedPosition+"]");
+			}
+			else
+			LeafExpandedPosition = 0;
+			
+			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
+			{
+			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.InitialLeafValues.MaxArea.Value");
+			}
+			//else
+			//LeafAppearedPosition = 0;
+			
 		}
 	}
 }
 	   ]]></Code>
         </Manager>
+        <Report>
+          <Name>Report</Name>
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[ExtraVariables].Script.AccumPlantN</string>
+            <string>[ExtraVariables].Script.AccumMineralisation</string>
+            <string>[ExtraVariables].Script.AccumDenit</string>
+            <string>[ExtraVariables].Script.AccumFert</string>
+            <string>[ExtraVariables].Script.AccumLeach</string>
+            <string>[ExtraVariables].Script.AccumDetach</string>
+            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+            <string>[ExtraVariables].Script.SWC</string>
+            <string>[ExtraVariables].Script.DUL</string>
+            <string>[ExtraVariables].Script.OutFlowLat</string>
+            <string>[ExtraVariables].Script.AccumEO</string>
+            <string>[ExtraVariables].Script.AccumEP</string>
+            <string>[ExtraVariables].Script.AccumES</string>
+            <string>[ExtraVariables].Script.AccumDrainage</string>
+            <string>[ExtraVariables].Script.AccumRunoff</string>
+            <string>[ExtraVariables].Script.AccumRainfall</string>
+            <string>[ExtraVariables].Script.AccumIrrigation</string>
+            <string>[ExtraVariables].Script.AccumOutflowLat</string>
+            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+            <string>[ExtraVariables].Script.FomN</string>
+            <string>[ExtraVariables].Script.HumN</string>
+            <string>[ExtraVariables].Script.BiomN</string>
+            <string>[ExtraVariables].Script.DltNMinRes</string>
+            <string>[ExtraVariables].Script.DltNMinTot</string>
+            <string>[Soil].SoilWater.SW</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
+            <string>[Soil].SoilWater.pond</string>
+            <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+            <string>[Soil].NO3N</string>
+            <string>[MicroClimate].net_radn</string>
+            <string>[MicroClimate].peta</string>
+            <string>[MicroClimate].petr</string>
+            <string>[Maize].Grain.Live.Wt</string>
+            <string>[Maize].Stem.Live.Wt</string>
+            <string>[Maize].Summariser.EarLive.Wt</string>
+            <string>[Maize].Leaf.Live.Wt</string>
+            <string>[Maize].Root.Live.Wt</string>
+            <string>[Maize].Husk.Live.Wt</string>
+            <string>[Maize].Summariser.EarLive.N</string>
+            <string>[Maize].Grain.Live.N</string>
+            <string>[Maize].Stem.Live.N</string>
+            <string>[Maize].Leaf.Live.N</string>
+            <string>[Maize].Root.Live.N</string>
+            <string>[Maize].Root.WaterSupply</string>
+            <string>[Maize].Root.WaterUptake</string>
+            <string>[Maize].Leaf.Transpiration</string>
+            <string>[Maize].Leaf.WaterDemand</string>
+            <string>[Maize].Root.Depth</string>
+            <string>[Maize].Leaf.CoverTotal</string>
+            <string>[Maize].Leaf.CoverDead</string>
+            <string>[Maize].Leaf.LAI</string>
+            <string>[Maize].Leaf.Height</string>
+            <string>[Maize].Leaf.InitialLeafValues.MaxArea.Value</string>
+            <string>[Maize].Leaf.Fw</string>
+            <string>[Maize].Leaf.Fn</string>
+            <string>[Maize].Phenology.CurrentPhaseName</string>
+            <string>[Maize].Phenology.Stage</string>
+            <string>[Maize].Summariser.AboveGroundLive.N</string>
+            <string>[Maize].Summariser.AboveGroundLive.Wt</string>
+            <string>[Maize].Summariser.Total.N</string>
+            <string>[Maize].Summariser.Total.Wt</string>
+            <string>[Maize].Arbitrator.NDemand</string>
+            <string>[Maize].Phenology.Stage</string>
+            <string>[Maize].Leaf.ExpandedCohortNo</string>
+            <string>[Maize].Leaf.AppearedCohortNo</string>
+            <string>[Maize].Leaf.CohortArea[1:30]</string>
+            <string>[ExtraVariables].Script.LeafAppearedPosition</string>
+            <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
+            <string>[ExtraVariables].Script.LeafExpandedPosition</string>
+            <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -5402,222 +5931,6 @@ namespace Models
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
         </MicroClimate>
-        <Report>
-          <Name>Report</Name>
-          <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[Maize].Root.NSupply</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[Maize].Grain.Live.Wt</string>
-            <string>[Maize].Stem.Live.Wt</string>
-            <string>[Maize].Spike.Live.N</string>
-            <string>[Maize].Spike.Live.Wt</string>
-            <string>[Maize].Grain.Live.N</string>
-            <string>[Maize].Stem.Live.N</string>
-            <string>[Maize].Leaf.Live.Wt</string>
-            <string>[Maize].Root.Live.Wt</string>
-            <string>[Maize].Leaf.Live.N</string>
-            <string>[Maize].Root.Live.N</string>
-            <string>[Maize].Leaf.Live.NConc</string>
-            <string>[Maize].Root.Live.NConc</string>
-            <string>[Maize].Root.WaterSupply</string>
-            <string>[Maize].Root.WaterUptake</string>
-            <string>[Maize].Leaf.Transpiration</string>
-            <string>[Maize].Leaf.WaterDemand</string>
-            <string>[Maize].Root.Depth</string>
-            <string>[Maize].Leaf.CoverTotal</string>
-            <string>[Maize].Leaf.CoverDead</string>
-            <string>[Maize].Leaf.LAI</string>
-            <string>[Maize].Leaf.Height</string>
-            <string>[Maize].Husk.Live.Wt</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[Maize].Arbitrator.NDemand</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[Maize].Leaf.Fw</string>
-            <string>[Maize].Leaf.Fn</string>
-            <string>[Maize].Phenology.CurrentPhaseName</string>
-            <string>[Maize].Phenology.Stage</string>
-            <string>[Maize].Summariser.AboveGroundLive.N</string>
-            <string>[Maize].Summariser.AboveGroundLive.Wt</string>
-            <string>[Maize].Summariser.Total.N</string>
-            <string>[Maize].Summariser.Total.Wt</string>
-            <string>[Maize].Phenology.Stage</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Clock].DoReport</string>
-          </EventNames>
-        </Report>
-        <Manager>
-          <Name>ExtraVariables</Name>
-          <Script />
-          <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant Maize;          
-		[Link] Zone zone;			
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
-
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-			InitialDay = true;
-		}	   
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.NO3N);
-			NH4N = Utility.Math.Sum(Soil.NH4N);
-			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-
-			AccumIrrigation += Irrig.IrrigationApplied;
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[Maize].Leaf.Transpiration");
-            AccumEP -= (double)zone.Get("Maize.Root.WaterUptake");
-			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage -= Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
-			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
-		}
-	}
-}
-	   ]]></Code>
-        </Manager>
         <Arbitrator>
           <Name>Arbitrator</Name>
           <ArbitrationMethod>Old</ArbitrationMethod>
@@ -5705,6 +6018,262 @@ namespace Models
             <Action>[Maize].Sow(population:10.52, cultivar:"Pioneer_3153", depth:50, rowSpacing:800);</Action>
           </Operation>
         </Operations>
+        <Report>
+          <Name>Report</Name>
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[ExtraVariables].Script.AccumPlantN</string>
+            <string>[ExtraVariables].Script.AccumMineralisation</string>
+            <string>[ExtraVariables].Script.AccumDenit</string>
+            <string>[ExtraVariables].Script.AccumFert</string>
+            <string>[ExtraVariables].Script.AccumLeach</string>
+            <string>[ExtraVariables].Script.AccumDetach</string>
+            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+            <string>[ExtraVariables].Script.SWC</string>
+            <string>[ExtraVariables].Script.DUL</string>
+            <string>[ExtraVariables].Script.OutFlowLat</string>
+            <string>[ExtraVariables].Script.AccumEO</string>
+            <string>[ExtraVariables].Script.AccumEP</string>
+            <string>[ExtraVariables].Script.AccumES</string>
+            <string>[ExtraVariables].Script.AccumDrainage</string>
+            <string>[ExtraVariables].Script.AccumRunoff</string>
+            <string>[ExtraVariables].Script.AccumRainfall</string>
+            <string>[ExtraVariables].Script.AccumIrrigation</string>
+            <string>[ExtraVariables].Script.AccumOutflowLat</string>
+            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+            <string>[ExtraVariables].Script.FomN</string>
+            <string>[ExtraVariables].Script.HumN</string>
+            <string>[ExtraVariables].Script.BiomN</string>
+            <string>[ExtraVariables].Script.DltNMinRes</string>
+            <string>[ExtraVariables].Script.DltNMinTot</string>
+            <string>[Soil].SoilWater.SW</string>
+            <string>[Soil].SoilWater.Eo</string>
+            <string>[Soil].SoilWater.Es</string>
+            <string>[Soil].SoilWater.Drainage</string>
+            <string>[Soil].SoilWater.Runoff</string>
+            <string>[Soil].SoilWater.pond</string>
+            <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+            <string>[Soil].NO3N</string>
+            <string>[MicroClimate].net_radn</string>
+            <string>[MicroClimate].peta</string>
+            <string>[MicroClimate].petr</string>
+            <string>[Maize].Grain.Live.Wt</string>
+            <string>[Maize].Stem.Live.Wt</string>
+            <string>[Maize].Summariser.EarLive.Wt</string>
+            <string>[Maize].Leaf.Live.Wt</string>
+            <string>[Maize].Root.Live.Wt</string>
+            <string>[Maize].Husk.Live.Wt</string>
+            <string>[Maize].Summariser.EarLive.N</string>
+            <string>[Maize].Grain.Live.N</string>
+            <string>[Maize].Stem.Live.N</string>
+            <string>[Maize].Leaf.Live.N</string>
+            <string>[Maize].Root.Live.N</string>
+            <string>[Maize].Root.WaterSupply</string>
+            <string>[Maize].Root.WaterUptake</string>
+            <string>[Maize].Leaf.Transpiration</string>
+            <string>[Maize].Leaf.WaterDemand</string>
+            <string>[Maize].Root.Depth</string>
+            <string>[Maize].Leaf.CoverTotal</string>
+            <string>[Maize].Leaf.CoverDead</string>
+            <string>[Maize].Leaf.LAI</string>
+            <string>[Maize].Leaf.Height</string>
+            <string>[Maize].Leaf.InitialLeafValues.MaxArea.Value</string>
+            <string>[Maize].Leaf.Fw</string>
+            <string>[Maize].Leaf.Fn</string>
+            <string>[Maize].Phenology.CurrentPhaseName</string>
+            <string>[Maize].Phenology.Stage</string>
+            <string>[Maize].Summariser.AboveGroundLive.N</string>
+            <string>[Maize].Summariser.AboveGroundLive.Wt</string>
+            <string>[Maize].Summariser.Total.N</string>
+            <string>[Maize].Summariser.Total.Wt</string>
+            <string>[Maize].Arbitrator.NDemand</string>
+            <string>[Maize].Phenology.Stage</string>
+            <string>[Maize].Leaf.ExpandedCohortNo</string>
+            <string>[Maize].Leaf.AppearedCohortNo</string>
+            <string>[Maize].Leaf.CohortArea[1:30]</string>
+            <string>[ExtraVariables].Script.LeafAppearedPosition</string>
+            <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
+            <string>[ExtraVariables].Script.LeafExpandedPosition</string>
+            <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <Manager>
+          <Name>ExtraVariables</Name>
+          <Script />
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{      
+		[Link] Clock Clock;
+		[Link] Soils.Soil Soil;
+		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
+		[Link] Weather Met;   
+		[Link] Fertiliser Fert;
+		[Link] Irrigation Irrig;  
+		[Link] Plant Maize;          
+		[Link] Zone zone;			
+					
+		[XmlIgnore] public bool InitialDay { get; set; }
+		
+		[XmlIgnore] public double AccumPlantN { get; set; }
+		[XmlIgnore] public double AccumMineralisation { get; set; }
+		[XmlIgnore] public double AccumDenit { get; set; }
+		[XmlIgnore] public double AccumFert { get; set; }
+		[XmlIgnore] public double AccumLeach { get; set; }
+		[XmlIgnore] public double AccumDetach { get; set; }
+		[XmlIgnore] public double DeltaSoilOMN { get; set; }
+		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
+		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
+		[XmlIgnore] public double SoilNitrogenContent { get; set; }
+		
+		[XmlIgnore] public double AccumEO { get; set; }
+		[XmlIgnore] public double AccumEP { get; set; }
+		[XmlIgnore] public double AccumES { get; set; }
+		[XmlIgnore] public double AccumDrainage { get; set; }
+		[XmlIgnore] public double AccumRunoff { get; set; }
+		[XmlIgnore] public double AccumOutflowLat { get; set; }
+		[XmlIgnore] public double AccumIrrigation { get; set; }
+		[XmlIgnore] public double AccumRainfall { get; set; }
+		[XmlIgnore] public double SoilWaterDeficit { get; set; }
+	
+		[XmlIgnore] public double  InitialSoilOMN { get; set; }
+		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
+		[XmlIgnore] public double  InitialMineralN { get; set; }
+		
+		[XmlIgnore] public double SWC { get; set; }
+		[XmlIgnore] public double DUL { get; set; }
+		[XmlIgnore] public double OutFlowLat { get; set; }
+
+		[XmlIgnore] public double FomN { get; set; }
+		[XmlIgnore] public double BiomN { get; set; }
+		[XmlIgnore] public double HumN { get; set; }
+		[XmlIgnore] public double OrganicN { get; set; }
+		[XmlIgnore] public double NO3N { get; set; }
+		[XmlIgnore] public double NH4N { get; set; }
+		[XmlIgnore] public double UreaN { get; set; }
+		[XmlIgnore] public double MineralN { get; set; }
+		[XmlIgnore] public double DltNMinRes { get; set; }
+		[XmlIgnore] public double DltNMinTot { get; set; }
+		
+		[XmlIgnore] public double LeafExpandedPosition {get; set;}
+        [XmlIgnore] public double LeafAppearedPosition {get; set;}
+        [XmlIgnore] public double ExpandedLeafNoYesterday {get; set;}
+        [XmlIgnore] public double AppearedLeafNoYesterday {get; set;}
+        [XmlIgnore] public double MostRecentlyExpandedLeafSize {get; set;}
+        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize {get; set;}
+        
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+			InitialDay = true;
+			LeafExpandedPosition = 0;
+			LeafAppearedPosition = 0;
+			ExpandedLeafNoYesterday = 0;
+			AppearedLeafNoYesterday = 0;
+			MostRecentlyExpandedLeafSize = 0;
+			MostRecentlyAppearedLeafMaxSize = 0;
+		}	   
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//!!!!!! Nitrogen balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
+			OrganicN = FomN + HumN + BiomN;
+			NO3N = Utility.Math.Sum(Soil.NO3N);
+			NH4N = Utility.Math.Sum(Soil.NH4N);
+			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
+			MineralN = NO3N + NH4N + UreaN; 
+			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            int layers = Soil.Thickness.Length;
+			if (InitialDay == true)
+			{
+				InitialSurfaceOMN = SOM.N;
+				InitialSoilOMN = OrganicN;
+				InitialMineralN = MineralN;
+				InitialDay = false;
+			}
+			AccumFert += Fert.NitrogenApplied;
+			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
+			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
+            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+			AccumPlantN -= (double)zone.Get("Maize.Root.NUptake");
+			DeltaSoilOMN = OrganicN - InitialSoilOMN;
+			DeltaSoilMineralN = MineralN - InitialMineralN;
+			SoilNitrogenContent = MineralN;
+			
+			//!!!!!! Water balance components !!!!!!
+			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
+
+			AccumIrrigation += Irrig.IrrigationApplied;
+			AccumRainfall += Met.Rain;
+			//AccumEP -= (double)zone.Get("[Maize].Leaf.Transpiration");
+            AccumEP -= (double)zone.Get("Maize.Root.WaterUptake");
+			SoilWaterDeficit =  (SWC - DUL);
+			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
+			AccumOutflowLat -= OutFlowLat;
+			
+			//Leaf number variable
+			ExpandedLeafNoYesterday = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+			AppearedLeafNoYesterday = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
+			
+			
+			AccumEO -= Soil.SoilWater.Eo;
+			AccumES -= Soil.SoilWater.Es; 
+			AccumDrainage -= Soil.SoilWater.Drainage;
+			AccumRunoff -= Soil.SoilWater.Runoff;
+			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
+			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
+			
+			if ((double)zone.Get("Maize.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
+			{
+			LeafExpandedPosition = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+			MostRecentlyExpandedLeafSize = (double)zone.Get("Maize.Leaf.CohortSize["+(int)LeafExpandedPosition+"]");
+			}
+			else
+			LeafExpandedPosition = 0;
+			
+			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
+			{
+			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.InitialLeafValues.MaxArea.Value");
+			}
+			//else
+			//LeafAppearedPosition = 0;
+			
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6665,6 +7234,11 @@ namespace Models
           <Action>[Maize].Sow(population:12, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);</Action>
         </Operation>
       </Operations>
+      <Arbitrator>
+        <Name>Arbitrator</Name>
+        <ArbitrationMethod>Old</ArbitrationMethod>
+        <NutrientUptakeMethod>2</NutrientUptakeMethod>
+      </Arbitrator>
       <Manager>
         <Name>ExtraVariables</Name>
         <Script />
@@ -6732,10 +7306,23 @@ namespace Models
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
 		
+		[XmlIgnore] public double LeafExpandedPosition {get; set;}
+        [XmlIgnore] public double LeafAppearedPosition {get; set;}
+        [XmlIgnore] public double ExpandedLeafNoYesterday {get; set;}
+        [XmlIgnore] public double AppearedLeafNoYesterday {get; set;}
+        [XmlIgnore] public double MostRecentlyExpandedLeafSize {get; set;}
+        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize {get; set;}
+        
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
 			InitialDay = true;
+			LeafExpandedPosition = 0;
+			LeafAppearedPosition = 0;
+			ExpandedLeafNoYesterday = 0;
+			AppearedLeafNoYesterday = 0;
+			MostRecentlyExpandedLeafSize = 0;
+			MostRecentlyAppearedLeafMaxSize = 0;
 		}	   
 		
 		[EventSubscribe("DoManagement")]
@@ -6781,6 +7368,10 @@ namespace Models
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
+			
+			//Leaf number variable
+			ExpandedLeafNoYesterday = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+			AppearedLeafNoYesterday = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -6797,16 +7388,28 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
 			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
+			
+			if ((double)zone.Get("Maize.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
+			{
+			LeafExpandedPosition = (double)zone.Get("Maize.Leaf.ExpandedCohortNo");
+			MostRecentlyExpandedLeafSize = (double)zone.Get("Maize.Leaf.CohortSize["+(int)LeafExpandedPosition+"]");
+			}
+			else
+			LeafExpandedPosition = 0;
+			
+			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
+			{
+			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.InitialLeafValues.MaxArea.Value");
+			}
+			//else
+			//LeafAppearedPosition = 0;
+			
 		}
 	}
 }
 	   ]]></Code>
       </Manager>
-      <Arbitrator>
-        <Name>Arbitrator</Name>
-        <ArbitrationMethod>Old</ArbitrationMethod>
-        <NutrientUptakeMethod>2</NutrientUptakeMethod>
-      </Arbitrator>
       <Report>
         <Name>Report</Name>
         <VariableNames>
@@ -6820,15 +7423,9 @@ namespace Models
           <string>[ExtraVariables].Script.DeltaSoilOMN</string>
           <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-          <string>[Maize].Root.NSupply</string>
-          <string>[Soil].SoilWater.Eo</string>
-          <string>[Soil].SoilWater.Es</string>
           <string>[ExtraVariables].Script.SWC</string>
           <string>[ExtraVariables].Script.DUL</string>
-          <string>[Soil].SoilWater.Drainage</string>
-          <string>[Soil].SoilWater.Runoff</string>
           <string>[ExtraVariables].Script.OutFlowLat</string>
-          <string>[Soil].SoilWater.pond</string>
           <string>[ExtraVariables].Script.AccumEO</string>
           <string>[ExtraVariables].Script.AccumEP</string>
           <string>[ExtraVariables].Script.AccumES</string>
@@ -6838,18 +7435,34 @@ namespace Models
           <string>[ExtraVariables].Script.AccumIrrigation</string>
           <string>[ExtraVariables].Script.AccumOutflowLat</string>
           <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+          <string>[ExtraVariables].Script.FomN</string>
+          <string>[ExtraVariables].Script.HumN</string>
+          <string>[ExtraVariables].Script.BiomN</string>
+          <string>[ExtraVariables].Script.DltNMinRes</string>
+          <string>[ExtraVariables].Script.DltNMinTot</string>
+          <string>[Soil].SoilWater.SW</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Runoff</string>
+          <string>[Soil].SoilWater.pond</string>
+          <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+          <string>[Soil].NO3N</string>
+          <string>[MicroClimate].net_radn</string>
+          <string>[MicroClimate].peta</string>
+          <string>[MicroClimate].petr</string>
           <string>[Maize].Grain.Live.Wt</string>
           <string>[Maize].Stem.Live.Wt</string>
-          <string>[Maize].Spike.Live.N</string>
-          <string>[Maize].Spike.Live.Wt</string>
-          <string>[Maize].Grain.Live.N</string>
-          <string>[Maize].Stem.Live.N</string>
+          <string>[Maize].Summariser.EarLive.Wt</string>
           <string>[Maize].Leaf.Live.Wt</string>
           <string>[Maize].Root.Live.Wt</string>
+          <string>[Maize].Husk.Live.Wt</string>
+          <string>[Maize].Summariser.EarLive.N</string>
+          <string>[Maize].Grain.Live.N</string>
+          <string>[Maize].Stem.Live.N</string>
           <string>[Maize].Leaf.Live.N</string>
           <string>[Maize].Root.Live.N</string>
-          <string>[Maize].Leaf.Live.NConc</string>
-          <string>[Maize].Root.Live.NConc</string>
           <string>[Maize].Root.WaterSupply</string>
           <string>[Maize].Root.WaterUptake</string>
           <string>[Maize].Leaf.Transpiration</string>
@@ -6859,24 +7472,7 @@ namespace Models
           <string>[Maize].Leaf.CoverDead</string>
           <string>[Maize].Leaf.LAI</string>
           <string>[Maize].Leaf.Height</string>
-          <string>[Maize].Husk.Live.Wt</string>
-          <string>[Soil].SoilWater.SWmm</string>
-          <string>[Soil].NO3N</string>
-          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[Maize].Arbitrator.NDemand</string>
-          <string>[Maize].Arbitrator.DMSupply</string>
-          <string>[Maize].Arbitrator.DMDemand</string>
-          <string>[Maize].Arbitrator.DMAllocated</string>
-          <string>[Maize].Arbitrator.DMSinkLimitation</string>
-          <string>[Maize].Arbitrator.DMNutrientLimitation</string>
-          <string>[MicroClimate].net_radn</string>
-          <string>[MicroClimate].peta</string>
-          <string>[MicroClimate].petr</string>
-          <string>[ExtraVariables].Script.FomN</string>
-          <string>[ExtraVariables].Script.HumN</string>
-          <string>[ExtraVariables].Script.BiomN</string>
-          <string>[ExtraVariables].Script.DltNMinRes</string>
-          <string>[ExtraVariables].Script.DltNMinTot</string>
+          <string>[Maize].Leaf.InitialLeafValues.MaxArea.Value</string>
           <string>[Maize].Leaf.Fw</string>
           <string>[Maize].Leaf.Fn</string>
           <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -6885,14 +7481,15 @@ namespace Models
           <string>[Maize].Summariser.AboveGroundLive.Wt</string>
           <string>[Maize].Summariser.Total.N</string>
           <string>[Maize].Summariser.Total.Wt</string>
+          <string>[Maize].Arbitrator.NDemand</string>
           <string>[Maize].Phenology.Stage</string>
           <string>[Maize].Leaf.ExpandedCohortNo</string>
           <string>[Maize].Leaf.AppearedCohortNo</string>
           <string>[Maize].Leaf.CohortArea[1:30]</string>
-          <string>[Maize].Leaf.InitialLeafValues.GrowthDuration.Value</string>
-          <string>[Maize].Leaf.InitialLeafValues.LagDuration.Value</string>
-          <string>[Maize].Leaf.InitialLeafValues.SenescenceDuration.Value</string>
-          <string>[Maize].Structure.MainStemNodeAppearanceRate.Value</string>
+          <string>[ExtraVariables].Script.LeafAppearedPosition</string>
+          <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
+          <string>[ExtraVariables].Script.LeafExpandedPosition</string>
+          <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>

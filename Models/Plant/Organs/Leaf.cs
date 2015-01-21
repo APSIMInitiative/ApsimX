@@ -472,7 +472,7 @@ namespace Models.PMF.Organs
             {
                 int i = 0;
 
-                double[] values = new double[(int)Structure.MaximumNodeNumber];
+                double[] values = new double[Structure.MaximumNodeNumber];
                 for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
