@@ -1530,6 +1530,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
+  <Type name="DeltaFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
   <Type name="DivideFunction">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>
