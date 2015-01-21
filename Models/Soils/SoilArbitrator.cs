@@ -21,6 +21,13 @@ namespace Models.Soils
         public double[] Water;
         public double[] NO3N;
         public double[] NH4N;
+        public double TotalWater
+        {
+            get{
+                return Utility.Math.Sum(Water);
+            }
+        }
+
     }
     public class CropWaterUptakes
     {
