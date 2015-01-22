@@ -78,6 +78,7 @@ namespace UserInterface.Views
             recentFilesGroup = new ListViewGroup("Recent files", HorizontalAlignment.Left);
         }
 
+        private const string indexTabText = "+";
 
         /// <summary>
         /// Gets the current tab index.
@@ -206,7 +207,7 @@ namespace UserInterface.Views
                     if (r.Contains(e.Location) /* && it is the header that was clicked*/)
                     {
                         TabControl.SelectedTab = TabControl.TabPages[i];
-                        CloseTabMenuItem.Enabled = TabControl.SelectedTab.Text != " ";
+                        CloseTabMenuItem.Enabled = TabControl.SelectedTab.Text != indexTabText;
                         TabPopupMenu.Show(this, e.Location);
 
                     }
@@ -220,7 +221,7 @@ namespace UserInterface.Views
                     if (r.Contains(e.Location) /* && it is the header that was clicked*/)
                     {
                         TabControl.SelectedTab = TabControl.TabPages[i];
-                        if (TabControl.SelectedTab.Text != " ")
+                        if (TabControl.SelectedTab.Text != indexTabText)
                            OnCloseTabClick(sender, e);
                     }
                 }
@@ -235,7 +236,7 @@ namespace UserInterface.Views
             if (TabClosing != null)
                 TabClosing.Invoke(this, e);
             
-            if (TabControl.SelectedTab.Text != " ")
+            if (TabControl.SelectedTab.Text != indexTabText)
                 TabControl.TabPages.Remove(TabControl.SelectedTab);
         }
 
@@ -392,7 +393,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if (e.TabPage.Text == "+")
+            if (e.TabPage.Text == indexTabText)
                 PopulateStartPageList();
         }
     }
