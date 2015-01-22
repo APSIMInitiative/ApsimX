@@ -2482,17 +2482,16 @@ namespace Models.AgPasture1
 		/// <summary>Placeholder for SoilArbitrator</summary>
 		/// <param name="info">some info</param>
 		/// <returns>soil info</returns>
-		public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)
+        public List<Soils.ZoneWaterAndN> GetSWUptakes(Models.Soils.SoilState soilstate)
 		{
-			return info;
+            throw new NotImplementedException();
 		}
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info)
+        public List<Soils.ZoneWaterAndN> GetNUptakes(Models.Soils.SoilState soilstate)
         {
-            // not yet correctly implemented
-            return info;
+            throw new NotImplementedException();
         }
 
 		/// <summary>Set the soil water uptake for today</summary>

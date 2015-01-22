@@ -1484,8 +1484,8 @@ namespace Models
             <string>Wheat.Grain.Wt</string>
             <string>Wheat.Grain.N</string>
             <string>Wheat.Total.Wt</string>
-            <string>Wheat.EP</string>
             <string>[wheat].SWStress.Photo</string>
+            <string>[Wheat].EP</string>
             <string>sum([Soil].SoilWater.SWmm) as SWTotal</string>
             <string>sum([Soil].SoilNitrogen.NO3) as NO3Total</string>
           </VariableNames>
@@ -2061,8 +2061,8 @@ namespace Models
             <string>Wheat.Grain.Wt</string>
             <string>Wheat.Grain.N</string>
             <string>Wheat.Total.Wt</string>
-            <string>Wheat.EP</string>
             <string>[wheat].SWStress.Photo</string>
+            <string>[Wheat].EP</string>
             <string>sum([Soil].SoilWater.SWmm) as SWTotal</string>
             <string>sum([Soil].SoilNitrogen.NO3) as NO3Total</string>
           </VariableNames>
@@ -4313,7 +4313,7 @@ namespace Models
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>C:\ApsimX\Examples\WeatherFiles\Dalby.met</FileName>
+        <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
@@ -4327,8 +4327,8 @@ namespace Models
             <string>sum([Soil].SoilWater.SWmm) as SWTotal</string>
             <string>sum([Soil].SoilNitrogen.NO3) as NO3Total</string>
             <string>sum([Soil].SoilNitrogen.NH4) as NH4Total</string>
-            <string>[wheat].PotentialEP</string>
-            <string>[wheat].EP</string>
+            <string>[Wheat].PotentialEP</string>
+            <string>[Wheat].EP</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -4780,12 +4780,12 @@ namespace Models
             <string>sum([Soil].SoilWater.SWmm) as SWTotal</string>
             <string>sum([Soil].SoilNitrogen.NO3) as NO3Total</string>
             <string>sum([Soil].SoilNitrogen.NH4) as NH4Total</string>
-            <string>[wheat].PotentialEP</string>
-            <string>[barley].PotentialEP</string>
-            <string>([wheat].PotentialEP+[barley].PotentialEP) as TotalPEP</string>
-            <string>[wheat].EP</string>
-            <string>[barley].EP</string>
-            <string>([wheat].EP+[barley].EP) as TotalEP</string>
+            <string>[Wheat].PotentialEP</string>
+            <string>[Barley].PotentialEP</string>
+            <string>([Wheat].PotentialEP+[Barley].PotentialEP) as TotalPEP</string>
+            <string>[Wheat].EP</string>
+            <string>[Barley].EP</string>
+            <string>([Wheat].EP+[Barley].EP) as TotalEP</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfDay</string>
@@ -4810,13 +4810,13 @@ namespace Models
                 <double>0.446</double>
               </LL>
               <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.02</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.005</double>
               </KL>
               <XF>
                 <double>1</double>
@@ -4840,13 +4840,13 @@ namespace Models
                 <double>0.446</double>
               </LL>
               <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.03</double>
+                <double>0.02</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.005</double>
               </KL>
               <XF>
                 <double>1</double>
@@ -5474,7 +5474,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Field1Wheat</Title>
+        <Title>Field1</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5494,11 +5494,11 @@ namespace Models
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field2Wheat</Title>
+        <Title>Field2</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16744448</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -5507,34 +5507,56 @@ namespace Models
         </X>
         <Y>
           <TableName>Report2</TableName>
-          <FieldName>wheat.PotentialEP</FieldName>
+          <FieldName>TotalPEP</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>ActualEP</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <Series>
-        <Title>Field2Barley</Title>
+        <Title>Field1</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-32704</ColourArgb>
+        <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
-          <TableName>Report2</TableName>
+          <TableName>Report1</TableName>
           <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
-          <TableName>Report2</TableName>
-          <FieldName>barley.PotentialEP</FieldName>
+          <TableName>Report1</TableName>
+          <FieldName>wheat.EP</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field2Total</Title>
+        <Title>Field2</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>

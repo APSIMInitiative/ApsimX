@@ -156,10 +156,10 @@ namespace Models.PMF
         /// <param name="info"></param>
         /// <returns></returns>
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
-        public List<ZoneWaterAndN> GetSWUptakes(List<ZoneWaterAndN> zones)
+        public List<ZoneWaterAndN> GetSWUptakes(Models.Soils.SoilState soilstate)
         {
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            foreach (ZoneWaterAndN Z in zones)
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
                 if (Z.Name == this.Parent.Name)
                     MyZone = Z;
 
@@ -182,6 +182,8 @@ namespace Models.PMF
 
             Uptake.Name = this.Parent.Name;
             Uptake.Water = SWUptake;
+            Uptake.NO3N = new double[SWUptake.Length];
+            Uptake.NH4N = new double[SWUptake.Length];
             Uptakes.Add(Uptake);
             return Uptakes;
 
@@ -189,10 +191,10 @@ namespace Models.PMF
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> zones)
+        public List<Soils.ZoneWaterAndN> GetNUptakes(Models.Soils.SoilState soilstate)
         {
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            foreach (ZoneWaterAndN Z in zones)
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
                 if (Z.Name == this.Parent.Name)
                     MyZone = Z;
 
@@ -221,6 +223,7 @@ namespace Models.PMF
             Uptake.Name = this.Parent.Name;
             Uptake.NO3N = NO3Uptake;
             Uptake.NH4N = NH4Uptake;
+            Uptake.Water = new double[NO3Uptake.Length];
             Uptakes.Add(Uptake);
             return Uptakes;
         }

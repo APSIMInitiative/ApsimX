@@ -1248,13 +1248,13 @@ namespace Models.PMF.OldPlant
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="zones"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> zones)
+        public List<Soils.ZoneWaterAndN> GetSWUptakes(Models.Soils.SoilState soilstate)
         {
             List<Soils.ZoneWaterAndN> Uptakes= new List<Soils.ZoneWaterAndN>();
             Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
 
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            foreach (ZoneWaterAndN Z in zones)
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
                 if (Z.Name==this.Parent.Name)
                     MyZone = Z;
 
@@ -1263,6 +1263,8 @@ namespace Models.PMF.OldPlant
 
             Uptake.Name = this.Parent.Name;
             Uptake.Water = Root.CalculateWaterUptake(TopsSWDemand, SW);
+            Uptake.NO3N = new double[SW.Length];
+            Uptake.NH4N = new double[SW.Length];
             Uptakes.Add(Uptake);
             return Uptakes;
 
@@ -1270,26 +1272,26 @@ namespace Models.PMF.OldPlant
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="zones"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> zones)
+        public List<Soils.ZoneWaterAndN> GetNUptakes(Models.Soils.SoilState soilstate)
         {
             List<Soils.ZoneWaterAndN> Uptakes = new List<Soils.ZoneWaterAndN>();
             Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
 
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            foreach (ZoneWaterAndN Z in zones)
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
                 if (Z.Name == this.Parent.Name)
                     MyZone = Z;
 
             double[] NO3N = MyZone.NO3N;
             double[] NH4N = MyZone.NH4N;
-            //OnPrepare(null, null);  //DEAN!!!
-
 
             double[] NO3NUp = new double[NO3N.Length];
             double[] NH4NUp = new double[NH4N.Length];
+            
             Root.CalculateNUptake(NO3N, NH4N, ref NO3NUp, ref NH4NUp);
             Uptake.NO3N = NO3NUp;
             Uptake.NH4N = NH4NUp;
+            Uptake.Water = new double[NO3N.Length];
             Uptake.Name = this.Parent.Name;
 
             Uptakes.Add(Uptake);

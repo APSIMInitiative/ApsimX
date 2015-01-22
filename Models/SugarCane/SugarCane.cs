@@ -9108,17 +9108,16 @@ namespace Models
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)  
+        public List<Soils.ZoneWaterAndN> GetSWUptakes(Models.Soils.SoilState soilstate)  
             {
-            return info;   //sv- other crop modules seem to do this, so I just copied it. (Only Plant15 seems to use SoilArbitrator though)
+                throw new NotImplementedException();
             }
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info)
+        public List<Soils.ZoneWaterAndN> GetNUptakes(Models.Soils.SoilState soilstate)
         {
-            // not yet correctly implemented
-            return info;
+            throw new NotImplementedException();
         }
 
 
