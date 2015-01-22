@@ -76,6 +76,7 @@ namespace Models.Soils
                     foreach (ZoneWaterAndN NewZ in NewState.Zones)
                         if (Z.Name == NewZ.Name)
                         {
+                            NewZ.Water = Utility.Math.Subtract(NewZ.Water, Z.Water);
                             NewZ.NO3N = Utility.Math.Subtract(NewZ.NO3N, Z.NO3N);
                             NewZ.NH4N = Utility.Math.Subtract(NewZ.NH4N, Z.NH4N);
                         }
@@ -188,7 +189,7 @@ namespace Models.Soils
             Estimate3.Calculate(Estimate.CalcType.Water, SoilState3);
 
             Estimate Estimate4 = new Estimate(this.Parent);
-            SoilState SoilState4 = InitialSoilState - Estimate1;
+            SoilState SoilState4 = InitialSoilState - Estimate3;
             Estimate4.Calculate(Estimate.CalcType.Water, SoilState4);
 
 
@@ -242,7 +243,7 @@ namespace Models.Soils
             Estimate3.Calculate(Estimate.CalcType.Nitrogen, SoilState3);
 
             Estimate Estimate4 = new Estimate(this.Parent);
-            SoilState SoilState4 = InitialSoilState - Estimate1;
+            SoilState SoilState4 = InitialSoilState - Estimate3;
             Estimate4.Calculate(Estimate.CalcType.Nitrogen, SoilState4);
 
             List<CropUptakes> UptakesFinal = new List<CropUptakes>();
