@@ -1676,7 +1676,7 @@
       <Name>GympieIF</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>C:\ApsimX\Tests\Egrandis\toolara8797.met</FileName>
+        <FileName>%root%\Tests\Egrandis\toolara8797.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
@@ -4754,7 +4754,7 @@
       <Name>Wagga</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>C:\ApsimX\Tests\Egrandis\wwepp.met</FileName>
+        <FileName>%root%\Tests\Egrandis\wwepp.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
