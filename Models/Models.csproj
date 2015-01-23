@@ -165,10 +165,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Report\ReportColumn.cs" />
+    <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
+    <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
-    <Compile Include="Soils\SoilArbitrator.cs" />
+    <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterDataTypes.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterEvap.cs" />

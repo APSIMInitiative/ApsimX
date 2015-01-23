@@ -11,6 +11,7 @@ using Models.PMF.Phen;
 using System.Xml.Serialization;
 using System.IO;
 using Models.Soils;
+using Models.Soils.Arbitrator;
 
 namespace Models.PMF.OldPlant
 {
@@ -1248,10 +1249,10 @@ namespace Models.PMF.OldPlant
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="zones"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetSWUptakes(Models.Soils.SoilState soilstate)
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
-            List<Soils.ZoneWaterAndN> Uptakes= new List<Soils.ZoneWaterAndN>();
-            Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
+            List<ZoneWaterAndN> Uptakes= new List<ZoneWaterAndN>();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN();
 
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
             foreach (ZoneWaterAndN Z in soilstate.Zones)
@@ -1272,10 +1273,10 @@ namespace Models.PMF.OldPlant
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="zones"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(Models.Soils.SoilState soilstate)
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            List<Soils.ZoneWaterAndN> Uptakes = new List<Soils.ZoneWaterAndN>();
-            Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN();
 
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
             foreach (ZoneWaterAndN Z in soilstate.Zones)
@@ -1302,14 +1303,14 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetSWUptake(List<ZoneWaterAndN> info)
         {
             Root.ArbitratorSWUptake = info[0].Water;
         }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetNUptake(List<ZoneWaterAndN> info)
         {
             Root.ArbitratorNO3Uptake = info[0].NO3N;
             Root.ArbitratorNH4Uptake = info[0].NH4N;

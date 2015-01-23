@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using Models;
 using Models.Core;
 using Models.Soils;
+using Models.Soils.Arbitrator;
 
 namespace Models
 {
@@ -5288,14 +5289,14 @@ namespace Models
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetSWUptakes(Models.Soils.SoilState soilstate)
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(Models.Soils.SoilState soilstate)
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
@@ -5303,12 +5304,12 @@ namespace Models
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetSWUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the  uptanke for today
         /// </summary>
-        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetNUptake(List<ZoneWaterAndN> info)
         { }
 
         //===============================================
@@ -6694,7 +6695,7 @@ namespace Models
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info">The information.</param>
         /// <returns></returns>
-        public Soils.ZoneWaterAndN GetPotSWUptake(Soils.ZoneWaterAndN info)
+        public ZoneWaterAndN GetPotSWUptake(ZoneWaterAndN info)
         {
             return info;
         }

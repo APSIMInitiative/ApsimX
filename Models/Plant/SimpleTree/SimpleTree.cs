@@ -5,6 +5,7 @@ using System.Text;
 using Models.Core;
 using Models.Soils;
 using System.Xml.Serialization;
+using Models.Soils.Arbitrator;
 
 namespace Models.PMF
 {
@@ -156,7 +157,7 @@ namespace Models.PMF
         /// <param name="info"></param>
         /// <returns></returns>
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
-        public List<ZoneWaterAndN> GetSWUptakes(Models.Soils.SoilState soilstate)
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
             foreach (ZoneWaterAndN Z in soilstate.Zones)
@@ -177,8 +178,8 @@ namespace Models.PMF
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PotentialEP / TotPotSWUptake);
 
-            List<Soils.ZoneWaterAndN> Uptakes = new List<Soils.ZoneWaterAndN>();
-            Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN();
 
             Uptake.Name = this.Parent.Name;
             Uptake.Water = SWUptake;
@@ -191,7 +192,7 @@ namespace Models.PMF
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(Models.Soils.SoilState soilstate)
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
             foreach (ZoneWaterAndN Z in soilstate.Zones)
@@ -217,8 +218,8 @@ namespace Models.PMF
                 NO3Uptake[j] = PotNO3Uptake[j] * Math.Min(1.0, NDemand / TotPotNUptake);
                 NH4Uptake[j] = PotNH4Uptake[j] * Math.Min(1.0, NDemand / TotPotNUptake);
             }
-            List<Soils.ZoneWaterAndN> Uptakes = new List<Soils.ZoneWaterAndN>();
-            Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN();
 
             Uptake.Name = this.Parent.Name;
             Uptake.NO3N = NO3Uptake;
@@ -231,7 +232,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetSWUptake(List<ZoneWaterAndN> info)
         {
             SWUptake = info[0].Water;
             EP = Utility.Math.Sum(SWUptake);
@@ -242,7 +243,7 @@ namespace Models.PMF
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetNUptake(List<ZoneWaterAndN> info)
         {
             NitrogenChangedType NUptakeType = new NitrogenChangedType();
             NUptakeType.Sender = Name;

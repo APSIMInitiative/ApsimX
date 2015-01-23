@@ -9,6 +9,7 @@ using Models;
 using Models.Core;
 using Models.Soils;
 using Models.PMF;
+using Models.Soils.Arbitrator;
 
 //nb. when adding a NEW model you need to add it as a child model in Models.cs (otherwise it just ignores the xml)
 
@@ -9108,14 +9109,14 @@ namespace Models
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetSWUptakes(Models.Soils.SoilState soilstate)  
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)  
             {
                 throw new NotImplementedException();
             }
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(Models.Soils.SoilState soilstate)
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
@@ -9124,12 +9125,12 @@ namespace Models
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetSWUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetNUptake(List<ZoneWaterAndN> info)
         { }    
 
 
