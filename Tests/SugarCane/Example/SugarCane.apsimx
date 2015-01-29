@@ -3319,13 +3319,12 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
+          <string>[SugarCane].crop_status as crop_status</string>
           <string>[SugarCane].biomass as biomass</string>
           <string>[SugarCane].cane_wt as cane_wt</string>
           <string>[SugarCane].sucrose_wt as sucrose_wt</string>
-          <string>[SugarCane].crop_status as crop_status</string>
           <string>[SugarCane].height as height</string>
           <string>[SugarCane].root_depth as root_depth</string>
-          <string>[SugarCane].node_no_dead as node_no_dead</string>
           <string>[SugarCane].node_no_detached as node_no_detached</string>
           <string>[SugarCane].leaves as leaves</string>
           <string>[SugarCane].green_leaves as green_leaves</string>
@@ -3355,11 +3354,6 @@ namespace Models
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
-    <Input>
-      <Name>Input</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\SugarCane\Example\Fortran\Fortran.out</FileName>
-    </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Tests>
