@@ -310,7 +310,7 @@
             <double>300</double>
           </Thickness>
           <NO3>
-            <double>217</double>
+            <double>270</double>
             <double>30</double>
             <double>5</double>
             <double>5</double>
@@ -644,7 +644,7 @@ namespace Models
         </Operation>
         <Operation>
           <Date>1998-12-29T00:00:00</Date>
-          <Action>[Fertiliser].Apply(150, Fertiliser.Types.UreaN, 10);</Action>
+          <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
         </Operation>
       </Operations>
       <Report>
@@ -660,15 +660,9 @@ namespace Models
           <string>[ExtraVariables].Script.DeltaSoilOMN</string>
           <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-          <string>[MCSP].Root.NSupply</string>
-          <string>[Soil].SoilWater.Eo</string>
-          <string>[Soil].SoilWater.Es</string>
           <string>[ExtraVariables].Script.SWC</string>
           <string>[ExtraVariables].Script.DUL</string>
-          <string>[Soil].SoilWater.Drainage</string>
-          <string>[Soil].SoilWater.Runoff</string>
           <string>[ExtraVariables].Script.OutFlowLat</string>
-          <string>[Soil].SoilWater.pond</string>
           <string>[ExtraVariables].Script.AccumEO</string>
           <string>[ExtraVariables].Script.AccumEP</string>
           <string>[ExtraVariables].Script.AccumES</string>
@@ -678,6 +672,22 @@ namespace Models
           <string>[ExtraVariables].Script.AccumIrrigation</string>
           <string>[ExtraVariables].Script.AccumOutflowLat</string>
           <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+          <string>[ExtraVariables].Script.FomN</string>
+          <string>[ExtraVariables].Script.HumN</string>
+          <string>[ExtraVariables].Script.BiomN</string>
+          <string>[ExtraVariables].Script.DltNMinRes</string>
+          <string>[ExtraVariables].Script.DltNMinTot</string>
+          <string>[MicroClimate].net_radn</string>
+          <string>[MicroClimate].peta</string>
+          <string>[MicroClimate].petr</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Runoff</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
+          <string>[Soil].SoilWater.pond</string>
+          <string>[Soil].SoilWater.SWmm</string>
+          <string>[Soil].NO3N</string>
           <string>[MCSP].Leaf.Live.Wt</string>
           <string>[MCSP].Root.Live.Wt</string>
           <string>[MCSP].Product.Live.Wt</string>
@@ -698,18 +708,8 @@ namespace Models
           <string>[MCSP].Leaf.Height</string>
           <string>[MCSP].Leaf.PotentialBiomass.Value</string>
           <string>[MCSP].Product.LiveFWt</string>
-          <string>[Soil].SoilWater.SWmm</string>
-          <string>[Soil].NO3N</string>
-          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[MCSP].Arbitrator.NDemand</string>
-          <string>[MicroClimate].net_radn</string>
-          <string>[MicroClimate].peta</string>
-          <string>[MicroClimate].petr</string>
-          <string>[ExtraVariables].Script.FomN</string>
-          <string>[ExtraVariables].Script.HumN</string>
-          <string>[ExtraVariables].Script.BiomN</string>
-          <string>[ExtraVariables].Script.DltNMinRes</string>
-          <string>[ExtraVariables].Script.DltNMinTot</string>
+          <string>[MCSP].OrganArbitrator.NDemand</string>
+          <string>[MCSP].OrganArbitrator.NSupply</string>
           <string>[MCSP].Leaf.Fw</string>
           <string>[MCSP].Leaf.Fn</string>
           <string>[MCSP].Summariser.Total.Wt</string>
@@ -1186,187 +1186,6 @@ namespace Models
     </Graph>
     <Graph>
       <Name>Plant Biomass components</Name>
-      <Graph>
-        <Name>Plant Biomass components</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Stover</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Root</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Root.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Product</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Product.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Total</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Summariser.Total.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>ParamDryYield</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32704</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Dash</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.DryYield.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>ParamTotalBiomStartReproductive</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Dot</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.TotalBiomassAtStartReproductive.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>ParamTotalBiomStartSen</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>DashDot</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.TotalBiomassAtStartSenescence.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>ParamYmax</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Dash</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Ymax.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-      </Graph>
       <Axis>
         <Type>Left</Type>
         <Title>Crop Biomass (g/m2)</Title>
@@ -1943,7 +1762,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Arbitrator.NDemand</FieldName>
+          <FieldName>MCSP.OrganArbitrator.NDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
@@ -1963,7 +1782,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Root.NSupply.Uptake</FieldName>
+          <FieldName>MCSP.OrganArbitrator.NSupply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>

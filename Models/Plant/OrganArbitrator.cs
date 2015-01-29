@@ -119,6 +119,10 @@ namespace Models.PMF
             /// <summary>Gets or sets the total retranslocation supply.</summary>
             /// <value>The total supply of labile biomass in the crop</value>
             public double TotalRetranslocationSupply { get; set; }
+            /// <summary>Gets or sets the total crop supply.</summary>
+            /// <value>crop supply from uptake, fixation, reallocation and remobilisation</value>
+            public double TotalPlantSupply { get; set; }
+            
             //Biomass Allocation Variables
             /// <summary>Gets or sets the reallocation.</summary>
             /// <value>The amount of biomass reallocated from each organ as it dies</value>
@@ -370,6 +374,28 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Gets the n supply.</summary>
+        /// <value>The n supply.</value>
+        [XmlIgnore]
+        public double NSupply
+        {
+            get
+            {
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return N.TotalPlantSupply;
+                        else return 0;
+                    }
+                    else
+                        return N.TotalPlantDemand;
+                }
+                else
+                    return 0.0;
+            }
+        }
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
         public double DeltaWt
@@ -472,7 +498,8 @@ namespace Models.PMF
             DM.TotalUptakeSupply = Utility.Math.Sum(DM.UptakeSupply);
             DM.TotalFixationSupply = Utility.Math.Sum(DM.FixationSupply);
             DM.TotalRetranslocationSupply = Utility.Math.Sum(DM.RetranslocationSupply);
-
+            DM.TotalPlantSupply = DM.TotalReallocationSupply + DM.TotalUptakeSupply + DM.TotalFixationSupply + DM.TotalRetranslocationSupply;
+            
             // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -558,17 +585,18 @@ namespace Models.PMF
             {
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.ReallocationSupply[i] = Supply.Reallocation;
-                //BAT.UptakeSupply[i] = Supply.Uptake;
+                BAT.UptakeSupply[i] = Supply.Uptake;
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
                 BAT.Start += Organs[i].Live.N + Organs[i].Dead.N;
             }
 
             BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
-            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
             BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
             BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
-
+            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
+            
             for (int i = 0; i < Organs.Length; i++)
             {
                 BiomassPoolType Demand = Organs[i].NDemand;
