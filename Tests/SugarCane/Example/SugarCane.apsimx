@@ -3426,14 +3426,9 @@ namespace Models
   <DataStore>
     <Name>DataStore</Name>
     <Input>
-      <Name>Sugar</Name>
+      <Name>Fortran</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\SugarCane\Example\OLD\Sugar.out</FileName>
-    </Input>
-    <Input>
-      <Name>Cane</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\SugarCane\Example\OLD\Cane.out</FileName>
+      <FileName>%root%\Tests\SugarCane\Example\Fortran\Fortran.out</FileName>
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
