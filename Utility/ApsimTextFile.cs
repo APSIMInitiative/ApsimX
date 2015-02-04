@@ -21,7 +21,7 @@ namespace Utility
     // A simple type for encapsulating a constant
     // ---------------------------------------------
     [Serializable]
-    class ApsimConstant
+    public class ApsimConstant
     {
         public ApsimConstant(string name, string val, string units, string comm)
         {
@@ -42,7 +42,7 @@ namespace Utility
     /// reading data.
     /// </summary>
     [Serializable]
-    class ApsimTextFile
+    public class ApsimTextFile
     {
         private string _FileName;
         public StringCollection Headings;
@@ -69,13 +69,29 @@ namespace Utility
 
             _FileName = FileName;
             CSV = System.IO.Path.GetExtension(FileName).ToLower() == ".csv";
-
-            _Constants.Clear();
-
             In = new StreamReaderRandomAccess(_FileName);
+            Open();
+        }
+
+        /// <summary>Opens the specified stream.</summary>
+        /// <param name="stream">The stream.</param>
+        public void Open(Stream stream)
+        {
+            _FileName = "Memory stream";
+            CSV = false;
+            In = new StreamReaderRandomAccess(stream);
+            Open();
+        }
+
+        /// <summary>
+        /// Open the file ready for reading.
+        /// </summary>
+        private void Open()
+        {
+            _Constants.Clear();
             ReadApsimHeader(In);
             if (Headings == null || Units == null)
-                throw new Exception("Cannot find headings and units line in " + FileName);
+                throw new Exception("Cannot find headings and units line in " + _FileName);
             FirstLinePosition = In.Position;
 
             // Read in first line.
@@ -101,7 +117,7 @@ namespace Utility
 
             // Get the date from the last line.
             if (Words.Count == 0)
-                throw new Exception("Cannot find last row of file: " + FileName);
+                throw new Exception("Cannot find last row of file: " + _FileName);
             Values = ConvertWordsToObjects(Words, ColumnTypes);
             _LastDate = GetDateFromValues(Values);
 
@@ -352,7 +368,7 @@ namespace Utility
                         DateFormat = DateFormat.Replace("dd", "d");
                         DateFormat = DateFormat.Replace("m", "M");
                         if (DateFormat == "")
-                            DateFormat = "d/M/yyyy";
+                            DateFormat = "yyyy-MM-dd";
                         DateTime Value = DateTime.ParseExact(Words[w], DateFormat, CultureInfo.InvariantCulture);
                         Values[w] = Value;
                     }
