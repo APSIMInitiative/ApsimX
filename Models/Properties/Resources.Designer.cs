@@ -61,6 +61,62 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to   &lt;Plant&gt;
+        ///	&lt;Name&gt;Maize&lt;/Name&gt;
+        ///	&lt;CropType&gt;Maize&lt;/CropType&gt;
+        ///	&lt;Cultivar&gt;
+        ///		&lt;Name&gt;Pioneer_3153&lt;/Name&gt;
+        ///		&lt;Alias&gt;Pie&lt;/Alias&gt;
+        ///	&lt;/Cultivar&gt;
+        ///	&lt;OrganArbitrator&gt;
+        ///		&lt;Name&gt;Arbitrator&lt;/Name&gt;
+        ///		&lt;NArbitrationOption&gt;PrioritythenRelativeAllocation&lt;/NArbitrationOption&gt;
+        ///		&lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
+        ///	&lt;/OrganArbitrator&gt;
+        ///	&lt;Phenology&gt;
+        ///		&lt;Name&gt;Phenology&lt;/Name&gt;
+        ///		&lt;MultiplyFunction&gt;
+        ///			&lt;Name&gt;ThermalTime&lt;/Name&gt;
+        ///			&lt;PhaseLookup&gt;
+        ///				&lt;PhaseLookupValue&gt;
+        ///					&lt;Name&gt;SoilTemperature&lt;/Name [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Maize {
+            get {
+                return ResourceManager.GetString("Maize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;Plant&gt;
+        ///	&lt;Name&gt;MCSP&lt;/Name&gt;
+        ///	&lt;CropType&gt;Maize&lt;/CropType&gt;
+        ///	&lt;OrganArbitrator&gt;
+        ///		&lt;NArbitrationOption&gt;RelativeAllocation&lt;/NArbitrationOption&gt;
+        ///		&lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
+        ///	&lt;/OrganArbitrator&gt;
+        ///	&lt;Phenology&gt;
+        ///		&lt;Name&gt;Phenology&lt;/Name&gt;
+        ///		&lt;AirTemperatureFunction&gt;
+        ///			&lt;Name&gt;ThermalTime&lt;/Name&gt;
+        ///			&lt;XYPairs&gt;
+        ///				&lt;Name&gt;XYPairs&lt;/Name&gt;
+        ///				&lt;X&gt;
+        ///					&lt;double&gt;0&lt;/double&gt;
+        ///					&lt;double&gt;30&lt;/double&gt;
+        ///					&lt;double&gt;40&lt;/double&gt;
+        ///				&lt;/X&gt;
+        ///				&lt;Y&gt;
+        ///					&lt;double&gt;0&lt;/double&gt;
+        ///					&lt;double&gt;30&lt;/d [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string MCSP {
+            get {
+                return ResourceManager.GetString("MCSP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;OilPalm&gt;
         ///  &lt;Name&gt;OilPalm&lt;/Name&gt;
         ///  &lt;Cultivar&gt;
@@ -154,13 +210,14 @@ namespace Models.Properties {
         ///  &lt;NSupplyPreference&gt;active&lt;/NSupplyPreference&gt;
         ///  &lt;DoRetranslocationBeforeNDemand&gt;false&lt;/DoRetranslocationBeforeNDemand&gt;
         ///  &lt;RemovedByAnimal /&gt;
-        ///  &lt;Cultivar&gt;
-        ///    &lt;Name&gt;GattonHartog&lt;/Name&gt;
-        ///    &lt;Command&gt;[Phenology].Vernalisation.VernSens = 2.5&lt;/Command&gt;
-        ///    &lt;Command&gt;[Phenology].Vernalisation.PhotopSens = 3.5&lt;/Command&gt;
-        ///  &lt;/Cultivar&gt;    
-        ///  &lt;Cultivar&gt;
-        ///    &lt;Name&gt;Rongotea&lt;/N [rest of string was truncated]&quot;;.
+        ///  &lt;Population1&gt;
+        ///    &lt;Name&gt;Population&lt;/Name&gt;
+        ///    &lt;PhaseBasedSwitch&gt;
+        ///      &lt;Name&gt;CropFailureStressPeriod&lt;/Name&gt;
+        ///      &lt;Start&gt;Emergence&lt;/Start&gt;
+        ///      &lt;End&gt;Flowering&lt;/End&gt;
+        ///    &lt;/PhaseBasedSwitch&gt;
+        ///    &lt;SoilTemperatureWeightedFunc [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Wheat {
             get {
@@ -170,8 +227,12 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to     &lt;Plant&gt;
-        ///	&lt;Name&gt;WheatPMF&lt;/Name&gt;
+        ///	&lt;Name&gt;WheatPMFPrototype&lt;/Name&gt;
         ///	&lt;CropType&gt;Wheat&lt;/CropType&gt;
+        ///	&lt;Cultivar&gt;
+        ///		&lt;Name&gt;JerseyBenny&lt;/Name&gt;
+        ///		&lt;Alias&gt;JerseyBenny&lt;/Alias&gt;
+        ///	&lt;/Cultivar&gt;
         ///	&lt;OrganArbitrator&gt;
         ///		&lt;Name&gt;Arbitrator&lt;/Name&gt;
         ///		&lt;NArbitrationOption&gt;PriorityThenRelativeAllocation&lt;/NArbitrationOption&gt;
@@ -182,11 +243,7 @@ namespace Models.Properties {
         ///		&lt;MultiplyFunction&gt;
         ///			&lt;Name&gt;ThermalTime&lt;/Name&gt;
         ///			&lt;PhaseLookup&gt;
-        ///				&lt;Name&gt;Temperature&lt;/Name&gt;
-        ///				&lt;PhaseLookupValue&gt;
-        ///					&lt;Name&gt;SoilTemperature&lt;/Name&gt;
-        ///					&lt;Start&gt;Sowing&lt;/Start&gt;
-        /// [rest of string was truncated]&quot;;.
+        ///				&lt;Name&gt;Temperature&lt;/ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WheatPMFPrototype {
             get {

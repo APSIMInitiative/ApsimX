@@ -760,7 +760,7 @@ namespace Models
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
+          <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
@@ -805,7 +805,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumMineralisation</Title>
@@ -825,7 +825,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumDenit</Title>
@@ -845,7 +845,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumFert</Title>
@@ -865,7 +865,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumLeach</Title>
@@ -885,7 +885,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>DeltaSoilOMN</Title>
@@ -905,7 +905,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>DeltaSurfaceOMN</Title>
@@ -925,7 +925,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>DeltaSoilMineralN</Title>
@@ -945,7 +945,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -986,7 +986,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumEO</Title>
@@ -1006,7 +1006,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumEP</Title>
@@ -1026,7 +1026,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumES</Title>
@@ -1046,7 +1046,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumDrainage</Title>
@@ -1066,7 +1066,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumRunoff</Title>
@@ -1086,7 +1086,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumRainfall</Title>
@@ -1106,7 +1106,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumIrrigation</Title>
@@ -1126,7 +1126,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumLatOutFlow</Title>
@@ -1146,7 +1146,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>SoilWaterDeficit</Title>
@@ -1166,7 +1166,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1207,7 +1207,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Stem</Title>
@@ -1227,7 +1227,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Tuber</Title>
@@ -1247,7 +1247,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root</Title>
@@ -1267,7 +1267,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Leaf</Title>
@@ -1287,7 +1287,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Step</Title>
@@ -1307,7 +1307,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Tuber</Title>
@@ -1327,7 +1327,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root Dead</Title>
@@ -1347,7 +1347,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Above Ground Wt</Title>
@@ -1367,7 +1367,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Below Ground Wt</Title>
@@ -1387,7 +1387,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Total Wt</Title>
@@ -1407,7 +1407,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1448,7 +1448,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Stem</Title>
@@ -1468,7 +1468,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Tuber</Title>
@@ -1488,7 +1488,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root</Title>
@@ -1508,7 +1508,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Leaf</Title>
@@ -1528,7 +1528,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Step</Title>
@@ -1548,7 +1548,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Tuber</Title>
@@ -1568,7 +1568,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root Dead</Title>
@@ -1588,7 +1588,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Above Ground Wt</Title>
@@ -1608,7 +1608,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Below Ground Wt</Title>
@@ -1628,7 +1628,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Total Wt</Title>
@@ -1648,7 +1648,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Total Live N</Title>
@@ -1668,7 +1668,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1717,7 +1717,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Uptake</Title>
@@ -1737,7 +1737,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Demand</Title>
@@ -1757,7 +1757,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Transpiration</Title>
@@ -1777,7 +1777,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Potential</Title>
@@ -1797,7 +1797,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root Depth</Title>
@@ -1817,7 +1817,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Canopy Height</Title>
@@ -1837,7 +1837,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1885,7 +1885,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Cover Green</Title>
@@ -1905,7 +1905,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>CoverTotal</Title>
@@ -1925,7 +1925,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>LAI</Title>
@@ -1945,7 +1945,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>LAI Dead</Title>
@@ -1965,7 +1965,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root depth</Title>
@@ -1985,7 +1985,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2034,7 +2034,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
@@ -2054,7 +2054,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2103,7 +2103,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
@@ -2123,7 +2123,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>

@@ -3319,101 +3319,27 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
+          <string>[SugarCane].crop_status as crop_status</string>
           <string>[SugarCane].biomass as biomass</string>
           <string>[SugarCane].cane_wt as cane_wt</string>
           <string>[SugarCane].sucrose_wt as sucrose_wt</string>
-          <string>[SugarCane].sw_demand as sw_demand</string>
-          <string>[SugarCane].DaysAfterSowing as DaysAfterSowing</string>
-          <string>[SugarCane].ratoon_no as ratoon_no</string>
-          <string>[SugarCane].crop_status as crop_status</string>
-          <string>[Soil].SoilWater.ESW as esw</string>
-          <string>[SugarCane].lai as lai</string>
-          <string>[SugarCane].nfact_photo as nfact_photo</string>
+          <string>[SugarCane].height as height</string>
           <string>[SugarCane].root_depth as root_depth</string>
-          <string>[SugarCane].swdef_photo as swdef_photo</string>
-          <string>[SugarCane].canefw as canefw</string>
-          <string>[Weather].Radn as radn</string>
-          <string>[Weather].Rain as rain</string>
-          <string>[Weather].MaxT as maxt</string>
-          <string>[Weather].MinT as mint</string>
-          <string>[SugarCane].tt_tot as tt_tot</string>
-          <string>[SugarCane].leaf_no as leaf_no</string>
-          <string>[SugarCane].node_no_dead as node_no_dead</string>
           <string>[SugarCane].node_no_detached as node_no_detached</string>
           <string>[SugarCane].leaves as leaves</string>
           <string>[SugarCane].green_leaves as green_leaves</string>
           <string>[SugarCane].dead_leaves as dead_leaves</string>
-          <string>[SugarCane].leaf_area as leaf_area</string>
-          <string>[SugarCane].leaf_dm as leaf_dm</string>
-          <string>[SugarCane].height as height</string>
-          <string>[SugarCane].cover_green as cover_green</string>
-          <string>[SugarCane].radn_int as radn_int</string>
-          <string>[SugarCane].cover_tot as cover_tot</string>
-          <string>[SugarCane].lai_sum as lai_sum</string>
-          <string>[SugarCane].tlai as tlai</string>
+          <string>[SugarCane].lai as lai</string>
           <string>[SugarCane].tla  as tla</string>
-          <string>[SugarCane].slai as slai</string>
-          <string>[SugarCane].rlv_tot as rlv_tot</string>
-          <string>[SugarCane].ll_dep as ll_dep</string>
-          <string>[SugarCane].lai2  as lai2</string>
-          <string>[SugarCane].leaf_wt2  as leaf_wt2</string>
-          <string>[SugarCane].rootgreenwt as rootgreenwt</string>
-          <string>[SugarCane].leafgreenwt as leafgreenwt</string>
-          <string>[SugarCane].sstem_wt as sstem_wt</string>
-          <string>[SugarCane].cane_dmf as cane_dmf</string>
-          <string>[SugarCane].ccs as ccs</string>
-          <string>[SugarCane].scmstf as scmstf</string>
-          <string>[SugarCane].scmst as scmst</string>
-          <string>[SugarCane].cabbage_wt as cabbage_wt</string>
-          <string>[SugarCane].green_biomass as green_biomass</string>
-          <string>[SugarCane].greenwt as greenwt</string>
-          <string>[SugarCane].senescedwt as senescedwt</string>
-          <string>[SugarCane].dm_dead as dm_dead</string>
-          <string>[SugarCane].dlt_dm  as dlt_dm</string>
-          <string>[SugarCane].partition_xs as partition_xs</string>
-          <string>[SugarCane].dlt_dm_green  as dlt_dm_green</string>
-          <string>[SugarCane].dlt_dm_detached as dlt_dm_detached</string>
-          <string>[SugarCane].n_critical as n_critical</string>
-          <string>[SugarCane].n_minimum as n_minimum</string>
-          <string>[SugarCane].n_conc_leaf as n_conc_leaf</string>
-          <string>[SugarCane].n_conc_cab  as n_conc_cab</string>
-          <string>[SugarCane].n_conc_cane as n_conc_cane</string>
-          <string>[SugarCane].n_leaf_crit as n_leaf_crit</string>
-          <string>[SugarCane].n_leaf_min as n_leaf_min</string>
-          <string>[SugarCane].biomass_n  as biomass_n</string>
           <string>[SugarCane].plant_n_tot as plant_n_tot</string>
-          <string>[SugarCane].green_biomass_n as green_biomass_n</string>
-          <string>[SugarCane].n_green as n_green</string>
-          <string>[SugarCane].greenn  as greenn</string>
-          <string>[SugarCane].sensescedn as sensescedn</string>
-          <string>[SugarCane].dlt_n_green as dlt_n_green</string>
+          <string>[SugarCane].swdef_photo as swdef_photo</string>
           <string>[SugarCane].swdef_pheno  as swdef_pheno</string>
           <string>[SugarCane].swdef_expan  as swdef_expan</string>
           <string>[SugarCane].swdef_stalk  as swdef_stalk</string>
+          <string>[SugarCane].nfact_photo as nfact_photo</string>
           <string>[SugarCane].nfact_expan  as nfact_expan</string>
           <string>[SugarCane].oxdef_photo  as oxdef_photo</string>
           <string>[SugarCane].ep  as ep</string>
-          <string>[SugarCane].cep  as cep</string>
-          <string>[SugarCane].sw_uptake as sw_uptake</string>
-          <string>[SugarCane].sw_demand_te as sw_demand_te</string>
-          <string>[SugarCane].fasw as fasw</string>
-          <string>[SugarCane].esw_layr as esw_layr</string>
-          <string>[SugarCane].no3_tot as no3_tot</string>
-          <string>[SugarCane].n_demand as n_demand</string>
-          <string>[SugarCane].no3_demand as no3_demand</string>
-          <string>[SugarCane].n_supply  as n_supply</string>
-          <string>[SugarCane].no3_uptake  as no3_uptake</string>
-          <string>[SugarCane].nh4_uptake  as nh4_uptake</string>
-          <string>[SugarCane].no3_uptake_pot as no3_uptake_pot</string>
-          <string>[SugarCane].nh4_uptake_pot as nh4_uptake_pot</string>
-          <string>[Soil].SoilWater.SWmm as sw_dep</string>
-          <string>[Soil].SoilWater.Eo as eo</string>
-          <string>[Soil].SoilWater.Eos as eos</string>
-          <string>[Soil].SoilWater.Es as es</string>
-          <string>[SurfaceOrganicMatter].Cover as surfaceom_cover</string>
-          <string>[SugarCane].stage as stage</string>
-          <string>[SugarCane].stage_code as stage_code</string>
-          <string>[SugarCane].stagename as stagename</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3427,17 +3353,157 @@ namespace Models
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
-    <Input>
-      <Name>Sugar</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\SugarCane\Example\OLD\Sugar.out</FileName>
-    </Input>
-    <Input>
-      <Name>Cane</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\SugarCane\Example\OLD\Cane.out</FileName>
-    </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>crop_status</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>biomass</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>cane_wt</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>sucrose_wt</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>height</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>root_depth</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>node_no_detached</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>leaves</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>green_leaves</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>dead_leaves</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>lai</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>tla</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>plant_n_tot</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>swdef_photo</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>swdef_pheno</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>swdef_expan</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>swdef_stalk</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>nfact_photo</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>nfact_expan</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>oxdef_photo</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>SugarCane</SimulationName>
+      <TableName>Report</TableName>
+      <Type>Tolerance</Type>
+      <ColumnNames>ep</ColumnNames>
+      <Parameters>1,1</Parameters>
+    </Test>
+  </Tests>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

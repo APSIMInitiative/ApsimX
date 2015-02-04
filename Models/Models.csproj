@@ -113,10 +113,11 @@
       <Link>Utility\Xml.cs</Link>
     </Compile>
     <Compile Include="AgPasture.cs" />
-    <Compile Include="AgPasture\AgPasture1.cs" />
+    <Compile Include="AgPasture\AgPasture1.Sward.cs" />
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
+    <Compile Include="Plant\Functions\DeltaFunction.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Core\Apsim.cs" />
@@ -164,10 +165,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Report\ReportColumn.cs" />
+    <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
+    <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
-    <Compile Include="Soils\SoilArbitrator.cs" />
+    <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterDataTypes.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterEvap.cs" />
@@ -389,9 +392,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\OilPalm.xml" />
+    <None Include="Resources\OilPalm.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Maize.xml" />
+    <None Include="Resources\MCSP.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -464,13 +464,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the size of the cohort.</summary>
         /// <value>The size of the cohort.</value>
+        [XmlIgnore]
+        [Units("mm3")]
         public double[] CohortSize
         {
             get
             {
                 int i = 0;
 
-                double[] values = new double[(int)Structure.MaximumNodeNumber];
+                double[] values = new double[Structure.MaximumNodeNumber];
                 for (i = 0; i <= (Structure.MaximumNodeNumber - 1); i++)
                     values[i] = 0;
                 i = 0;
@@ -479,7 +481,6 @@ namespace Models.PMF.Organs
                     values[i] = L.Size;
                     i++;
                 }
-
                 return values;
             }
         }

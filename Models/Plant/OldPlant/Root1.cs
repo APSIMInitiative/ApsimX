@@ -153,9 +153,16 @@ namespace Models.PMF.OldPlant
         /// <value>The length of the specific root.</value>
         public double SpecificRootLength { get; set; }
 
-        /// <summary>Gets or sets the length of the soil water uptake from the arbitrator.</summary>
+        /// <summary>Gets or sets the soil water uptake from the arbitrator.</summary>
         [XmlIgnore]
-        public double[] AribtratorSWUptake { get; set; }
+        public double[] ArbitratorSWUptake { get; set; }
+        /// <summary>Gets or sets the no3 uptake from the arbitrator.</summary>
+        [XmlIgnore]
+        public double[] ArbitratorNO3Uptake { get; set; }
+        /// <summary>Gets or sets the nh4 uptake from the arbitrator.</summary>
+        [XmlIgnore]
+        public double[] ArbitratorNH4Uptake { get; set; }
+
 
         #endregion
 
@@ -199,6 +206,7 @@ namespace Models.PMF.OldPlant
         private double[] no3gsm_uptake_pot;
         /// <summary>The nh4gsm_uptake_pot</summary>
         private double[] nh4gsm_uptake_pot;
+
         /// <summary>The DLT root depth</summary>
         private double dltRootDepth;
         /// <summary>The DLT root length</summary>
@@ -299,10 +307,10 @@ namespace Models.PMF.OldPlant
                 dlt_sw_dep = (double[])Apsim.Get(this, "uptake_water_" + Plant.CropType);
                 dlt_sw_dep = Utility.Math.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
             }
-            else if (AribtratorSWUptake != null)
+            else if (ArbitratorSWUptake != null)
             {
                 //dlt_sw_dep = Utility.Math.Multiply_Value(AribtratorSWUptake, -1);   // make them negative numbers.
-                dlt_sw_dep = AribtratorSWUptake;   // make them negative numbers.
+                dlt_sw_dep = ArbitratorSWUptake;   // make them negative numbers.
                 //Util.ZeroArray(AribtratorSWUptake);
             }
             else { }
@@ -322,6 +330,18 @@ namespace Models.PMF.OldPlant
             return DoWaterUptakeInternal(SWDemand);
 
         }
+        /// <summary>Calculate SW uptake for a given demand and soil water content</summary>
+        public void CalculateNUptake(double[] NO3N, double[] NH4N, ref double[] NO3NUp, ref double[] NH4NUp)
+        {
+            // In the case of water we just moved the normal code into a method so that it could be recalled
+
+            CalculateNSupply(NO3N, NH4N, ref no3gsm_uptake_pot, ref nh4gsm_uptake_pot);
+            DoNUptakeCalculation(0.0);
+            NO3NUp = Utility.Math.Multiply_Value(dlt_no3gsm, -10);
+            NH4NUp = Utility.Math.Multiply_Value(dlt_nh4gsm, -10);
+            
+        }
+
         /// <summary>Calculate change in rooting depth.</summary>
         public void DoRootDepth()
         {
@@ -520,15 +540,20 @@ namespace Models.PMF.OldPlant
         {
             if (NUptakeFunction is NUptake3)
             {
-                double[] no3gsm = Utility.Math.Multiply_Value(Soil.NO3N, Conversions.kg2gm / Conversions.ha2sm);
-                double[] nh4gsm = Utility.Math.Multiply_Value(Soil.NH4N, Conversions.kg2gm / Conversions.ha2sm);
-
-                (NUptakeFunction as NUptake3).DoNUptake(RootDepth, no3gsm, nh4gsm,
-                                                 Soil.BD, Soil.Thickness, sw_avail, sw_avail_pot, no3gsm_min, nh4gsm_min,
-                                                 ref no3gsm_uptake_pot, ref nh4gsm_uptake_pot);
+                CalculateNSupply(Soil.NO3N, Soil.NH4N, ref no3gsm_uptake_pot, ref nh4gsm_uptake_pot);
             }
             else
                 throw new NotImplementedException();
+        }
+
+        private void CalculateNSupply(double[] NO3N, double[] NH4N, ref double[] no3gsm_uptake_pot, ref double[] nh4gsm_uptake_pot)
+        {
+            double[] no3gsm = Utility.Math.Multiply_Value(NO3N, Conversions.kg2gm / Conversions.ha2sm);
+            double[] nh4gsm = Utility.Math.Multiply_Value(NH4N, Conversions.kg2gm / Conversions.ha2sm);
+
+            (NUptakeFunction as NUptake3).DoNUptake(RootDepth, no3gsm, nh4gsm,
+                                             Soil.BD, Soil.Thickness, sw_avail, sw_avail_pot, no3gsm_min, nh4gsm_min,
+                                             ref no3gsm_uptake_pot, ref nh4gsm_uptake_pot);
         }
 
         /// <summary>Does the n retranslocate.</summary>
@@ -602,9 +627,23 @@ namespace Models.PMF.OldPlant
         {
             dlt_n_senesced_trans = 0;
         }
+
         /// <summary>Does the n uptake.</summary>
         /// <param name="PotNFix">The pot n fix.</param>
         public override void DoNUptake(double PotNFix)
+        {
+            if (ArbitratorNO3Uptake!=null)
+            {
+                dlt_no3gsm = Utility.Math.Multiply_Value(ArbitratorNO3Uptake, -0.1);  // need to make it -ve and change from kg/ha to g/m2
+                dlt_nh4gsm = Utility.Math.Multiply_Value(ArbitratorNH4Uptake, -0.1);
+                }
+             else
+                DoNUptakeCalculation(PotNFix);
+
+        }
+        /// <summary>Does the n uptake.</summary>
+        /// <param name="PotNFix">The pot n fix.</param>
+        private void DoNUptakeCalculation(double PotNFix)
         {
             //if (SwimIsPresent)
             //{
@@ -618,6 +657,7 @@ namespace Models.PMF.OldPlant
                 n_demand += Organ.SoilNDemand;
 
             int deepest_layer = FindLayerNo(RootDepth);
+
 
             double ngsm_supply = Utility.Math.Sum(no3gsm_uptake_pot, 0, deepest_layer + 1, 0)
                                + Utility.Math.Sum(nh4gsm_uptake_pot, 0, deepest_layer + 1, 0);
@@ -653,6 +693,8 @@ namespace Models.PMF.OldPlant
 
             Util.Debug("Root.dlt_no3gsm=%f", Utility.Math.Sum(dlt_no3gsm));
             Util.Debug("Root.dlt_nh4gsm=%f", Utility.Math.Sum(dlt_nh4gsm));
+
+                
         }
 
 

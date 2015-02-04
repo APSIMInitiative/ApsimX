@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Models.Soils.Arbitrator;
 
 namespace Models.Core
 {
@@ -52,12 +53,22 @@ namespace Models.Core
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
-        List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info);
+        List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(SoilState soilstate);
 
         /// <summary>
-        /// Set the potential sw uptake for today
+        /// Calculate the potential sw uptake for today
         /// </summary>
-        void SetSWUptake(List<Soils.UptakeInfo> info);
+        List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate);
+
+
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        void SetSWUptake(List<Soils.Arbitrator.ZoneWaterAndN> info);
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        void SetNUptake(List<Soils.Arbitrator.ZoneWaterAndN> info);
 
 
         /// <summary>Sows the plant</summary>

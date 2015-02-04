@@ -8,7 +8,10 @@ using System.Xml.Serialization;
 namespace Models.PMF
 {
     /// <summary>
-    /// An organ arbitrator model
+    /// This module takes Supplies and Demands of DM and N from each organ in the plant.  Firstly it gets DM Demands form organs
+    /// and does a potential DM allocation based on these.  Then it gets N demands and allocates these to organs.  Finally it works
+    /// out if N allocations were sufficient to meet minimum N concentratins of the organs and constrain DM allocations to maintain 
+    /// minimum N concentrations if N is not sufficient
     /// </summary>
     [Serializable]
     public class OrganArbitrator : Model
@@ -16,18 +19,18 @@ namespace Models.PMF
         #region Class Members
         // Input paramaters
 
-        /// <summary>The plant</summary>
+        /// <summary>The top level plant object in the Plant Modelling Framework</summary>
         [Link]
         public Plant Plant = null;
 
-        /// <summary>The clock</summary>
+        /// <summary>APSIMs clock model</summary>
         [Link]
         public Clock Clock = null;
 
-        /// <summary>The n arbitration option</summary>
+        /// <summary>The method used to arbitrate N allocations</summary>
         [Description("Select method used for Arbitration")]
         public string NArbitrationOption = "";
-        /// <summary>The dm arbitration option</summary>
+        /// <summary>The mentod used to arbitrate DM allocations </summary>
         [Description("Select method used for DMArbitration")]
         public string DMArbitrationOption = "";
         /// <summary>The nutrient drivers</summary>
@@ -59,121 +62,124 @@ namespace Models.PMF
         {
             //Biomass Demand Variables
             /// <summary>Gets or sets the structural demand.</summary>
-            /// <value>The structural demand.</value>
+            /// <value>Demand for structural biomass from each organ</value>
             public double[] StructuralDemand { get; set; }
             /// <summary>Gets or sets the total structural demand.</summary>
-            /// <value>The total structural demand.</value>
+            /// <value>Demand for structural biomass from the crop</value>
             public double TotalStructuralDemand { get; set; }
             /// <summary>Gets or sets the metabolic demand.</summary>
-            /// <value>The metabolic demand.</value>
+            /// <value>Demand for metabolic biomass from each organ</value>
             public double[] MetabolicDemand { get; set; }
             /// <summary>Gets or sets the total metabolic demand.</summary>
-            /// <value>The total metabolic demand.</value>
+            /// <value>Demand for metabolic biomass from the crop</value>
             public double TotalMetabolicDemand { get; set; }
             /// <summary>Gets or sets the non structural demand.</summary>
-            /// <value>The non structural demand.</value>
+            /// <value>Demand for non-structural biomass from each organ</value>
             public double[] NonStructuralDemand { get; set; }
             /// <summary>Gets or sets the total non structural demand.</summary>
-            /// <value>The total non structural demand.</value>
+            /// <value>Demand for non-structural biomass from the crop</value>
             public double TotalNonStructuralDemand { get; set; }
             /// <summary>Gets or sets the total demand.</summary>
-            /// <value>The total demand.</value>
+            /// <value>Total biomass demand from each oragen, structural, non-sturctural and metabolic</value>
             public double[] TotalDemand { get; set; }
             /// <summary>Gets or sets the relative structural demand.</summary>
-            /// <value>The relative structural demand.</value>
+            /// <value>Structural biomass demand relative to total biomass demand</value>
             public double[] RelativeStructuralDemand { get; set; }
             /// <summary>Gets or sets the relative metabolic demand.</summary>
-            /// <value>The relative metabolic demand.</value>
+            /// <value>Metabolic biomass demand relative to total biomass demand</value>
             public double[] RelativeMetabolicDemand { get; set; }
             /// <summary>Gets or sets the relative non structural demand.</summary>
-            /// <value>The relative non structural demand.</value>
+            /// <value>Non-structural biomass demand relative to total biomass demand</value>
             public double[] RelativeNonStructuralDemand { get; set; }
-            /// <summary>Gets or sets the total plant demand.</summary>
-            /// <value>The total plant demand.</value>
+            /// <summary>Gets or sets the total crop demand.</summary>
+            /// <value>crop demand for biomass, structural, non-sturctural and metabolic</value>
             public double TotalPlantDemand { get; set; }
             //Biomass Supply Variables
             /// <summary>Gets or sets the reallocation supply.</summary>
-            /// <value>The reallocation supply.</value>
+            /// <value>Biomass available for reallocation for each organ as it dies</value>
             public double[] ReallocationSupply { get; set; }
             /// <summary>Gets or sets the total reallocation supply.</summary>
-            /// <value>The total reallocation supply.</value>
+            /// <value>Biomass available for reallocation from the entire crop</value>
             public double TotalReallocationSupply { get; set; }
             /// <summary>Gets or sets the uptake supply.</summary>
-            /// <value>The uptake supply.</value>
+            /// <value>Biomass available for uptake from each absorbing organ, generally limited to ntrient uptake in roots</value>
             public double[] UptakeSupply { get; set; }
             /// <summary>Gets or sets the total uptake supply.</summary>
-            /// <value>The total uptake supply.</value>
+            /// <value>Biomass available for uptake by the crop</value>
             public double TotalUptakeSupply { get; set; }
             /// <summary>Gets or sets the fixation supply.</summary>
-            /// <value>The fixation supply.</value>
+            /// <value>Biomass that may be fixed by the crop, eg DM fixed by photosynhesis in the leaves of N fixed by nodules</value>
             public double[] FixationSupply { get; set; }
             /// <summary>Gets or sets the total fixation supply.</summary>
-            /// <value>The total fixation supply.</value>
+            /// <value>Total fixation by the crop</value>
             public double TotalFixationSupply { get; set; }
             /// <summary>Gets or sets the retranslocation supply.</summary>
-            /// <value>The retranslocation supply.</value>
+            /// <value>Supply of labile biomass that can be retranslocated from each oragn</value>
             public double[] RetranslocationSupply { get; set; }
             /// <summary>Gets or sets the total retranslocation supply.</summary>
-            /// <value>The total retranslocation supply.</value>
+            /// <value>The total supply of labile biomass in the crop</value>
             public double TotalRetranslocationSupply { get; set; }
             //Biomass Allocation Variables
             /// <summary>Gets or sets the reallocation.</summary>
-            /// <value>The reallocation.</value>
+            /// <value>The amount of biomass reallocated from each organ as it dies</value>
             public double[] Reallocation { get; set; }
             /// <summary>Gets or sets the total reallocation.</summary>
-            /// <value>The total reallocation.</value>
+            /// <value>The total amount of biomass reallocated by the crop</value>
             public double TotalReallocation { get; set; }
             /// <summary>Gets or sets the uptake.</summary>
-            /// <value>The uptake.</value>
+            /// <value>The actual uptake of biomass by each organ, generally limited to nutrients in the roots</value>
             public double[] Uptake { get; set; }
             /// <summary>Gets or sets the fixation.</summary>
-            /// <value>The fixation.</value>
+            /// <value>The actual uptake of biomass by the whole crop</value>
             public double[] Fixation { get; set; }
             /// <summary>Gets or sets the retranslocation.</summary>
-            /// <value>The retranslocation.</value>
+            /// <value>The actual retranslocation or biomass from each oragan</value>
             public double[] Retranslocation { get; set; }
             /// <summary>Gets or sets the total retranslocation.</summary>
-            /// <value>The total retranslocation.</value>
+            /// <value>The total amount of biomass retranslocated by the crop</value>
             public double TotalRetranslocation { get; set; }
             /// <summary>Gets or sets the respiration.</summary>
-            /// <value>The respiration.</value>
+            /// <value>The amount of biomass respired by each organ</value>
             public double[] Respiration { get; set; }
             /// <summary>Gets or sets the total respiration.</summary>
-            /// <value>The total respiration.</value>
+            /// <value>Total respiration by the crop</value>
             public double TotalRespiration { get; set; }
             /// <summary>Gets or sets the constrained growth.</summary>
-            /// <value>The constrained growth.</value>
+            /// <value>Biomass growth that is possible given nutrient availability and minimum N concentratins of organs</value>
             public double[] ConstrainedGrowth { get; set; }
             /// <summary>Gets or sets the structural allocation.</summary>
-            /// <value>The structural allocation.</value>
+            /// <value>The actual amount of structural biomass allocated to each organ</value>
             public double[] StructuralAllocation { get; set; }
             /// <summary>Gets or sets the total structural allocation.</summary>
-            /// <value>The total structural allocation.</value>
+            /// <value>The total structural biomass allocation to the whole crop</value>
             public double TotalStructuralAllocation { get; set; }
             /// <summary>Gets or sets the metabolic allocation.</summary>
-            /// <value>The metabolic allocation.</value>
+            /// <value>The actual meatabilic biomass allocation to each organ</value>
             public double[] MetabolicAllocation { get; set; }
             /// <summary>Gets or sets the total metabolic allocation.</summary>
-            /// <value>The total metabolic allocation.</value>
+            /// <value>The metabolic biomass allocation to each organ</value>
             public double TotalMetabolicAllocation { get; set; }
             /// <summary>Gets or sets the non structural allocation.</summary>
-            /// <value>The non structural allocation.</value>
+            /// <value>The actual non-structural biomass allocation to each organ</value>
             public double[] NonStructuralAllocation { get; set; }
             /// <summary>Gets or sets the total non structural allocation.</summary>
-            /// <value>The total non structural allocation.</value>
+            /// <value>The total non-structural allocationed to the crop</value>
             public double TotalNonStructuralAllocation { get; set; }
             /// <summary>Gets or sets the total allocation.</summary>
-            /// <value>The total allocation.</value>
+            /// <value>The actual biomass allocation to each organ, structural, non-structural and metabolic</value>
             public double[] TotalAllocation { get; set; }
             /// <summary>Gets or sets the total allocated.</summary>
-            /// <value>The total allocated.</value>
-            public double TotalAllocated { get; set; }
+            /// <value>The amount of biomass allocated to the whole crop</value>
+            public double Allocated { get; set; }
             /// <summary>Gets or sets the not allocated.</summary>
-            /// <value>The not allocated.</value>
+            /// <value>The biomass available that was not allocated.</value>
             public double NotAllocated { get; set; }
             /// <summary>Gets or sets the sink limitation.</summary>
-            /// <value>The sink limitation.</value>
+            /// <value>The amount of biomass that could have been assimilated but was not because the demand from organs was insufficient.</value>
             public double SinkLimitation { get; set; }
+            /// <summary>Gets or sets the limitation due to nutrient shortage</summary>
+            /// <value>The amount of biomass that could have been assimilated but was not becasue nutrient supply was insufficient to meet organs minimunn N concentrations</value>
+            public double NutrientLimitation { get; set; }
             //Error checking variables
             /// <summary>Gets or sets the start.</summary>
             /// <value>The start.</value>
@@ -227,31 +233,137 @@ namespace Models.PMF
 
 
         /// <summary>Gets the dm supply.</summary>
-        /// <value>The dm supply.</value>
+        /// <value>Supply of DM from photosynthesising organs</value>
+        [XmlIgnore]
         public double DMSupply
         {
             get
             {
-                return DM.TotalFixationSupply;
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.TotalFixationSupply;
+                        else return 0;
+                    }
+                    else
+                        return DM.TotalFixationSupply;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+        /// <summary>Gets the dm demand</summary>
+        /// <value>Demand of DM from growing organs</value>
+        [XmlIgnore]
+        public double DMDemand
+        {
+            get
+            {
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.TotalPlantDemand;
+                        else return 0;
+                    }
+                    else
+                        return DM.TotalPlantDemand;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+        /// <summary>Gets the dm allocations</summary>
+        /// <value>Allocation of DM to each organ</value>
+        [XmlIgnore]
+        public double DMAllocated
+        {
+            get
+            {
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.Allocated;
+                        else return 0;
+                    }
+                    else
+                        return DM.Allocated;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+        /// <summary>Gets the sink limitation to growth</summary>
+        /// <value>The amount of DM that was not fixed because potential growth from organs did not require it</value>
+        [XmlIgnore]
+        public double DMSinkLimitation
+        {
+            get
+            {
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.SinkLimitation;
+                        else return 0;
+                    }
+                    else
+                        return DM.SinkLimitation;
+                }
+                else
+                    return 0.0;
+            }
+        }
+
+        /// <summary>Gets the nutrient limitation to growth</summary>
+        /// <value>The amount of DM that was not assimilated because there was not enough nutrient to meet minimum concentrations</value>
+        [XmlIgnore]
+        public double DMNutrientLimitation
+        {
+            get
+            {
+                if (Plant.PlantInGround)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                            return DM.NutrientLimitation;
+                        else return 0;
+                    }
+                    else
+                        return DM.NutrientLimitation;
+                }
+                else
+                    return 0.0;
             }
         }
 
         /// <summary>Gets the n demand.</summary>
         /// <value>The n demand.</value>
+        [XmlIgnore]
         public double NDemand
         {
             get
             {
                 if (Plant.PlantInGround)
                 {
-                    //if (Plant.Phenology != null)
-                    //{
-                    //    if (Plant.Phenology.Emerged == true)
-                            return N.TotalPlantDemand;
-                    //    else return 0;
-                    //}
-                    //else
-                    //return 0.0;
+                    if (Plant.Phenology != null)
+                    {
+                        if (Plant.Phenology.Emerged == true)
+                          return N.TotalPlantDemand;
+                        else return 0;
+                    }
+                    else
+                        return N.TotalPlantDemand;
                 }
                 else
                     return 0.0;
@@ -288,8 +400,8 @@ namespace Models.PMF
             N = null;
         }
 
-
-        /// <summary>Does the water limited dm allocations.</summary>
+        #region Interface methods called by Plant.cs
+        /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply</summary>
         /// <param name="Organs">The organs.</param>
         public void DoWaterLimitedDMAllocations(Organ[] Organs)
         {
@@ -327,10 +439,13 @@ namespace Models.PMF
         public void DoNutrientLimitedGrowth(Organ[] Organs)
         {
             //Work out how much DM can be assimilated by each organ based on the most limiting nutrient
+            DoNutrientConstrainedDMAllocation(Organs);
+            //Tell each organ how DM they are getting folling allocation
             SendDMAllocations(Organs);
             //Tell each organ how much nutrient they are getting following allocaition
             SendNutrientAllocations(Organs);
        }
+        #endregion
 
         #region Arbitration step functions
         /// <summary>Does the dm setup.</summary>
@@ -351,7 +466,7 @@ namespace Models.PMF
                 DM.FixationSupply[i] = Supply.Fixation;
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
             DM.Start += Organs[i].Live.Wt + Organs[i].Dead.Wt;
-        }
+            }
 
             DM.TotalReallocationSupply = Utility.Math.Sum(DM.ReallocationSupply);
             DM.TotalUptakeSupply = Utility.Math.Sum(DM.UptakeSupply);
@@ -384,8 +499,11 @@ namespace Models.PMF
             DM.TotalStructuralAllocation = 0;
             DM.TotalMetabolicAllocation = 0;
             DM.TotalNonStructuralAllocation = 0;
+            DM.Allocated = 0;
+            DM.SinkLimitation = 0;
+            DM.NutrientLimitation = 0;
 
-            //Set relative N demands of each organ
+            //Set relative DM demands of each organ
             for (int i = 0; i < Organs.Length; i++)
             {
                 if (DM.TotalStructuralDemand > 0)
@@ -402,14 +520,15 @@ namespace Models.PMF
         virtual public void SendPotentialDMAllocations(Organ[] Organs)
         {
             //  Allocate to meet Organs demands
-            DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalReallocationSupply - DM.TotalAllocated);
             DM.TotalStructuralAllocation = Utility.Math.Sum(DM.StructuralAllocation);
             DM.TotalMetabolicAllocation = Utility.Math.Sum(DM.MetabolicAllocation);
             DM.TotalNonStructuralAllocation = Utility.Math.Sum(DM.NonStructuralAllocation);
-
+            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
+            DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply - DM.Allocated);
+            
             // Then check it all adds up
-            DM.BalanceError = Math.Abs((DM.TotalAllocated + DM.SinkLimitation) - (DM.TotalFixationSupply + DM.TotalReallocationSupply));
-            if (DM.BalanceError > 0.00001 & DM.TotalStructuralDemand > 0)
+            DM.BalanceError = Math.Abs((DM.Allocated + DM.SinkLimitation) - (DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply));
+            if (DM.BalanceError > 0.0000001 & DM.TotalStructuralDemand > 0)
                 throw new Exception("Mass Balance Error in Photosynthesis DM Allocation");
 
             // Send potential DM allocation to organs to set this variable for calculating N demand
@@ -472,9 +591,9 @@ namespace Models.PMF
             BAT.TotalNonStructuralDemand = Utility.Math.Sum(BAT.NonStructuralDemand);
             BAT.TotalPlantDemand = BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand;
 
-            DM.TotalStructuralAllocation = 0;
-            DM.TotalMetabolicAllocation = 0;
-            DM.TotalNonStructuralAllocation = 0;
+            BAT.TotalStructuralAllocation = 0;
+            BAT.TotalMetabolicAllocation = 0;
+            BAT.TotalNonStructuralAllocation = 0;
 
             //Set relative N demands of each organ
             for (int i = 0; i < Organs.Length; i++)
@@ -487,7 +606,6 @@ namespace Models.PMF
                     BAT.RelativeNonStructuralDemand[i] = BAT.NonStructuralDemand[i] / BAT.TotalNonStructuralDemand;
             }
         }
-
         /// <summary>Does the nutrient uptake set up.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -504,7 +622,6 @@ namespace Models.PMF
         
             BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
         }
-
         /// <summary>Does the re allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -599,7 +716,7 @@ namespace Models.PMF
             double BiomassFixed = 0;
             if (BAT.TotalFixationSupply > 0.00000000001)
             {
-                // Calculate how much fixation N each demanding organ is allocated based on relative demands
+                // Calculate how much fixed resource each demanding organ is allocated based on relative demands
                 if (string.Compare(Option, "RelativeAllocation", true) == 0)
                     RelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
                 if (string.Compare(Option, "PriorityAllocation", true) == 0)
@@ -607,7 +724,7 @@ namespace Models.PMF
                 if (string.Compare(Option, "PrioritythenRelativeAllocation", true) == 0)
                     PrioritythenRelativeAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
 
-                // Then calculate how much N is fixed from each supplying organ based on relative fixation supply
+                // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
                 if (BiomassFixed > 0)
                 {
                     for (int i = 0; i < Organs.Length; i++)
@@ -682,10 +799,11 @@ namespace Models.PMF
                 }
             }
         }
-        /// <summary>Sends the dm allocations.</summary>
+        /// <summary>Determines Nutrient limitations to DM allocations</summary>
         /// <param name="Organs">The organs.</param>
-        virtual public void SendDMAllocations(Organ[] Organs)
+        virtual public void DoNutrientConstrainedDMAllocation(Organ[] Organs)
         {
+            double PreNStressDMAllocation = DM.Allocated;
             for (int i = 0; i < Organs.Length; i++)
                 N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.NonStructuralAllocation[i];
 
@@ -703,7 +821,6 @@ namespace Models.PMF
             }
 
             // Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation
-            //NutrientLimitatedWtAllocation = 0;
             for (int i = 0; i < Organs.Length; i++)
             {
                 if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
@@ -711,9 +828,20 @@ namespace Models.PMF
                     double proportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]);
                     DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * (1 - proportion));  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
                     DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * proportion);
+                //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
                 }
             }
-
+            //Recalculated DM Allocation totals
+            DM.TotalStructuralAllocation = Utility.Math.Sum(DM.StructuralAllocation);
+            DM.TotalMetabolicAllocation = Utility.Math.Sum(DM.MetabolicAllocation);
+            DM.TotalNonStructuralAllocation = Utility.Math.Sum(DM.NonStructuralAllocation);
+            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
+            DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
+        }
+        /// <summary>Sends the dm allocations.</summary>
+        /// <param name="Organs">The organs.</param>
+        virtual public void SendDMAllocations(Organ[] Organs)
+        {
             // Send DM allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -773,7 +901,7 @@ namespace Models.PMF
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalFixationSupply));
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
-            N.BalanceError = (N.End - (N.Start + NDemand));
+            N.BalanceError = (N.End - (N.Start + N.TotalPlantDemand));
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
@@ -797,7 +925,7 @@ namespace Models.PMF
         private void RelativeAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
-            ////allocate to structural and metabolic N first
+            ////allocate to structural and metabolic Biomass first
             for (int i = 0; i < Organs.Length; i++)
             {
                 double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
@@ -813,7 +941,7 @@ namespace Models.PMF
                     TotalAllocated += (StructuralAllocation + MetabolicAllocation);
                 }
             }
-            // Second time round if there is still N to allocate let organs take N up to their Maximum
+            // Second time round if there is still Biomass to allocate let organs take N up to their Maximum
             for (int i = 0; i < Organs.Length; i++)
             {
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands

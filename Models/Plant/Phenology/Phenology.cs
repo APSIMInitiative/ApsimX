@@ -20,6 +20,8 @@ namespace Models.PMF.Phen
         public String OldPhaseName = "";
         /// <summary>The new phase name</summary>
         public String NewPhaseName = "";
+        /// <summary>The stage at phase change</summary>
+        public String EventStageName = "";
     }
         /*! <summary>
     Perform daily increase of phenology.
@@ -138,8 +140,6 @@ namespace Models.PMF.Phen
         #endregion
 
         #region Parameters
-        /// <summary>The stage code</summary>
-        [Link] public Function StageCode = null;
         /// <summary>The thermal time</summary>
         [Link] public Function ThermalTime = null;
 
@@ -396,6 +396,7 @@ namespace Models.PMF.Phen
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.OldPhaseName = OldPhaseName;
                     PhaseChangedData.NewPhaseName = CurrentPhase.Name;
+                    PhaseChangedData.EventStageName = CurrentPhase.Start;
                     PhaseChanged.Invoke(PhaseChangedData);
                     //Fixme, make this work again MyPaddock.Publish(CurrentPhase.Start);
                 }

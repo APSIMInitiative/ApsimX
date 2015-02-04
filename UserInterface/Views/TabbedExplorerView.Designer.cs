@@ -65,7 +65,7 @@
             this.StartPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.StartPage.Size = new System.Drawing.Size(602, 497);
             this.StartPage.TabIndex = 0;
-            this.StartPage.Text = "+";
+            this.StartPage.Text = indexTabText;
             this.StartPage.UseVisualStyleBackColor = true;
             // 
             // listViewMain

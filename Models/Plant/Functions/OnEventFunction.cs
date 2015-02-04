@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using Models.PMF.Phen;
 
 namespace Models.PMF.Functions
 {
@@ -32,17 +33,20 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            //Fixme, this needs to be fixed to respond to change and reset events
-            //MyPaddock.Subscribe(SetEvent, OnSetEvent);
-            //MyPaddock.Subscribe(ReSetEvent, OnReSetEvent);
             _Value = PreEventValue.Value;
         }
 
-        //[EventSubscribe("")]
-        //public void OnInit()
-        //{
-        //    _Value = PreEventValue.Value;
-        //}
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="PhaseChange">The phase change.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        {
+            if (PhaseChange.EventStageName == SetEvent)
+                OnSetEvent();
+
+            if (PhaseChange.EventStageName == ReSetEvent)
+                OnReSetEvent();
+        }
 
         /// <summary>Called when [re set event].</summary>
         public void OnReSetEvent()

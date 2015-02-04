@@ -784,6 +784,7 @@ namespace Models
             SetupCropTypes("lolium_rigidum", "Crop");
             SetupCropTypes("lucerne", "Crop");
             SetupCropTypes("maize", "Crop");
+            SetupCropTypes("MCSP", "Crop");
             SetupCropTypes("nativepasture", "C4Grass");
             SetupCropTypes("oats", "Crop");
             SetupCropTypes("oilmallee", "Tree");

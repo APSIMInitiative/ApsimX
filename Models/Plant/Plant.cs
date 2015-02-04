@@ -525,36 +525,16 @@ namespace Models.PMF
                 if (Phenology != null)
                 {
                     DoPhenology();
-                    //if (Phenology.Emerged == true)
-                    //{
+                    if (Phenology.Emerged == true)
+                    {
                         DoDMSetUp();//Sets organs water limited DM supplys and demands
-                    //}
+                    }
                 }
                 else
                 {
                     DoDMSetUp();//Sets organs water limited DM supplys and demands
                 }
             }
-        }
-
-        /// <summary>Called when [do water arbitration].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoWaterArbitration")]
-        private void OnDoWaterArbitration(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
-        {
-
-            //Take out water process so arbitrator can do it.
-            /* if (Phenology != null)
-               if (Phenology.Emerged == true)
-               {
-                   DoWater();
-               }
-           else 
-                if (InGround == true)
-                {
-                    DoWater();
-                }  */
         }
 
         /// <summary>Called when [do nutrient arbitration].</summary>
@@ -565,26 +545,26 @@ namespace Models.PMF
         {
             if ((PlantInGround) && (Arbitrator != null))
             {
-                //if (Phenology != null)
-                //{
-                    //if (Phenology.Emerged == true)
-                    //{
+                if (Phenology != null)
+                {
+                    if (Phenology.Emerged == true)
+                    {
 
                         Arbitrator.DoWaterLimitedDMAllocations(Organs);
                         Arbitrator.DoNutrientDemandSetUp(Organs);
                         Arbitrator.SetNutrientUptake(Organs);
                         Arbitrator.DoNutrientAllocations(Organs);
                         Arbitrator.DoNutrientLimitedGrowth(Organs);
-                    //}
-                //}
-                //else
-                //{
-                //    Arbitrator.DoWaterLimitedDMAllocations(Organs);
-                //    Arbitrator.DoNutrientDemandSetUp(Organs);
-                //    Arbitrator.SetNutrientUptake(Organs);
-                //    Arbitrator.DoNutrientAllocations(Organs);
-                //    Arbitrator.DoNutrientLimitedGrowth(Organs);
-                //}
+                    }
+                }
+                else
+                {
+                    Arbitrator.DoWaterLimitedDMAllocations(Organs);
+                    Arbitrator.DoNutrientDemandSetUp(Organs);
+                    Arbitrator.SetNutrientUptake(Organs);
+                    Arbitrator.DoNutrientAllocations(Organs);
+                    Arbitrator.DoNutrientLimitedGrowth(Organs);
+                }
             }
         }
 
@@ -596,20 +576,9 @@ namespace Models.PMF
         {
             if (PlantInGround)
             {
-                //if (Phenology != null)
-                //{
-                //    if (Phenology.Emerged == true)
-                //        DoActualGrowth();
-                //}
-                //else
-                    DoActualGrowth();
+                DoActualGrowth();
             }
         }
-        //[EventSubscribe("DoPlantGrowth")]
-        //private void OnDoPlantGrowth(object sender, EventArgs e)
-        //{
-           //This is an old event handler that needs to be deleted once testing is complete
-        //}
         #endregion
 
         #region Internal Communications.  Method calls
@@ -643,11 +612,6 @@ namespace Models.PMF
                 Supply += o.WaterSupply;
                 Demand += o.WaterDemand;
             }
-
-            /*if (Demand > 0)
-                WaterSupplyDemandRatio = Supply / Demand;
-            else
-                WaterSupplyDemandRatio = 1;*/
 
             double fraction = 1;
             if (Demand > 0)

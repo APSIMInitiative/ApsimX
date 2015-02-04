@@ -10,6 +10,7 @@ using Models.Soils;
 using System.Xml.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Models.Soils.Arbitrator;
 
 
 namespace Models.PMF.OilPalm
@@ -813,14 +814,29 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.UptakeInfo> GetSWUptake(List<Soils.UptakeInfo> info)
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
-            return info;
+            throw new NotImplementedException();
         }
+
+        /// <summary>Placeholder for SoilArbitrator</summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        {
+            throw new NotImplementedException();
+
+        }
+
         /// <summary>
-        /// Set the potential sw uptake for today
+        /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.UptakeInfo> info)
+        public void SetSWUptake(List<ZoneWaterAndN> info)
+        { }
+        /// <summary>
+        /// Set the n uptake for today
+        /// </summary>
+        public void SetNUptake(List<ZoneWaterAndN> info)
         { }
 
         /// <summary>Does the flower abortion.</summary>

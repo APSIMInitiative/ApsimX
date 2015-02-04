@@ -831,12 +831,17 @@ namespace Models
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
-          <SplitOn>Simulation</SplitOn>
+          <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
       </Graph>
+      <Arbitrator>
+        <Name>Arbitrator</Name>
+        <ArbitrationMethod>Old</ArbitrationMethod>
+        <NutrientUptakeMethod>2</NutrientUptakeMethod>
+      </Arbitrator>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -860,7 +865,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>AccumPlantN</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -876,11 +881,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumMineralisation</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388353</ColourArgb>
@@ -896,11 +901,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumDenit</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744193</ColourArgb>
@@ -916,11 +921,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumFert</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
@@ -936,11 +941,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumLeach</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -956,11 +961,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>DeltaSoilOMN</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
@@ -976,11 +981,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>DeltaSurfaceOMN</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -996,11 +1001,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>DeltaSoilMineralN</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777152</ColourArgb>
@@ -1016,7 +1021,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1041,7 +1046,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Pond</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
@@ -1057,11 +1062,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumEO</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1077,11 +1082,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumEP</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1097,11 +1102,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumES</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -1117,11 +1122,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumDrainage</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -1137,11 +1142,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumRunoff</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
@@ -1157,11 +1162,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumRainfall</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
@@ -1177,11 +1182,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumIrrigation</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-12582784</ColourArgb>
@@ -1197,11 +1202,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>AccumLatOutFlow</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
@@ -1217,11 +1222,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>SoilWaterDeficit</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777056</ColourArgb>
@@ -1237,7 +1242,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1262,7 +1267,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Leaf</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
@@ -1278,11 +1283,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Stem</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16760704</ColourArgb>
@@ -1298,11 +1303,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Tuber</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1318,11 +1323,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -1338,11 +1343,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Leaf</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388480</ColourArgb>
@@ -1358,11 +1363,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Step</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1378,11 +1383,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Tuber</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
@@ -1398,11 +1403,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root Dead</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
@@ -1418,11 +1423,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Above Ground Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372160</ColourArgb>
@@ -1438,11 +1443,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Below Ground Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
@@ -1458,11 +1463,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Total Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
@@ -1478,7 +1483,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1503,7 +1508,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Leaf</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
@@ -1519,11 +1524,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Stem</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16760704</ColourArgb>
@@ -1539,11 +1544,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Tuber</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1559,11 +1564,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -1579,11 +1584,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Leaf</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388480</ColourArgb>
@@ -1599,11 +1604,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Step</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1619,11 +1624,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Dead Tuber</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
@@ -1639,11 +1644,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root Dead</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
@@ -1659,11 +1664,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Above Ground Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372160</ColourArgb>
@@ -1679,11 +1684,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Below Ground Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
@@ -1699,11 +1704,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Total Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
@@ -1719,11 +1724,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Total Live N</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
@@ -1739,7 +1744,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1772,7 +1777,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Supply</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
@@ -1788,11 +1793,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Uptake</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
@@ -1808,11 +1813,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Demand</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1828,11 +1833,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Transpiration</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1848,11 +1853,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Potential</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -1868,11 +1873,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root Depth</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -1888,11 +1893,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Canopy Height</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-16711936</ColourArgb>
@@ -1908,7 +1913,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1940,7 +1945,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Cover Dead</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372224</ColourArgb>
@@ -1956,11 +1961,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Cover Green</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1976,11 +1981,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>CoverTotal</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1996,11 +2001,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>LAI</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
@@ -2016,11 +2021,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>LAI Dead</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -2036,11 +2041,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Root depth</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -2056,7 +2061,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2089,7 +2094,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
@@ -2105,11 +2110,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -2125,7 +2130,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2158,7 +2163,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
@@ -2174,11 +2179,11 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -2194,7 +2199,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
