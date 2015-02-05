@@ -279,7 +279,8 @@ namespace Models.PMF
             PrimaryBudNo = Sow.BudNumber;
             TotalStemPopn = Sow.Population * PrimaryBudNo;
             _MainStemFinalNodeNo = MaximumMainStemNodeNumber.Value;
-            MaximumNodeNumber = (int)MaximumMainStemNodeNumber.Value;
+            MaximumNodeNumber = (int)MainStemFinalNodeNumber.Value;
+            _Height = HeightModel.Value;
         }
         #endregion
     }
