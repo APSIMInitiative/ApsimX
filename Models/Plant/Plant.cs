@@ -446,13 +446,13 @@ namespace Models.PMF
             BiomassRemovedData.dlt_dm_p = new float[Organs.Length];
             BiomassRemovedData.fraction_to_residue = new float[Organs.Length];
             int i = 0;
-            foreach (Organ O in Organs)
+            foreach (BaseOrgan O in Organs)
             {
                 if (O is AboveGround)
                 {
                     BiomassRemovedData.dm_type[i] = O.Name;
-                    BiomassRemovedData.dlt_crop_dm[i] = (float)(O.Live.Wt + O.Dead.Wt) * 10f;
-                    BiomassRemovedData.dlt_dm_n[i] = (float)(O.Live.N + O.Dead.N) * 10f;
+                    BiomassRemovedData.dlt_crop_dm[i] = (float)O.TotalDM * 10f;
+                    BiomassRemovedData.dlt_dm_n[i] = (float)O.TotalN * 10f;
                     BiomassRemovedData.dlt_dm_p[i] = 0f;
                     BiomassRemovedData.fraction_to_residue[i] = 1f;
                 }

@@ -132,106 +132,108 @@ namespace Models.PMF.Organs
     /// <summary>
     /// Base organ model
     /// </summary>
-    [Serializable]
-    abstract public class Organ : Model
+    public interface Organ
     {
-        #region Links to other models or compontnets
-        /// <summary>The live</summary>
-        [Link] public Biomass Live = null;
-        /// <summary>The dead</summary>
-        [Link] public Biomass Dead = null;
-        #endregion
-
         #region Organ - Arbitrator interface methods
         //DryMatter methods
         /// <summary>Sets the dm potential allocation.</summary>
         /// <value>The dm potential allocation.</value>
         [XmlIgnore]
-        abstract public BiomassPoolType DMPotentialAllocation { set; }
+        BiomassPoolType DMPotentialAllocation { set; }
         /// <summary>Gets or sets the dm demand.</summary>
         /// <value>The dm demand.</value>
         [XmlIgnore]
-        abstract public BiomassPoolType DMDemand { get; set; }
+        BiomassPoolType DMDemand { get; set; }
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
         [XmlIgnore]
-        abstract public BiomassSupplyType DMSupply { get; set; }
+        BiomassSupplyType DMSupply { get; set; }
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         [XmlIgnore]
-        abstract public BiomassAllocationType DMAllocation { set; }
+        BiomassAllocationType DMAllocation { set; }
         //Nitrogen methods
         /// <summary>Gets or sets the n demand.</summary>
         /// <value>The n demand.</value>
         [XmlIgnore]
-        abstract public BiomassPoolType NDemand { get; set; }
+        BiomassPoolType NDemand { get; set; }
         /// <summary>Gets or sets the n supply.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        abstract public BiomassSupplyType NSupply { get; set; }
+        BiomassSupplyType NSupply { get; set; }
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
         [XmlIgnore]
-        abstract public BiomassAllocationType NAllocation { set; }
+        BiomassAllocationType NAllocation { set; }
         //Water methods
         /// <summary>Gets or sets the water demand.</summary>
         /// <value>The water demand.</value>
         [XmlIgnore]
-        abstract public double WaterDemand { get; set; }
+        double WaterDemand { get; set; }
         /// <summary>Gets or sets the water supply.</summary>
         /// <value>The water supply.</value>
         [XmlIgnore]
-        abstract public double WaterSupply { get; set; }
+        double WaterSupply { get; set; }
         /// <summary>Gets or sets the water allocation.</summary>
         /// <value>The water allocation.</value>
         [XmlIgnore]
-        abstract public double WaterAllocation { get; set; }
+        double WaterAllocation { get; set; }
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
         [XmlIgnore]
-        abstract public double WaterUptake { get; set; }
+        double WaterUptake { get; set; }
         /// <summary>Gets or sets the FRGR.</summary>
         /// <value>The FRGR.</value>
         [XmlIgnore]
-        abstract public double FRGR {get; set;}
+        double FRGR {get; set;}
         //Communicated organ variables
         /// <summary>Gets or sets the maximum nconc.</summary>
         /// <value>The maximum nconc.</value>
         [XmlIgnore]
-        abstract public double MaxNconc { get; set; }
+        double MaxNconc { get; set; }
         /// <summary>Gets or sets the minimum nconc.</summary>
         /// <value>The minimum nconc.</value>
         [XmlIgnore]
-        abstract public double MinNconc { get; set; }
+        double MinNconc { get; set; }
         /// <summary>Gets or sets the n fixation cost.</summary>
         /// <value>The n fixation cost.</value>
         [XmlIgnore]
-        abstract public double NFixationCost { get; set; }
+        double NFixationCost { get; set; }
+        #endregion
+
+        #region Properties
+
+        /// <summary>Gets the total (live + dead) dm (g/m2)</summary>
+        double TotalDM { get; }
+
+        /// <summary>Gets the total (live + dead) n (g/m2).</summary>
+        double TotalN { get; }
+
         #endregion
 
         #region Top Level Time-step  and event Functions
         //Plant actions
         /// <summary>Clears this instance.</summary>
-        abstract public void Clear();
+        void Clear();
         /// <summary>Does the water uptake.</summary>
         /// <param name="Demand">The demand.</param>
-        virtual public void DoWaterUptake(double Demand) { }
+        void DoWaterUptake(double Demand);
         /// <summary>Does the potential dm.</summary>
-        virtual public void DoPotentialDM() { }
+        void DoPotentialDM();
         /// <summary>Does the potential nutrient.</summary>
-        virtual public void DoPotentialNutrient() { }
+        void DoPotentialNutrient();
         /// <summary>Does the actual growth.</summary>
-        virtual public void DoActualGrowth() { }
+        void DoActualGrowth();
         // Methods that can be called .e.g from manager
         /// <summary>Called when [sow].</summary>
         /// <param name="Sow">The sow.</param>
-        abstract public void OnSow(SowPlant2Type Sow);
+        void OnSow(SowPlant2Type Sow);
         /// <summary>Called when [harvest].</summary>
-        abstract public void OnHarvest();
+        void OnHarvest();
         /// <summary>Called when [end crop].</summary>
-        abstract public void OnEndCrop();
+        void OnEndCrop();
         /// <summary>Called when [cut].</summary>
-        abstract public void OnCut();
+        void OnCut();
         #endregion
     }
 }
