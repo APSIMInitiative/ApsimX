@@ -52,8 +52,6 @@ namespace Models.PMF
         [Link] public Function MainStemNodeAppearanceRate = null;
         /// <summary>The main stem final node number</summary>
         [Link] public Function MainStemFinalNodeNumber = null;
-        /// <summary>The maximum main stem node number</summary>
-        [Link] public Function MaximumMainStemNodeNumber = null;
         /// <summary>The height model</summary>
         [Link] Function HeightModel = null;
         /// <summary>The branching rate</summary>
