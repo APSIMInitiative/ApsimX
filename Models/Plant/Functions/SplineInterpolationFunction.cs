@@ -14,7 +14,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
-    public class SplineInterpolationFunction : Function
+    public class SplineInterpolationFunction : Model, Function
     {
         /// <summary>Gets or sets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
@@ -43,7 +43,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public override double Value
+        public double Value
         {
             get
             {

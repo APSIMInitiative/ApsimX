@@ -459,10 +459,13 @@
 			<Name>ThermalTime</Name>
 			<VariableName>[Phenology].ThermalTime.Value</VariableName>
 		</VariableReference>
-		<MainStemFinalNodeNumberFunction>
-			<Name>MainStemFinalNodeNumber</Name>
-			<MaximumMainStemNodeNumber>18</MaximumMainStemNodeNumber>
-		</MainStemFinalNodeNumberFunction>
+        <Constant>
+          <Name>MaximumMainStemNodeNumber</Name>
+          <Value>18</Value>
+        </Constant>
+        <MainStemFinalNodeNumberFunction>
+	  	  <Name>MainStemFinalNodeNumber</Name>
+        </MainStemFinalNodeNumberFunction>
 	</Structure>
 	<ReproductiveOrgan>
 		<Name>Grain</Name>

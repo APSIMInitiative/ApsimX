@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A * B * exp(x * C)")]
-    public class ExponentialFunction : Function
+    public class ExponentialFunction : Model, Function
     {
         /// <summary>a</summary>
         public double A = 1.0;
@@ -26,7 +26,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Sigmoid function must have only one argument</exception>
-        public override double Value
+        public double Value
         {
             get
             {

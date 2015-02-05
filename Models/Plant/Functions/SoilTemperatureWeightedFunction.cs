@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [Description("Returns the temperature of the surface soil layer with the weighting: " +
                  "0.25*DayBeforeYesterday + 0.5*Yesterday + 0.25*Today")]
-    public class SoilTemperatureWeightedFunction : Function
+    public class SoilTemperatureWeightedFunction : Model, Function
     {
         #region Class Data Members
 
@@ -48,7 +48,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         [Units("deg.day")]
-        public override double Value
+        public double Value
         {
             get
             {

@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
-    public class LinearInterpolationFunction : Function
+    public class LinearInterpolationFunction : Model, Function, FunctionArray
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
@@ -44,7 +44,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public override double Value
+        public double Value
         {
             get
             {
@@ -72,7 +72,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the values.</summary>
         /// <value>The values.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
-        public override double[] Values
+        public double[] Values
         {
             get
             {

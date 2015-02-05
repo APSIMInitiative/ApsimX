@@ -11,13 +11,13 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("From the value of the first child function, subtract the values of the subsequent children functions")]
-    public class SubtractFunction : Function
+    public class SubtractFunction : Model, Function
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

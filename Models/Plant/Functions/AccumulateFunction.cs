@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Adds the value of all childern functions to the previous days accumulation between start and end phases")]
-    public class AccumulateFunction : Function
+    public class AccumulateFunction : Model, Function
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -64,7 +64,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

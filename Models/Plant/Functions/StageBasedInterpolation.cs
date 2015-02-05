@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is linearly interpolated between phenological growth stages")]
-    public class StageBasedInterpolation : Function
+    public class StageBasedInterpolation : Model, Function
     {
         /// <summary>The _ proportional</summary>
         private bool _Proportional = true;
@@ -51,7 +51,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Something is a miss here.  Specifically, the number of values in your StageCode function don't match the number of stage names.  Sort it out numb nuts!!</exception>
-        public override double Value
+        public double Value
         {
             get
             {

@@ -10,17 +10,23 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the difference between today's and yesterday's photoperiods in hours.")]
-    public class PhotoperiodDeltaFunction : Function
+    public class PhotoperiodDeltaFunction : Model, Function
     {
-        //[Link]
-        //Clock Clock = null;
+
+        /// <summary>The met data</summary>
+        [Link]
+        protected Weather MetData = null;
+
+        /// <summary>The clock</summary>
+        [Link]
+        protected Clock Clock = null;
 
         /// <summary>The twilight</summary>
         public double Twilight = 0;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

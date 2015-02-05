@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// A constant value function
     /// </summary>
     [Serializable]
-    public class Constant : Function
+    public class Constant : Model, Function
     {
         /// <summary>Gets or sets the value.</summary>
         /// <value>The value.</value>
@@ -20,6 +20,6 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value { get { return value; } }
+        public double Value { get { return value; } }
     }
 }

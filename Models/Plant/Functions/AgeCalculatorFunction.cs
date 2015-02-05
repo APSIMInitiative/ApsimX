@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the age (in years) of the crop")]
-    public class AgeCalculatorFunction : Function
+    public class AgeCalculatorFunction : Model, Function
     {
         /// <summary>The _ age</summary>
         private int _Age = 0;
@@ -28,7 +28,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         [Units("y")]
-        public override double Value
+        public double Value
         {
             get
             {

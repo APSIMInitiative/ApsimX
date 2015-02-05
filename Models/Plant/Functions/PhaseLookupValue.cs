@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
-    public class PhaseLookupValue : Function
+    public class PhaseLookupValue : Model, Function
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -33,7 +33,7 @@ namespace Models.PMF.Functions
         /// or
         /// Phase end name not set: + Name
         /// </exception>
-        public override double Value
+        public double Value
         {
             get
             {

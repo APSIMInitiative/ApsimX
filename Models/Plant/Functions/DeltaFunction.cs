@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
-    public class DeltaFunction : Function
+    public class DeltaFunction : Model, Function
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -35,7 +35,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

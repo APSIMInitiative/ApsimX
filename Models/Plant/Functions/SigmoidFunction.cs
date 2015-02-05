@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)")]
-    public class SigmoidFunction : Function
+    public class SigmoidFunction : Model, Function
     {
         /// <summary>The xmax</summary>
         public double Xmax = 1.0;
@@ -26,7 +26,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Sigmoid function must have only one argument</exception>
-        public override double Value
+        public double Value
         {
             get
             {

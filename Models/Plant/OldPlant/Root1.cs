@@ -36,7 +36,7 @@ namespace Models.PMF.OldPlant
         /// <summary>The sw factor root depth</summary>
         [Link] Function SWFactorRootDepth = null;
         /// <summary>The sw factor root length</summary>
-        [Link] Function SWFactorRootLength = null;
+        [Link] FunctionArray SWFactorRootLength = null;
         /// <summary>The root depth rate</summary>
         [Link] Function RootDepthRate = null;
 
@@ -45,7 +45,7 @@ namespace Models.PMF.OldPlant
         Population1 Population = null;
 
         /// <summary>The relative root rate</summary>
-        [Link] Function RelativeRootRate = null;
+        [Link] FunctionArray RelativeRootRate = null;
         /// <summary>The dm senescence fraction</summary>
         [Link] Function DMSenescenceFraction = null;
         /// <summary>The growth structural fraction stage</summary>

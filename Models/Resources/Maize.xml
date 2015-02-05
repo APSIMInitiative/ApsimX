@@ -293,9 +293,12 @@
         </LinearInterpolationFunction>
       </PhaseLookupValue>
     </PhaseLookup>
+    <Constant>
+      <Name>MaximumMainStemNodeNumber</Name>
+      <Value>30</Value>
+    </Constant>
     <MainStemFinalNodeNumberFunction>
       <Name>MainStemFinalNodeNumber</Name>
-      <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
       <OnEventFunction>
         <SetEvent>End_Juvenile</SetEvent>
         <Name>FinalLeafNumber</Name>

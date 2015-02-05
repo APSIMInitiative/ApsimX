@@ -15,7 +15,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of a nominated external APSIM numerical variable")]
-    public class ExternalVariable : Function
+    public class ExternalVariable : Model, Function
     {
         /// <summary>The variable name</summary>
         public string VariableName = "";
@@ -25,7 +25,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception"></exception>
-        public override double Value
+        public double Value
         {
             get
             {

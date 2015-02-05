@@ -15,7 +15,7 @@ namespace Models.PMF.Functions
     /// Evaluate a mathematical expression using the EvaluateExpression dll. Obs: Expression can contain variable names from Plant2"
     /// </summary>
     [Serializable]
-    public class ExpressionFunction : Function
+    public class ExpressionFunction : Model, Function
     {
         /// <summary>The expression</summary>
         public string Expression = "";
@@ -28,7 +28,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

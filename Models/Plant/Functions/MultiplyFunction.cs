@@ -11,13 +11,13 @@ namespace Models.PMF.Functions
     /// \retval Product of value of all children of this node. Return 1 if no child.
     [Serializable]
     [Description("Returns the product of all children function values")]
-    public class MultiplyFunction : Function
+    public class MultiplyFunction : Model, Function
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

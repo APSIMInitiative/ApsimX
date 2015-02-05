@@ -11,14 +11,14 @@ namespace Models.PMF.Functions
     /// \retval Minimum value of all children of this node. Return 999999999 if no child.
     [Serializable]
     [Description("Returns the Minimum value of all children functions")]
-    public class MinimumFunction : Function
+    public class MinimumFunction : Model, Function
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

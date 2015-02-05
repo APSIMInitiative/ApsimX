@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty")]
-    public class XYPairs : Function
+    public class XYPairs : Model, Function
     {
         /// <summary>Gets or sets the x.</summary>
         /// <value>The x.</value>
@@ -23,7 +23,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot call Value on XYPairs function. Must be indexed.</exception>
-        public override double Value { get { throw new Exception("Cannot call Value on XYPairs function. Must be indexed."); } }
+        public double Value { get { throw new Exception("Cannot call Value on XYPairs function. Must be indexed."); } }
 
         /// <summary>Values the indexed.</summary>
         /// <param name="dX">The d x.</param>

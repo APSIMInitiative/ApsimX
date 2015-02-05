@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("returns the temperature of the surface soil layer")]
-    public class SoilTemperatureFunction : Function
+    public class SoilTemperatureFunction : Model, Function
     {
         #region Class Data Members
         /// <summary>The xy pairs</summary>
@@ -27,7 +27,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         [Units("deg.day")]
-        public override double Value
+        public double Value
         {
             get
             {
