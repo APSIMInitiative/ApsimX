@@ -334,7 +334,7 @@
 			<Start>Emergence</Start>
 			<End>FinalLeaf</End>
 		</PhaseLookupValue>
-		<Constant>
+        <Constant>
 			<Name>MainStemFinalNodeNumber</Name>
 			<Value>34</Value>
 		</Constant>

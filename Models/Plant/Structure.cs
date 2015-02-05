@@ -6,6 +6,7 @@ using Models.PMF.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
+using Models.PMF.Functions.StructureFunctions;
 
 namespace Models.PMF
 {
@@ -278,8 +279,11 @@ namespace Models.PMF
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             PrimaryBudNo = Sow.BudNumber;
             TotalStemPopn = Sow.Population * PrimaryBudNo;
-            _MainStemFinalNodeNo = MaximumMainStemNodeNumber.Value;
-            MaximumNodeNumber = (int)MainStemFinalNodeNumber.Value;
+            if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
+                _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
+            else
+                _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+            MaximumNodeNumber = (int)_MainStemFinalNodeNo;
             _Height = HeightModel.Value;
         }
         #endregion

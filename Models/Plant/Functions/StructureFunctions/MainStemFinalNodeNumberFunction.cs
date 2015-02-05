@@ -21,8 +21,8 @@ namespace Models.PMF.Functions.StructureFunctions
         [Link(IsOptional=true)]
         Function FinalLeafNumber = null;
 
-        [Link]
-        Function MaximumMainStemNodeNumber = null;
+        /// <summary>The maximum main stem node number</summary>
+        public double MaximumMainStemNodeNumber = 0;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -33,12 +33,12 @@ namespace Models.PMF.Functions.StructureFunctions
                 if (FinalLeafNumber == null)
                 {
                     if (Structure.MainStemPrimordiaNo != 0)
-                        return Math.Min(MaximumMainStemNodeNumber.Value, Structure.MainStemPrimordiaNo);
+                        return Math.Min(MaximumMainStemNodeNumber, Structure.MainStemPrimordiaNo);
                     else 
-                        return MaximumMainStemNodeNumber.Value;
+                        return MaximumMainStemNodeNumber;
                 }
                 else
-                    return Math.Min(FinalLeafNumber.Value, MaximumMainStemNodeNumber.Value);
+                    return Math.Min(FinalLeafNumber.Value, MaximumMainStemNodeNumber);
 
             }
         }
