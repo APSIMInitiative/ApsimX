@@ -119,7 +119,7 @@ namespace Models.PMF.Organs
         //4public event BiomassRemovedDelegate BiomassRemoved;
 
         /// <summary>Clears this instance.</summary>
-        public override void Clear()
+        protected override void Clear()
         {
             base.Clear();
             SenescenceRate = 0;

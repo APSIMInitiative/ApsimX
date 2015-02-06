@@ -9,8 +9,24 @@ namespace Models.PMF.Interfaces
 
     /// <summary>
     /// An interface that defines what needs to be implemented by an organ
-    /// that communicates to an OrganArbitrator.
+    /// that communicates to the OrganArbitrator.
     /// </summary>
+    /// <remarks>
+    ///  PFM considers four types of biomass supply, i.e.
+    ///  - fixation
+    ///  - reallocation
+    ///  - uptake
+    ///  - retranslocation
+    /// PFM considers eight types of biomass allocation, i.e.
+    ///  - structural
+    ///  - non-structural
+    ///  - metabolic
+    ///  - retranslocation
+    ///  - reallocation
+    ///  - respired
+    ///  - uptake
+    ///  - fixation
+    /// </remarks>
     public interface IArbitration
     {
         /// <summary>Sets the dm potential allocation.</summary>
@@ -48,10 +64,26 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Gets the total (live + dead) n (g/m2).</summary>
         double TotalN { get; }
+
+        /// <summary>Gets or sets the water demand.</summary>
+        double WaterDemand { get; set; }
+
+        /// <summary>Gets or sets the water supply.</summary>
+        double WaterSupply { get; set; }
+
+        /// <summary>Gets or sets the water allocation.</summary>
+        double WaterAllocation { get; set; }
+
+        /// <summary>Gets or sets the water uptake.</summary>
+        double WaterUptake { get; set; }
+
+        /// <summary>Does the water uptake.</summary>
+        /// <param name="Demand">The demand.</param>
+        void DoWaterUptake(double Demand);
     }
 
 
-    #region Arbitrator method types
+    #region Arbitrator data types
     /// <summary>
     /// 
     /// </summary>

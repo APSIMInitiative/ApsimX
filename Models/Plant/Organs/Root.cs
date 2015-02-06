@@ -108,7 +108,7 @@ namespace Models.PMF.Organs
         public double Depth { get; set; }
 
         /// <summary>Clears this instance.</summary>
-        public override void Clear()
+        protected override void Clear()
         {
             base.Clear();
             SWSupply = null;

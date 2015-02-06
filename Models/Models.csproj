@@ -121,6 +121,7 @@
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
+    <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Core\Apsim.cs" />
@@ -280,7 +281,7 @@
     <Compile Include="Plant\Organs\Leaf.cs" />
     <Compile Include="Plant\Organs\LeafCohort.cs" />
     <Compile Include="Plant\Organs\Nodule.cs" />
-    <Compile Include="Plant\Organs\Organ.cs" />
+    <Compile Include="Plant\Interfaces\IOrgan.cs" />
     <Compile Include="Plant\Organs\ReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\ReserveOrgan.cs" />
     <Compile Include="Plant\Organs\Root.cs" />

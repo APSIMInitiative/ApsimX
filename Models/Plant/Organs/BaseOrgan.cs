@@ -12,7 +12,7 @@ namespace Models.PMF.Organs
     /// This class represents a base organ
     /// </summary>
     [Serializable]
-    public class BaseOrgan : Model, Organ, IArbitration
+    public class BaseOrgan : Model, IOrgan, IArbitration
     {
         #region Links to other models or compontnets
         /// <summary>The live</summary>
@@ -137,24 +137,26 @@ namespace Models.PMF.Organs
         public double TotalN { get { return Live.N + Dead.N; } }
 
         /// <summary>Clears this instance.</summary>
-        virtual public void Clear()
+        virtual protected void Clear()
         {
             Live.Clear();
             Dead.Clear();
         }
 
-        // Methods that can be called from manager
-        /// <summary>Called when [sow].</summary>
+        /// <summary>Called when a simulation commences</summary>
+        virtual public void OnSimulationCommencing() { Clear(); }
+        
+        /// <summary>Called when a crop is sown</summary>
         /// <param name="SowData">The sow data.</param>
         virtual public void OnSow(SowPlant2Type SowData) { Clear(); }
-        /// <summary>Called when [harvest].</summary>
+
+        /// <summary>Called when a crop is harvested</summary>
         virtual public void OnHarvest() { }
-        /// <summary>Called when [end crop].</summary>
-        virtual public void OnEndCrop() 
-        {
-            Clear();
-        }
-        /// <summary>Called when [cut].</summary>
+
+        /// <summary>Called when a crop ends</summary>
+        virtual public void OnEndCrop() { Clear(); }
+
+        /// <summary>Called when a crop is cut</summary>
         virtual public void OnCut() { }
     }
 }

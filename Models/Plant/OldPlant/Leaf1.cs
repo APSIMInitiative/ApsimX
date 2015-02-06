@@ -8,6 +8,7 @@ using Models.PMF.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.OldPlant
 {

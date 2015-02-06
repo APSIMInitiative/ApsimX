@@ -870,7 +870,7 @@ namespace Models.PMF.Organs
             _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
         }
         /// <summary>Clears this instance.</summary>
-        public override void Clear()
+        protected override void Clear()
         {
             Leaves = new List<LeafCohort>();
             WaterDemand = 0;
