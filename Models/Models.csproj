@@ -201,7 +201,6 @@
     <Compile Include="Plant\OrganArbitrator.cs" />
     <Compile Include="Plant\ArrayBiomass.cs" />
     <Compile Include="Plant\Biomass.cs" />
-    <Compile Include="Plant\Comment.cs" />
     <Compile Include="Plant\CompositeBiomass.cs" />
     <Compile Include="Plant\Functions\AccumulateFunction.cs" />
     <Compile Include="Plant\Functions\AddFunction.cs" />
