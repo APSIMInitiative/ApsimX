@@ -7,6 +7,7 @@ using Models.PMF.Functions;
 using Models.PMF.Functions.SupplyFunctions;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -43,51 +44,74 @@ namespace Models.PMF.Organs
         public class InitialLeafValues : Model
         {
             /// <summary>The maximum area</summary>
-            [Link] public Function MaxArea = null;
+            [Link]
+            public IFunction MaxArea = null;
             /// <summary>The growth duration</summary>
-            [Link] public Function GrowthDuration = null;
+            [Link]
+            public IFunction GrowthDuration = null;
             /// <summary>The lag duration</summary>
-            [Link] public Function LagDuration = null;
+            [Link]
+            public IFunction LagDuration = null;
             /// <summary>The senescence duration</summary>
-            [Link] public Function SenescenceDuration = null;
+            [Link]
+            public IFunction SenescenceDuration = null;
             /// <summary>The detachment lag duration</summary>
-            [Link] public Function DetachmentLagDuration = null;
+            [Link]
+            public IFunction DetachmentLagDuration = null;
             /// <summary>The detachment duration</summary>
-            [Link] public Function DetachmentDuration = null;
+            [Link]
+            public IFunction DetachmentDuration = null;
             /// <summary>The specific leaf area maximum</summary>
-            [Link] public Function SpecificLeafAreaMax = null;
+            [Link]
+            public IFunction SpecificLeafAreaMax = null;
             /// <summary>The specific leaf area minimum</summary>
-            [Link] public Function SpecificLeafAreaMin = null;
+            [Link]
+            public IFunction SpecificLeafAreaMin = null;
             /// <summary>The structural fraction</summary>
-            [Link] public Function StructuralFraction = null;
+            [Link]
+            public IFunction StructuralFraction = null;
             /// <summary>The maximum n conc</summary>
-            [Link] public Function MaximumNConc = null;
+            [Link]
+            public IFunction MaximumNConc = null;
             /// <summary>The minimum n conc</summary>
-            [Link] public Function MinimumNConc = null;
+            [Link]
+            public IFunction MinimumNConc = null;
             /// <summary>The structural n conc</summary>
-            [Link(IsOptional=true)] public Function StructuralNConc = null;
+            [Link(IsOptional = true)]
+            public IFunction StructuralNConc = null;
             /// <summary>The initial n conc</summary>
-            [Link] public Function InitialNConc = null;
+            [Link]
+            public IFunction InitialNConc = null;
             /// <summary>The n reallocation factor</summary>
-            [Link] public Function NReallocationFactor = null;
+            [Link]
+            public IFunction NReallocationFactor = null;
             /// <summary>The dm reallocation factor</summary>
-            [Link(IsOptional=true)] public Function DMReallocationFactor = null;
+            [Link(IsOptional = true)]
+            public IFunction DMReallocationFactor = null;
             /// <summary>The n retranslocation factor</summary>
-            [Link] public Function NRetranslocationFactor = null;
+            [Link]
+            public IFunction NRetranslocationFactor = null;
             /// <summary>The expansion stress</summary>
-            [Link] public Function ExpansionStress = null;
+            [Link]
+            public IFunction ExpansionStress = null;
             /// <summary>The critical n conc</summary>
-            [Link] public Function CriticalNConc = null;
+            [Link]
+            public IFunction CriticalNConc = null;
             /// <summary>The dm retranslocation factor</summary>
-            [Link] public Function DMRetranslocationFactor = null;
+            [Link]
+            public IFunction DMRetranslocationFactor = null;
             /// <summary>The shade induced senescence rate</summary>
-            [Link] public Function ShadeInducedSenescenceRate = null;
+            [Link]
+            public IFunction ShadeInducedSenescenceRate = null;
             /// <summary>The drought induced sen acceleration</summary>
-            [Link(IsOptional=true)] public Function DroughtInducedSenAcceleration = null;
+            [Link(IsOptional = true)]
+            public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
-            [Link] public Function NonStructuralFraction = null;
+            [Link]
+            public IFunction NonStructuralFraction = null;
             /// <summary>The cell division stress</summary>
-            [Link(IsOptional=true)] public Function CellDivisionStress = null;
+            [Link(IsOptional = true)]
+            public IFunction CellDivisionStress = null;
         }
         #endregion
 
@@ -105,19 +129,24 @@ namespace Models.PMF.Organs
         /// <summary>The photosynthesis</summary>
         [Link] RUEModel Photosynthesis = null;
         /// <summary>The thermal time</summary>
-        [Link] Function ThermalTime = null;
+        [Link]
+        IFunction ThermalTime = null;
         /// <summary>The extinction coeff</summary>
-        [Link] Function ExtinctionCoeff = null;
+        [Link]
+        IFunction ExtinctionCoeff = null;
         /// <summary>The frost fraction</summary>
-        [Link] Function FrostFraction = null;
+        [Link]
+        IFunction FrostFraction = null;
         //[Link] Function ExpansionStress = null;
         //[Link] Function CriticalNConc = null;
         //[Link] Function MaximumNConc = null;
         //[Link] Function MinimumNConc = null;
         /// <summary>The structural fraction</summary>
-        [Link] Function StructuralFraction = null;
+        [Link]
+        IFunction StructuralFraction = null;
         /// <summary>The dm demand function</summary>
-        [Link(IsOptional=true)] Function DMDemandFunction = null;
+        [Link(IsOptional = true)]
+        IFunction DMDemandFunction = null;
         //[Link] Biomass Total = null;
         //[Link] ArrayBiomass CohortArrayLive = null;
         //[Link] ArrayBiomass CohortArrayDead = null;

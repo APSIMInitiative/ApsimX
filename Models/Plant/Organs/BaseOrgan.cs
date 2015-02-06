@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
+using Models.PMF.Interfaces;
 
 
 namespace Models.PMF.Organs
@@ -11,7 +12,7 @@ namespace Models.PMF.Organs
     /// This class represents a base organ
     /// </summary>
     [Serializable]
-    public class BaseOrgan : Model, Organ
+    public class BaseOrgan : Model, Organ, IArbitration
     {
         #region Links to other models or compontnets
         /// <summary>The live</summary>

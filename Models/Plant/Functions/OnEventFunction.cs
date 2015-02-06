@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of PreEventValue child function from Initialisation to SetEvent, PostEventValue from ReSetEvent and PreEventValue again from ReSetEvent to the next SetEvent")]
-    public class OnEventFunction : Model, Function
+    public class OnEventFunction : Model, IFunction
     {
         /// <summary>The _ value</summary>
         private double _Value = 0;
@@ -23,9 +23,11 @@ namespace Models.PMF.Functions
 
 
         /// <summary>The pre event value</summary>
-        [Link] Function PreEventValue = null;
+        [Link]
+        IFunction PreEventValue = null;
         /// <summary>The post event value</summary>
-        [Link] Function PostEventValue = null;
+        [Link]
+        IFunction PostEventValue = null;
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>

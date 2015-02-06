@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// \retval Maximum value of all children of this node. Return -999999999 if no child.
     [Serializable]
     [Description("Returns the maximum value of all childern functions")]
-    public class MaximumFunction : Model, Function
+    public class MaximumFunction : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -23,10 +23,10 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
                 double ReturnValue = -999999999;
-                foreach (Function F in ChildFunctions)
+                foreach (IFunction F in ChildFunctions)
                 {
                     ReturnValue = Math.Max(ReturnValue, F.Value);
                 }

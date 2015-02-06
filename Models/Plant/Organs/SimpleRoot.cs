@@ -5,6 +5,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.Soils;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -20,7 +21,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The dm demand function</summary>
         [Link]
-        Function DMDemandFunction = null;
+        IFunction DMDemandFunction = null;
 
         /// <summary>The uptake</summary>
         private double Uptake = 0;

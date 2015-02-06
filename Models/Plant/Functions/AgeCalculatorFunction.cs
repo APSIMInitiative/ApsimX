@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the age (in years) of the crop")]
-    public class AgeCalculatorFunction : Model, Function
+    public class AgeCalculatorFunction : Model, IFunction
     {
         /// <summary>The _ age</summary>
         private int _Age = 0;

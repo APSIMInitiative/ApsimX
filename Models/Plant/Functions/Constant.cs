@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// A constant value function
     /// </summary>
     [Serializable]
-    public class Constant : Model, Function
+    public class Constant : Model, IFunction
     {
         /// <summary>Gets or sets the value.</summary>
         /// <value>The value.</value>

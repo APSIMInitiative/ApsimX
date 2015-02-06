@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
-    public class DeltaFunction : Model, Function
+    public class DeltaFunction : Model, IFunction
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -20,7 +20,7 @@ namespace Models.PMF.Functions
         
         /// <summary>The child function to return a delta for</summary>
         [Link]
-        Function Integral = null;
+        IFunction Integral = null;
 
         private void OnSimulationCommencing(object sender, EventArgs e)
         {

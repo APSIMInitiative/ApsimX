@@ -13,7 +13,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
-    public class LinearInterpolationFunction : Model, Function, FunctionArray
+    public class LinearInterpolationFunction : Model, IFunction, IFunctionArray
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;

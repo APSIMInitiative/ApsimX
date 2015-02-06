@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("This Function calculates a mean daily temperature from Max and Min weighted toward Max according to the specified MaximumTemperatureWeighting factor.  This is then passed into the XY matrix as the x property and the function returns the y value")]
-    public class WeightedTemperatureFunction : Model, Function
+    public class WeightedTemperatureFunction : Model, IFunction
     {
         #region Class Data Members
         /// <summary>Gets or sets the xy pairs.</summary>

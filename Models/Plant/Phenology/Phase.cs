@@ -62,10 +62,12 @@ namespace Models.PMF.Phen
 
         // ThermalTime is optional because GerminatingPhase doesn't require it.
         /// <summary>The thermal time</summary>
-        [Link(IsOptional=true)] public Function ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
+        [Link(IsOptional = true)]
+        public IFunction ThermalTime = null;  //FIXME this should be called something to represent rate of progress as it is sometimes used to represent other things that are not thermal time.
 
         /// <summary>The stress</summary>
-        [Link(IsOptional=true)] public Function Stress = null;
+        [Link(IsOptional = true)]
+        public IFunction Stress = null;
 
         /// <summary>The property of day unused</summary>
         protected double PropOfDayUnused = 0;

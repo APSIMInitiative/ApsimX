@@ -29,19 +29,26 @@ namespace Models.PMF.OldPlant
         Grain Grain = null;
 
         /// <summary>The te</summary>
-        [Link] Function TE = null;
+        [Link]
+        IFunction TE = null;
         /// <summary>The fraction grain in pod</summary>
-        [Link] Function FractionGrainInPod = null;
+        [Link]
+        IFunction FractionGrainInPod = null;
         /// <summary>The n concentration critical</summary>
-        [Link] Function NConcentrationCritical = null;
+        [Link]
+        IFunction NConcentrationCritical = null;
         /// <summary>The n concentration minimum</summary>
-        [Link] Function NConcentrationMinimum = null;
+        [Link]
+        IFunction NConcentrationMinimum = null;
         /// <summary>The n concentration maximum</summary>
-        [Link] Function NConcentrationMaximum = null;
+        [Link]
+        IFunction NConcentrationMaximum = null;
         /// <summary>The growth structural fraction stage</summary>
-        [Link] Function GrowthStructuralFractionStage = null;
+        [Link]
+        IFunction GrowthStructuralFractionStage = null;
         /// <summary>The dm senescence fraction</summary>
-        [Link] Function DMSenescenceFraction = null;
+        [Link]
+        IFunction DMSenescenceFraction = null;
 
         /// <summary>The plant</summary>
         [Link]

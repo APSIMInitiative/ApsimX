@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is calculated from the mean of 3-hourly estimates of air temperature calculated from daily max and min temperatures")]
-    public class AirTemperatureFunction : Model, Function
+    public class AirTemperatureFunction : Model, IFunction
     {
 
         /// <summary>The met data</summary>

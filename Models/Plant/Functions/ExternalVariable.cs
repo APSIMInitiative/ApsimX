@@ -15,7 +15,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of a nominated external APSIM numerical variable")]
-    public class ExternalVariable : Model, Function
+    public class ExternalVariable : Model, IFunction
     {
         /// <summary>The variable name</summary>
         public string VariableName = "";

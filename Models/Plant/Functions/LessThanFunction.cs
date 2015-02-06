@@ -9,7 +9,7 @@ namespace Models.PMF.Functions
     /// <summary>FIXME: This can be generalised to a IF function</summary>
     [Serializable]
     [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
-    public class LessThanFunction : Model, Function
+    public class LessThanFunction : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -20,18 +20,18 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
                 double Variable = 0.0;
                 double Criteria = 0.0;
                 double IfTrue = 0.0;
                 double IfFalse = 0.0;
 
-                Function F = ChildFunctions[0] as Function;
+                IFunction F = ChildFunctions[0] as IFunction;
 
                 for (int i = 0; i < ChildFunctions.Count; i++)
                 {
-                    F = ChildFunctions[i] as Function;
+                    F = ChildFunctions[i] as IFunction;
                     if (i == 0)
                         Variable = F.Value;
                     if (i == 1)

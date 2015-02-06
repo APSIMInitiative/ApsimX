@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Determines which PhaseLookupValue child functions start and end stages bracket the current phenological stage and returns the value of the grand child function decending from the applicable PhaseLookupValue function.")]
-    public class PhaseLookup : Model, Function
+    public class PhaseLookup : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -22,9 +22,9 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
-                foreach (Function F in ChildFunctions)
+                foreach (IFunction F in ChildFunctions)
                 {
                     PhaseLookupValue P = F as PhaseLookupValue;
                     if (P.InPhase)

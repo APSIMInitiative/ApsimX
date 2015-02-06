@@ -120,10 +120,10 @@ namespace Models.PMF.Phen
         private Clock Clock = null;
         /// <summary>The rewind due to biomass removed</summary>
         [Link(IsOptional = true)]
-        private Function RewindDueToBiomassRemoved = null;
+        private IFunction RewindDueToBiomassRemoved = null;
         /// <summary>The above ground period</summary>
         [Link(IsOptional = true)]
-        private Function AboveGroundPeriod = null;
+        private IFunction AboveGroundPeriod = null;
 
         #endregion
 
@@ -141,7 +141,8 @@ namespace Models.PMF.Phen
 
         #region Parameters
         /// <summary>The thermal time</summary>
-        [Link] public Function ThermalTime = null;
+        [Link]
+        public IFunction ThermalTime = null;
 
         /// <summary>The phases</summary>
         private List<Phase> Phases;

@@ -45,23 +45,32 @@ namespace Models.PMF
         public double PrimaryBudNo {get; set;}
 
         /// <summary>The thermal time</summary>
-        [Link] Function ThermalTime = null;
+        [Link]
+        IFunction ThermalTime = null;
         /// <summary>The main stem primordia initiation rate</summary>
-        [Link] Function MainStemPrimordiaInitiationRate = null;
+        [Link]
+        IFunction MainStemPrimordiaInitiationRate = null;
         /// <summary>The main stem node appearance rate</summary>
-        [Link] public Function MainStemNodeAppearanceRate = null;
+        [Link]
+        public IFunction MainStemNodeAppearanceRate = null;
         /// <summary>The main stem final node number</summary>
-        [Link] public Function MainStemFinalNodeNumber = null;
+        [Link]
+        public IFunction MainStemFinalNodeNumber = null;
         /// <summary>The height model</summary>
-        [Link] Function HeightModel = null;
+        [Link]
+        IFunction HeightModel = null;
         /// <summary>The branching rate</summary>
-        [Link] Function BranchingRate = null;
+        [Link]
+        IFunction BranchingRate = null;
         /// <summary>The shade induced branch mortality</summary>
-        [Link] Function ShadeInducedBranchMortality = null;
+        [Link]
+        IFunction ShadeInducedBranchMortality = null;
         /// <summary>The drought induced branch mortality</summary>
-        [Link] Function DroughtInducedBranchMortality = null;
+        [Link]
+        IFunction DroughtInducedBranchMortality = null;
         /// <summary>The plant mortality</summary>
-        [Link(IsOptional=true)] Function PlantMortality = null;
+        [Link(IsOptional = true)]
+        IFunction PlantMortality = null;
         #endregion
 
         #region States

@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Adds the value of all childern functions to the previous days accumulation between start and end phases")]
-    public class AccumulateFunction : Model, Function
+    public class AccumulateFunction : Model, IFunction
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -47,12 +47,12 @@ namespace Models.PMF.Functions
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(Function));
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
             if (Phenology.Between(StartStageName, EndStageName))
             {
                 double DailyIncrement = 0.0;
-                foreach (Function F in ChildFunctions)
+                foreach (IFunction F in ChildFunctions)
                 {
                     DailyIncrement = DailyIncrement + F.Value;
                 }
@@ -69,7 +69,7 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
                 return AccumulatedValue;
             }

@@ -12,7 +12,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is linearly interpolated between phenological growth stages")]
-    public class StageBasedInterpolation : Model, Function
+    public class StageBasedInterpolation : Model, IFunction
     {
         /// <summary>The _ proportional</summary>
         private bool _Proportional = true;

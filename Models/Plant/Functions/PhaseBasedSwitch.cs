@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns a value of 1 if phenology is between start and end phases and otherwise a value of 0.")]
-    public class PhaseBasedSwitch : Model, Function
+    public class PhaseBasedSwitch : Model, IFunction
     {
         //Fixme.  This can be removed an phase lookup returnig a constant of 1 if in phase.
 

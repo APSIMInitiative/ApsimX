@@ -11,7 +11,7 @@ namespace Models.PMF.Functions.StructureFunctions
     /// </summary>
     [Serializable]
     [Description("This Function determines final leaf number for a crop.  If no childern are present final leaf number will be the same as primordia number, increasing at the same rate and reaching a fixed value when primordia initiation stops or when maximum leaf number is reached.  However, if a child function called 'FinalLeafNumber' is present that function will determine the increase and fixing of final leaf number")]
-    public class MainStemFinalNodeNumberFunction : Model, Function
+    public class MainStemFinalNodeNumberFunction : Model, IFunction
     {
         /// <summary>The structure</summary>
         [Link]
@@ -19,7 +19,7 @@ namespace Models.PMF.Functions.StructureFunctions
 
         /// <summary>The final leaf number</summary>
         [Link(IsOptional=true)]
-        Function FinalLeafNumber = null;
+        IFunction FinalLeafNumber = null;
 
         /// <summary>The maximum main stem node number</summary>
         public double MaximumMainStemNodeNumber = 0;

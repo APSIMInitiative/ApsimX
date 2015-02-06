@@ -34,7 +34,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The temporary stress</summary>
         [Link]
-        Function TempStress = null;
+        IFunction TempStress = null;
 
         /// <summary>The stem</summary>
         [Link]
@@ -49,23 +49,32 @@ namespace Models.PMF.OldPlant
         Population1 Population = null;
 
         /// <summary>The grain growth period</summary>
-        [Link] Function GrainGrowthPeriod = null;
+        [Link]
+        IFunction GrainGrowthPeriod = null;
         /// <summary>The reproductive period</summary>
-        [Link] Function ReproductivePeriod = null;
+        [Link]
+        IFunction ReproductivePeriod = null;
         /// <summary>The relative grain fill</summary>
-        [Link] Function RelativeGrainFill = null;
+        [Link]
+        IFunction RelativeGrainFill = null;
         /// <summary>The relative grain n fill</summary>
-        [Link] Function RelativeGrainNFill = null;
+        [Link]
+        IFunction RelativeGrainNFill = null;
         /// <summary>The dm senescence fraction</summary>
-        [Link] Function DMSenescenceFraction = null;
+        [Link]
+        IFunction DMSenescenceFraction = null;
         /// <summary>The n concentration critical</summary>
-        [Link] Function NConcentrationCritical = null;
+        [Link]
+        IFunction NConcentrationCritical = null;
         /// <summary>The n concentration minimum</summary>
-        [Link] Function NConcentrationMinimum = null;
+        [Link]
+        IFunction NConcentrationMinimum = null;
         /// <summary>The n concentration maximum</summary>
-        [Link] Function NConcentrationMaximum = null;
+        [Link]
+        IFunction NConcentrationMaximum = null;
         /// <summary>The growth structural fraction stage</summary>
-        [Link] Function GrowthStructuralFractionStage = null;
+        [Link]
+        IFunction GrowthStructuralFractionStage = null;
 
         /// <summary>Gets or sets the initial wt.</summary>
         /// <value>The initial wt.</value>

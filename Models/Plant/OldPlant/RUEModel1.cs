@@ -26,11 +26,14 @@ namespace Models.PMF.OldPlant
         SWStress SWStress = null;
 
         /// <summary>The temporary stress</summary>
-        [Link] Function TempStress = null;
+        [Link]
+        IFunction TempStress = null;
         /// <summary>The rue</summary>
-        [Link] Function RUE = null;
+        [Link]
+        IFunction RUE = null;
         /// <summary>The rue modifier</summary>
-        [Link] Function RUEModifier = null;   // used for CO2
+        [Link]
+        IFunction RUEModifier = null;   // used for CO2
 
         /// <summary>Potentials the dm.</summary>
         /// <param name="radiationInterceptedGreen">The radiation intercepted green.</param>

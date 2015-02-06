@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Return soil temperature (oC) from a specified soil profile layer.  The source of soil temperature array can be either SoilN (st) or SoilTemp (ave_soil_temp) property")]
-    public class SoilTemperatureDepthFunction : Model, Function
+    public class SoilTemperatureDepthFunction : Model, IFunction
     {
 
         /// <summary>The soil</summary>

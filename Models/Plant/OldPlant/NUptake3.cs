@@ -20,7 +20,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The n stress period</summary>
         [Link]
-        Function NStressPeriod = null;
+        IFunction NStressPeriod = null;
 
         /// <summary>Gets or sets the kno3.</summary>
         /// <value>The kno3.</value>

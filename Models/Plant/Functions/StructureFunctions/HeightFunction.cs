@@ -11,10 +11,10 @@ namespace Models.PMF.Functions.StructureFunctions
     /// </summary>
     [Serializable]
     [Description("Calculates the potential height increment and then multiplies it by the smallest of any childern functions (Child functions represent stress)")]
-    public class HeightFunction : Model, Function
+    public class HeightFunction : Model, IFunction
     {
         /// <summary>The potential height</summary>
-        [Link] Function PotentialHeight = null;
+        [Link] IFunction PotentialHeight = null;
         /// <summary>The potential height yesterday</summary>
         double PotentialHeightYesterday = 0;
         /// <summary>The height</summary>
@@ -32,12 +32,12 @@ namespace Models.PMF.Functions.StructureFunctions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
                 double PotentialHeightIncrement = PotentialHeight.Value - PotentialHeightYesterday;
                 double StressValue = 1.0;
                 //This function is counting potential height as a stress.
-                foreach (Function F in ChildFunctions)
+                foreach (IFunction F in ChildFunctions)
                 {
                     StressValue = Math.Min(StressValue, F.Value);
                 }

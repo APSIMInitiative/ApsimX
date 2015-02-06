@@ -11,7 +11,7 @@ namespace Models.PMF.Functions.StructureFunctions
     /// </summary>
     [Serializable]
     [Description("Returns the curreent InPhase tempature accumulation")]
-    public class InPhaseTemperatureFunction : Model, Function
+    public class InPhaseTemperatureFunction : Model, IFunction
     {
         /// <summary>The phenology</summary>
         [Link]

@@ -409,7 +409,9 @@ namespace Models.PMF
             if (Structure != null)
                Structure.OnSow(SowingData);
             if (Phenology != null)
-            Phenology.OnSow();
+                Phenology.OnSow();
+            if (Arbitrator != null)
+                Arbitrator.OnSow();
 
             
        
@@ -550,20 +552,20 @@ namespace Models.PMF
                     if (Phenology.Emerged == true)
                     {
 
-                        Arbitrator.DoWaterLimitedDMAllocations(Organs);
-                        Arbitrator.DoNutrientDemandSetUp(Organs);
-                        Arbitrator.SetNutrientUptake(Organs);
-                        Arbitrator.DoNutrientAllocations(Organs);
-                        Arbitrator.DoNutrientLimitedGrowth(Organs);
+                        Arbitrator.DoWaterLimitedDMAllocations();
+                        Arbitrator.DoNutrientDemandSetUp();
+                        Arbitrator.SetNutrientUptake();
+                        Arbitrator.DoNutrientAllocations();
+                        Arbitrator.DoNutrientLimitedGrowth();
                     }
                 }
                 else
                 {
-                    Arbitrator.DoWaterLimitedDMAllocations(Organs);
-                    Arbitrator.DoNutrientDemandSetUp(Organs);
-                    Arbitrator.SetNutrientUptake(Organs);
-                    Arbitrator.DoNutrientAllocations(Organs);
-                    Arbitrator.DoNutrientLimitedGrowth(Organs);
+                    Arbitrator.DoWaterLimitedDMAllocations();
+                    Arbitrator.DoNutrientDemandSetUp();
+                    Arbitrator.SetNutrientUptake();
+                    Arbitrator.DoNutrientAllocations();
+                    Arbitrator.DoNutrientLimitedGrowth();
                 }
             }
         }

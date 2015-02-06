@@ -27,19 +27,26 @@ namespace Models.PMF.OldPlant
         Population1 Population = null;
 
         /// <summary>The height function</summary>
-        [Link] Function HeightFunction = null;
+        [Link]
+        IFunction HeightFunction = null;
         /// <summary>The growth structural fraction stage</summary>
-        [Link] Function GrowthStructuralFractionStage = null;
+        [Link]
+        IFunction GrowthStructuralFractionStage = null;
         /// <summary>The dm senescence fraction</summary>
-        [Link] Function DMSenescenceFraction = null;
+        [Link]
+        IFunction DMSenescenceFraction = null;
         /// <summary>The n concentration critical</summary>
-        [Link] Function NConcentrationCritical = null;
+        [Link]
+        IFunction NConcentrationCritical = null;
         /// <summary>The n concentration minimum</summary>
-        [Link] Function NConcentrationMinimum = null;
+        [Link]
+        IFunction NConcentrationMinimum = null;
         /// <summary>The n concentration maximum</summary>
-        [Link] Function NConcentrationMaximum = null;
+        [Link]
+        IFunction NConcentrationMaximum = null;
         /// <summary>The retain fraction</summary>
-        [Link] Function RetainFraction = null;
+        [Link]
+        IFunction RetainFraction = null;
 
         /// <summary>The leaf</summary>
         [Link]

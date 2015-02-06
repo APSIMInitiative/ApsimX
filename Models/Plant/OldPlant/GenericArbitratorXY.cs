@@ -25,7 +25,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The ratio root shoot</summary>
         [Link]
-        Function RatioRootShoot = null;
+        IFunction RatioRootShoot = null;
 
         /// <summary>The leaf</summary>
         [Link]
@@ -186,7 +186,7 @@ namespace Models.PMF.OldPlant
         /// <exception cref="System.Exception">In arbitrator, cannot find FracDMRemainingIn + OrganName</exception>
         private double FracDMRemainingInPart(string OrganName)
         {
-            Function F = Apsim.Find(this, "FracDMRemainingIn" + OrganName) as Function;
+            IFunction F = Apsim.Find(this, "FracDMRemainingIn" + OrganName) as IFunction;
             if (F == null)
                 throw new Exception("In arbitrator, cannot find FracDMRemainingIn" + OrganName);
             return F.Value;

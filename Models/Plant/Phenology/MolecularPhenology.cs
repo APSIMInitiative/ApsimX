@@ -27,11 +27,14 @@ namespace Models.PMF.Phen
         //[Link] Function ThermalTime = null;
         //[Link] Function PhotoperiodFunction = null;
         /// <summary>The vrn1rate</summary>
-        [Link] Function Vrn1rate = null;
+        [Link]
+        IFunction Vrn1rate = null;
         /// <summary>The vrn2rate</summary>
-        [Link] Function Vrn2rate = null;
+        [Link]
+        IFunction Vrn2rate = null;
         /// <summary>The vrn3rate</summary>
-        [Link] Function Vrn3rate = null;
+        [Link]
+        IFunction Vrn3rate = null;
 
 
         /// <summary>The accumulated vernalisation</summary>

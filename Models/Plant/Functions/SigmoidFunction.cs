@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)")]
-    public class SigmoidFunction : Model, Function
+    public class SigmoidFunction : Model, IFunction
     {
         /// <summary>The xmax</summary>
         public double Xmax = 1.0;
@@ -31,11 +31,11 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
                 if (ChildFunctions.Count == 1)
                 {
-                    Function F = ChildFunctions[0] as Function;
+                    IFunction F = ChildFunctions[0] as IFunction;
 
                     return Xmax * 1 / (1 + Math.Exp(-(F.Value - Xo) / b));
                 }

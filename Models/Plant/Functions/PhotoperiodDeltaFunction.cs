@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the difference between today's and yesterday's photoperiods in hours.")]
-    public class PhotoperiodDeltaFunction : Model, Function
+    public class PhotoperiodDeltaFunction : Model, IFunction
     {
 
         /// <summary>The met data</summary>

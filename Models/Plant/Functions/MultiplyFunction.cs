@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// \retval Product of value of all children of this node. Return 1 if no child.
     [Serializable]
     [Description("Returns the product of all children function values")]
-    public class MultiplyFunction : Model, Function
+    public class MultiplyFunction : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
@@ -22,11 +22,11 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
                 double returnValue = 1.0;
 
-                foreach (Function F in ChildFunctions)
+                foreach (IFunction F in ChildFunctions)
                     returnValue = returnValue * F.Value;
                 return returnValue;
             }

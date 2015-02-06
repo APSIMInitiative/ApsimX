@@ -241,7 +241,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The n fix rate</summary>
         [Link]
-        Function NFixRate = null;
+        IFunction NFixRate = null;
 
         /// <summary>The above ground live</summary>
         [Link]
@@ -281,7 +281,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The temporary stress</summary>
         [Link]
-        Function TempStress = null;
+        IFunction TempStress = null;
 
         /// <summary>The root</summary>
         [Link]

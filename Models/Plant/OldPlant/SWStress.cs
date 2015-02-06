@@ -41,17 +41,23 @@ namespace Models.PMF.OldPlant
         Plant15 Plant = null;
 
         /// <summary>The expansion factor</summary>
-        [Link] Function ExpansionFactor = null;
+        [Link]
+        IFunction ExpansionFactor = null;
         /// <summary>The pheno factor</summary>
-        [Link] Function PhenoFactor = null;
+        [Link]
+        IFunction PhenoFactor = null;
         /// <summary>The fixation factor</summary>
-        [Link] Function FixationFactor = null;
+        [Link]
+        IFunction FixationFactor = null;
         /// <summary>The oxygen deficit photo factor</summary>
-        [Link] Function OxygenDeficitPhotoFactor = null;
+        [Link]
+        IFunction OxygenDeficitPhotoFactor = null;
         /// <summary>The pheno flower factor</summary>
-        [Link] Function PhenoFlowerFactor = null;
+        [Link]
+        IFunction PhenoFlowerFactor = null;
         /// <summary>The pheno grain filling factor</summary>
-        [Link] Function PhenoGrainFillingFactor = null;
+        [Link]
+        IFunction PhenoGrainFillingFactor = null;
 
         /// <summary>Gets the photo stress.</summary>
         /// <value>The photo stress.</value>

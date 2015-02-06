@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -25,11 +26,14 @@ namespace Models.PMF.Organs
         public Biomass AboveGround { get; set; }
 
         /// <summary>The water content</summary>
-        [Link] Function WaterContent = null;
+        [Link]
+        IFunction WaterContent = null;
         /// <summary>The hi increment</summary>
-        [Link] Function HIIncrement = null;
+        [Link]
+        IFunction HIIncrement = null;
         /// <summary>The n conc</summary>
-        [Link] Function NConc = null;
+        [Link]
+        IFunction NConc = null;
 
         /// <summary>The daily growth</summary>
         private double DailyGrowth = 0;

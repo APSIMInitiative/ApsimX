@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Raises the value of the child to the power of the exponent specified")]
-    public class PowerFunction : Model, Function
+    public class PowerFunction : Model, IFunction
     {
         /// <summary>The exponent</summary>
         public double Exponent = 1.0;
@@ -26,11 +26,11 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
                 if (ChildFunctions.Count == 1)
                 {
-                    Function F = ChildFunctions[0] as Function;
+                    IFunction F = ChildFunctions[0] as IFunction;
                     return Math.Pow(F.Value, Exponent);
                 }
                 else

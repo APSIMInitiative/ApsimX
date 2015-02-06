@@ -118,7 +118,9 @@
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
-    <Compile Include="Plant\Functions\FunctionArray.cs" />
+    <Compile Include="Plant\Interfaces\IArbitration.cs" />
+    <Compile Include="Plant\Interfaces\IFunction.cs" />
+    <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Core\Apsim.cs" />
@@ -216,7 +218,6 @@
     <Compile Include="Plant\Functions\Exponential.cs" />
     <Compile Include="Plant\Functions\ExpressionFunction.cs" />
     <Compile Include="Plant\Functions\ExternalVariable.cs" />
-    <Compile Include="Plant\Functions\Function.cs" />
     <Compile Include="Plant\Functions\InPhaseTtFunction.cs" />
     <Compile Include="Plant\Functions\LessThanFunction.cs" />
     <Compile Include="Plant\Functions\LinearInterpolationFunction.cs" />

@@ -14,7 +14,7 @@ namespace Models.PMF.Functions
     /// \retval The day length of a specified day and location. Variable "photoperiod" will be returned if simulation environment has a variable called ClimateControl.PhotoPeriod.
     [Serializable]
     [Description("Returns the value of todays photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead")]
-    public class PhotoperiodFunction : Model, Function
+    public class PhotoperiodFunction : Model, IFunction
     {
 
         /// <summary>The met data</summary>

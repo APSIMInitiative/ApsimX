@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="FunctionArray.cs" company="APSIM Initiative">
+// <copyright file="IFunctionArray.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// Interface for all array functions i.e. functions that return
     /// multiple values.
     /// </summary>
-    public interface FunctionArray
+    public interface IFunctionArray
     {
         /// <summary>Gets the values.</summary>
         /// <value>The values.</value>

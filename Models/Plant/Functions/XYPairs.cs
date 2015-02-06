@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty")]
-    public class XYPairs : Model, Function
+    public class XYPairs : Model, IFunction
     {
         /// <summary>Gets or sets the x.</summary>
         /// <value>The x.</value>

@@ -22,7 +22,7 @@ namespace Models.PMF.Phen
     public class GenericPhase : Phase
     {
         [Link(IsOptional=true)]
-        private Function Target = null;
+        private IFunction Target = null;
 
         /// <summary>
         /// This function increments thermal time accumulated in each phase 

@@ -14,7 +14,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
-    public class SplineInterpolationFunction : Model, Function
+    public class SplineInterpolationFunction : Model, IFunction
     {
         /// <summary>Gets or sets the xy pairs.</summary>
         /// <value>The xy pairs.</value>

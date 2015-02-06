@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
-    public class PhaseLookupValue : Model, Function
+    public class PhaseLookupValue : Model, IFunction
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -38,7 +38,7 @@ namespace Models.PMF.Functions
             get
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(Function));
+                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
                 if (Start == "")
                     throw new Exception("Phase start name not set:" + Name);
@@ -47,7 +47,7 @@ namespace Models.PMF.Functions
 
                 if (Phenology.Between(Start, End) && ChildFunctions.Count > 0)
                 {
-                    Function Lookup = ChildFunctions[0] as Function;
+                    IFunction Lookup = ChildFunctions[0] as IFunction;
                     return Lookup.Value;
                 }
                 else

@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("returns the temperature of the surface soil layer")]
-    public class SoilTemperatureFunction : Model, Function
+    public class SoilTemperatureFunction : Model, IFunction
     {
         #region Class Data Members
         /// <summary>The xy pairs</summary>
