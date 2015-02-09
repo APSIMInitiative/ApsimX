@@ -166,7 +166,8 @@ namespace UserInterface.Presenters
                                       monthlyRain,
                                       Axis.AxisType.Bottom,
                                       Axis.AxisType.Left,
-                                      Color.LightSkyBlue);
+                                      Color.LightSkyBlue,
+                                      true);
             weatherDataView.Graph.DrawLineAndMarkers("Maximum temperature",
                                                      Utility.Date.LowerCaseMonths,
                                                      montlyMaxt,
@@ -174,7 +175,8 @@ namespace UserInterface.Presenters
                                                      Axis.AxisType.Right,
                                                      Color.Red,
                                                      Series.LineType.Solid,
-                                                     Series.MarkerType.None);
+                                                     Series.MarkerType.None,
+                                                     true);
             weatherDataView.Graph.DrawLineAndMarkers("Minimum temperature",
                                                      Utility.Date.LowerCaseMonths,
                                                      monthlyMint,
@@ -182,7 +184,8 @@ namespace UserInterface.Presenters
                                                      Axis.AxisType.Right,
                                                      Color.Orange,
                                                      Series.LineType.Solid,
-                                                     Series.MarkerType.None);
+                                                     Series.MarkerType.None,
+                                                     true);
             weatherDataView.Graph.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN);
             weatherDataView.Graph.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
             weatherDataView.Graph.FormatAxis(Axis.AxisType.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN);

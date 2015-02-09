@@ -151,13 +151,15 @@ namespace UserInterface.Views
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,
              Models.Graph.Series.LineType lineType,
-             Models.Graph.Series.MarkerType markerType)
+             Models.Graph.Series.MarkerType markerType,
+             bool showOnLegend)
         {
             if (x != null && y != null)
             {
                 Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
                 series.OnHoverOverPoint += OnHoverOverPoint;
-                series.Title = title;
+                if (showOnLegend)
+                    series.Title = title;
                 series.Color = ConverterExtensions.ToOxyColor(colour);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
@@ -214,10 +216,12 @@ namespace UserInterface.Views
             IEnumerable y,
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType,
-            Color colour)
+            Color colour,
+            bool showOnLegend)
         {
             Utility.ColumnXYSeries series = new Utility.ColumnXYSeries();
-            series.Title = title;
+            if (showOnLegend)
+                series.Title = title;
             series.FillColor = ConverterExtensions.ToOxyColor(colour);
             series.StrokeColor = ConverterExtensions.ToOxyColor(colour);
             series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -247,7 +251,8 @@ namespace UserInterface.Views
             IEnumerable y2,
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType,
-            Color colour)
+            Color colour,
+            bool showOnLegend)
         {
             AreaSeries series = new AreaSeries();
             series.Color = ConverterExtensions.ToOxyColor(colour);

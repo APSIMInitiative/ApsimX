@@ -93,8 +93,9 @@ namespace UserInterface.Interfaces
              Models.Graph.Axis.AxisType xAxisType, 
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,
-             Models.Graph.Series.LineType lineType, 
-             Models.Graph.Series.MarkerType markerType);
+             Models.Graph.Series.LineType lineType,
+             Models.Graph.Series.MarkerType markerType,
+            bool showInLegend);
 
         /// <summary>
         /// Draw a bar series with the specified arguments.
@@ -112,7 +113,8 @@ namespace UserInterface.Interfaces
             IEnumerable y, 
             Models.Graph.Axis.AxisType xAxisType, 
             Models.Graph.Axis.AxisType yAxisType, 
-            Color colour);
+            Color colour,
+            bool showInLegend);
 
         /// <summary>
         /// Draw an  area series with the specified arguments. A filled polygon is
@@ -135,7 +137,8 @@ namespace UserInterface.Interfaces
             IEnumerable y2,
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType,
-            Color colour);
+            Color colour,
+            bool showInLegend);
 
         /// <summary>
         /// Draw text on the graph at the specified coordinates.

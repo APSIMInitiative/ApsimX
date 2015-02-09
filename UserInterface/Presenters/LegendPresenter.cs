@@ -50,10 +50,21 @@ namespace UserInterface.Presenters
                 values.Add(value.ToString());
 
             View.Populate(Graph.LegendPosition.ToString(), values.ToArray());
-            View.SetSeriesNames(graphPresenter.GetSeriesNames());
+
+            List<string> seriesNames = GetSeriesNames();
+            View.SetSeriesNames(seriesNames.ToArray());
             View.SetDisabledSeriesNames(Graph.DisabledSeries.ToArray());
 
             View.DisabledSeriesChanged += OnDisabledSeriesChanged;
+        }
+
+        private List<string> GetSeriesNames()
+        {
+            List<string> seriesNames = new List<string>();
+            foreach (string seriesName in graphPresenter.GetSeriesNames())
+                if (!seriesNames.Contains(seriesName))
+                    seriesNames.Add(seriesName);
+            return seriesNames;
         }
 
         /// <summary>Called when user changes a disabled series.</summary>
@@ -65,7 +76,8 @@ namespace UserInterface.Presenters
 
             List<string> disabledSeries = new List<string>();
             disabledSeries.AddRange(View.GetDisabledSeriesNames());
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "DisabledSeries", disabledSeries));
+            if (disabledSeries.Count < GetSeriesNames().Count)
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "DisabledSeries", disabledSeries));
 
             ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }

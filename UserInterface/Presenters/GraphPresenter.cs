@@ -365,7 +365,9 @@ namespace UserInterface.Presenters
         /// <returns></returns>
         public string[] GetSeriesNames()
         {
-            return GraphView.GetSeriesNames();
+            IEnumerable<string> validSeriesTitles = this.seriesMetadata.Select(s => s.Title);
+
+            return validSeriesTitles.ToArray();
         }
 
         /// <summary>
@@ -523,7 +525,7 @@ namespace UserInterface.Presenters
                 double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
                 graphView.DrawLineAndMarkers("", regressionX, regressionY,
                                              xAxis, yAxis, colour,
-                                             Series.LineType.Solid, Series.MarkerType.None);
+                                             Series.LineType.Solid, Series.MarkerType.None, true);
 
                 // Show the 1:1 line
                 double lowestAxisScale = Math.Min(minimumX, minimumY);
@@ -531,7 +533,7 @@ namespace UserInterface.Presenters
                 double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };
                 graphView.DrawLineAndMarkers("", oneToOne, oneToOne,
                                              xAxis, yAxis, colour,
-                                             Series.LineType.Dash, Series.MarkerType.None);
+                                             Series.LineType.Dash, Series.MarkerType.None, true);
 
                 // Draw the equation.
                 double interval = (largestAxisScale - lowestAxisScale) / 13;
@@ -606,12 +608,6 @@ namespace UserInterface.Presenters
                 this.filter = filter;
                 this.seriesIndex = seriesIndex;
                 this.numSeries = numSeries;
-
-                // If showInLegend is false then blank the series title.
-                if (!series.ShowInLegend)
-                {
-                    Title = string.Empty;
-                }
             }
 
             /// <summary>
@@ -710,17 +706,17 @@ namespace UserInterface.Presenters
                     // Create the series and populate it with data.
                     if (series.Type == Models.Graph.Series.SeriesType.Bar)
                     {
-                        graphView.DrawBar(title, X, Y, series.XAxis, series.YAxis, Colour);
+                        graphView.DrawBar(title, X, Y, series.XAxis, series.YAxis, Colour, series.ShowInLegend);
                     }
 
                     else if (series.Type == Series.SeriesType.Scatter)
                     {
                         graphView.DrawLineAndMarkers(title, X, Y, series.XAxis, series.YAxis, Colour,
-                                                     series.Line, series.Marker);
+                                                     series.Line, series.Marker, series.ShowInLegend);
                     }
                     else if (X2 != null && Y2 != null)
                     {
-                        graphView.DrawArea(title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour);
+                        graphView.DrawArea(title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour, series.ShowInLegend);
                     }
                 }
             }
