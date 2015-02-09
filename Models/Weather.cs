@@ -640,6 +640,9 @@ namespace Models
 
             tav = yearlySumMeans / nyears;  // calc the ave of the yearly ave means
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
+
+            this.reader.SeekToDate(start.AddDays(1)); // goto start of data set
+
         }
         
         /// <summary>
