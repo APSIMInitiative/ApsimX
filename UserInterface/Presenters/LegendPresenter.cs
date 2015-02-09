@@ -14,6 +14,14 @@ namespace UserInterface.Presenters
         private Graph Graph;
         private ILegendView View;
         private ExplorerPresenter ExplorerPresenter;
+        private GraphPresenter graphPresenter;
+
+        /// <summary>Initializes a new instance of the <see cref="LegendPresenter"/> class.</summary>
+        /// <param name="graphPresenter">The graph presenter.</param>
+        public LegendPresenter(GraphPresenter graphPresenter)
+        {
+            this.graphPresenter = graphPresenter;
+        }
 
         /// <summary>
         /// Attach the specified Model and View.
@@ -34,6 +42,7 @@ namespace UserInterface.Presenters
             PopulateView();
         }
 
+        /// <summary>Populates the view.</summary>
         private void PopulateView()
         {
             List<string> values = new List<string>();
@@ -41,6 +50,24 @@ namespace UserInterface.Presenters
                 values.Add(value.ToString());
 
             View.Populate(Graph.LegendPosition.ToString(), values.ToArray());
+            View.SetSeriesNames(graphPresenter.GetSeriesNames());
+            View.SetDisabledSeriesNames(Graph.DisabledSeries.ToArray());
+
+            View.DisabledSeriesChanged += OnDisabledSeriesChanged;
+        }
+
+        /// <summary>Called when user changes a disabled series.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        void OnDisabledSeriesChanged(object sender, EventArgs e)
+        {
+            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+
+            List<string> disabledSeries = new List<string>();
+            disabledSeries.AddRange(View.GetDisabledSeriesNames());
+            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Graph, "DisabledSeries", disabledSeries));
+
+            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -53,6 +80,8 @@ namespace UserInterface.Presenters
 
             // Trap events from the view.
             View.OnPositionChanged -= OnTitleChanged;
+
+            View.DisabledSeriesChanged -= OnDisabledSeriesChanged;
         }
         
         /// <summary>

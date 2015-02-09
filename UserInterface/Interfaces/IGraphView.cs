@@ -204,13 +204,6 @@ namespace UserInterface.Interfaces
         void AddContextAction(string menuText, System.EventHandler onClick);
 
         /// <summary>
-        /// Enable or disable a series.
-        /// </summary>
-        /// <param name="seriesIndex">series index</param>
-        /// <param name="enable">Enable the series?</param>
-        void EnableSeries(int seriesIndex, bool enable);
-
-        /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
         double AxisMaximum(Models.Graph.Axis.AxisType axisType);
@@ -219,5 +212,9 @@ namespace UserInterface.Interfaces
         /// Gets the minimum scale of the specified axis.
         /// </summary>
         double AxisMinimum(Models.Graph.Axis.AxisType axisType);
+
+        /// <summary>Gets the series names.</summary>
+        /// <returns></returns>
+        string[] GetSeriesNames();
     }
 }
