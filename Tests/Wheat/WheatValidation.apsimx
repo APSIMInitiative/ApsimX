@@ -18,6 +18,7 @@
     </PredictedObserved>
     <Input>
       <Name>NZObservations</Name>
+      <ErrorMessage />
       <FileName>RainShelterBiomass.txt</FileName>
     </Input>
     <TimeSeriesStats>
@@ -797,7 +798,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
@@ -817,7 +818,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -860,7 +861,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
@@ -880,7 +881,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1503,7 +1504,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
@@ -1523,7 +1524,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1566,7 +1567,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
@@ -1586,7 +1587,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2429,7 +2430,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4410,7 +4411,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -4430,7 +4431,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 2</Title>
@@ -4450,7 +4451,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 3</Title>
@@ -4470,7 +4471,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4512,7 +4513,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -6130,7 +6131,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -6150,7 +6151,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -6191,7 +6192,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -6211,7 +6212,7 @@ public class Script : Model
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -7290,7 +7291,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Observed</Title>
@@ -7310,7 +7311,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -7351,7 +7352,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -8565,7 +8566,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>true</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -9705,7 +9706,7 @@ private void OnDoManagement(object sender, EventArgs e)
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -11613,7 +11614,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>*</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
@@ -11655,7 +11656,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>Experiment</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
@@ -11697,7 +11698,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
@@ -11739,7 +11740,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>*</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>

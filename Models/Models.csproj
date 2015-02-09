@@ -118,6 +118,10 @@
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
+    <Compile Include="Plant\Interfaces\IArbitration.cs" />
+    <Compile Include="Plant\Interfaces\IFunction.cs" />
+    <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
+    <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Core\Apsim.cs" />
@@ -165,10 +169,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Report\ReportColumn.cs" />
+    <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
+    <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\PatchHandler.cs" />
-    <Compile Include="Soils\SoilArbitrator.cs" />
+    <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
     <Compile Include="Soils\soilCNPatch.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterDataTypes.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterEvap.cs" />
@@ -195,7 +201,6 @@
     <Compile Include="Plant\OrganArbitrator.cs" />
     <Compile Include="Plant\ArrayBiomass.cs" />
     <Compile Include="Plant\Biomass.cs" />
-    <Compile Include="Plant\Comment.cs" />
     <Compile Include="Plant\CompositeBiomass.cs" />
     <Compile Include="Plant\Functions\AccumulateFunction.cs" />
     <Compile Include="Plant\Functions\AddFunction.cs" />
@@ -213,7 +218,6 @@
     <Compile Include="Plant\Functions\Exponential.cs" />
     <Compile Include="Plant\Functions\ExpressionFunction.cs" />
     <Compile Include="Plant\Functions\ExternalVariable.cs" />
-    <Compile Include="Plant\Functions\Function.cs" />
     <Compile Include="Plant\Functions\InPhaseTtFunction.cs" />
     <Compile Include="Plant\Functions\LessThanFunction.cs" />
     <Compile Include="Plant\Functions\LinearInterpolationFunction.cs" />
@@ -276,7 +280,7 @@
     <Compile Include="Plant\Organs\Leaf.cs" />
     <Compile Include="Plant\Organs\LeafCohort.cs" />
     <Compile Include="Plant\Organs\Nodule.cs" />
-    <Compile Include="Plant\Organs\Organ.cs" />
+    <Compile Include="Plant\Interfaces\IOrgan.cs" />
     <Compile Include="Plant\Organs\ReproductiveOrgan.cs" />
     <Compile Include="Plant\Organs\ReserveOrgan.cs" />
     <Compile Include="Plant\Organs\Root.cs" />
@@ -376,7 +380,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\Wheat.xml" />
+    <None Include="Resources\Wheat.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Potato.xml">

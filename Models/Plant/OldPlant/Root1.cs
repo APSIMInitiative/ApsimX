@@ -10,6 +10,7 @@ using Models.Soils;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using System.IO;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.OldPlant
 {
@@ -30,26 +31,32 @@ namespace Models.PMF.OldPlant
         public Plant15 Plant;
 
         /// <summary>The root advance factor temporary</summary>
-        [Link] Function RootAdvanceFactorTemp = null;
+        [Link]
+        IFunction RootAdvanceFactorTemp = null;
         /// <summary>The root advance factor water stress</summary>
-        [Link] Function RootAdvanceFactorWaterStress = null;
+        [Link]
+        IFunction RootAdvanceFactorWaterStress = null;
         /// <summary>The sw factor root depth</summary>
-        [Link] Function SWFactorRootDepth = null;
+        [Link]
+        IFunction SWFactorRootDepth = null;
         /// <summary>The sw factor root length</summary>
-        [Link] Function SWFactorRootLength = null;
+        [Link] IFunctionArray SWFactorRootLength = null;
         /// <summary>The root depth rate</summary>
-        [Link] Function RootDepthRate = null;
+        [Link]
+        IFunction RootDepthRate = null;
 
         /// <summary>The population</summary>
         [Link]
         Population1 Population = null;
 
         /// <summary>The relative root rate</summary>
-        [Link] Function RelativeRootRate = null;
+        [Link] IFunctionArray RelativeRootRate = null;
         /// <summary>The dm senescence fraction</summary>
-        [Link] Function DMSenescenceFraction = null;
+        [Link]
+        IFunction DMSenescenceFraction = null;
         /// <summary>The growth structural fraction stage</summary>
-        [Link] Function GrowthStructuralFractionStage = null;
+        [Link]
+        IFunction GrowthStructuralFractionStage = null;
 
         /// <summary>The n uptake function</summary>
         [Link]

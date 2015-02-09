@@ -11,16 +11,16 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Calculates the maximum leaf size (mm2/leaf) given its node position (Elings, 2000 - Agronomy Journal 92, 436-444)")]
-    public class BellCurveFunction : Function
+    public class BellCurveFunction : Model, IFunction
     {
         /// <summary>The largest leaf position</summary>
-        [Link] Function LargestLeafPosition = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
+        [Link] IFunction LargestLeafPosition = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
         /// <summary>The area maximum</summary>
-        [Link] Function AreaMax = null;             // Area of the largest leaf of a plant (mm2)
+        [Link] IFunction AreaMax = null;             // Area of the largest leaf of a plant (mm2)
         /// <summary>The breadth</summary>
-        [Link] Function Breadth = null;
+        [Link] IFunction Breadth = null;
         /// <summary>The skewness</summary>
-        [Link] Function Skewness = null;
+        [Link] IFunction Skewness = null;
         /// <summary>The structure</summary>
         [Link] Structure Structure = null;
 
@@ -28,7 +28,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

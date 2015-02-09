@@ -310,7 +310,7 @@
       </OnEventFunction>
     </MainStemFinalNodeNumberFunction>
     <HeightFunction>
-      <Name>Height</Name>
+      <Name>HeightModel</Name>
       <LinearInterpolationFunction>
         <Name>PotentialHeight</Name>
         <XProperty>[Phenology].Stage</XProperty>
@@ -457,6 +457,10 @@
     <Constant>
       <Name>WaterContent</Name>
       <Value>0.12</Value>
+    </Constant>
+    <Constant>
+      <Name>DMDemandFunction</Name>
+      <Value>1</Value>
     </Constant>
     <PhaseLookup>
       <Name>NFillingRate</Name>
@@ -1164,6 +1168,7 @@
       <Name>MinimumNConc</Name>
       <Value>0.01</Value>
     </Constant>
+   
   </GenericAboveGroundOrgan>
   <GenericAboveGroundOrgan>
     <Name>Rachis</Name>
@@ -1373,7 +1378,7 @@
         </VariableReference>
         <VariableReference>
           <Name>DeltaHeight</Name>
-          <VariableName>[Structure].Height.DeltaHeight</VariableName>
+          <VariableName>[Structure].HeightModel.DeltaHeight</VariableName>
         </VariableReference>
       </MultiplyFunction>
     </MinimumFunction>

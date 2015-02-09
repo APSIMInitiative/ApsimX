@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Description("Returns the thermal time accumulation from the current phase in phenology")]
     [Serializable]
-    public class InPhaseTtFunction : Function
+    public class InPhaseTtFunction : Model, IFunction
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -20,7 +20,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

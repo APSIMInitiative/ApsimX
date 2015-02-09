@@ -69,7 +69,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The photoperiod</summary>
         [Link]
-        Function Photoperiod = null;
+        IFunction Photoperiod = null;
 
         /// <summary>The weather</summary>
         [Link]

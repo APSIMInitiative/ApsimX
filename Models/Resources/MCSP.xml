@@ -191,6 +191,10 @@
 			<End>Maturity</End>
 		</PhaseBasedSwitch>
 		<Constant>
+			<Name>TemperatureEffect</Name>
+			<Value>1</Value>
+		</Constant>
+        <Constant>
 			<Name>MaximumRootDepth</Name>
 			<Value>1500</Value>
 		</Constant>
@@ -502,6 +506,10 @@
 										<Name>PreEventValue</Name>
 										<Value>3000</Value>
 									</Constant>
+									<Constant>
+										<Name>PostEventValue</Name>
+										<Value>0</Value>
+									</Constant>                                  
 								</OnEventFunction>
 							</SubtractFunction>
 						</MultiplyFunction>
@@ -650,7 +658,15 @@
 			<Name>FWlog</Name>
 			<Value>0.01</Value>
 		</Constant>
-	</Nodule>
+		<Constant>
+			<Name>FixationMetabolicCost</Name>
+			<Value>0</Value>
+		</Constant>
+		<Constant>
+			<Name>SpecificNitrogenaseActivity</Name>
+			<Value>0</Value>
+		</Constant>
+    </Nodule>
 	<Summariser>
 		<Name>Summariser</Name>
 		<CompositeBiomass>

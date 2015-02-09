@@ -9,7 +9,7 @@ namespace Models.PMF.Functions.DemandFunctions
     /// </summary>
     [Serializable]
     [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!.  This function calculates DM demand between the start and end stages as the product of potential growth rate (g/oCd/organ), daily thermal time and the specified organ number. It returns the product of this potential rate and any childern so if other stress multipliers are required they can be constructed with generic functions.  Stress factors are optional")]
-    public class PotentialSizeDemandFunction : Function
+    public class PotentialSizeDemandFunction : Model, IFunction
     {
         /// <summary>The start stage name</summary>
         public string StartStageName = "";
@@ -19,11 +19,11 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>The potential growth increment</summary>
         [Link]
-        Function PotentialGrowthIncrement = null;
+        IFunction PotentialGrowthIncrement = null;
 
         /// <summary>The organ number</summary>
-        [Link] 
-        Function OrganNumber = null;
+        [Link]
+        IFunction OrganNumber = null;
 
         /// <summary>The phenology</summary>
         [Link]
@@ -31,11 +31,11 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>The thermal time</summary>
         [Link]
-        Function ThermalTime = null;
+        IFunction ThermalTime = null;
 
         /// <summary>The accum thermal time</summary>
         [Link]
-        Function AccumThermalTime = null;
+        IFunction AccumThermalTime = null;
 
         /// <summary>Gets the accumulated thermal time.</summary>
         /// <value>The accumulated thermal time.</value>
@@ -47,7 +47,7 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

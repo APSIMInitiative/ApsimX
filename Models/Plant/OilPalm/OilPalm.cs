@@ -10,6 +10,7 @@ using Models.Soils;
 using System.Xml.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Models.Soils.Arbitrator;
 
 
 namespace Models.PMF.OilPalm
@@ -316,97 +317,97 @@ namespace Models.PMF.OilPalm
         [Link]
         [Description("Frond appearance rate under optimal temperature conditions.")]
         [Units("d")]
-        Function FrondAppearanceRate = null;
+        IFunction FrondAppearanceRate = null;
         /// <summary>The relative developmental rate</summary>
         [Link]
         [Description("Relative rate of plant development (e.g. frond appearance) as affected by air temperature")]
         [Units("0-1")]
-        Function RelativeDevelopmentalRate = null;
+        IFunction RelativeDevelopmentalRate = null;
         /// <summary>The frond maximum area</summary>
         [Link]
         [Description("Maximum area of an individual frond")]
         [Units("m^2")]
-        Function FrondMaxArea = null;
+        IFunction FrondMaxArea = null;
         /// <summary>The direct extinction coeff</summary>
         [Link]
         [Description("Beer-Lambert law extinction coefficient for direct beam radiation")]
         [Units("unitless")]
-        Function DirectExtinctionCoeff = null;
+        IFunction DirectExtinctionCoeff = null;
         /// <summary>The diffuse extinction coeff</summary>
         [Link]
         [Description("Beer-Lambert law extinction coefficient for diffuse beam radiation")]
         [Units("unitless")]
-        Function DiffuseExtinctionCoeff = null;
+        IFunction DiffuseExtinctionCoeff = null;
         /// <summary>The expanding fronds</summary>
         [Link]
         [Description("The number of expanding fronds at a given point in time.")]
         [Units("/palm")]
-        Function ExpandingFronds = null;
+        IFunction ExpandingFronds = null;
         /// <summary>The initial frond number</summary>
         [Link]
         [Description("The number of fronds on the palm at planting")]
         [Units("/palm")]
-        Function InitialFrondNumber = null;
+        IFunction InitialFrondNumber = null;
         /// <summary>The rue</summary>
         [Link]
         [Description("Radiation use efficiency for total short wave radiation.")]
         [Units("g/m^2")]
-        Function RUE = null;
+        IFunction RUE = null;
         /// <summary>The root front velocity</summary>
         [Link]
         [Description("Root front velocity")]
         [Units("mm/d")]
-        Function RootFrontVelocity = null;
+        IFunction RootFrontVelocity = null;
         /// <summary>The root senescence rate</summary>
         [Link]
         [Description("Fraction of the live root system that senesces per day (ie first order decay coefficient)")]
         [Units("/d")]
-        Function RootSenescenceRate = null;
+        IFunction RootSenescenceRate = null;
         /// <summary>The specific leaf area</summary>
         [Link]
         [Description("Amount of frond area per unit frond mass. Used to calculate frond dry matter demand")]
         [Units("m^2/g")]
-        Function SpecificLeafArea = null;
+        IFunction SpecificLeafArea = null;
         /// <summary>The specific leaf area maximum</summary>
         [Link]
         [Description("Maximum amount of frond area per unit frond mass. Used to limit area growth when dry matter is limiting")]
         [Units("m^2/g")]
-        Function SpecificLeafAreaMax = null;
+        IFunction SpecificLeafAreaMax = null;
         /// <summary>The root fraction</summary>
         [Link]
         [Description("Fraction of daily growth partitioned into the root system")]
         [Units("0-1")]
-        Function RootFraction = null;
+        IFunction RootFraction = null;
         /// <summary>The bunch size maximum</summary>
         [Link]
         [Description("Maximum bunch size on a dry mass basis")]
         [Units("g")]
-        Function BunchSizeMax = null;
+        IFunction BunchSizeMax = null;
         /// <summary>The female flower fraction</summary>
         [Link]
         [Description("Female fraction of a cohort's population of inflorescences as affected by age")]
         [Units("0-1")]
-        Function FemaleFlowerFraction = null;
+        IFunction FemaleFlowerFraction = null;
         /// <summary>The FFF stress impact</summary>
         [Link]
         [Description("Fraction of inflorescences that become female each day during the gender determination phase")]
         [Units("0-1")]
-        Function FFFStressImpact = null;
+        IFunction FFFStressImpact = null;
         /// <summary>The stem to frond fraction</summary>
         [Link]
         [Description("Ratio of stem to frond growth as affected by plant age")]
         [Units("g/g")]
-        Function StemToFrondFraction = null;
+        IFunction StemToFrondFraction = null;
         /// <summary>The flower abortion fraction</summary>
         [Link]
         [Description("Fraction of inflorescences that become aborted each day during the flower abortion phase")]
         [Units("0-1")]
-        Function FlowerAbortionFraction = null;
+        IFunction FlowerAbortionFraction = null;
         /// <summary>The bunch failure fraction</summary>
         [Link]
         [Description("Fraction of bunches that fail each day during the bunch failure phase")]
         [Units("0-1")]
-        Function BunchFailureFraction = null;
+        IFunction BunchFailureFraction = null;
 
         /// <summary>The initial root depth</summary>
         private double InitialRootDepth = 300;
@@ -415,53 +416,53 @@ namespace Models.PMF.OilPalm
         [Link]
         [Description("NO3 Uptake coefficient - Fraction of NO3 available at a soil concentration of 1ppm ")]
         [Units("/ppm")]
-        Function KNO3 = null;
+        IFunction KNO3 = null;
 
         /// <summary>The stem n concentration</summary>
         [Link]
         [Description("Stem nitrogen concentration on dry mass basis")]
         [Units("%")]
-        Function StemNConcentration = null;
+        IFunction StemNConcentration = null;
         /// <summary>The bunch n concentration</summary>
         [Link]
         [Description("Bunch nitrogen concentration on dry mass basis")]
         [Units("%")]
-        Function BunchNConcentration = null;
+        IFunction BunchNConcentration = null;
         /// <summary>The root n concentration</summary>
         [Link]
         [Description("Root nitrogen concentration on dry mass basis")]
         [Units("%")]
-        Function RootNConcentration = null;
+        IFunction RootNConcentration = null;
         /// <summary>The bunch oil conversion factor</summary>
         [Link]
         [Description("Conversion factor to convert carbohydrate to bunch dry mass to account for oil content")]
         [Units("g/g")]
-        Function BunchOilConversionFactor = null;
+        IFunction BunchOilConversionFactor = null;
         /// <summary>The ripe bunch water content</summary>
         [Link] 
         [Description("Fractional contribution of water to fresh bunch mass")]
         [Units("g/g")]
-        Function RipeBunchWaterContent = null;
+        IFunction RipeBunchWaterContent = null;
         /// <summary>The harvest frond number</summary>
         [Link]
         [Description("Frond number removed when bunches are ready for harvest - used to determine harvest time")]
         [Units("/palm")]
-        Function HarvestFrondNumber = null;
+        IFunction HarvestFrondNumber = null;
         /// <summary>The frond maximum n concentration</summary>
         [Link]
         [Description("Maximum frond nitrogen concentration on dry mass basis")]
         [Units("%")]
-        Function FrondMaximumNConcentration = null;
+        IFunction FrondMaximumNConcentration = null;
         /// <summary>The frond critical n concentration</summary>
         [Link]
         [Description("Critical frond nitrogen concentration on dry mass basis")]
         [Units("%")]
-        Function FrondCriticalNConcentration = null;
+        IFunction FrondCriticalNConcentration = null;
         /// <summary>The frond minimum n concentration</summary>
         [Link]
         [Description("Minimum frond nitrogen concentration on dry mass basis")]
         [Units("%")]
-        Function FrondMinimumNConcentration = null;
+        IFunction FrondMinimumNConcentration = null;
 
         /// <summary>Proportion of green cover provided by the understory canopy</summary>
         /// <value>The understory cover green.</value>
@@ -813,30 +814,29 @@ namespace Models.PMF.OilPalm
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
-            // not yet correctly implemented
-            return info;
+            throw new NotImplementedException();
         }
 
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info)
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            // not yet correctly implemented
-            return info;
+            throw new NotImplementedException();
+
         }
 
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetSWUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetNUptake(List<ZoneWaterAndN> info)
         { }
 
         /// <summary>Does the flower abortion.</summary>

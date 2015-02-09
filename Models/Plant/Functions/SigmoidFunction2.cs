@@ -12,12 +12,14 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)")]
-    public class SigmoidFunction2 : Function
+    public class SigmoidFunction2 : Model, IFunction
     {
         /// <summary>The ymax</summary>
-        [Link] Function Ymax = null;
+        [Link]
+        IFunction Ymax = null;
         /// <summary>The x value</summary>
-        [Link] Function XValue = null;
+        [Link]
+        IFunction XValue = null;
 
         /// <summary>The xo</summary>
         [XmlElement("Xo")]
@@ -33,7 +35,7 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Error with values to Sigmoid function</exception>
-        public override double Value
+        public double Value
         {
             get
             {

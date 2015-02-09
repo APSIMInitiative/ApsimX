@@ -11,6 +11,8 @@ using Models.PMF.Phen;
 using System.Xml.Serialization;
 using System.IO;
 using Models.Soils;
+using Models.Soils.Arbitrator;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.OldPlant
 {
@@ -240,7 +242,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The n fix rate</summary>
         [Link]
-        Function NFixRate = null;
+        IFunction NFixRate = null;
 
         /// <summary>The above ground live</summary>
         [Link]
@@ -280,7 +282,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The temporary stress</summary>
         [Link]
-        Function TempStress = null;
+        IFunction TempStress = null;
 
         /// <summary>The root</summary>
         [Link]
@@ -1248,13 +1250,13 @@ namespace Models.PMF.OldPlant
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="zones"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> zones)
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
-            List<Soils.ZoneWaterAndN> Uptakes= new List<Soils.ZoneWaterAndN>();
-            Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
+            List<ZoneWaterAndN> Uptakes= new List<ZoneWaterAndN>();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN();
 
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            foreach (ZoneWaterAndN Z in zones)
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
                 if (Z.Name==this.Parent.Name)
                     MyZone = Z;
 
@@ -1263,6 +1265,8 @@ namespace Models.PMF.OldPlant
 
             Uptake.Name = this.Parent.Name;
             Uptake.Water = Root.CalculateWaterUptake(TopsSWDemand, SW);
+            Uptake.NO3N = new double[SW.Length];
+            Uptake.NH4N = new double[SW.Length];
             Uptakes.Add(Uptake);
             return Uptakes;
 
@@ -1270,26 +1274,26 @@ namespace Models.PMF.OldPlant
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="zones"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> zones)
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            List<Soils.ZoneWaterAndN> Uptakes = new List<Soils.ZoneWaterAndN>();
-            Soils.ZoneWaterAndN Uptake = new Soils.ZoneWaterAndN();
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN();
 
             ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            foreach (ZoneWaterAndN Z in zones)
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
                 if (Z.Name == this.Parent.Name)
                     MyZone = Z;
 
             double[] NO3N = MyZone.NO3N;
             double[] NH4N = MyZone.NH4N;
-            //OnPrepare(null, null);  //DEAN!!!
-
 
             double[] NO3NUp = new double[NO3N.Length];
             double[] NH4NUp = new double[NH4N.Length];
+            
             Root.CalculateNUptake(NO3N, NH4N, ref NO3NUp, ref NH4NUp);
             Uptake.NO3N = NO3NUp;
             Uptake.NH4N = NH4NUp;
+            Uptake.Water = new double[NO3N.Length];
             Uptake.Name = this.Parent.Name;
 
             Uptakes.Add(Uptake);
@@ -1300,14 +1304,14 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetSWUptake(List<ZoneWaterAndN> info)
         {
             Root.ArbitratorSWUptake = info[0].Water;
         }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetNUptake(List<ZoneWaterAndN> info)
         {
             Root.ArbitratorNO3Uptake = info[0].NO3N;
             Root.ArbitratorNH4Uptake = info[0].NH4N;

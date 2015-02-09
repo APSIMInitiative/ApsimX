@@ -17,6 +17,7 @@ using Models;
 using Models.Core;
 using Models.Soils;
 using Models.PMF;
+using Models.Soils.Arbitrator;
 
 namespace Models.AgPasture1
 {
@@ -2482,28 +2483,27 @@ namespace Models.AgPasture1
 		/// <summary>Placeholder for SoilArbitrator</summary>
 		/// <param name="info">some info</param>
 		/// <returns>soil info</returns>
-		public List<Soils.ZoneWaterAndN> GetSWUptakes(List<Soils.ZoneWaterAndN> info)
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
 		{
-			return info;
+            throw new NotImplementedException();
 		}
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public List<Soils.ZoneWaterAndN> GetNUptakes(List<Soils.ZoneWaterAndN> info)
+        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            // not yet correctly implemented
-            return info;
+            throw new NotImplementedException();
         }
 
 		/// <summary>Set the soil water uptake for today</summary>
 		/// <param name="info">Some info</param>
-		public void SetSWUptake(List<Soils.ZoneWaterAndN> info)
+		public void SetSWUptake(List<ZoneWaterAndN> info)
 		{
 		}
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
-        public void SetNUptake(List<Soils.ZoneWaterAndN> info)
+        public void SetNUptake(List<ZoneWaterAndN> info)
         { }    
 
 		/// <summary>Compute the distribution of roots in the soil profile (sum is equal to one)</summary>

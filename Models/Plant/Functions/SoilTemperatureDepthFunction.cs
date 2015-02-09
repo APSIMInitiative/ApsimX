@@ -11,7 +11,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Return soil temperature (oC) from a specified soil profile layer.  The source of soil temperature array can be either SoilN (st) or SoilTemp (ave_soil_temp) property")]
-    public class SoilTemperatureDepthFunction : Function
+    public class SoilTemperatureDepthFunction : Model, IFunction
     {
 
         /// <summary>The soil</summary>
@@ -33,7 +33,7 @@ namespace Models.PMF.Functions
         /// <exception cref="System.Exception">
         /// </exception>
         [Units("oC")]
-        public override double Value
+        public double Value
         {
             get
             {

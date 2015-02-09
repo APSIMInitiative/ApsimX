@@ -8,6 +8,7 @@ using Models.PMF.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.OldPlant
 {
@@ -43,13 +44,17 @@ namespace Models.PMF.OldPlant
         Phenology Phenology = null;
 
         /// <summary>The te modifier</summary>
-        [Link] Function TEModifier = null;
+        [Link]
+        IFunction TEModifier = null;
         /// <summary>The n conc critical modifier</summary>
-        [Link] Function NConcCriticalModifier = null;
+        [Link]
+        IFunction NConcCriticalModifier = null;
         /// <summary>The te</summary>
-        [Link] Function TE = null;
+        [Link]
+        IFunction TE = null;
         /// <summary>The leaf size</summary>
-        [Link] Function LeafSize = null;
+        [Link]
+        IFunction LeafSize = null;
         /// <summary>The sw stress</summary>
         [Link] SWStress SWStress = null;
         /// <summary>The n stress</summary>
@@ -63,19 +68,26 @@ namespace Models.PMF.OldPlant
         PlantSpatial1 PlantSpatial = null;
 
         /// <summary>The sla maximum</summary>
-        [Link] Function SLAMax = null;
+        [Link]
+        IFunction SLAMax = null;
         /// <summary>The leaf number fraction</summary>
-        [Link] Function LeafNumberFraction = null;
+        [Link]
+        IFunction LeafNumberFraction = null;
         /// <summary>The extinction coefficient</summary>
-        [Link] Function ExtinctionCoefficient = null;
+        [Link]
+        IFunction ExtinctionCoefficient = null;
         /// <summary>The extinction coefficient dead</summary>
-        [Link] Function ExtinctionCoefficientDead = null;
+        [Link]
+        IFunction ExtinctionCoefficientDead = null;
         /// <summary>The n concentration critical</summary>
-        [Link] Function NConcentrationCritical = null;
+        [Link]
+        IFunction NConcentrationCritical = null;
         /// <summary>The n concentration minimum</summary>
-        [Link] Function NConcentrationMinimum = null;
+        [Link]
+        IFunction NConcentrationMinimum = null;
         /// <summary>The n concentration maximum</summary>
-        [Link] Function NConcentrationMaximum = null;
+        [Link]
+        IFunction NConcentrationMaximum = null;
 
         /// <summary>The met data</summary>
         [Link]
@@ -111,11 +123,11 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The node formation period</summary>
         [Link]
-        Function NodeFormationPeriod = null;
+        IFunction NodeFormationPeriod = null;
 
         /// <summary>The node appearance rate</summary>
         [Link]
-        Function NodeAppearanceRate = null;
+        IFunction NodeAppearanceRate = null;
 
         /// <summary>The leaves per node</summary>
         [Link]
@@ -123,15 +135,15 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The leaf senescence period</summary>
         [Link]
-        Function LeafSenescencePeriod = null;
+        IFunction LeafSenescencePeriod = null;
 
         /// <summary>The leaf senescence frost</summary>
         [Link]
-        Function LeafSenescenceFrost = null;
+        IFunction LeafSenescenceFrost = null;
 
         /// <summary>The dm senescence fraction</summary>
         [Link]
-        Function DMSenescenceFraction = null;
+        IFunction DMSenescenceFraction = null;
 
         /// <summary>The total live</summary>
         [Link]
@@ -139,7 +151,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The growth structural fraction stage</summary>
         [Link]
-        Function GrowthStructuralFractionStage = null;
+        IFunction GrowthStructuralFractionStage = null;
 
         /// <summary>Gets or sets the initial wt.</summary>
         /// <value>The initial wt.</value>

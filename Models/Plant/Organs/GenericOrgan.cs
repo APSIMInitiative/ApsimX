@@ -5,6 +5,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using System.Xml.Serialization;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -35,7 +36,7 @@ namespace Models.PMF.Organs
     /// Model of generic organ
     /// </summary>
     [Serializable]
-    public class GenericOrgan : BaseOrgan
+    public class GenericOrgan : BaseOrgan, IArbitration
     {
         #region Class Dependency Links and Structures
         /// <summary>The plant</summary>
@@ -51,44 +52,44 @@ namespace Models.PMF.Organs
         #region Class Parameter Function Links
         /// <summary>The senescence rate function</summary>
         [Link(IsOptional = true)]
-        Function SenescenceRateFunction = null;
+        IFunction SenescenceRateFunction = null;
         /// <summary>The detachment rate function</summary>
         [Link(IsOptional = true)]
-        Function DetachmentRateFunction = null;
+        IFunction DetachmentRateFunction = null;
 
         /// <summary>The n reallocation factor</summary>
         [Link(IsOptional = true)]
-        Function NReallocationFactor = null;
+        IFunction NReallocationFactor = null;
         /// <summary>The n retranslocation factor</summary>
         [Link(IsOptional = true)]
-        Function NRetranslocationFactor = null;
+        IFunction NRetranslocationFactor = null;
         /// <summary>The nitrogen demand switch</summary>
         [Link(IsOptional = true)]
-        Function NitrogenDemandSwitch = null;
+        IFunction NitrogenDemandSwitch = null;
         /// <summary>The dm retranslocation factor</summary>
         [Link(IsOptional = true)]
-        Function DMRetranslocationFactor = null;
+        IFunction DMRetranslocationFactor = null;
         /// <summary>The structural fraction</summary>
         [Link(IsOptional = true)] 
-        Function StructuralFraction = null;
-        /// <summary>The dm demand function</summary>
+        IFunction StructuralFraction = null;
+        /// <summary>The dm demand Function</summary>
         [Link(IsOptional = true)]
-        Function DMDemandFunction = null;
+        IFunction DMDemandFunction = null;
         /// <summary>The initial wt function</summary>
         [Link(IsOptional = true)]
-        Function InitialWtFunction = null;
+        IFunction InitialWtFunction = null;
         /// <summary>The initial structural fraction</summary>
         [Link(IsOptional = true)]
-        Function InitialStructuralFraction = null;
+        IFunction InitialStructuralFraction = null;
         /// <summary>The dry matter content</summary>
         [Link(IsOptional = true)]
-        Function DryMatterContent = null;
+        IFunction DryMatterContent = null;
         /// <summary>The maximum n conc</summary>
         [Link(IsOptional = true)]
-        Function MaximumNConc = null;
+        IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Link(IsOptional = true)]
-        Function MinimumNConc = null;  
+        IFunction MinimumNConc = null;  
         #endregion
 
         #region States
@@ -118,7 +119,7 @@ namespace Models.PMF.Organs
         //4public event BiomassRemovedDelegate BiomassRemoved;
 
         /// <summary>Clears this instance.</summary>
-        public override void Clear()
+        protected override void Clear()
         {
             base.Clear();
             SenescenceRate = 0;

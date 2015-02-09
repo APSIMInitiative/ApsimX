@@ -11,7 +11,7 @@ namespace Models.PMF.Functions.StructureFunctions
     /// </summary>
     [Serializable]
     [Description("Returns the curreent InPhase tempature accumulation")]
-    public class InPhaseTemperatureFunction : Function
+    public class InPhaseTemperatureFunction : Model, IFunction
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -20,7 +20,7 @@ namespace Models.PMF.Functions.StructureFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

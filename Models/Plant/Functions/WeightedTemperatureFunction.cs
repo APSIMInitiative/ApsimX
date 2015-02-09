@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("This Function calculates a mean daily temperature from Max and Min weighted toward Max according to the specified MaximumTemperatureWeighting factor.  This is then passed into the XY matrix as the x property and the function returns the y value")]
-    public class WeightedTemperatureFunction : Function
+    public class WeightedTemperatureFunction : Model, IFunction
     {
         #region Class Data Members
         /// <summary>Gets or sets the xy pairs.</summary>
@@ -20,16 +20,17 @@ namespace Models.PMF.Functions
         /// <summary>The maximum temperature weighting</summary>
         public double MaximumTemperatureWeighting = 0.0;
 
-        //[Input]
-        //public NewMetType MetData;
-
+        /// <summary>The met data</summary>
+        [Link]
+        protected Weather MetData = null;
+        
         #endregion
 
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         [Units("0-1")]
-        public override double Value
+        public double Value
         {
             get
             {

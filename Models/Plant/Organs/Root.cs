@@ -5,6 +5,7 @@ using Models.Core;
 using Models.PMF.Functions;
 using Models.Soils;
 using System.Xml.Serialization;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -43,23 +44,32 @@ namespace Models.PMF.Organs
         public double KNH4 { get; set; }
 
         /// <summary>The nitrogen demand switch</summary>
-        [Link] Function NitrogenDemandSwitch = null;
+        [Link]
+        IFunction NitrogenDemandSwitch = null;
         /// <summary>The senescence rate</summary>
-        [Link(IsOptional=true)] Function SenescenceRate = null;
+        [Link(IsOptional = true)]
+        IFunction SenescenceRate = null;
         /// <summary>The temperature effect</summary>
-        [Link] Function TemperatureEffect = null;
+        [Link]
+        IFunction TemperatureEffect = null;
         /// <summary>The root front velocity</summary>
-        [Link] Function RootFrontVelocity = null;
+        [Link]
+        IFunction RootFrontVelocity = null;
         /// <summary>The partition fraction</summary>
-        [Link] Function PartitionFraction = null;
+        [Link]
+        IFunction PartitionFraction = null;
         /// <summary>The maximum n conc</summary>
-        [Link] Function MaximumNConc = null;
+        [Link]
+        IFunction MaximumNConc = null;
         /// <summary>The maximum daily n uptake</summary>
-        [Link] Function MaxDailyNUptake = null;
+        [Link]
+        IFunction MaxDailyNUptake = null;
         /// <summary>The minimum n conc</summary>
-        [Link] Function MinimumNConc = null;
+        [Link]
+        IFunction MinimumNConc = null;
         /// <summary>The kl modifier</summary>
-        [Link] Function KLModifier = null;
+        [Link]
+        IFunction KLModifier = null;
         #endregion
 
         #region States
@@ -98,7 +108,7 @@ namespace Models.PMF.Organs
         public double Depth { get; set; }
 
         /// <summary>Clears this instance.</summary>
-        public override void Clear()
+        protected override void Clear()
         {
             base.Clear();
             SWSupply = null;

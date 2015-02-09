@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Phen;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -25,22 +26,30 @@ namespace Models.PMF.Organs
         [Link]
         protected Phenology Phenology = null;
         /// <summary>The water content</summary>
-        [Link] Function WaterContent = null;
+        [Link]
+        IFunction WaterContent = null;
         /// <summary>The filling rate</summary>
-        [Link] Function FillingRate = null;
+        [Link]
+        IFunction FillingRate = null;
         /// <summary>The number function</summary>
-        [Link] Function NumberFunction = null;
+        [Link]
+        IFunction NumberFunction = null;
         /// <summary>The n filling rate</summary>
-        [Link] Function NFillingRate = null;
+        [Link]
+        IFunction NFillingRate = null;
         //[Link] Function MaxNConcDailyGrowth = null;
         /// <summary>The nitrogen demand switch</summary>
-        [Link] Function NitrogenDemandSwitch = null;
+        [Link]
+        IFunction NitrogenDemandSwitch = null;
         /// <summary>The maximum n conc</summary>
-        [Link] Function MaximumNConc = null;
+        [Link]
+        IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
-        [Link] Function MinimumNConc = null;
+        [Link]
+        IFunction MinimumNConc = null;
         /// <summary>The dm demand function</summary>
-        [Link] Function DMDemandFunction = null;
+        [Link]
+        IFunction DMDemandFunction = null;
         #endregion
 
         #region Class Fields

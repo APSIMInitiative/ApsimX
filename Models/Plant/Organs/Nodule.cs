@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -15,19 +16,19 @@ namespace Models.PMF.Organs
         #region Paramater Input Classes
         /// <summary>The fixation metabolic cost</summary>
         [Link]
-        Function FixationMetabolicCost = null;
+        IFunction FixationMetabolicCost = null;
         /// <summary>The specific nitrogenase activity</summary>
         [Link]
-        Function SpecificNitrogenaseActivity = null;
+        IFunction SpecificNitrogenaseActivity = null;
         /// <summary>The ft</summary>
         [Link]
-        Function FT = null;
+        IFunction FT = null;
         /// <summary>The fw</summary>
         [Link]
-        Function FW = null;
+        IFunction FW = null;
         /// <summary>The f wlog</summary>
         [Link]
-        Function FWlog = null;
+        IFunction FWlog = null;
         #endregion
 
         #region Class Fields

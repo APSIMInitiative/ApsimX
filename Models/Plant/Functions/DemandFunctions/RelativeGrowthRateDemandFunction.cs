@@ -9,7 +9,7 @@ namespace Models.PMF.Functions.DemandFunctions
     /// </summary>
     [Serializable]
     [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!  This function calculates DM demand beyond the start stage as the product of current organ wt (g), relative growth rate and the specified organ number.")]
-    public class RelativeGrowthRateDemandFunction : Function
+    public class RelativeGrowthRateDemandFunction : Model, IFunction
     {
         /// <summary>The initial wt</summary>
         public double InitialWt = 0;
@@ -19,11 +19,11 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>The relative growth rate</summary>
         [Link]
-        Function RelativeGrowthRate = null;
+        IFunction RelativeGrowthRate = null;
 
         /// <summary>The organ number</summary>
         [Link]
-        Function OrganNumber = null;
+        IFunction OrganNumber = null;
 
         /// <summary>The phenology</summary>
         [Link]
@@ -38,7 +38,7 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public override double Value
+        public double Value
         {
             get
             {

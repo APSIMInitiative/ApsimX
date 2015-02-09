@@ -3,29 +3,8 @@
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
-    <MemoText><![CDATA[{\rtf1\fbidis\ansi\ansicpg1252\deff0\deflang3081{\fonttbl{\f0\fswiss\fprq2\fcharset0 Calibri;}{\f1\froman\fprq2\fcharset2 Symbol;}{\f2\fswiss\fprq2\fcharset0 Microsoft Sans Serif;}{\f3\fnil\fcharset0 Microsoft Sans Serif;}}
-\viewkind4\uc1\trowd\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx2202\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx4512\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx6823\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx9134\pard\intbl\ltrpar\sl252\slmult1\lang9\f0\fs22 TH1 new stuff\cell TH2\cell TH3\cell TH4\cell\row
-\trowd\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx2202\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx4512\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx6823\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx9134\intbl R2C1\cell R2C2\cell R2C3\cell R2C4\cell\row
-\trowd\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx2202\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx4512\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx6823\clbrdrt\brdrw15\brdrs\clbrdrl\brdrw15\brdrs\clbrdrb\brdrw15\brdrs\clbrdrr\brdrw15\brdrs \cellx9134\intbl R3C1\cell R3C2\cell R3C3\cell R3C4\cell\row
-\pard\ltrpar\sa200\sl276\slmult1\par
-\pard\ltrpar\fi-360\li720\sa200\sl276\slmult1 1.\tab ordered list 1\par
-2.\tab ordered list 2\par
-3.\tab ordered list 3\par
-\pard\ltrpar\sa200\sl276\slmult1 Plain Text\par
-\b Bold Text\b0  plain\par
-\i Italic Text\i0  plain\par
-\ul Underlined Text\ulnone  plain\ul\b\par
-\ulnone\b0\strike Strike Text\strike0  plain\par
-\super superscript\nosupersub  plain\par
-\sub subscript\nosupersub  plain\sub\par
-\pard\ltrpar\fi-360\li720\sa200\sl276\slmult1\nosupersub\f1\'b7\tab\f0 unordered list 1\par
-\f1\'b7\tab\f0 unordered list 2\par
-\f1\'b7\tab\f0 unordered list 3\lang3081\par
-\pard\ltrpar\f2\fs17\par
-\pard\ltrpar\sa160\sl252\slmult1\f0\fs22\par
-\pard\ltrpar\f3\fs17\par
-}
-]]></MemoText>
+    <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">]]></MemoText>
   </Memo>
   <Experiment>
     <Name>Sangara</Name>
@@ -1292,7 +1271,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title />
@@ -1312,7 +1291,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1354,7 +1333,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -1374,7 +1353,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1416,7 +1395,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -1436,7 +1415,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1478,7 +1457,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -1498,7 +1477,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1540,7 +1519,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -1560,7 +1539,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -1602,7 +1581,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -1622,7 +1601,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2796,7 +2775,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -2816,7 +2795,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2858,7 +2837,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -2878,7 +2857,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2920,7 +2899,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -2940,7 +2919,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2982,7 +2961,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -3002,7 +2981,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -3044,7 +3023,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -3064,7 +3043,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -3106,7 +3085,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -3126,7 +3105,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4462,7 +4441,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -4482,7 +4461,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4524,7 +4503,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 2</Title>
@@ -4544,7 +4523,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4586,7 +4565,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -4606,7 +4585,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4648,7 +4627,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -4668,7 +4647,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4710,7 +4689,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -4730,7 +4709,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4772,7 +4751,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series 1</Title>
@@ -4792,7 +4771,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -4803,6 +4782,7 @@ namespace Models
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
+      <ErrorMessage />
       <FileName>observed.prn</FileName>
     </Input>
     <PredictedObserved>
@@ -4859,7 +4839,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>*</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
@@ -4901,7 +4881,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>*</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
@@ -4943,7 +4923,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>*</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
@@ -4985,7 +4965,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
-      <SplitOn>*</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>

@@ -23,12 +23,32 @@ namespace Utility
             Open(filename);
         }
 
+        public StreamReaderRandomAccess(Stream stream)
+        {
+            Open(stream);
+        }
+
         private void Open(string filename)
         {
 
             if ((g_file != null)) Close();
 
             g_file = new StreamReader(filename);
+            g_position = 0;
+            g_eofFlag = false;
+            g_bufferSize = 0;
+            g_bufferOffset = 0;
+
+            LoadBuffer();
+
+        }
+
+        private void Open(Stream stream)
+        {
+
+            if ((g_file != null)) Close();
+
+            g_file = new StreamReader(stream);
             g_position = 0;
             g_eofFlag = false;
             g_bufferSize = 0;

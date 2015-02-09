@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Functions.SupplyFunctions;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -38,7 +39,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The lai function</summary>
         [Link]
-        Function LAIFunction = null;
+        IFunction LAIFunction = null;
         /// <summary>The photosynthesis</summary>
         [Link]
         RUEModel Photosynthesis = null;

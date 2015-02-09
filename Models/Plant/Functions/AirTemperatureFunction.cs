@@ -10,8 +10,13 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is calculated from the mean of 3-hourly estimates of air temperature calculated from daily max and min temperatures")]
-    public class AirTemperatureFunction : Function
+    public class AirTemperatureFunction : Model, IFunction
     {
+
+        /// <summary>The met data</summary>
+        [Link]
+        protected Weather MetData = null;
+
         /// <summary>Gets or sets the xy pairs.</summary>
         public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
 
@@ -41,9 +46,8 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         [Units("deg.day")]
-        public override double Value
+        public double Value
         {
-
             get
             {
                 return Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);

@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF
 {
@@ -227,6 +228,19 @@ namespace Models.PMF
             }
         }
 
+        private IArbitration[] Organs;
+
+        /// <summary>Called when crop is sown</summary>
+        public void OnSow()
+        {
+            List<IArbitration> organsToArbitrate = new List<IArbitration>();
+
+            foreach (IOrgan organ in Plant.Organs)
+                if (organ is IArbitration)
+                    organsToArbitrate.Add(organ as IArbitration);
+
+            Organs = organsToArbitrate.ToArray();
+        }
 
         /// <summary>The dm</summary>
         private BiomassArbitrationType DM = null;
@@ -426,10 +440,38 @@ namespace Models.PMF
             N = null;
         }
 
+        /// <summary>Does the water.</summary>
+        public void DoWaterArbitration()
+        {
+            double Supply = 0;
+            double Demand = 0;
+            foreach (IArbitration o in Organs)
+            {
+                Supply += o.WaterSupply;
+                Demand += o.WaterDemand;
+            }
+
+            double fraction = 1;
+            if (Demand > 0)
+                fraction = Math.Min(1.0, Supply / Demand);
+
+            foreach (IArbitration o in Organs)
+                if (o.WaterDemand > 0)
+                    o.WaterAllocation = fraction * o.WaterDemand;
+
+            double FractionUsed = 0;
+            if (Supply > 0)
+                FractionUsed = Math.Min(1.0, Demand / Supply);
+
+            foreach (IArbitration o in Organs)
+                o.DoWaterUptake(FractionUsed * Supply);
+        }
+
+
         #region Interface methods called by Plant.cs
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply</summary>
         /// <param name="Organs">The organs.</param>
-        public void DoWaterLimitedDMAllocations(Organ[] Organs)
+        public void DoWaterLimitedDMAllocations()
         {
             //Work out how much each organ will grow in the absence of nutrient stress, and how much DM they can supply.
             DoDMSetup(Organs);
@@ -441,20 +483,20 @@ namespace Models.PMF
         }
         /// <summary>Does the nutrient demand set up.</summary>
         /// <param name="Organs">The organs.</param>
-        public void DoNutrientDemandSetUp(Organ[] Organs)
+        public void DoNutrientDemandSetUp()
         {
                 DoNutrientSetUp(Organs, ref N);
                 DoReAllocation(Organs, N, NArbitrationOption);
         }
         /// <summary>Sets the nutrient uptake.</summary>
         /// <param name="Organs">The organs.</param>
-        public void SetNutrientUptake(Organ[] Organs)
+        public void SetNutrientUptake()
         {
                 DoNutrientUptakeSetUp(Organs, ref N);
         }
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="Organs">The organs.</param>
-        public void DoNutrientAllocations(Organ[] Organs)
+        public void DoNutrientAllocations()
         {
                 DoUptake(Organs, N, NArbitrationOption);
                 DoRetranslocation(Organs, N, NArbitrationOption);
@@ -462,7 +504,7 @@ namespace Models.PMF
         }
         /// <summary>Does the nutrient limited growth.</summary>
         /// <param name="Organs">The organs.</param>
-        public void DoNutrientLimitedGrowth(Organ[] Organs)
+        public void DoNutrientLimitedGrowth()
         {
             //Work out how much DM can be assimilated by each organ based on the most limiting nutrient
             DoNutrientConstrainedDMAllocation(Organs);
@@ -476,7 +518,7 @@ namespace Models.PMF
         #region Arbitration step functions
         /// <summary>Does the dm setup.</summary>
         /// <param name="Organs">The organs.</param>
-        virtual public void DoDMSetup(Organ[] Organs)
+        virtual public void DoDMSetup(IArbitration[] Organs)
         {
             //Creat Drymatter variable class
             DM = new BiomassArbitrationType(Organs.Length);
@@ -491,7 +533,7 @@ namespace Models.PMF
                 DM.UptakeSupply[i] = Supply.Uptake;
                 DM.FixationSupply[i] = Supply.Fixation;
                 DM.RetranslocationSupply[i] = Supply.Retranslocation;
-            DM.Start += Organs[i].Live.Wt + Organs[i].Dead.Wt;
+                DM.Start += Organs[i].TotalDM;
             }
 
             DM.TotalReallocationSupply = Utility.Math.Sum(DM.ReallocationSupply);
@@ -544,7 +586,7 @@ namespace Models.PMF
         /// <summary>Sends the potential dm allocations.</summary>
         /// <param name="Organs">The organs.</param>
         /// <exception cref="System.Exception">Mass Balance Error in Photosynthesis DM Allocation</exception>
-        virtual public void SendPotentialDMAllocations(Organ[] Organs)
+        virtual public void SendPotentialDMAllocations(IArbitration[] Organs)
         {
             //  Allocate to meet Organs demands
             DM.TotalStructuralAllocation = Utility.Math.Sum(DM.StructuralAllocation);
@@ -572,7 +614,7 @@ namespace Models.PMF
         /// <summary>Does the nutrient set up.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
-        virtual public void DoNutrientSetUp(Organ[] Organs, ref BiomassArbitrationType BAT)
+        virtual public void DoNutrientSetUp(IArbitration[] Organs, ref BiomassArbitrationType BAT)
         {
             //Creat Biomass variable class
             BAT = new BiomassArbitrationType(Organs.Length);
@@ -588,7 +630,7 @@ namespace Models.PMF
                 BAT.UptakeSupply[i] = Supply.Uptake;
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
-                BAT.Start += Organs[i].Live.N + Organs[i].Dead.N;
+                BAT.Start += Organs[i].TotalN;
             }
 
             BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
@@ -637,7 +679,7 @@ namespace Models.PMF
         /// <summary>Does the nutrient uptake set up.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
-        virtual public void DoNutrientUptakeSetUp(Organ[] Organs, ref BiomassArbitrationType BAT)
+        virtual public void DoNutrientUptakeSetUp(IArbitration[] Organs, ref BiomassArbitrationType BAT)
         {
             //Creat Biomass variable class
             //BAT = new BiomassArbitrationType(Organs.Length);
@@ -654,7 +696,7 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
-        virtual public void DoReAllocation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoReAllocation(IArbitration[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassReallocated = 0;
             if (BAT.TotalReallocationSupply > 0.00000000001)
@@ -682,7 +724,7 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
-        virtual public void DoUptake(Organ[] Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoUptake(IArbitration[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassTakenUp = 0;
             if (BAT.TotalUptakeSupply > 0.00000000001)
@@ -710,7 +752,7 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
-        virtual public void DoRetranslocation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoRetranslocation(IArbitration[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassRetranslocated = 0;
             if (BAT.TotalRetranslocationSupply > 0.00000000001)
@@ -739,7 +781,7 @@ namespace Models.PMF
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
         /// <exception cref="System.Exception">Crop is trying to Fix excessive amounts of BAT.  Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic</exception>
-        virtual public void DoFixation(Organ[] Organs, BiomassArbitrationType BAT, string Option)
+        virtual public void DoFixation(IArbitration[] Organs, BiomassArbitrationType BAT, string Option)
         {
             double BiomassFixed = 0;
             if (BAT.TotalFixationSupply > 0.00000000001)
@@ -829,7 +871,7 @@ namespace Models.PMF
         }
         /// <summary>Determines Nutrient limitations to DM allocations</summary>
         /// <param name="Organs">The organs.</param>
-        virtual public void DoNutrientConstrainedDMAllocation(Organ[] Organs)
+        virtual public void DoNutrientConstrainedDMAllocation(IArbitration[] Organs)
         {
             double PreNStressDMAllocation = DM.Allocated;
             for (int i = 0; i < Organs.Length; i++)
@@ -868,7 +910,7 @@ namespace Models.PMF
         }
         /// <summary>Sends the dm allocations.</summary>
         /// <param name="Organs">The organs.</param>
-        virtual public void SendDMAllocations(Organ[] Organs)
+        virtual public void SendDMAllocations(IArbitration[] Organs)
         {
             // Send DM allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
@@ -897,7 +939,7 @@ namespace Models.PMF
         /// or
         /// DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and NonStructural DM capacity
         /// </exception>
-        virtual public void SendNutrientAllocations(Organ[] Organs)
+        virtual public void SendNutrientAllocations(IArbitration[] Organs)
         {
             // Send N allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
@@ -925,7 +967,7 @@ namespace Models.PMF
             //Finally Check Mass balance adds up
             N.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                N.End += Organs[i].Live.N + Organs[i].Dead.N;
+                N.End += Organs[i].TotalN;
             N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalFixationSupply));
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
@@ -934,7 +976,7 @@ namespace Models.PMF
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)
-                DM.End += Organs[i].Live.Wt + Organs[i].Dead.Wt;
+                DM.End += Organs[i].TotalDM;
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalFixationSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than Photosynthetic DM supply");
@@ -950,7 +992,7 @@ namespace Models.PMF
         /// <param name="TotalSupply">The total supply.</param>
         /// <param name="TotalAllocated">The total allocated.</param>
         /// <param name="BAT">The bat.</param>
-        private void RelativeAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        private void RelativeAllocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
             ////allocate to structural and metabolic Biomass first
@@ -987,7 +1029,7 @@ namespace Models.PMF
         /// <param name="TotalSupply">The total supply.</param>
         /// <param name="TotalAllocated">The total allocated.</param>
         /// <param name="BAT">The bat.</param>
-        private void PriorityAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        private void PriorityAllocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
             ////First time round allocate to met priority demands of each organ
@@ -1024,7 +1066,7 @@ namespace Models.PMF
         /// <param name="TotalSupply">The total supply.</param>
         /// <param name="TotalAllocated">The total allocated.</param>
         /// <param name="BAT">The bat.</param>
-        private void PrioritythenRelativeAllocation(Organ[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
+        private void PrioritythenRelativeAllocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply;
             ////First time round allocate to met priority demands of each organ

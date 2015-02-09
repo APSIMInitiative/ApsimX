@@ -6,6 +6,7 @@ using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Functions.SupplyFunctions;
 using System.Xml.Serialization;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -28,40 +29,40 @@ namespace Models.PMF.Organs
         #region Parameters
         /// <summary>The FRGR function</summary>
         [Link]
-        Function FRGRFunction = null;   // VPD effect on Growth Interpolation Set
+        IFunction FRGRFunction = null;   // VPD effect on Growth Interpolation Set
         /// <summary>The potential biomass</summary>
         [Link(IsOptional = true)]
-        Function PotentialBiomass = null;
+        IFunction PotentialBiomass = null;
         /// <summary>The dm demand function</summary>
         [Link]
-        Function DMDemandFunction = null;
+        IFunction DMDemandFunction = null;
         /// <summary>The cover function</summary>
         [Link(IsOptional = true)]
-        Function CoverFunction = null;
+        IFunction CoverFunction = null;
         /// <summary>The nitrogen demand switch</summary>
         [Link(IsOptional = true)]
-        Function NitrogenDemandSwitch = null;
+        IFunction NitrogenDemandSwitch = null;
         /// <summary>The n conc</summary>
         [Link]
-        Function NConc = null;
+        IFunction NConc = null;
         /// <summary>The lai function</summary>
         [Link(IsOptional = true)]
-        Function LAIFunction = null;
+        IFunction LAIFunction = null;
         /// <summary>The extinction coefficient function</summary>
         [Link(IsOptional = true)]
-        Function ExtinctionCoefficientFunction = null;
+        IFunction ExtinctionCoefficientFunction = null;
         /// <summary>The photosynthesis</summary>
         [Link(IsOptional = true)]
         RUEModel Photosynthesis = null;
         /// <summary>The height function</summary>
         [Link(IsOptional = true)]
-        Function HeightFunction = null;
+        IFunction HeightFunction = null;
         /// <summary>The lai dead function</summary>
         [Link(IsOptional = true)]
-        Function LaiDeadFunction = null;
+        IFunction LaiDeadFunction = null;
         /// <summary>The structural fraction</summary>
         [Link(IsOptional = true)]
-        Function StructuralFraction = null;
+        IFunction StructuralFraction = null;
         #endregion
 
         #region States and variables

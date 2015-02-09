@@ -14,27 +14,27 @@ namespace Models.PMF.Functions.SupplyFunctions
     {
         /// <summary>The rue</summary>
         [Link]
-        Function RUE = null;
+        IFunction RUE = null;
 
         /// <summary>The fc o2</summary>
         [Link]
-        Function FCO2 = null;
+        IFunction FCO2 = null;
 
         /// <summary>The function</summary>
         [Link]
-        Function FN = null;
+        IFunction FN = null;
 
         /// <summary>The ft</summary>
         [Link]
-        public Function FT = null;
+        public IFunction FT = null;
 
         /// <summary>The fw</summary>
         [Link]
-        Function FW = null;
+        IFunction FW = null;
 
         /// <summary>The FVPD</summary>
         [Link]
-        public Function FVPD = null;
+        public IFunction FVPD = null;
 
         /// <summary>The met data</summary>
         [Link]

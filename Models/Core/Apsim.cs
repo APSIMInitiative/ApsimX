@@ -427,7 +427,8 @@ namespace Models.Core
                         if (linkedObject == null && !link.IsOptional && allMatches.Count > 1)
                         {
                             // Return the first (closest) match.
-                            linkedObject = allMatches[0];
+                            if (field.FieldType == typeof(Zone))
+                                linkedObject = allMatches[0];
                         }
 
                         if ((linkedObject == null) && (!link.IsOptional))

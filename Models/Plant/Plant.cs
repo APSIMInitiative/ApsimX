@@ -1,171 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-
-using System.Reflection;
-using System.Collections;
-using Models.PMF.Organs;
-using Models.PMF.Phen;
-using Models.PMF.Functions;
-using Models.Soils;
-using System.Xml.Serialization;
-using System.Xml.Schema;
-using System.Xml;
-
+// -----------------------------------------------------------------------
+// <copyright file="Plant.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.PMF
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class WaterUptakesCalculatedUptakesType
-    {
-        /// <summary>The name</summary>
-        public String Name = "";
-        /// <summary>The amount</summary>
-        public Double[] Amount;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class WaterUptakesCalculatedType
-    {
-        /// <summary>The uptakes</summary>
-        public WaterUptakesCalculatedUptakesType[] Uptakes;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void WaterUptakesCalculatedDelegate(WaterUptakesCalculatedType Data);
-    /// <summary>
-    /// 
-    /// </summary>
-    public class WaterChangedType
-    {
-        /// <summary>The delta water</summary>
-        public Double[] DeltaWater;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void WaterChangedDelegate(WaterChangedType Data);
-    /// <summary>
-    /// 
-    /// </summary>
-    public class PruneType
-    {
-        /// <summary>The bud number</summary>
-        public Double BudNumber;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class KillLeafType
-    {
-        /// <summary>The kill fraction</summary>
-        public Single KillFraction;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="NewCanopyData">The new canopy data.</param>
-    public delegate void NewCanopyDelegate(NewCanopyType NewCanopyData);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void FOMLayerDelegate(FOMLayerType Data);
-    /// <summary>
-    /// 
-    /// </summary>
-    public delegate void NullTypeDelegate();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void NewCropDelegate(NewCropType Data);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void BiomassRemovedDelegate(BiomassRemovedType Data);
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class SowPlant2Type
-    {
-        /// <summary>The cultivar</summary>
-        public String Cultivar = "";
-        /// <summary>The population</summary>
-        public Double Population = 100;
-        /// <summary>The depth</summary>
-        public Double Depth = 100;
-        /// <summary>The row spacing</summary>
-        public Double RowSpacing = 150;
-        /// <summary>The maximum cover</summary>
-        public Double MaxCover = 1;
-        /// <summary>The bud number</summary>
-        public Double BudNumber = 1;
-        /// <summary>The skip row</summary>
-        public Double SkipRow; //Not yet handled in Code
-        /// <summary>The skip plant</summary>
-        public Double SkipPlant; //Not yet handled in Code
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class BiomassRemovedType
-    {
-        /// <summary>The crop_type</summary>
-        public String crop_type = "";
-        /// <summary>The dm_type</summary>
-        public String[] dm_type;
-        /// <summary>The dlt_crop_dm</summary>
-        public Single[] dlt_crop_dm;
-        /// <summary>The DLT_DM_N</summary>
-        public Single[] dlt_dm_n;
-        /// <summary>The DLT_DM_P</summary>
-        public Single[] dlt_dm_p;
-        /// <summary>The fraction_to_residue</summary>
-        public Single[] fraction_to_residue;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class NewCropType
-    {
-        /// <summary>The sender</summary>
-        public String sender = "";
-        /// <summary>The crop_type</summary>
-        public String crop_type = "";
-    }
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
+    using Models.Core;
+    using Models.PMF.Organs;
+    using Models.PMF.Phen;
+    using Models.Soils;
+    using Models.PMF.Interfaces;
 
-    /*! <summary>
-    The root function of plant model framework.
-    </summary>
-    \param CropType The crop type defined in the Plant function.
-    <remarks>
-    
-    </remarks>
-    */
     /// <summary>
     /// The generic plant model
     /// </summary>
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop2
     {
-        #region Class links and lists
+        #region Class links
         /// <summary>The summary</summary>
         [Link] ISummary Summary = null;
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)] public Phenology Phenology = null;
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
-        ///// <summary>The rue model</summary>
-        //[Link(IsOptional = true)] private Models.PMF.Functions.SupplyFunctions.RUEModel RUEModel = null;
         /// <summary>The structure</summary>
         [Link(IsOptional=true)] public Structure Structure = null;
         /// <summary>The soil</summary>
@@ -175,8 +36,6 @@ namespace Models.PMF
         /// <summary>The root</summary>
         [Link(IsOptional=true)] public Root Root = null;
         /// <summary>The base function class</summary>
-        [Link(IsOptional = true)]
-        public Function Function = null;
         
         #endregion
 
@@ -186,32 +45,18 @@ namespace Models.PMF
         /// canopy properties for this crop.
         /// </summary>
         public string CropType { get; set; }
+
         /// <summary>The sowing data</summary>
         [XmlIgnore]
         public SowPlant2Type SowingData;
-        /// <summary>The _ organs</summary>
-        private Organ[] _Organs = null;
+        
         /// <summary>Gets the organs.</summary>
-        /// <value>The organs.</value>
         [XmlIgnore]
-        public Organ[] Organs 
-        { 
-            get 
-            {
-                if (_Organs == null)
-                {
-                    List<Organ> organs = new List<Organ>();
-                    foreach (Organ organ in Apsim.Children(this, typeof(Organ)))
-                        organs.Add(organ);
-                    _Organs = organs.ToArray();
-                }
-                return _Organs;
-            } 
-        }
+        public IOrgan[] Organs { get; private set; }
+        
         /// <summary>Gets the canopy data.</summary>
-        /// <value>The canopy data.</value>
-        [XmlIgnore]
         public NewCanopyType CanopyData { get { return LocalCanopyData; } }
+
         /// <summary>The local canopy data</summary>
         [XmlIgnore]
         public NewCanopyType LocalCanopyData;
@@ -262,7 +107,7 @@ namespace Models.PMF
             get 
             {
                 double frgr = 1;
-                foreach (Organ Child in Organs)
+                foreach (IOrgan Child in Organs)
                 {
                     if (Child.FRGR <= 1)
                       frgr = Child.FRGR;
@@ -410,12 +255,14 @@ namespace Models.PMF
             this.Population = population;
 
             // tell all our children about sow
-            foreach (Organ Child in Organs)
+            foreach (IOrgan Child in Organs)
                 Child.OnSow(SowingData);
             if (Structure != null)
                Structure.OnSow(SowingData);
             if (Phenology != null)
-            Phenology.OnSow();
+                Phenology.OnSow();
+            if (Arbitrator != null)
+                Arbitrator.OnSow();
 
             
        
@@ -429,7 +276,7 @@ namespace Models.PMF
                 Harvesting.Invoke(this, new EventArgs());
 
             // tell all our children about harvest
-            foreach (Organ Child in Organs)
+            foreach (IOrgan Child in Organs)
                 Child.OnHarvest();
 
             Phenology.OnHarvest();
@@ -452,13 +299,13 @@ namespace Models.PMF
             BiomassRemovedData.dlt_dm_p = new float[Organs.Length];
             BiomassRemovedData.fraction_to_residue = new float[Organs.Length];
             int i = 0;
-            foreach (Organ O in Organs)
+            foreach (BaseOrgan O in Organs)
             {
                 if (O is AboveGround)
                 {
                     BiomassRemovedData.dm_type[i] = O.Name;
-                    BiomassRemovedData.dlt_crop_dm[i] = (float)(O.Live.Wt + O.Dead.Wt) * 10f;
-                    BiomassRemovedData.dlt_dm_n[i] = (float)(O.Live.N + O.Dead.N) * 10f;
+                    BiomassRemovedData.dlt_crop_dm[i] = (float)O.TotalDM * 10f;
+                    BiomassRemovedData.dlt_dm_n[i] = (float)O.TotalN * 10f;
                     BiomassRemovedData.dlt_dm_p[i] = 0f;
                     BiomassRemovedData.fraction_to_residue[i] = 1f;
                 }
@@ -475,7 +322,7 @@ namespace Models.PMF
             BiomassRemoved.Invoke(BiomassRemovedData);
 
             // tell all our children about endcrop
-            foreach (Organ Child in Organs)
+            foreach (IOrgan Child in Organs)
                 Child.OnEndCrop();
             Clear();
 
@@ -501,7 +348,7 @@ namespace Models.PMF
                 Cutting.Invoke(this, new EventArgs());
 
             // tell all our children about endcrop
-            foreach (Organ Child in Organs)
+            foreach (IOrgan Child in Organs)
                 Child.OnCut();
         }
         /// <summary>Things the plant model does when the simulation starts</summary>
@@ -510,17 +357,21 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            List<IOrgan> organs = new List<IOrgan>();
+            foreach (IOrgan organ in Apsim.Children(this, typeof(IOrgan)))
+                organs.Add(organ);
+            Organs = organs.ToArray();
+
             Clear();
-            foreach (Organ o in Organs)
+            foreach (IOrgan o in Organs)
             {
-                o.Clear();
+                o.OnSimulationCommencing();
             }
             InitialiseInterfaceTypes();
         }
         /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        
         
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
@@ -559,20 +410,20 @@ namespace Models.PMF
                     if (Phenology.Emerged == true)
                     {
 
-                        Arbitrator.DoWaterLimitedDMAllocations(Organs);
-                        Arbitrator.DoNutrientDemandSetUp(Organs);
-                        Arbitrator.SetNutrientUptake(Organs);
-                        Arbitrator.DoNutrientAllocations(Organs);
-                        Arbitrator.DoNutrientLimitedGrowth(Organs);
+                        Arbitrator.DoWaterLimitedDMAllocations();
+                        Arbitrator.DoNutrientDemandSetUp();
+                        Arbitrator.SetNutrientUptake();
+                        Arbitrator.DoNutrientAllocations();
+                        Arbitrator.DoNutrientLimitedGrowth();
                     }
                 }
                 else
                 {
-                    Arbitrator.DoWaterLimitedDMAllocations(Organs);
-                    Arbitrator.DoNutrientDemandSetUp(Organs);
-                    Arbitrator.SetNutrientUptake(Organs);
-                    Arbitrator.DoNutrientAllocations(Organs);
-                    Arbitrator.DoNutrientLimitedGrowth(Organs);
+                    Arbitrator.DoWaterLimitedDMAllocations();
+                    Arbitrator.DoNutrientDemandSetUp();
+                    Arbitrator.SetNutrientUptake();
+                    Arbitrator.DoNutrientAllocations();
+                    Arbitrator.DoNutrientLimitedGrowth();
                 }
             }
         }
@@ -605,47 +456,22 @@ namespace Models.PMF
         {
             if (Structure != null)
                 Structure.DoPotentialDM();
-            foreach (Organ o in Organs)
+            foreach (IOrgan o in Organs)
                 o.DoPotentialDM();
         }
         /// <summary>Does the nutrient set up.</summary>
         private void DoNutrientSetUp()
         {
-            foreach (Organ o in Organs)
+            foreach (IOrgan o in Organs)
                 o.DoPotentialNutrient();
         }
-        /// <summary>Does the water.</summary>
-        private void DoWater()
-        {
-            double Supply = 0;
-            double Demand = 0;
-            foreach (Organ o in Organs)
-            {
-                Supply += o.WaterSupply;
-                Demand += o.WaterDemand;
-            }
 
-            double fraction = 1;
-            if (Demand > 0)
-                fraction = Math.Min(1.0, Supply / Demand);
-
-            foreach (Organ o in Organs)
-                if (o.WaterDemand > 0)
-                    o.WaterAllocation = fraction * o.WaterDemand;
-
-            double FractionUsed = 0;
-            if (Supply > 0)
-                FractionUsed = Math.Min(1.0, Demand / Supply);
-
-            foreach (Organ o in Organs)
-                o.DoWaterUptake(FractionUsed * Supply);
-        }
         /// <summary>Does the actual growth.</summary>
         private void DoActualGrowth()
         {
             if (Structure != null)
                 Structure.DoActualGrowth();
-            foreach (Organ o in Organs)
+            foreach (IOrgan o in Organs)
                 o.DoActualGrowth();
         }
         /// <summary>Initialises the interface types.</summary>

@@ -59,9 +59,11 @@ namespace Models.PMF.OldPlant
         Leaf1 Leaf = null;
 
         /// <summary>The crop failure stress period</summary>
-        [Link] Function CropFailureStressPeriod = null;
+        [Link]
+        IFunction CropFailureStressPeriod = null;
         /// <summary>The death high temperature during emergence</summary>
-        [Link] Function DeathHighTemperatureDuringEmergence = null;
+        [Link]
+        IFunction DeathHighTemperatureDuringEmergence = null;
 
         /// <summary>Gets or sets the leaf number critical.</summary>
         /// <value>The leaf number critical.</value>

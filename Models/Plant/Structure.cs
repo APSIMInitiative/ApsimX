@@ -6,6 +6,7 @@ using Models.PMF.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
+using Models.PMF.Functions.StructureFunctions;
 
 namespace Models.PMF
 {
@@ -16,6 +17,9 @@ namespace Models.PMF
     [Description("Keeps Track of Plants Structural Development")]
     public class Structure : Model
     {
+        private double _MainStemFinalNodeNo;
+        private double _Height;
+
         #region Links
         /// <summary>The plant</summary>
         [Link]
@@ -41,23 +45,32 @@ namespace Models.PMF
         public double PrimaryBudNo {get; set;}
 
         /// <summary>The thermal time</summary>
-        [Link] Function ThermalTime = null;
+        [Link]
+        IFunction ThermalTime = null;
         /// <summary>The main stem primordia initiation rate</summary>
-        [Link] Function MainStemPrimordiaInitiationRate = null;
+        [Link]
+        IFunction MainStemPrimordiaInitiationRate = null;
         /// <summary>The main stem node appearance rate</summary>
-        [Link] public Function MainStemNodeAppearanceRate = null;
+        [Link]
+        public IFunction MainStemNodeAppearanceRate = null;
         /// <summary>The main stem final node number</summary>
-        [Link] public Function MainStemFinalNodeNumber = null;
+        [Link]
+        public IFunction MainStemFinalNodeNumber = null;
         /// <summary>The height model</summary>
-        [Link] Function HeightModel = null;
+        [Link]
+        IFunction HeightModel = null;
         /// <summary>The branching rate</summary>
-        [Link] Function BranchingRate = null;
+        [Link]
+        IFunction BranchingRate = null;
         /// <summary>The shade induced branch mortality</summary>
-        [Link] Function ShadeInducedBranchMortality = null;
+        [Link]
+        IFunction ShadeInducedBranchMortality = null;
         /// <summary>The drought induced branch mortality</summary>
-        [Link] Function DroughtInducedBranchMortality = null;
+        [Link]
+        IFunction DroughtInducedBranchMortality = null;
         /// <summary>The plant mortality</summary>
-        [Link(IsOptional=true)] Function PlantMortality = null;
+        [Link(IsOptional = true)]
+        IFunction PlantMortality = null;
         #endregion
 
         #region States
@@ -139,7 +152,7 @@ namespace Models.PMF
         /// <summary>Gets the height.</summary>
         /// <value>The height.</value>
         [Units("mm")]
-        public double Height { get { return HeightModel.Value; } } //This is not protocole compliant.  needs to be changed to a blank get set and hight needs to be set in do potential growth 
+        public double Height { get { return _Height; } } 
 
         /// <summary>Gets the primary bud total node no.</summary>
         /// <value>The primary bud total node no.</value>
@@ -152,7 +165,7 @@ namespace Models.PMF
         /// <value>The main stem final node no.</value>
         [XmlIgnore]
         [Description("Number of leaves that will appear on the mainstem before it terminates")]
-        public double MainStemFinalNodeNo { get { return MainStemFinalNodeNumber.Value; } } //Fixme.  this property is not needed as this value can be obtained dirrect from the function.  Not protocole compliant.  Remove.
+        public double MainStemFinalNodeNo { get { return _MainStemFinalNodeNo; } } 
 
         /// <summary>Gets the relative node apperance.</summary>
         /// <value>The relative node apperance.</value>
@@ -183,7 +196,7 @@ namespace Models.PMF
 
             double StartOfDayMainStemNodeNo = (int)MainStemNodeNo;
 
-            MainStemFinalNodeNumber.UpdateVariables("");
+            _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
             MainStemPrimordiaNo = Math.Min(MainStemPrimordiaNo, MaximumNodeNumber);
 
             if (MainStemNodeNo > 0)
@@ -243,7 +256,7 @@ namespace Models.PMF
         /// <summary>Updates the height.</summary>
         public void UpdateHeight()
         {
-            HeightModel.UpdateVariables("");
+            _Height = HeightModel.Value;
         }
         /// <summary>Resets the stem popn.</summary>
         public void ResetStemPopn()
@@ -273,9 +286,12 @@ namespace Models.PMF
                 throw new Exception("MaxCover must exceed zero in a Sow event.");
             PrimaryBudNo = Sow.BudNumber;
             TotalStemPopn = Sow.Population * PrimaryBudNo;
-            string initial = "yes";
-            MainStemFinalNodeNumber.UpdateVariables(initial);
-            MaximumNodeNumber = (int)MainStemFinalNodeNumber.Value;
+            if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
+                _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
+            else
+                _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+            MaximumNodeNumber = (int)_MainStemFinalNodeNo;
+            _Height = HeightModel.Value;
         }
         #endregion
     }
