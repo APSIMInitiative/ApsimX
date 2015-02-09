@@ -750,33 +750,6 @@ namespace UserInterface.Views
                 OnCaptionClick.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Enable or disable a series.
-        /// </summary>
-        /// <param name="seriesIndex">series index</param>
-        /// <param name="enable">Enable the series?</param>
-        public void EnableSeries(int seriesIndex, bool enable)
-        {
-            if (seriesIndex < this.plot1.Model.Series.Count)
-            {
-                LineSeries series = this.plot1.Model.Series[seriesIndex] as LineSeries;
-                if (series != null)
-                {
-                    if (enable && series.Tag != null)
-                    {
-                        series.Color = (OxyColor)series.Tag;
-                        series.Tag = null;
-                    }
-                    else if (!enable && series.Tag == null)
-                    {
-                        series.Tag = series.Color;
-                        series.Color = OxyColors.Transparent;
-                    }
-
-                    this.plot1.Refresh();
-                }
-            }
-        }
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.
@@ -806,6 +779,18 @@ namespace UserInterface.Views
             }
             else
                 return double.NaN;
+        }
+
+        /// <summary>Gets the series names.</summary>
+        /// <returns></returns>
+        public string[] GetSeriesNames()
+        {
+            List<string> names = new List<string>();
+            foreach (OxyPlot.Series.Series series in this.plot1.Model.Series)
+            {
+                names.Add(series.Title);
+            }
+            return names.ToArray();
         }
     }
 }

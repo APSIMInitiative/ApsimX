@@ -97,13 +97,6 @@ namespace UserInterface.Presenters
                 //Format the footer
                 GraphView.FormatCaption(Graph.Caption);
 
-                // Tell the graph view about any disabled series 
-                for (int i = 0; i < seriesMetadata.Count; i++)
-                {
-                    if (this.Graph.DisabledSeries.Contains(seriesMetadata[i].Title))
-                        this.GraphView.EnableSeries(i, enable: false);
-                }
-
                 // Remove series titles out of the graph disabled series list when
                 // they are no longer valid i.e. not on the graph.
                 IEnumerable<string> validSeriesTitles = this.seriesMetadata.Select(s => s.Title);
@@ -368,6 +361,13 @@ namespace UserInterface.Presenters
             return html;
         }
 
+        /// <summary>Gets the series names.</summary>
+        /// <returns></returns>
+        public string[] GetSeriesNames()
+        {
+            return GraphView.GetSeriesNames();
+        }
+
         /// <summary>
         /// The graph model has changed.
         /// </summary>
@@ -459,31 +459,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnLegendClick(object sender, LegendClickArgs e)
         {
-            if (e.controlKeyPressed)
-            {
-                string seriesTitle = this.seriesMetadata[e.seriesIndex].Title;
-                bool isDisabled = this.Graph.DisabledSeries.Contains(seriesTitle);
-                if (isDisabled)
-                {
-                    this.GraphView.EnableSeries(e.seriesIndex, enable: true);
-                    this.Graph.DisabledSeries.Remove(seriesTitle);
-                }
-                else
-                {
-                    this.GraphView.EnableSeries(e.seriesIndex, enable: false);
-                    this.Graph.DisabledSeries.Add(seriesTitle);
-                }
-            }
-            else
-            {
-                LegendPresenter presenter = new LegendPresenter();
-                CurrentPresenter = presenter;
+            
+            LegendPresenter presenter = new LegendPresenter(this);
+            CurrentPresenter = presenter;
 
-                LegendView view = new LegendView();
-                GraphView.ShowEditorPanel(view);
-                presenter.Attach(Graph, view, ExplorerPresenter);
-            }
-        }
+            LegendView view = new LegendView();
+            GraphView.ShowEditorPanel(view);
+            presenter.Attach(Graph, view, ExplorerPresenter);
+    }
 
         /// <summary>
         /// User has hovered over a point on the graph.
@@ -722,20 +705,23 @@ namespace UserInterface.Presenters
                 if (series.Title != null && !series.Title.StartsWith("Series") && numSeries == 1)
                     title = series.Title;
 
-                // Create the series and populate it with data.
-                if (series.Type == Models.Graph.Series.SeriesType.Bar)
+                if (!graph.DisabledSeries.Contains(title))
                 {
-                    graphView.DrawBar(title, X, Y, series.XAxis, series.YAxis, Colour);
-                }
+                    // Create the series and populate it with data.
+                    if (series.Type == Models.Graph.Series.SeriesType.Bar)
+                    {
+                        graphView.DrawBar(title, X, Y, series.XAxis, series.YAxis, Colour);
+                    }
 
-                else if (series.Type == Series.SeriesType.Scatter)
-                {
-                    graphView.DrawLineAndMarkers(title, X, Y, series.XAxis, series.YAxis, Colour,
-                                                 series.Line, series.Marker);
-                }
-                else if (X2 != null && Y2 != null)
-                {
-                    graphView.DrawArea(title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour);
+                    else if (series.Type == Series.SeriesType.Scatter)
+                    {
+                        graphView.DrawLineAndMarkers(title, X, Y, series.XAxis, series.YAxis, Colour,
+                                                     series.Line, series.Marker);
+                    }
+                    else if (X2 != null && Y2 != null)
+                    {
+                        graphView.DrawArea(title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour);
+                    }
                 }
             }
 
