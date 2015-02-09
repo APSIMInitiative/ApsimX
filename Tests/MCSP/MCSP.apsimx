@@ -719,6 +719,9 @@ namespace Models
           <string>[MCSP].TotalBiomassAtStartSenescence.Value</string>
           <string>[MCSP].Ymax.Value</string>
           <string>[MCSP].Summariser.Total.N</string>
+          <string>[MCSP].OrganArbitrator.DMSupply</string>
+          <string>[MCSP].OrganArbitrator.DMDemand</string>
+          <string>[MCSP].Phenology.AccumulatedThermalTime.Value</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -778,6 +781,75 @@ namespace Models
         <ArbitrationMethod>Old</ArbitrationMethod>
         <NutrientUptakeMethod>2</NutrientUptakeMethod>
       </Arbitrator>
+      <Graph>
+        <Name>Stress Factors</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Water (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Title>Length (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Series 0</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>MCSP.Leaf.Fw</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series2</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744448</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>MCSP.Leaf.Fn</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -959,7 +1031,7 @@ namespace Models
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>BottomLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
     </Graph>
@@ -1180,7 +1252,7 @@ namespace Models
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
+      <LegendPosition>BottomLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
     </Graph>
@@ -1211,7 +1283,7 @@ namespace Models
         <Line>Solid</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1231,7 +1303,7 @@ namespace Models
         <Line>Solid</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1251,7 +1323,7 @@ namespace Models
         <Line>Solid</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1271,7 +1343,7 @@ namespace Models
         <Line>Solid</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1291,7 +1363,7 @@ namespace Models
         <Line>Dash</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1311,7 +1383,7 @@ namespace Models
         <Line>Dot</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1331,7 +1403,7 @@ namespace Models
         <Line>DashDot</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1351,7 +1423,7 @@ namespace Models
         <Line>Dash</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1727,7 +1799,7 @@ namespace Models
       <Name>N supply and demand</Name>
       <Axis>
         <Type>Left</Type>
-        <Title>Water (mm)</Title>
+        <Title>Nitrogen (g/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1793,10 +1865,10 @@ namespace Models
       <DisabledSeries />
     </Graph>
     <Graph>
-      <Name>Stress Factors</Name>
+      <Name>DM supply and demand</Name>
       <Axis>
         <Type>Left</Type>
-        <Title>Water (mm)</Title>
+        <Title>DM (g/m2/d)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -1831,11 +1903,11 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Leaf.Fw</FieldName>
+          <FieldName>MCSP.OrganArbitrator.DMSupply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <Cumulative>true</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
@@ -1851,11 +1923,11 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Leaf.Fn</FieldName>
+          <FieldName>MCSP.OrganArbitrator.DMDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <Cumulative>true</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>

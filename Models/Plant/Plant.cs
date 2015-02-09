@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
+using Models.PMF.Functions;
 using Models.Soils;
 using System.Xml.Serialization;
 using System.Xml.Schema;
@@ -173,6 +174,10 @@ namespace Models.PMF
         [Link(IsOptional=true)] public Leaf Leaf = null;
         /// <summary>The root</summary>
         [Link(IsOptional=true)] public Root Root = null;
+        /// <summary>The base function class</summary>
+        [Link(IsOptional = true)]
+        public Function Function = null;
+        
         #endregion
 
         #region Class properties and fields
@@ -192,7 +197,6 @@ namespace Models.PMF
         public Organ[] Organs 
         { 
             get 
-
             {
                 if (_Organs == null)
                 {
@@ -371,6 +375,8 @@ namespace Models.PMF
         public event EventHandler PlantEnding;
         /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
+        /// <summary>Occurs when daily phenology timestep completed</summary>
+        public event EventHandler PostPhenology;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -528,6 +534,9 @@ namespace Models.PMF
                     if (Phenology.Emerged == true)
                     {
                         DoDMSetUp();//Sets organs water limited DM supplys and demands
+                        // Invoke a post phenology event.
+                        if (PostPhenology != null)
+                            PostPhenology.Invoke(this, new EventArgs());
                     }
                 }
                 else
@@ -586,7 +595,10 @@ namespace Models.PMF
         private void DoPhenology()
         {
             if (Phenology != null)
+            {
                 Phenology.DoTimeStep();
+
+            }
         }
         /// <summary>Does the dm set up.</summary>
         private void DoDMSetUp()

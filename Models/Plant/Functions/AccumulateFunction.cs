@@ -40,11 +40,10 @@ namespace Models.PMF.Functions
             AccumulatedValue = 0;
         }
 
-        /// <summary>Called when [new weather data available].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
+        /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
+        /// <param name="sender">Plant.cs</param>
+        [EventSubscribe("PostPhenology")]
+        private void PostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
                 ChildFunctions = Apsim.Children(this, typeof(Function));

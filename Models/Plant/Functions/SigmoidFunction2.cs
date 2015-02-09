@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Functions
 {
@@ -19,9 +20,13 @@ namespace Models.PMF.Functions
         [Link] Function XValue = null;
 
         /// <summary>The xo</summary>
-        public double Xo = 1.0;
+        [XmlElement("Xo")]
+        public double Xo { get; set; }
+        //public double Xo = 1.0;
         /// <summary>The b</summary>
-        public double b = 1.0;
+        [XmlElement("b")]
+        public double b { get; set; }
+        //public double b = 1.0;
 
 
 
@@ -35,7 +40,8 @@ namespace Models.PMF.Functions
 
                 try
                 {
-                    return Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo) / b));
+                    double _return = Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo) / b));
+                    return _return;
                 }
                 catch (Exception)
                 {
