@@ -1738,9 +1738,7 @@ namespace Models
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries>
-          <string />
-        </DisabledSeries>
+        <DisabledSeries />
       </Graph>
       <Folder>
         <Name>SWCLayers</Name>

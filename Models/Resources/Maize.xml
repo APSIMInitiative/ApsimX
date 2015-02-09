@@ -460,7 +460,7 @@
     </Constant>
     <Constant>
       <Name>DMDemandFunction</Name>
-      <Value>1</Value>
+      <Value>0</Value>
     </Constant>
     <PhaseLookup>
       <Name>NFillingRate</Name>
@@ -668,7 +668,7 @@
     <LeafCohort>
       <Name>InitialLeaves[1]</Name>
       <Rank>1</Rank>
-      <Area>50</Area>
+      <Area>380</Area>
     </LeafCohort>
     <LeafCohort>
       <Name>InitialLeaves[2]</Name>
