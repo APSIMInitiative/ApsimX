@@ -1,5 +1,6 @@
 [katumani.input.weather]
-
+tav = 19.1
+amp = 4.1
 latitude= -1
 
     year    day     radn    maxt    mint    rain

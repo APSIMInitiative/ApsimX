@@ -1,5 +1,7 @@
 [kiboko.input.weather]
 latitude=             -1
+tav = 23.1
+amp = 4.0
 
 !       dummy   data    day           60to            90and          275to           304in          1987(no     crops   at      this    time)
 site    year    day     radn    maxt    mint    rain
