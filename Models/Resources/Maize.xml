@@ -119,7 +119,7 @@
       <End>End_Juvenile</End>
       <Constant>
         <Name>Target</Name>
-        <Value>160</Value>
+        <Value>140</Value>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
@@ -285,8 +285,8 @@
               <double>4</double>
             </X>
             <Y>
-              <double>40</double>
-              <double>40</double>
+              <double>30</double>
+              <double>30</double>
               <double>46</double>
             </Y>
           </XYPairs>
@@ -297,12 +297,25 @@
       <Name>MainStemFinalNodeNumber</Name>
       <MaximumMainStemNodeNumber>30</MaximumMainStemNodeNumber>
       <OnEventFunction>
-        <SetEvent>End_Juvenile</SetEvent>
+        <SetEvent>Floral_Initiation</SetEvent>
         <Name>FinalLeafNumber</Name>
-        <Constant>
+        <AddFunction>
           <Name>PreEventValue</Name>
-          <Value>25</Value>
-        </Constant>
+          <Constant>
+            <Name>PrimordiaAtEmergence</Name>
+            <Value>6</Value>
+          </Constant>
+          <DivideFunction>
+            <VariableReference>
+              <Name>JuvenilePhaseDuration</Name>
+              <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
+            </VariableReference>
+            <Constant>
+              <Name>ApproximatePlastochron</Name>
+              <Value>14</Value>
+            </Constant>
+          </DivideFunction>
+        </AddFunction>
         <VariableReference>
           <Name>PostEventValue</Name>
           <VariableName>[Structure].MainStemPrimordiaNo</VariableName>
@@ -852,12 +865,12 @@
           <Name>XYPairs</Name>
           <X>
             <double>0</double>
-            <double>8</double>
-            <double>20</double>
+            <double>0.5</double>
+            <double>1</double>
           </X>
           <Y>
             <double>350</double>
-            <double>700</double>
+            <double>750</double>
             <double>700</double>
           </Y>
         </XYPairs>
@@ -938,8 +951,8 @@
             <double>9</double>
           </X>
           <Y>
-            <double>34000</double>
-            <double>34000</double>
+            <double>100000</double>
+            <double>100000</double>
           </Y>
         </XYPairs>
       </LinearInterpolationFunction>
@@ -981,9 +994,9 @@
           <Y>
             <double>0</double>
             <double>0</double>
-            <double>0.01</double>
-            <double>0.02</double>
-            <double>0.03</double>
+            <double>0.00</double>
+            <double>0.00</double>
+            <double>0.00</double>
           </Y>
         </XYPairs>
       </LinearInterpolationFunction>
@@ -996,7 +1009,7 @@
       <Name>Photosynthesis</Name>
       <Constant>
         <Name>RUE</Name>
-        <Value>2.0</Value>
+        <Value>2</Value>
       </Constant>
       <WeightedTemperatureFunction>
         <Name>FT</Name>
@@ -1112,8 +1125,8 @@
       <XYPairs>
         <Name>XYPairs</Name>
         <X>
-          <double>-1</double>
-          <double>0</double>
+          <double>-10</double>
+          <double>-9</double>
         </X>
         <Y>
           <double>1</double>
@@ -1132,7 +1145,7 @@
       <Name>DMDemandFunction</Name>
       <StartStage>5.2</StartStage>
       <GrowthDuration>120</GrowthDuration>
-      <MaximumOrganWt>30</MaximumOrganWt>
+      <MaximumOrganWt>0</MaximumOrganWt>
       <VariableReference>
         <Name>ThermalTime</Name>
         <VariableName>[Phenology].ThermalTime.Value</VariableName>
@@ -1168,7 +1181,6 @@
       <Name>MinimumNConc</Name>
       <Value>0.01</Value>
     </Constant>
-   
   </GenericAboveGroundOrgan>
   <GenericAboveGroundOrgan>
     <Name>Rachis</Name>
@@ -1176,7 +1188,7 @@
       <Name>DMDemandFunction</Name>
       <StartStage>5</StartStage>
       <GrowthDuration>300</GrowthDuration>
-      <MaximumOrganWt>30</MaximumOrganWt>
+      <MaximumOrganWt>0</MaximumOrganWt>
       <VariableReference>
         <Name>ThermalTime</Name>
         <VariableName>[Phenology].ThermalTime.Value</VariableName>
@@ -1234,7 +1246,7 @@
       <Name>DMDemandFunction</Name>
       <StartStage>5</StartStage>
       <GrowthDuration>300</GrowthDuration>
-      <MaximumOrganWt>10</MaximumOrganWt>
+      <MaximumOrganWt>0</MaximumOrganWt>
       <VariableReference>
         <Name>ThermalTime</Name>
         <VariableName>[Phenology].ThermalTime.Value</VariableName>
@@ -1359,9 +1371,9 @@
               <double>3.5</double>
             </X>
             <Y>
-              <double>5</double>
-              <double>5</double>
-              <double>5</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
             </Y>
           </XYPairs>
         </LinearInterpolationFunction>
