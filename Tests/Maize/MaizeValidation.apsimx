@@ -30,6 +30,13 @@
         <string>SoilWater</string>
       </SheetNames>
     </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>RSNitrogen</Name>
+      <FileName>C:\ApsimX\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <SheetNames>
+        <string>RainShelterNitrogen</string>
+      </SheetNames>
+    </Model>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -2736,6 +2743,67 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <Graph>
+        <Name>AboveGroundN</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Above Ground Nitrogen (g/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Maize.Summariser.AboveGroundLive.N</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>RainShelterNitrogen</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>RainShelterNitrogen</TableName>
+            <FieldName>Maize.Sumariser.AboveGroundLive.N</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
         <Name>LeafBiomass</Name>
         <Axis>
           <Type>Left</Type>
@@ -2787,6 +2855,67 @@ namespace Models
           <Y>
             <TableName>observed</TableName>
             <FieldName>Leaf.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>LeafNitrogen</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf N (g/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Maize.Leaf.Live.N</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>RainShelterNitrogen</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>RainShelterNitrogen</TableName>
+            <FieldName>Maize.Leaf.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -2858,6 +2987,67 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <Graph>
+        <Name>StemNitrogen</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Stem Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Maize.Stem.Live.N</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>RainShelterNitrogen</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>RainShelterNitrogen</TableName>
+            <FieldName>Maize.Stem.Live.N</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
         <Name>GrainBiomass</Name>
         <Axis>
           <Type>Left</Type>
@@ -2909,6 +3099,67 @@ namespace Models
           <Y>
             <TableName>observed</TableName>
             <FieldName>Maize.Grain.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>GrainNitrogen</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Grain Biomass (g/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Maize.Grain.Live.N</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>RainShelterNitrogen</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>RainShelterNitrogen</TableName>
+            <FieldName>Maize.Grain.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>

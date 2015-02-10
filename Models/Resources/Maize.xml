@@ -905,15 +905,15 @@
       </Constant>
       <Constant>
         <Name>MaximumNConc</Name>
-        <Value>.04</Value>
-      </Constant>
-      <Constant>
-        <Name>CriticalNConc</Name>
         <Value>.02</Value>
       </Constant>
       <Constant>
+        <Name>CriticalNConc</Name>
+        <Value>.018</Value>
+      </Constant>
+      <Constant>
         <Name>MinimumNConc</Name>
-        <Value>.005</Value>
+        <Value>.01</Value>
       </Constant>
       <AddFunction>
         <Name>DroughtInducedSenAcceleration</Name>
