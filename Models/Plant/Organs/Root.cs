@@ -6,6 +6,7 @@ using Models.PMF.Functions;
 using Models.Soils;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using Models.Soils.Arbitrator;
 
 namespace Models.PMF.Organs
 {
@@ -298,23 +299,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
-        public override void DoWaterUptake(double Amount)
+        public override void DoWaterUptake(double[] Amount)
         {
             // Send the delta water back to SoilWat that we're going to uptake.
             WaterChangedType WaterUptake = new WaterChangedType();
-            WaterUptake.DeltaWater = new double[SWSupply.Length];
-            double Supply = Utility.Math.Sum(SWSupply);
-            double FractionUsed = 1;
-            if (Supply > 0)
-                FractionUsed = Amount / Supply;
-
-            for (int layer = 0; layer <= SWSupply.Length - 1; layer++)
-                WaterUptake.DeltaWater[layer] = -SWSupply[layer] * FractionUsed;
+            WaterUptake.DeltaWater = Utility.Math.Multiply_Value(Amount, -1.0);
 
             Uptake = WaterUptake.DeltaWater;
-          //Turning this off so arbitrator can do it
-            //  if (WaterChanged != null)
-          //      WaterChanged.Invoke(WaterUptake);
+            if (WaterChanged != null)
+                WaterChanged.Invoke(WaterUptake);
         }
         /// <summary>Layers the index.</summary>
         /// <param name="depth">The depth.</param>
@@ -753,43 +746,60 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <value>The water supply.</value>
-        [Units("mm")]
-        public override double WaterSupply {get; set;}
+        public override double[] WaterSupply(List<ZoneWaterAndN> zones)
+        {
+            if (zones.Count != 1)
+                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+
+            double[] SW = zones[0].Water;
+
+            double[] supply = new double[Soil.Thickness.Length];
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                if (layer <= LayerIndex(Depth))
+                    supply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value *
+                        (SW[layer] - soilCrop.LL[layer] * Soil.Thickness[layer]) * RootProportion(layer, Depth));
+                else
+                    supply[layer] = 0;
+
+            return supply;
+        }
 
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
         [Units("mm")]
         public override double WaterUptake
         {
-            //get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
-            get
-            {
-                return Utility.Math.Sum(Plant.uptakeWater);
-            }
+            get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
         }
+
+        //[Units("mm")]
+        //public override double WaterUptake
+        //{
+        //    get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
+        //}
+
         #endregion
 
         #region Event handlers
-        /// <summary>Called when [do water arbitration].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-                [EventSubscribe("DoWaterArbitration")]
-        private void OnDoWaterArbitration(object sender, EventArgs e)
-        {
-                if (SWSupply == null || SWSupply.Length != Soil.Thickness.Length)
-                    SWSupply = new double[Soil.Thickness.Length];
-                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                    if (layer <= LayerIndex(Depth))
-                        SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.Water[layer] - soilCrop.LL[layer] * Soil.Thickness[layer]) * RootProportion(layer, Depth));
-                    else
-                        SWSupply[layer] = 0;
+        ///// <summary>Called when [do water arbitration].</summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("DoWaterArbitration")]
+        //private void OnDoWaterArbitration(object sender, EventArgs e)
+        //{
+        //        if (SWSupply == null || SWSupply.Length != Soil.Thickness.Length)
+        //            SWSupply = new double[Soil.Thickness.Length];
+        //        for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+        //            if (layer <= LayerIndex(Depth))
+        //                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.Water[layer] - soilCrop.LL[layer] * Soil.Thickness[layer]) * RootProportion(layer, Depth));
+        //            else
+        //                SWSupply[layer] = 0;
 
-                WaterSupply = Utility.Math.Sum(SWSupply);
-        }
+        //        WaterSupply = Utility.Math.Sum(SWSupply);
+        //}
 
-
-                /// <summary>Called when [water uptakes calculated].</summary>
-                /// <param name="SoilWater">The soil water.</param>
+        /// <summary>Called when [water uptakes calculated].</summary>
+        /// <param name="SoilWater">The soil water.</param>
         [EventSubscribe("WaterUptakesCalculated")]
         private void OnWaterUptakesCalculated(WaterUptakesCalculatedType SoilWater)
         {
@@ -817,7 +827,11 @@ namespace Models.PMF.Organs
 
         /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
+
+        /// <summary>Occurs when [nitrogen changed].</summary>
+        public event WaterChangedDelegate WaterChanged;
         #endregion
+
 
     }
 }

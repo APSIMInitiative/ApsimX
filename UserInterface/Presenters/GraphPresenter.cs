@@ -176,18 +176,18 @@ namespace UserInterface.Presenters
                 return;
             }
 
+            // See if graph is inside a simulation. If so then graph the simulation.
+            if (parentSimulation != null)
+            {
+                FillSeriesInfoFromSimulations(new string[] { parentSimulation.Name }, series);
+                return;
+            }
+
             // See if graph is inside an experiment. If so then graph all series in experiment.
             Experiment parentExperiment = Apsim.Parent(this.Graph, typeof(Experiment)) as Experiment;
             if (parentExperiment != null)
             {
                 FillSeriesInfoFromSimulations(parentExperiment.Names(), series);
-                return;
-            }
-
-            // See if graph is inside a simulation. If so then graph the simulation.
-            if (parentSimulation != null)
-            {
-                FillSeriesInfoFromSimulations(new string[] {parentSimulation.Name}, series);
                 return;
             }
 

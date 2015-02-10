@@ -401,9 +401,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Maize.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Resources\Maize.xml" />
     <None Include="Resources\MCSP.xml">
       <SubType>Designer</SubType>
     </None>

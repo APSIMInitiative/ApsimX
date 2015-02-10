@@ -19,6 +19,9 @@
     <Summary>
       <Name>Summary</Name>
     </Summary>
+    <SoilArbitrator>
+      <Name>Soil Arbitrator</Name>
+    </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
       <Soil>
@@ -1191,7 +1194,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Leaf</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
@@ -1211,7 +1214,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Stem</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16760704</ColourArgb>
@@ -1231,7 +1234,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Tuber</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1251,7 +1254,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Root</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -1271,7 +1274,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Dead Leaf</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388480</ColourArgb>
@@ -1291,7 +1294,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Dead Step</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -1311,7 +1314,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Dead Tuber</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
@@ -1331,7 +1334,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Root Dead</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
@@ -1351,7 +1354,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Above Ground Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8372160</ColourArgb>
@@ -1371,7 +1374,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Below Ground Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777088</ColourArgb>
@@ -1391,7 +1394,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Total Wt</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388608</ColourArgb>
