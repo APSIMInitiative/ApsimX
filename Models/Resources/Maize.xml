@@ -6,6 +6,10 @@
     <Name>Pioneer_3153</Name>
     <Alias>Pie</Alias>
   </Cultivar>
+  <Cultivar>
+    <Name>Katumani</Name>
+  </Cultivar>
+
   <OrganArbitrator>
     <Name>Arbitrator</Name>
     <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
