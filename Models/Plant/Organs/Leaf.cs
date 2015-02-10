@@ -1262,9 +1262,9 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public override double WaterDemand
         {
-            get
+           get
             {
-                return Plant.demandWater;
+                return Plant.PotentialEP;
             }
             //set
             //{

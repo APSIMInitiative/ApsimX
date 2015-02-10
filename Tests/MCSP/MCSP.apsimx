@@ -19,6 +19,9 @@
     <Summary>
       <Name>Summary</Name>
     </Summary>
+    <SoilArbitrator>
+      <Name>Soil Arbitrator</Name>
+    </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
       <Soil>
@@ -776,11 +779,6 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
       </Graph>
-      <Arbitrator>
-        <Name>Arbitrator</Name>
-        <ArbitrationMethod>Old</ArbitrationMethod>
-        <NutrientUptakeMethod>2</NutrientUptakeMethod>
-      </Arbitrator>
       <Graph>
         <Name>Stress Factors</Name>
         <Axis>

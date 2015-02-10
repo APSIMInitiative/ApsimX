@@ -6,6 +6,7 @@ using Models.Core;
 using Models.PMF.Functions;
 using Models.Soils;
 using Models.PMF.Interfaces;
+using Models.Soils.Arbitrator;
 
 namespace Models.PMF.Organs
 {
@@ -110,36 +111,34 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <value>The water supply.</value>
-        public override double WaterSupply
+        public override double[] WaterSupply(List<ZoneWaterAndN> zones)
         {
-            get
-            {
-                CurrentPaddockName = Apsim.FullPath(this);
-                OurName = CurrentPaddockName;
-                if (OurName.Length > 0)
-                    OurName += ".";
-                OurName += Plant.Name;
+            throw new NotImplementedException("SimpleRoot doesn't currently support SoilArbitrator");
+            //CurrentPaddockName = Apsim.FullPath(this);
+            //OurName = CurrentPaddockName;
+            //if (OurName.Length > 0)
+            //    OurName += ".";
+            //OurName += Plant.Name;
 
-                TalkDirectlyToRoot = RootModelExists;
+            //TalkDirectlyToRoot = RootModelExists;
 
-                double[] SWSupply;
-                if (TalkDirectlyToRoot)
-                {
-                    SWSupply = (double[])Apsim.Get(this, OurName + "Root.SWSupply");
-                    return Utility.Math.Sum(SWSupply);
-                }
+            //double[] SWSupply;
+            //if (TalkDirectlyToRoot)
+            //{
+            //    SWSupply = (double[])Apsim.Get(this, OurName + "Root.SWSupply");
+            //    return SWSupply;
+            //}
 
-                else
-                {
-                    double Total = 0;
-                    //foreach (Zone SubPaddock in this.Models)
-                    //{
-                    //    SWSupply = (double[]) this.Get(SubPaddock.FullPath + "." + Plant.Name + "Root.SWSupply");
-                    //    Total += Utility.Math.Sum(SWSupply);
-                    //}
-                    return Total;
-                }
-            }
+            //else
+            //{
+            //    double Total = 0;
+            //    //foreach (Zone SubPaddock in this.Models)
+            //    //{
+            //    //    SWSupply = (double[]) this.Get(SubPaddock.FullPath + "." + Plant.Name + "Root.SWSupply");
+            //    //    Total += Utility.Math.Sum(SWSupply);
+            //    //}
+            //    return Total;
+            //}
         }
 
 
@@ -149,9 +148,9 @@ namespace Models.PMF.Organs
         /// <param name="Amount">The amount.</param>
         /// <exception cref="System.NotImplementedException">
         /// </exception>
-        public override void DoWaterUptake(double Amount)
+        public override void DoWaterUptake(double[] Amount)
         {
-            Uptake = Amount;
+            Uptake = Utility.Math.Sum(Amount);
             if (TalkDirectlyToRoot)
                 //MyPaddock.Set(OurName + "Root.SWUptake", Amount);
                 throw new NotImplementedException();

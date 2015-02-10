@@ -272,6 +272,9 @@
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
+      <SoilArbitrator>
+        <Name>Soil Arbitrator</Name>
+      </SoilArbitrator>
       <Zone>
         <Name>RainShelter</Name>
         <Soil>
@@ -940,11 +943,6 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
-        <Arbitrator>
-          <Name>Arbitrator</Name>
-          <ArbitrationMethod>Old</ArbitrationMethod>
-          <NutrientUptakeMethod>2</NutrientUptakeMethod>
-        </Arbitrator>
         <Report>
           <Name>Report</Name>
           <VariableNames>
@@ -2327,6 +2325,9 @@ LightInt --> still need simulated data
 
 EAH added observed data and filters for all treatment levels, and treatment/variable info into memo]]></MemoText>
       </Memo>
+      <SoilArbitrator>
+        <Name>Soil Arbitrator</Name>
+      </SoilArbitrator>
       <Zone>
         <Name>Field</Name>
         <Soil>
@@ -3240,11 +3241,6 @@ TreatNo = 2
           <ResourceName>Maize</ResourceName>
           <CropType>Maize</CropType>
         </Plant>
-        <Arbitrator>
-          <Name>Arbitrator</Name>
-          <ArbitrationMethod>Old</ArbitrationMethod>
-          <NutrientUptakeMethod>2</NutrientUptakeMethod>
-        </Arbitrator>
         <Manager>
           <Name>ExtraVariables</Name>
           <Script />
@@ -5135,6 +5131,9 @@ namespace Models
       <Summary>
         <Name>summaryfile</Name>
       </Summary>
+      <SoilArbitrator>
+        <Name>Soil Arbitrator</Name>
+      </SoilArbitrator>
       <Zone>
         <Name>Field</Name>
         <Soil>
@@ -5931,11 +5930,6 @@ namespace Models
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
         </MicroClimate>
-        <Arbitrator>
-          <Name>Arbitrator</Name>
-          <ArbitrationMethod>Old</ArbitrationMethod>
-          <NutrientUptakeMethod>2</NutrientUptakeMethod>
-        </Arbitrator>
         <Plant>
           <Name>Maize</Name>
           <ResourceName>Maize</ResourceName>
@@ -6300,6 +6294,9 @@ namespace Models
     <Summary>
       <Name>summaryfile</Name>
     </Summary>
+    <SoilArbitrator>
+      <Name>Soil Arbitrator</Name>
+    </SoilArbitrator>
     <Zone>
       <Name>RainShelter</Name>
       <Soil>
@@ -7234,11 +7231,6 @@ namespace Models
           <Action>[Maize].Sow(population:12, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);</Action>
         </Operation>
       </Operations>
-      <Arbitrator>
-        <Name>Arbitrator</Name>
-        <ArbitrationMethod>Old</ArbitrationMethod>
-        <NutrientUptakeMethod>2</NutrientUptakeMethod>
-      </Arbitrator>
       <Manager>
         <Name>ExtraVariables</Name>
         <Script />

@@ -6,6 +6,8 @@
 namespace Models.PMF.Interfaces
 {
     using System;
+    using Models.Soils.Arbitrator;
+    using System.Collections.Generic;
 
     /// <summary>
     /// An interface that defines what needs to be implemented by an organ
@@ -68,8 +70,8 @@ namespace Models.PMF.Interfaces
         /// <summary>Gets or sets the water demand.</summary>
         double WaterDemand { get; set; }
 
-        /// <summary>Gets or sets the water supply.</summary>
-        double WaterSupply { get; set; }
+        /// <summary>Gets the water supply for the given water state.</summary>
+        double[] WaterSupply(List<ZoneWaterAndN> zones);
 
         /// <summary>Gets or sets the water allocation.</summary>
         double WaterAllocation { get; set; }
@@ -79,7 +81,7 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Demand">The demand.</param>
-        void DoWaterUptake(double Demand);
+        void DoWaterUptake(double[] uptake);
     }
 
 
