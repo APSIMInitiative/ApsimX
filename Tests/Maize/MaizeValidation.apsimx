@@ -993,6 +993,8 @@ namespace Models
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
             <string>[Maize].Husk.Live.Wt</string>
+            <string>[Maize].Rachis.Live.Wt</string>
+            <string>[Maize].Tastle.Live.Wt</string>
             <string>[Maize].Summariser.EarLive.N</string>
             <string>[Maize].Grain.Live.N</string>
             <string>[Maize].Stem.Live.N</string>
@@ -1009,6 +1011,8 @@ namespace Models
             <string>[Maize].Leaf.Height</string>
             <string>[Maize].Leaf.InitialLeafValues.MaxArea.Value</string>
             <string>[Maize].Leaf.Fw</string>
+            <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
             <string>[Maize].Leaf.Fn</string>
             <string>[Maize].Phenology.CurrentPhaseName</string>
             <string>[Maize].Phenology.Stage</string>
@@ -1020,7 +1024,15 @@ namespace Models
             <string>[Maize].Phenology.Stage</string>
             <string>[Maize].Leaf.ExpandedCohortNo</string>
             <string>[Maize].Leaf.AppearedCohortNo</string>
+            <string>[Maize].Leaf.DeadCohortNo</string>
+            <string>[Maize].Leaf.InitialisedCohortNo</string>
+            <string>[Maize].Structure.MainStemFinalNodeNo</string>
+            <string>[Maize].Structure.MainStemNodeNo</string>
+            <string>[Maize].Structure.MainStemPrimordiaNo</string>
             <string>[Maize].Leaf.CohortArea[1:30]</string>
+            <string>[Maize].Leaf.CohortSLA[1:30]</string>
+            <string>[Maize].Leaf.InitialLeafValues.SpecificLeafAreaMax.Value</string>
+            <string>[Maize].Leaf.InitialLeafValues.SpecificLeafAreaMin.Value</string>
             <string>[Maize].Arbitrator.NDemand</string>
             <string>[Maize].Arbitrator.DMSupply</string>
             <string>[Maize].Arbitrator.DMDemand</string>
@@ -1040,6 +1052,147 @@ namespace Models
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <Graph>
+          <Name>Leafappearance</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>number</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Ligules</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8388608</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Leaf.ExpandedCohortNo</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Tips</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65281</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Leaf.AppearedCohortNo</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Dead </Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Leaf.DeadCohortNo</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>InitialisedCohorts</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32704</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Leaf.InitialisedCohortNo</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>FinalNodeNumber</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Structure.MainStemFinalNodeNo</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>MainStemNodes</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Structure.MainStemNodeNo</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>BottomRight</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -1738,13 +1891,7 @@ namespace Models
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries>
-          <string>Lincoln2012NitrogenNilIrrigationFull</string>
-          <string>Lincoln2012NitrogenLowIrrigationFull</string>
-          <string>Lincoln2012NitrogenNilIrrigationNil</string>
-          <string>Lincoln2012NitrogenLowIrrigationNil</string>
-          <string>Lincoln2012NitrogenMedIrrigationNil</string>
-        </DisabledSeries>
+        <DisabledSeries />
       </Graph>
       <Folder>
         <Name>SWCLayers</Name>
@@ -9146,5 +9293,5 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>303</ExplorerWidth>
+  <ExplorerWidth>224</ExplorerWidth>
 </Simulations>
