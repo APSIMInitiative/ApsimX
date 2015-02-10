@@ -9,7 +9,6 @@
   <Cultivar>
     <Name>Katumani</Name>
   </Cultivar>
-
   <OrganArbitrator>
     <Name>Arbitrator</Name>
     <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
@@ -341,8 +340,8 @@
           </X>
           <Y>
             <double>20</double>
-            <double>1500</double>
-            <double>1700</double>
+            <double>50</double>
+            <double>60</double>
             <double>1700</double>
           </Y>
         </XYPairs>
@@ -906,15 +905,15 @@
       </Constant>
       <Constant>
         <Name>MaximumNConc</Name>
-        <Value>.063</Value>
+        <Value>.04</Value>
       </Constant>
       <Constant>
         <Name>CriticalNConc</Name>
-        <Value>.05</Value>
+        <Value>.02</Value>
       </Constant>
       <Constant>
         <Name>MinimumNConc</Name>
-        <Value>.01</Value>
+        <Value>.005</Value>
       </Constant>
       <AddFunction>
         <Name>DroughtInducedSenAcceleration</Name>
@@ -955,8 +954,8 @@
             <double>9</double>
           </X>
           <Y>
-            <double>100000</double>
-            <double>100000</double>
+            <double>60000</double>
+            <double>30000</double>
           </Y>
         </XYPairs>
       </LinearInterpolationFunction>
@@ -1366,27 +1365,27 @@
         </VariableReference>
         <LinearInterpolationFunction>
           <Name>PotentialInternodeWt</Name>
-          <XProperty>[Phenology].Stage</XProperty>
+          <XProperty>[Structure].RelativeNodeApperance</XProperty>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
-              <double>3</double>
-              <double>3.3</double>
-              <double>3.5</double>
+              <double>0</double>
+              <double>0.5</double>
+              <double>1</double>
             </X>
             <Y>
               <double>0</double>
-              <double>0</double>
-              <double>0</double>
+              <double>0.2</double>
+              <double>16</double>
             </Y>
           </XYPairs>
         </LinearInterpolationFunction>
       </MultiplyFunction>
       <MultiplyFunction>
-        <Name>MaximumSpecificStemLength</Name>
+        <Name>HightLimitedDMAccumulation</Name>
         <Constant>
           <Name>SpecificStemLengthMax</Name>
-          <Value>0.5</Value>
+          <Value>500</Value>
         </Constant>
         <VariableReference>
           <Name>Branches</Name>
