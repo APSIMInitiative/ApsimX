@@ -440,34 +440,6 @@ namespace Models.PMF
             N = null;
         }
 
-        /// <summary>Does the water.</summary>
-        public void DoWaterArbitration()
-        {
-            double Supply = 0;
-            double Demand = 0;
-            foreach (IArbitration o in Organs)
-            {
-                Supply += o.WaterSupply;
-                Demand += o.WaterDemand;
-            }
-
-            double fraction = 1;
-            if (Demand > 0)
-                fraction = Math.Min(1.0, Supply / Demand);
-
-            foreach (IArbitration o in Organs)
-                if (o.WaterDemand > 0)
-                    o.WaterAllocation = fraction * o.WaterDemand;
-
-            double FractionUsed = 0;
-            if (Supply > 0)
-                FractionUsed = Math.Min(1.0, Demand / Supply);
-
-            foreach (IArbitration o in Organs)
-                o.DoWaterUptake(FractionUsed * Supply);
-        }
-
-
         #region Interface methods called by Plant.cs
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply</summary>
         /// <param name="Organs">The organs.</param>

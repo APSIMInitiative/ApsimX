@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using Models.Soils.Arbitrator;
 
 
 namespace Models.PMF.Organs
@@ -67,10 +68,10 @@ namespace Models.PMF.Organs
         /// <value>The water demand.</value>
         [XmlIgnore]
         virtual public double WaterDemand { get { return 0; } set { } }
-        /// <summary>Gets or sets the water supply.</summary>
-        /// <value>The water supply.</value>
-        [XmlIgnore]
-        virtual public double WaterSupply { get { return 0; } set { } }
+
+        /// <summary>Gets the water supply for the given water state.</summary>
+        virtual public double[] WaterSupply(List<ZoneWaterAndN> zones) { return null; }
+
         /// <summary>Gets or sets the water uptake.</summary>
         /// <value>The water uptake.</value>
         /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
@@ -91,7 +92,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Does the water uptake.</summary>
         /// <param name="Demand">The demand.</param>
-        virtual public void DoWaterUptake(double Demand) { }
+        virtual public void DoWaterUptake(double[] uptake) { }
         /// <summary>Gets or sets the FRGR.</summary>
         /// <value>The FRGR.</value>
         [XmlIgnore]

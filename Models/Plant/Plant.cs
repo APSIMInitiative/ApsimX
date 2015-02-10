@@ -13,12 +13,13 @@ namespace Models.PMF
     using Models.PMF.Phen;
     using Models.Soils;
     using Models.PMF.Interfaces;
+    using Models.Soils.Arbitrator;
 
     /// <summary>
     /// The generic plant model
     /// </summary>
     [Serializable]
-    public class Plant : ModelCollectionFromResource, ICrop2
+    public class Plant : ModelCollectionFromResource, ICrop
     {
         #region Class links
         /// <summary>The summary</summary>
@@ -100,6 +101,8 @@ namespace Models.PMF
         }
         /// <summary>The current cultivar definition.</summary>
         private Cultivar cultivarDefinition;
+
+
         /// <summary>MicroClimate needs FRGR.</summary>
         /// <value>The FRGR.</value>
         public double FRGR 
@@ -207,6 +210,16 @@ namespace Models.PMF
         }
 
 
+        /// <summary>
+        /// Is the plant alive?
+        /// </summary>
+        public bool IsAlive
+        { 
+            get
+            {
+                return SowingData != null;
+            }
+        }
         #endregion
 
         #region Class Events
@@ -396,6 +409,25 @@ namespace Models.PMF
                 }
             }
         }
+        /// <summary>Called when [do water arbitration].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoWaterArbitration")]
+        private void OnDoWaterArbitration(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
+        {
+
+            //Take out water process so arbitrator can do it.
+            /* if (Phenology != null)
+               if (Phenology.Emerged == true)
+               {
+                   DoWater();
+               }
+           else 
+                if (InGround == true)
+                {
+                    DoWater();
+                }  */
+        }
 
         /// <summary>Called when [do nutrient arbitration].</summary>
         /// <param name="sender">The sender.</param>
@@ -439,6 +471,91 @@ namespace Models.PMF
                 DoActualGrowth();
             }
         }
+
+
+        /// <summary>
+        /// Calculate the potential sw uptake for today
+        /// </summary>
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        {
+            double Supply = 0;
+            double Demand = 0;
+            foreach (IArbitration o in Organs)
+            {
+                double[] organSupply = o.WaterSupply(soilstate.Zones);
+                if (organSupply != null)
+                    Supply += Utility.Math.Sum(organSupply);
+                Demand += o.WaterDemand;
+            }
+
+            double FractionUsed = 0;
+            if (Supply > 0)
+                FractionUsed = Math.Min(1.0, Demand / Supply);
+
+            ZoneWaterAndN uptake = new ZoneWaterAndN();
+            uptake.Name = soilstate.Zones[0].Name;
+            uptake.Water = Utility.Math.Multiply_Value(soilstate.Zones[0].Water, FractionUsed);
+            uptake.NO3N = new double[uptake.Water.Length];
+            uptake.NH4N = new double[uptake.Water.Length];
+
+            List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+            zones.Add(uptake);
+            return zones;
+        }
+
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<ZoneWaterAndN> zones)
+        {
+            double Supply = 0;
+            double Demand = 0;
+            foreach (IArbitration o in Organs)
+            {
+                double[] organSupply = o.WaterSupply(zones);
+                if (organSupply != null)
+                    Supply += Utility.Math.Sum(organSupply);
+                Demand += o.WaterDemand;
+            }
+
+            double fraction = 1;
+            if (Demand > 0)
+                fraction = Math.Min(1.0, Supply / Demand);
+
+            foreach (IArbitration o in Organs)
+                if (o.WaterDemand > 0)
+                    o.WaterAllocation = fraction * o.WaterDemand;
+
+            double FractionUsed = 0;
+            if (Supply > 0)
+                FractionUsed = Math.Min(1.0, Demand / Supply);
+
+            foreach (IArbitration o in Organs)
+            {
+                double[] organSupply = o.WaterSupply(zones);
+                if (organSupply != null)
+                    o.DoWaterUptake(Utility.Math.Multiply_Value(organSupply, FractionUsed));
+            }
+        }
+
+        /// <summary>
+        /// Calculate the potential sw uptake for today
+        /// </summary>
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        {
+            return soilstate.Zones;  // FIX
+        }
+
+
+
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        public void SetNUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
+        {
+            
+        }
+
         #endregion
 
         #region Internal Communications.  Method calls
