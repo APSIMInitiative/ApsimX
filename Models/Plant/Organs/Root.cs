@@ -769,11 +769,7 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public override double WaterUptake
         {
-            //get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
-            get
-            {
-                return Utility.Math.Sum(Plant.uptakeWater);
-            }
+            get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
         }
 
         //[Units("mm")]

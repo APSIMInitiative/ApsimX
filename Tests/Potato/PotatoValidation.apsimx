@@ -18699,7 +18699,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Prediceted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -18719,7 +18719,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -18761,7 +18761,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -18781,7 +18781,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -24435,5 +24435,5 @@ namespace Models
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
   </Graph>
-  <ExplorerWidth>351</ExplorerWidth>
+  <ExplorerWidth>331</ExplorerWidth>
 </Simulations>

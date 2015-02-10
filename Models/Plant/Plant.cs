@@ -480,11 +480,15 @@ namespace Models.PMF
         {
             double Supply = 0;
             double Demand = 0;
+            double[] supply = null;
             foreach (IArbitration o in Organs)
             {
                 double[] organSupply = o.WaterSupply(soilstate.Zones);
                 if (organSupply != null)
+                {
+                    supply = organSupply;
                     Supply += Utility.Math.Sum(organSupply);
+                }
                 Demand += o.WaterDemand;
             }
 
@@ -494,7 +498,7 @@ namespace Models.PMF
 
             ZoneWaterAndN uptake = new ZoneWaterAndN();
             uptake.Name = soilstate.Zones[0].Name;
-            uptake.Water = Utility.Math.Multiply_Value(soilstate.Zones[0].Water, FractionUsed);
+            uptake.Water = Utility.Math.Multiply_Value(supply, FractionUsed);
             uptake.NO3N = new double[uptake.Water.Length];
             uptake.NH4N = new double[uptake.Water.Length];
 
@@ -508,15 +512,11 @@ namespace Models.PMF
         /// </summary>
         public void SetSWUptake(List<ZoneWaterAndN> zones)
         {
-            double Supply = 0;
+            double[] uptake = zones[0].Water;
+            double Supply = Utility.Math.Sum(uptake);
             double Demand = 0;
             foreach (IArbitration o in Organs)
-            {
-                double[] organSupply = o.WaterSupply(zones);
-                if (organSupply != null)
-                    Supply += Utility.Math.Sum(organSupply);
                 Demand += o.WaterDemand;
-            }
 
             double fraction = 1;
             if (Demand > 0)
@@ -526,16 +526,7 @@ namespace Models.PMF
                 if (o.WaterDemand > 0)
                     o.WaterAllocation = fraction * o.WaterDemand;
 
-            double FractionUsed = 0;
-            if (Supply > 0)
-                FractionUsed = Math.Min(1.0, Demand / Supply);
-
-            foreach (IArbitration o in Organs)
-            {
-                double[] organSupply = o.WaterSupply(zones);
-                if (organSupply != null)
-                    o.DoWaterUptake(Utility.Math.Multiply_Value(organSupply, FractionUsed));
-            }
+            Root.DoWaterUptake(uptake);
         }
 
         /// <summary>
