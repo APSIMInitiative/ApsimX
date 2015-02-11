@@ -2415,7 +2415,7 @@ namespace Models
             <BoronUnits>HotWater</BoronUnits>
           </Analysis>
           <Sample>
-            <Name>Sample</Name>
+            <Name>InitialN</Name>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -2567,6 +2567,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -2578,8 +2579,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -2600,12 +2603,14 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -2623,12 +2628,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -2645,6 +2652,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -2654,6 +2662,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -2686,9 +2695,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -2759,7 +2770,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -2770,7 +2782,8 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
+              <string>130-160</string>
+              <string>160-190</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -2782,11 +2795,13 @@ namespace Models
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
+              <double>0.49</double>
             </OC>
             <FBiom>
               <double>0.04</double>
               <double>0.02</double>
               <double>0.015</double>
+              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -2804,6 +2819,7 @@ namespace Models
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
+              <double>0.93</double>
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
@@ -2818,7 +2834,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -2830,12 +2847,13 @@ namespace Models
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
+              <double>6.8</double>
             </PH>
             <PHUnits>Water</PHUnits>
             <BoronUnits>HotWater</BoronUnits>
           </Analysis>
           <Sample>
-            <Name>Sample</Name>
+            <Name>InitialN</Name>
             <Thickness>
               <double>100</double>
               <double>100</double>
@@ -2845,7 +2863,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -2857,10 +2876,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -2886,18 +2907,20 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.17</double>
+              <double>0.17</double>
+              <double>0.212</double>
+              <double>0.208</double>
+              <double>0.21</double>
+              <double>0.213</double>
+              <double>0.229</double>
+              <double>0.23</double>
+              <double>0.244</double>
+              <double>0.233</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -3317,15 +3340,15 @@ namespace Models
               <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
+              <double>0.17</double>
+              <double>0.17</double>
               <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.204</double>
+              <double>0.183</double>
+              <double>0.191</double>
+              <double>0.196</double>
+              <double>0.201</double>
+              <double>0.209</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -3737,15 +3760,15 @@ namespace Models
               <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
+              <double>0.256</double>
+              <double>0.256</double>
               <double>0.225</double>
-              <double>0.234</double>
+              <double>0.203</double>
+              <double>0.213</double>
+              <double>0.229</double>
+              <double>0.243</double>
+              <double>0.239</double>
+              <double>0.24</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -3799,6 +3822,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -3810,8 +3834,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -3833,11 +3859,13 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -3855,12 +3883,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -3877,6 +3907,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -3886,6 +3917,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -3919,8 +3951,10 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -3992,6 +4026,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -4003,6 +4038,7 @@ namespace Models
               <string>90-110</string>
               <string>110-130</string>
               <string>130-150</string>
+              <string>150-170</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -4010,6 +4046,7 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
+              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -4025,6 +4062,7 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
+              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -4033,6 +4071,7 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
+              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
@@ -4051,6 +4090,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -4059,6 +4099,7 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
+              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
@@ -4078,6 +4119,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -4089,10 +4131,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -4119,17 +4163,19 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
+              <double>0.164</double>
+              <double>0.164</double>
+              <double>0.21</double>
+              <double>0.168</double>
+              <double>0.189</double>
+              <double>0.186</double>
+              <double>0.194</double>
+              <double>0.191</double>
               <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.196</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -4183,6 +4229,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -4194,8 +4241,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -4216,12 +4265,14 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -4239,12 +4290,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -4261,6 +4314,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -4270,6 +4324,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -4302,9 +4357,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -4375,7 +4432,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -4386,7 +4444,8 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
+              <string>130-160</string>
+              <string>160-190</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -4398,11 +4457,13 @@ namespace Models
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
+              <double>0.49</double>
             </OC>
             <FBiom>
               <double>0.04</double>
               <double>0.02</double>
               <double>0.015</double>
+              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -4420,6 +4481,7 @@ namespace Models
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
+              <double>0.93</double>
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
@@ -4434,7 +4496,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -4443,6 +4506,7 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
+              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
@@ -4461,7 +4525,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -4473,10 +4538,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -4502,18 +4569,20 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SW>
+              <double>0.179</double>
+              <double>0.179</double>
+              <double>0.198</double>
+              <double>0.188</double>
+              <double>0.187</double>
+              <double>0.19</double>
               <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.213</double>
+              <double>0.22</double>
+              <double>0.204</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -4559,6 +4628,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -4570,8 +4640,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -4593,11 +4665,13 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -4615,12 +4689,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -4637,6 +4713,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -4646,6 +4723,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -4679,8 +4757,10 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -4752,6 +4832,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -4763,6 +4844,7 @@ namespace Models
               <string>90-110</string>
               <string>110-130</string>
               <string>130-150</string>
+              <string>150-170</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -4770,6 +4852,7 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
+              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -4785,6 +4868,7 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
+              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -4793,6 +4877,7 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
+              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
@@ -4811,6 +4896,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -4819,6 +4905,7 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
+              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
@@ -4838,6 +4925,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -4849,10 +4937,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -4879,17 +4969,19 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.155</double>
+              <double>0.155</double>
+              <double>0.213</double>
+              <double>0.243</double>
+              <double>0.212</double>
+              <double>0.2</double>
+              <double>0.215</double>
+              <double>0.236</double>
+              <double>0.247</double>
+              <double>0.247</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -4934,7 +5026,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -4945,10 +5036,8 @@ namespace Models
                 <double>0.04</double>
                 <double>0.03</double>
                 <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -4968,13 +5057,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -4990,14 +5077,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -5012,7 +5097,6 @@ namespace Models
               <double>0.3</double>
               <double>0.31</double>
               <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -5022,7 +5106,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
               <double>0.37</double>
             </SAT>
           </Water>
@@ -5054,10 +5137,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -5127,7 +5208,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -5138,7 +5218,6 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -5146,7 +5225,6 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
-              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -5160,7 +5238,6 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
-              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -5169,7 +5246,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
             </FInert>
@@ -5186,7 +5262,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -5195,7 +5270,6 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
-              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
             </PH>
@@ -5213,7 +5287,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -5224,12 +5297,10 @@ namespace Models
               <double>5</double>
               <double>2</double>
               <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -5254,18 +5325,16 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.208</double>
+              <double>0.208</double>
+              <double>0.215</double>
+              <double>0.184</double>
+              <double>0.211</double>
+              <double>0.226</double>
+              <double>0.228</double>
+              <double>0.22</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -5319,6 +5388,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -5330,8 +5400,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -5352,12 +5424,14 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -5375,12 +5449,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -5397,6 +5473,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -5406,6 +5483,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -5438,9 +5516,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -5511,7 +5591,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -5522,7 +5603,8 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
+              <string>130-160</string>
+              <string>160-190</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -5534,11 +5616,13 @@ namespace Models
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
+              <double>0.49</double>
             </OC>
             <FBiom>
               <double>0.04</double>
               <double>0.02</double>
               <double>0.015</double>
+              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -5556,6 +5640,7 @@ namespace Models
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
+              <double>0.93</double>
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
@@ -5570,7 +5655,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -5579,6 +5665,7 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
+              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
@@ -5597,7 +5684,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -5609,10 +5697,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -5638,18 +5728,20 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.183</double>
+              <double>0.183</double>
+              <double>0.254</double>
+              <double>0.232</double>
+              <double>0.216</double>
+              <double>0.201</double>
+              <double>0.21</double>
+              <double>0.228</double>
+              <double>0.231</double>
+              <double>0.226</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -5694,7 +5786,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -5705,10 +5796,8 @@ namespace Models
                 <double>0.04</double>
                 <double>0.03</double>
                 <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -5728,13 +5817,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -5750,14 +5837,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -5772,7 +5857,6 @@ namespace Models
               <double>0.3</double>
               <double>0.31</double>
               <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -5782,7 +5866,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
               <double>0.37</double>
             </SAT>
           </Water>
@@ -5814,10 +5897,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -5887,7 +5968,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -5898,7 +5978,6 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -5906,7 +5985,6 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
-              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -5920,7 +5998,6 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
-              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -5929,7 +6006,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
             </FInert>
@@ -5946,7 +6022,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -5957,18 +6032,16 @@ namespace Models
               <double>6.7</double>
               <double>6.8</double>
               <double>6.8</double>
-              <double>6.8</double>
             </PH>
             <PHUnits>Water</PHUnits>
             <BoronUnits>HotWater</BoronUnits>
           </Analysis>
           <Sample>
-            <Name>Sample</Name>
+            <Name>InitialN</Name>
             <Thickness>
               <double>100</double>
               <double>100</double>
               <double>100</double>
-              <double>200</double>
               <double>200</double>
               <double>200</double>
               <double>200</double>
@@ -5984,12 +6057,10 @@ namespace Models
               <double>5</double>
               <double>2</double>
               <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -6014,18 +6085,16 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
+              <double>0.151</double>
+              <double>0.151</double>
               <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.193</double>
+              <double>0.194</double>
+              <double>0.192</double>
+              <double>0.192</double>
+              <double>0.209</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -6104,7 +6173,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
             </Thickness>
             <BD>
               <double>1.35</double>
@@ -6120,10 +6189,10 @@ namespace Models
             <AirDry>
               <double>0.04</double>
               <double>0.14</double>
-              <double>0.15</double>
-              <double>0.16</double>
-              <double>0.18</double>
-              <double>0.18</double>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.17</double>
+              <double>0.17</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -6148,7 +6217,7 @@ namespace Models
               <double>0.3</double>
               <double>0.31</double>
               <double>0.32</double>
-              <double>0.31</double>
+              <double>0.32</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -6190,7 +6259,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
             </Thickness>
             <SWCON>
               <double>0.5</double>
@@ -6263,7 +6332,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -6274,7 +6343,7 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
+              <string>130-160</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -6322,7 +6391,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -6349,7 +6418,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -6360,7 +6429,7 @@ namespace Models
               <double>5</double>
               <double>2</double>
               <double>2</double>
-              <double>1.5</double>
+              <double>2</double>
             </NO3>
             <NH4>
               <double>5</double>
@@ -6390,18 +6459,18 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
+              <double>0.146</double>
+              <double>0.146</double>
+              <double>0.147</double>
+              <double>0.158</double>
+              <double>0.177</double>
+              <double>0.177</double>
+              <double>0.187</double>
+              <double>0.202</double>
               <double>0.225</double>
-              <double>0.234</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -6446,7 +6515,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -6457,10 +6525,8 @@ namespace Models
                 <double>0.04</double>
                 <double>0.03</double>
                 <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -6480,13 +6546,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -6502,14 +6566,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -6524,7 +6586,6 @@ namespace Models
               <double>0.3</double>
               <double>0.31</double>
               <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -6534,7 +6595,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
               <double>0.37</double>
             </SAT>
           </Water>
@@ -6566,10 +6626,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -6639,7 +6697,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -6650,7 +6707,6 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -6658,7 +6714,6 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
-              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -6672,7 +6727,6 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
-              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -6681,7 +6735,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
             </FInert>
@@ -6698,7 +6751,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -6707,7 +6759,6 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
-              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
             </PH>
@@ -6725,7 +6776,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -6736,12 +6786,10 @@ namespace Models
               <double>5</double>
               <double>2</double>
               <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -6766,18 +6814,16 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.164</double>
+              <double>0.164</double>
+              <double>0.189</double>
+              <double>0.173</double>
+              <double>0.186</double>
+              <double>0.202</double>
+              <double>0.221</double>
+              <double>0.208</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -6823,6 +6869,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -6834,8 +6881,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -6856,12 +6905,14 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -6879,12 +6930,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -6901,6 +6954,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -6910,6 +6964,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -6942,9 +6997,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -7015,7 +7072,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -7026,7 +7084,8 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
+              <string>130-160</string>
+              <string>160-190</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -7038,11 +7097,13 @@ namespace Models
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
+              <double>0.49</double>
             </OC>
             <FBiom>
               <double>0.04</double>
               <double>0.02</double>
               <double>0.015</double>
+              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -7060,6 +7121,7 @@ namespace Models
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
+              <double>0.93</double>
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
@@ -7074,7 +7136,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -7083,6 +7146,7 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
+              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
@@ -7101,7 +7165,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -7113,10 +7178,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -7142,18 +7209,20 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
+              <double>0.157</double>
+              <double>0.157</double>
+              <double>0.181</double>
               <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.21</double>
+              <double>0.221</double>
+              <double>0.228</double>
+              <double>0.24</double>
+              <double>0.236</double>
+              <double>0.224</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -7199,6 +7268,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -7210,8 +7280,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -7233,11 +7305,13 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -7255,12 +7329,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -7277,6 +7353,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.32</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -7286,6 +7363,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -7319,8 +7397,10 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -7392,6 +7472,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -7403,6 +7484,7 @@ namespace Models
               <string>90-110</string>
               <string>110-130</string>
               <string>130-150</string>
+              <string>150-170</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -7410,6 +7492,7 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
+              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -7425,6 +7508,7 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
+              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -7433,6 +7517,7 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
+              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
@@ -7451,6 +7536,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -7459,6 +7545,7 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
+              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
@@ -7478,6 +7565,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -7489,10 +7577,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>2</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -7519,17 +7609,19 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.227</double>
+              <double>0.227</double>
+              <double>0.188</double>
+              <double>0.181</double>
+              <double>0.183</double>
+              <double>0.189</double>
+              <double>0.18</double>
+              <double>0.185</double>
+              <double>0.206</double>
+              <double>0.201</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -7583,6 +7675,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -7594,8 +7687,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -7616,12 +7711,14 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -7639,12 +7736,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -7661,6 +7760,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -7670,6 +7770,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -7702,9 +7803,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -7775,7 +7878,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -7786,7 +7890,8 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
+              <string>130-160</string>
+              <string>160-190</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -7798,11 +7903,13 @@ namespace Models
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
+              <double>0.49</double>
             </OC>
             <FBiom>
               <double>0.04</double>
               <double>0.02</double>
               <double>0.015</double>
+              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -7820,6 +7927,7 @@ namespace Models
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
+              <double>0.93</double>
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
@@ -7834,7 +7942,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -7843,6 +7952,7 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
+              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
@@ -7861,7 +7971,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -7873,10 +7984,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -7902,18 +8015,20 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
+              <double>300</double>
+              <double>300</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
+              <double>0.181</double>
+              <double>0.181</double>
               <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
+              <double>0.214</double>
+              <double>0.239</double>
+              <double>0.207</double>
               <double>0.234</double>
+              <double>0.231</double>
+              <double>0.252</double>
+              <double>0.272</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -8289,15 +8404,15 @@ namespace Models
               <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.183</double>
+              <double>0.183</double>
+              <double>0.23</double>
+              <double>0.232</double>
+              <double>0.216</double>
+              <double>0.205</double>
+              <double>0.209</double>
+              <double>0.188</double>
+              <double>0.201</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -8351,6 +8466,7 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
+                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -8362,8 +8478,10 @@ namespace Models
                 <double>0.03</double>
                 <double>0.02</double>
                 <double>0.01</double>
+                <double>0.01</double>
               </KL>
               <XF>
+                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -8385,11 +8503,13 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
+              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -8407,12 +8527,14 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
+              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
+              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -8429,6 +8551,7 @@ namespace Models
               <double>0.31</double>
               <double>0.32</double>
               <double>0.31</double>
+              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -8438,6 +8561,7 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
+              <double>0.37</double>
               <double>0.37</double>
               <double>0.37</double>
             </SAT>
@@ -8471,8 +8595,10 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <SWCON>
+              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -8544,6 +8670,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -8555,6 +8682,7 @@ namespace Models
               <string>90-110</string>
               <string>110-130</string>
               <string>130-150</string>
+              <string>150-170</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -8562,6 +8690,7 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
+              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -8577,6 +8706,7 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
+              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -8585,6 +8715,7 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
+              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
@@ -8603,6 +8734,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -8611,6 +8743,7 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
+              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
@@ -8630,6 +8763,7 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -8641,10 +8775,12 @@ namespace Models
               <double>2</double>
               <double>2</double>
               <double>1.5</double>
+              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
+              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -8671,17 +8807,19 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
+              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.233</double>
+              <double>0.233</double>
+              <double>0.268</double>
+              <double>0.232</double>
+              <double>0.229</double>
+              <double>0.216</double>
+              <double>0.22</double>
+              <double>0.221</double>
+              <double>0.209</double>
+              <double>0.194</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -8726,7 +8864,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -8737,10 +8874,8 @@ namespace Models
                 <double>0.04</double>
                 <double>0.03</double>
                 <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -8760,13 +8895,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -8782,14 +8915,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -8804,7 +8935,6 @@ namespace Models
               <double>0.3</double>
               <double>0.31</double>
               <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -8814,7 +8944,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
               <double>0.37</double>
             </SAT>
           </Water>
@@ -8846,10 +8975,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -8919,7 +9046,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -8930,7 +9056,6 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -8938,7 +9063,6 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
-              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -8952,7 +9076,6 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
-              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -8961,7 +9084,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
             </FInert>
@@ -8978,7 +9100,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -8987,7 +9108,6 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
-              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
             </PH>
@@ -9005,7 +9125,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -9016,12 +9135,10 @@ namespace Models
               <double>5</double>
               <double>2</double>
               <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -9046,18 +9163,16 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
               <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.199</double>
+              <double>0.209</double>
+              <double>0.213</double>
+              <double>0.201</double>
+              <double>0.205</double>
+              <double>0.214</double>
+              <double>0.232</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -9109,8 +9224,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -9120,12 +9233,8 @@ namespace Models
                 <double>0.06</double>
                 <double>0.04</double>
                 <double>0.03</double>
-                <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -9143,15 +9252,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -9165,16 +9270,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -9187,8 +9288,6 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
               <double>0.31</double>
-              <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -9198,8 +9297,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
-              <double>0.37</double>
             </SAT>
           </Water>
           <SoilWater>
@@ -9229,12 +9326,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -9302,8 +9395,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -9313,8 +9404,6 @@ namespace Models
               <string>50-70</string>
               <string>70-90</string>
               <string>90-110</string>
-              <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -9324,15 +9413,11 @@ namespace Models
               <double>0.4</double>
               <double>0.49</double>
               <double>0.49</double>
-              <double>0.49</double>
-              <double>0.49</double>
             </OC>
             <FBiom>
               <double>0.04</double>
               <double>0.02</double>
               <double>0.015</double>
-              <double>0.01</double>
-              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -9345,8 +9430,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
-              <double>0.93</double>
               <double>0.93</double>
             </FInert>
             <OCUnits>Total</OCUnits>
@@ -9361,8 +9444,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -9371,8 +9452,6 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
-              <double>6.8</double>
-              <double>6.8</double>
               <double>6.8</double>
             </PH>
             <PHUnits>Water</PHUnits>
@@ -9388,8 +9467,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -9399,14 +9476,10 @@ namespace Models
               <double>5</double>
               <double>5</double>
               <double>2</double>
-              <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -9429,19 +9502,15 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.213</double>
+              <double>0.213</double>
+              <double>0.229</double>
+              <double>0.176</double>
+              <double>0.181</double>
+              <double>0.188</double>
+              <double>0.184</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -9485,8 +9554,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -9496,12 +9563,8 @@ namespace Models
                 <double>0.06</double>
                 <double>0.04</double>
                 <double>0.03</double>
-                <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -9519,15 +9582,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -9541,16 +9600,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -9563,8 +9618,6 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
               <double>0.31</double>
-              <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -9574,8 +9627,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
-              <double>0.37</double>
             </SAT>
           </Water>
           <SoilWater>
@@ -9605,12 +9656,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -9678,8 +9725,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -9689,8 +9734,6 @@ namespace Models
               <string>50-70</string>
               <string>70-90</string>
               <string>90-110</string>
-              <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -9700,15 +9743,11 @@ namespace Models
               <double>0.4</double>
               <double>0.49</double>
               <double>0.49</double>
-              <double>0.49</double>
-              <double>0.49</double>
             </OC>
             <FBiom>
               <double>0.04</double>
               <double>0.02</double>
               <double>0.015</double>
-              <double>0.01</double>
-              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -9721,8 +9760,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
-              <double>0.93</double>
               <double>0.93</double>
             </FInert>
             <OCUnits>Total</OCUnits>
@@ -9737,8 +9774,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -9747,8 +9782,6 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
-              <double>6.8</double>
-              <double>6.8</double>
               <double>6.8</double>
             </PH>
             <PHUnits>Water</PHUnits>
@@ -9764,8 +9797,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -9775,14 +9806,10 @@ namespace Models
               <double>5</double>
               <double>5</double>
               <double>2</double>
-              <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -9805,19 +9832,15 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
+              <double>0.17</double>
+              <double>0.17</double>
+              <double>0.182</double>
+              <double>0.208</double>
               <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.187</double>
+              <double>0.201</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -9906,7 +9929,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -9917,10 +9939,8 @@ namespace Models
                 <double>0.04</double>
                 <double>0.03</double>
                 <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -9940,13 +9960,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -9962,14 +9980,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -9984,7 +10000,6 @@ namespace Models
               <double>0.3</double>
               <double>0.31</double>
               <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -9994,7 +10009,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
               <double>0.37</double>
             </SAT>
           </Water>
@@ -10026,10 +10040,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -10099,7 +10111,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -10110,7 +10121,6 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -10118,7 +10128,6 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
-              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -10132,7 +10141,6 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
-              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -10141,7 +10149,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
             </FInert>
@@ -10158,7 +10165,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -10167,7 +10173,6 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
-              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
             </PH>
@@ -10185,7 +10190,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -10196,12 +10200,10 @@ namespace Models
               <double>5</double>
               <double>2</double>
               <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -10226,18 +10228,16 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.238</double>
+              <double>0.238</double>
+              <double>0.287</double>
+              <double>0.244</double>
+              <double>0.2</double>
+              <double>0.194</double>
+              <double>0.202</double>
+              <double>0.194</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -10334,7 +10334,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -10345,10 +10344,8 @@ namespace Models
                 <double>0.04</double>
                 <double>0.03</double>
                 <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -10368,13 +10365,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -10390,14 +10385,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -10412,7 +10405,6 @@ namespace Models
               <double>0.3</double>
               <double>0.31</double>
               <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -10422,7 +10414,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
               <double>0.37</double>
             </SAT>
           </Water>
@@ -10454,10 +10445,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -10527,7 +10516,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -10538,7 +10526,6 @@ namespace Models
               <string>70-90</string>
               <string>90-110</string>
               <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -10546,7 +10533,6 @@ namespace Models
               <double>0.74</double>
               <double>0.56</double>
               <double>0.4</double>
-              <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
               <double>0.49</double>
@@ -10560,7 +10546,6 @@ namespace Models
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
-              <double>0.01</double>
             </FBiom>
             <FInert>
               <double>0.39</double>
@@ -10569,7 +10554,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
               <double>0.93</double>
               <double>0.93</double>
             </FInert>
@@ -10586,7 +10570,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -10595,7 +10578,6 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
-              <double>6.8</double>
               <double>6.8</double>
               <double>6.8</double>
             </PH>
@@ -10613,7 +10595,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -10624,12 +10605,10 @@ namespace Models
               <double>5</double>
               <double>2</double>
               <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -10654,18 +10633,16 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.193</double>
+              <double>0.193</double>
+              <double>0.203</double>
+              <double>0.192</double>
+              <double>0.186</double>
+              <double>0.185</double>
+              <double>0.194</double>
+              <double>0.192</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -10753,8 +10730,6 @@ namespace Models
                 <double>0.18</double>
                 <double>0.18</double>
                 <double>0.18</double>
-                <double>0.18</double>
-                <double>0.18</double>
               </LL>
               <KL>
                 <double>0.08</double>
@@ -10764,12 +10739,8 @@ namespace Models
                 <double>0.06</double>
                 <double>0.04</double>
                 <double>0.03</double>
-                <double>0.02</double>
-                <double>0.01</double>
               </KL>
               <XF>
-                <double>1</double>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
                 <double>1</double>
@@ -10787,15 +10758,11 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <BD>
               <double>1.35</double>
               <double>1.35</double>
               <double>1.35</double>
-              <double>1.4</double>
-              <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
               <double>1.4</double>
@@ -10809,16 +10776,12 @@ namespace Models
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
-              <double>0.18</double>
-              <double>0.18</double>
             </AirDry>
             <LL15>
               <double>0.14</double>
               <double>0.14</double>
               <double>0.15</double>
               <double>0.16</double>
-              <double>0.18</double>
-              <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
               <double>0.18</double>
@@ -10831,8 +10794,6 @@ namespace Models
               <double>0.3</double>
               <double>0.3</double>
               <double>0.31</double>
-              <double>0.32</double>
-              <double>0.31</double>
             </DUL>
             <SAT>
               <double>0.3</double>
@@ -10842,8 +10803,6 @@ namespace Models
               <double>0.34</double>
               <double>0.35</double>
               <double>0.36</double>
-              <double>0.37</double>
-              <double>0.37</double>
             </SAT>
           </Water>
           <SoilWater>
@@ -10873,12 +10832,8 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <SWCON>
-              <double>0.5</double>
-              <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
               <double>0.5</double>
@@ -10946,8 +10901,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <Depth>
               <string>0-10</string>
@@ -10957,8 +10910,6 @@ namespace Models
               <string>50-70</string>
               <string>70-90</string>
               <string>90-110</string>
-              <string>110-130</string>
-              <string>130-150</string>
             </Depth>
             <OC>
               <double>1.15</double>
@@ -10968,15 +10919,11 @@ namespace Models
               <double>0.4</double>
               <double>0.49</double>
               <double>0.49</double>
-              <double>0.49</double>
-              <double>0.49</double>
             </OC>
             <FBiom>
               <double>0.04</double>
               <double>0.02</double>
               <double>0.015</double>
-              <double>0.01</double>
-              <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
               <double>0.01</double>
@@ -10989,8 +10936,6 @@ namespace Models
               <double>0.62</double>
               <double>0.74</double>
               <double>0.83</double>
-              <double>0.93</double>
-              <double>0.93</double>
               <double>0.93</double>
             </FInert>
             <OCUnits>Total</OCUnits>
@@ -11005,8 +10950,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <PH>
               <double>6</double>
@@ -11015,8 +10958,6 @@ namespace Models
               <double>6.2</double>
               <double>6.5</double>
               <double>6.7</double>
-              <double>6.8</double>
-              <double>6.8</double>
               <double>6.8</double>
             </PH>
             <PHUnits>Water</PHUnits>
@@ -11032,8 +10973,6 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <NO3>
               <double>15</double>
@@ -11043,14 +10982,10 @@ namespace Models
               <double>5</double>
               <double>5</double>
               <double>2</double>
-              <double>2</double>
-              <double>1.5</double>
             </NO3>
             <NH4>
               <double>5</double>
               <double>2.5</double>
-              <double>1.5</double>
-              <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
               <double>1.5</double>
@@ -11073,19 +11008,15 @@ namespace Models
               <double>200</double>
               <double>200</double>
               <double>200</double>
-              <double>200</double>
-              <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
               <double>0.197</double>
-              <double>0.199</double>
+              <double>0.197</double>
               <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.194</double>
+              <double>0.187</double>
+              <double>0.184</double>
+              <double>0.197</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
@@ -11505,15 +11436,15 @@ namespace Models
               <double>200</double>
             </Thickness>
             <SW>
-              <double>0.196</double>
-              <double>0.196</double>
-              <double>0.234</double>
-              <double>0.224</double>
-              <double>0.197</double>
-              <double>0.199</double>
-              <double>0.219</double>
-              <double>0.225</double>
-              <double>0.234</double>
+              <double>0.215</double>
+              <double>0.215</double>
+              <double>0.261</double>
+              <double>0.241</double>
+              <double>0.23</double>
+              <double>0.229</double>
+              <double>0.222</double>
+              <double>0.198</double>
+              <double>0.209</double>
             </SW>
             <NO3Units>ppm</NO3Units>
             <NH4Units>ppm</NH4Units>
