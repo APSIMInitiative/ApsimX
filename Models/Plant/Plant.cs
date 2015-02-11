@@ -382,10 +382,10 @@ namespace Models.PMF
             }
             InitialiseInterfaceTypes();
         }
+        
         /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
@@ -422,56 +422,6 @@ namespace Models.PMF
                 }
             }
         }
-        /// <summary>Called when [do water arbitration].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoWaterArbitration")]
-        private void OnDoWaterArbitration(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
-        {
-
-            //Take out water process so arbitrator can do it.
-            /* if (Phenology != null)
-               if (Phenology.Emerged == true)
-               {
-                   DoWater();
-               }
-           else 
-                if (InGround == true)
-                {
-                    DoWater();
-                }  */
-        }
-
-        /// <summary>Called when [do nutrient arbitration].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoNutrientArbitration")]
-        private void OnDoNutrientArbitration(object sender, EventArgs e)
-        {
-            if ((PlantInGround) && (Arbitrator != null))
-            {
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
-                    {
-
-                        //Arbitrator.DoWaterLimitedDMAllocations();
-                        //Arbitrator.DoNutrientDemandSetUp();
-                        //Arbitrator.SetNutrientUptake();
-                        //Arbitrator.DoNutrientAllocations();
-                        //Arbitrator.DoNutrientLimitedGrowth();
-                    }
-                }
-                else
-                {
-                    //Arbitrator.DoWaterLimitedDMAllocations();
-                    //Arbitrator.DoNutrientDemandSetUp();
-                    //Arbitrator.SetNutrientUptake();
-                    //Arbitrator.DoNutrientAllocations();
-                    //Arbitrator.DoNutrientLimitedGrowth();
-                }
-            }
-        }
 
         /// <summary>Called when [do actual plant growth].</summary>
         /// <param name="sender">The sender.</param>
@@ -501,7 +451,6 @@ namespace Models.PMF
                 DoActualGrowth();
             }
         }
-
 
         /// <summary>
         /// Calculate the potential sw uptake for today
@@ -566,8 +515,6 @@ namespace Models.PMF
         {
             return soilstate.Zones;  // FIX
         }
-
-
 
         /// <summary>
         /// Set the sw uptake for today

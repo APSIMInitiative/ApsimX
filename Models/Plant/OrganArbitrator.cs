@@ -599,17 +599,17 @@ namespace Models.PMF
             {
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.ReallocationSupply[i] = Supply.Reallocation;
-                BAT.UptakeSupply[i] = Supply.Uptake;
+                //BAT.UptakeSupply[i] = Supply.Uptake;
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
                 BAT.Start += Organs[i].TotalN;
             }
 
             BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
-            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
             BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
             BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
-            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
+            //BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
             
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -661,8 +661,9 @@ namespace Models.PMF
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.UptakeSupply[i] = Supply.Uptake;
             }
-        
+            
             BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
         }
         /// <summary>Does the re allocation.</summary>
         /// <param name="Organs">The organs.</param>
