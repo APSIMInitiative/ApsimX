@@ -64,6 +64,12 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         virtual public BiomassPoolType NDemand { get { return new BiomassPoolType(); } set { } }
 
+        /// <summary>Gets the NO3 supply for the given N state.</summary>
+        virtual public double[] NO3NSupply(List<ZoneWaterAndN> zones) { return null; }
+
+        /// <summary>Gets the NH4 supply for the given N state.</summary>
+        virtual public double[] NH4NSupply(List<ZoneWaterAndN> zones) { return null; }
+
         /// <summary>Gets or sets the water demand.</summary>
         /// <value>The water demand.</value>
         [XmlIgnore]

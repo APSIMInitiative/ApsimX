@@ -5,6 +5,7 @@ using Models.Core;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using Models.Soils.Arbitrator;
 
 namespace Models.PMF
 {
@@ -410,6 +411,7 @@ namespace Models.PMF
                     return 0.0;
             }
         }
+        
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
         public double DeltaWt
@@ -419,6 +421,14 @@ namespace Models.PMF
                 return DM.End - DM.Start;
             }
         }
+
+        /// <summary>Gets and Sets NO3 Supply</summary>
+        /// <value>NO3 supplies from each soil layer</value>
+        public double[] NO3NSupply { get; set; }
+
+        /// <summary>Gets and Sets NH4 Supply</summary>
+        /// <value>NH4 supplies from each soil layer</value>
+        public double[] NH4NSupply { get; set; }
 
         //FixME Currently all models are N aware but none are P or K aware.  More programming is needed to make this work! 
         /// <summary>The n aware</summary>
@@ -460,6 +470,12 @@ namespace Models.PMF
                 DoNutrientSetUp(Organs, ref N);
                 DoReAllocation(Organs, N, NArbitrationOption);
         }
+
+        public void DoNutrientUptake(SoilState soilstate)
+        {
+            DoUptakeCalculations(Organs, ref N, soilstate);
+        }
+        
         /// <summary>Sets the nutrient uptake.</summary>
         /// <param name="Organs">The organs.</param>
         public void SetNutrientUptake()
@@ -646,6 +662,24 @@ namespace Models.PMF
                     BAT.RelativeMetabolicDemand[i] = BAT.MetabolicDemand[i] / BAT.TotalMetabolicDemand;
                 if (BAT.TotalNonStructuralDemand > 0)
                     BAT.RelativeNonStructuralDemand[i] = BAT.NonStructuralDemand[i] / BAT.TotalNonStructuralDemand;
+            }
+        }
+
+        virtual public void DoUptakeCalculations(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
+        {
+            foreach (IArbitration o in Organs)
+            {
+                double[] organNO3Supply = o.NO3NSupply(soilstate.Zones);
+                if (organNO3Supply != null)
+                {
+                    NO3NSupply = organNO3Supply;
+                }
+
+                double[] organNH4Supply = o.NH4NSupply(soilstate.Zones);
+                if (organNH4Supply != null)
+                {
+                    NH4NSupply = organNH4Supply;
+                }
             }
         }
         /// <summary>Does the nutrient uptake set up.</summary>

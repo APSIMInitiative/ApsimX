@@ -474,7 +474,7 @@ namespace Models.PMF
             double FractionUsed = 0;
             if (Supply > 0)
                 FractionUsed = Math.Min(1.0, Demand / Supply);
-
+            
             ZoneWaterAndN uptake = new ZoneWaterAndN();
             uptake.Name = soilstate.Zones[0].Name;
             uptake.Water = Utility.Math.Multiply_Value(supply, FractionUsed);
@@ -513,7 +513,36 @@ namespace Models.PMF
         /// </summary>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            return soilstate.Zones;  // FIX
+            ZoneWaterAndN uptake = new ZoneWaterAndN();
+                    
+            if (Phenology != null)
+                if (Phenology.Emerged == true)
+                {
+                    Arbitrator.DoNutrientUptake(soilstate);
+
+                    //Pack results into uptake structure
+                    uptake.NO3N = Arbitrator.NO3NSupply;
+                    uptake.NH4N = Arbitrator.NH4NSupply;
+
+                    //Sending zeros until everything is working internally and the root N uptake is turned off
+                    for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
+                    for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                }
+                else //Uptakes are zero
+                {
+                    uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                    for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
+                    uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                    for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                }
+
+            uptake.Name = soilstate.Zones[0].Name;
+            uptake.Water = new double[uptake.NO3N.Length];
+
+            List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+            zones.Add(uptake);
+            return zones;
+
         }
 
         /// <summary>

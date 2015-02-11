@@ -648,6 +648,75 @@ namespace Models.PMF.Organs
                     return new BiomassSupplyType();
             }
         }
+
+        /// <summary>Gets the nitrogne supply.</summary>
+        /// <value>The water supply.</value>
+        public override double[] NO3NSupply(List<ZoneWaterAndN> zones)
+        {
+            if (zones.Count != 1)
+                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+
+            double[] NO3 = zones[0].NO3N;
+
+            double[] NO3Supply = new double[Soil.Thickness.Length];
+
+            double[] no3ppm = new double[Soil.Thickness.Length];
+
+            double NO3uptake = 0;
+           
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+            {
+                if (LayerLive[layer].Wt > 0)
+                {
+                    double swaf = 0;
+                    swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                    no3ppm[layer] = NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
+                    NO3Supply[layer] = Math.Min(NO3[layer] * KNO3 * no3ppm[layer] * swaf, (MaxDailyNUptake.Value - NO3uptake));
+                    NO3uptake += NO3Supply[layer];
+                }
+                else
+                {
+                    NO3Supply[layer] = 0;
+                }
+            }
+
+            return NO3Supply;
+        }
+        /// <summary>Gets the nitrogne supply.</summary>
+        /// <value>The water supply.</value>
+        public override double[] NH4NSupply(List<ZoneWaterAndN> zones)
+        {
+            if (zones.Count != 1)
+                throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
+
+            double[] NH4 = zones[0].NH4N;
+
+            double[] NH4Supply = new double[Soil.Thickness.Length];
+
+            double[] NH4ppm = new double[Soil.Thickness.Length];
+
+            double NH4uptake = 0;
+
+            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+            {
+                if (LayerLive[layer].Wt > 0)
+                {
+                    double swaf = 0;
+                    swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+                    swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                    NH4ppm[layer] = NH4Supply[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
+                    NH4Supply[layer] = Math.Min(NH4[layer] * KNH4 * NH4ppm[layer] * swaf, (MaxDailyNUptake.Value - NH4uptake));
+                    NH4uptake += NH4Supply[layer]; 
+                }
+                else
+                {
+                    NH4Supply[layer] = 0;
+                }
+            }
+
+            return NH4Supply;
+        }
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
         /// <exception cref="System.Exception">
