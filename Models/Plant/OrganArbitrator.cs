@@ -473,7 +473,7 @@ namespace Models.PMF
 
         public void DoNutrientUptake(SoilState soilstate)
         {
-            DoUptakeCalculations(Organs, ref N, soilstate);
+            DoNutrientUptakeCalculations(Organs, ref N, soilstate);
         }
         
         /// <summary>Sets the nutrient uptake.</summary>
@@ -665,22 +665,28 @@ namespace Models.PMF
             }
         }
 
-        virtual public void DoUptakeCalculations(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
+        virtual public void DoNutrientUptakeCalculations(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
         {
-            foreach (IArbitration o in Organs)
+            for (int i = 0; i < Organs.Length; i++)
             {
-                double[] organNO3Supply = o.NO3NSupply(soilstate.Zones);
+               
+                
+                double[] organNO3Supply = Organs[i].NO3NSupply(soilstate.Zones);
                 if (organNO3Supply != null)
                 {
                     NO3NSupply = organNO3Supply;
+                    //BAT.UptakeSupply[i] = Utility.Math.Sum(organNO3Supply);
                 }
 
-                double[] organNH4Supply = o.NH4NSupply(soilstate.Zones);
+                double[] organNH4Supply = Organs[i].NH4NSupply(soilstate.Zones);
                 if (organNH4Supply != null)
                 {
                     NH4NSupply = organNH4Supply;
+                    //BAT.UptakeSupply[i] = Utility.Math.Sum(organNH4Supply);
                 }
             }
+            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
         }
         /// <summary>Does the nutrient uptake set up.</summary>
         /// <param name="Organs">The organs.</param>

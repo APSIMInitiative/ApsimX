@@ -524,6 +524,7 @@ namespace Models.PMF
                     uptake.NO3N = Arbitrator.NO3NSupply;
                     uptake.NH4N = Arbitrator.NH4NSupply;
 
+                    //These two lines below must be REMOVED !!!!!!!!!!!!!
                     //Sending zeros until everything is working internally and the root N uptake is turned off
                     for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
                     for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }

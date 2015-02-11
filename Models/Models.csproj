@@ -186,8 +186,8 @@
     <Compile Include="SugarCane\CultivarConstants.cs" />
     <Compile Include="SugarCane\MathUtil.cs" />
     <Compile Include="SugarCane\SugarCane.cs" />
-    <Compile Include="Soils\Utility\Accumulator.cs" />
-    <Compile Include="Soils\Utility\JobManager.cs" />
+    <Compile Include="Utility\Accumulator.cs" />
+    <Compile Include="Utility\JobManager.cs" />
     <Compile Include="Core\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />
@@ -338,8 +338,8 @@
     <Compile Include="Clock.cs" />
     <Compile Include="Core\ICrop.cs" />
     <Compile Include="Graph\Graph.cs" />
-    <Compile Include="Soils\Utility\ExpressionEvaluator.cs" />
-    <Compile Include="Soils\Utility\Met.cs" />
+    <Compile Include="Utility\ExpressionEvaluator.cs" />
+    <Compile Include="Utility\Met.cs" />
     <Compile Include="Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Project.cs" />

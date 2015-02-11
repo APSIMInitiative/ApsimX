@@ -8,6 +8,15 @@
   </Cultivar>
   <Cultivar>
     <Name>Katumani</Name>
+    <Command>[Phenology].Juvenile.Target = 150</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 0, 115</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target = 120</Command>
+    <Command>[Phenology].GrainFilling.Target = 530</Command>
+    <Command>[Phenology].Maturing.Target = 1</Command>
+    <Command>[Phenology].MaturityToHarvestRipe.Target = 1</Command>  
+    
   </Cultivar>
   <OrganArbitrator>
     <Name>Arbitrator</Name>
@@ -134,7 +143,7 @@
       <Start>End_Juvenile</Start>
       <End>Floral_Initiation</End>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>ThermalTi me</Name>
         <VariableName>[Phenology].ThermalTime.Value</VariableName>
       </VariableReference>
       <LinearInterpolationFunction>
@@ -266,7 +275,7 @@
           </VariableReference>
           <Constant>
             <Name>TipPerPrimordia</Name>
-            <Value>0.35</Value>
+            <Value>0.50</Value>
           </Constant>
         </MultiplyFunction>
       </PhaseLookupValue>
@@ -315,7 +324,7 @@
             </VariableReference>
             <Constant>
               <Name>ApproximatePlastochron</Name>
-              <Value>14</Value>
+              <Value>20</Value>
             </Constant>
           </DivideFunction>
         </AddFunction>
