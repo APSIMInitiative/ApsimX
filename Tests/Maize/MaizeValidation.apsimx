@@ -1235,7 +1235,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(1)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1255,7 +1255,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(2)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1275,7 +1275,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(3)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1295,7 +1295,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(4)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1315,7 +1315,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(5)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1335,7 +1335,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(6)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1355,7 +1355,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(7)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1375,7 +1375,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(8)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1395,7 +1395,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(9)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1415,7 +1415,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(10)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1435,7 +1435,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(11)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1455,7 +1455,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(12)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1475,7 +1475,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(13)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1495,7 +1495,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(14)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1515,7 +1515,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(15)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1535,7 +1535,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(16)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1555,7 +1555,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(17)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1575,7 +1575,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(18)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1595,7 +1595,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(19)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1615,7 +1615,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(20)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1635,7 +1635,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(20)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1655,7 +1655,7 @@ namespace Models
               <FieldName>Maize.Leaf.CohortArea1:30(21)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>BottomRight</LegendPosition>
@@ -1837,7 +1837,7 @@ namespace Models
               <FieldName>Maize.Leaf.InitialLeafValues.LagDuration.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1857,7 +1857,7 @@ namespace Models
               <FieldName>Maize.Leaf.InitialLeafValues.SenescenceDuration.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1877,7 +1877,7 @@ namespace Models
               <FieldName>Maize.Structure.MainStemNodeAppearanceRate.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -1918,7 +1918,7 @@ namespace Models
               <FieldName>Maize.Structure.Height</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>BottomRight</LegendPosition>
@@ -1959,7 +1959,7 @@ namespace Models
               <FieldName>Maize.Stem.DMDemandFunction.PotentialDMAccumulation.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
@@ -1979,7 +1979,7 @@ namespace Models
               <FieldName>Maize.Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>BottomRight</LegendPosition>
@@ -2490,6 +2490,47 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
+        <Graph>
+          <Name>LeafParameters1</Name>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Leaf Tips (n)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Growth Duration</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Structure.MainStemNodeNo</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Structure.MainStemNodeAppearanceRate.Value</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -2552,7 +2593,7 @@ namespace Models
             <FieldName>Leaf.AppearedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2613,7 +2654,7 @@ namespace Models
             <FieldName>Leaf.ExpandedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2674,7 +2715,7 @@ namespace Models
             <FieldName>Maize.Leaf.LAI</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2735,7 +2776,7 @@ namespace Models
             <FieldName>Maize.Summariser.AboveGround.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2796,7 +2837,7 @@ namespace Models
             <FieldName>Maize.Sumariser.AboveGroundLive.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2857,7 +2898,7 @@ namespace Models
             <FieldName>Leaf.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2918,7 +2959,7 @@ namespace Models
             <FieldName>Maize.Leaf.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2979,7 +3020,7 @@ namespace Models
             <FieldName>Stem.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -3040,7 +3081,7 @@ namespace Models
             <FieldName>Maize.Stem.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -3101,7 +3142,7 @@ namespace Models
             <FieldName>Maize.Grain.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -3162,7 +3203,7 @@ namespace Models
             <FieldName>Maize.Grain.Live.N</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -3223,7 +3264,7 @@ namespace Models
             <FieldName>Leaf.CoverTotal</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -3284,7 +3325,7 @@ namespace Models
             <FieldName>Phenology.StageCode.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -3346,7 +3387,7 @@ namespace Models
             <FieldName>Observed.ExtraVariables.Script.MostRecentlyExpandedLeafSize</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -3433,7 +3474,7 @@ namespace Models
             <FieldName>ProfileWater</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -3496,7 +3537,7 @@ namespace Models
               <FieldName>Soil.SoilWater.SW(1)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -3557,7 +3598,7 @@ namespace Models
               <FieldName>Soil.SoilWater.SW(2)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -3618,7 +3659,7 @@ namespace Models
               <FieldName>Soil.SoilWater.SW(3)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -3679,7 +3720,7 @@ namespace Models
               <FieldName>Soil.SoilWater.SW(4)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -3740,7 +3781,7 @@ namespace Models
               <FieldName>Soil.SoilWater.SW(5)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -3801,7 +3842,7 @@ namespace Models
               <FieldName>Soil.SoilWater.SW(6)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -3862,7 +3903,7 @@ namespace Models
               <FieldName>Soil.SoilWater.SW(7)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -3923,7 +3964,7 @@ namespace Models
               <FieldName>Soil.SoilWater.SW(8)</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <LegendPosition>TopLeft</LegendPosition>
@@ -5271,7 +5312,7 @@ namespace Models
             <FieldName>Leaf.AppearedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5332,7 +5373,7 @@ namespace Models
             <FieldName>Leaf.ExpandedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5393,7 +5434,7 @@ namespace Models
             <FieldName>Maize.Summariser.AboveGround.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5454,7 +5495,7 @@ namespace Models
             <FieldName>Maize.Grain.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5515,7 +5556,7 @@ namespace Models
             <FieldName>Maize.Leaf.LAI</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5576,7 +5617,7 @@ namespace Models
             <FieldName>Leaf.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5637,7 +5678,7 @@ namespace Models
             <FieldName>Leaf.CoverTotal</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5698,7 +5739,7 @@ namespace Models
             <FieldName>Phenology.StageCode.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5759,7 +5800,7 @@ namespace Models
             <FieldName>Stem.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -5800,7 +5841,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5820,7 +5861,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(2)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5840,7 +5881,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(3)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5860,7 +5901,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(4)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5880,7 +5921,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(5)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5900,7 +5941,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(6)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5920,7 +5961,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(7)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5940,7 +5981,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(8)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5960,7 +6001,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(9)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -5980,7 +6021,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(10)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
@@ -6112,7 +6153,7 @@ namespace Models
             <FieldName>Leaf.AppearedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6173,7 +6214,7 @@ namespace Models
             <FieldName>Leaf.ExpandedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6234,7 +6275,7 @@ namespace Models
             <FieldName>Maize.Summariser.AboveGround.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6295,7 +6336,7 @@ namespace Models
             <FieldName>Maize.Grain.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6356,7 +6397,7 @@ namespace Models
             <FieldName>Maize.Leaf.LAI</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6417,7 +6458,7 @@ namespace Models
             <FieldName>Leaf.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6478,7 +6519,7 @@ namespace Models
             <FieldName>Leaf.CoverTotal</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6539,7 +6580,7 @@ namespace Models
             <FieldName>Phenology.StageCode.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6600,7 +6641,7 @@ namespace Models
             <FieldName>Stem.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6641,7 +6682,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(1)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6661,7 +6702,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(2)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6681,7 +6722,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(3)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6701,7 +6742,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(4)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6721,7 +6762,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(5)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6741,7 +6782,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(6)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6761,7 +6802,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(7)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6781,7 +6822,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(8)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6801,7 +6842,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(9)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -6821,7 +6862,7 @@ namespace Models
             <FieldName>Maize.Leaf.CohortArea1:10(10)</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
