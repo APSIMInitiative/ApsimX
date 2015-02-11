@@ -397,15 +397,28 @@ namespace Models.PMF
                     DoPhenology();
                     if (Phenology.Emerged == true)
                     {
-                        DoDMSetUp();//Sets organs water limited DM supplys and demands
+                       
                         // Invoke a post phenology event.
                         if (PostPhenology != null)
                             PostPhenology.Invoke(this, new EventArgs());
+                        DoDMSetUp();//Sets organs water limited DM supplys and demands
+                        if (Arbitrator != null)
+                        {
+                            Arbitrator.DoWaterLimitedDMAllocations();
+                            Arbitrator.DoNutrientDemandSetUp();
+                            Arbitrator.SetNutrientUptake();
+                        }
                     }
                 }
                 else
                 {
                     DoDMSetUp();//Sets organs water limited DM supplys and demands
+                    if (Arbitrator != null)
+                    {
+                        Arbitrator.DoWaterLimitedDMAllocations();
+                        Arbitrator.DoNutrientDemandSetUp();
+                        Arbitrator.SetNutrientUptake();
+                    }
                 }
             }
         }
@@ -442,20 +455,20 @@ namespace Models.PMF
                     if (Phenology.Emerged == true)
                     {
 
-                        Arbitrator.DoWaterLimitedDMAllocations();
-                        Arbitrator.DoNutrientDemandSetUp();
-                        Arbitrator.SetNutrientUptake();
-                        Arbitrator.DoNutrientAllocations();
-                        Arbitrator.DoNutrientLimitedGrowth();
+                        //Arbitrator.DoWaterLimitedDMAllocations();
+                        //Arbitrator.DoNutrientDemandSetUp();
+                        //Arbitrator.SetNutrientUptake();
+                        //Arbitrator.DoNutrientAllocations();
+                        //Arbitrator.DoNutrientLimitedGrowth();
                     }
                 }
                 else
                 {
-                    Arbitrator.DoWaterLimitedDMAllocations();
-                    Arbitrator.DoNutrientDemandSetUp();
-                    Arbitrator.SetNutrientUptake();
-                    Arbitrator.DoNutrientAllocations();
-                    Arbitrator.DoNutrientLimitedGrowth();
+                    //Arbitrator.DoWaterLimitedDMAllocations();
+                    //Arbitrator.DoNutrientDemandSetUp();
+                    //Arbitrator.SetNutrientUptake();
+                    //Arbitrator.DoNutrientAllocations();
+                    //Arbitrator.DoNutrientLimitedGrowth();
                 }
             }
         }
@@ -468,6 +481,23 @@ namespace Models.PMF
         {
             if (PlantInGround)
             {
+                if (Phenology != null)
+                {
+                    if (Phenology.Emerged == true)
+                    {
+                        if (Arbitrator != null)
+                        {
+                            Arbitrator.DoNutrientAllocations();
+                            Arbitrator.DoNutrientLimitedGrowth();
+                        }
+                    }
+                }
+                else
+                    if (Arbitrator != null)
+                    {
+                        Arbitrator.DoNutrientAllocations();
+                        Arbitrator.DoNutrientLimitedGrowth();
+                    }
                 DoActualGrowth();
             }
         }
