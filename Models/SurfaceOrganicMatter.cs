@@ -1587,20 +1587,20 @@
         /// <param name="mass">The mass.</param>
         /// <param name="N">The n.</param>
         /// <param name="name">The name.</param>
-        public void Add(string type, double mass, double N, string name)
-        {
-            Add_surfaceomType data = new Add_surfaceomType();
-            if (name == null)
-                data.name = type;
-            else
-                data.name = name;
-            data.type = type;
-            data.mass = mass;
-            data.n = N;
+        //public void Add(string type, double mass, double N, string name)
+        //{
+        //    Add_surfaceomType data = new Add_surfaceomType();
+        //    if (name == null)
+        //        data.name = type;
+        //    else
+        //        data.name = name;
+        //    data.type = type;
+        //    data.mass = mass;
+        //    data.n = N;
 
 
-            AddSurfom(data);
-        }
+        //    AddSurfom(data);
+        //}
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -3092,12 +3092,12 @@
         }
 
         /// <summary>Adds material to the surface organic matter pool.</summary>
-        /// <param name="biomass">The amount of biomass added (kg/ha).</param>
-        /// <param name="N">The amount of N added.</param>
-        /// <param name="P">The amount of P added.</param>
+        /// <param name="mass">The amount of biomass added (kg/ha).</param>
+        /// <param name="N">The amount of N added (ppm).</param>
+        /// <param name="P">The amount of P added (ppm).</param>
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
-        public void Add(double biomass, double N, double P, string type, string name)
+        public void Add(double mass, double N, double P, string type, string name)
         {
             int SOMNo;      // system number of the surface organic matter added;
 
@@ -3107,7 +3107,7 @@
                 summary.WriteMessage(this, string.Format(
                     @"Added surface organic matter:\r\n" +
                      "   Type          = {0}\r\n" +
-                     "   Amount Added (kg/ha)    = {1}", type + " " + name, biomass));
+                     "   Amount Added (kg/ha)    = {1}", type + " " + name, mass));
             }       
 
             // Assume the "cropType" is the unique name.  Now check whether this unique "name" already exists in the system.
@@ -3120,21 +3120,21 @@
             // else THIS ADDITION IS AN EXISTING COMPONENT OF THE SURFOM SYSTEM;
 
             // convert the ppm figures into kg/ha;
-            SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * biomass;
-            SurfOM[SOMNo].nh4 += Utility.Math.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * biomass;
-            SurfOM[SOMNo].po4 += Utility.Math.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * biomass;
+            SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
+            SurfOM[SOMNo].nh4 += Utility.Math.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+            SurfOM[SOMNo].po4 += Utility.Math.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
 
             // Assume all surfom added is in the LYING pool, ie No STANDING component;
             for (int i = 0; i < maxFr; i++)
             {
-                SurfOM[SOMNo].Lying[i].amount += biomass * frPoolC[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].C += biomass * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].amount += mass * frPoolC[i, SOMNo];
+                SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].AshAlk = 0.0;
             }
 
-            SendResAddedEvent(SurfOM[SOMNo].OrganicMatterType, SurfOM[SOMNo].OrganicMatterType, biomass, N, P);
+            SendResAddedEvent(SurfOM[SOMNo].OrganicMatterType, SurfOM[SOMNo].OrganicMatterType, mass, N, P);
         }
 
         /// <summary>Notify other modules of residue added to residue pool.</summary>
