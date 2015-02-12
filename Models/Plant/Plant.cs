@@ -54,15 +54,6 @@ namespace Models.PMF
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
         public IOrgan[] Organs { get; private set; }
-        
-        /// <summary>Gets the canopy data.</summary>
-        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
-
-        /// <summary>The local canopy data</summary>
-        [XmlIgnore]
-        public NewCanopyType LocalCanopyData;
-        /// <summary>The local canopy data2</summary>
-        private CanopyProperties LocalCanopyData2;
         /// <summary>The local root data</summary>
         private RootProperties LocalRootData;
         /// <summary>Gets a list of cultivar names</summary>
@@ -105,18 +96,18 @@ namespace Models.PMF
 
         /// <summary>MicroClimate needs FRGR.</summary>
         /// <value>The FRGR.</value>
-        public double FRGR 
-        { 
-            get 
+        public double FRGR
+        {
+            get
             {
                 double frgr = 1;
-                foreach (IOrgan Child in Organs)
-                {
-                    if (Child.FRGR <= 1)
-                      frgr = Child.FRGR;
-                }
-                return frgr; 
-            } 
+                //foreach (IOrgan Child in Organs)
+                //{
+                //    if (Child.FRGR <= 1)
+                //        frgr = Child.FRGR;
+                //}
+                return frgr;
+            }
         }
         /// <summary>MicroClimate supplies light profile.</summary>
         [XmlIgnore]
@@ -124,7 +115,18 @@ namespace Models.PMF
         /// <summary>MicroClimate supplies Potential EP</summary>
         /// <value>The potential ep.</value>
         [XmlIgnore]
-        public double PotentialEP {get; set;}
+        public double PotentialEP
+        {
+            get
+            {
+                return double.MaxValue;
+            }
+
+            set
+            {
+
+            }
+        }
 
         /// <summary>Gets the water supply demand ratio.</summary>
         /// <value>The water supply demand ratio.</value>
@@ -154,8 +156,6 @@ namespace Models.PMF
         #endregion
 
         #region Interface properties
-        /// <summary>Provides canopy data to Arbitrator.</summary>
-        public CanopyProperties CanopyProperties { get { return LocalCanopyData2; } }
         /// <summary>Provides root data to Arbitrator.</summary>
         public RootProperties RootProperties { get { return LocalRootData; } }
         /// <summary>
@@ -590,30 +590,7 @@ namespace Models.PMF
             uptakeNitrogenPropNO3 = new double[Soil.Thickness.Length];
 
             //Set up CanopyData and root data types
-            LocalCanopyData = new NewCanopyType();
-            LocalCanopyData2 = new CanopyProperties();
             LocalRootData = new RootProperties();
-
-            CanopyProperties.Name = CropType;
-            CanopyProperties.CoverGreen = 0;
-            CanopyProperties.CoverTot = 0;
-            CanopyProperties.CanopyDepth = 0;
-            CanopyProperties.CanopyHeight = 0;
-            CanopyProperties.LAIGreen = 0;
-            CanopyProperties.LAItot = 0;
-            CanopyProperties.Frgr = 0;
-            if (Leaf != null)
-            {
-                CanopyProperties.MaximumStomatalConductance = Leaf.GsMax;
-                CanopyProperties.HalfSatStomatalConductance = Leaf.R50;
-                CanopyProperties.CanopyEmissivity = Leaf.Emissivity;
-            }
-            else
-            {
-                CanopyProperties.MaximumStomatalConductance = 0;
-                CanopyProperties.HalfSatStomatalConductance = 0;
-                CanopyProperties.CanopyEmissivity = 0;
-            }
 
             SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
 

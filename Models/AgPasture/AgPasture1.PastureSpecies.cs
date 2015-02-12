@@ -91,43 +91,53 @@ namespace Models.AgPasture1
 
 		#endregion
 
-		#region ICrop implementation  --------------------------------------------------------------------------------------
+        #region Canopy interface
+        /// <summary>Canopy type</summary>
+        public string CanopyType { get { return CropType; } }
 
-		/// <summary>
-		/// Generic descriptor used by MicroClimate to look up for canopy properties for this plant
-		/// </summary>
-		[Description("Generic type of crop")]
-		[Units("")]
-		public string CropType
-		{
-			get { return Name; }
-		}
+        /// <summary>Gets the LAI (m^2/m^2)</summary>
+        public double LAI { get { return GreenLAI; } }
 
-		/// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
-		public string[] CultivarNames
-		{
-			get { return null; }
-		}
+        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
+        public double LAITotal { get { return TotalLAI; } }
 
-		/// <summary>Potential evapotranspiration, as calculated by MicroClimate</summary>
-		[XmlIgnore]
-		public double PotentialEP
-		{
-			get
-			{
-				return myWaterDemand;
-			}
-			set
-			{
-				myWaterDemand = value;
-				demandWater = myWaterDemand;
-			}
-		}
+        /// <summary>Gets the cover green (0-1)</summary>
+        public double CoverGreen { get { return GreenCover; } }
 
-		/// <summary>The intercepted solar radiation</summary>
-		public double interceptedRadn;
-		/// <summary>Light profile (energy available for each canopy layer)</summary>
-		private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
+        /// <summary>Gets the cover total (0-1)</summary>
+        public double CoverTotal { get { return TotalCover; } }
+
+        /// <summary>Gets the canopy height (mm)</summary>
+        [Description("Plants average height")]
+        [Units("mm")]
+        public double Height
+        {
+            get { return myHeight; }  // minimum = 20mm  - TODO: update this function
+        }
+
+        /// <summary>Gets the canopy depth (mm)</summary>
+        public double Depth { get { return Height; } }
+
+        // TODO: have to verify how this works (what exactly is needed by MicroClimate
+        /// <summary>Plant growth limiting factor, supplied to another module calculating potential transpiration</summary>
+        public double FRGR
+        { get { return 1.0; } }
+
+        /// <summary>Potential evapotranspiration, as calculated by MicroClimate</summary>
+        [XmlIgnore]
+        public double PotentialEP
+        {
+            get
+            {
+                return myWaterDemand;
+            }
+            set
+            {
+                myWaterDemand = value;
+                demandWater = myWaterDemand;
+            }
+        }
+
 		/// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate</summary>
 		[XmlIgnore]
 		public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
@@ -143,6 +153,33 @@ namespace Models.AgPasture1
 				}
 			}
 		}
+        #endregion
+
+        #region ICrop implementation  --------------------------------------------------------------------------------------
+
+        /// <summary>
+		/// Generic descriptor used by MicroClimate to look up for canopy properties for this plant
+		/// </summary>
+		[Description("Generic type of crop")]
+		[Units("")]
+		public string CropType
+		{
+			get { return Name; }
+		}
+
+		/// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
+		public string[] CultivarNames
+		{
+			get { return null; }
+		}
+
+
+
+		/// <summary>The intercepted solar radiation</summary>
+		public double interceptedRadn;
+		/// <summary>Light profile (energy available for each canopy layer)</summary>
+		private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
+
 
 		/// <summary>Data about this plant's canopy (LAI, height, etc)</summary>
 		private NewCanopyType myCanopyData = new NewCanopyType();
@@ -158,10 +195,6 @@ namespace Models.AgPasture1
 			}
 		}
 
-		// TODO: have to verify how this works (what exactly is needed by MicroClimate
-		/// <summary>Plant growth limiting factor, supplied to another module calculating potential transpiration</summary>
-		public double FRGR
-		{ get { return 1.0; } }
 
 		// TODO: Have to verify how this works, it seems Microclime needs a sow event, not new crop...
 		/// <summary>Invokes the NewCrop event (info about this crop type)</summary>
@@ -2464,14 +2497,6 @@ namespace Models.AgPasture1
 			}
 		}
 
-		/// <summary>Gets the average plant height.</summary>
-		/// <value>The plant height.</value>
-		[Description("Plants average height")]
-		[Units("mm")]
-		public double Height
-		{
-			get { return myHeight; }  // minimum = 20mm  - TODO: update this function
-		}
 		#endregion
 
 		#region - Root depth and distribution  -----------------------------------------------------------------------------

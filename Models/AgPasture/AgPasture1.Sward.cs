@@ -25,7 +25,7 @@ namespace Models.AgPasture1
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class Sward : Model, ICrop
+	public class Sward : Model, ICrop, ICanopy
 	{
 		#region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -88,47 +88,121 @@ namespace Models.AgPasture1
 
 		#endregion
 
-		#region ICrop implementation  --------------------------------------------------------------------------------------
+        #region Canopy interface
+        /// <summary>Canopy type</summary>
+        [Description("Generic type of crop")]
+        public string CanopyType
+        {
+            get { return Name; }
+        }
 
-		/// <summary>
-		/// Gets the generic descriptor used by MicroClimate to look up for canopy properties for this plant
-		/// </summary>
-		[Description("Generic type of crop")]
-		[Units("")]
-		public string CropType
-		{
-			get { return Name; }
-		}
+        /// <summary>Gets the LAI (m^2/m^2)</summary>
+        public double LAI { get { return GreenLAI; } }
+
+        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
+        public double LAITotal { get { return TotalLAI; } }
+
+        /// <summary>Gets the cover green (0-1)</summary>
+        public double CoverGreen { get { return GreenCover; } }
+
+        /// <summary>Gets the cover total (0-1)</summary>
+        public double CoverTotal { get { return CoverTotal; } }
+
+        /// <summary>Gets the canopy height (mm)</summary>
+        [Description("Sward average height")]
+        [Units("mm")]
+        public double Height
+        {
+            get { return Math.Max(20.0, HeightFromMass.Value(AboveGroundWt)); } //speciesInSward.Max(mySpecies => mySpecies.Height); }
+        }
+
+        /// <summary>Gets the canopy depth (mm)</summary>
+        public double Depth { get { return Height; } }
+
+        //// TODO: have to verify how this works (what exactly is needed by MicroClimate
+        /// <summary>Gets the plant growth limiting factor, supplied to another module calculating potential transpiration</summary>
+        public double FRGR
+        {
+            get
+            {
+                double Tday = 0.75 * MetData.MaxT + 0.25 * MetData.MinT;
+                double gft;
+                if (Tday < 20)
+                    gft = Math.Sqrt(GlfTemperature);
+                else
+                    gft = GlfTemperature;
+                // Note: p_gftemp is for gross photosysthsis.
+                // This is different from that for net production as used in other APSIM crop models, and is
+                // assumesd in calculation of temperature effect on transpiration (in micromet).
+                // Here we passed it as sqrt - (Doing so by a comparison of p_gftemp and that
+                // used in wheat). Temperature effects on NET produciton of forage mySpecies in other models
+                // (e.g., grassgro) are not so significant for T = 10-20 degrees(C)
+
+                //Also, have tested the consequences of passing p_Ncfactor in (different concept for gfwater),
+                //coulnd't see any differnece for results
+                return Math.Min(FVPD, gft);
+                //// RCichota, Jan/2014: removed AgPasture's Frgr from here, it is considered at the same level as nitrogen etc...
+            }
+        }
+
+        /// <summary>Gets or sets the potential evapotranspiration, as calculated by MicroClimate</summary>
+        [XmlIgnore]
+        public double PotentialEP
+        {
+            get
+            {
+                return swardWaterDemand;
+            }
+            set
+            {
+                swardWaterDemand = value;
+
+                // partition the demand among species
+                if (isSwardControlled)
+                {
+                    double spDemand = 0.0;
+                    foreach (PastureSpecies mySpecies in mySward)
+                    {
+                        spDemand = Utility.Math.Divide(swardWaterDemand * mySpecies.AboveGrounLivedWt, AboveGroundLiveWt, 0.0);
+                        mySpecies.PotentialEP = spDemand;
+                    }
+                }
+            }
+        }
+
+        /// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate</summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
+        {
+            get
+            {
+                return myLightProfile;
+            }
+            set
+            {
+                // get the total intercepted radiation (sum all canopy layers)
+                interceptedRadn = 0.0;
+                foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in value)
+                    interceptedRadn += canopyLayer.amount;
+
+                // pass on the radiation to each species  -  shouldn't this be partitioned???
+                if (isSwardControlled)
+                    foreach (PastureSpecies mySpecies in mySward)
+                        mySpecies.interceptedRadn = interceptedRadn;
+                //// TODO: remove this once energy balance by species is running
+            }
+        }
+
+        #endregion
+
+        #region ICrop implementation  --------------------------------------------------------------------------------------
+
+
 
 		/// <summary>Gets a list of cultivar names (not used by AgPasture)</summary>
 		public string[] CultivarNames
 		{
 			get { return null; }
-		}
-
-		/// <summary>Gets or sets the potential evapotranspiration, as calculated by MicroClimate</summary>
-		[XmlIgnore]
-		public double PotentialEP
-		{
-			get
-			{
-				return swardWaterDemand;
-			}
-			set
-			{
-				swardWaterDemand = value;
-
-				// partition the demand among species
-				if (isSwardControlled)
-				{
-					double spDemand = 0.0;
-					foreach (PastureSpecies mySpecies in mySward)
-					{
-						spDemand = Utility.Math.Divide(swardWaterDemand * mySpecies.AboveGrounLivedWt, AboveGroundLiveWt, 0.0);
-						mySpecies.PotentialEP = spDemand;
-					}
-				}
-			}
 		}
 
 		/// <summary>The intercepted solar radiation</summary>
@@ -137,77 +211,10 @@ namespace Models.AgPasture1
 		/// <summary>Light profile (energy available for each canopy layer)</summary>
 		private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile = null;
 
-		/// <summary>Gets or sets the light profile for this plant, as calculated by MicroClimate</summary>
-		[XmlIgnore]
-		public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
-		{
-			get
-			{
-				return myLightProfile;
-			}
-			set
-			{
-				// get the total intercepted radiation (sum all canopy layers)
-				interceptedRadn = 0.0;
-				foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in value)
-					interceptedRadn += canopyLayer.amount;
-
-				// pass on the radiation to each species  -  shouldn't this be partitioned???
-				if (isSwardControlled)
-					foreach (PastureSpecies mySpecies in mySward)
-						mySpecies.interceptedRadn = interceptedRadn;
-				//// TODO: remove this once energy balance by species is running
-			}
-		}
-
-		/// <summary>Data about the sward's canopy (LAI, height, etc)</summary>
-		private NewCanopyType myCanopyData = new NewCanopyType();
-
-		/// <summary>Gets the data about the sward's canopy, used by MicroClimate</summary>
-		public NewCanopyType CanopyData
-		{
-			get { return myCanopyData; }
-		}
-
-		//// TODO: have to verify how this works (what exactly is needed by MicroClimate
-		/// <summary>Gets the plant growth limiting factor, supplied to another module calculating potential transpiration</summary>
-		public double FRGR
-		{
-			get
-			{
-				double Tday = 0.75 * MetData.MaxT + 0.25 * MetData.MinT;
-				double gft;
-				if (Tday < 20)
-					gft = Math.Sqrt(GlfTemperature);
-				else
-					gft = GlfTemperature;
-				// Note: p_gftemp is for gross photosysthsis.
-				// This is different from that for net production as used in other APSIM crop models, and is
-				// assumesd in calculation of temperature effect on transpiration (in micromet).
-				// Here we passed it as sqrt - (Doing so by a comparison of p_gftemp and that
-				// used in wheat). Temperature effects on NET produciton of forage mySpecies in other models
-				// (e.g., grassgro) are not so significant for T = 10-20 degrees(C)
-
-				//Also, have tested the consequences of passing p_Ncfactor in (different concept for gfwater),
-				//coulnd't see any differnece for results
-				return Math.Min(FVPD, gft);
-				//// RCichota, Jan/2014: removed AgPasture's Frgr from here, it is considered at the same level as nitrogen etc...
-			}
-		}
-
 		//// TODO: Have to verify how this works, it seems Microclime needs a sow event, not new crop...
 		/// <summary>Invokes the NewCrop event (info about this crop type)</summary>
 		private void DoNewCropEvent()
 		{
-			if (NewCrop != null)
-			{
-				// Send out New Crop Event to tell other modules who I am and what I am
-				PMF.NewCropType EventData = new PMF.NewCropType();
-				EventData.crop_type = "Pasture";
-				EventData.sender = Name;
-				NewCrop.Invoke(EventData);
-			}
-
 			if (Sowing != null)
 				Sowing.Invoke(this, new EventArgs());
 		}
@@ -1228,14 +1235,6 @@ namespace Models.AgPasture1
 			}
 		}
 
-		/// <summary>Gets the average sward height.</summary>
-		/// <value>The sward height.</value>
-		[Description("Sward average height")]
-		[Units("mm")]
-		public double Height
-		{
-			get { return Math.Max(20.0, HeightFromMass.Value(AboveGroundWt)); } //speciesInSward.Max(mySpecies => mySpecies.Height); }
-		}
 
 		#endregion
 
@@ -1692,8 +1691,6 @@ namespace Models.AgPasture1
 			//  needed this for at least untill the radiation budget can be done for each species separately
 			if (isSwardControlled)
 			{
-				// Send information about this canopy, MicroClimate will compute intercepted radiation and water demand
-				DoNewCanopyEvent();
 
 				// TODO: this event should be unnecessary once the energy balance for each species is done properly
 			}
@@ -1757,24 +1754,6 @@ namespace Models.AgPasture1
 		}
 
 		#region - Water uptake process  ------------------------------------------------------------------------------------
-
-		/// <summary>
-		/// Provides canopy data for MicroClimate, who will do the energy balance and calculate water demand
-		/// </summary>
-		private void DoNewCanopyEvent()
-		{
-			if (NewCanopy != null)
-			{
-				myCanopyData.sender = Name;
-				myCanopyData.lai = GreenLAI;
-				myCanopyData.lai_tot = TotalLAI;
-				myCanopyData.height = Height;
-				myCanopyData.depth = Height;			  // canopy depth = canopy height
-				myCanopyData.cover = GreenCover;
-				myCanopyData.cover_tot = TotalCover;
-				NewCanopy.Invoke(myCanopyData);
-			}
-		}
 
 		/// <summary>Gets the water uptake for each layer as calculated by an external module (SWIM)</summary>
 		/// <param name="SoilWater">The soil water.</param>

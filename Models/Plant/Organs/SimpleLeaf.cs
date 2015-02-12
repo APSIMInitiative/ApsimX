@@ -14,8 +14,56 @@ namespace Models.PMF.Organs
     /// A simple leaf organ
     /// </summary>
     [Serializable]
-    public class SimpleLeaf : BaseOrgan, AboveGround
+    public class SimpleLeaf : BaseOrgan, AboveGround, ICanopy
     {
+        #region Canopy interface
+
+        /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
+        public string CanopyType { get { return Plant.CropType; } }
+
+        /// <summary>Gets the LAI</summary>
+        [Units("m^2/m^2")]
+        public double LAI {get; set;}
+
+        /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
+        public double LAITotal { get { return LAI + LAIDead; } }
+
+        /// <summary>Gets the cover green.</summary>
+        public double CoverGreen
+        {
+            get
+            {
+                if (CoverFunction == null)
+                    return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
+                return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
+            }
+        }
+        
+        /// <summary>Gets the cover total.</summary>
+        public double CoverTotal
+        {
+            get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
+        }
+        
+        /// <summary>Gets or sets the height.</summary>
+        [Units("mm")]
+        public double Height { get; set; }
+        /// <summary>Gets the depth.</summary>
+        [Units("mm")]
+        public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+
+        /// <summary>Gets or sets the FRGR.</summary>
+        [Units("mm")]
+        public double FRGR { get; set; }
+        
+        /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
+        public double PotentialEP { get; set; }
+
+        /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+        #endregion
+
+
         #region Class Links
         /// <summary>The plant</summary>
         [Link]
@@ -94,20 +142,17 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Plant.PotentialEP;
+                return PotentialEP;
             }
-            set
-            {
-                Plant.PotentialEP = value;
-            }
+            //set
+            //{
+            //    Plant.PotentialEP = value;
+            //}
         }
         /// <summary>Gets the transpiration.</summary>
         /// <value>The transpiration.</value>
         public double Transpiration { get { return EP; } }
-        /// <summary>Gets or sets the FRGR.</summary>
-        /// <value>The FRGR.</value>
-        [Units("mm")]
-        public override double FRGR { get; set; }
+
         /// <summary>Gets the fw.</summary>
         /// <value>The fw.</value>
         public double Fw
@@ -132,33 +177,12 @@ namespace Models.PMF.Organs
                 return Live.N / MaxNContent;
             } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
         }
-        /// <summary>Gets or sets the lai.</summary>
-        /// <value>The lai.</value>
-        public double LAI { get; set; }
+
         /// <summary>Gets or sets the lai dead.</summary>
         /// <value>The lai dead.</value>
         public double LAIDead { get; set; }
-        /// <summary>Gets or sets the height.</summary>
-        /// <value>The height.</value>
-        [Units("mm")]
-        public double Height { get; set; }
-        /// <summary>Gets the cover green.</summary>
-        /// <value>The cover green.</value>
-        public double CoverGreen
-        {
-            get
-            {
-                if (CoverFunction == null)
-                    return 1.0 - Math.Exp((-1 * ExtinctionCoefficientFunction.Value) * LAI);
-                return Math.Min(Math.Max(CoverFunction.Value, 0), 1);
-            }
-        }
-        /// <summary>Gets the cover total.</summary>
-        /// <value>The cover total.</value>
-        public double CoverTotal
-        {
-            get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
-        }
+
+
         /// <summary>Gets the cover dead.</summary>
         /// <value>The cover dead.</value>
         public double CoverDead
@@ -293,8 +317,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Evnets
-        /// <summary>Occurs when [new canopy].</summary>
-        public event NewCanopyDelegate NewCanopy;
 
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
@@ -314,31 +336,8 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Component Process Functions
-        /// <summary>Publishes the new canopy event.</summary>
-        protected virtual void PublishNewCanopyEvent()
-        {
-            if (NewCanopy != null)
-            {
-                Plant.LocalCanopyData.sender = Plant.Name;
-                Plant.LocalCanopyData.lai = (float)LAI;
-                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
-                Plant.LocalCanopyData.height = (float)Height;
-                Plant.LocalCanopyData.depth = (float)Height;
-                Plant.LocalCanopyData.cover = (float)CoverGreen;
-                Plant.LocalCanopyData.cover_tot = (float)CoverTotal;
-                NewCanopy.Invoke(Plant.LocalCanopyData);
-            }
-        }
-        public void UpdateCanopyData()
-        {
-            Plant.CanopyProperties.CoverGreen = CoverGreen;
-            Plant.CanopyProperties.CoverTot = CoverTotal;
-            Plant.CanopyProperties.CanopyDepth = Height;
-            Plant.CanopyProperties.CanopyHeight = Height;
-            Plant.CanopyProperties.LAIGreen = LAI;
-            Plant.CanopyProperties.LAItot = LAI + LAIDead;
-            Plant.CanopyProperties.Frgr = FRGR;
-        }
+
+
         /// <summary>Called when [cut].</summary>
         public override void OnCut()
         {
@@ -352,8 +351,6 @@ namespace Models.PMF.Organs
         {
             if (StructuralFraction != null)
                 _StructuralFraction = StructuralFraction.Value;
-
-            PublishNewCanopyEvent();
         }
         #endregion
 
@@ -373,7 +370,6 @@ namespace Models.PMF.Organs
                 LAIDead = LaiDeadFunction.Value;
             else
                 LAIDead = 0;
-            PublishNewCanopyEvent();
 
             /*/Set N Demand
             double StructuralDemand = 0;
@@ -397,10 +393,7 @@ namespace Models.PMF.Organs
             NDemand.Structural = StructuralDemand;
             NDemand.NonStructural = NDeficit;*/
         }
-        public override void DoActualGrowth()
-        {
-            UpdateCanopyData();
-        }
+
         #endregion
 
     }

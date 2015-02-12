@@ -24,9 +24,48 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SugarCane : Model, ICrop
-        {
+    public class SugarCane : Model, ICrop, ICanopy
+    {
 
+        #region Canopy interface
+
+        /// <summary>Canopy type</summary>
+        public string CanopyType { get { return CropType; } }
+
+        /// <summary>Gets the LAI (m^2/m^2)</summary>
+        public double LAI { get { return lai; } }
+
+        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
+        public double LAITotal { get { return lai + g_slai; } }
+
+        /// <summary>Gets the cover green (0-1)</summary>
+        public double CoverGreen { get { return cover_green; } }
+
+        /// <summary>Gets the cover total (0-1)</summary>
+        public double CoverTotal { get { return cover_tot; } }
+
+        /// <summary>Gets the canopy height (mm)</summary>
+        public double Height { get { return height; } }
+
+        /// <summary>Gets the canopy depth (mm)</summary>
+        public double Depth { get { return height; } }
+
+        /// <summary>Gets  FRGR.</summary>
+        [XmlIgnore]
+        public double FRGR { get { return 1; } }  //TODO: don't know how to implement FRGR in SugarCane. So just return 1.
+
+        /// <summary>Sets the potential evapotranspiration.</summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
+
+        /// <summary>
+        /// MicroClimate calculates a layered canopy energy balance and sets
+        /// this property in the crop.
+        /// </summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } //TODO: don't know how to implement LightProfile in SugarCane
+
+        #endregion
 
 
         #region Links
@@ -9066,27 +9105,6 @@ namespace Models
                 }
             
             }
-
-        /// <summary>
-        /// Crop specific relative growth stress factor (0-1). MicroClimate
-        /// uses this to calculate the crop canopy conductance
-        /// </summary>
-        [XmlIgnore]
-        public double FRGR { get { return 1; } }  //TODO: don't know how to implement FRGR in SugarCane. So just return 1.
-
-        /// <summary>
-        /// Potential evapotranspiration. MicroClimate calculates this and sets
-        /// this property in the crop.
-        /// </summary>
-        [XmlIgnore]
-        public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
-
-        /// <summary>
-        /// MicroClimate calculates a layered canopy energy balance and sets
-        /// this property in the crop.
-        /// </summary>
-        [XmlIgnore]
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } //TODO: don't know how to implement LightProfile in SugarCane
 
         /// <summary>
         /// Gets a list of cultivar names

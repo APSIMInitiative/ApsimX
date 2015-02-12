@@ -95,8 +95,8 @@ namespace Models.PMF.Organs
         virtual public void DoWaterUptake(double[] uptake) { }
         /// <summary>Gets or sets the FRGR.</summary>
         /// <value>The FRGR.</value>
-        [XmlIgnore]
-        virtual public double FRGR { get { return 10000; } set { } } //Defalt is a rediculious value so Organs that don't over ride this with something sensible can be screaned easily
+        //[XmlIgnore]
+        //virtual public double FRGR { get { return 10000; } set { } } //Defalt is a rediculious value so Organs that don't over ride this with something sensible can be screaned easily
         /// <summary>Does the potential dm.</summary>
         virtual public void DoPotentialDM() { }
         /// <summary>Does the potential nutrient.</summary>
