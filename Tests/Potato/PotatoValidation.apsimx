@@ -811,7 +811,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>AccumPlantN</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -831,7 +831,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumMineralisation</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8388353</ColourArgb>
@@ -851,7 +851,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumDenit</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744193</ColourArgb>
@@ -871,7 +871,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumFert</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-256</ColourArgb>
@@ -891,7 +891,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumLeach</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -911,7 +911,7 @@ namespace Models
             </Series>
             <Series>
               <Title>DeltaSoilOMN</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8372224</ColourArgb>
@@ -931,7 +931,7 @@ namespace Models
             </Series>
             <Series>
               <Title>DeltaSurfaceOMN</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-32768</ColourArgb>
@@ -951,7 +951,7 @@ namespace Models
             </Series>
             <Series>
               <Title>DeltaSoilMineralN</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777152</ColourArgb>
@@ -992,7 +992,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>Pond</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16776961</ColourArgb>
@@ -1012,7 +1012,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumEO</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -1032,7 +1032,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumEP</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -1052,7 +1052,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumES</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-32768</ColourArgb>
@@ -1072,7 +1072,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumDrainage</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65281</ColourArgb>
@@ -1092,7 +1092,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumRunoff</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16711681</ColourArgb>
@@ -1112,7 +1112,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumRainfall</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8388544</ColourArgb>
@@ -1132,7 +1132,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumIrrigation</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-12582784</ColourArgb>
@@ -1152,7 +1152,7 @@ namespace Models
             </Series>
             <Series>
               <Title>AccumLatOutFlow</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
@@ -1172,7 +1172,7 @@ namespace Models
             </Series>
             <Series>
               <Title>SoilWaterDeficit</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777056</ColourArgb>
@@ -1213,7 +1213,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>Leaf</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8388608</ColourArgb>
@@ -1233,7 +1233,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Stem</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16760704</ColourArgb>
@@ -1253,7 +1253,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Tuber</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -1273,7 +1273,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Root</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65281</ColourArgb>
@@ -1293,7 +1293,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Dead Leaf</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8388480</ColourArgb>
@@ -1313,7 +1313,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Dead Step</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -1333,7 +1333,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Dead Tuber</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-256</ColourArgb>
@@ -1353,7 +1353,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Root Dead</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16711681</ColourArgb>
@@ -1373,7 +1373,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Above Ground Wt</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8372160</ColourArgb>
@@ -1393,7 +1393,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Below Ground Wt</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777088</ColourArgb>
@@ -1413,7 +1413,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Total Wt</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8388608</ColourArgb>
@@ -1715,7 +1715,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>Ft</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -1735,7 +1735,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Fn</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16760704</ColourArgb>
@@ -1755,7 +1755,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Fw</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -1775,7 +1775,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Fvpd</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-32768</ColourArgb>
@@ -1824,7 +1824,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>Supply</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777088</ColourArgb>
@@ -1844,7 +1844,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Uptake</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8372224</ColourArgb>
@@ -1864,7 +1864,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Demand</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -1884,7 +1884,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Transpiration</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -1904,7 +1904,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Potential</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65281</ColourArgb>
@@ -1924,7 +1924,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Root Depth</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Right</YAxis>
               <ColourArgb>-32768</ColourArgb>
@@ -1944,7 +1944,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Canopy Height</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Right</YAxis>
               <ColourArgb>-16711936</ColourArgb>
@@ -1993,7 +1993,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>Cover Dead</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8372224</ColourArgb>
@@ -2013,7 +2013,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Cover Green</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -2033,7 +2033,7 @@ namespace Models
             </Series>
             <Series>
               <Title>CoverTotal</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -2053,7 +2053,7 @@ namespace Models
             </Series>
             <Series>
               <Title>LAI</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Right</YAxis>
               <ColourArgb>-16711936</ColourArgb>
@@ -2073,7 +2073,7 @@ namespace Models
             </Series>
             <Series>
               <Title>LAI Dead</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Right</YAxis>
               <ColourArgb>-32768</ColourArgb>
@@ -2114,7 +2114,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>Senescing Cohorts</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-256</ColourArgb>
@@ -2134,7 +2134,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Total Stem Popn</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -2154,7 +2154,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Expanding Nodes</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16711936</ColourArgb>
@@ -2174,7 +2174,7 @@ namespace Models
             </Series>
             <Series>
               <Title>TotalNodes</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -2194,7 +2194,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Dead Cohorts</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8372224</ColourArgb>
@@ -2214,7 +2214,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Appeared Cohorts</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-32704</ColourArgb>
@@ -2234,7 +2234,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Green leaves</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744384</ColourArgb>
@@ -2254,7 +2254,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Expanded Cohorts</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-8355776</ColourArgb>
@@ -2302,7 +2302,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -2322,7 +2322,7 @@ namespace Models
             </Series>
             <Series>
               <Title>DeadNCocn</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16760704</ColourArgb>
@@ -2342,7 +2342,7 @@ namespace Models
             </Series>
             <Series>
               <Title>MinimumNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -2362,7 +2362,7 @@ namespace Models
             </Series>
             <Series>
               <Title>MaximumNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16711936</ColourArgb>
@@ -2382,7 +2382,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Stage Code</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Right</YAxis>
               <ColourArgb>-65408</ColourArgb>
@@ -2430,7 +2430,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -2450,7 +2450,7 @@ namespace Models
             </Series>
             <Series>
               <Title>DeadNCocn</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16760704</ColourArgb>
@@ -2470,7 +2470,7 @@ namespace Models
             </Series>
             <Series>
               <Title>MinimumNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -2490,7 +2490,7 @@ namespace Models
             </Series>
             <Series>
               <Title>MaximumNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16711936</ColourArgb>
@@ -2510,7 +2510,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Stage Code</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Right</YAxis>
               <ColourArgb>-65408</ColourArgb>
@@ -2558,7 +2558,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -2578,7 +2578,7 @@ namespace Models
             </Series>
             <Series>
               <Title>DeadNCocn</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16760704</ColourArgb>
@@ -2598,7 +2598,7 @@ namespace Models
             </Series>
             <Series>
               <Title>MinimumNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -2618,7 +2618,7 @@ namespace Models
             </Series>
             <Series>
               <Title>MaximumNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16711936</ColourArgb>
@@ -2638,7 +2638,7 @@ namespace Models
             </Series>
             <Series>
               <Title>Stage Code</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Right</YAxis>
               <ColourArgb>-65408</ColourArgb>
@@ -2679,7 +2679,7 @@ namespace Models
             </Axis>
             <Series>
               <Title>LiveNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16744448</ColourArgb>
@@ -2699,7 +2699,7 @@ namespace Models
             </Series>
             <Series>
               <Title>DeadNCocn</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16760704</ColourArgb>
@@ -2719,7 +2719,7 @@ namespace Models
             </Series>
             <Series>
               <Title>MinimumNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65536</ColourArgb>
@@ -2739,7 +2739,7 @@ namespace Models
             </Series>
             <Series>
               <Title>MaximumNConc</Title>
-              <Type>Line</Type>
+              <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-65408</ColourArgb>
@@ -2752,6 +2752,268 @@ namespace Models
               <Y>
                 <TableName>Report</TableName>
                 <FieldName>Potato.Root.MaximumNConc.Value</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Leafappearance</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>number</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Ligules</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Leaf.ExpandedCohortNo</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Tips</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-65281</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Leaf.AppearedCohortNo</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Dead </Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Leaf.DeadCohortNo</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>InitialisedCohorts</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-32704</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Leaf.InitialisedCohortNo</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>FinalNodeNumber</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-65536</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Structure.MainStemFinalNodeNo</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>MainStemNodes</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16744448</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Structure.MainStemNodeNo</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>BottomRight</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>DM Allocation</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>DM (g/m2/d)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>DM Supply</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Arbitrator.DMSupply</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>DM Demand</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Arbitrator.DMDemand</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>DM Allocated</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-65536</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Arbitrator.DMAllocated</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>DM Sink limitation</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16744448</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Arbitrator.DMSinkLimitation</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>DM Nutrient limitation</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-256</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Potato.Arbitrator.DMNutrientLimitation</FieldName>
               </Y>
               <ShowRegressionLine>false</ShowRegressionLine>
               <ShowInLegend>true</ShowInLegend>
@@ -2979,68 +3241,6 @@ namespace Models
             <Action>[Irrigation].Apply(25);</Action>
           </Operation>
         </Operations>
-        <Graph>
-          <Name>TuberWt</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Tuber live weight (g DM/m2)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>Prediceted</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-32768</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Potato.Arbitrator.NO3NSupply(1)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Observed</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-32768</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Potato.Tuber.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-        </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6951,7 +7151,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Prediceted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -6971,7 +7171,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -7013,7 +7213,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -7033,7 +7233,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -18888,7 +19088,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -18908,7 +19108,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -18950,7 +19150,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -18970,7 +19170,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19012,7 +19212,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19032,7 +19232,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19074,7 +19274,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19094,7 +19294,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19136,7 +19336,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19156,7 +19356,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19198,7 +19398,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19218,7 +19418,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19260,7 +19460,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19280,7 +19480,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19322,7 +19522,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19342,7 +19542,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19384,7 +19584,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19404,7 +19604,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19446,7 +19646,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19466,7 +19666,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19507,7 +19707,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19526,7 +19726,7 @@ namespace Models
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19568,7 +19768,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Prediceted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19588,7 +19788,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19630,7 +19830,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Prediceted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19650,7 +19850,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -19692,7 +19892,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>

@@ -719,7 +719,7 @@ namespace Models.PMF
                 BAT.UptakeSupply[i] = Supply.Uptake;
             }
             
-            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);  //This should be Uptake not uptake supply
             BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
         }
         /// <summary>Does the re allocation.</summary>

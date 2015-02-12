@@ -88,6 +88,8 @@ namespace Models.PMF.Organs
         private double _SenescenceRate = 0;
         /// <summary>The _ nuptake</summary>
         private double _Nuptake = 0;
+        /// <summary>The Nuptake</summary>
+        private double[] NitUptake = null;
 
         /// <summary>Gets or sets the layer live.</summary>
         /// <value>The layer live.</value>
@@ -159,14 +161,14 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the n uptake.</summary>
         /// <value>The n uptake.</value>
-        [Units("kg/ha")]
+      /*  [Units("kg/ha")]
         public double NUptake
         {
             get
             {
                 return _Nuptake / kgha2gsm;
             }
-        }
+        } */
 
         /// <summary>Gets the l ldep.</summary>
         /// <value>The l ldep.</value>
@@ -309,6 +311,20 @@ namespace Models.PMF.Organs
             Uptake = WaterUptake.DeltaWater;
             if (WaterChanged != null)
                 WaterChanged.Invoke(WaterUptake);
+        }
+
+        /// <summary>Does the Nitrogen uptake.</summary>
+        /// <param name="Amount">The amount.</param>
+        public override void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount)
+        {
+            // Send the delta water back to SoilN that we're going to uptake.
+            NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
+            NitrogenUptake.DeltaNO3 = Utility.Math.Multiply_Value(NO3NAmount, -1.0);
+            NitrogenUptake.DeltaNH4 = Utility.Math.Multiply_Value(NH4NAmount, -1.0);
+
+            NitUptake = Utility.Math.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
+            if (NitrogenChanged != null)
+                NitrogenChanged.Invoke(NitrogenUptake);
         }
         /// <summary>Layers the index.</summary>
         /// <param name="depth">The depth.</param>
@@ -734,6 +750,9 @@ namespace Models.PMF.Organs
                     throw new Exception("Error in N Allocation: " + Name);
                 }
 
+
+                //letting arbitrator do uptake now
+                /*
                 // uptake_gsm
                 _Nuptake = value.Uptake;
                 double Uptake = value.Uptake / kgha2gsm;
@@ -762,9 +781,9 @@ namespace Models.PMF.Organs
                         NitrogenUptake.DeltaNH4[layer] = DeltaNH4[layer];
                     }
                     if (NitrogenChanged != null)
-                        NitrogenChanged.Invoke(NitrogenUptake); //letting arbitrator do uptake now
+                      NitrogenChanged.Invoke(NitrogenUptake); 
 
-                }
+                }*/
 
             }
         }
@@ -815,7 +834,14 @@ namespace Models.PMF.Organs
         {
             get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
         }
-
+        
+        /// <summary>Gets or sets the water uptake.</summary>
+        /// <value>The water uptake.</value>
+        [Units("mm")]
+        public override double NUptake
+        {
+            get {return NitUptake == null ? 0.0 : -Utility.Math.Sum(NitUptake);}
+        }
         #endregion
 
         #region Event handlers

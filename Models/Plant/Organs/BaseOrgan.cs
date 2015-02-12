@@ -64,6 +64,7 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         virtual public BiomassPoolType NDemand { get { return new BiomassPoolType(); } set { } }
 
+
         /// <summary>Gets the NO3 supply for the given N state.</summary>
         virtual public double[] NO3NSupply(List<ZoneWaterAndN> zones) { return null; }
 
@@ -87,6 +88,16 @@ namespace Models.PMF.Organs
             get { return 0; }
             set { throw new Exception("Cannot set water uptake for " + Name); }
         }
+
+        /// <summary>Gets or sets the water uptake.</summary>
+        /// <value>The water uptake.</value>
+        /// <exception cref="System.Exception">Cannot set water uptake for  + Name</exception>
+        [XmlIgnore]
+        virtual public double NUptake
+        {
+            get { return 0; }
+            set { throw new Exception("Cannot set water uptake for " + Name); }
+        }
         /// <summary>Gets or sets the water allocation.</summary>
         /// <value>The water allocation.</value>
         /// <exception cref="System.Exception">Cannot set water allocation for  + Name</exception>
@@ -99,6 +110,9 @@ namespace Models.PMF.Organs
         /// <summary>Does the water uptake.</summary>
         /// <param name="Demand">The demand.</param>
         virtual public void DoWaterUptake(double[] uptake) { }
+        /// <summary>Does the N uptake.</summary>
+        /// <param name="Demand">The demand.</param>
+        virtual public void DoNitrogenUptake(double[] NO3NUptake, double[] NH4Uptake) { }
         /// <summary>Gets or sets the FRGR.</summary>
         /// <value>The FRGR.</value>
         //[XmlIgnore]

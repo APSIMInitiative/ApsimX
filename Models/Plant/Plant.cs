@@ -402,9 +402,10 @@ namespace Models.PMF
                     Arbitrator.DoNutrientUptake(soilstate);
 
                     //Pack results into uptake structure
-                    //uptake.NO3N = Arbitrator.NO3NSupply;
-                    //uptake.NH4N = Arbitrator.NH4NSupply;
+                    uptake.NO3N = Arbitrator.NO3NSupply;
+                    uptake.NH4N = Arbitrator.NH4NSupply;
 
+                    /*  stuff used to zero uptakes for
                     double[] dummy = Arbitrator.NO3NSupply;
                     double[] dummer = Arbitrator.NH4NSupply;
 
@@ -413,7 +414,7 @@ namespace Models.PMF
                    uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
                    for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
                    uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
-                   for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                   for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; } */
                 }
                 else //Uptakes are zero
                 {
@@ -435,9 +436,12 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetNUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
+        public void SetNUptake(List<ZoneWaterAndN> zones)
         {
-            
+            double[] NO3uptake = zones[0].NO3N;
+            double[] NH4uptake = zones[0].NH4N;
+
+            Root.DoNitrogenUptake(NO3uptake, NH4uptake);
         }
 
         #endregion
