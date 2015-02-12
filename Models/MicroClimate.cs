@@ -541,19 +541,19 @@ namespace Models
         [EventSubscribe("NewCanopy")]
         private void OnNewCanopy(NewCanopyType newCanopy)
         {
-            int senderIdx = FindComponentIndex(newCanopy.sender);
-            if (senderIdx < 0)
-            {
-                throw new Exception("Unknown Canopy Component: " + Convert.ToString(newCanopy.sender));
-            }
-            ComponentData[senderIdx].LAI = newCanopy.lai;
-            ComponentData[senderIdx].LAItot = newCanopy.lai_tot;
-            ComponentData[senderIdx].CoverGreen = newCanopy.cover;
-            ComponentData[senderIdx].CoverTot = newCanopy.cover_tot;
-            ComponentData[senderIdx].Height = Math.Round(newCanopy.height, 5) / 1000.0;
-            // Round off a bit and convert mm to m
-            ComponentData[senderIdx].Depth = Math.Round(newCanopy.depth, 5) / 1000.0;
-            // Round off a bit and convert mm to m
+            //int senderIdx = FindComponentIndex(newCanopy.sender);
+            //if (senderIdx < 0)
+            //{
+            //    throw new Exception("Unknown Canopy Component: " + Convert.ToString(newCanopy.sender));
+            //}
+            //ComponentData[senderIdx].LAI = newCanopy.lai;
+            //ComponentData[senderIdx].LAItot = newCanopy.lai_tot;
+            //ComponentData[senderIdx].CoverGreen = newCanopy.cover;
+            //ComponentData[senderIdx].CoverTot = newCanopy.cover_tot;
+            //ComponentData[senderIdx].Height = Math.Round(newCanopy.height, 5) / 1000.0;
+            //// Round off a bit and convert mm to m
+            //ComponentData[senderIdx].Depth = Math.Round(newCanopy.depth, 5) / 1000.0;
+            //// Round off a bit and convert mm to m
         }
 
         /// <summary>Called when [loaded].</summary>

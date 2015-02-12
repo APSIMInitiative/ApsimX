@@ -106,7 +106,7 @@ namespace Models.AgPasture1
         public double CoverGreen { get { return GreenCover; } }
 
         /// <summary>Gets the cover total (0-1)</summary>
-        public double CoverTotal { get { return CoverTotal; } }
+        public double CoverTotal { get { return TotalCover; } }
 
         /// <summary>Gets the canopy height (mm)</summary>
         [Description("Sward average height")]

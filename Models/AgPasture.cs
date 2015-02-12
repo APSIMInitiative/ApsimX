@@ -4557,7 +4557,8 @@ namespace Models
                 {
                     interceptedRadn += myLightProfile[j].amount;
                 }
-                canopiesRadn[0] = interceptedRadn;
+                if (canopiesNum > 0)
+                    canopiesRadn[0] = interceptedRadn;
             }
         }
 
