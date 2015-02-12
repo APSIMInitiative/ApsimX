@@ -61,10 +61,6 @@ namespace Models
         public event EventHandler DoManagement;
         /// <summary>Occurs when [do energy arbitration].</summary>
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
-        /// <summary>Occurs when [do canopy].</summary>
-        public event EventHandler DoCanopy;                            //This will be removed when comms are better sorted  do not use  MicroClimate only
-        /// <summary>Occurs when [do canopy energy balance].</summary>
-        public event EventHandler DoCanopyEnergyBalance;               //This will be removed when comms are better sorted  do not use  MicroClimate only
         /// <summary>Occurs when [do soil water movement].</summary>
         public event EventHandler DoSoilWaterMovement;                                //Soil module
         //DoSoilTemperature will be here
@@ -81,8 +77,6 @@ namespace Models
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
         /// <summary>Occurs when [do actual plant growth].</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
-        /// <summary>Occurs when [do plant growth].</summary>
-        public event EventHandler DoPlantGrowth;                       //This will be removed when comms are better sorted  do not use  MicroClimate only
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
         /// <summary>Occurs when [do management calculations].</summary>
@@ -151,12 +145,6 @@ namespace Models
                 if (DoEnergyArbitration != null)
                     DoEnergyArbitration.Invoke(this, args);
 
-                if (DoCanopy != null)
-                    DoCanopy.Invoke(this, args);
-
-                if (DoCanopyEnergyBalance != null)
-                    DoCanopyEnergyBalance.Invoke(this, args);
-
                 if (DoSoilWaterMovement != null)
                     DoSoilWaterMovement.Invoke(this, args);
 
@@ -178,9 +166,6 @@ namespace Models
 
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
-
-                if (DoPlantGrowth != null)
-                    DoPlantGrowth.Invoke(this, args);
 
                 if (DoUpdate != null)
                     DoUpdate.Invoke(this, args);

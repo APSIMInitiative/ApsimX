@@ -714,7 +714,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the transpiration.</summary>
         /// <value>The transpiration.</value>
         [Units("mm")]
-        public double Transpiration { get { return Utility.Math.Sum(Plant.uptakeWater); } }
+        public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
         /// <value>The fw.</value>
@@ -723,15 +723,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                /*double F = 0;
+                double F = 0;
                 if (WaterDemand > 0)
                     F = WaterAllocation / WaterDemand;
-                else
-                    F = 1;
-                return F;*/
-                double F = 0;
-                if (Plant.demandWater > 0)
-                    F = Utility.Math.Sum(Plant.uptakeWater) / Plant.demandWater;
                 else
                     F = 1;
                 return F;

@@ -403,33 +403,6 @@ namespace Models
             wind = Weather.MetData.Wind;
         }
 
-        /// <summary>Called when [do canopy].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoCanopy")]
-        private void OnDoCanopy(object sender, EventArgs e)
-        {
-            if (ComponentData.Count > 0 && ComponentData[0].LAI > 0)
-            {
-
-            }
-
-            CalculateGc();
-            CalculateGa();
-            CalculateInterception();
-            CalculatePM();
-            CalculateOmega();
-
-            SendEnergyBalanceEvent();
-        }
-
-        [EventSubscribe("DoPlantGrowth")]
-        private void OnDoPlantGrowth(object sender, EventArgs e)
-        {
-            GetAllCanopies();
-
-        }
-
         /// <summary>Gets all canopies in simulation</summary>
         private void GetAllCanopies()
         {
@@ -458,14 +431,11 @@ namespace Models
         /// <summary>Called when [do canopy energy balance].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// <exception cref="System.Exception">
-        /// Unknown Canopy Component:  + crop.CropType
-        /// or
-        /// Unknown Canopy Component:  + crop2.CropType
-        /// </exception>
-        [EventSubscribe("DoCanopyEnergyBalance")]
-        private void OnDoCanopyEnergyBalance(object sender, EventArgs e)
+        [EventSubscribe("DoEnergyArbitration")]
+        private void DoEnergyArbitration(object sender, EventArgs e)
         {
+            GetAllCanopies();
+            
             MetVariables();
             CanopyCompartments();
             BalanceCanopyEnergy();
@@ -533,27 +503,6 @@ namespace Models
             Util.ZeroArray(c.PETa);
             Util.ZeroArray(c.Omega);
             Util.ZeroArray(c.interception);
-        }
-
-        /// <summary>Called when [new canopy].</summary>
-        /// <param name="newCanopy">The new canopy.</param>
-        /// <exception cref="System.Exception">Unknown Canopy Component:  + Convert.ToString(newCanopy.sender)</exception>
-        [EventSubscribe("NewCanopy")]
-        private void OnNewCanopy(NewCanopyType newCanopy)
-        {
-            //int senderIdx = FindComponentIndex(newCanopy.sender);
-            //if (senderIdx < 0)
-            //{
-            //    throw new Exception("Unknown Canopy Component: " + Convert.ToString(newCanopy.sender));
-            //}
-            //ComponentData[senderIdx].LAI = newCanopy.lai;
-            //ComponentData[senderIdx].LAItot = newCanopy.lai_tot;
-            //ComponentData[senderIdx].CoverGreen = newCanopy.cover;
-            //ComponentData[senderIdx].CoverTot = newCanopy.cover_tot;
-            //ComponentData[senderIdx].Height = Math.Round(newCanopy.height, 5) / 1000.0;
-            //// Round off a bit and convert mm to m
-            //ComponentData[senderIdx].Depth = Math.Round(newCanopy.depth, 5) / 1000.0;
-            //// Round off a bit and convert mm to m
         }
 
         /// <summary>Called when [loaded].</summary>
