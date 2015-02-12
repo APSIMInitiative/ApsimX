@@ -39,6 +39,9 @@ namespace Models.PMF
         [Description("List of nutrients that the arbitrator will consider")]
         public string[] NutrientDrivers = null;
 
+        /// <summary>The kgha2gsm</summary>
+        private const double kgha2gsm = 0.1;
+
         /// <summary>Called when [initialize].</summary>
         [EventSubscribe("Initialised")]
         private void OnInit()
@@ -424,10 +427,12 @@ namespace Models.PMF
 
         /// <summary>Gets and Sets NO3 Supply</summary>
         /// <value>NO3 supplies from each soil layer</value>
+        [XmlIgnore]
         public double[] NO3NSupply { get; set; }
 
         /// <summary>Gets and Sets NH4 Supply</summary>
         /// <value>NH4 supplies from each soil layer</value>
+         [XmlIgnore]
         public double[] NH4NSupply { get; set; }
 
         //FixME Currently all models are N aware but none are P or K aware.  More programming is needed to make this work! 
@@ -615,17 +620,17 @@ namespace Models.PMF
             {
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.ReallocationSupply[i] = Supply.Reallocation;
-                //BAT.UptakeSupply[i] = Supply.Uptake;
+                //BAT.UptakeSupply[i] = Supply.Uptake;             This is done on DoNutrientUptakeCalculations
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
                 BAT.Start += Organs[i].TotalN;
             }
 
             BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
-            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);   This is done on DoNutrientUptakeCalculations
             BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
             BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
-            //BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
+            //BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply; This is done on DoNutrientUptakeCalculations
             
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -667,26 +672,38 @@ namespace Models.PMF
 
         virtual public void DoNutrientUptakeCalculations(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
         {
+            NO3NSupply = new double[soilstate.Zones[0].NO3N.Length];  
+            NH4NSupply = new double[soilstate.Zones[0].NH4N.Length]; 
+
             for (int i = 0; i < Organs.Length; i++)
             {
-               
-                
                 double[] organNO3Supply = Organs[i].NO3NSupply(soilstate.Zones);
                 if (organNO3Supply != null)
                 {
-                    NO3NSupply = organNO3Supply;
-                    //BAT.UptakeSupply[i] = Utility.Math.Sum(organNO3Supply);
+                    NO3NSupply = Utility.Math.Add(NO3NSupply, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                    BAT.UptakeSupply[i] = Utility.Math.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
                 }
 
                 double[] organNH4Supply = Organs[i].NH4NSupply(soilstate.Zones);
                 if (organNH4Supply != null)
                 {
-                    NH4NSupply = organNH4Supply;
-                    //BAT.UptakeSupply[i] = Utility.Math.Sum(organNH4Supply);
+                    NH4NSupply = Utility.Math.Add(NH4NSupply, organNH4Supply);
+                    BAT.UptakeSupply[i] += Utility.Math.Sum(organNH4Supply) * kgha2gsm;
                 }
             }
+            //Calculate plant level supply totals.
             BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
             BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
+            
+            //If N supply is greater than demand that we need to limite uptake demand
+
+            if (BAT.TotalUptakeSupply > (BAT.TotalPlantDemand - BAT.TotalReallocation))
+            {
+                double ratio = Math.Min(1.0, (BAT.TotalPlantDemand - BAT.TotalReallocation) / BAT.TotalUptakeSupply);
+                NO3NSupply = Utility.Math.Multiply_Value(NO3NSupply, ratio);
+                NH4NSupply = Utility.Math.Multiply_Value(NH4NSupply, ratio);
+            }
+
         }
         /// <summary>Does the nutrient uptake set up.</summary>
         /// <param name="Organs">The organs.</param>
@@ -731,6 +748,7 @@ namespace Models.PMF
                         BAT.Reallocation[i] += BiomassReallocated * RelativeSupply;
                     }
                 }
+                BAT.TotalReallocation = Utility.Math.Sum(BAT.Reallocation);
             }
         }
         /// <summary>Does the uptake.</summary>
@@ -1025,12 +1043,13 @@ namespace Models.PMF
                 }
             }
             // Second time round if there is still Biomass to allocate let organs take N up to their Maximum
+            double FirstPassNotAllocated = NotAllocated;
             for (int i = 0; i < Organs.Length; i++)
             {
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (NonStructuralRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(NotAllocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
+                    double NonStructuralAllocation = Math.Min(FirstPassNotAllocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
                     BAT.NonStructuralAllocation[i] += NonStructuralAllocation;
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;
@@ -1099,12 +1118,13 @@ namespace Models.PMF
                 }
             }
             // Second time round if there is still N to allocate let organs take N up to their Maximum
+            double FirstPassNotallocated = NotAllocated;
             for (int i = 0; i < Organs.Length; i++)
             {
                 double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (NonStructuralRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(NotAllocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
+                    double NonStructuralAllocation = Math.Min(FirstPassNotallocated * BAT.RelativeNonStructuralDemand[i], NonStructuralRequirement);
                     BAT.NonStructuralAllocation[i] += NonStructuralAllocation;
                     NotAllocated -= NonStructuralAllocation;
                     TotalAllocated += NonStructuralAllocation;

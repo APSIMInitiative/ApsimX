@@ -2882,6 +2882,9 @@ namespace Models
             <string>[PotatoHarvestRule].Script.FinalTag</string>
             <string>Potato.Tuber.LiveFWt</string>
             <string>Potato.Tuber.DryMatterContent.Value</string>
+            <string>[Potato].Arbitrator.NO3NSupply</string>
+            <string>[Potato].Arbitrator.NH4NSupply</string>
+            <string>[Potato].Root.NUptake</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2976,6 +2979,68 @@ namespace Models
             <Action>[Irrigation].Apply(25);</Action>
           </Operation>
         </Operations>
+        <Graph>
+          <Name>TuberWt</Name>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Date</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Tuber live weight (g DM/m2)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Series>
+            <Title>Prediceted</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Potato.Arbitrator.NO3NSupply(1)</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Observed</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-32768</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>Input</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Input</TableName>
+              <FieldName>Potato.Tuber.Live.Wt</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
@@ -3314,7 +3379,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3334,7 +3399,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3562,7 +3627,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3582,7 +3647,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>

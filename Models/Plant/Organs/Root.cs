@@ -208,6 +208,9 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
+
+        public double NuptakeSupply { get; set; }
+
         /// <summary>Does the potential dm.</summary>
         public override void DoPotentialDM()
         {
@@ -642,7 +645,9 @@ namespace Models.PMF.Organs
                     double[] nh4supply = new double[Soil.Thickness.Length];
                     SoilNSupply(no3supply, nh4supply);
                     double NSupply = (Math.Min(Utility.Math.Sum(no3supply), MaxDailyNUptake.Value) + Math.Min(Utility.Math.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
+                    NuptakeSupply = NSupply;
                     return new BiomassSupplyType { Uptake = NSupply };
+                    
                 }
                 else
                     return new BiomassSupplyType();
@@ -787,7 +792,7 @@ namespace Models.PMF.Organs
                         NitrogenUptake.DeltaNH4[layer] = DeltaNH4[layer];
                     }
                     if (NitrogenChanged != null)
-                        NitrogenChanged.Invoke(NitrogenUptake);
+                        NitrogenChanged.Invoke(NitrogenUptake); //letting arbitrator do uptake now
 
                 }
 

@@ -406,7 +406,7 @@ namespace Models.PMF
                         {
                             Arbitrator.DoWaterLimitedDMAllocations();
                             Arbitrator.DoNutrientDemandSetUp();
-                            Arbitrator.SetNutrientUptake();
+                            //Arbitrator.SetNutrientUptake();
                         }
                     }
                 }
@@ -437,6 +437,7 @@ namespace Models.PMF
                     {
                         if (Arbitrator != null)
                         {
+                            //Arbitrator.SetNutrientUptake();
                             Arbitrator.DoNutrientAllocations();
                             Arbitrator.DoNutrientLimitedGrowth();
                         }
@@ -521,13 +522,18 @@ namespace Models.PMF
                     Arbitrator.DoNutrientUptake(soilstate);
 
                     //Pack results into uptake structure
-                    uptake.NO3N = Arbitrator.NO3NSupply;
-                    uptake.NH4N = Arbitrator.NH4NSupply;
+                    //uptake.NO3N = Arbitrator.NO3NSupply;
+                    //uptake.NH4N = Arbitrator.NH4NSupply;
+
+                    double[] dummy = Arbitrator.NO3NSupply;
+                    double[] dummer = Arbitrator.NH4NSupply;
 
                     //These two lines below must be REMOVED !!!!!!!!!!!!!
                     //Sending zeros until everything is working internally and the root N uptake is turned off
-                    for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
-                    for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                   uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                   for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
+                   uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                   for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
                 }
                 else //Uptakes are zero
                 {
