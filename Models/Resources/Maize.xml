@@ -8,8 +8,16 @@
   </Cultivar>
   <Cultivar>
     <Name>Katumani</Name>
+    <Command>[Phenology].Juvenile.Target = 150</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
+    <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 0, 115</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target = 10</Command>
+    <Command>[Phenology].FloweringToGrainFilling.Target = 120</Command>
+    <Command>[Phenology].GrainFilling.Target = 530</Command>
+    <Command>[Phenology].Maturing.Target = 1</Command>
+    <Command>[Phenology].MaturityToHarvestRipe.Target = 1</Command>  
+    
   </Cultivar>
-
   <OrganArbitrator>
     <Name>Arbitrator</Name>
     <NArbitrationOption>PrioritythenRelativeAllocation</NArbitrationOption>
@@ -135,7 +143,7 @@
       <Start>End_Juvenile</Start>
       <End>Floral_Initiation</End>
       <VariableReference>
-        <Name>ThermalTime</Name>
+        <Name>ThermalTi me</Name>
         <VariableName>[Phenology].ThermalTime.Value</VariableName>
       </VariableReference>
       <LinearInterpolationFunction>
@@ -267,7 +275,7 @@
           </VariableReference>
           <Constant>
             <Name>TipPerPrimordia</Name>
-            <Value>0.35</Value>
+            <Value>0.50</Value>
           </Constant>
         </MultiplyFunction>
       </PhaseLookupValue>
@@ -316,7 +324,7 @@
             </VariableReference>
             <Constant>
               <Name>ApproximatePlastochron</Name>
-              <Value>14</Value>
+              <Value>20</Value>
             </Constant>
           </DivideFunction>
         </AddFunction>
@@ -341,8 +349,8 @@
           </X>
           <Y>
             <double>20</double>
-            <double>1500</double>
-            <double>1700</double>
+            <double>50</double>
+            <double>60</double>
             <double>1700</double>
           </Y>
         </XYPairs>
@@ -906,11 +914,11 @@
       </Constant>
       <Constant>
         <Name>MaximumNConc</Name>
-        <Value>.063</Value>
+        <Value>.02</Value>
       </Constant>
       <Constant>
         <Name>CriticalNConc</Name>
-        <Value>.05</Value>
+        <Value>.018</Value>
       </Constant>
       <Constant>
         <Name>MinimumNConc</Name>
@@ -955,8 +963,8 @@
             <double>9</double>
           </X>
           <Y>
-            <double>100000</double>
-            <double>100000</double>
+            <double>60000</double>
+            <double>30000</double>
           </Y>
         </XYPairs>
       </LinearInterpolationFunction>
@@ -1366,27 +1374,27 @@
         </VariableReference>
         <LinearInterpolationFunction>
           <Name>PotentialInternodeWt</Name>
-          <XProperty>[Phenology].Stage</XProperty>
+          <XProperty>[Structure].RelativeNodeApperance</XProperty>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
-              <double>3</double>
-              <double>3.3</double>
-              <double>3.5</double>
+              <double>0</double>
+              <double>0.5</double>
+              <double>1</double>
             </X>
             <Y>
               <double>0</double>
-              <double>0</double>
-              <double>0</double>
+              <double>0.2</double>
+              <double>16</double>
             </Y>
           </XYPairs>
         </LinearInterpolationFunction>
       </MultiplyFunction>
       <MultiplyFunction>
-        <Name>MaximumSpecificStemLength</Name>
+        <Name>HightLimitedDMAccumulation</Name>
         <Constant>
           <Name>SpecificStemLengthMax</Name>
-          <Value>0.5</Value>
+          <Value>500</Value>
         </Constant>
         <VariableReference>
           <Name>Branches</Name>

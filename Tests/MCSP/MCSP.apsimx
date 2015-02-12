@@ -772,7 +772,7 @@ namespace Models
             <FieldName>MCSP.Leaf.Live.NConc</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -821,7 +821,7 @@ namespace Models
             <FieldName>MCSP.Leaf.Fw</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -841,7 +841,7 @@ namespace Models
             <FieldName>MCSP.Leaf.Fn</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -886,7 +886,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -906,7 +906,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -926,7 +926,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -946,7 +946,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumFert</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -966,7 +966,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -986,7 +986,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1006,7 +1006,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1026,7 +1026,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
@@ -1067,7 +1067,7 @@ namespace Models
           <FieldName>SoilWater.pond</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1087,7 +1087,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumEO</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1107,7 +1107,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumEP</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1127,7 +1127,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumES</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1147,7 +1147,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumDrainage</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1167,7 +1167,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumRunoff</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1187,7 +1187,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumRainfall</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1207,7 +1207,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumIrrigation</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1227,7 +1227,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumOutflowLat</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1247,7 +1247,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>BottomLeft</LegendPosition>
@@ -1288,7 +1288,7 @@ namespace Models
           <FieldName>MCSP.Leaf.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1308,7 +1308,7 @@ namespace Models
           <FieldName>MCSP.Root.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1328,7 +1328,7 @@ namespace Models
           <FieldName>MCSP.Product.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1348,7 +1348,7 @@ namespace Models
           <FieldName>MCSP.Summariser.Total.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1368,7 +1368,7 @@ namespace Models
           <FieldName>MCSP.DryYield.Value</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1388,7 +1388,7 @@ namespace Models
           <FieldName>MCSP.TotalBiomassAtStartReproductive.Value</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1408,7 +1408,7 @@ namespace Models
           <FieldName>MCSP.TotalBiomassAtStartSenescence.Value</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1428,7 +1428,7 @@ namespace Models
           <FieldName>MCSP.Ymax.Value</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -1469,7 +1469,7 @@ namespace Models
           <FieldName>MCSP.Leaf.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1489,7 +1489,7 @@ namespace Models
           <FieldName>MCSP.Root.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1509,7 +1509,7 @@ namespace Models
           <FieldName>MCSP.Product.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1529,7 +1529,7 @@ namespace Models
           <FieldName>MCSP.Summariser.Total.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -1578,7 +1578,7 @@ namespace Models
           <FieldName>MCSP.Root.WaterSupply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1598,7 +1598,7 @@ namespace Models
           <FieldName>MCSP.Root.WaterUptake</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1618,7 +1618,7 @@ namespace Models
           <FieldName>MCSP.Leaf.WaterDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1638,7 +1638,7 @@ namespace Models
           <FieldName>MCSP.Leaf.Transpiration</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1658,7 +1658,7 @@ namespace Models
           <FieldName>Soil.SoilWater.Eo</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1678,7 +1678,7 @@ namespace Models
           <FieldName>MCSP.Root.Depth</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1698,7 +1698,7 @@ namespace Models
           <FieldName>MCSP.Leaf.Height</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -1746,7 +1746,7 @@ namespace Models
           <FieldName>MCSP.Root.Depth</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1766,7 +1766,7 @@ namespace Models
           <FieldName>MCSP.Leaf.CoverTotal</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1786,7 +1786,7 @@ namespace Models
           <FieldName>MCSP.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
@@ -1835,7 +1835,7 @@ namespace Models
           <FieldName>MCSP.OrganArbitrator.NDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1855,7 +1855,7 @@ namespace Models
           <FieldName>MCSP.OrganArbitrator.NSupply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -1904,7 +1904,7 @@ namespace Models
           <FieldName>MCSP.OrganArbitrator.DMSupply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>true</Cumulative>
       </Series>
       <Series>
@@ -1924,7 +1924,7 @@ namespace Models
           <FieldName>MCSP.OrganArbitrator.DMDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>true</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>

@@ -382,10 +382,10 @@ namespace Models.PMF
             }
             InitialiseInterfaceTypes();
         }
+        
         /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
@@ -397,65 +397,28 @@ namespace Models.PMF
                     DoPhenology();
                     if (Phenology.Emerged == true)
                     {
-                        DoDMSetUp();//Sets organs water limited DM supplys and demands
+                       
                         // Invoke a post phenology event.
                         if (PostPhenology != null)
                             PostPhenology.Invoke(this, new EventArgs());
+                        DoDMSetUp();//Sets organs water limited DM supplys and demands
+                        if (Arbitrator != null)
+                        {
+                            Arbitrator.DoWaterLimitedDMAllocations();
+                            Arbitrator.DoNutrientDemandSetUp();
+                            Arbitrator.SetNutrientUptake();
+                        }
                     }
                 }
                 else
                 {
                     DoDMSetUp();//Sets organs water limited DM supplys and demands
-                }
-            }
-        }
-        /// <summary>Called when [do water arbitration].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoWaterArbitration")]
-        private void OnDoWaterArbitration(object sender, EventArgs e) //this should be put into DoWater arbitration to test the effect of the changed order and then replaced by microc climate 
-        {
-
-            //Take out water process so arbitrator can do it.
-            /* if (Phenology != null)
-               if (Phenology.Emerged == true)
-               {
-                   DoWater();
-               }
-           else 
-                if (InGround == true)
-                {
-                    DoWater();
-                }  */
-        }
-
-        /// <summary>Called when [do nutrient arbitration].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoNutrientArbitration")]
-        private void OnDoNutrientArbitration(object sender, EventArgs e)
-        {
-            if ((PlantInGround) && (Arbitrator != null))
-            {
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
+                    if (Arbitrator != null)
                     {
-
                         Arbitrator.DoWaterLimitedDMAllocations();
                         Arbitrator.DoNutrientDemandSetUp();
                         Arbitrator.SetNutrientUptake();
-                        Arbitrator.DoNutrientAllocations();
-                        Arbitrator.DoNutrientLimitedGrowth();
                     }
-                }
-                else
-                {
-                    Arbitrator.DoWaterLimitedDMAllocations();
-                    Arbitrator.DoNutrientDemandSetUp();
-                    Arbitrator.SetNutrientUptake();
-                    Arbitrator.DoNutrientAllocations();
-                    Arbitrator.DoNutrientLimitedGrowth();
                 }
             }
         }
@@ -468,10 +431,26 @@ namespace Models.PMF
         {
             if (PlantInGround)
             {
+                if (Phenology != null)
+                {
+                    if (Phenology.Emerged == true)
+                    {
+                        if (Arbitrator != null)
+                        {
+                            Arbitrator.DoNutrientAllocations();
+                            Arbitrator.DoNutrientLimitedGrowth();
+                        }
+                    }
+                }
+                else
+                    if (Arbitrator != null)
+                    {
+                        Arbitrator.DoNutrientAllocations();
+                        Arbitrator.DoNutrientLimitedGrowth();
+                    }
                 DoActualGrowth();
             }
         }
-
 
         /// <summary>
         /// Calculate the potential sw uptake for today
@@ -495,7 +474,7 @@ namespace Models.PMF
             double FractionUsed = 0;
             if (Supply > 0)
                 FractionUsed = Math.Min(1.0, Demand / Supply);
-
+            
             ZoneWaterAndN uptake = new ZoneWaterAndN();
             uptake.Name = soilstate.Zones[0].Name;
             uptake.Water = Utility.Math.Multiply_Value(supply, FractionUsed);
@@ -534,10 +513,38 @@ namespace Models.PMF
         /// </summary>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            return soilstate.Zones;  // FIX
+            ZoneWaterAndN uptake = new ZoneWaterAndN();
+                    
+            if (Phenology != null)
+                if (Phenology.Emerged == true)
+                {
+                    Arbitrator.DoNutrientUptake(soilstate);
+
+                    //Pack results into uptake structure
+                    uptake.NO3N = Arbitrator.NO3NSupply;
+                    uptake.NH4N = Arbitrator.NH4NSupply;
+
+                    //These two lines below must be REMOVED !!!!!!!!!!!!!
+                    //Sending zeros until everything is working internally and the root N uptake is turned off
+                    for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
+                    for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                }
+                else //Uptakes are zero
+                {
+                    uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                    for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
+                    uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                    for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                }
+
+            uptake.Name = soilstate.Zones[0].Name;
+            uptake.Water = new double[uptake.NO3N.Length];
+
+            List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+            zones.Add(uptake);
+            return zones;
+
         }
-
-
 
         /// <summary>
         /// Set the sw uptake for today
