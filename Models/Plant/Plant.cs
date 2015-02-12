@@ -9,10 +9,9 @@ namespace Models.PMF
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Core;
+    using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
-    using Models.Soils;
-    using Models.PMF.Interfaces;
     using Models.Soils.Arbitrator;
 
     /// <summary>
@@ -30,8 +29,6 @@ namespace Models.PMF
         [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
         /// <summary>The structure</summary>
         [Link(IsOptional=true)] public Structure Structure = null;
-        /// <summary>The soil</summary>
-        [Link] Soils.Soil Soil = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional=true)] public Leaf Leaf = null;
         /// <summary>The root</summary>
@@ -100,8 +97,9 @@ namespace Models.PMF
             get
             {
                 double F;
+                
                 if (Leaf != null && Leaf.WaterDemand > 0)
-                    F = -Root.WaterUptake / Leaf.WaterDemand;
+                    F = Root.WaterUptake / Leaf.WaterDemand;
                 else
                     F = 1;
                 return F;
@@ -137,15 +135,15 @@ namespace Models.PMF
         #endregion
 
         #region Class Events
-        /// <summary>Occurs when [sowing].</summary>
+        /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler Sowing;
-        /// <summary>Occurs when [harvesting].</summary>
+        /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
-        /// <summary>Occurs when [cutting].</summary>
+        /// <summary>Occurs when a plant is about to be cut.</summary>
         public event EventHandler Cutting;
-        /// <summary>Occurs when [plant ending].</summary>
+        /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when [biomass removed].</summary>
+        /// <summary>Occurs when biomass is removed from thecrop.</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
         /// <summary>Occurs when daily phenology timestep completed</summary>
         public event EventHandler PostPhenology;
@@ -255,6 +253,7 @@ namespace Models.PMF
 
             cultivarDefinition.Unapply();
         }
+        
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
@@ -268,6 +267,7 @@ namespace Models.PMF
             if (Arbitrator != null)
                Arbitrator.Clear();
         }
+        
         /// <summary>Cut the crop.</summary>
         public void Cut()
         {
@@ -278,6 +278,7 @@ namespace Models.PMF
             foreach (IOrgan Child in Organs)
                 Child.OnCut();
         }
+        
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
