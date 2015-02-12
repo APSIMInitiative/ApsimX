@@ -354,7 +354,7 @@ namespace Models.PMF
         /// </summary>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            ZoneWaterAndN uptake = new ZoneWaterAndN();
+            ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
             if (IsAlive)
                 if (Phenology != null)
                 {
@@ -363,30 +363,30 @@ namespace Models.PMF
                         Arbitrator.DoNUptakeDemandCalculations(soilstate);
 
                         //Pack results into uptake structure
-                        uptake.NO3N = Arbitrator.NO3NSupply;
-                        uptake.NH4N = Arbitrator.NH4NSupply;
+                        UptakeDemands.NO3N = Arbitrator.PotentialNO3NUptake;
+                        UptakeDemands.NH4N = Arbitrator.PotentialNH4NUptake;
                     }
                     else //Uptakes are zero
                     {
-                        uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
-                        for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
-                        uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
-                        for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                        UptakeDemands.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                        for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
+                        UptakeDemands.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                        for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
                     }
                 }
                 else //Uptakes are zero
                 {
-                    uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
-                    for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
-                    uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
-                    for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                    UptakeDemands.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                    for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
+                    UptakeDemands.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                    for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
                 }
 
-            uptake.Name = soilstate.Zones[0].Name;
-            uptake.Water = new double[uptake.NO3N.Length];
+            UptakeDemands.Name = soilstate.Zones[0].Name;
+            UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
             List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-            zones.Add(uptake);
+            zones.Add(UptakeDemands);
             return zones;
 
         }
@@ -400,18 +400,18 @@ namespace Models.PMF
                 {
                     if (Phenology.Emerged == true)
                     {
-                        double[] NO3uptake = zones[0].NO3N;
-                        double[] NH4uptake = zones[0].NH4N;
-                        Arbitrator.DoNUptakeAllocations(); //Fixme, needs to send allocations to arbitrator
-                        Root.DoNitrogenUptake(NO3uptake, NH4uptake);
+                        double[] AllocatedNO3Nuptake = zones[0].NO3N;
+                        double[] AllocatedNH4Nuptake = zones[0].NH4N;
+                        Arbitrator.DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
+                        Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
                     }
                 }
                 else
                 {
-                    double[] NO3uptake = zones[0].NO3N;
-                    double[] NH4uptake = zones[0].NH4N;
-                    Arbitrator.DoNUptakeAllocations(); //Fixme, needs to send allocations to arbitrator
-                    Root.DoNitrogenUptake(NO3uptake, NH4uptake);
+                    double[] AllocatedNO3Nuptake = zones[0].NO3N;
+                    double[] AllocatedNH4Nuptake = zones[0].NH4N;
+                    Arbitrator.DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
+                    Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
                 }
         }
         /// <summary>Called when [do actual plant growth].</summary>

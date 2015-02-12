@@ -428,12 +428,12 @@ namespace Models.PMF
         /// <summary>Gets and Sets NO3 Supply</summary>
         /// <value>NO3 supplies from each soil layer</value>
         [XmlIgnore]
-        public double[] NO3NSupply { get; set; }
+        public double[] PotentialNO3NUptake { get; set; }
 
         /// <summary>Gets and Sets NH4 Supply</summary>
         /// <value>NH4 supplies from each soil layer</value>
          [XmlIgnore]
-        public double[] NH4NSupply { get; set; }
+        public double[] PotentialNH4NUptake { get; set; }
 
         //FixME Currently all models are N aware but none are P or K aware.  More programming is needed to make this work! 
         /// <summary>The n aware</summary>
@@ -473,19 +473,37 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         public void DoNUptakeDemandCalculations(SoilState soilstate)
         {
-            DoNutrientUptakeCalculations(Organs, ref N, soilstate);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
+            DoPotentialNutrientUptake(Organs, ref N, soilstate);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
         }
         /// <summary>Allocates the NUptake that the soil arbitrator has returned</summary>
         /// <param name="Organs">The organs.</param>
-        public void DoNUptakeAllocations()  //Fixme Needs to take N allocation from soil arbitrator
+        public void DoNUptakeAllocations(double[] AllocatedNO3Nuptake, double[] AllocatedNH4Nuptake)  //Fixme Needs to take N allocation from soil arbitrator
         {
-            DoUptake(Organs, N, NArbitrationOption);                 //Allocate N that the SoilArbitrator has allocated the plant to each organ
+            //Calculation the proportion of potential N uptake from each organ
+            double[] proportion = new double[Organs.Length];
+            for (int i = 0; i < Organs.Length; i++)
+            {
+                proportion[i] = N.UptakeSupply[i] / N.TotalUptakeSupply;
+            }
+            
+            //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
+            for (int i = 0; i < Organs.Length; i++)
+            {   //Allocation of n involves resetting UptakeSupply from the potential value calculated on DoNUptakeDemandCalculations to an actual value based on what soil arbitrator allocated
+                N.UptakeSupply[i] = Utility.Math.Sum(AllocatedNO3Nuptake) * kgha2gsm * proportion[i];
+                N.UptakeSupply[i] += Utility.Math.Sum(AllocatedNH4Nuptake) * kgha2gsm * proportion[i];
+            }
+            
+            //Recalculate totals based on actual supply
+            N.TotalUptakeSupply = Utility.Math.Sum(N.UptakeSupply);
+            N.TotalPlantSupply = N.TotalReallocationSupply + N.TotalUptakeSupply + N.TotalFixationSupply + N.TotalRetranslocationSupply;
+            
+            //Allocate N that the SoilArbitrator has allocated the plant to each organ
+            DoUptake(Organs, N, NArbitrationOption);                 
         }
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="Organs">The organs.</param>
         public void DoActualGrowth()
         {
-            //DoUptake(Organs, N, NArbitrationOption);
             DoRetranslocation(Organs, N, NArbitrationOption);        //Allocate retranslocated N to each organ
             DoFixation(Organs, N, NArbitrationOption);               //Allocate fixed Nitrogen to each organ
             DoNutrientConstrainedDMAllocation(Organs);               //Work out how much DM can be assimilated by each organ based on allocated nutrients
@@ -613,10 +631,10 @@ namespace Models.PMF
             }
 
             BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
-            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);   This is done on DoNutrientUptakeCalculations
+            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);       This is done on DoNutrientUptakeCalculations
             BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
             BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
-            //BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply; This is done on DoNutrientUptakeCalculations
+            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
             
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -688,38 +706,39 @@ namespace Models.PMF
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="Option">The option.</param>
-        virtual public void DoNutrientUptakeCalculations(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
+        virtual public void DoPotentialNutrientUptake(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
         {
-            NO3NSupply = new double[soilstate.Zones[0].NO3N.Length];
-            NH4NSupply = new double[soilstate.Zones[0].NH4N.Length];
+            PotentialNO3NUptake = new double[soilstate.Zones[0].NO3N.Length];
+            PotentialNH4NUptake = new double[soilstate.Zones[0].NH4N.Length];
 
+            //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
             for (int i = 0; i < Organs.Length; i++)
             {
                 double[] organNO3Supply = Organs[i].NO3NSupply(soilstate.Zones);
                 if (organNO3Supply != null)
                 {
-                    NO3NSupply = Utility.Math.Add(NO3NSupply, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                    PotentialNO3NUptake = Utility.Math.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                     BAT.UptakeSupply[i] = Utility.Math.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
                 }
 
                 double[] organNH4Supply = Organs[i].NH4NSupply(soilstate.Zones);
                 if (organNH4Supply != null)
                 {
-                    NH4NSupply = Utility.Math.Add(NH4NSupply, organNH4Supply);
+                    PotentialNH4NUptake = Utility.Math.Add(PotentialNH4NUptake, organNH4Supply);
                     BAT.UptakeSupply[i] += Utility.Math.Sum(organNH4Supply) * kgha2gsm;
                 }
             }
+            
             //Calculate plant level supply totals.
             BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
             BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
 
-            //If N supply is greater than demand that we need to limite uptake demand
-
+            //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
             if (BAT.TotalUptakeSupply > (BAT.TotalPlantDemand - BAT.TotalReallocation))
             {
                 double ratio = Math.Min(1.0, (BAT.TotalPlantDemand - BAT.TotalReallocation) / BAT.TotalUptakeSupply);
-                NO3NSupply = Utility.Math.Multiply_Value(NO3NSupply, ratio);
-                NH4NSupply = Utility.Math.Multiply_Value(NH4NSupply, ratio);
+                PotentialNO3NUptake = Utility.Math.Multiply_Value(PotentialNO3NUptake, ratio);
+                PotentialNH4NUptake = Utility.Math.Multiply_Value(PotentialNH4NUptake, ratio);
             }
 
         }
