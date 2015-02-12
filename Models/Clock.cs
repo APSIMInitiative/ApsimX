@@ -77,6 +77,8 @@ namespace Models
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
         /// <summary>Occurs when [do actual plant growth].</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
+        /// <summary>Occurs when [do plant growth].</summary>
+        public event EventHandler DoPlantGrowth;                       //This will be removed when comms are better sorted  do not use  MicroClimate only
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
         /// <summary>Occurs when [do management calculations].</summary>
@@ -166,6 +168,9 @@ namespace Models
 
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
+
+                if (DoPlantGrowth != null)
+                    DoPlantGrowth.Invoke(this, args);
 
                 if (DoUpdate != null)
                     DoUpdate.Invoke(this, args);
