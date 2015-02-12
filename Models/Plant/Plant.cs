@@ -9,6 +9,7 @@ namespace Models.PMF
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Core;
+    using Models.Plant.Interfaces;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
@@ -18,7 +19,7 @@ namespace Models.PMF
     /// The generic plant model
     /// </summary>
     [Serializable]
-    public class Plant : ModelCollectionFromResource, ICrop
+    public class Plant : ModelCollectionFromResource, ICrop, IUptake
     {
         #region Class links
         /// <summary>The summary</summary>
@@ -263,37 +264,42 @@ namespace Models.PMF
                 o.OnSimulationCommencing();
         }
         /// <summary>
-        /// Calculate the potential sw uptake for today
+        /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
         /// </summary>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
-            double Supply = 0;
-            double Demand = 0;
-            double[] supply = null;
-            foreach (IArbitration o in Organs)
+            if (IsAlive)
             {
-                double[] organSupply = o.WaterSupply(soilstate.Zones);
-                if (organSupply != null)
+                double Supply = 0;
+                double Demand = 0;
+                double[] supply = null;
+                foreach (IArbitration o in Organs)
                 {
-                    supply = organSupply;
-                    Supply += Utility.Math.Sum(organSupply);
+                    double[] organSupply = o.WaterSupply(soilstate.Zones);
+                    if (organSupply != null)
+                    {
+                        supply = organSupply;
+                        Supply += Utility.Math.Sum(organSupply);
+                    }
+                    Demand += o.WaterDemand;
                 }
-                Demand += o.WaterDemand;
+
+                double FractionUsed = 0;
+                if (Supply > 0)
+                    FractionUsed = Math.Min(1.0, Demand / Supply);
+
+                ZoneWaterAndN uptake = new ZoneWaterAndN();
+                uptake.Name = soilstate.Zones[0].Name;
+                uptake.Water = Utility.Math.Multiply_Value(supply, FractionUsed);
+                uptake.NO3N = new double[uptake.Water.Length];
+                uptake.NH4N = new double[uptake.Water.Length];
+
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                zones.Add(uptake);
+                return zones;
             }
-
-            double FractionUsed = 0;
-            if (Supply > 0)
-                FractionUsed = Math.Min(1.0, Demand / Supply);
-            
-            ZoneWaterAndN uptake = new ZoneWaterAndN();
-            uptake.Name = soilstate.Zones[0].Name;
-            uptake.Water = Utility.Math.Multiply_Value(supply, FractionUsed);
-            uptake.NO3N = new double[uptake.Water.Length];
-            uptake.NH4N = new double[uptake.Water.Length];
-
-            List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-            zones.Add(uptake);
-            return zones;
+            else
+                return null;
         }
         /// <summary>
         /// Set the sw uptake for today
@@ -350,21 +356,31 @@ namespace Models.PMF
             }
         }
         /// <summary>
-        /// Calculate the potential sw uptake for today
+        /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
         /// </summary>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            ZoneWaterAndN uptake = new ZoneWaterAndN();
             if (IsAlive)
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
+            {
+                ZoneWaterAndN uptake = new ZoneWaterAndN();
+                if (IsAlive)
+                    if (Phenology != null)
                     {
-                        Arbitrator.DoNUptakeDemandCalculations(soilstate);
+                        if (Phenology.Emerged == true)
+                        {
+                            Arbitrator.DoNUptakeDemandCalculations(soilstate);
 
-                        //Pack results into uptake structure
-                        uptake.NO3N = Arbitrator.NO3NSupply;
-                        uptake.NH4N = Arbitrator.NH4NSupply;
+                            //Pack results into uptake structure
+                            uptake.NO3N = Arbitrator.NO3NSupply;
+                            uptake.NH4N = Arbitrator.NH4NSupply;
+                        }
+                        else //Uptakes are zero
+                        {
+                            uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                            for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
+                            uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                            for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                        }
                     }
                     else //Uptakes are zero
                     {
@@ -373,22 +389,16 @@ namespace Models.PMF
                         uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
                         for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
                     }
-                }
-                else //Uptakes are zero
-                {
-                    uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
-                    for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
-                    uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
-                    for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
-                }
 
-            uptake.Name = soilstate.Zones[0].Name;
-            uptake.Water = new double[uptake.NO3N.Length];
+                uptake.Name = soilstate.Zones[0].Name;
+                uptake.Water = new double[uptake.NO3N.Length];
 
-            List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-            zones.Add(uptake);
-            return zones;
-
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                zones.Add(uptake);
+                return zones;
+            }
+            else
+                return null;
         }
         /// <summary>
         /// Set the sw uptake for today
