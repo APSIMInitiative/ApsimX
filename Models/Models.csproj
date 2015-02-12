@@ -117,7 +117,8 @@
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
-    <Compile Include="ICanopy.cs" />
+    <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
+    <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />

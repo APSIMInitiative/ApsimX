@@ -814,22 +814,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Event handlers
-        ///// <summary>Called when [do water arbitration].</summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("DoWaterArbitration")]
-        //private void OnDoWaterArbitration(object sender, EventArgs e)
-        //{
-        //        if (SWSupply == null || SWSupply.Length != Soil.Thickness.Length)
-        //            SWSupply = new double[Soil.Thickness.Length];
-        //        for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-        //            if (layer <= LayerIndex(Depth))
-        //                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.Water[layer] - soilCrop.LL[layer] * Soil.Thickness[layer]) * RootProportion(layer, Depth));
-        //            else
-        //                SWSupply[layer] = 0;
 
-        //        WaterSupply = Utility.Math.Sum(SWSupply);
-        //}
 
         /// <summary>Called when [water uptakes calculated].</summary>
         /// <param name="SoilWater">The soil water.</param>

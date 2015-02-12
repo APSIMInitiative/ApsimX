@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using Models.SurfaceOM;
 
 using Models.Soils.SoilWaterBackend;
+using Models.Interfaces;
 
 
 namespace Models.Soils

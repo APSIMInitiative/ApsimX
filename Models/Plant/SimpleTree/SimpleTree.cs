@@ -6,6 +6,7 @@ using Models.Core;
 using Models.Soils;
 using System.Xml.Serialization;
 using Models.Soils.Arbitrator;
+using Models.Interfaces;
 
 namespace Models.PMF
 {

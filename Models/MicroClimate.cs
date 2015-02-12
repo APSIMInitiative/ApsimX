@@ -9,6 +9,7 @@ using Models.Core;
 using Models;
 using Models.PMF;
 using System.Xml.Serialization;
+using Models.Interfaces;
 
 namespace Models
 {

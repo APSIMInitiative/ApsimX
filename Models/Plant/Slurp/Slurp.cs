@@ -9,6 +9,7 @@ using Models.PMF.Functions;
 using Models.Soils;
 using System.Xml.Serialization;
 using Models.PMF;
+using Models.Interfaces;
 
 
 namespace Models.PMF.Slurp

@@ -6,6 +6,7 @@ using System.IO;
 using Models.Core;
 using Models;
 using System.Xml.Serialization;
+using Models.Interfaces;
 
 namespace Models.Soils
 {

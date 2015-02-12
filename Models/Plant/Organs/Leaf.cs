@@ -8,6 +8,7 @@ using Models.PMF.Functions.SupplyFunctions;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -90,6 +91,8 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link]
         public Phenology Phenology = null;
+        [Link]
+        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
         #endregion
 
         #region Structures
@@ -903,7 +906,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the actual growth.</summary>
         public override void DoActualGrowth()
         {
-            WaterAllocation = 0;
+           // WaterAllocation = 0;
             
             foreach (LeafCohort L in Leaves)
                 L.DoActualGrowth(ThermalTime.Value, LeafCohortParameters);
@@ -1542,11 +1545,13 @@ namespace Models.PMF.Organs
 
         }
 
-        /// <summary>Called when [cut].</summary>
+        /// <summary>Called when crop is cut</summary>
         public override void OnCut()
         {
-
             Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+
+            if (TotalDM > 0)
+                SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
 
             Structure.MainStemNodeNo = 0;
             Structure.Clear();
@@ -1558,12 +1563,19 @@ namespace Models.PMF.Organs
             //Structure.ResetStemPopn();
         }
 
-        /// <summary>Called when [harvest].</summary>
+        /// <summary>Called when a crop is harvested</summary>
         public override void OnHarvest()
         {
-            OnCut();
+            
         }
 
+        /// <summary>Called when a crop ends</summary>
+        public override void OnEndCrop()
+        {
+            if (TotalDM > 0)
+                SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+            Clear();
+        }
         #endregion
 
 

@@ -18,7 +18,8 @@ namespace Models.PMF.Organs
 
         /// <summary>Occurs when [harvesting].</summary>
         public event NullTypeDelegate Harvesting;
-        /// <summary>Called when [harvest].</summary>
+
+        /// <summary>Called when crop is harvested</summary>
         public override void OnHarvest()
         {
             Harvesting.Invoke();

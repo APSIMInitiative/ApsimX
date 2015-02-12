@@ -10,6 +10,7 @@ using Models.Core;
 using Models.Soils;
 using Models.PMF;
 using Models.Soils.Arbitrator;
+using Models.Interfaces;
 
 //nb. when adding a NEW model you need to add it as a child model in Models.cs (otherwise it just ignores the xml)
 

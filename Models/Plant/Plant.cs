@@ -143,8 +143,6 @@ namespace Models.PMF
         public event EventHandler Cutting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when biomass is removed from thecrop.</summary>
-        public event BiomassRemovedDelegate BiomassRemoved;
         /// <summary>Occurs when daily phenology timestep completed</summary>
         public event EventHandler PostPhenology;
         #endregion
@@ -215,36 +213,6 @@ namespace Models.PMF
 
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());
-
-            BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
-            BiomassRemovedData.crop_type = CropType;
-            BiomassRemovedData.dm_type = new string[Organs.Length];
-            BiomassRemovedData.dlt_crop_dm = new float[Organs.Length];
-            BiomassRemovedData.dlt_dm_n = new float[Organs.Length];
-            BiomassRemovedData.dlt_dm_p = new float[Organs.Length];
-            BiomassRemovedData.fraction_to_residue = new float[Organs.Length];
-            int i = 0;
-            foreach (BaseOrgan O in Organs)
-            {
-                if (O is AboveGround)
-                {
-                    BiomassRemovedData.dm_type[i] = O.Name;
-                    BiomassRemovedData.dlt_crop_dm[i] = (float)O.TotalDM * 10f;
-                    BiomassRemovedData.dlt_dm_n[i] = (float)O.TotalN * 10f;
-                    BiomassRemovedData.dlt_dm_p[i] = 0f;
-                    BiomassRemovedData.fraction_to_residue[i] = 1f;
-                }
-                else
-                {
-                    BiomassRemovedData.dm_type[i] = O.Name;
-                    BiomassRemovedData.dlt_crop_dm[i] = 0f;
-                    BiomassRemovedData.dlt_dm_n[i] = 0f;
-                    BiomassRemovedData.dlt_dm_p[i] = 0f;
-                    BiomassRemovedData.fraction_to_residue[i] = 0f;
-                }
-                i++;
-            }
-            BiomassRemoved.Invoke(BiomassRemovedData);
 
             // tell all our children about endcrop
             foreach (IOrgan Child in Organs)

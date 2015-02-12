@@ -18,6 +18,7 @@ using Models.Core;
 using Models.Soils;
 using Models.PMF;
 using Models.Soils.Arbitrator;
+using Models.Interfaces;
 
 namespace Models.AgPasture1
 {
