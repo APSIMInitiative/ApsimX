@@ -48,7 +48,7 @@ namespace Models.PMF.Organs
         [Link]
         IFunction MinimumNConc = null;
         /// <summary>The dm demand function</summary>
-        [Link]
+        [Link(IsOptional=true)]
         IFunction DMDemandFunction = null;
         #endregion
 
