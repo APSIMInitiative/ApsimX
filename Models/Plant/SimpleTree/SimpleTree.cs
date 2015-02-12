@@ -15,32 +15,56 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleTree : Model, ICrop
+    public class SimpleTree : Model, ICrop, ICanopy
     {
+        #region Canopy interface
+
+        /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
+        public string CanopyType { get; set; }
+
+        /// <summary>Gets the LAI</summary>
+        [Description("Leaf Area Index (m^2/m^2)")]
+        [Units("m^2/m^2")]
+        public double LAI { get; set; }
+
+        /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
+        public double LAITotal { get { return LAI; } }
+
+        /// <summary>Gets the cover green.</summary>
+        [Units("0-1")]
+        public double CoverGreen { get { return 1.0 - Math.Exp(-0.5 * LAI); } }
+
+        /// <summary>Gets the cover total.</summary>
+        [Units("0-1")]
+        public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - 0); } }
+
+        /// <summary>Gets the height.</summary>
+        [Units("mm")]
+        public double Height { get; set; }
+
+        /// <summary>Gets the depth.</summary>
+        [Units("mm")]
+        public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+
+        /// <summary>Gets  FRGR.</summary>
+        [Units("0-1")]
+        public double FRGR { get { return 1; } }
+
+        /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
+        [XmlIgnore]
+        public double PotentialEP { get; set; }
+
+        /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+        #endregion
+
+        public string CropType { get; set; }
+
         /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
         /// <summary>Occurs when [nitrogen changed].</summary>
         public event NitrogenChangedDelegate NitrogenChanged;
-        /// <summary>Occurs when [new canopy].</summary>
-        public event NewCanopyDelegate NewCanopy;
-
-        /// <summary>Provides canopy data to micromet.</summary>
-        public NewCanopyType CanopyData
-        {
-            get
-            {
-                NewCanopyType LocalCanopyData = new NewCanopyType();
-                LocalCanopyData.cover = CoverLive;
-                LocalCanopyData.cover_tot = CoverLive;
-                LocalCanopyData.height = Height;
-                LocalCanopyData.depth = Height;
-                LocalCanopyData.lai = LAI;
-                LocalCanopyData.lai_tot = LAI;
-                LocalCanopyData.sender = Name;
-                return LocalCanopyData;
-            }
-        }
 
 
         /// <summary>
@@ -51,17 +75,7 @@ namespace Models.PMF
             get { return true; }
         }
 
-        /// <summary>LeafAreaIndex</summary>
-        /// <value>The leaf area index.</value>
-        [Description("Leaf Area Index (m^2/m^2)")]
-        [Units("m^2/m^2")]
-        public double LAI { get; set; }
 
-        /// <summary>Height</summary>
-        /// <value>The plant height.</value>
-        [Description("Height (mm)")]
-        [Units("mm")]
-        public double Height { get; set; }
 
         /// <summary>Rooting Depth</summary>
         /// <value>The rooting depth.</value>
@@ -76,10 +90,6 @@ namespace Models.PMF
         public double NDemand { get; set; }
 
 
-        /// <summary>Cover live</summary>
-        /// <value>The cover live.</value>
-        public double CoverLive {get { return 1.0 - Math.Exp(-0.5 * LAI); }}
-        
         /// <summary>The plant_status</summary>
         [XmlIgnore]
         public string plant_status = "alive";
@@ -105,14 +115,6 @@ namespace Models.PMF
             Name = "SimpleTree";
         }
 
-        /// <summary>The type of crop</summary>
-        /// <value>Type of crop.</value>
-        [Description("Crop Type")]
-        [Units("")]
-        public string CropType { get; set; }
-
-        /// <summary>Frogger. Used for MicroClimate I think?</summary>
-        public double FRGR { get { return 1; } }
         /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
         {
@@ -124,14 +126,7 @@ namespace Models.PMF
 
         /// <summary>MicroClimate supplies PotentialEP</summary>
         [XmlIgnore]
-        public double PotentialEP { get; set; }
-        /// <summary>MicroClimate supplies PotentialEP</summary>
-        [XmlIgnore]
         public double EP { get; set; }
-
-        /// <summary>MicroClimate supplies LightProfile</summary>
-        [XmlIgnore]
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
         /// <summary>Simulation start</summary>
         /// <param name="sender">The sender.</param>
@@ -140,9 +135,7 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Uptakes = new List<ZoneWaterAndN>();
-            NewCanopy.Invoke(CanopyData);
             EP = 0;
-     
         }
 
         /// <summary>Run at start of day</summary>

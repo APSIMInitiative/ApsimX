@@ -5,6 +5,7 @@ using Models.Core;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using Models.Soils.Arbitrator;
 
 namespace Models.PMF
 {
@@ -257,7 +258,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -280,7 +281,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -303,7 +304,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -326,7 +327,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -349,7 +350,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -372,7 +373,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -395,7 +396,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -410,6 +411,7 @@ namespace Models.PMF
                     return 0.0;
             }
         }
+        
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
         public double DeltaWt
@@ -419,6 +421,14 @@ namespace Models.PMF
                 return DM.End - DM.Start;
             }
         }
+
+        /// <summary>Gets and Sets NO3 Supply</summary>
+        /// <value>NO3 supplies from each soil layer</value>
+        public double[] NO3NSupply { get; set; }
+
+        /// <summary>Gets and Sets NH4 Supply</summary>
+        /// <value>NH4 supplies from each soil layer</value>
+        public double[] NH4NSupply { get; set; }
 
         //FixME Currently all models are N aware but none are P or K aware.  More programming is needed to make this work! 
         /// <summary>The n aware</summary>
@@ -460,6 +470,12 @@ namespace Models.PMF
                 DoNutrientSetUp(Organs, ref N);
                 DoReAllocation(Organs, N, NArbitrationOption);
         }
+
+        public void DoNutrientUptake(SoilState soilstate)
+        {
+            DoNutrientUptakeCalculations(Organs, ref N, soilstate);
+        }
+        
         /// <summary>Sets the nutrient uptake.</summary>
         /// <param name="Organs">The organs.</param>
         public void SetNutrientUptake()
@@ -599,17 +615,17 @@ namespace Models.PMF
             {
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.ReallocationSupply[i] = Supply.Reallocation;
-                BAT.UptakeSupply[i] = Supply.Uptake;
+                //BAT.UptakeSupply[i] = Supply.Uptake;
                 BAT.FixationSupply[i] = Supply.Fixation;
                 BAT.RetranslocationSupply[i] = Supply.Retranslocation;
                 BAT.Start += Organs[i].TotalN;
             }
 
             BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
-            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
             BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
             BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
-            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
+            //BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
             
             for (int i = 0; i < Organs.Length; i++)
             {
@@ -648,6 +664,30 @@ namespace Models.PMF
                     BAT.RelativeNonStructuralDemand[i] = BAT.NonStructuralDemand[i] / BAT.TotalNonStructuralDemand;
             }
         }
+
+        virtual public void DoNutrientUptakeCalculations(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
+        {
+            for (int i = 0; i < Organs.Length; i++)
+            {
+               
+                
+                double[] organNO3Supply = Organs[i].NO3NSupply(soilstate.Zones);
+                if (organNO3Supply != null)
+                {
+                    NO3NSupply = organNO3Supply;
+                    //BAT.UptakeSupply[i] = Utility.Math.Sum(organNO3Supply);
+                }
+
+                double[] organNH4Supply = Organs[i].NH4NSupply(soilstate.Zones);
+                if (organNH4Supply != null)
+                {
+                    NH4NSupply = organNH4Supply;
+                    //BAT.UptakeSupply[i] = Utility.Math.Sum(organNH4Supply);
+                }
+            }
+            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
+        }
         /// <summary>Does the nutrient uptake set up.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -661,8 +701,9 @@ namespace Models.PMF
                 BiomassSupplyType Supply = Organs[i].NSupply;
                 BAT.UptakeSupply[i] = Supply.Uptake;
             }
-        
+            
             BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
         }
         /// <summary>Does the re allocation.</summary>
         /// <param name="Organs">The organs.</param>

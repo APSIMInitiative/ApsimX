@@ -120,7 +120,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (Plant.PlantInGround)
+            if (Plant.IsAlive)
             {
                 if (Phenology.CurrentPhaseName == "Emerging")
                     DeltaHaunStage = Tt / 90; //Fixme, need to do something better than this

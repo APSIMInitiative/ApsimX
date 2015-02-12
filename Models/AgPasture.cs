@@ -19,7 +19,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AgPasture : Model, ICrop
+    public class AgPasture : Model, ICrop, ICanopy
     {
         #region Links and event declarations
 
@@ -88,42 +88,6 @@ namespace Models
 
         #region Inputs
 
-        /// <summary>MicroClimate supplies PotentialEP</summary>
-        [XmlIgnore]
-        public double PotentialEP
-        {
-            get
-            {
-                return p_waterDemand;
-            }
-            set
-            {
-                p_waterDemand = value;
-            }
-        }
-
-        /// <summary>MicroClimate supplies LightProfile</summary>
-        [XmlIgnore]
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
-        {
-            get
-            {
-                return myLightProfile;
-            }
-            set
-            {
-                myLightProfile = value;
-                canopiesNum = myLightProfile.Length;
-                canopiesRadn = new double[canopiesNum];
-
-                interceptedRadn = 0;
-                for (int j = 0; j < canopiesNum; j++)
-                {
-                    interceptedRadn += myLightProfile[j].amount;
-                }
-                canopiesRadn[0] = interceptedRadn;
-            }
-        }
 
         #endregion
 
@@ -1342,16 +1306,6 @@ namespace Models
             }
         }
 
-        /// <summary>
-        /// MicroClimate will get 'CropType' and use it to look up
-        /// canopy properties for this crop.
-        /// </summary>
-        [Description("Generic type of crop")]
-        [Units("")]
-        public string CropType
-        {
-            get { return SwardName; }
-        }
 
         /// <summary>
         /// Is the plant alive?
@@ -2469,14 +2423,6 @@ namespace Models
             }
         }
 
-        /// <summary>Gets the height.</summary>
-        /// <value>The height.</value>
-        [Description("Sward average height")]                 //needed by micromet
-        [Units("mm")]
-        public double Height
-        {
-            get { return p_height; }
-        }
 
         //testing purpose
         /// <summary>Gets the plant stage1 wt.</summary>
@@ -4516,49 +4462,35 @@ namespace Models
 
         #endregion
 
-        # region EventSenders
+        # region Canopy interface
+        /// <summary>Canopy type</summary>
+        public string CanopyType { get { return SwardName; } }
 
-        //--------------------------------------------------------------------------------------------
-        /// <summary>Event publication - new crop</summary>
-        private void DoNewCropEvent()
+        /// <summary>Gets the LAI (m^2/m^2)</summary>
+        public double LAI { get { return p_greenLAI; } }
+
+        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
+        public double LAITotal { get { return p_totalLAI; } }
+
+        /// <summary>Gets the cover green (0-1)</summary>
+        public double CoverGreen { get { return Cover_green; } }
+
+        /// <summary>Gets the cover total (0-1)</summary>
+        public double CoverTotal { get { return Cover_tot; } }
+
+        /// <summary>Gets the canopy height (mm)</summary>
+        [Description("Sward average height")]                 //needed by micromet
+        [Units("mm")]
+        public double Height
         {
-            if (NewCrop != null)
-            {
-                // Send out New Crop Event to tell other modules who I am and what I am
-                PMF.NewCropType EventData = new PMF.NewCropType();
-                EventData.crop_type = SP[0].micrometType;  // need to separate crop type for micromet & canopy name !!
-                EventData.sender = Name;		//
-                NewCrop.Invoke(EventData);
-            }
+            get { return p_height; }
         }
 
-        //----------------------------------------------------------------
-        /// <summary>Event publication - new canopy</summary>
-        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
-        /// <summary>The local canopy data</summary>
-        NewCanopyType LocalCanopyData = new NewCanopyType();
-        /// <summary>Does the new canopy event.</summary>
-        private void DoNewCanopyEvent()
-        {
-            if (NewCanopy != null)
-            {
-                LocalCanopyData.sender = Name;
-                LocalCanopyData.lai = p_greenLAI;
-                LocalCanopyData.lai_tot = p_totalLAI;
-                p_height = HeightfromDM;
-                LocalCanopyData.height = p_height;			 // height effect, mm
-                LocalCanopyData.depth = p_height;			  // canopy depth
-                LocalCanopyData.cover = Cover_green;
-                LocalCanopyData.cover_tot = Cover_tot;
-                NewCanopy.Invoke(LocalCanopyData);
-            }
-        }
+        /// <summary>Gets the canopy depth (mm)</summary>
+        public double Depth { get { return HeightfromDM; } }
 
-        //----------------------------------------------------------------
-        /// <summary>
-        /// Send out plant growth limiting factor for other module calculating potential transp.
-        /// </summary>
-        public double FRGR
+        /// <summary>Gets  FRGR.</summary>
+        public double FRGR 
         {
             get
             {
@@ -4592,7 +4524,45 @@ namespace Models
             }
         }
 
-        #endregion //EventSender
+        /// <summary>MicroClimate supplies PotentialEP</summary>
+        [XmlIgnore]
+        public double PotentialEP
+        {
+            get
+            {
+                return p_waterDemand;
+            }
+            set
+            {
+                p_waterDemand = value;
+            }
+        }
+
+        /// <summary>MicroClimate supplies LightProfile</summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
+        {
+            get
+            {
+                return myLightProfile;
+            }
+            set
+            {
+                myLightProfile = value;
+                canopiesNum = myLightProfile.Length;
+                canopiesRadn = new double[canopiesNum];
+
+                interceptedRadn = 0;
+                for (int j = 0; j < canopiesNum; j++)
+                {
+                    interceptedRadn += myLightProfile[j].amount;
+                }
+                if (canopiesNum > 0)
+                    canopiesRadn[0] = interceptedRadn;
+            }
+        }
+
+        #endregion
 
         #region EventHandlers
 
@@ -4607,9 +4577,6 @@ namespace Models
                 SetPastureToSpeciesData();		 // This is needed for the first day after knowing the number of species
 
             FractionToHarvest = new double[numSpecies];
-
-            DoNewCropEvent();			// Tell other modules that I exist
-            DoNewCanopyEvent();		  // Tell other modules about my canopy
 
             alt_N_uptake = alt_N_uptake.ToLower();
             if (alt_N_uptake == "yes")
@@ -4641,8 +4608,6 @@ namespace Models
 
             for (int s = 0; s < numSpecies; s++)
                 SP[s].DailyRefresh();
-
-            DoNewCanopyEvent();
         }
 
         //---------------------------------------------------------------------
