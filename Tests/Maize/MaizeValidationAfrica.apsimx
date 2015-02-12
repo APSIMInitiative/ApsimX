@@ -453,6 +453,12 @@ namespace Models
             <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
             <string>[ExtraVariables].Script.LeafExpandedPosition</string>
             <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
+            <string>[Maize].Grain.NumberFunction.Value</string>
+            <string>[Maize].Grain.NumberFunction.StemNumber.Value</string>
+            <string>[Maize].Grain.NumberFunction.CobsPerStem.Value</string>
+            <string>[Maize].Grain.NumberFunction.KernalsPerCob.Value</string>
+            <string>[Maize].Grain.NumberFunction.GrainPerKernal.Value</string>
+            <string>[Maize].Rachis.CobSize.Value</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -827,6 +833,7 @@ namespace Models
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
             <string>[Maize].Husk.Live.Wt</string>
+            <string>[Maize].Rachis.Live.Wt</string>
             <string>[Maize].Summariser.EarLive.N</string>
             <string>[Maize].Grain.Live.N</string>
             <string>[Maize].Stem.Live.N</string>
@@ -838,6 +845,7 @@ namespace Models
             <string>[Maize].Summariser.Total.N</string>
             <string>[Maize].Summariser.Total.Wt</string>
             <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
+            <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
           </VariableNames>
           <EventNames>
             <string>[Maize].Harvesting</string>
@@ -968,6 +976,90 @@ namespace Models
         <Y>
           <TableName>Report</TableName>
           <FieldName>Maize.Leaf.AppearedCohortNo</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>GrainNo</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Series1</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Grain.NumberFunction.Value</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>CobSize</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Series1</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Maize.Rachis.CobSize.Value</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -1814,6 +1906,7 @@ namespace Models
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
             <string>[Maize].Husk.Live.Wt</string>
+            <string>[Maize].Rachis.Live.Wt</string>
             <string>[Maize].Summariser.EarLive.N</string>
             <string>[Maize].Grain.Live.N</string>
             <string>[Maize].Stem.Live.N</string>
@@ -1825,6 +1918,7 @@ namespace Models
             <string>[Maize].Summariser.Total.N</string>
             <string>[Maize].Summariser.Total.Wt</string>
             <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
+            <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
           </VariableNames>
           <EventNames>
             <string>[Maize].Harvesting</string>
@@ -2040,6 +2134,48 @@ namespace Models
       <Y>
         <TableName>PredictedObserved</TableName>
         <FieldName>Predicted.LAImax</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
+  <Graph>
+    <Name>GPSM</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.GPSM</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.GPSM</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
@@ -12181,6 +12317,7 @@ namespace Models
             <string>[Maize].Leaf.Live.Wt</string>
             <string>[Maize].Root.Live.Wt</string>
             <string>[Maize].Husk.Live.Wt</string>
+            <string>[Maize].Rachis.Live.Wt</string>
             <string>[Maize].Summariser.EarLive.N</string>
             <string>[Maize].Grain.Live.N</string>
             <string>[Maize].Stem.Live.N</string>
@@ -12192,6 +12329,7 @@ namespace Models
             <string>[Maize].Summariser.Total.N</string>
             <string>[Maize].Summariser.Total.Wt</string>
             <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
+            <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
           </VariableNames>
           <EventNames>
             <string>[Maize].Harvesting</string>
@@ -12290,5 +12428,47 @@ namespace Models
       <DisabledSeries />
     </Graph>
   </Experiment>
+  <Graph>
+    <Name>GNvsRAchis</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>HarvestReport</TableName>
+        <FieldName>Maize.Rachis.Live.Wt</FieldName>
+      </X>
+      <Y>
+        <TableName>HarvestReport</TableName>
+        <FieldName>GPSM</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
   <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
