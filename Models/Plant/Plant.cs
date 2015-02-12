@@ -262,77 +262,6 @@ namespace Models.PMF
             foreach (IOrgan o in Organs)
                 o.OnSimulationCommencing();
         }
-        
-        /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (IsAlive)
-            {
-                
-                if (Phenology != null)
-                {
-                    DoPhenology();
-                    if (Phenology.Emerged == true)
-                    {
-                       
-                        // Invoke a post phenology event.
-                        if (PostPhenology != null)
-                            PostPhenology.Invoke(this, new EventArgs());
-                        DoDMSetUp();//Sets organs water limited DM supplys and demands
-                        if (Arbitrator != null)
-                        {
-                            Arbitrator.DoWaterLimitedDMAllocations();
-                            Arbitrator.DoNutrientDemandSetUp();
-                            //Arbitrator.SetNutrientUptake();
-                        }
-                    }
-                }
-                else
-                {
-                    DoDMSetUp();//Sets organs water limited DM supplys and demands
-                    if (Arbitrator != null)
-                    {
-                        Arbitrator.DoWaterLimitedDMAllocations();
-                        Arbitrator.DoNutrientDemandSetUp();
-                        Arbitrator.SetNutrientUptake();
-                    }
-                }
-            }
-        }
-
-        /// <summary>Called when [do actual plant growth].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
-        {
-            if (IsAlive)
-            {
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
-                    {
-                        if (Arbitrator != null)
-                        {
-                            //Arbitrator.SetNutrientUptake();
-                            Arbitrator.DoNutrientAllocations();
-                            Arbitrator.DoNutrientLimitedGrowth();
-                        }
-                    }
-                }
-                else
-                    if (Arbitrator != null)
-                    {
-                        Arbitrator.DoNutrientAllocations();
-                        Arbitrator.DoNutrientLimitedGrowth();
-                    }
-                DoActualGrowth();
-            }
-        }
-
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
@@ -366,7 +295,6 @@ namespace Models.PMF
             zones.Add(uptake);
             return zones;
         }
-
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
@@ -388,33 +316,63 @@ namespace Models.PMF
 
             Root.DoWaterUptake(uptake);
         }
-
+        /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            if (IsAlive)
+            {
+                if (Phenology != null)
+                {
+                    DoPhenology();
+                    if (Phenology.Emerged == true)
+                    {
+                        // Invoke a post phenology event.
+                        if (PostPhenology != null)
+                            PostPhenology.Invoke(this, new EventArgs());
+                        DoDMSetUp();//Sets organs water limited DM supplys and demands
+                        if (Arbitrator != null)
+                        {
+                            Arbitrator.DoPotentialGrowth();
+                        }
+                    }
+                }
+                else
+                {
+                    DoDMSetUp();//Sets organs water limited DM supplys and demands
+                    if (Arbitrator != null)
+                    {
+                        Arbitrator.DoPotentialGrowth();
+                    }
+                }
+            }
+        }
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
             ZoneWaterAndN uptake = new ZoneWaterAndN();
-                    
-            if (Phenology != null)
-                if (Phenology.Emerged == true)
+            if (IsAlive)
+                if (Phenology != null)
                 {
-                    Arbitrator.DoNutrientUptake(soilstate);
+                    if (Phenology.Emerged == true)
+                    {
+                        Arbitrator.DoNUptakeDemandCalculations(soilstate);
 
-                    //Pack results into uptake structure
-                    uptake.NO3N = Arbitrator.NO3NSupply;
-                    uptake.NH4N = Arbitrator.NH4NSupply;
-
-                    /*  stuff used to zero uptakes for
-                    double[] dummy = Arbitrator.NO3NSupply;
-                    double[] dummer = Arbitrator.NH4NSupply;
-
-                    //These two lines below must be REMOVED !!!!!!!!!!!!!
-                    //Sending zeros until everything is working internally and the root N uptake is turned off
-                   uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
-                   for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
-                   uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
-                   for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; } */
+                        //Pack results into uptake structure
+                        uptake.NO3N = Arbitrator.NO3NSupply;
+                        uptake.NH4N = Arbitrator.NH4NSupply;
+                    }
+                    else //Uptakes are zero
+                    {
+                        uptake.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                        for (int i = 0; i < uptake.NO3N.Length; i++) { uptake.NO3N[i] = 0; }
+                        uptake.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                        for (int i = 0; i < uptake.NH4N.Length; i++) { uptake.NH4N[i] = 0; }
+                    }
                 }
                 else //Uptakes are zero
                 {
@@ -432,18 +390,56 @@ namespace Models.PMF
             return zones;
 
         }
-
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
         public void SetNUptake(List<ZoneWaterAndN> zones)
         {
-            double[] NO3uptake = zones[0].NO3N;
-            double[] NH4uptake = zones[0].NH4N;
-
-            Root.DoNitrogenUptake(NO3uptake, NH4uptake);
+            if (IsAlive)
+                if (Phenology != null)
+                {
+                    if (Phenology.Emerged == true)
+                    {
+                        double[] NO3uptake = zones[0].NO3N;
+                        double[] NH4uptake = zones[0].NH4N;
+                        Arbitrator.DoNUptakeAllocations(); //Fixme, needs to send allocations to arbitrator
+                        Root.DoNitrogenUptake(NO3uptake, NH4uptake);
+                    }
+                }
+                else
+                {
+                    double[] NO3uptake = zones[0].NO3N;
+                    double[] NH4uptake = zones[0].NH4N;
+                    Arbitrator.DoNUptakeAllocations(); //Fixme, needs to send allocations to arbitrator
+                    Root.DoNitrogenUptake(NO3uptake, NH4uptake);
+                }
         }
-
+        /// <summary>Called when [do actual plant growth].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            if (IsAlive)
+            {
+                if (Phenology != null)
+                {
+                    if (Phenology.Emerged == true)
+                    {
+                        if (Arbitrator != null)
+                        {
+                            Arbitrator.DoActualGrowth();
+                        }
+                    }
+                }
+                else
+                    if (Arbitrator != null)
+                    {
+                        Arbitrator.DoActualGrowth();
+                    }
+                DoActualGrowth();
+            }
+        }
         #endregion
 
         #region Internal Communications.  Method calls
