@@ -6,6 +6,7 @@ using Models.Core;
 using Models.PMF.Functions;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -42,6 +43,9 @@ namespace Models.PMF.Organs
         /// <summary>The plant</summary>
         [Link]
         protected Plant Plant = null;
+
+        [Link]
+        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
         #endregion
 
         #region Class Structures
@@ -115,8 +119,6 @@ namespace Models.PMF.Organs
         protected double InitialWt = 0;
         /// <summary>The initialize stut fraction</summary>
         private double InitStutFraction = 1;
-
-        //4public event BiomassRemovedDelegate BiomassRemoved;
 
         /// <summary>Clears this instance.</summary>
         protected override void Clear()
@@ -212,28 +214,12 @@ namespace Models.PMF.Organs
                 Dead.MetabolicWt *= (1 - DetachedFrac);
                 Dead.MetabolicN *= (1 - DetachedFrac);
 
-
-                BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
-
-                BiomassRemovedData.crop_type = Plant.CropType;
-                BiomassRemovedData.dm_type = new string[1];
-                BiomassRemovedData.dlt_crop_dm = new float[1];
-                BiomassRemovedData.dlt_dm_n = new float[1];
-                BiomassRemovedData.dlt_dm_p = new float[1];
-                BiomassRemovedData.fraction_to_residue = new float[1];
-
-                BiomassRemovedData.dm_type[0] = "leaf";
-                BiomassRemovedData.dlt_crop_dm[0] = (float)DetachedWt * 10f;
-                BiomassRemovedData.dlt_dm_n[0] = (float)DetachedN * 10f;
-                BiomassRemovedData.dlt_dm_p[0] = 0f;
-                BiomassRemovedData.fraction_to_residue[0] = 1f;
-                //BiomassRemoved.Invoke(BiomassRemovedData);
-
-            }            
+                if (DetachedWt > 0)
+                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+            }       
+     
             if ((DryMatterContent != null)&& (Live.Wt != 0))
                 LiveFWt = Live.Wt / DryMatterContent.Value;
-
-
         }
    
         #endregion
@@ -416,8 +402,15 @@ namespace Models.PMF.Organs
         /// <summary>Called when [harvest].</summary>
           public override void OnHarvest() 
           { 
-            Live.Clear();
-            Dead.Clear();
+
+          }
+
+          /// <summary>Called when a crop ends</summary>
+          public override void OnEndCrop()
+          {
+              if (TotalDM > 0)
+                  SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+              Clear();
           }
         #endregion
     }

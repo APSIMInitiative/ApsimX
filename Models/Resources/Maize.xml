@@ -15,7 +15,8 @@
     <Command>[Phenology].FloweringToGrainFilling.Target = 120</Command>
     <Command>[Phenology].GrainFilling.Target = 530</Command>
     <Command>[Phenology].Maturing.Target = 1</Command>
-    <Command>[Phenology].MaturityToHarvestRipe.Target = 1</Command>  
+    <Command>[Phenology].MaturityToHarvestRipe.Target = 1</Command>
+    <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 14</Command>
     
   </Cultivar>
   <OrganArbitrator>
@@ -459,7 +460,7 @@
   </Structure>
   <ReproductiveOrgan>
     <Name>Grain</Name>
-    <MaximumSize>0.1</MaximumSize>
+    <MaximumSize>0.45</MaximumSize>
     <RipeStage>Ripe</RipeStage>
     <Biomass>
       <Name>Live</Name>
@@ -482,10 +483,6 @@
     <Constant>
       <Name>WaterContent</Name>
       <Value>0.12</Value>
-    </Constant>
-    <Constant>
-      <Name>DMDemandFunction</Name>
-      <Value>0</Value>
     </Constant>
     <PhaseLookup>
       <Name>NFillingRate</Name>
@@ -521,28 +518,30 @@
     <MultiplyFunction>
       <Name>NumberFunction</Name>
       <VariableReference>
-        <Name>StemNumber</Name>
-        <VariableName>[Structure].TotalStemPopn</VariableName>
+        <Name>CobNumber</Name>
+        <VariableName>[Rachis].CobNumber.Value</VariableName>
       </VariableReference>
-      <Constant>
+      <LinearInterpolationFunction>
         <Name>KernalsPerCob</Name>
-        <Value>800</Value>
-      </Constant>
+        <XProperty>[Rachis].CobSize.Value</XProperty>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <X>
+            <double>0</double>
+            <double>25</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>800</double>
+          </Y>
+        </XYPairs>
+      </LinearInterpolationFunction>
+
       <Constant>
         <Name>GrainPerKernal</Name>
         <Value>1</Value>
       </Constant>
-      <PhaseLookup>
-        <Name>CobsPerStem</Name>
-        <PhaseLookupValue>
-          <Start>StartGrainFill</Start>
-          <End>EndGrainFill</End>
-          <Constant>
-            <Name>CobsPerStem</Name>
-            <Value>1.1</Value>
-          </Constant>
-        </PhaseLookupValue>
-      </PhaseLookup>
+     
     </MultiplyFunction>
     <AirTemperatureFunction>
       <Name>FillingRate</Name>
@@ -556,9 +555,9 @@
         </X>
         <Y>
           <double>0</double>
-          <double>0.001</double>
-          <double>0.001</double>
-          <double>0.001</double>
+          <double>0.01</double>
+          <double>0.01</double>
+          <double>0.01</double>
         </Y>
       </XYPairs>
     </AirTemperatureFunction>
@@ -1196,11 +1195,33 @@
   </GenericAboveGroundOrgan>
   <GenericAboveGroundOrgan>
     <Name>Rachis</Name>
+    <MultiplyFunction>
+      <Name>CobNumber</Name>
+      <VariableReference>
+        <Name>StemNumber</Name>
+        <VariableName>[Structure].TotalStemPopn</VariableName>
+      </VariableReference>
+      <Constant>
+        <Name>CobsPerStem</Name>
+        <Value>1.1</Value>
+      </Constant>
+    </MultiplyFunction>
+    <DivideFunction>
+      <Name>CobSize</Name>
+      <VariableReference>
+        <Name>CobMass</Name>
+        <VariableName>[Rachis].Live.Wt</VariableName>
+      </VariableReference>
+      <VariableReference>
+        <Name>CobMass</Name>
+        <VariableName>[Rachis].CobNumber.Value</VariableName>
+      </VariableReference>
+    </DivideFunction>
     <PopulationBasedDemandFunction>
       <Name>DMDemandFunction</Name>
-      <StartStage>5</StartStage>
+      <StartStage>5.5</StartStage>
       <GrowthDuration>300</GrowthDuration>
-      <MaximumOrganWt>0</MaximumOrganWt>
+      <MaximumOrganWt>25</MaximumOrganWt>
       <VariableReference>
         <Name>ThermalTime</Name>
         <VariableName>[Phenology].ThermalTime.Value</VariableName>

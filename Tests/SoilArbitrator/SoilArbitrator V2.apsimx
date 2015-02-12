@@ -4762,11 +4762,11 @@ namespace Models
         </MicroClimate>
         <SimpleTree>
           <Name>wheat</Name>
+          <CanopyType>wheat</CanopyType>
           <LAI>3</LAI>
           <Height>10000</Height>
           <RootDepth>1000</RootDepth>
           <NDemand>0.15</NDemand>
-          <CropType>wheat</CropType>
         </SimpleTree>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -5249,19 +5249,19 @@ namespace Models
         </MicroClimate>
         <SimpleTree>
           <Name>wheat</Name>
+          <CanopyType>wheat</CanopyType>
           <LAI>1.5</LAI>
           <Height>10000</Height>
           <RootDepth>1000</RootDepth>
           <NDemand>0.075</NDemand>
-          <CropType>wheat</CropType>
         </SimpleTree>
         <SimpleTree>
           <Name>barley</Name>
+          <CanopyType>barley</CanopyType>
           <LAI>1.5</LAI>
           <Height>10000</Height>
           <RootDepth>1000</RootDepth>
           <NDemand>0.075</NDemand>
-          <CropType>barley</CropType>
         </SimpleTree>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -5776,27 +5776,27 @@ namespace Models
         </MicroClimate>
         <SimpleTree>
           <Name>wheat</Name>
+          <CanopyType>wheat</CanopyType>
           <LAI>1</LAI>
           <Height>10000</Height>
           <RootDepth>1000</RootDepth>
           <NDemand>0.05</NDemand>
-          <CropType>wheat</CropType>
         </SimpleTree>
         <SimpleTree>
           <Name>barley</Name>
+          <CanopyType>barley</CanopyType>
           <LAI>1</LAI>
           <Height>10000</Height>
           <RootDepth>1000</RootDepth>
           <NDemand>0.05</NDemand>
-          <CropType>barley</CropType>
         </SimpleTree>
         <SimpleTree>
           <Name>oats</Name>
+          <CanopyType>oats</CanopyType>
           <LAI>1</LAI>
           <Height>10000</Height>
           <RootDepth>1000</RootDepth>
           <NDemand>0.05</NDemand>
-          <CropType>oats</CropType>
         </SimpleTree>
         <Area>1</Area>
         <Slope>0</Slope>

@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using Models.SurfaceOM;
 
 using Models.Soils.SoilWaterBackend;
+using Models.Interfaces;
 
 
 namespace Models.Soils
@@ -1343,9 +1344,9 @@ namespace Models.Soils
             canopy.ZeroCanopyData();  //make all the arrays (from Yesterday) zero length, ready for the resize below (for Today).
 
             //Get an array of models that are crop models.
-            List<IModel> models = Apsim.FindAll(paddock, typeof(ICrop));
+            List<IModel> models = Apsim.FindAll(paddock, typeof(ICanopy));
 
-            //foreach crop model in the simulation
+            //foreach ICanopy model in the simulation
             foreach (Model m in models)
                 {
                     //add an extra element to each of the canopy arrays.
@@ -1353,25 +1354,15 @@ namespace Models.Soils
                     Array.Resize(ref canopy.cover_tot, canopy.NumberOfCrops + 1);
                     Array.Resize(ref canopy.canopy_height, canopy.NumberOfCrops + 1);
 
-                    //Cast the model to a Crop Model.
-                    ICrop Crop = m as ICrop;
+                    //Cast the model to a ICanopy Model.
+                    ICanopy Canopy = m as ICanopy;
 
                     //if this crop model has Canopy Data
-                    if (Crop.CanopyData != null)
-                    {
-                        //assign the data from this crop model to the extra element in the array you added.
-                        canopy.cover_green[canopy.NumberOfCrops] = Crop.CanopyData.cover;
-                        canopy.cover_tot[canopy.NumberOfCrops] = Crop.CanopyData.cover_tot;
-                        canopy.canopy_height[canopy.NumberOfCrops] = Crop.CanopyData.height;
-                    }
-                    //if this crop model does not have any Canopy Data
-                    else
-                    {
-                        //assign zero the extra element in the array you added.
-                        canopy.cover_green[canopy.NumberOfCrops] = 0;
-                        canopy.cover_tot[canopy.NumberOfCrops] = 0;
-                        canopy.canopy_height[canopy.NumberOfCrops] = 0;
-                    }
+                    //assign the data from this crop model to the extra element in the array you added.
+                    canopy.cover_green[canopy.NumberOfCrops] = Canopy.CoverGreen;
+                    canopy.cover_tot[canopy.NumberOfCrops] = Canopy.CoverTotal;
+                    canopy.canopy_height[canopy.NumberOfCrops] = Canopy.Height;
+
                     canopy.NumberOfCrops += 1;     //increment number of crops ready for next array resize in next iteration.
                 }
 

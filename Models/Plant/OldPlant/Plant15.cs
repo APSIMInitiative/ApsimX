@@ -13,6 +13,7 @@ using System.IO;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.PMF.Interfaces;
+using Models.Interfaces;
 
 namespace Models.PMF.OldPlant
 {
@@ -780,15 +781,7 @@ namespace Models.PMF.OldPlant
                 cover_sen += Organ.CoverSen;
             }
             double cover_tot = (1.0 - (1.0 - cover_green) * (1.0 - cover_sen));
-            LocalCanopyData.height = (float)Stem.Height;
-            LocalCanopyData.depth = (float)Stem.Height;
-            LocalCanopyData.lai = (float)Leaf.LAI;
-            LocalCanopyData.lai_tot = (float)(Leaf.LAI + Leaf.SLAI);
-            LocalCanopyData.cover = (float)cover_green;
-            LocalCanopyData.cover_tot = (float)cover_tot;
-            LocalCanopyData.sender = Name;
 
-            NewCanopy.Invoke(LocalCanopyData);
             Util.Debug("NewCanopy.height=%f", LocalCanopyData.height);
             Util.Debug("NewCanopy.depth=%f", LocalCanopyData.depth);
             Util.Debug("NewCanopy.lai=%f", LocalCanopyData.lai);

@@ -6,6 +6,7 @@ using System.IO;
 using Models.Core;
 using Models;
 using System.Xml.Serialization;
+using Models.Interfaces;
 
 namespace Models.Soils
 {
@@ -1408,7 +1409,7 @@ namespace Models.Soils
                 double[] cover_green = new double[0];
                 int NumberOfCrops = 0;
 
-                List<IModel> models = Apsim.FindAll(paddock, typeof(ICrop));
+                List<IModel> models = Apsim.FindAll(paddock, typeof(ICanopy));
 
                 foreach (Model m in models)
                 {
@@ -1416,19 +1417,10 @@ namespace Models.Soils
                     Array.Resize(ref cover_tot, NumberOfCrops + 1);
                     Array.Resize(ref canopy_height, NumberOfCrops + 1);
 
-                    ICrop Crop = m as ICrop;
-                    if (Crop.CanopyData != null)
-                    {
-                        cover_green[NumberOfCrops] = Crop.CanopyData.cover;
-                        cover_tot[NumberOfCrops] = Crop.CanopyData.cover_tot;
-                        canopy_height[NumberOfCrops] = Crop.CanopyData.height;
-                    }
-                    else
-                    {
-                        cover_green[NumberOfCrops] = 0;
-                        cover_tot[NumberOfCrops] = 0;
-                        canopy_height[NumberOfCrops] = 0;
-                    }
+                    ICanopy Canopy = m as ICanopy;
+                    cover_green[NumberOfCrops] = Canopy.CoverGreen;
+                    cover_tot[NumberOfCrops] = Canopy.CoverTotal;
+                    canopy_height[NumberOfCrops] = Canopy.Height;
                     NumberOfCrops += 1;
                 }
 

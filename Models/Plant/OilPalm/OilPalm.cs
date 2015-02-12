@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Models.Soils.Arbitrator;
+using Models.Interfaces;
 
 
 namespace Models.PMF.OilPalm
@@ -21,24 +22,62 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OilPalm : ModelCollectionFromResource, ICrop
+    public class OilPalm : ModelCollectionFromResource, ICrop, ICanopy
     {
+        #region Canopy interface
+        /// <summary>Canopy type</summary>
+        public string CanopyType { get { return "OilPalm"; } }
 
-        /// <summary>Provides canopy data to SoilWater.</summary>
-        public NewCanopyType CanopyData 
-        { 
-            get 
+        /// <summary>Gets the lai.</summary>
+        /// <value>The lai.</value>
+        [Description("Leaf Area Index")]
+        [Units("m^2/m^2")]
+        public double LAI
+        {
+            get
             {
-                NewCanopyType LocalCanopyData = new NewCanopyType();
-                LocalCanopyData.cover = cover_green;
-                LocalCanopyData.cover_tot = cover_tot;
-                LocalCanopyData.height = 10000;
-                LocalCanopyData.depth = 10000;
-                LocalCanopyData.lai = LAI;
-                LocalCanopyData.lai_tot = LAI;
-                return LocalCanopyData; 
-            } 
+                if (CropInGround)
+                {
+                    double FrondArea = 0.0;
+                    foreach (FrondType F in Fronds)
+                        FrondArea += F.Area;
+                    return FrondArea * SowingData.Population;
+                }
+                else
+                    return 0;
+            }
+
         }
+        
+        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
+        public double LAITotal { get { return LAI; } }
+
+        /// <summary>Gets the cover green (0-1)</summary>
+        public double CoverGreen { get { return cover_green; } }
+
+        /// <summary>Gets the cover total (0-1)</summary>
+        public double CoverTotal { get { return cover_tot; } }
+
+        /// <summary>Gets the canopy height (mm)</summary>
+        public double Height { get { return 10000; } }
+
+        /// <summary>Gets the canopy depth (mm)</summary>
+        public double Depth { get { return 10000; } }
+
+        /// <summary>Gets the LAI (m^2/m^2)</summary>
+        [Units("0-1")]
+        public double FRGR { get { return 1; } }
+
+        /// <summary>Potential evapotranspiration</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double PotentialEP { get; set; }
+
+        /// <summary>MicroClimate supplies LightProfile</summary>
+        [XmlIgnore]
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+
+        #endregion
 
         /// <summary>
         /// Is the plant alive?
@@ -64,9 +103,7 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
-        /// <summary>Type of crop</summary>
-        [Units("")]
-        public string CropType { get { return "OilPalm"; } }
+
 
         /// <summary>The soil crop</summary>
         private SoilCropOilPalm soilCrop;
@@ -108,19 +145,6 @@ namespace Models.PMF.OilPalm
                 return cultivars;
             }
         }
-
-        /// <summary>Factor for Relative Growth Rate</summary>
-        [Units("0-1")]
-        public double FRGR { get { return 1; } }
-
-        /// <summary>Potential evapotranspiration</summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public double PotentialEP { get; set; }
-
-        /// <summary>MicroClimate supplies LightProfile</summary>
-        [XmlIgnore]
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
         /// <summary>Height to top of plant canopy</summary>
         [XmlIgnore]
@@ -770,17 +794,8 @@ namespace Models.PMF.OilPalm
             plant_status = "alive";
             Population = SowingData.Population;
 
-            if (NewCrop != null)
-            {
-                NewCropType Crop = new NewCropType();
-                Crop.crop_type = CropType;
-                Crop.sender = Name;
-                NewCrop.Invoke(Crop);
-            }
-
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
-
         }
 
         // The following event handler will be called each day at the beginning of the day
@@ -967,7 +982,7 @@ namespace Models.PMF.OilPalm
                 FOMLayers[layer] = Layer;
             }
             FOMLayerType FomLayer = new FOMLayerType();
-            FomLayer.Type = CropType;
+            FomLayer.Type = CanopyType;
             FomLayer.Layer = FOMLayers;
             IncorpFOM.Invoke(FomLayer);
 
@@ -1101,7 +1116,7 @@ namespace Models.PMF.OilPalm
                 Bunches.RemoveAt(0);
 
                 BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
-                BiomassRemovedData.crop_type = CropType;
+                BiomassRemovedData.crop_type = CanopyType;
                 BiomassRemovedData.dm_type = new string[1] { "frond" };
                 BiomassRemovedData.dlt_crop_dm = new float[1] { (float)(Fronds[0].Mass * Population * 10) };
                 BiomassRemovedData.dlt_dm_n = new float[1] { (float)(Fronds[0].N * Population * 10) };
@@ -1231,27 +1246,6 @@ namespace Models.PMF.OilPalm
         }
 
 
-
-        /// <summary>Gets the lai.</summary>
-        /// <value>The lai.</value>
-        [Description("Leaf Area Index")]
-        [Units("m^2/m^2")]
-        public double LAI
-        {
-            get
-            {
-                if (CropInGround)
-                {
-                    double FrondArea = 0.0;
-                    foreach (FrondType F in Fronds)
-                        FrondArea += F.Area;
-                    return FrondArea * SowingData.Population;
-                }
-                else
-                    return 0;
-            }
-
-        }
 
         /// <summary>Gets the frond area.</summary>
         /// <value>The frond area.</value>

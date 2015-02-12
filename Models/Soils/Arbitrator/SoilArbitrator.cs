@@ -67,7 +67,7 @@ namespace Models.Soils
                             if (Z.Name == ZoneName)
                                 return Z;
                 
-                throw (new Exception("Cannot find uptake for" + crop.CropType + " " + ZoneName));
+                throw (new Exception("Cannot find uptake for" + (crop as IModel).Name + " " + ZoneName));
             }
             public static Estimate operator *(Estimate E, double value)
             {

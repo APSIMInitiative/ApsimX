@@ -30,7 +30,7 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>The maximum organ wt</summary>
         [Description("Size individual organs will grow to when fully supplied with DM")]
-        public double MaximumOrganWt = 0;
+        public double MaximumOrganWt { get; set; }
 
         /// <summary>The start stage</summary>
         [Description("Stage when organ growth starts ")]

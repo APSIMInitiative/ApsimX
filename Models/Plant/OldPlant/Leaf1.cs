@@ -9,6 +9,7 @@ using Models.PMF.Phen;
 using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using Models.Interfaces;
 
 namespace Models.PMF.OldPlant
 {
@@ -16,8 +17,55 @@ namespace Models.PMF.OldPlant
     /// A leaf organ for Plant15
     /// </summary>
     [Serializable]
-    public class Leaf1 : BaseOrgan1, AboveGround
+    public class Leaf1 : BaseOrgan1, AboveGround, ICanopy
     {
+        #region Canopy interface
+        /// <summary>Canopy type</summary>
+        public string CanopyType { get { return Plant.CropType; } }
+
+        /// <summary>Gets the lai.</summary>
+        /// <value>The lai.</value>
+        [Units("m^2/m^2")]
+        public double LAI { get { return _LAI; } }
+
+        /// <summary>Gets the lai total.</summary>
+        /// <value>The lai total.</value>
+        [Units("m^2/m^2")]
+        public double LAITotal { get { return LAI + SLAI; } }
+
+        /// <summary>Gets or sets the cover green.</summary>
+        /// <value>The cover green.</value>
+        [XmlIgnore]
+        public override double CoverGreen { get; protected set; } // Required by soilwat for E0 calculation.
+        
+        /// <summary>Gets the cover total.</summary>
+        public double CoverTotal
+        {
+            get
+            {
+                return (1.0
+                     - (1.0 - CoverGreen)
+                     * (1.0 - CoverSen));
+            }
+        }
+
+        /// <summary>Gets the canopy height (mm)</summary>
+        public double Height { get { return Plant.height; } }
+
+        /// <summary>Gets the canopy depth (mm)</summary>
+        public double Depth { get { return Plant.height; } }
+
+        /// <summary>Gets  FRGR.</summary>
+        public double FRGR { get { return Plant.FRGR; } }
+
+        /// <summary>Sets the potential evapotranspiration.</summary>
+        public double PotentialEP { set { Plant.PotentialEP = value; } }
+
+        /// <summary>Sets the light profile.</summary>
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set { Plant.LightProfile = value; } }
+
+        #endregion
+
         #region Parameters read from XML file and links to other functions.
         /// <summary>The plant</summary>
         [Link]
@@ -661,10 +709,6 @@ namespace Models.PMF.OldPlant
         public override void DoNUptake(double PotNFix) { }
 
         // cover
-        /// <summary>Gets or sets the cover green.</summary>
-        /// <value>The cover green.</value>
-        [XmlIgnore]
-        public override double CoverGreen { get; protected set; } // Required by soilwat for E0 calculation.
         /// <summary>Gets or sets the cover sen.</summary>
         /// <value>The cover sen.</value>
         [XmlIgnore]
@@ -787,29 +831,12 @@ namespace Models.PMF.OldPlant
         /// <summary>Gets the n senesced trans.</summary>
         /// <value>The n senesced trans.</value>
         public double NSenescedTrans { get { return dlt_n_senesced_trans; } }
-        /// <summary>Gets the cover total.</summary>
-        /// <value>The cover total.</value>
-        public double CoverTotal
-        {
-            get
-            {
-                return (1.0
-                     - (1.0 - CoverGreen)
-                     * (1.0 - CoverSen));
-            }
-        }
-        /// <summary>Gets the lai.</summary>
-        /// <value>The lai.</value>
-        [Units("m^2/m^2")]
-        public double LAI { get { return _LAI; } }
+
         /// <summary>Gets the slai.</summary>
         /// <value>The slai.</value>
         [Units("m^2/m^2")]
         public double SLAI { get { return _SLAI; } }
-        /// <summary>Gets the lai total.</summary>
-        /// <value>The lai total.</value>
-        [Units("m^2/m^2")]
-        public double LAITotal { get { return LAI + SLAI; } }
+
         /// <summary>Gets the leaf number.</summary>
         /// <value>The leaf number.</value>
         public double LeafNumber { get { return Utility.Math.Sum(LeafNo); } }

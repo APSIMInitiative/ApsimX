@@ -8,6 +8,7 @@ using Models.PMF.Functions.SupplyFunctions;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -16,8 +17,64 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
-    public class Leaf : BaseOrgan, AboveGround
+    public class Leaf : BaseOrgan, AboveGround, ICanopy
     {
+        #region Canopy interface
+
+        /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
+        public string CanopyType { get { return Plant.CropType; } }
+
+        /// <summary>Gets the LAI</summary>
+        [Units("m^2/m^2")]
+        public double LAI
+        {
+            get
+            {
+                int MM2ToM2 = 1000000; // Conversion of mm2 to m2
+                double value = 0;
+                foreach (LeafCohort L in Leaves)
+                    value = value + L.LiveArea / MM2ToM2;
+                return value;
+            }
+        }
+
+        /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
+        public double LAITotal { get { return LAI + LAIDead; } }
+
+        /// <summary>Gets the cover green.</summary>
+        [Units("0-1")]
+        public double CoverGreen
+        {
+            get
+            {
+                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover));
+            }
+        }
+
+        /// <summary>Gets the cover total.</summary>
+        [Units("0-1")]
+        public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
+
+        /// <summary>Gets the height.</summary>
+        [Units("mm")]
+        public double Height { get { return Structure.Height; } }
+
+        /// <summary>Gets the depth.</summary>
+        [Units("mm")]
+        public double Depth { get { return Structure.Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+
+        /// <summary>Gets  FRGR.</summary>
+        [Units("0-1")]
+        public double FRGR { get { return Photosynthesis.FRGR; } }
+        
+        /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
+        public double PotentialEP { get;  set; }
+
+        /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } 
+        #endregion
+
+
         #region Links
         /// <summary>The plant</summary>
         [Link]
@@ -34,6 +91,8 @@ namespace Models.PMF.Organs
         /// <summary>The phenology</summary>
         [Link]
         public Phenology Phenology = null;
+        [Link]
+        ISurfaceOrganicMatter SurfaceOrganicMatter = null;
         #endregion
 
         #region Structures
@@ -373,20 +432,6 @@ namespace Models.PMF.Organs
 
         //Canopy State variables
 
-        /// <summary>Gets the lai.</summary>
-        /// <value>The lai.</value>
-        [Units("m^2/m^2")]
-        public double LAI
-        {
-            get
-            {
-                int MM2ToM2 = 1000000; // Conversion of mm2 to m2
-                double value = 0;
-                foreach (LeafCohort L in Leaves)
-                    value = value + L.LiveArea / MM2ToM2;
-                return value;
-            }
-        }
 
         /// <summary>Gets the lai dead.</summary>
         /// <value>The lai dead.</value>
@@ -433,48 +478,16 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the FRGR.</summary>
-        /// <value>The FRGR.</value>
-        [Units("0-1")]
-        public override double FRGR { get { return Photosynthesis.FRGR; } }
-
-        /// <summary>Gets the cover green.</summary>
-        /// <value>The cover green.</value>
-        [Units("0-1")]
-        public double CoverGreen 
-        { 
-            get 
-            {
-                return MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)); 
-            } 
-        }
-
         /// <summary>Gets the cover dead.</summary>
         /// <value>The cover dead.</value>
         [Units("0-1")]
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
-
-        /// <summary>Gets the cover total.</summary>
-        /// <value>The cover total.</value>
-        [Units("0-1")]
-        public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
 
         /// <summary>Gets the RAD int tot.</summary>
         /// <value>The RAD int tot.</value>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
-
-        /// <summary>Gets the height.</summary>
-        /// <value>The height.</value>
-        [Description("This needs to be here so soilwater can get hight from leaf")]
-        public double Height { get { return Structure.Height; } }
-
-        /// <summary>Gets the depth.</summary>
-        /// <value>The depth.</value>
-        [Description("This needs to be here so soilwater can get hight from leaf")]
-        public double Depth { get { return Structure.Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
-
 
         /// <summary>Gets the specific area.</summary>
         /// <value>The specific area.</value>
@@ -704,7 +717,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the transpiration.</summary>
         /// <value>The transpiration.</value>
         [Units("mm")]
-        public double Transpiration { get { return Utility.Math.Sum(Plant.uptakeWater); } }
+        public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets the fw.</summary>
         /// <value>The fw.</value>
@@ -713,15 +726,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                /*double F = 0;
+                double F = 0;
                 if (WaterDemand > 0)
                     F = WaterAllocation / WaterDemand;
-                else
-                    F = 1;
-                return F;*/
-                double F = 0;
-                if (Plant.demandWater > 0)
-                    F = Utility.Math.Sum(Plant.uptakeWater) / Plant.demandWater;
                 else
                     F = 1;
                 return F;
@@ -899,14 +906,12 @@ namespace Models.PMF.Organs
         /// <summary>Does the actual growth.</summary>
         public override void DoActualGrowth()
         {
-            WaterAllocation = 0;
+           // WaterAllocation = 0;
             
             foreach (LeafCohort L in Leaves)
                 L.DoActualGrowth(ThermalTime.Value, LeafCohortParameters);
 
             Structure.UpdateHeight();
-            UpdateCanopyData();
-            PublishNewCanopyEvent();
 
             //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
             FractionDied = 0;
@@ -935,17 +940,7 @@ namespace Models.PMF.Organs
                 LAIabove += Leaves[i].LiveArea / MM2ToM2;
             return 1 - Math.Exp(-ExtinctionCoeff.Value * LAIabove);
         }
-        /// <summary>Updates the canopy data.</summary>
-        public void UpdateCanopyData()
-        {
-            Plant.CanopyProperties.CoverGreen = CoverGreen;
-            Plant.CanopyProperties.CoverTot = CoverTotal;
-            Plant.CanopyProperties.CanopyDepth = Depth;
-            Plant.CanopyProperties.CanopyHeight = Height;
-            Plant.CanopyProperties.LAIGreen = LAI;
-            Plant.CanopyProperties.LAItot = LAI + LAIDead;
-            Plant.CanopyProperties.Frgr = FRGR;
-        }
+
         #endregion
 
         #region Arbitrator methods
@@ -1264,12 +1259,8 @@ namespace Models.PMF.Organs
         {
            get
             {
-                return Plant.PotentialEP;
+                return PotentialEP;
             }
-            //set
-            //{
-            //    Plant.PotentialEP = value;
-            //}
         }
         /// <summary>Gets or sets the water allocation.</summary>
         /// <value>The water allocation.</value>
@@ -1511,8 +1502,6 @@ namespace Models.PMF.Organs
 
         #region Event handlers and publishers
 
-        /// <summary>Occurs when [new canopy].</summary>
-        public event NewCanopyDelegate NewCanopy;
         /// <summary>Occurs when [new leaf].</summary>
         public event NullTypeDelegate NewLeaf;
 
@@ -1556,11 +1545,13 @@ namespace Models.PMF.Organs
 
         }
 
-        /// <summary>Called when [cut].</summary>
+        /// <summary>Called when crop is cut</summary>
         public override void OnCut()
         {
-
             Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+
+            if (TotalDM > 0)
+                SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
 
             Structure.MainStemNodeNo = 0;
             Structure.Clear();
@@ -1572,28 +1563,19 @@ namespace Models.PMF.Organs
             //Structure.ResetStemPopn();
         }
 
-        /// <summary>Called when [harvest].</summary>
+        /// <summary>Called when a crop is harvested</summary>
         public override void OnHarvest()
         {
-            OnCut();
+            
         }
 
-        /// <summary>Publishes the new canopy event.</summary>
-        protected virtual void PublishNewCanopyEvent()
+        /// <summary>Called when a crop ends</summary>
+        public override void OnEndCrop()
         {
-            if (NewCanopy != null)
-            {
-                Plant.LocalCanopyData.sender = Plant.Name;
-                Plant.LocalCanopyData.lai = (float)LAI;
-                Plant.LocalCanopyData.lai_tot = (float)(LAI + LAIDead);
-                Plant.LocalCanopyData.height = (float)Structure.Height;
-                Plant.LocalCanopyData.depth = (float)Structure.Height;
-                Plant.LocalCanopyData.cover = (float)CoverGreen;
-                Plant.LocalCanopyData.cover_tot = (float)CoverTotal;
-                NewCanopy.Invoke(Plant.LocalCanopyData);
-            }
+            if (TotalDM > 0)
+                SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+            Clear();
         }
-
         #endregion
 
 

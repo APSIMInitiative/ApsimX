@@ -152,7 +152,7 @@ namespace Models.PMF.Organs
         /// <value>
         /// <c>true</c> if this instance is growing; otherwise, <c>false</c>.
         /// </value>
-        private bool isGrowing { get { return (Plant.PlantInGround && Plant.SowingData.Depth < this.Depth); } }
+        private bool isGrowing { get { return (Plant.IsAlive && Plant.SowingData.Depth < this.Depth); } }
 
         /// <summary>The soil crop</summary>
         private SoilCrop soilCrop;
@@ -296,8 +296,6 @@ namespace Models.PMF.Organs
             FomLayer.Type = Plant.CropType;
             FomLayer.Layer = FOMLayers;
             IncorpFOM.Invoke(FomLayer);
-
-            UpdateRootProperties();
         }
 
         /// <summary>Does the water uptake.</summary>
@@ -372,35 +370,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
-        /// <summary>Updates the root properties.</summary>
-        public void UpdateRootProperties()
-        {
-            //Plant.RootProperties.KL = Soil.KL(Plant.CropType);
-            //Plant.RootProperties.LowerLimitDep = Soil.LL(Plant.CropType);
-            Plant.RootProperties.RootDepth = Depth;
-            Plant.RootProperties.MaximumDailyNUptake = MaxDailyNUptake.Value;
-            
-            double[] RLD = new double[Soil.Thickness.Length];
-                for (int i = 0; i < Soil.Thickness.Length; i++)
-                    RLD[i] = LayerLive[i].Wt * SpecificRootLength / 1000000 / Soil.Thickness[i];
-            Plant.RootProperties.RootLengthDensityByVolume = RLD;
-            
-            double[] RootProp = new double[Soil.Thickness.Length];
-                 for (int i = 0; i < Soil.Thickness.Length; i++)
-                    RootProp[i] =  RootProportion(i, Depth);
-            Plant.RootProperties.RootExplorationByLayer = RootProp;
 
-            double[] KlAdjusted = new double[Soil.Thickness.Length];
-            for (int i = 0; i < Soil.Thickness.Length; i++)
-                KlAdjusted[i] = soilCrop.KL[i] * KLModifier.Value;
-            Plant.RootProperties.KL = KlAdjusted;
-
-            double[] LL_dep = new double[Soil.Thickness.Length];
-            for (int i = 0; i < Soil.Thickness.Length; i++)
-                LL_dep[i] = soilCrop.LL[i] * Soil.Thickness[i];
-            Plant.RootProperties.LowerLimitDep = LL_dep;
-   
-        }
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -846,31 +816,10 @@ namespace Models.PMF.Organs
             get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
         }
 
-        //[Units("mm")]
-        //public override double WaterUptake
-        //{
-        //    get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
-        //}
-
         #endregion
 
         #region Event handlers
-        ///// <summary>Called when [do water arbitration].</summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("DoWaterArbitration")]
-        //private void OnDoWaterArbitration(object sender, EventArgs e)
-        //{
-        //        if (SWSupply == null || SWSupply.Length != Soil.Thickness.Length)
-        //            SWSupply = new double[Soil.Thickness.Length];
-        //        for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-        //            if (layer <= LayerIndex(Depth))
-        //                SWSupply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value * (Soil.Water[layer] - soilCrop.LL[layer] * Soil.Thickness[layer]) * RootProportion(layer, Depth));
-        //            else
-        //                SWSupply[layer] = 0;
 
-        //        WaterSupply = Utility.Math.Sum(SWSupply);
-        //}
 
         /// <summary>Called when [water uptakes calculated].</summary>
         /// <param name="SoilWater">The soil water.</param>

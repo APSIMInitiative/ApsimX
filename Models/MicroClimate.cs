@@ -9,6 +9,7 @@ using Models.Core;
 using Models;
 using Models.PMF;
 using System.Xml.Serialization;
+using Models.Interfaces;
 
 namespace Models
 {
@@ -33,17 +34,7 @@ namespace Models
         /// <summary>The cover_tot</summary>
         public double cover_tot;
     }
-    /// <summary>
-    /// A canopy energy balance type
-    /// </summary>
-    [Serializable]
-    public class CanopyEnergyBalanceInterceptionlayerType
-    {
-        /// <summary>The thickness</summary>
-        public double thickness;
-        /// <summary>The amount</summary>
-        public double amount;
-    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -399,8 +390,6 @@ namespace Models
             ComponentData[senderIdx].Gsmax += ChangeGSMax.dlt;
         }
 
-
-
         /// <summary>Obtain all relevant met data</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -415,58 +404,50 @@ namespace Models
             wind = Weather.MetData.Wind;
         }
 
-        /// <summary>Called when [do canopy].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoCanopy")]
-        private void OnDoCanopy(object sender, EventArgs e)
+        /// <summary>Gets all canopies in simulation</summary>
+        private void GetAllCanopies()
         {
-            CalculateGc();
-            CalculateGa();
-            CalculateInterception();
-            CalculatePM();
-            CalculateOmega();
+            foreach (ICanopy canopy in Apsim.FindAll(this.Parent, typeof(ICanopy)))
+            {
+                ComponentDataStruct componentData = ComponentData.Find(c => c.Name == canopy.CanopyType);
+                if (componentData == null)
+                {
+                    componentData = CreateNewComonentData(canopy.CanopyType);
+                    Clear(componentData);
+                }
 
-            SendEnergyBalanceEvent();
+                componentData.Name = canopy.CanopyType;
+                componentData.Type = canopy.CanopyType;
+                componentData.Canopy = canopy;
+                componentData.LAI = canopy.LAI;
+                componentData.LAItot = canopy.LAITotal;
+                componentData.CoverGreen = canopy.CoverGreen;
+                componentData.CoverTot = canopy.CoverTotal;
+                componentData.Height = Math.Round(canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m
+                componentData.Depth = Math.Round(canopy.Depth, 5) / 1000.0;   // Round off a bit and convert mm to m
+                componentData.Canopy = canopy;
+            }
         }
 
         /// <summary>Called when [do canopy energy balance].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// <exception cref="System.Exception">
-        /// Unknown Canopy Component:  + crop.CropType
-        /// or
-        /// Unknown Canopy Component:  + crop2.CropType
-        /// </exception>
-        [EventSubscribe("DoCanopyEnergyBalance")]
-        private void OnDoCanopyEnergyBalance(object sender, EventArgs e)
+        [EventSubscribe("DoEnergyArbitration")]
+        private void DoEnergyArbitration(object sender, EventArgs e)
         {
+            GetAllCanopies();
+            
             MetVariables();
             CanopyCompartments();
             BalanceCanopyEnergy();
 
             // Loop through all crops and get their potential growth for today.
-            foreach (ICrop crop in Apsim.FindAll(this, typeof(ICrop)))
+            foreach (ComponentDataStruct componentData in ComponentData)
             {
-                int senderIdx = FindComponentIndex(crop.CropType);
-                if (senderIdx < 0)
-                {
-                    throw new Exception("Unknown Canopy Component: " + crop.CropType);
-                }
-                ComponentData[senderIdx].Crop = crop;
-                ComponentData[senderIdx].Frgr = crop.FRGR;
-            }
-
-            // Loop through all crops and get their potential growth for today.
-            foreach (ICrop2 crop2 in Apsim.FindAll(this, typeof(ICrop2)))
-            {
-                int senderIdx = FindComponentIndex(crop2.CropType);
-                if (senderIdx < 0)
-                {
-                    throw new Exception("Unknown Canopy Component: " + crop2.CropType);
-                }
-                ComponentData[senderIdx].Crop2 = crop2;
-                ComponentData[senderIdx].Frgr = crop2.CanopyProperties.Frgr;
+                if (componentData.Canopy != null)
+                    componentData.Frgr = componentData.Canopy.FRGR;
+                else if (componentData.Crop2 != null)
+                    componentData.Frgr = componentData.Crop2.CanopyProperties.Frgr;
             }
 
             CalculateGc();
@@ -476,28 +457,6 @@ namespace Models
             CalculateOmega();
 
             SendEnergyBalanceEvent();
-        }
-
-        /// <summary>Register presence of a new crop</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        /// <exception cref="ApsimXException">Cannot find MicroClimate definition for crop ' + newCrop.Name + '</exception>
-        [EventSubscribe("Sowing")]
-        private void OnSowing(object sender, EventArgs e)
-        {
-            Model newCrop = sender as Model;
-
-            int senderIdx = FindComponentIndex(newCrop.Name);
-
-            // If sender is unknown, add it to the list
-            if (senderIdx == -1)
-                throw new ApsimXException(this, "Cannot find MicroClimate definition for crop '" + newCrop.Name + "'");
-            ComponentData[senderIdx].Name = newCrop.Name;
-            if (newCrop is Plant)
-                ComponentData[senderIdx].Type = (newCrop as Plant).CropType;
-            else
-                ComponentData[senderIdx].Type = newCrop.Name;
-            Clear(ComponentData[senderIdx]);
         }
 
         /*/// <summary>
@@ -518,7 +477,7 @@ namespace Models
             Clear(ComponentData[senderIdx]);
         } */
 
-        /// <summary>Clears the specified c.</summary>
+        /// <summary>Clears the specified componentdata</summary>
         /// <param name="c">The c.</param>
         private void Clear(ComponentDataStruct c)
         {
@@ -545,27 +504,6 @@ namespace Models
             Util.ZeroArray(c.PETa);
             Util.ZeroArray(c.Omega);
             Util.ZeroArray(c.interception);
-        }
-
-        /// <summary>Called when [new canopy].</summary>
-        /// <param name="newCanopy">The new canopy.</param>
-        /// <exception cref="System.Exception">Unknown Canopy Component:  + Convert.ToString(newCanopy.sender)</exception>
-        [EventSubscribe("NewCanopy")]
-        private void OnNewCanopy(NewCanopyType newCanopy)
-        {
-            int senderIdx = FindComponentIndex(newCanopy.sender);
-            if (senderIdx < 0)
-            {
-                throw new Exception("Unknown Canopy Component: " + Convert.ToString(newCanopy.sender));
-            }
-            ComponentData[senderIdx].LAI = newCanopy.lai;
-            ComponentData[senderIdx].LAItot = newCanopy.lai_tot;
-            ComponentData[senderIdx].CoverGreen = newCanopy.cover;
-            ComponentData[senderIdx].CoverTot = newCanopy.cover_tot;
-            ComponentData[senderIdx].Height = Math.Round(newCanopy.height, 5) / 1000.0;
-            // Round off a bit and convert mm to m
-            ComponentData[senderIdx].Depth = Math.Round(newCanopy.depth, 5) / 1000.0;
-            // Round off a bit and convert mm to m
         }
 
         /// <summary>Called when [loaded].</summary>
@@ -668,6 +606,8 @@ namespace Models
             public ICrop Crop;
             /// <summary>The crop2</summary>
             public ICrop2 Crop2;
+
+            public ICanopy Canopy;
 
             /// <summary>The lai</summary>
             [XmlIgnore]
@@ -1005,6 +945,20 @@ namespace Models
             return -1;
         }
 
+        private ComponentDataStruct CreateNewComonentData(string name)
+        {
+            for (int i = 0; i <= ComponentDataDefinitions.Count - 1; i++)
+            {
+                if (ComponentDataDefinitions[i].Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // found
+                    ComponentData.Add(ComponentDataDefinitions[i]);
+                    return ComponentData[ComponentData.Count - 1];
+                }
+            }
+            throw new Exception("Cannot find a MicroClimate definition for " + name);
+        }
+
 
         /// <summary>Canopies the compartments.</summary>
         private void CanopyCompartments()
@@ -1333,7 +1287,8 @@ namespace Models
             for (int j = 0; j <= ComponentData.Count - 1; j++)
             {
                 ComponentDataStruct componentData = ComponentData[j];
-                if (componentData.Crop != null)
+
+                if (componentData.Canopy != null)
                 {
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
                     double totalPotentialEp = 0;
@@ -1347,11 +1302,11 @@ namespace Models
                         totalInterception += componentData.interception[i];
                     }
 
-                    componentData.Crop.PotentialEP = totalPotentialEp;
-                    componentData.Crop.LightProfile = lightProfile;
+                    componentData.Canopy.PotentialEP = totalPotentialEp;
+                    componentData.Canopy.LightProfile = lightProfile;
                 }
                 
-                if (componentData.Crop2 != null)
+                else if (componentData.Crop2 != null)
                 {
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
                     double totalPotentialEp = 0;

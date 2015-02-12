@@ -261,7 +261,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -284,7 +284,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -307,7 +307,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -330,7 +330,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -353,7 +353,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -376,7 +376,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {
@@ -399,7 +399,7 @@ namespace Models.PMF
         {
             get
             {
-                if (Plant.PlantInGround)
+                if (Plant.IsAlive)
                 {
                     if (Plant.Phenology != null)
                     {

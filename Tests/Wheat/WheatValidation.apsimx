@@ -1611,7 +1611,7 @@ namespace Models
           <Name>Lucerne</Name>
           <Operation>
             <Date>1993-06-03T00:00:00</Date>
-            <Action>[SurfaceOrganicMatter].Add(type: "lucerne", mass: 3560, N: 108.8);</Action>
+            <Action>[SurfaceOrganicMatter].Add(mass: 3560, N: 108.8, P:0.0, type: "lucerne", name: "");</Action>
           </Operation>
           <Operation>
             <Date>1993-06-03T00:00:00</Date>
@@ -1622,7 +1622,7 @@ namespace Models
           <Name>Straw</Name>
           <Operation>
             <Date>1993-06-03T00:00:00</Date>
-            <Action>[SurfaceOrganicMatter].Add(type: "barley", mass: 3584, N: 28.8);</Action>
+            <Action>[SurfaceOrganicMatter].Add(mass: 3584, N: 28.8, P:0.0, type: "barley", name: "");</Action>
           </Operation>
           <Operation>
             <Date>1993-06-03T00:00:00</Date>
@@ -2205,7 +2205,7 @@ namespace Models
           <Name>OMSchedule</Name>
           <Operation>
             <Date>1993-06-03T00:00:00</Date>
-            <Action>[SurfaceOrganicMatter].Add(type: "wheat", mass: 0, N: 0);</Action>
+            <Action>[SurfaceOrganicMatter].Add(mass: 0, N: 0, P:0.0, type: "wheat", name: "");</Action>
           </Operation>
           <Operation>
             <Date>1993-06-03T00:00:00</Date>

@@ -9,10 +9,9 @@ namespace Models.PMF
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Core;
+    using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
-    using Models.Soils;
-    using Models.PMF.Interfaces;
     using Models.Soils.Arbitrator;
 
     /// <summary>
@@ -30,8 +29,6 @@ namespace Models.PMF
         [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
         /// <summary>The structure</summary>
         [Link(IsOptional=true)] public Structure Structure = null;
-        /// <summary>The soil</summary>
-        [Link] Soils.Soil Soil = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional=true)] public Leaf Leaf = null;
         /// <summary>The root</summary>
@@ -54,17 +51,7 @@ namespace Models.PMF
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
         public IOrgan[] Organs { get; private set; }
-        
-        /// <summary>Gets the canopy data.</summary>
-        public NewCanopyType CanopyData { get { return LocalCanopyData; } }
 
-        /// <summary>The local canopy data</summary>
-        [XmlIgnore]
-        public NewCanopyType LocalCanopyData;
-        /// <summary>The local canopy data2</summary>
-        private CanopyProperties LocalCanopyData2;
-        /// <summary>The local root data</summary>
-        private RootProperties LocalRootData;
         /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
         {
@@ -102,30 +89,6 @@ namespace Models.PMF
         /// <summary>The current cultivar definition.</summary>
         private Cultivar cultivarDefinition;
 
-
-        /// <summary>MicroClimate needs FRGR.</summary>
-        /// <value>The FRGR.</value>
-        public double FRGR 
-        { 
-            get 
-            {
-                double frgr = 1;
-                foreach (IOrgan Child in Organs)
-                {
-                    if (Child.FRGR <= 1)
-                      frgr = Child.FRGR;
-                }
-                return frgr; 
-            } 
-        }
-        /// <summary>MicroClimate supplies light profile.</summary>
-        [XmlIgnore]
-        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        /// <summary>MicroClimate supplies Potential EP</summary>
-        /// <value>The potential ep.</value>
-        [XmlIgnore]
-        public double PotentialEP {get; set;}
-
         /// <summary>Gets the water supply demand ratio.</summary>
         /// <value>The water supply demand ratio.</value>
         [XmlIgnore]
@@ -134,71 +97,31 @@ namespace Models.PMF
             get
             {
                 double F;
-                if (demandWater > 0)
-                    F = Utility.Math.Sum(uptakeWater) / demandWater;
+                
+                if (Leaf != null && Leaf.WaterDemand > 0)
+                    F = Root.WaterUptake / Leaf.WaterDemand;
                 else
                     F = 1;
                 return F;
             }
         }
+
         /// <summary>Gets or sets the population.</summary>
         /// <value>The population.</value>
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
         public double Population { get; set; }
-        /// <summary>Gets or sets the plant transpiration.</summary>
-        /// <value>The plant transpiration.</value>
-        [XmlIgnore]
-        public double PlantTranspiration { get; set; }
+
         #endregion
 
         #region Interface properties
-        /// <summary>Provides canopy data to Arbitrator.</summary>
-        public CanopyProperties CanopyProperties { get { return LocalCanopyData2; } }
-        /// <summary>Provides root data to Arbitrator.</summary>
-        public RootProperties RootProperties { get { return LocalRootData; } }
-        /// <summary>
-        /// Potential evapotranspiration. Arbitrator calculates this and sets this property in the crop.
-        /// </summary>
-        [XmlIgnore]
-        public double demandWater { get; set; }
-        /// <summary>
-        /// Actual transpiration by the crop. Calculated by Arbitrator based on PotentialEP across all crops, soil and root properties
-        /// </summary>
-        [XmlIgnore]
-        public double[] uptakeWater { get; set; }
-        /// <summary>Crop calculates potentialNitrogenDemand after getting its water allocation</summary>
-        [XmlIgnore]
-        public double demandNitrogen { get; set; }
-        /// <summary>
-        /// Arbitrator supplies actualNitrogenSupply based on soil supply and other crop demand
-        /// </summary>
-        [XmlIgnore]
-        public double[] uptakeNitrogen { get; set; }
-        /// <summary>The proportion of supplyNitrogen that is supplied as NO3, the remainder is NH4</summary>
-        [XmlIgnore]
-        public double[] uptakeNitrogenPropNO3 { get;  set; }
-        /// <summary>
-        /// The initial value of the extent to which the roots have penetrated the soil layer (0-1)
-        /// </summary>
-        /// <value>The local root exploration by layer.</value>
-        [XmlIgnore] public double[] localRootExplorationByLayer { get; set; }
-        /// <summary>The initial value of the root length densities for each soil layer (mm/mm3)</summary>
-        /// <value>The local root length density by volume.</value>
-        [XmlIgnore] public double[] localRootLengthDensityByVolume { get; set; }
-        /// <summary>Is the plant in the ground?</summary>
-        [XmlIgnore]
-        public bool PlantInGround
-        {
-            get
-            {
-                return SowingData != null;
-            }
-        }
-        /// <summary>Test if the plant has emerged</summary>
-        [XmlIgnore]
-        public bool PlantEmerged
+
+        /// <summary>Return true if plant is alive and in the ground.</summary>
+        public bool IsAlive { get { return SowingData != null; } }
+        
+        /// <summary>Return true if plant has emerged</summary>
+        public bool IsEmerged
         {
             get
             {
@@ -209,30 +132,17 @@ namespace Models.PMF
             }
         }
 
-
-        /// <summary>
-        /// Is the plant alive?
-        /// </summary>
-        public bool IsAlive
-        { 
-            get
-            {
-                return SowingData != null;
-            }
-        }
         #endregion
 
         #region Class Events
-        /// <summary>Occurs when [sowing].</summary>
+        /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler Sowing;
-        /// <summary>Occurs when [harvesting].</summary>
+        /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
-        /// <summary>Occurs when [cutting].</summary>
+        /// <summary>Occurs when a plant is about to be cut.</summary>
         public event EventHandler Cutting;
-        /// <summary>Occurs when [plant ending].</summary>
+        /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when [biomass removed].</summary>
-        public event BiomassRemovedDelegate BiomassRemoved;
         /// <summary>Occurs when daily phenology timestep completed</summary>
         public event EventHandler PostPhenology;
         #endregion
@@ -304,36 +214,6 @@ namespace Models.PMF
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());
 
-            BiomassRemovedType BiomassRemovedData = new BiomassRemovedType();
-            BiomassRemovedData.crop_type = CropType;
-            BiomassRemovedData.dm_type = new string[Organs.Length];
-            BiomassRemovedData.dlt_crop_dm = new float[Organs.Length];
-            BiomassRemovedData.dlt_dm_n = new float[Organs.Length];
-            BiomassRemovedData.dlt_dm_p = new float[Organs.Length];
-            BiomassRemovedData.fraction_to_residue = new float[Organs.Length];
-            int i = 0;
-            foreach (BaseOrgan O in Organs)
-            {
-                if (O is AboveGround)
-                {
-                    BiomassRemovedData.dm_type[i] = O.Name;
-                    BiomassRemovedData.dlt_crop_dm[i] = (float)O.TotalDM * 10f;
-                    BiomassRemovedData.dlt_dm_n[i] = (float)O.TotalN * 10f;
-                    BiomassRemovedData.dlt_dm_p[i] = 0f;
-                    BiomassRemovedData.fraction_to_residue[i] = 1f;
-                }
-                else
-                {
-                    BiomassRemovedData.dm_type[i] = O.Name;
-                    BiomassRemovedData.dlt_crop_dm[i] = 0f;
-                    BiomassRemovedData.dlt_dm_n[i] = 0f;
-                    BiomassRemovedData.dlt_dm_p[i] = 0f;
-                    BiomassRemovedData.fraction_to_residue[i] = 0f;
-                }
-                i++;
-            }
-            BiomassRemoved.Invoke(BiomassRemovedData);
-
             // tell all our children about endcrop
             foreach (IOrgan Child in Organs)
                 Child.OnEndCrop();
@@ -341,6 +221,7 @@ namespace Models.PMF
 
             cultivarDefinition.Unapply();
         }
+        
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
@@ -354,6 +235,7 @@ namespace Models.PMF
             if (Arbitrator != null)
                Arbitrator.Clear();
         }
+        
         /// <summary>Cut the crop.</summary>
         public void Cut()
         {
@@ -364,6 +246,7 @@ namespace Models.PMF
             foreach (IOrgan Child in Organs)
                 Child.OnCut();
         }
+        
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -377,10 +260,7 @@ namespace Models.PMF
 
             Clear();
             foreach (IOrgan o in Organs)
-            {
                 o.OnSimulationCommencing();
-            }
-            InitialiseInterfaceTypes();
         }
         
         /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
@@ -389,7 +269,7 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (PlantInGround)
+            if (IsAlive)
             {
                 
                 if (Phenology != null)
@@ -429,7 +309,7 @@ namespace Models.PMF
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (PlantInGround)
+            if (IsAlive)
             {
                 if (Phenology != null)
                 {
@@ -595,58 +475,6 @@ namespace Models.PMF
             foreach (IOrgan o in Organs)
                 o.DoActualGrowth();
         }
-        /// <summary>Initialises the interface types.</summary>
-        private void InitialiseInterfaceTypes()
-        {
-            uptakeWater = new double[Soil.Thickness.Length];
-            uptakeNitrogen = new double[Soil.Thickness.Length];
-            uptakeNitrogenPropNO3 = new double[Soil.Thickness.Length];
-
-            //Set up CanopyData and root data types
-            LocalCanopyData = new NewCanopyType();
-            LocalCanopyData2 = new CanopyProperties();
-            LocalRootData = new RootProperties();
-
-            CanopyProperties.Name = CropType;
-            CanopyProperties.CoverGreen = 0;
-            CanopyProperties.CoverTot = 0;
-            CanopyProperties.CanopyDepth = 0;
-            CanopyProperties.CanopyHeight = 0;
-            CanopyProperties.LAIGreen = 0;
-            CanopyProperties.LAItot = 0;
-            CanopyProperties.Frgr = 0;
-            if (Leaf != null)
-            {
-                CanopyProperties.MaximumStomatalConductance = Leaf.GsMax;
-                CanopyProperties.HalfSatStomatalConductance = Leaf.R50;
-                CanopyProperties.CanopyEmissivity = Leaf.Emissivity;
-            }
-            else
-            {
-                CanopyProperties.MaximumStomatalConductance = 0;
-                CanopyProperties.HalfSatStomatalConductance = 0;
-                CanopyProperties.CanopyEmissivity = 0;
-            }
-
-            SoilCrop soilCrop = this.Soil.Crop(Name) as SoilCrop;
-
-            RootProperties.KL = soilCrop.KL;
-            RootProperties.LowerLimitDep = soilCrop.LL;
-            RootProperties.RootDepth = 0;
-            RootProperties.MaximumDailyNUptake = 0;
-            RootProperties.KNO3 = Root.KNO3;
-            RootProperties.KNH4 = Root.KNH4;
-
-            localRootExplorationByLayer = new double[Soil.Thickness.Length];
-            localRootLengthDensityByVolume = new double[Soil.Thickness.Length];
-
-            demandWater = 0;
-            demandNitrogen = 0;
-
-            RootProperties.RootExplorationByLayer = localRootExplorationByLayer;
-            RootProperties.RootLengthDensityByVolume = localRootLengthDensityByVolume;
-        }
-
         #endregion
      }
 }
