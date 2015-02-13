@@ -280,8 +280,18 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
-
         }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+                Clear();
+        }
+
         /// <summary>Called when [sow].</summary>
         /// <param name="Sow">The sow.</param>
         /// <exception cref="System.Exception">MaxCover must exceed zero in a Sow event.</exception>
@@ -300,15 +310,6 @@ namespace Models.PMF
             _Height = HeightModel.Value;
         }
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, ModelArgs e)
-        {
-            if (e.Model == Plant)
-                Clear();
-        }
         
         #endregion
     }

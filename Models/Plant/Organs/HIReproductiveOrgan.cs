@@ -53,21 +53,23 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Occurs when [harvesting].</summary>
-        public event NullTypeDelegate Harvesting;
-        /// <summary>Called when [harvest].</summary>
-        public override void OnHarvest()
+        /// <summary>Called when crop is being harvested.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, ModelArgs e)
         {
-            Harvesting.Invoke();
+            if (e.Model == Plant)
+            {
+                double YieldDW = (Live.Wt + Dead.Wt);
 
-            double YieldDW = (Live.Wt + Dead.Wt);
+                string message = "Harvesting " + Name + " from " + Plant.Name + "\r\n" +
+                                 "  Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)";
+                Summary.WriteMessage(this, message);
 
-            string message = "Harvesting " + Name + " from " + Plant.Name + "\r\n" +
-                             "  Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)";
-            Summary.WriteMessage(this, message);
-
-            Live.Clear();
-            Dead.Clear();
+                Live.Clear();
+                Dead.Clear();
+            }
         }
 
         /// <summary>Gets the hi.</summary>
@@ -122,6 +124,25 @@ namespace Models.PMF.Organs
             {
                 Live.StructuralN += value.Structural;
             }
+        }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+                Clear();
         }
     }
 }

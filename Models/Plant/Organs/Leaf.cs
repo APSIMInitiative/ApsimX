@@ -229,15 +229,6 @@ namespace Models.PMF.Organs
         
         #endregion
 
-        /// <summary>Called when [loaded].</summary>
-        [EventSubscribe("Loaded")]
-        private void OnLoaded()
-        {
-            List<LeafCohort> initialLeaves = new List<LeafCohort>();
-            foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
-                initialLeaves.Add(initialLeaf);
-            InitialLeaves = initialLeaves.ToArray();
-        }
 
         #region States
 
@@ -1545,36 +1536,53 @@ namespace Models.PMF.Organs
 
         }
 
-        /// <summary>Called when crop is cut</summary>
-        public override void OnCut()
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCutting(object sender, ModelArgs e)
         {
-            Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+            if (e.Model == Plant)
+            {
+                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
-            if (TotalDM > 0)
-                SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+                if (TotalDM > 0)
+                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
 
-            Structure.MainStemNodeNo = 0;
-            Structure.Clear();
-            Live.Clear();
-            Dead.Clear();
-            Leaves.Clear();
-            Structure.ResetStemPopn();
-            InitialiseCohorts();
-            //Structure.ResetStemPopn();
+                Structure.MainStemNodeNo = 0;
+                Structure.Clear();
+                Live.Clear();
+                Dead.Clear();
+                Leaves.Clear();
+                Structure.ResetStemPopn();
+                InitialiseCohorts();
+            }
         }
 
-        /// <summary>Called when a crop is harvested</summary>
-        public override void OnHarvest()
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            
+            List<LeafCohort> initialLeaves = new List<LeafCohort>();
+            foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
+                initialLeaves.Add(initialLeaf);
+            InitialLeaves = initialLeaves.ToArray();
         }
 
-        /// <summary>Called when a crop ends</summary>
-        public override void OnEndCrop()
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
         {
-            if (TotalDM > 0)
-                SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
-            Clear();
+            if (e.Model == Plant)
+            {
+                if (TotalDM > 0)
+                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+                Clear();
+            }
         }
         #endregion
 

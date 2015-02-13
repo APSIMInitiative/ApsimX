@@ -30,6 +30,9 @@ namespace Models.PMF.Organs
         [Link]
         public Weather MetData = null;
 
+        [Link]
+        Plant Plant = null;
+
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
         [XmlIgnore]
@@ -159,27 +162,9 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
-
-        /// <summary>Things the plant model does when the simulation starts</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        virtual protected void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Clear();
-        }
         
         /// <summary>Called when a crop is sown</summary>
         /// <param name="SowData">The sow data.</param>
         virtual public void OnSow(SowPlant2Type SowData) { Clear(); }
-
-        /// <summary>Called when a crop is harvested</summary>
-        virtual public void OnHarvest() { }
-
-        /// <summary>Called when a crop ends</summary>
-        virtual public void OnEndCrop() { Clear(); }
-
-        /// <summary>Called when a crop is cut</summary>
-        virtual public void OnCut() { }
     }
 }

@@ -16,15 +16,6 @@ namespace Models.PMF.Interfaces
         /// <summary>Called when crop is sown</summary>
         /// <param name="sowing">Sowing data</param>
         void OnSow(SowPlant2Type sowing);
-
-        /// <summary>Called when the crop is harvested</summary>
-        void OnHarvest();
-
-        /// <summary>Called when the crop is cut</summary>
-        void OnCut();
-
-        /// <summary>Called when crop ends</summary>
-        void OnEndCrop();
     }
 
     /// <summary>An above ground interface</summary>

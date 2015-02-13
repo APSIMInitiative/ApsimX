@@ -136,15 +136,29 @@ namespace Models.PMF
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
-        public event EventHandler Harvesting;
+        public event EventHandler<ModelArgs> Harvesting;
         /// <summary>Occurs when a plant is about to be cut.</summary>
         public event EventHandler Cutting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler<ModelArgs> PlantEnding;
-
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
+
+        /// <summary>Things the plant model does when the simulation starts</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            List<IOrgan> organs = new List<IOrgan>();
+            foreach (IOrgan organ in Apsim.Children(this, typeof(IOrgan)))
+                organs.Add(organ);
+            Organs = organs.ToArray();
+
+            Clear();
+        }
+
         /// <summary>Sow the crop with the specified parameters.</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
@@ -166,8 +180,6 @@ namespace Models.PMF
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
             cultivarDefinition.Apply(this);
 
-
-
             // Invoke a sowing event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
@@ -184,8 +196,6 @@ namespace Models.PMF
             if (Arbitrator != null)
                 Arbitrator.OnSow();
 
-
-
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
         
@@ -194,15 +204,9 @@ namespace Models.PMF
         {
             // Invoke a harvesting event.
             if (Harvesting != null)
-                Harvesting.Invoke(this, new EventArgs());
+                Harvesting.Invoke(this, new ModelArgs() { Model = this });
 
-            // tell all our children about harvest
-            foreach (IOrgan Child in Organs)
-                Child.OnHarvest();
-
-            Phenology.OnHarvest();
-
-            Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today, Yeahhh"));
+            Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today."));
         }
         
         /// <summary>End the crop.</summary>
@@ -210,54 +214,30 @@ namespace Models.PMF
         {
             Summary.WriteMessage(this, "Crop ending");
 
+            // Invoke a plant ending event.
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new ModelArgs() { Model = this });
 
-            // tell all our children about endcrop
-            foreach (IOrgan Child in Organs)
-                Child.OnEndCrop();
             Clear();
-
             cultivarDefinition.Unapply();
-        }
-
-        /// <summary>Clears this instance.</summary>
-        private void Clear()
-        {
-            SowingData = null;
-            //WaterSupplyDemandRatio = 0;
-            Population = 0;
-            if (Phenology != null)
-                Phenology.Clear();
-            if (Arbitrator != null)
-                Arbitrator.Clear();
         }
 
         /// <summary>Cut the crop.</summary>
         public void Cut()
         {
+            // Invoke a cutting event.
             if (Cutting != null)
-                Cutting.Invoke(this, new EventArgs());
-
-            // tell all our children about endcrop
-            foreach (IOrgan Child in Organs)
-                Child.OnCut();
+                Cutting.Invoke(this, new ModelArgs() { Model = this });
         }
+        #endregion
 
-        /// <summary>Things the plant model does when the simulation starts</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        #region Private methods
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
         {
-            List<IOrgan> organs = new List<IOrgan>();
-            foreach (IOrgan organ in Apsim.Children(this, typeof(IOrgan)))
-                organs.Add(organ);
-            Organs = organs.ToArray();
-
-            Clear();
+            SowingData = null;
+            Population = 0;
         }
-
         #endregion
     }
 }

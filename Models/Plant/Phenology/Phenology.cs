@@ -286,20 +286,36 @@ namespace Models.PMF.Phen
             Clear();
         }
 
-        /// <summary>Called when [harvest].</summary>
-        public void OnHarvest()
+        /// <summary>Called when crop is being harvested.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, ModelArgs e)
         {
-            //Jump phenology to the end
-            
-            string OldPhaseName = CurrentPhase.Name;
-            int EndPhase = Phases.Count;
-            PhaseChangedType PhaseChangedData = new PhaseChangedType();
-            PhaseChangedData.OldPhaseName = OldPhaseName;
-            PhaseChangedData.NewPhaseName = Phases[EndPhase - 1].Name;
-            PhaseChanged.Invoke(PhaseChangedData);
-            CurrentPhaseName = Phases[EndPhase - 1].Name;
+            if (e.Model == Plant)
+            {
+                //Jump phenology to the end
+
+                string OldPhaseName = CurrentPhase.Name;
+                int EndPhase = Phases.Count;
+                PhaseChangedType PhaseChangedData = new PhaseChangedType();
+                PhaseChangedData.OldPhaseName = OldPhaseName;
+                PhaseChangedData.NewPhaseName = Phases[EndPhase - 1].Name;
+                PhaseChanged.Invoke(PhaseChangedData);
+                CurrentPhaseName = Phases[EndPhase - 1].Name;
+            }
         }
 
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+                Clear();
+        }
+  
         /// <summary>Look for a particular phase and return it's index or -1 if not found.</summary>
         /// <param name="Name">The name.</param>
         /// <returns></returns>

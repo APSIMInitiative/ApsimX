@@ -408,36 +408,40 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>Called when [end crop].</summary>
-        public override void OnEndCrop()
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
         {
-            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
-
-            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+            if (e.Model == Plant)
             {
-                double DM = (LayerLive[layer].Wt + LayerDead[layer].Wt) * 10.0;
-                double N = (LayerLive[layer].N + LayerDead[layer].N) * 10.0;
+                FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
 
-                FOMType fom = new FOMType();
-                fom.amount = (float)DM;
-                fom.N = (float)N;
-                fom.C = (float)(0.40 * DM);
-                fom.P = 0;
-                fom.AshAlk = 0;
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                {
+                    double DM = (LayerLive[layer].Wt + LayerDead[layer].Wt) * 10.0;
+                    double N = (LayerLive[layer].N + LayerDead[layer].N) * 10.0;
 
-                FOMLayerLayerType Layer = new FOMLayerLayerType();
-                Layer.FOM = fom;
-                Layer.CNR = 0;
-                Layer.LabileP = 0;
+                    FOMType fom = new FOMType();
+                    fom.amount = (float)DM;
+                    fom.N = (float)N;
+                    fom.C = (float)(0.40 * DM);
+                    fom.P = 0;
+                    fom.AshAlk = 0;
 
-                FOMLayers[layer] = Layer;
+                    FOMLayerLayerType Layer = new FOMLayerLayerType();
+                    Layer.FOM = fom;
+                    Layer.CNR = 0;
+                    Layer.LabileP = 0;
+
+                    FOMLayers[layer] = Layer;
+                }
+                FOMLayerType FomLayer = new FOMLayerType();
+                FomLayer.Type = Plant.CropType;
+                FomLayer.Layer = FOMLayers;
+                IncorpFOM.Invoke(FomLayer);
             }
-            FOMLayerType FomLayer = new FOMLayerType();
-            FomLayer.Type = Plant.CropType;
-            FomLayer.Layer = FOMLayers;
-            IncorpFOM.Invoke(FomLayer);
-
-            base.OnEndCrop();
         }
 
         /// <summary>Called when [sow].</summary>

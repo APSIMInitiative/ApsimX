@@ -27,13 +27,19 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
-        /// <summary>Called when [cut].</summary>
-        public override void OnCut()
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCutting(object sender, ModelArgs e)
         {
-            Summary.WriteMessage(this, "Cutting");
+            if (e.Model == Plant)
+            {
+                Summary.WriteMessage(this, "Cutting");
 
-            Live.Clear();
-            Dead.Clear();
+                Live.Clear();
+                Dead.Clear();
+            }
         }
         #endregion
     }

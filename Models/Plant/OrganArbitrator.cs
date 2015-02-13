@@ -588,6 +588,15 @@ namespace Models.PMF
         #endregion
 
         #region Interface methods called by Plant.cs
+        /// <summary>Things the plant model does when the simulation starts</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
         /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
         /// <param name="sender">The sender.</param>
@@ -651,6 +660,16 @@ namespace Models.PMF
                 SendDMAllocations(Organs);                               //Tell each organ how DM they are getting folling allocation
                 SendNutrientAllocations(Organs);                         //Tell each organ how much nutrient they are getting following allocaition
             }
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+                Clear();
         }
         #endregion
 

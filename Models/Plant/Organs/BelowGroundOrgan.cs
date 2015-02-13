@@ -16,25 +16,25 @@ namespace Models.PMF.Organs
         [Link]
         ISummary Summary = null;
 
-        /// <summary>Occurs when [harvesting].</summary>
-        public event NullTypeDelegate Harvesting;
-
-        /// <summary>Called when crop is harvested</summary>
-        public override void OnHarvest()
+        /// <summary>Called when crop is being harvested.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, ModelArgs e)
         {
-            Harvesting.Invoke();
+            if (e.Model == Plant)
+            {
+                DateTime Today = new DateTime(Clock.Today.Year, 1, 1);
+                Today = Today.AddDays(Clock.Today.Day - 1);
+                double YieldDW = (Live.Wt + Dead.Wt);
 
-            DateTime Today = new DateTime(Clock.Today.Year, 1, 1);
-            Today = Today.AddDays(Clock.Today.Day - 1);
-            double YieldDW = (Live.Wt + Dead.Wt);
+                string message = "Harvesting " + Name + " from " + Plant.Name + "\r\n" +
+                                 "  Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)";
+                Summary.WriteMessage(this, message);
 
-            string message = "Harvesting " + Name + " from " + Plant.Name + "\r\n" +
-                             "  Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)";
-            Summary.WriteMessage(this, message);
-
-            Live.Clear();
-            Dead.Clear();
-
+                Live.Clear();
+                Dead.Clear();
+            }
         }
     }
 }

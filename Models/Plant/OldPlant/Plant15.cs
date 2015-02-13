@@ -350,7 +350,9 @@ namespace Models.PMF.OldPlant
 
         /// <summary>Occurs when [new canopy].</summary>
         public event NewCanopyDelegate NewCanopy;
-
+        
+        /// <summary>Occurs when [crop ending].</summary>
+        public event EventHandler<ModelArgs> PlantEnding;
 
         /// <summary>Occurs when [crop ending].</summary>
         public event NewCropDelegate CropEnding;
@@ -923,6 +925,9 @@ namespace Models.PMF.OldPlant
             Crop.sender = Name;
             if (CropEnding != null)
                 CropEnding.Invoke(Crop);
+
+            if (PlantEnding != null)
+                PlantEnding.Invoke(this, new ModelArgs() { Model = this });
 
             // Keep track of some variables for reporting.
             Biomass AboveGroundBiomass = new Biomass(AboveGround);

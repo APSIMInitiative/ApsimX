@@ -74,7 +74,7 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         IFunction DMRetranslocationFactor = null;
         /// <summary>The structural fraction</summary>
-        [Link(IsOptional = true)] 
+        [Link(IsOptional = true)]
         IFunction StructuralFraction = null;
         /// <summary>The dm demand Function</summary>
         [Link(IsOptional = true)]
@@ -93,7 +93,7 @@ namespace Models.PMF.Organs
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Link(IsOptional = true)]
-        IFunction MinimumNConc = null;  
+        IFunction MinimumNConc = null;
         #endregion
 
         #region States
@@ -149,86 +149,7 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Organ functions
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (Plant.IsEmerged)
-            {
-                SenescenceRate = 0;
-                if (SenescenceRateFunction != null) //Default of zero means no senescence
-                    SenescenceRate = SenescenceRateFunction.Value;
-                _StructuralFraction = 1;
-                if (StructuralFraction != null) //Default of 1 means all biomass is structural
-                    _StructuralFraction = StructuralFraction.Value;
-                InitialWt = 0; //Default of zero means no initial Wt
-                if (InitialWtFunction != null)
-                    InitialWt = InitialWtFunction.Value;
-                InitStutFraction = 1.0; //Default of 1 means all initial DM is structural
-                if (InitialStructuralFraction != null)
-                    InitStutFraction = InitialStructuralFraction.Value;
 
-                //Initialise biomass and nitrogen
-                if (Live.Wt == 0)
-                {
-                    Live.StructuralWt = InitialWt * InitStutFraction;
-                    Live.NonStructuralWt = InitialWt * (1 - InitStutFraction);
-                    Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
-                    Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
-                }
-
-                StartLive = Live;
-                StartNReallocationSupply = NSupply.Reallocation;
-                StartNRetranslocationSupply = NSupply.Retranslocation;
-            }
-        }
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantPartioning")]
-        protected void OnDoActualPlantPartioning(object sender, EventArgs e)
-        {
-            Biomass Loss = new Biomass();
-            Loss.StructuralWt = Live.StructuralWt * SenescenceRate;
-            Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate;
-            Loss.StructuralN = Live.StructuralN * SenescenceRate;
-            Loss.NonStructuralN = Live.NonStructuralN * SenescenceRate;
-
-            Live.StructuralWt -= Loss.StructuralWt;
-            Live.NonStructuralWt -= Loss.NonStructuralWt;
-            Live.StructuralN -= Loss.StructuralN;
-            Live.NonStructuralN -= Loss.NonStructuralN;
-
-            Dead.StructuralWt += Loss.StructuralWt;
-            Dead.NonStructuralWt += Loss.NonStructuralWt;
-            Dead.StructuralN += Loss.StructuralN;
-            Dead.NonStructuralN += Loss.NonStructuralN;
-
-            double DetachedFrac = 0;
-            if (DetachmentRateFunction != null)
-               DetachedFrac = DetachmentRateFunction.Value;
-            if (DetachedFrac > 0.0)
-            {
-                double DetachedWt = Dead.Wt * DetachedFrac;
-                double DetachedN = Dead.N * DetachedFrac;
-
-                Dead.StructuralWt *= (1 - DetachedFrac);
-                Dead.StructuralN *= (1 - DetachedFrac);
-                Dead.NonStructuralWt *= (1 - DetachedFrac);
-                Dead.NonStructuralN *= (1 - DetachedFrac);
-                Dead.MetabolicWt *= (1 - DetachedFrac);
-                Dead.MetabolicN *= (1 - DetachedFrac);
-
-                if (DetachedWt > 0)
-                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
-            }       
-     
-            if ((DryMatterContent != null)&& (Live.Wt != 0))
-                LiveFWt = Live.Wt / DryMatterContent.Value;
-        }
-   
         #endregion
 
         #region Arbitrator methods
@@ -240,10 +161,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-             StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
-             double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
-             MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
-             NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt); 
+                StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
+                double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
+                MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
+                NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
                 return new BiomassPoolType { Structural = StructuralDMDemand, NonStructural = NonStructuralDMDemand };
             }
         }
@@ -269,12 +190,15 @@ namespace Models.PMF.Organs
         {
             get
             {
-            double _DMRetranslocationFactor = 0;
-            if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
-                _DMRetranslocationFactor = DMRetranslocationFactor.Value;
-            return new BiomassSupplyType { Fixation = 0, 
-                                      Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
-            Reallocation = 0};
+                double _DMRetranslocationFactor = 0;
+                if (DMRetranslocationFactor != null) //Default of 0 means retranslocation is always truned off!!!!
+                    _DMRetranslocationFactor = DMRetranslocationFactor.Value;
+                return new BiomassSupplyType
+                {
+                    Fixation = 0,
+                    Retranslocation = StartLive.NonStructuralWt * _DMRetranslocationFactor,
+                    Reallocation = 0
+                };
             }
         }
         /// <summary>Gets or sets the n demand.</summary>
@@ -283,13 +207,13 @@ namespace Models.PMF.Organs
         {
             get
             {
-            double _NitrogenDemandSwitch = 1;
-            if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
-            double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N);
-            NDeficit *= _NitrogenDemandSwitch;
-            double StructuralNDemand = Math.Min(NDeficit,PotentialStructuralDMAllocation * MinimumNConc.Value);
-            double NonStructuralNDemand = Math.Max(0,NDeficit - StructuralNDemand); 
+                double _NitrogenDemandSwitch = 1;
+                if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
+                    _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
+                double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N);
+                NDeficit *= _NitrogenDemandSwitch;
+                double StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value);
+                double NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand);
                 return new BiomassPoolType { Structural = StructuralNDemand, NonStructural = NonStructuralNDemand };
             }
         }
@@ -299,22 +223,22 @@ namespace Models.PMF.Organs
         {
             get
             {
-            BiomassSupplyType Supply = new BiomassSupplyType();
+                BiomassSupplyType Supply = new BiomassSupplyType();
 
-            // Calculate Reallocation Supply.
-            double _NReallocationFactor = 0;
-            if (NReallocationFactor != null) //Default of zero means N reallocation is truned off
-                _NReallocationFactor = NReallocationFactor.Value;
-            Supply.Reallocation = SenescenceRate * StartLive.NonStructuralN * _NReallocationFactor;
+                // Calculate Reallocation Supply.
+                double _NReallocationFactor = 0;
+                if (NReallocationFactor != null) //Default of zero means N reallocation is truned off
+                    _NReallocationFactor = NReallocationFactor.Value;
+                Supply.Reallocation = SenescenceRate * StartLive.NonStructuralN * _NReallocationFactor;
 
-            // Calculate Retranslocation Supply.
-            double _NRetranslocationFactor = 0;
-            if (NRetranslocationFactor != null) //Default of zero means retranslocation is turned off
-                _NRetranslocationFactor = NRetranslocationFactor.Value;
-            double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
-            Supply.Retranslocation = (LabileN - StartNReallocationSupply) * _NRetranslocationFactor;
+                // Calculate Retranslocation Supply.
+                double _NRetranslocationFactor = 0;
+                if (NRetranslocationFactor != null) //Default of zero means retranslocation is turned off
+                    _NRetranslocationFactor = NRetranslocationFactor.Value;
+                double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
+                Supply.Retranslocation = (LabileN - StartNReallocationSupply) * _NRetranslocationFactor;
 
-            return Supply;
+                return Supply;
             }
         }
         /// <summary>Sets the dm allocation.</summary>
@@ -406,19 +330,109 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Events and Event Handlers
-        /// <summary>Called when [harvest].</summary>
-          public override void OnHarvest() 
-          { 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Clear();
+        }
 
-          }
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            if (Plant.IsEmerged)
+            {
+                SenescenceRate = 0;
+                if (SenescenceRateFunction != null) //Default of zero means no senescence
+                    SenescenceRate = SenescenceRateFunction.Value;
+                _StructuralFraction = 1;
+                if (StructuralFraction != null) //Default of 1 means all biomass is structural
+                    _StructuralFraction = StructuralFraction.Value;
+                InitialWt = 0; //Default of zero means no initial Wt
+                if (InitialWtFunction != null)
+                    InitialWt = InitialWtFunction.Value;
+                InitStutFraction = 1.0; //Default of 1 means all initial DM is structural
+                if (InitialStructuralFraction != null)
+                    InitStutFraction = InitialStructuralFraction.Value;
 
-          /// <summary>Called when a crop ends</summary>
-          public override void OnEndCrop()
-          {
-              if (TotalDM > 0)
-                  SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
-              Clear();
-          }
+                //Initialise biomass and nitrogen
+                if (Live.Wt == 0)
+                {
+                    Live.StructuralWt = InitialWt * InitStutFraction;
+                    Live.NonStructuralWt = InitialWt * (1 - InitStutFraction);
+                    Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
+                    Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
+                }
+
+                StartLive = Live;
+                StartNReallocationSupply = NSupply.Reallocation;
+                StartNRetranslocationSupply = NSupply.Retranslocation;
+            }
+        }
+
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        protected void OnDoActualPlantPartioning(object sender, EventArgs e)
+        {
+            Biomass Loss = new Biomass();
+            Loss.StructuralWt = Live.StructuralWt * SenescenceRate;
+            Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate;
+            Loss.StructuralN = Live.StructuralN * SenescenceRate;
+            Loss.NonStructuralN = Live.NonStructuralN * SenescenceRate;
+
+            Live.StructuralWt -= Loss.StructuralWt;
+            Live.NonStructuralWt -= Loss.NonStructuralWt;
+            Live.StructuralN -= Loss.StructuralN;
+            Live.NonStructuralN -= Loss.NonStructuralN;
+
+            Dead.StructuralWt += Loss.StructuralWt;
+            Dead.NonStructuralWt += Loss.NonStructuralWt;
+            Dead.StructuralN += Loss.StructuralN;
+            Dead.NonStructuralN += Loss.NonStructuralN;
+
+            double DetachedFrac = 0;
+            if (DetachmentRateFunction != null)
+                DetachedFrac = DetachmentRateFunction.Value;
+            if (DetachedFrac > 0.0)
+            {
+                double DetachedWt = Dead.Wt * DetachedFrac;
+                double DetachedN = Dead.N * DetachedFrac;
+
+                Dead.StructuralWt *= (1 - DetachedFrac);
+                Dead.StructuralN *= (1 - DetachedFrac);
+                Dead.NonStructuralWt *= (1 - DetachedFrac);
+                Dead.NonStructuralN *= (1 - DetachedFrac);
+                Dead.MetabolicWt *= (1 - DetachedFrac);
+                Dead.MetabolicN *= (1 - DetachedFrac);
+
+                if (DetachedWt > 0)
+                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+            }
+
+            if ((DryMatterContent != null) && (Live.Wt != 0))
+                LiveFWt = Live.Wt / DryMatterContent.Value;
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+            {
+                if (TotalDM > 0)
+                    SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);
+                Clear();
+            }
+        }
         #endregion
     }
 }

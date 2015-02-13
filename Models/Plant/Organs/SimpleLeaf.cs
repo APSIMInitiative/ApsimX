@@ -317,7 +317,26 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-        #region Evnets
+        #region Events
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+                Clear();
+        }
 
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
@@ -339,12 +358,18 @@ namespace Models.PMF.Organs
         #region Component Process Functions
 
 
-        /// <summary>Called when [cut].</summary>
-        public override void OnCut()
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCutting(object sender, ModelArgs e)
         {
-            Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
-            Live.Clear();
-            Dead.Clear();
+            if (e.Model == Plant)
+            {
+                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+                Live.Clear();
+                Dead.Clear();
+            }
         }
         /// <summary>Called when [sow].</summary>
         /// <param name="Data">The data.</param>

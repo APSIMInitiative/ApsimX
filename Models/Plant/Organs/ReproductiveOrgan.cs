@@ -133,39 +133,70 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
-        /// <summary>Called when [harvest].</summary>
-        public override void OnHarvest()
+        /// <summary>Called when crop is being harvested.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvesting(object sender, ModelArgs e)
         {
-            if (Harvesting != null)
-                Harvesting.Invoke();
+            if (e.Model == Plant)
+            {
+                if (Harvesting != null)
+                    Harvesting.Invoke();
 
-            double YieldDW = (Live.Wt + Dead.Wt);
+                double YieldDW = (Live.Wt + Dead.Wt);
 
-            Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name);
-            Summary.WriteMessage(this, " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
-            Summary.WriteMessage(this, " Size: " + Size.ToString("f2") + " (g)");
-            Summary.WriteMessage(this, " Number: " + Number.ToString("f2") + " (/m^2)");
+                Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name);
+                Summary.WriteMessage(this, " Yield DWt: " + YieldDW.ToString("f2") + " (g/m^2)");
+                Summary.WriteMessage(this, " Size: " + Size.ToString("f2") + " (g)");
+                Summary.WriteMessage(this, " Number: " + Number.ToString("f2") + " (/m^2)");
 
-            Live.Clear();
-            Dead.Clear();
-            Number = 0;
-            _ReadyForHarvest = false;
+                Live.Clear();
+                Dead.Clear();
+                Number = 0;
+                _ReadyForHarvest = false;
+            }
         }
         #endregion
 
         #region Event handlers
 
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+                Clear();
+        }
+
         /// <summary>Occurs when [harvesting].</summary>
         public event NullTypeDelegate Harvesting;
-        /// <summary>Called when [cut].</summary>
-        public override void OnCut()
+        /// <summary>Called when crop is being cut.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCutting(object sender, ModelArgs e)
         {
-            Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+            if (e.Model == Plant)
+            {
+                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
-            Live.Clear();
-            Dead.Clear();
-            Number = 0;
-            _ReadyForHarvest = false;
+                Live.Clear();
+                Dead.Clear();
+                Number = 0;
+                _ReadyForHarvest = false;
+            }
         }
         #endregion
 
