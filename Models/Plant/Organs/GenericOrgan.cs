@@ -184,10 +184,12 @@ namespace Models.PMF.Organs
                 StartNRetranslocationSupply = NSupply.Retranslocation;
             }
         }
-        /// <summary>Does the actual growth.</summary>
-        public override void DoActualGrowth()
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        protected void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
-            base.DoActualGrowth();
             Biomass Loss = new Biomass();
             Loss.StructuralWt = Live.StructuralWt * SenescenceRate;
             Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate;

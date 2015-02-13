@@ -2,6 +2,12 @@
 {
     using System;
     using Models.Soils;
+    using Models.Core;
+
+    public class ModelArgs : EventArgs
+    {
+        public IModel Model;
+    }
 
     /// <summary>
     /// 

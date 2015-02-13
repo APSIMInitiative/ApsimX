@@ -255,11 +255,13 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Does the actual growth.</summary>
-        public override void DoActualGrowth()
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
-            base.DoActualGrowth();
-
+            
             // Do Root Front Advance
             int RootLayer = LayerIndex(Depth);
             double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;

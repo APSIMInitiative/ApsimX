@@ -248,7 +248,10 @@ namespace Models.PMF
             }
         }
         /// <summary>Does the actual growth.</summary>
-        public void DoActualGrowth()
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
             //Set PlantTotalNodeNo    
             PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
@@ -296,6 +299,17 @@ namespace Models.PMF
             MaximumNodeNumber = (int)_MainStemFinalNodeNo;
             _Height = HeightModel.Value;
         }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+                Clear();
+        }
+        
         #endregion
     }
 

@@ -206,11 +206,13 @@ namespace Models.PMF.Organs
                     _LAI = LAIFunction.Value;
             }
         }
-        /// <summary>Does the actual growth.</summary>
-        public override void DoActualGrowth()
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
-            base.DoActualGrowth();
-            
+                        
         }
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>

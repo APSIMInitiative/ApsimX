@@ -638,14 +638,19 @@ namespace Models.PMF
             DoUptake(Organs, N, NArbitrationOption);                 
         }
         /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="Organs">The organs.</param>
-        public void DoActualGrowth()
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
-            DoRetranslocation(Organs, N, NArbitrationOption);        //Allocate retranslocated N to each organ
-            DoFixation(Organs, N, NArbitrationOption);               //Allocate fixed Nitrogen to each organ
-            DoNutrientConstrainedDMAllocation(Organs);               //Work out how much DM can be assimilated by each organ based on allocated nutrients
-            SendDMAllocations(Organs);                               //Tell each organ how DM they are getting folling allocation
-            SendNutrientAllocations(Organs);                         //Tell each organ how much nutrient they are getting following allocaition
+            if (Plant.IsEmerged)
+            {
+                DoRetranslocation(Organs, N, NArbitrationOption);        //Allocate retranslocated N to each organ
+                DoFixation(Organs, N, NArbitrationOption);               //Allocate fixed Nitrogen to each organ
+                DoNutrientConstrainedDMAllocation(Organs);               //Work out how much DM can be assimilated by each organ based on allocated nutrients
+                SendDMAllocations(Organs);                               //Tell each organ how DM they are getting folling allocation
+                SendNutrientAllocations(Organs);                         //Tell each organ how much nutrient they are getting following allocaition
+            }
         }
         #endregion
 

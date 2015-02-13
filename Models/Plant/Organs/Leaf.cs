@@ -900,8 +900,11 @@ namespace Models.PMF.Organs
                 Structure.MainStemPrimordiaNo += 1.0;
             }
         }
-        /// <summary>Does the actual growth.</summary>
-        public override void DoActualGrowth()
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
            // WaterAllocation = 0;
             

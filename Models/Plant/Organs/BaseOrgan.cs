@@ -119,9 +119,6 @@ namespace Models.PMF.Organs
         /// <summary>Does the potential nutrient.</summary>
         virtual public void DoPotentialNutrient() { }
         
-        /// <summary>Does the actual growth.</summary>
-        virtual public void DoActualGrowth() { }
-
         /// <summary>Gets or sets the maximum nconc.</summary>
         /// <value>The maximum nconc.</value>
         [XmlIgnore]
@@ -163,8 +160,14 @@ namespace Models.PMF.Organs
             Dead.Clear();
         }
 
-        /// <summary>Called when a simulation commences</summary>
-        virtual public void OnSimulationCommencing() { Clear(); }
+        /// <summary>Things the plant model does when the simulation starts</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        virtual protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Clear();
+        }
         
         /// <summary>Called when a crop is sown</summary>
         /// <param name="SowData">The sow data.</param>
