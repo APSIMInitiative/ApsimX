@@ -262,36 +262,6 @@ namespace Models.PMF
                 o.OnSimulationCommencing();
         }
 
-        /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (IsAlive)
-            {
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
-                    {
-                        DoDMSetUp();//Sets organs water limited DM supplys and demands
-                        if (Arbitrator != null)
-                        {
-                            Arbitrator.DoPotentialGrowth();
-                        }
-                    }
-                }
-                else
-                {
-                    DoDMSetUp();//Sets organs water limited DM supplys and demands
-                    if (Arbitrator != null)
-                    {
-                        Arbitrator.DoPotentialGrowth();
-                    }
-                }
-            }
-        }
-
         /// <summary>Called when [do actual plant growth].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -315,27 +285,11 @@ namespace Models.PMF
                     {
                         Arbitrator.DoActualGrowth();
                     }
-                DoActualGrowth();
+                if (Structure != null)
+                    Structure.DoActualGrowth();
+                foreach (IOrgan o in Organs)
+                    o.DoActualGrowth();
             }
-        }
-        #endregion
-
-        #region Internal Communications.  Method calls
-        /// <summary>Does the dm set up.</summary>
-        private void DoDMSetUp()
-        {
-            if (Structure != null)
-                Structure.DoPotentialDM();
-            foreach (IOrgan o in Organs)
-                o.DoPotentialDM();
-        }
-        /// <summary>Does the actual growth.</summary>
-        private void DoActualGrowth()
-        {
-            if (Structure != null)
-                Structure.DoActualGrowth();
-            foreach (IOrgan o in Organs)
-                o.DoActualGrowth();
         }
         #endregion
     }

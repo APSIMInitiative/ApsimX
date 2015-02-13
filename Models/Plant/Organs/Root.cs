@@ -213,40 +213,46 @@ namespace Models.PMF.Organs
 
         public double NuptakeSupply { get; set; }
 
-        /// <summary>Does the potential dm.</summary>
-        public override void DoPotentialDM()
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            _SenescenceRate = 0;
-            if (SenescenceRate != null) //Default of zero means no senescence
-                _SenescenceRate = SenescenceRate.Value;
-
-          /*  if (Live.Wt == 0)
+            if (Plant.IsEmerged)
             {
-                //determine how many layers to put initial DM into.
-                Depth = Plant.SowingData.Depth;
-                double AccumulatedDepth = 0;
-                double InitialLayers = 0;
-                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                {
-                    if (AccumulatedDepth < Depth)
-                        InitialLayers += 1;
-                    AccumulatedDepth += Soil.SoilWater.Thickness[layer];
-                }
-                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                {
-                    if (layer <= InitialLayers - 1)
-                    {
-                        //dirstibute root biomass evently through root depth
-                        LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
-                        LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
-                    }
-                }
+                _SenescenceRate = 0;
+                if (SenescenceRate != null) //Default of zero means no senescence
+                    _SenescenceRate = SenescenceRate.Value;
+
+                /*  if (Live.Wt == 0)
+                  {
+                      //determine how many layers to put initial DM into.
+                      Depth = Plant.SowingData.Depth;
+                      double AccumulatedDepth = 0;
+                      double InitialLayers = 0;
+                      for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                      {
+                          if (AccumulatedDepth < Depth)
+                              InitialLayers += 1;
+                          AccumulatedDepth += Soil.SoilWater.Thickness[layer];
+                      }
+                      for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                      {
+                          if (layer <= InitialLayers - 1)
+                          {
+                              //dirstibute root biomass evently through root depth
+                              LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
+                              LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
+                          }
+                      }
                
+                  }
+                  */
+                Length = 0;
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                    Length += LengthDensity[layer];
             }
-            */
-            Length = 0;
-            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-                Length += LengthDensity[layer];
         }
 
         /// <summary>Does the actual growth.</summary>

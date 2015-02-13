@@ -10,12 +10,6 @@ namespace Models.PMF.Interfaces
     /// </summary>
     public interface IOrgan
     {
-        /// <summary>Gets or sets the FRGR.</summary>
-        //double FRGR { get; set; }
-
-        /// <summary>Does the potential dm.</summary>
-        void DoPotentialDM();
-        
         /// <summary>Does the potential nutrient.</summary>
         void DoPotentialNutrient();
         

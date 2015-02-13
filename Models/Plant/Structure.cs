@@ -185,8 +185,11 @@ namespace Models.PMF
         #endregion
 
         #region Top level timestep Functions
-        /// <summary>Does the potential dm.</summary>
-        public void DoPotentialDM()
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 if (MainStemPrimordiaInitiationRate.Value > 0.0)

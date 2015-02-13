@@ -194,12 +194,17 @@ namespace Models.PMF.Organs
 
         #region Arbitrator methods
 
-        /// <summary>Does the potential dm.</summary>
-        public override void DoPotentialDM()
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            base.DoPotentialDM();
-            if (LAIFunction != null)
-                _LAI = LAIFunction.Value;
+            if (Plant.IsEmerged)
+            {
+                if (LAIFunction != null)
+                    _LAI = LAIFunction.Value;
+            }
         }
         /// <summary>Does the actual growth.</summary>
         public override void DoActualGrowth()

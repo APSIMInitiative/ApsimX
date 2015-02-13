@@ -788,7 +788,7 @@ namespace Models.Core
         private static List<EventSubscriber> FindEventSubscribers(string eventName, IModel relativeTo)
         {
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
-            foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
+            foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
             {
                 EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)Utility.Reflection.GetAttribute(method, typeof(EventSubscribeAttribute), false);
                 if (subscriberAttribute != null && (eventName == null || subscriberAttribute.ToString() == eventName))

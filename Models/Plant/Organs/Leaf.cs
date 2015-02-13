@@ -804,77 +804,74 @@ namespace Models.PMF.Organs
             foreach (LeafCohort Leaf in From)
                 To.Add(Leaf.Clone());
         }
-        /// <summary>Does the potential dm.</summary>
-        /// <exception cref="System.Exception">
-        /// Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.
-        /// or
-        /// Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.
-        /// or
-        /// MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough
-        /// </exception>
-        public override void DoPotentialDM()
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            //WaterAllocation = 0;
-
-            if (FrostFraction.Value > 0)
-                foreach (LeafCohort L in Leaves)
-                    L.DoFrost(FrostFraction.Value);
-
-            // On the initial day set up initial cohorts and set their properties
-            if (Phenology.OnDayOf(Structure.InitialiseStage))
-                InitialiseCohorts();
-
-            //When primordia number is 1 more than current cohort number produce a new cohort
-            if (Structure.MainStemPrimordiaNo >= Leaves.Count + FinalLeafFraction)
+            if (Plant.IsEmerged)
             {
-                if (CohortsInitialised == false)
-                    throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
+                if (FrostFraction.Value > 0)
+                    foreach (LeafCohort L in Leaves)
+                        L.DoFrost(FrostFraction.Value);
 
-                LeafCohort NewLeaf = InitialLeaves[0].Clone();
-                NewLeaf.CohortPopulation = 0;
-                NewLeaf.Age = 0;
-                NewLeaf.Rank = (int)Math.Truncate(Structure.MainStemNodeNo);
-                NewLeaf.Area = 0.0;
-                NewLeaf.DoInitialisation();
-                Leaves.Add(NewLeaf);
-            }
+                // On the initial day set up initial cohorts and set their properties
+                if (Phenology.OnDayOf(Structure.InitialiseStage))
+                    InitialiseCohorts();
 
-            //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
-            if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalLeafFraction) && (FinalLeafFraction > 0.0))
-            {
-
-                if (CohortsInitialised == false)
-                    throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
-                int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalLeafFraction));
-                double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalLeafFraction;
-                if (AppearingNode > InitialisedCohortNo)
-                    throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
-                int i = AppearingNode - 1;
-                Leaves[i].Rank = AppearingNode;
-                Leaves[i].CohortPopulation = Structure.TotalStemPopn;
-                Leaves[i].Age = CohortAge;
-                Leaves[i].DoAppearance(FinalLeafFraction, LeafCohortParameters);
-                if (NewLeaf != null)
-                    NewLeaf.Invoke();
-            }
-       
-            bool NextExpandingLeaf = false;
-            foreach (LeafCohort L in Leaves)
-            {
-                CurrentRank = L.Rank;
-                L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
-                if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
+                //When primordia number is 1 more than current cohort number produce a new cohort
+                if (Structure.MainStemPrimordiaNo >= Leaves.Count + FinalLeafFraction)
                 {
-                    NextExpandingLeaf = true;
-                    if (CurrentExpandingLeaf != L.Rank)
-                    {
-                        CurrentExpandingLeaf = L.Rank;
-                        StartFractionExpanded = L.FractionExpanded;
-                    }
-                    FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
+                    if (CohortsInitialised == false)
+                        throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeInitiationRate.  Your NodeInitiationRate is triggering a new leaf cohort before leaves have been initialised.");
+
+                    LeafCohort NewLeaf = InitialLeaves[0].Clone();
+                    NewLeaf.CohortPopulation = 0;
+                    NewLeaf.Age = 0;
+                    NewLeaf.Rank = (int)Math.Truncate(Structure.MainStemNodeNo);
+                    NewLeaf.Area = 0.0;
+                    NewLeaf.DoInitialisation();
+                    Leaves.Add(NewLeaf);
                 }
+
+                //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
+                if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalLeafFraction) && (FinalLeafFraction > 0.0))
+                {
+
+                    if (CohortsInitialised == false)
+                        throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
+                    int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalLeafFraction));
+                    double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalLeafFraction;
+                    if (AppearingNode > InitialisedCohortNo)
+                        throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
+                    int i = AppearingNode - 1;
+                    Leaves[i].Rank = AppearingNode;
+                    Leaves[i].CohortPopulation = Structure.TotalStemPopn;
+                    Leaves[i].Age = CohortAge;
+                    Leaves[i].DoAppearance(FinalLeafFraction, LeafCohortParameters);
+                    if (NewLeaf != null)
+                        NewLeaf.Invoke();
+                }
+
+                bool NextExpandingLeaf = false;
+                foreach (LeafCohort L in Leaves)
+                {
+                    CurrentRank = L.Rank;
+                    L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
+                    if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
+                    {
+                        NextExpandingLeaf = true;
+                        if (CurrentExpandingLeaf != L.Rank)
+                        {
+                            CurrentExpandingLeaf = L.Rank;
+                            StartFractionExpanded = L.FractionExpanded;
+                        }
+                        FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
+                    }
+                }
+                _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
             }
-            _ExpandedNodeNo = ExpandedCohortNo + FractionNextleafExpanded;
         }
         /// <summary>Clears this instance.</summary>
         protected override void Clear()

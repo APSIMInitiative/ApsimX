@@ -149,35 +149,40 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Organ functions
-        /// <summary>Does the potential dm.</summary>
-        public override void DoPotentialDM()
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            SenescenceRate = 0;
-            if (SenescenceRateFunction != null) //Default of zero means no senescence
-                SenescenceRate = SenescenceRateFunction.Value;
-            _StructuralFraction = 1;
-            if (StructuralFraction != null) //Default of 1 means all biomass is structural
-                _StructuralFraction = StructuralFraction.Value;
-            InitialWt = 0; //Default of zero means no initial Wt
-            if (InitialWtFunction != null)
-                InitialWt = InitialWtFunction.Value;
-            InitStutFraction = 1.0; //Default of 1 means all initial DM is structural
-            if (InitialStructuralFraction != null)
-                InitStutFraction = InitialStructuralFraction.Value;
-
-            //Initialise biomass and nitrogen
-            if (Live.Wt == 0)
+            if (Plant.IsEmerged)
             {
-                Live.StructuralWt = InitialWt * InitStutFraction;
-                Live.NonStructuralWt = InitialWt * (1 - InitStutFraction);
-                Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
-                Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
+                SenescenceRate = 0;
+                if (SenescenceRateFunction != null) //Default of zero means no senescence
+                    SenescenceRate = SenescenceRateFunction.Value;
+                _StructuralFraction = 1;
+                if (StructuralFraction != null) //Default of 1 means all biomass is structural
+                    _StructuralFraction = StructuralFraction.Value;
+                InitialWt = 0; //Default of zero means no initial Wt
+                if (InitialWtFunction != null)
+                    InitialWt = InitialWtFunction.Value;
+                InitStutFraction = 1.0; //Default of 1 means all initial DM is structural
+                if (InitialStructuralFraction != null)
+                    InitStutFraction = InitialStructuralFraction.Value;
+
+                //Initialise biomass and nitrogen
+                if (Live.Wt == 0)
+                {
+                    Live.StructuralWt = InitialWt * InitStutFraction;
+                    Live.NonStructuralWt = InitialWt * (1 - InitStutFraction);
+                    Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
+                    Live.NonStructuralN = (InitialWt * MaximumNConc.Value) - Live.StructuralN;
+                }
+
+                StartLive = Live;
+                StartNReallocationSupply = NSupply.Reallocation;
+                StartNRetranslocationSupply = NSupply.Retranslocation;
             }
-
-            StartLive = Live;
-            StartNReallocationSupply = NSupply.Reallocation;
-            StartNRetranslocationSupply = NSupply.Retranslocation;
-
         }
         /// <summary>Does the actual growth.</summary>
         public override void DoActualGrowth()

@@ -74,7 +74,9 @@ namespace Models
         /// <summary>Occurs when [do phenology].</summary>                             
         public event EventHandler DoPhenology;                                         // Plant 
         /// <summary>Occurs when [do potential plant growth].</summary>
-        public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant
+        public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant        
+        /// <summary>Occurs when [do potential plant partioning].</summary>
+        public event EventHandler DoPotentialPlantPartioning;                          // PMF OrganArbitrator.
         /// <summary>Occurs when [do nutrient arbitration].</summary>
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
         /// <summary>Occurs when [do actual plant growth].</summary>
@@ -167,6 +169,9 @@ namespace Models
 
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
+
+                if (DoPotentialPlantPartioning != null)
+                    DoPotentialPlantPartioning.Invoke(this, args);
 
                 if (DoNutrientArbitration != null)
                     DoNutrientArbitration.Invoke(this, args);
