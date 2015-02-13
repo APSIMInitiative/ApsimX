@@ -594,7 +594,7 @@ namespace Models.PMF.OldPlant
                 SWStress.DoPlantWaterStress(TopsSWDemand);
                 foreach (Organ1 Organ in Organ1s)
                     Organ.DoNSupply();
-                Phenology.DoTimeStep();
+                //Phenology.DoTimeStep();
                 Stem.Morphology();
                 Leaf.DoCanopyExpansion();
 

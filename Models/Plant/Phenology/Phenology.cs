@@ -7,6 +7,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
+using Models.PMF.OldPlant;
 
 namespace Models.PMF.Phen
 {
@@ -115,6 +116,12 @@ namespace Models.PMF.Phen
     public class Phenology : Model
     {
         #region Links
+        [Link(IsOptional = true)]
+        private Plant Plant = null;
+
+        [Link(IsOptional = true)]
+        private Plant15 Plant15 = null;    // This can be deleted once we get rid of plant15.
+
         /// <summary>The clock</summary>
         [Link]
         private Clock Clock = null;
@@ -128,15 +135,18 @@ namespace Models.PMF.Phen
         #endregion
 
         #region Events
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
+        /// <summary>Delegate for a phase changed event</summary>
+        /// <param name="Data">The data describing the phase change.</param>
         public delegate void PhaseChangedDelegate(PhaseChangedType Data);
+        
         /// <summary>Occurs when [phase changed].</summary>
         public event PhaseChangedDelegate PhaseChanged;
+        
         /// <summary>Occurs when [growth stage].</summary>
         public event NullTypeDelegate GrowthStage;
+
+        /// <summary>Occurs when daily phenology timestep completed</summary>
+        public event EventHandler PostPhenology;
         #endregion
 
         #region Parameters
@@ -302,49 +312,76 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>
+        /// A helper property that checks the parent plant (old or new) to see if it is alive.
+        /// </summary>
+        /// <value><c>true</c> if plant is alive; otherwise, <c>false</c>.</value>
+        private bool PlantIsAlive
+        {
+            get
+            {
+                if (Plant != null && Plant.IsAlive)
+                    return true;
+                if (Plant15 != null && Plant15.IsAlive)
+                    return true;
+                return false;
+            }
+        }
+
+        /// <summary>Called by sequencer to perform phenology.</summary>
+        /// <remarks>
         /// Perform our daily timestep function. Get the current phase to do its
         /// development for the day. If TT is leftover after Phase is progressed,
         /// and the timestep for the subsequent phase is calculated using leftover TT
-        /// </summary>
+        /// </remarks>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="System.Exception">Cannot transition to the next phase. No more phases exist</exception>
-        public void DoTimeStep()
+        [EventSubscribe("DoPhenology")]
+        private void OnDoPhenology(object sender, EventArgs e)
         {
-            // If this is the first time through here then setup some variables.
-            if (Phases == null || Phases.Count == 0)
-                OnSimulationCommencing(null, null);
-
-            CurrentlyOnFirstDayOfPhase = "";
-            if (JustInitialised)
+            if (PlantIsAlive)
             {
-                CurrentlyOnFirstDayOfPhase = Phases[0].Start;
-                JustInitialised = false;
+                // If this is the first time through here then setup some variables.
+                if (Phases == null || Phases.Count == 0)
+                    OnSimulationCommencing(null, null);
+
+                CurrentlyOnFirstDayOfPhase = "";
+                if (JustInitialised)
+                {
+                    CurrentlyOnFirstDayOfPhase = Phases[0].Start;
+                    JustInitialised = false;
+                }
+                double FractionOfDayLeftOver = CurrentPhase.DoTimeStep(1.0);
+
+                if (FractionOfDayLeftOver > 0)
+                {
+                    // Transition to the next phase.
+                    if (CurrentPhaseIndex + 1 >= Phases.Count)
+                        throw new Exception("Cannot transition to the next phase. No more phases exist");
+
+                    if (CurrentPhase is EmergingPhase)
+                        Emerged = true;
+
+                    CurrentPhase = Phases[CurrentPhaseIndex + 1];
+                    if (GrowthStage != null)
+                        GrowthStage.Invoke();
+
+
+                    // Tell the new phase to use the fraction of day left.
+                    FractionOfDayLeftOver = CurrentPhase.AddTT(FractionOfDayLeftOver);
+                    Stage = CurrentPhaseIndex + 1;
+                }
+                else
+                    Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+
+                _AccumulatedTT += CurrentPhase.TTForToday;
+
+                if (Emerged && PostPhenology != null)
+                    PostPhenology.Invoke(this, new EventArgs());
+
+                Util.Debug("Phenology.CurrentPhaseName=%s", CurrentPhase.Name.ToLower());
+                Util.Debug("Phenology.CurrentStage=%f", Stage);
             }
-            double FractionOfDayLeftOver = CurrentPhase.DoTimeStep(1.0);
-
-            if (FractionOfDayLeftOver > 0)
-            {
-                // Transition to the next phase.
-                if (CurrentPhaseIndex + 1 >= Phases.Count)
-                    throw new Exception("Cannot transition to the next phase. No more phases exist");
-
-                if (CurrentPhase is EmergingPhase)
-                    Emerged = true;
-                
-                CurrentPhase = Phases[CurrentPhaseIndex + 1];
-                if (GrowthStage != null)
-                    GrowthStage.Invoke();
- 
-   
-                // Tell the new phase to use the fraction of day left.
-                FractionOfDayLeftOver = CurrentPhase.AddTT(FractionOfDayLeftOver);
-                Stage = CurrentPhaseIndex + 1;
-            }
-            else
-                Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
-
-            _AccumulatedTT += CurrentPhase.TTForToday;
-            Util.Debug("Phenology.CurrentPhaseName=%s", CurrentPhase.Name.ToLower());
-            Util.Debug("Phenology.CurrentStage=%f", Stage);
         }
 
         /// <summary>A utility property to return the current phase.</summary>

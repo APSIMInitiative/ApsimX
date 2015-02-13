@@ -45,10 +45,7 @@ namespace Models.PMF
         #endregion
 
         #region Class properties and fields
-        /// <summary>
-        /// MicroClimate will get 'CropType' and use it to look up
-        /// canopy properties for this crop.
-        /// </summary>
+        /// <summary>Used by several organs to determine the type of crop.</summary>
         public string CropType { get; set; }
 
         /// <summary>The sowing data</summary>
@@ -78,8 +75,8 @@ namespace Models.PMF
                 return new List<string>(cultivarNames).ToArray();
             }
         }
+        
         /// <summary>A property to return all cultivar definitions.</summary>
-        /// <value>The cultivars.</value>
         private List<Cultivar> Cultivars
         {
             get
@@ -93,12 +90,11 @@ namespace Models.PMF
                 return cultivars;
             }
         }
+        
         /// <summary>The current cultivar definition.</summary>
         private Cultivar cultivarDefinition;
 
         /// <summary>Gets the water supply demand ratio.</summary>
-        /// <value>The water supply demand ratio.</value>
-        [XmlIgnore]
         public double WaterSupplyDemandRatio
         {
             get
@@ -114,15 +110,10 @@ namespace Models.PMF
         }
 
         /// <summary>Gets or sets the population.</summary>
-        /// <value>The population.</value>
         [XmlIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
         public double Population { get; set; }
-
-        #endregion
-
-        #region Interface properties
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
         public bool IsAlive { get { return SowingData != null; } }
@@ -138,7 +129,7 @@ namespace Models.PMF
                     return true;
             }
         }
-
+        
         #endregion
 
         #region Class Events
@@ -150,8 +141,7 @@ namespace Models.PMF
         public event EventHandler Cutting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when daily phenology timestep completed</summary>
-        public event EventHandler PostPhenology;
+
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -198,6 +188,7 @@ namespace Models.PMF
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
+        
         /// <summary>Harvest the crop.</summary>
         public void Harvest()
         {
@@ -213,6 +204,7 @@ namespace Models.PMF
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today, Yeahhh"));
         }
+        
         /// <summary>End the crop.</summary>
         public void EndCrop()
         {
@@ -280,12 +272,8 @@ namespace Models.PMF
             {
                 if (Phenology != null)
                 {
-                    DoPhenology();
                     if (Phenology.Emerged == true)
                     {
-                        // Invoke a post phenology event.
-                        if (PostPhenology != null)
-                            PostPhenology.Invoke(this, new EventArgs());
                         DoDMSetUp();//Sets organs water limited DM supplys and demands
                         if (Arbitrator != null)
                         {
@@ -333,15 +321,6 @@ namespace Models.PMF
         #endregion
 
         #region Internal Communications.  Method calls
-        /// <summary>Does the phenology.</summary>
-        private void DoPhenology()
-        {
-            if (Phenology != null)
-            {
-                Phenology.DoTimeStep();
-
-            }
-        }
         /// <summary>Does the dm set up.</summary>
         private void DoDMSetUp()
         {
@@ -350,13 +329,6 @@ namespace Models.PMF
             foreach (IOrgan o in Organs)
                 o.DoPotentialDM();
         }
-        /// <summary>Does the nutrient set up.</summary>
-        private void DoNutrientSetUp()
-        {
-            foreach (IOrgan o in Organs)
-                o.DoPotentialNutrient();
-        }
-
         /// <summary>Does the actual growth.</summary>
         private void DoActualGrowth()
         {
