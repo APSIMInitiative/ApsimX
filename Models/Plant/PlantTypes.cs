@@ -89,7 +89,7 @@
     /// 
     /// </summary>
     [Serializable]
-    public class SowPlant2Type
+    public class SowPlant2Type : EventArgs
     {
         /// <summary>The cultivar</summary>
         public String Cultivar = "";

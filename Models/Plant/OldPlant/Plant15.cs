@@ -358,7 +358,7 @@ namespace Models.PMF.OldPlant
         public event NewCropDelegate CropEnding;
 
         /// <summary>Occurs when [harvesting].</summary>
-        public event EventHandler Harvesting;
+        public event EventHandler<ModelArgs> Harvesting;
 
         /// <summary>Gets the cover_green.</summary>
         /// <value>The cover_green.</value>
@@ -882,7 +882,7 @@ namespace Models.PMF.OldPlant
 
             // Tell the rest of the system we are about to harvest
             if (Harvesting != null)
-                Harvesting.Invoke(this, new EventArgs());
+                Harvesting.Invoke(this, new ModelArgs() { Model = this });
 
             // Check some bounds
             if (Harvest.Remove < 0 || Harvest.Remove > 1.0)

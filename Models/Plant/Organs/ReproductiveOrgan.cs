@@ -141,9 +141,6 @@ namespace Models.PMF.Organs
         {
             if (e.Model == Plant)
             {
-                if (Harvesting != null)
-                    Harvesting.Invoke();
-
                 double YieldDW = (Live.Wt + Dead.Wt);
 
                 Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name);
@@ -180,8 +177,6 @@ namespace Models.PMF.Organs
                 Clear();
         }
 
-        /// <summary>Occurs when [harvesting].</summary>
-        public event NullTypeDelegate Harvesting;
         /// <summary>Called when crop is being cut.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
