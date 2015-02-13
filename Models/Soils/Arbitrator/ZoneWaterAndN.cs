@@ -1,57 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="ZoneWaterAndN.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.Soils.Arbitrator
 {
+    using System;
+
     /// <summary>
-    /// 
+    /// Represents a zone (point, field etc) that has water and N values.
     /// </summary>
     public class ZoneWaterAndN
     {
         /// <summary>The zone</summary>
         public string Name;
-        /// <summary>The amount</summary>
+
+        /// <summary>Amount of water (mm)</summary>
         public double[] Water;
+
+        /// <summary>Amount of N (kg/ha)</summary>
         public double[] NO3N;
+
+        /// <summary>Amount of NH4 (kg/ha)</summary>
         public double[] NH4N;
-        public double TotalWater
-        {
-            get
-            {
-                return Utility.Math.Sum(Water);
-            }
-        }
-        public static ZoneWaterAndN operator *(ZoneWaterAndN Z, double value)
+
+        /// <summary>Gets the sum of 'Water' (mm)</summary>
+        public double TotalWater { get { return Utility.Math.Sum(Water); } }
+
+        /// <summary>Implements the operator *.</summary>
+        /// <param name="zone">The zone</param>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the operator.</returns>
+        public static ZoneWaterAndN operator *(ZoneWaterAndN zone, double value)
         {
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
-            NewZ.Name = Z.Name;
-            NewZ.Water = Utility.Math.Multiply_Value(Z.Water, value);
-            NewZ.NO3N = Utility.Math.Multiply_Value(Z.NO3N, value);
-            NewZ.NH4N = Utility.Math.Multiply_Value(Z.NH4N, value);
+            NewZ.Name = zone.Name;
+            NewZ.Water = Utility.Math.Multiply_Value(zone.Water, value);
+            NewZ.NO3N = Utility.Math.Multiply_Value(zone.NO3N, value);
+            NewZ.NH4N = Utility.Math.Multiply_Value(zone.NH4N, value);
             return NewZ;
         }
-        public static ZoneWaterAndN operator +(ZoneWaterAndN Z1, ZoneWaterAndN Z2)
+
+        /// <summary>Implements the operator +.</summary>
+        /// <param name="zone1">Zone 1</param>
+        /// <param name="zone2">Zone 2</param>
+        /// <returns>The result of the operator.</returns>
+        /// <exception cref="System.Exception">Cannot add zones with different names</exception>
+        public static ZoneWaterAndN operator +(ZoneWaterAndN zone1, ZoneWaterAndN zone2)
         {
-            if (Z1.Name != Z2.Name)
+            if (zone1.Name != zone2.Name)
                 throw new Exception("Cannot add zones with different names");
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
-            NewZ.Name = Z1.Name;
-            NewZ.Water = Utility.Math.Add(Z1.Water, Z2.Water);
-            NewZ.NO3N = Utility.Math.Add(Z1.NO3N, Z2.NO3N);
-            NewZ.NH4N = Utility.Math.Add(Z1.NH4N, Z2.NH4N);
+            NewZ.Name = zone1.Name;
+            NewZ.Water = Utility.Math.Add(zone1.Water, zone2.Water);
+            NewZ.NO3N = Utility.Math.Add(zone1.NO3N, zone2.NO3N);
+            NewZ.NH4N = Utility.Math.Add(zone1.NH4N, zone2.NH4N);
             return NewZ;
         }
-        public static ZoneWaterAndN operator -(ZoneWaterAndN Z1, ZoneWaterAndN Z2)
+
+        /// <summary>Implements the operator -.</summary>
+        /// <param name="zone1">Zone 1</param>
+        /// <param name="zone2">Zone 2</param>
+        /// <returns>The result of the operator.</returns>
+        /// <exception cref="System.Exception">Cannot subtract zones with different names</exception>
+        public static ZoneWaterAndN operator -(ZoneWaterAndN zone1, ZoneWaterAndN zone2)
         {
-            if (Z1.Name != Z2.Name)
+            if (zone1.Name != zone2.Name)
                 throw new Exception("Cannot subtract zones with different names");
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
-            NewZ.Name = Z1.Name;
-            NewZ.Water = Utility.Math.Subtract(Z1.Water, Z2.Water);
-            NewZ.NO3N = Utility.Math.Subtract(Z1.NO3N, Z2.NO3N);
-            NewZ.NH4N = Utility.Math.Subtract(Z1.NH4N, Z2.NH4N);
+            NewZ.Name = zone1.Name;
+            NewZ.Water = Utility.Math.Subtract(zone1.Water, zone2.Water);
+            NewZ.NO3N = Utility.Math.Subtract(zone1.NO3N, zone2.NO3N);
+            NewZ.NH4N = Utility.Math.Subtract(zone1.NH4N, zone2.NH4N);
             return NewZ;
         }
     }
