@@ -356,43 +356,49 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Top Level time step functions
-        /// <summary>Does the potential dm.</summary>
-        public override void DoPotentialDM()
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            FRGR = FRGRFunction.Value;
-            if (CoverFunction != null)
-                LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
-            if (LAIFunction != null)
-                LAI = LAIFunction.Value;
-
-            Height = HeightFunction.Value;
-
-            if (LaiDeadFunction != null)
-                LAIDead = LaiDeadFunction.Value;
-            else
-                LAIDead = 0;
-
-            /*/Set N Demand
-            double StructuralDemand = 0;
-            double NDeficit = 0;
-            if (NitrogenDemandSwitch == null)
-                NDeficit = 0;
-            if (NitrogenDemandSwitch != null)
+            if (Plant.IsEmerged)
             {
-                if (NitrogenDemandSwitch.Value == 0)
+                FRGR = FRGRFunction.Value;
+                if (CoverFunction != null)
+                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
+                if (LAIFunction != null)
+                    LAI = LAIFunction.Value;
+
+                Height = HeightFunction.Value;
+
+                if (LaiDeadFunction != null)
+                    LAIDead = LaiDeadFunction.Value;
+                else
+                    LAIDead = 0;
+
+                /*/Set N Demand
+                double StructuralDemand = 0;
+                double NDeficit = 0;
+                if (NitrogenDemandSwitch == null)
                     NDeficit = 0;
-            }
+                if (NitrogenDemandSwitch != null)
+                {
+                    if (NitrogenDemandSwitch.Value == 0)
+                        NDeficit = 0;
+                }
 
-            if (NConc == null)
-                NDeficit = 0;
-            else
-            {
-                StructuralDemand = NConc.Value * DeltaBiomass * _StructuralFraction;
-                NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DMDemand.Structural + DMDemand.NonStructural + DMDemand.Metabolic) - Live.N) - StructuralDemand;
-            } //return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
-            NDemand = new BiomassPoolType();           
-            NDemand.Structural = StructuralDemand;
-            NDemand.NonStructural = NDeficit;*/
+                if (NConc == null)
+                    NDeficit = 0;
+                else
+                {
+                    StructuralDemand = NConc.Value * DeltaBiomass * _StructuralFraction;
+                    NDeficit = Math.Max(0.0, NConc.Value * (Live.Wt + DMDemand.Structural + DMDemand.NonStructural + DMDemand.Metabolic) - Live.N) - StructuralDemand;
+                } //return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
+                NDemand = new BiomassPoolType();           
+                NDemand.Structural = StructuralDemand;
+                NDemand.NonStructural = NDeficit;*/
+            }
         }
 
         #endregion

@@ -590,19 +590,24 @@ namespace Models.PMF
         #region Interface methods called by Plant.cs
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
         /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
-        /// <param name="Organs">The organs.</param>
-        public void DoPotentialGrowth()
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantPartioning")]
+        private void OnDoPotentialPlantPartioning(object sender, EventArgs e)
         {
-            DoDMSetup(Organs);                                       //Get DM demands and supplies (with water stress effects included) from each organ
-            DoReAllocation(Organs, DM, DMArbitrationOption);         //Allocate supply of reallocated DM to organs
-            DoFixation(Organs, DM, DMArbitrationOption);             //Allocate supply of fixed DM (photosynthesis) to organs
-            DoRetranslocation(Organs, DM, DMArbitrationOption);      //Allocate supply of retranslocated DM to organs
-            SendPotentialDMAllocations(Organs);                      //Tell each organ what their potential growth is so organs can calculate their N demands
-            DoNutrientSetUp(Organs, ref N);                          //Get N demands and supplies (excluding uptake supplys) from each organ
-            DoReAllocation(Organs, N, NArbitrationOption);           //Allocate N available from reallocation to each organ
+            if (Plant.IsEmerged)
+            {
+                DoDMSetup(Organs);                                       //Get DM demands and supplies (with water stress effects included) from each organ
+                DoReAllocation(Organs, DM, DMArbitrationOption);         //Allocate supply of reallocated DM to organs
+                DoFixation(Organs, DM, DMArbitrationOption);             //Allocate supply of fixed DM (photosynthesis) to organs
+                DoRetranslocation(Organs, DM, DMArbitrationOption);      //Allocate supply of retranslocated DM to organs
+                SendPotentialDMAllocations(Organs);                      //Tell each organ what their potential growth is so organs can calculate their N demands
+                DoNutrientSetUp(Organs, ref N);                          //Get N demands and supplies (excluding uptake supplys) from each organ
+                DoReAllocation(Organs, N, NArbitrationOption);           //Allocate N available from reallocation to each organ
+            }
         }
         /// <summary>Calculates how much N the roots will take up in the absence of competition</summary>
-        /// <param name="Organs">The organs.</param>
+        /// <param name="soilstate">The state of the soil.</param>
         public void DoNUptakeDemandCalculations(SoilState soilstate)
         {
             DoPotentialNutrientUptake(Organs, ref N, soilstate);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
@@ -633,14 +638,19 @@ namespace Models.PMF
             DoUptake(Organs, N, NArbitrationOption);                 
         }
         /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="Organs">The organs.</param>
-        public void DoActualGrowth()
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
-            DoRetranslocation(Organs, N, NArbitrationOption);        //Allocate retranslocated N to each organ
-            DoFixation(Organs, N, NArbitrationOption);               //Allocate fixed Nitrogen to each organ
-            DoNutrientConstrainedDMAllocation(Organs);               //Work out how much DM can be assimilated by each organ based on allocated nutrients
-            SendDMAllocations(Organs);                               //Tell each organ how DM they are getting folling allocation
-            SendNutrientAllocations(Organs);                         //Tell each organ how much nutrient they are getting following allocaition
+            if (Plant.IsEmerged)
+            {
+                DoRetranslocation(Organs, N, NArbitrationOption);        //Allocate retranslocated N to each organ
+                DoFixation(Organs, N, NArbitrationOption);               //Allocate fixed Nitrogen to each organ
+                DoNutrientConstrainedDMAllocation(Organs);               //Work out how much DM can be assimilated by each organ based on allocated nutrients
+                SendDMAllocations(Organs);                               //Tell each organ how DM they are getting folling allocation
+                SendNutrientAllocations(Organs);                         //Tell each organ how much nutrient they are getting following allocaition
+            }
         }
         #endregion
 

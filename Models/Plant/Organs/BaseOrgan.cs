@@ -98,6 +98,7 @@ namespace Models.PMF.Organs
             get { return 0; }
             set { throw new Exception("Cannot set water uptake for " + Name); }
         }
+        
         /// <summary>Gets or sets the water allocation.</summary>
         /// <value>The water allocation.</value>
         /// <exception cref="System.Exception">Cannot set water allocation for  + Name</exception>
@@ -110,24 +111,19 @@ namespace Models.PMF.Organs
         /// <summary>Does the water uptake.</summary>
         /// <param name="Demand">The demand.</param>
         virtual public void DoWaterUptake(double[] uptake) { }
+        
         /// <summary>Does the N uptake.</summary>
         /// <param name="Demand">The demand.</param>
         virtual public void DoNitrogenUptake(double[] NO3NUptake, double[] NH4Uptake) { }
-        /// <summary>Gets or sets the FRGR.</summary>
-        /// <value>The FRGR.</value>
-        //[XmlIgnore]
-        //virtual public double FRGR { get { return 10000; } set { } } //Defalt is a rediculious value so Organs that don't over ride this with something sensible can be screaned easily
-        /// <summary>Does the potential dm.</summary>
-        virtual public void DoPotentialDM() { }
+
         /// <summary>Does the potential nutrient.</summary>
         virtual public void DoPotentialNutrient() { }
-        /// <summary>Does the actual growth.</summary>
-        virtual public void DoActualGrowth() { }
-
+        
         /// <summary>Gets or sets the maximum nconc.</summary>
         /// <value>The maximum nconc.</value>
         [XmlIgnore]
         virtual public double MaxNconc { get { return 0; } set { } }
+        
         /// <summary>Gets or sets the minimum nconc.</summary>
         /// <value>The minimum nconc.</value>
         [XmlIgnore]
@@ -164,8 +160,14 @@ namespace Models.PMF.Organs
             Dead.Clear();
         }
 
-        /// <summary>Called when a simulation commences</summary>
-        virtual public void OnSimulationCommencing() { Clear(); }
+        /// <summary>Things the plant model does when the simulation starts</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        virtual protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Clear();
+        }
         
         /// <summary>Called when a crop is sown</summary>
         /// <param name="SowData">The sow data.</param>

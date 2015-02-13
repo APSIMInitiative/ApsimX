@@ -140,7 +140,7 @@ namespace Models.PMF
         /// <summary>Occurs when a plant is about to be cut.</summary>
         public event EventHandler Cutting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
-        public event EventHandler PlantEnding;
+        public event EventHandler<ModelArgs> PlantEnding;
 
         #endregion
 
@@ -211,7 +211,7 @@ namespace Models.PMF
             Summary.WriteMessage(this, "Crop ending");
 
             if (PlantEnding != null)
-                PlantEnding.Invoke(this, new EventArgs());
+                PlantEnding.Invoke(this, new ModelArgs() { Model = this });
 
             // tell all our children about endcrop
             foreach (IOrgan Child in Organs)
@@ -227,8 +227,6 @@ namespace Models.PMF
             SowingData = null;
             //WaterSupplyDemandRatio = 0;
             Population = 0;
-            if (Structure != null)
-                Structure.Clear();
             if (Phenology != null)
                 Phenology.Clear();
             if (Arbitrator != null)
@@ -258,85 +256,8 @@ namespace Models.PMF
             Organs = organs.ToArray();
 
             Clear();
-            foreach (IOrgan o in Organs)
-                o.OnSimulationCommencing();
         }
 
-        /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (IsAlive)
-            {
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
-                    {
-                        DoDMSetUp();//Sets organs water limited DM supplys and demands
-                        if (Arbitrator != null)
-                        {
-                            Arbitrator.DoPotentialGrowth();
-                        }
-                    }
-                }
-                else
-                {
-                    DoDMSetUp();//Sets organs water limited DM supplys and demands
-                    if (Arbitrator != null)
-                    {
-                        Arbitrator.DoPotentialGrowth();
-                    }
-                }
-            }
-        }
-
-        /// <summary>Called when [do actual plant growth].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
-        {
-            if (IsAlive)
-            {
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
-                    {
-                        if (Arbitrator != null)
-                        {
-                            Arbitrator.DoActualGrowth();
-                        }
-                    }
-                }
-                else
-                    if (Arbitrator != null)
-                    {
-                        Arbitrator.DoActualGrowth();
-                    }
-                DoActualGrowth();
-            }
-        }
-        #endregion
-
-        #region Internal Communications.  Method calls
-        /// <summary>Does the dm set up.</summary>
-        private void DoDMSetUp()
-        {
-            if (Structure != null)
-                Structure.DoPotentialDM();
-            foreach (IOrgan o in Organs)
-                o.DoPotentialDM();
-        }
-        /// <summary>Does the actual growth.</summary>
-        private void DoActualGrowth()
-        {
-            if (Structure != null)
-                Structure.DoActualGrowth();
-            foreach (IOrgan o in Organs)
-                o.DoActualGrowth();
-        }
         #endregion
     }
 }

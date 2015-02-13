@@ -170,10 +170,12 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Arbitrator methods
-        /// <summary>Does the actual growth.</summary>
-        public override void DoActualGrowth()
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
-            base.DoActualGrowth();
             if (Phenology.OnDayOf(RipeStage))
                 _ReadyForHarvest = true;
         }

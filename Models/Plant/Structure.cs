@@ -185,8 +185,11 @@ namespace Models.PMF
         #endregion
 
         #region Top level timestep Functions
-        /// <summary>Does the potential dm.</summary>
-        public void DoPotentialDM()
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (Phenology.OnDayOf(InitialiseStage) == false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 if (MainStemPrimordiaInitiationRate.Value > 0.0)
@@ -245,7 +248,10 @@ namespace Models.PMF
             }
         }
         /// <summary>Does the actual growth.</summary>
-        public void DoActualGrowth()
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantPartioning")]
+        private void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
             //Set PlantTotalNodeNo    
             PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
@@ -293,6 +299,17 @@ namespace Models.PMF
             MaximumNodeNumber = (int)_MainStemFinalNodeNo;
             _Height = HeightModel.Value;
         }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, ModelArgs e)
+        {
+            if (e.Model == Plant)
+                Clear();
+        }
+        
         #endregion
     }
 

@@ -10,20 +10,8 @@ namespace Models.PMF.Interfaces
     /// </summary>
     public interface IOrgan
     {
-        /// <summary>Gets or sets the FRGR.</summary>
-        //double FRGR { get; set; }
-
-        /// <summary>Does the potential dm.</summary>
-        void DoPotentialDM();
-        
         /// <summary>Does the potential nutrient.</summary>
         void DoPotentialNutrient();
-        
-        /// <summary>Does the actual growth.</summary>
-        void DoActualGrowth();
-
-        /// <summary>Called when a simulation commences</summary>
-        void OnSimulationCommencing();
 
         /// <summary>Called when crop is sown</summary>
         /// <param name="sowing">Sowing data</param>

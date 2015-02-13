@@ -9395,10 +9395,6 @@ namespace Models
 
 
 
-        //[EventHandler]
-        //public void OnPrepare()
-        //[EventSubscribe("DoPotentialPlantGrowth")]
-        //private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
             {
