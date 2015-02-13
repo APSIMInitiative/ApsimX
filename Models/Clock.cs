@@ -71,6 +71,8 @@ namespace Models
         public event EventHandler DoSurfaceOrganicMatterDecomposition;                 //SurfaceOM
         /// <summary>Occurs when [do water arbitration].</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
+        /// <summary>Occurs when [do phenology].</summary>                             
+        public event EventHandler DoPhenology;                                         // Plant 
         /// <summary>Occurs when [do potential plant growth].</summary>
         public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant
         /// <summary>Occurs when [do nutrient arbitration].</summary>
@@ -159,6 +161,9 @@ namespace Models
                 { }
                 if (DoWaterArbitration != null)
                     DoWaterArbitration.Invoke(this, args);
+
+                if (DoPhenology != null)
+                    DoPhenology.Invoke(this, args);
 
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
