@@ -6,6 +6,7 @@ using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
+using Models.Interfaces;
 
 namespace Models.PMF
 {
@@ -16,7 +17,7 @@ namespace Models.PMF
     /// minimum N concentrations if N is not sufficient
     /// </summary>
     [Serializable]
-    public class OrganArbitrator : Model
+    public class OrganArbitrator : Model, IUptake
     {
         #region Class Members
         // Input paramaters
@@ -454,6 +455,137 @@ namespace Models.PMF
             DM = null;
             N = null;
         }
+
+        #region IUptake interface
+        /// <summary>
+        /// Calculate the potential sw uptake for today
+        /// </summary>
+        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
+        {
+            if (Plant.IsAlive)
+            {
+                double Supply = 0;
+                double Demand = 0;
+                double[] supply = null;
+                foreach (IArbitration o in Organs)
+                {
+                    double[] organSupply = o.WaterSupply(soilstate.Zones);
+                    if (organSupply != null)
+                    {
+                        supply = organSupply;
+                        Supply += Utility.Math.Sum(organSupply);
+                    }
+                    Demand += o.WaterDemand;
+                }
+
+                double FractionUsed = 0;
+                if (Supply > 0)
+                    FractionUsed = Math.Min(1.0, Demand / Supply);
+
+                ZoneWaterAndN uptake = new ZoneWaterAndN();
+                uptake.Name = soilstate.Zones[0].Name;
+                uptake.Water = Utility.Math.Multiply_Value(supply, FractionUsed);
+                uptake.NO3N = new double[uptake.Water.Length];
+                uptake.NH4N = new double[uptake.Water.Length];
+
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                zones.Add(uptake);
+                return zones;
+            }
+            else
+                return null;
+        }
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        public void SetSWUptake(List<ZoneWaterAndN> zones)
+        {
+            double[] uptake = zones[0].Water;
+            double Supply = Utility.Math.Sum(uptake);
+            double Demand = 0;
+            foreach (IArbitration o in Organs)
+                Demand += o.WaterDemand;
+
+            double fraction = 1;
+            if (Demand > 0)
+                fraction = Math.Min(1.0, Supply / Demand);
+
+            foreach (IArbitration o in Organs)
+                if (o.WaterDemand > 0)
+                    o.WaterAllocation = fraction * o.WaterDemand;
+
+            Plant.Root.DoWaterUptake(uptake);
+        }
+
+        /// <summary>
+        /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
+        /// </summary>
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        {
+            if (Plant.IsAlive)
+            {
+                ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
+                if (Plant.Phenology != null)
+                {
+                    if (Plant.Phenology.Emerged == true)
+                    {
+                        DoNUptakeDemandCalculations(soilstate);
+
+                        //Pack results into uptake structure
+                        UptakeDemands.NO3N = PotentialNO3NUptake;
+                        UptakeDemands.NH4N = PotentialNH4NUptake;
+                    }
+                    else //Uptakes are zero
+                    {
+                        UptakeDemands.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                        for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
+                        UptakeDemands.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                        for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
+                    }
+                }
+                else //Uptakes are zero
+                {
+                    UptakeDemands.NO3N = new double[soilstate.Zones[0].NO3N.Length];
+                    for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
+                    UptakeDemands.NH4N = new double[soilstate.Zones[0].NH4N.Length];
+                    for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
+                }
+
+                UptakeDemands.Name = soilstate.Zones[0].Name;
+                UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
+
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+                zones.Add(UptakeDemands);
+                return zones;
+            }
+            else
+                return null;
+        }
+        /// <summary>
+        /// Set the sw uptake for today
+        /// </summary>
+        public void SetNUptake(List<ZoneWaterAndN> zones)
+        {
+            if (Plant.IsAlive)
+                if (Plant.Phenology != null)
+                {
+                    if (Plant.Phenology.Emerged == true)
+                    {
+                        double[] AllocatedNO3Nuptake = zones[0].NO3N;
+                        double[] AllocatedNH4Nuptake = zones[0].NH4N;
+                        DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
+                        Plant.Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
+                    }
+                }
+                else
+                {
+                    double[] AllocatedNO3Nuptake = zones[0].NO3N;
+                    double[] AllocatedNH4Nuptake = zones[0].NH4N;
+                    DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
+                    Plant.Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
+                }
+        }
+        #endregion
 
         #region Interface methods called by Plant.cs
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply

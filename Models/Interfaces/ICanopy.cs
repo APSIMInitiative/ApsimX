@@ -7,7 +7,7 @@ namespace Models.Interfaces
 {
     using System;
 
-    /// <summary>MicroClimate uses this canopy interface.</summary>
+    /// <summary>This interface describes MicroClimate / canopy comms.</summary>
     public interface ICanopy
     {
         /// <summary>Canopy type</summary>

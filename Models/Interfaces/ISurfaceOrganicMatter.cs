@@ -7,7 +7,7 @@ namespace Models.Interfaces
 {
     using System;
 
-    /// <summary>MicroClimate uses this canopy interface.</summary>
+    /// <summary>Surface organic matter interface.</summary>
     public interface ISurfaceOrganicMatter
     {
         /// <summary>Adds material to the surface organic matter pool.</summary>

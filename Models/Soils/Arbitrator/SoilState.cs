@@ -1,19 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="SoilState.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.Soils.Arbitrator
 {
+    using System;
+    using System.Collections.Generic;
+    using Models.Core;
+
+    /// <summary>
+    /// Encapsulates the state of water and N in multiple zones.
+    /// </summary>
     public class SoilState
     {
-        public List<ZoneWaterAndN> Zones = new List<ZoneWaterAndN>();
-        IModel Parent;
+        /// <summary>The parent model.</summary>
+        private IModel Parent;
+
+        /// <summary>Initializes a new instance of the <see cref="SoilState"/> class.</summary>
+        /// <param name="parent">The parent model.</param>
         public SoilState(IModel parent)
         {
             Parent = parent;
+            Zones = new List<ZoneWaterAndN>();
         }
+
+        /// <summary>Initialises this instance.</summary>
         public void Initialise()
         {
             foreach (Zone Z in Apsim.Children(this.Parent, typeof(Zone)))
@@ -28,17 +40,17 @@ namespace Models.Soils.Arbitrator
             }
         }
 
-        public ZoneWaterAndN ZoneState(string ZoneName)
+        /// <summary>Gets all zones in this soil state.</summary>
+        public List<ZoneWaterAndN> Zones { get; private set; }
+
+        /// <summary>Implements the operator -.</summary>
+        /// <param name="state">The soil state.</param>
+        /// <param name="estimate">The estimate to subtract from the soil state.</param>
+        /// <returns>The result of the operator.</returns>
+        public static SoilState operator -(SoilState state, Estimate estimate)
         {
-            foreach (ZoneWaterAndN Z in Zones)
-                if (Z.Name == ZoneName)
-                    return Z;
-            throw new Exception("Could not find zone called " + ZoneName);
-        }
-        public static SoilState operator -(SoilState State, SoilArbitrator.Estimate E)
-        {
-            SoilState NewState = new SoilState(State.Parent);
-            foreach (ZoneWaterAndN Z in State.Zones)
+            SoilState NewState = new SoilState(state.Parent);
+            foreach (ZoneWaterAndN Z in state.Zones)
             {
                 ZoneWaterAndN NewZ = new ZoneWaterAndN();
                 NewZ.Name = Z.Name;
@@ -48,7 +60,7 @@ namespace Models.Soils.Arbitrator
                 NewState.Zones.Add(NewZ);
             }
 
-            foreach (SoilArbitrator.CropUptakes C in E.Value)
+            foreach (CropUptakes C in estimate.Values)
                 foreach (ZoneWaterAndN Z in C.Zones)
                     foreach (ZoneWaterAndN NewZ in NewState.Zones)
                         if (Z.Name == NewZ.Name)
@@ -59,7 +71,5 @@ namespace Models.Soils.Arbitrator
                         }
             return NewState;
         }
-
     }
-
 }

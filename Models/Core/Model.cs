@@ -90,7 +90,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.LayerStructure))]
         [XmlElement(typeof(Soils.SoilTemperature))]
         [XmlElement(typeof(Soils.SoilTemperature2))]
-        [XmlElement(typeof(Soils.SoilArbitrator))]
+        [XmlElement(typeof(Soils.Arbitrator.SoilArbitrator))]
         [XmlElement(typeof(Soils.Sample))]
         [XmlElement(typeof(Models.SugarCane))]
         [XmlElement(typeof(Models.PMF.OrganArbitrator))]

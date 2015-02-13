@@ -22,7 +22,7 @@ namespace Models.PMF.OilPalm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class OilPalm : ModelCollectionFromResource, ICrop, ICanopy
+    public class OilPalm : ModelCollectionFromResource, ICrop, ICanopy, IUptake
     {
         #region Canopy interface
         /// <summary>Canopy type</summary>

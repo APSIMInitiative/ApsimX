@@ -16,7 +16,7 @@ namespace Models.PMF
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SimpleTree : Model, ICrop, ICanopy
+    public class SimpleTree : Model, ICrop, ICanopy, IUptake
     {
         #region Canopy interface
 

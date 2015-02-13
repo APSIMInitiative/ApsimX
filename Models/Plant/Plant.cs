@@ -9,6 +9,7 @@ namespace Models.PMF
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Core;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
@@ -22,19 +23,25 @@ namespace Models.PMF
     {
         #region Class links
         /// <summary>The summary</summary>
-        [Link] ISummary Summary = null;
+        [Link]
+        ISummary Summary = null;
         /// <summary>The phenology</summary>
-        [Link(IsOptional = true)] public Phenology Phenology = null;
+        [Link(IsOptional = true)]
+        public Phenology Phenology = null;
         /// <summary>The arbitrator</summary>
-        [Link(IsOptional = true)] public OrganArbitrator Arbitrator = null;
+        [Link(IsOptional = true)]
+        public OrganArbitrator Arbitrator = null;
         /// <summary>The structure</summary>
-        [Link(IsOptional=true)] public Structure Structure = null;
+        [Link(IsOptional = true)]
+        public Structure Structure = null;
         /// <summary>The leaf</summary>
-        [Link(IsOptional=true)] public Leaf Leaf = null;
+        [Link(IsOptional = true)]
+        public Leaf Leaf = null;
         /// <summary>The root</summary>
-        [Link(IsOptional=true)] public Root Root = null;
+        [Link(IsOptional = true)]
+        public Root Root = null;
         /// <summary>The base function class</summary>
-        
+
         #endregion
 
         #region Class properties and fields
@@ -47,7 +54,7 @@ namespace Models.PMF
         /// <summary>The sowing data</summary>
         [XmlIgnore]
         public SowPlant2Type SowingData;
-        
+
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
         public IOrgan[] Organs { get; private set; }
@@ -97,7 +104,7 @@ namespace Models.PMF
             get
             {
                 double F;
-                
+
                 if (Leaf != null && Leaf.WaterDemand > 0)
                     F = Root.WaterUptake / Leaf.WaterDemand;
                 else
@@ -119,7 +126,7 @@ namespace Models.PMF
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
         public bool IsAlive { get { return SowingData != null; } }
-        
+
         /// <summary>Return true if plant has emerged</summary>
         public bool IsEmerged
         {
@@ -181,15 +188,15 @@ namespace Models.PMF
             foreach (IOrgan Child in Organs)
                 Child.OnSow(SowingData);
             if (Structure != null)
-               Structure.OnSow(SowingData);
+                Structure.OnSow(SowingData);
             if (Phenology != null)
                 Phenology.OnSow();
             if (Arbitrator != null)
                 Arbitrator.OnSow();
 
-            
-       
-            Summary.WriteMessage(this, string.Format("A crop of " + CropType +" (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+
+
+            Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
         /// <summary>Harvest the crop.</summary>
         public void Harvest()
@@ -221,7 +228,7 @@ namespace Models.PMF
 
             cultivarDefinition.Unapply();
         }
-        
+
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
@@ -229,13 +236,13 @@ namespace Models.PMF
             //WaterSupplyDemandRatio = 0;
             Population = 0;
             if (Structure != null)
-               Structure.Clear();
+                Structure.Clear();
             if (Phenology != null)
-               Phenology.Clear();
+                Phenology.Clear();
             if (Arbitrator != null)
-               Arbitrator.Clear();
+                Arbitrator.Clear();
         }
-        
+
         /// <summary>Cut the crop.</summary>
         public void Cut()
         {
@@ -246,7 +253,7 @@ namespace Models.PMF
             foreach (IOrgan Child in Organs)
                 Child.OnCut();
         }
-        
+
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -262,60 +269,7 @@ namespace Models.PMF
             foreach (IOrgan o in Organs)
                 o.OnSimulationCommencing();
         }
-        /// <summary>
-        /// Calculate the potential sw uptake for today
-        /// </summary>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
-        {
-            double Supply = 0;
-            double Demand = 0;
-            double[] supply = null;
-            foreach (IArbitration o in Organs)
-            {
-                double[] organSupply = o.WaterSupply(soilstate.Zones);
-                if (organSupply != null)
-                {
-                    supply = organSupply;
-                    Supply += Utility.Math.Sum(organSupply);
-                }
-                Demand += o.WaterDemand;
-            }
 
-            double FractionUsed = 0;
-            if (Supply > 0)
-                FractionUsed = Math.Min(1.0, Demand / Supply);
-            
-            ZoneWaterAndN uptake = new ZoneWaterAndN();
-            uptake.Name = soilstate.Zones[0].Name;
-            uptake.Water = Utility.Math.Multiply_Value(supply, FractionUsed);
-            uptake.NO3N = new double[uptake.Water.Length];
-            uptake.NH4N = new double[uptake.Water.Length];
-
-            List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-            zones.Add(uptake);
-            return zones;
-        }
-        /// <summary>
-        /// Set the sw uptake for today
-        /// </summary>
-        public void SetSWUptake(List<ZoneWaterAndN> zones)
-        {
-            double[] uptake = zones[0].Water;
-            double Supply = Utility.Math.Sum(uptake);
-            double Demand = 0;
-            foreach (IArbitration o in Organs)
-                Demand += o.WaterDemand;
-
-            double fraction = 1;
-            if (Demand > 0)
-                fraction = Math.Min(1.0, Supply / Demand);
-
-            foreach (IArbitration o in Organs)
-                if (o.WaterDemand > 0)
-                    o.WaterAllocation = fraction * o.WaterDemand;
-
-            Root.DoWaterUptake(uptake);
-        }
         /// <summary>Things that happen when the clock broadcasts DoPlantGrowth Event</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -349,71 +303,7 @@ namespace Models.PMF
                 }
             }
         }
-        /// <summary>
-        /// Calculate the potential sw uptake for today
-        /// </summary>
-        public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate)
-        {
-            ZoneWaterAndN UptakeDemands = new ZoneWaterAndN();
-            if (IsAlive)
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
-                    {
-                        Arbitrator.DoNUptakeDemandCalculations(soilstate);
 
-                        //Pack results into uptake structure
-                        UptakeDemands.NO3N = Arbitrator.PotentialNO3NUptake;
-                        UptakeDemands.NH4N = Arbitrator.PotentialNH4NUptake;
-                    }
-                    else //Uptakes are zero
-                    {
-                        UptakeDemands.NO3N = new double[soilstate.Zones[0].NO3N.Length];
-                        for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
-                        UptakeDemands.NH4N = new double[soilstate.Zones[0].NH4N.Length];
-                        for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
-                    }
-                }
-                else //Uptakes are zero
-                {
-                    UptakeDemands.NO3N = new double[soilstate.Zones[0].NO3N.Length];
-                    for (int i = 0; i < UptakeDemands.NO3N.Length; i++) { UptakeDemands.NO3N[i] = 0; }
-                    UptakeDemands.NH4N = new double[soilstate.Zones[0].NH4N.Length];
-                    for (int i = 0; i < UptakeDemands.NH4N.Length; i++) { UptakeDemands.NH4N[i] = 0; }
-                }
-
-            UptakeDemands.Name = soilstate.Zones[0].Name;
-            UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
-
-            List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-            zones.Add(UptakeDemands);
-            return zones;
-
-        }
-        /// <summary>
-        /// Set the sw uptake for today
-        /// </summary>
-        public void SetNUptake(List<ZoneWaterAndN> zones)
-        {
-            if (IsAlive)
-                if (Phenology != null)
-                {
-                    if (Phenology.Emerged == true)
-                    {
-                        double[] AllocatedNO3Nuptake = zones[0].NO3N;
-                        double[] AllocatedNH4Nuptake = zones[0].NH4N;
-                        Arbitrator.DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
-                        Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
-                    }
-                }
-                else
-                {
-                    double[] AllocatedNO3Nuptake = zones[0].NO3N;
-                    double[] AllocatedNH4Nuptake = zones[0].NH4N;
-                    Arbitrator.DoNUptakeAllocations(AllocatedNO3Nuptake, AllocatedNH4Nuptake); //Fixme, needs to send allocations to arbitrator
-                    Root.DoNitrogenUptake(AllocatedNO3Nuptake, AllocatedNH4Nuptake);
-                }
-        }
         /// <summary>Called when [do actual plant growth].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -476,5 +366,5 @@ namespace Models.PMF
                 o.DoActualGrowth();
         }
         #endregion
-     }
+    }
 }

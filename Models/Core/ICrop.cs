@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-using Models.Soils.Arbitrator;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="ICrop.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+//-----------------------------------------------------------------------
 namespace Models.Core
 {
     /// <summary>
@@ -19,28 +21,6 @@ namespace Models.Core
         /// Gets a list of cultivar names
         /// </summary>
         string[] CultivarNames { get; }
-
-
-        /// <summary>
-        /// Calculate the potential sw uptake for today
-        /// </summary>
-        List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(SoilState soilstate);
-
-        /// <summary>
-        /// Calculate the potential sw uptake for today
-        /// </summary>
-        List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(SoilState soilstate);
-
-
-        /// <summary>
-        /// Set the sw uptake for today
-        /// </summary>
-        void SetSWUptake(List<Soils.Arbitrator.ZoneWaterAndN> info);
-        /// <summary>
-        /// Set the sw uptake for today
-        /// </summary>
-        void SetNUptake(List<Soils.Arbitrator.ZoneWaterAndN> info);
-
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
