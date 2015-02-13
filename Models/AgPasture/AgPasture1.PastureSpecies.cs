@@ -27,7 +27,7 @@ namespace Models.AgPasture1
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class PastureSpecies : Model, ICrop, ICrop2
+	public class PastureSpecies : Model, ICrop, ICrop2, IUptake
 	{
 		#region Links, events and delegates  -------------------------------------------------------------------------------
 

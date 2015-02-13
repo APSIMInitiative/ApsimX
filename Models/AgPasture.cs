@@ -20,7 +20,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AgPasture : Model, ICrop, ICanopy
+    public class AgPasture : Model, ICrop, ICanopy, IUptake
     {
         #region Links and event declarations
 

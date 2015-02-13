@@ -26,7 +26,7 @@ namespace Models.AgPasture1
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class Sward : Model, ICrop, ICanopy
+	public class Sward : Model, ICrop, ICanopy, IUptake
 	{
 		#region Links, events and delegates  -------------------------------------------------------------------------------
 

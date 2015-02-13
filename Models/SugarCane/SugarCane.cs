@@ -25,7 +25,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SugarCane : Model, ICrop, ICanopy
+    public class SugarCane : Model, ICrop, ICanopy, IUptake
     {
 
         #region Canopy interface

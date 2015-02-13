@@ -108,7 +108,7 @@ namespace Models.PMF.OldPlant
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Plant15 : ModelCollectionFromResource, ICrop
+    public class Plant15 : ModelCollectionFromResource, ICrop, IUptake
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -1245,53 +1245,61 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
-            List<ZoneWaterAndN> Uptakes= new List<ZoneWaterAndN>();
-            ZoneWaterAndN Uptake = new ZoneWaterAndN();
+            if (IsAlive)
+            {
+                List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+                ZoneWaterAndN Uptake = new ZoneWaterAndN();
 
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            foreach (ZoneWaterAndN Z in soilstate.Zones)
-                if (Z.Name==this.Parent.Name)
-                    MyZone = Z;
+                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                foreach (ZoneWaterAndN Z in soilstate.Zones)
+                    if (Z.Name == this.Parent.Name)
+                        MyZone = Z;
 
-            double[] SW = MyZone.Water;
-            OnPrepare(null, null);  //DEAN!!!
+                double[] SW = MyZone.Water;
+                OnPrepare(null, null);  //DEAN!!!
 
-            Uptake.Name = this.Parent.Name;
-            Uptake.Water = Root.CalculateWaterUptake(TopsSWDemand, SW);
-            Uptake.NO3N = new double[SW.Length];
-            Uptake.NH4N = new double[SW.Length];
-            Uptakes.Add(Uptake);
-            return Uptakes;
-
+                Uptake.Name = this.Parent.Name;
+                Uptake.Water = Root.CalculateWaterUptake(TopsSWDemand, SW);
+                Uptake.NO3N = new double[SW.Length];
+                Uptake.NH4N = new double[SW.Length];
+                Uptakes.Add(Uptake);
+                return Uptakes;
+            }
+            else
+                return null;
         }
         /// <summary>Placeholder for SoilArbitrator</summary>
         /// <param name="zones"></param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-            ZoneWaterAndN Uptake = new ZoneWaterAndN();
+            if (IsAlive)
+            {
+                List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+                ZoneWaterAndN Uptake = new ZoneWaterAndN();
 
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
-            foreach (ZoneWaterAndN Z in soilstate.Zones)
-                if (Z.Name == this.Parent.Name)
-                    MyZone = Z;
+                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                foreach (ZoneWaterAndN Z in soilstate.Zones)
+                    if (Z.Name == this.Parent.Name)
+                        MyZone = Z;
 
-            double[] NO3N = MyZone.NO3N;
-            double[] NH4N = MyZone.NH4N;
+                double[] NO3N = MyZone.NO3N;
+                double[] NH4N = MyZone.NH4N;
 
-            double[] NO3NUp = new double[NO3N.Length];
-            double[] NH4NUp = new double[NH4N.Length];
-            
-            Root.CalculateNUptake(NO3N, NH4N, ref NO3NUp, ref NH4NUp);
-            Uptake.NO3N = NO3NUp;
-            Uptake.NH4N = NH4NUp;
-            Uptake.Water = new double[NO3N.Length];
-            Uptake.Name = this.Parent.Name;
+                double[] NO3NUp = new double[NO3N.Length];
+                double[] NH4NUp = new double[NH4N.Length];
 
-            Uptakes.Add(Uptake);
-            return Uptakes;
+                Root.CalculateNUptake(NO3N, NH4N, ref NO3NUp, ref NH4NUp);
+                Uptake.NO3N = NO3NUp;
+                Uptake.NH4N = NH4NUp;
+                Uptake.Water = new double[NO3N.Length];
+                Uptake.Name = this.Parent.Name;
 
+                Uptakes.Add(Uptake);
+                return Uptakes;
+            }
+            else
+                return null;
         }
 
         /// <summary>
