@@ -5,7 +5,7 @@
     <Name>DataStore</Name>
     <Model xsi:type="ExcelInput">
       <Name>Observed</Name>
-      <FileName>C:\ApsimX\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>observed</string>
       </SheetNames>
@@ -32,7 +32,7 @@
     </Model>
     <Model xsi:type="ExcelInput">
       <Name>RSNitrogen</Name>
-      <FileName>C:\ApsimX\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RainShelterNitrogen</string>
       </SheetNames>
