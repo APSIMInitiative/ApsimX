@@ -5,7 +5,7 @@
     <Name>DataStore</Name>
     <Model xsi:type="ExcelInput">
       <Name>Observed</Name>
-      <FileName>C:\ApsimX\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>observed</string>
       </SheetNames>
@@ -17,12 +17,6 @@
         <string>MaxLeafSize</string>
       </SheetNames>
     </Model>
-    <PredictedObserved>
-      <Name>LeafAreas</Name>
-      <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>MaxLeafSize</ObservedTableName>
-      <FieldNameUsedForMatch>ExtraVariables.Script.LeafExpandedPosition</FieldNameUsedForMatch>
-    </PredictedObserved>
     <Model xsi:type="ExcelInput">
       <Name>SoilWater</Name>
       <FileName>%root%\Tests\Maize\Observations\SoilWater.xlsx</FileName>
@@ -32,11 +26,27 @@
     </Model>
     <Model xsi:type="ExcelInput">
       <Name>RSNitrogen</Name>
-      <FileName>C:\ApsimX\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
       <SheetNames>
         <string>RainShelterNitrogen</string>
       </SheetNames>
     </Model>
+    <PredictedObserved>
+      <Name>LeafAreas</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>MaxLeafSize</ObservedTableName>
+      <FieldNameUsedForMatch>ExtraVariables.Script.LeafExpandedPosition</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>observed</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <TimeSeriesStats>
+      <Name>TimeSeriesStats</Name>
+      <TableName>PredictedObserved</TableName>
+    </TimeSeriesStats>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
