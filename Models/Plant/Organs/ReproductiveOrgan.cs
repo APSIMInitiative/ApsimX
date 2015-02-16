@@ -133,6 +133,17 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Functions
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, SowPlant2Type data)
+        {
+            if (data.Plant == Plant)
+                Clear();
+        }
+
         /// <summary>Called when crop is being harvested.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -199,8 +210,8 @@ namespace Models.PMF.Organs
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantPartioning")]
-        private void OnDoActualPlantPartioning(object sender, EventArgs e)
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             if (Phenology.OnDayOf(RipeStage))
                 _ReadyForHarvest = true;

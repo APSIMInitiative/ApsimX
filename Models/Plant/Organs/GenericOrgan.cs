@@ -334,9 +334,19 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             Clear();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        protected void OnSowing(object sender, SowPlant2Type data)
+        {
+            if (data.Plant == Plant)
+                Clear();
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -378,8 +388,8 @@ namespace Models.PMF.Organs
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantPartioning")]
-        protected void OnDoActualPlantPartioning(object sender, EventArgs e)
+        [EventSubscribe("DoActualPlantGrowth")]
+        protected void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             Biomass Loss = new Biomass();
             Loss.StructuralWt = Live.StructuralWt * SenescenceRate;
@@ -424,7 +434,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, ModelArgs e)
+        protected void OnPlantEnding(object sender, ModelArgs e)
         {
             if (e.Model == Plant)
             {

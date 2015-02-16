@@ -120,6 +120,16 @@ namespace Models.PMF.Organs
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, SowPlant2Type data)
+        {
+            if (data.Plant == Plant)
+                Clear();
+        }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, ModelArgs e)
         {

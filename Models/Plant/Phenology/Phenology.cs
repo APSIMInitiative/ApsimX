@@ -280,10 +280,14 @@ namespace Models.PMF.Phen
             Clear();
         }
 
-        /// <summary>Called when [sow].</summary>
-        public void OnSow()
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, SowPlant2Type data)
         {
-            Clear();
+            if (data.Plant == Plant)
+                Clear();
         }
 
         /// <summary>Called when crop is being harvested.</summary>

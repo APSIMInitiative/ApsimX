@@ -894,8 +894,8 @@ namespace Models.PMF.Organs
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantPartioning")]
-        private void OnDoActualPlantPartioning(object sender, EventArgs e)
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
            // WaterAllocation = 0;
             
@@ -1513,15 +1513,20 @@ namespace Models.PMF.Organs
             Leaves.RemoveAt(0);
         }
 
-        /// <summary>Called when [sow].</summary>
-        /// <param name="Sow">The sow.</param>
-        /// <exception cref="System.Exception">MaxCover must exceed zero in a Sow event.</exception>
-        public override void OnSow(SowPlant2Type Sow)
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, SowPlant2Type data)
         {
-            Clear();
-            if (Sow.MaxCover <= 0.0)
-                throw new Exception("MaxCover must exceed zero in a Sow event.");
-            MaxCover = Sow.MaxCover;
+            if (data.Plant == Plant)
+            {
+                Clear();
+                if (data.MaxCover <= 0.0)
+                    throw new Exception("MaxCover must exceed zero in a Sow event.");
+                MaxCover = data.MaxCover;
+            }
         }
 
         /// <summary>Called when [kill leaf].</summary>

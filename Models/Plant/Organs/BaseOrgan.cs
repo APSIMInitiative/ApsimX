@@ -30,9 +30,6 @@ namespace Models.PMF.Organs
         [Link]
         public Weather MetData = null;
 
-        [Link]
-        Plant Plant = null;
-
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
         [XmlIgnore]
@@ -162,9 +159,5 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
-        
-        /// <summary>Called when a crop is sown</summary>
-        /// <param name="SowData">The sow data.</param>
-        virtual public void OnSow(SowPlant2Type SowData) { Clear(); }
     }
 }

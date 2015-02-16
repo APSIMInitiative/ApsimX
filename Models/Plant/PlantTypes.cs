@@ -91,6 +91,9 @@
     [Serializable]
     public class SowPlant2Type : EventArgs
     {
+        /// <summary>The parent plant</summary>
+        public Plant Plant = null;
+
         /// <summary>The cultivar</summary>
         public String Cultivar = "";
         /// <summary>The population</summary>

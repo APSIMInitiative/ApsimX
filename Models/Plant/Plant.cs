@@ -133,12 +133,14 @@ namespace Models.PMF
         #endregion
 
         #region Class Events
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler<SowPlant2Type> AboutToSow;
         /// <summary>Occurs when a plant is sown.</summary>
-        public event EventHandler Sowing;
+        public event EventHandler<SowPlant2Type> Sowing;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler<ModelArgs> Harvesting;
         /// <summary>Occurs when a plant is about to be cut.</summary>
-        public event EventHandler Cutting;
+        public event EventHandler<ModelArgs> Cutting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler<ModelArgs> PlantEnding;
         #endregion
@@ -169,32 +171,26 @@ namespace Models.PMF
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
         {
             SowingData = new SowPlant2Type();
+            SowingData.Plant = this;
             SowingData.Population = population;
             SowingData.Depth = depth;
             SowingData.Cultivar = cultivar;
             SowingData.MaxCover = maxCover;
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
+            this.Population = population;
 
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
             cultivarDefinition.Apply(this);
 
+            // Invoke an AboutToSow event.
+            if (AboutToSow != null)
+                AboutToSow.Invoke(this, SowingData);
+
             // Invoke a sowing event.
             if (Sowing != null)
-                Sowing.Invoke(this, new EventArgs());
-
-            this.Population = population;
-
-            // tell all our children about sow
-            foreach (IOrgan Child in Organs)
-                Child.OnSow(SowingData);
-            if (Structure != null)
-                Structure.OnSow(SowingData);
-            if (Phenology != null)
-                Phenology.OnSow();
-            if (Arbitrator != null)
-                Arbitrator.OnSow();
+                Sowing.Invoke(this, SowingData);
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }

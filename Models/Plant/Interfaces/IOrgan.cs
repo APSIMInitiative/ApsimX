@@ -12,10 +12,6 @@ namespace Models.PMF.Interfaces
     {
         /// <summary>Does the potential nutrient.</summary>
         void DoPotentialNutrient();
-
-        /// <summary>Called when crop is sown</summary>
-        /// <param name="sowing">Sowing data</param>
-        void OnSow(SowPlant2Type sowing);
     }
 
     /// <summary>An above ground interface</summary>

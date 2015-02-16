@@ -371,12 +371,19 @@ namespace Models.PMF.Organs
                 Dead.Clear();
             }
         }
-        /// <summary>Called when [sow].</summary>
-        /// <param name="Data">The data.</param>
-        public override void OnSow(SowPlant2Type Data)
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, SowPlant2Type data)
         {
-            if (StructuralFraction != null)
-                _StructuralFraction = StructuralFraction.Value;
+            if (data.Plant == Plant)
+            {
+                Clear();
+
+                if (StructuralFraction != null)
+                    _StructuralFraction = StructuralFraction.Value;
+            }
         }
         #endregion
 

@@ -235,16 +235,22 @@ namespace Models.PMF
 
         private IArbitration[] Organs;
 
-        /// <summary>Called when crop is sown</summary>
-        public void OnSow()
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, SowPlant2Type data)
         {
-            List<IArbitration> organsToArbitrate = new List<IArbitration>();
+            if (data.Plant == Plant)
+            {
+                List<IArbitration> organsToArbitrate = new List<IArbitration>();
 
-            foreach (IOrgan organ in Plant.Organs)
-                if (organ is IArbitration)
-                    organsToArbitrate.Add(organ as IArbitration);
+                foreach (IOrgan organ in Plant.Organs)
+                    if (organ is IArbitration)
+                        organsToArbitrate.Add(organ as IArbitration);
 
-            Organs = organsToArbitrate.ToArray();
+                Organs = organsToArbitrate.ToArray();
+            }
         }
 
         /// <summary>The dm</summary>

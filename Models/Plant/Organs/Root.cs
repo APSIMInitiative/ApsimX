@@ -258,8 +258,8 @@ namespace Models.PMF.Organs
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantPartioning")]
-        private void OnDoActualPlantPartioning(object sender, EventArgs e)
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             
             // Do Root Front Advance
@@ -444,29 +444,35 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when [sow].</summary>
-        /// <param name="Sow">The sow.</param>
-        public override void OnSow(SowPlant2Type Sow)
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, SowPlant2Type data)
         {
-            //Fixme, this can be deleted when arbitrator calculates uptake ?????
-            Uptake = new double[Soil.Thickness.Length];
-            
-            Depth = Plant.SowingData.Depth;
-            double AccumulatedDepth = 0;
-            double InitialLayers = 0;
-            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+            if (data.Plant == Plant)
             {
-                if (AccumulatedDepth < Depth)
-                    InitialLayers += 1;
-                AccumulatedDepth += Soil.SoilWater.Thickness[layer];
-            }
-            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
-            {
-                if (layer <= InitialLayers - 1)
+                //Fixme, this can be deleted when arbitrator calculates uptake ?????
+                Uptake = new double[Soil.Thickness.Length];
+
+                Depth = Plant.SowingData.Depth;
+                double AccumulatedDepth = 0;
+                double InitialLayers = 0;
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
-                    //dirstibute root biomass evently through root depth
-                    LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
-                    LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
+                    if (AccumulatedDepth < Depth)
+                        InitialLayers += 1;
+                    AccumulatedDepth += Soil.SoilWater.Thickness[layer];
+                }
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                {
+                    if (layer <= InitialLayers - 1)
+                    {
+                        //dirstibute root biomass evently through root depth
+                        LayerLive[layer].StructuralWt = InitialDM / InitialLayers * Plant.Population;
+                        LayerLive[layer].StructuralN = InitialDM / InitialLayers * MaxNconc * Plant.Population;
+                    }
                 }
             }
         }

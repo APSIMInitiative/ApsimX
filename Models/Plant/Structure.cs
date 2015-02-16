@@ -251,7 +251,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoActualPlantPartioning")]
-        private void OnDoActualPlantPartioning(object sender, EventArgs e)
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             //Set PlantTotalNodeNo    
             PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
@@ -292,24 +292,26 @@ namespace Models.PMF
                 Clear();
         }
 
-        /// <summary>Called when [sow].</summary>
-        /// <param name="Sow">The sow.</param>
-        /// <exception cref="System.Exception">MaxCover must exceed zero in a Sow event.</exception>
-        public void OnSow(SowPlant2Type Sow)
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="Sow">Sowing data to initialise from.</param>
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, SowPlant2Type Sow)
         {
-            Clear();
-            if (Sow.MaxCover <= 0.0)
-                throw new Exception("MaxCover must exceed zero in a Sow event.");
-            PrimaryBudNo = Sow.BudNumber;
-            TotalStemPopn = Sow.Population * PrimaryBudNo;
-            if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
-                _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
-            else
-                _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
-            MaximumNodeNumber = (int)_MainStemFinalNodeNo;
-            _Height = HeightModel.Value;
+            if (Sow.Plant == Plant)
+            {
+                Clear();
+                if (Sow.MaxCover <= 0.0)
+                    throw new Exception("MaxCover must exceed zero in a Sow event.");
+                PrimaryBudNo = Sow.BudNumber;
+                TotalStemPopn = Sow.Population * PrimaryBudNo;
+                if (MainStemFinalNodeNumber is MainStemFinalNodeNumberFunction)
+                    _MainStemFinalNodeNo = (MainStemFinalNodeNumber as MainStemFinalNodeNumberFunction).MaximumMainStemNodeNumber;
+                else
+                    _MainStemFinalNodeNo = MainStemFinalNodeNumber.Value;
+                MaximumNodeNumber = (int)_MainStemFinalNodeNo;
+                _Height = HeightModel.Value;
+            }
         }
-
         
         #endregion
     }
