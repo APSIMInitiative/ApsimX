@@ -332,9 +332,9 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, ModelArgs e)
+        private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (e.Model == Plant)
+            if (sender == Plant)
                 Clear();
         }
 
@@ -362,9 +362,9 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Cutting")]
-        private void OnCutting(object sender, ModelArgs e)
+        private void OnCutting(object sender, EventArgs e)
         {
-            if (e.Model == Plant)
+            if (sender == Plant)
             {
                 Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
                 Live.Clear();

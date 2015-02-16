@@ -434,9 +434,9 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        protected void OnPlantEnding(object sender, ModelArgs e)
+        protected void OnPlantEnding(object sender, EventArgs e)
         {
-            if (e.Model == Plant)
+            if (sender == Plant)
             {
                 if (TotalDM > 0)
                     SurfaceOrganicMatter.Add(TotalDM * 10, TotalN * 10, 0, Plant.CropType, Name);

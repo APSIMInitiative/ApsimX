@@ -20,9 +20,9 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, ModelArgs e)
+        private void OnHarvesting(object sender, EventArgs e)
         {
-            if (e.Model == Plant)
+            if (sender == Plant)
             {
                 DateTime Today = new DateTime(Clock.Today.Year, 1, 1);
                 Today = Today.AddDays(Clock.Today.Day - 1);

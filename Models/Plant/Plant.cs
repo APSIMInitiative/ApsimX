@@ -138,11 +138,11 @@ namespace Models.PMF
         /// <summary>Occurs when a plant is sown.</summary>
         public event EventHandler<SowPlant2Type> Sowing;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
-        public event EventHandler<ModelArgs> Harvesting;
+        public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is about to be cut.</summary>
-        public event EventHandler<ModelArgs> Cutting;
+        public event EventHandler Cutting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
-        public event EventHandler<ModelArgs> PlantEnding;
+        public event EventHandler PlantEnding;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -200,7 +200,7 @@ namespace Models.PMF
         {
             // Invoke a harvesting event.
             if (Harvesting != null)
-                Harvesting.Invoke(this, new ModelArgs() { Model = this });
+                Harvesting.Invoke(this, new EventArgs());
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today."));
         }
@@ -212,7 +212,7 @@ namespace Models.PMF
 
             // Invoke a plant ending event.
             if (PlantEnding != null)
-                PlantEnding.Invoke(this, new ModelArgs() { Model = this });
+                PlantEnding.Invoke(this, new EventArgs());
 
             Clear();
             cultivarDefinition.Unapply();
@@ -223,7 +223,7 @@ namespace Models.PMF
         {
             // Invoke a cutting event.
             if (Cutting != null)
-                Cutting.Invoke(this, new ModelArgs() { Model = this });
+                Cutting.Invoke(this, new EventArgs());
         }
         #endregion
 

@@ -672,9 +672,9 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, ModelArgs e)
+        private void OnPlantEnding(object sender, EventArgs e)
         {
-            if (e.Model == Plant)
+            if (sender == Plant)
                 Clear();
         }
         #endregion
