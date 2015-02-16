@@ -342,8 +342,8 @@ namespace Models.PMF.Organs
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Sowing")]
-        protected void OnSowing(object sender, SowPlant2Type data)
+        [EventSubscribe("PlantSowing")]
+        protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == Plant)
                 Clear();

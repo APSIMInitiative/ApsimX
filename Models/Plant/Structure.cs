@@ -294,8 +294,8 @@ namespace Models.PMF
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="Sow">Sowing data to initialise from.</param>
-        [EventSubscribe("Sowing")]
-        private void OnSowing(object sender, SowPlant2Type Sow)
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type Sow)
         {
             if (Sow.Plant == Plant)
             {

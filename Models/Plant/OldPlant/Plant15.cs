@@ -164,7 +164,10 @@ namespace Models.PMF.OldPlant
         public event NewCropDelegate NewCrop;
 
         /// <summary>Occurs when [sowing].</summary>
-        public event EventHandler<SowPlant2Type> Sowing;
+        public event EventHandler Sowing;
+
+        /// <summary>Occurs when [plant sowing].</summary>
+        public event EventHandler<SowPlant2Type> PlantSowing;
 
         /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
@@ -219,8 +222,11 @@ namespace Models.PMF.OldPlant
             }
 
             if (Sowing != null)
-                Sowing.Invoke(this, SowingData);
+                Sowing.Invoke(this, new EventArgs());
 
+            if (PlantSowing != null)
+                PlantSowing.Invoke(this, SowingData);
+            
             Population.OnSow(SowingData);
             WriteSowReport(SowingData);
             OnPrepare(null, null); // Call this because otherwise it won't get called on the sow date.

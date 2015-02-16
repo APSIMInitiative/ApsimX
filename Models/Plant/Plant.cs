@@ -134,9 +134,9 @@ namespace Models.PMF
 
         #region Class Events
         /// <summary>Occurs when a plant is about to be sown.</summary>
-        public event EventHandler<SowPlant2Type> AboutToSow;
+        public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
-        public event EventHandler<SowPlant2Type> Sowing;
+        public event EventHandler<SowPlant2Type> PlantSowing;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is about to be cut.</summary>
@@ -185,12 +185,12 @@ namespace Models.PMF
             cultivarDefinition.Apply(this);
 
             // Invoke an AboutToSow event.
-            if (AboutToSow != null)
-                AboutToSow.Invoke(this, SowingData);
+            if (Sowing != null)
+                Sowing.Invoke(this, new EventArgs());
 
             // Invoke a sowing event.
-            if (Sowing != null)
-                Sowing.Invoke(this, SowingData);
+            if (PlantSowing != null)
+                PlantSowing.Invoke(this, SowingData);
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
