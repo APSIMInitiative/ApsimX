@@ -132,7 +132,7 @@
       <End>End_Juvenile</End>
       <Constant>
         <Name>Target</Name>
-        <Value>140</Value>
+        <Value>200</Value>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
@@ -325,7 +325,7 @@
             </VariableReference>
             <Constant>
               <Name>ApproximatePlastochron</Name>
-              <Value>20</Value>
+              <Value>15</Value>
             </Constant>
           </DivideFunction>
         </AddFunction>

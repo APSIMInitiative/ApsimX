@@ -1061,6 +1061,7 @@ namespace Models
             <string>[Maize].Structure.Height</string>
             <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
             <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
+            <string>[Maize].Structure.MainStemPrimordiaNo</string>
             <string>[ExtraVariables].Script.LeafAppearedPosition</string>
             <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
             <string>[ExtraVariables].Script.LeafExpandedPosition</string>
@@ -1202,6 +1203,26 @@ namespace Models
             <Y>
               <TableName>Report</TableName>
               <FieldName>Maize.Structure.MainStemNodeNo</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Series7</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Maize.Structure.MainStemPrimordiaNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>true</ShowInLegend>

@@ -312,13 +312,21 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int Count = CohortCounter("IsAppeared");
+                double FLF = 1;
+                //int Count = CohortCounter("IsIniated");
+                if (InitialisedCohortNo < Structure.MainStemFinalNodeNo)
+                    FLF = Math.Min(Structure.MainStemFinalNodeNo - InitialisedCohortNo, 1);
+                else
+                    FLF = 1 - Math.Min(InitialisedCohortNo - Structure.MainStemFinalNodeNo, 1);
+                return FLF;
+                    
+                //int Count = CohortCounter("IsAppeared");
                 // DeanH: I don't think this next if statement will ever be true. Isn't MaximumNodeNumber
                 // always equal to MainStemFinalNodeNo?
-                if (Count == (int)Structure.MainStemFinalNodeNo && Count < Structure.MaximumNodeNumber) 
-                    return Leaves[Count-1].FractionExpanded;
-                else
-                    return 1.0;
+                //if (Count == (int)Structure.MainStemFinalNodeNo && Count < Structure.MaximumNodeNumber) 
+                //    return Leaves[Count-1].FractionExpanded;
+                //else
+                    //return 1.0;
             }
         }
 
@@ -331,7 +339,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (FinalLeafFraction != 1.0)
+                if (Structure.MainStemNodeNo >= Structure.MainStemFinalNodeNo)
                     return true;
                 else
                     return false;
@@ -827,20 +835,23 @@ namespace Models.PMF.Organs
                 }
 
                 //When Node number is 1 more than current appeared leaf number make a new leaf appear and start growing
-                if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalLeafFraction) && (FinalLeafFraction > 0.0))
+                double FinalFraction = 1;
+                if (Structure.MainStemFinalNodeNo - AppearedCohortNo <= 1)
+                    FinalFraction = FinalLeafFraction;
+                if ((Structure.MainStemNodeNo >= AppearedCohortNo + FinalFraction) && (FinalFraction > 0.0))
                 {
 
                     if (CohortsInitialised == false)
                         throw new Exception("Trying to initialse new cohorts prior to InitialStage.  Check the InitialStage parameter on the leaf object and the parameterisation of NodeAppearanceRate.  Your NodeAppearanceRate is triggering a new leaf cohort before the initial leaves have been triggered.");
-                    int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalLeafFraction));
-                    double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalLeafFraction;
+                    int AppearingNode = (int)(Structure.MainStemNodeNo + (1 - FinalFraction));
+                    double CohortAge = (Structure.MainStemNodeNo - AppearingNode) * Structure.MainStemNodeAppearanceRate.Value * FinalFraction;
                     if (AppearingNode > InitialisedCohortNo)
                         throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
                     int i = AppearingNode - 1;
                     Leaves[i].Rank = AppearingNode;
                     Leaves[i].CohortPopulation = Structure.TotalStemPopn;
                     Leaves[i].Age = CohortAge;
-                    Leaves[i].DoAppearance(FinalLeafFraction, LeafCohortParameters);
+                    Leaves[i].DoAppearance(FinalFraction, LeafCohortParameters);
                     if (NewLeaf != null)
                         NewLeaf.Invoke();
                 }
