@@ -117,6 +117,8 @@
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
+    <Compile Include="Grazplan\Supplement.cs" />
+    <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
@@ -381,6 +383,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -418,6 +421,7 @@
     <Content Include="Resources\Slurp.xml">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Resources\Supplement.txt" />
     <Content Include="Resources\WheatPMFPrototype.xml" />
   </ItemGroup>
   <ItemGroup>
