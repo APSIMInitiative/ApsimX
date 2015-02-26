@@ -37,6 +37,7 @@ namespace Models.Grazplan
     [Serializable]
     public class TSupplementModel : TSupplementLibrary
     {
+        [Serializable]
         private class PaddockInfo
         {
             public string Name;
@@ -54,6 +55,7 @@ namespace Models.Grazplan
         public double SpoilageTime { get; set; }
 
         public TSupplementModel()
+            : base()
         {
             AddToStore(0.0, FODDER, ROUGHAGE);
             fSuppts[0].DM_Propn = 0.85;
@@ -64,6 +66,7 @@ namespace Models.Grazplan
         {
             int idx = Paddocks.Length;
             Array.Resize(ref Paddocks, idx + 1);
+            Paddocks[idx] = new PaddockInfo();
             Paddocks[idx].Name = paddName.ToLower();
             Paddocks[idx].PaddId = paddId;
             Paddocks[idx].SupptFed = new TSupplementRation();
@@ -156,8 +159,7 @@ namespace Models.Grazplan
         {
             int idx = IndexOf(suppName);
 
-            TSupplement addSupp = new TSupplement();
-            addSupp.ParseText(suppName, false);
+            TSupplement addSupp = new TSupplement(suppName);
 
             if (idx >= 0)                             // Work out the composition of the supplement being added
                 addSupp.Assign(this[idx]);
@@ -491,6 +493,7 @@ namespace Models.Grazplan
                 StoreType[] result = new StoreType[theModel.Count];
                 for (int i = 0; i < theModel.Count; i++)
                 {
+                    result[i] = new StoreType();
                     result[i].Name = theModel[i].sName;
                     result[i].Stored = theModel[i].Amount;
                     result[i].IsRoughage = theModel[i].IsRoughage;
@@ -548,6 +551,7 @@ namespace Models.Grazplan
             }
             set
             {
+                theModel.ClearPaddockList();
                 paddocksGiven = value.Length > 0;
                 if (paddocksGiven)
                     for (int i = 0; i < value.Length; i++)
@@ -624,6 +628,7 @@ namespace Models.Grazplan
                 SuppToStockType[] result = new SuppToStockType[theModel.PaddockCount];
                 for (int i = 0; i < theModel.PaddockCount; i++)
                 {
+                    result[i] = new SuppToStockType();
                     double amount = 0.0;
                     TSupplement supp = theModel.GetFedSuppt(i, ref amount);
                     result[i].Paddock = supp.sName;
@@ -682,7 +687,8 @@ namespace Models.Grazplan
         }
 
         /// <summary>
-        /// Runs at the start of the simulation, here only reads the aribtration method to be used
+        /// Runs at the start of the simulation
+        /// Sets up the list of paddocks, if that hasn't been provided explicitly
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -695,7 +701,8 @@ namespace Models.Grazplan
                 theModel.AddPaddock(-1, "");
                 int paddId = 0;
                 foreach (Zone zone in Apsim.FindAll(Simulation, typeof(Zone)))
-                    theModel.AddPaddock(paddId++, zone.Name);
+                    if (zone.Area > 0.0)
+                        theModel.AddPaddock(paddId++, zone.Name);
             }
         }
 
@@ -706,7 +713,8 @@ namespace Models.Grazplan
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            theModel.ClearPaddockList();
+            if (!paddocksGiven)
+                theModel.ClearPaddockList();
             theModel.Clear();
         }
 
@@ -732,8 +740,14 @@ namespace Models.Grazplan
         [EventSubscribe("Conserve")]
         private void OnConserve(ConserveType conserved)
         {
-            theModel.AddFodder(conserved.Name, conserved.FreshWt, conserved.DMContent, conserved.DMD,
+            Conserve(conserved.Name, conserved.FreshWt, conserved.DMContent, conserved.DMD,
                 conserved.NConc, conserved.PConc, conserved.SConc, conserved.AshAlk);
+        }
+
+        public void Conserve(string name, double freshWt, double DMContent, double DMD,
+                double NConc, double PConc, double SConc, double AshAlk)
+        {
+            theModel.AddFodder(name, freshWt, DMContent, DMD, NConc, PConc, SConc, AshAlk);
         }
 
         /// <summary>Called to buy new supplements into the store</summary>
@@ -741,7 +755,12 @@ namespace Models.Grazplan
         [EventSubscribe("Buy")]
         private void OnBuy(BuySuppType purchase)
         {
-            theModel.AddToStore(purchase.Amount, purchase.Supplement);
+            Buy(purchase.Amount, purchase.Supplement);
+        }
+
+        public void Buy(double amount, string supplement)
+        {
+            theModel.AddToStore(amount, supplement);
         }
 
         /// <summary>Called to feed a supplement from the store</summary>
@@ -749,7 +768,12 @@ namespace Models.Grazplan
         [EventSubscribe("Feed")]
         private void OnFeed(FeedSuppType feed)
         {
-            theModel.FeedOut(feed.Supplement, feed.Amount, feed.Paddock);
+            Feed(feed.Supplement, feed.Amount, feed.Paddock);
+        }
+
+        public void Feed(string supplement, double amount, string paddock)
+        {
+            theModel.FeedOut(supplement, amount, paddock);
         }
 
         /// <summary>Called to buy mix supplements in the store</summary>
@@ -757,7 +781,13 @@ namespace Models.Grazplan
         [EventSubscribe("Mix")]
         private void OnMix(MixSuppType mix)
         {
-            theModel.Blend(mix.Source, mix.Amount, mix.Destination);
+            Mix(mix.Source, mix.Amount, mix.Destination);
         }
+
+        public void Mix(string source, double amount, string destination)
+        {
+            theModel.Blend(source, amount, destination);
+        }
+
     }
 }
