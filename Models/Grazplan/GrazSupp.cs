@@ -153,6 +153,7 @@ namespace Models.Grazplan
             spaMaxP
         };
 
+        [Serializable]
         internal struct TTranslation
         {
             internal string sLang;
@@ -417,6 +418,14 @@ namespace Models.Grazplan
         }
 
         /// <summary>
+        /// constructor with text argument
+        /// </summary>
+        public TSupplement(string suppSt)
+        {
+            ParseText(suppSt, false);
+        }
+
+        /// <summary>
         /// copy consructor
         /// </summary>
         public TSupplement(TSupplement src)
@@ -434,9 +443,8 @@ namespace Models.Grazplan
         /// <param name="scalar">Multiplier for value field</param>
         /// <param name="value">Receives the value which was read</param>
         private bool ParseKeyword(ref string suppSt, string token, string units,
-                                  double scalar, out double value)
+                                  double scalar, ref double value)
         {
-            value = Double.NaN;
             bool result = Utility.String.MatchToken(ref suppSt, token) &&
                           Utility.String.TokenDouble(ref suppSt, ref value) &&
                           Utility.String.MatchToken(ref suppSt, units);
@@ -493,16 +501,16 @@ namespace Models.Grazplan
 
             while (Continue)                  // Any breakdown results in the rest of the string being ignored
             {
-                if (ParseKeyword(ref suppSt, "DM_PC", "%", 0.01, out _DM_Propn)
-                   || ParseKeyword(ref suppSt, "CP", "%", 0.01, out _CrudeProt)
-                   || ParseKeyword(ref suppSt, "DG", "%", 0.01, out _DgProt))
+                if (ParseKeyword(ref suppSt, "DM_PC", "%", 0.01, ref _DM_Propn)
+                   || ParseKeyword(ref suppSt, "CP", "%", 0.01, ref _CrudeProt)
+                   || ParseKeyword(ref suppSt, "DG", "%", 0.01, ref _DgProt))
                     Continue = true;
-                else if (ParseKeyword(ref suppSt, "DMD", "%", 0.01, out _DM_Digestibility))
+                else if (ParseKeyword(ref suppSt, "DMD", "%", 0.01, ref _DM_Digestibility))
                 {
                     Continue = true;
                     DMDSet = true;
                 }
-                else if (ParseKeyword(ref suppSt, "ME2DM", "MJ", 1.0, out _ME_2_DM))
+                else if (ParseKeyword(ref suppSt, "ME2DM", "MJ", 1.0, ref _ME_2_DM))
                 {
                     Continue = true;
                     MEDMSet = true;
@@ -532,6 +540,7 @@ namespace Models.Grazplan
             if (!found)
             {
                 Array.Resize(ref FTranslations, FTranslations.Length + 1);
+                FTranslations[FTranslations.Length - 1] = new TTranslation();
                 FTranslations[FTranslations.Length - 1].sLang = lang;
                 FTranslations[FTranslations.Length - 1].sText = text;
             }
@@ -751,7 +760,11 @@ namespace Models.Grazplan
         {
             Array.Resize(ref fSuppts, srcRation.Count);
             for (int idx = 0; idx < srcRation.Count; idx++)
+            {
+                if (fSuppts[idx] == null)
+                    fSuppts[idx] = new TSupplementItem();
                 fSuppts[idx].Assign(srcRation[idx]);
+            }
             rationChoice = srcRation.rationChoice;
         }
 
@@ -933,6 +946,7 @@ namespace Models.Grazplan
     ///                        ReadFromStrings to the file pointed to by
     ///                        in a file pointed to by SUPP_LIB_KEY
     /// </summary>
+    [Serializable]
     public class TSupplementLibrary : TSupplementRation
     {
         public void Add(string sName, double amount = 0.0, double cost = 0.0)

@@ -11,6 +11,21 @@
     <RootNamespace>UserInterface</RootNamespace>
     <AssemblyName>UserInterface</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -58,9 +73,6 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="NRtfTree">
-      <HintPath>..\..\temp\NRtfTree.dll</HintPath>
     </Reference>
     <Reference Include="OxyPlot, Version=2013.1.1.1, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -123,6 +135,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -589,6 +602,64 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Plant.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Maize.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HeightFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Structure.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Grain.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ReproductiveOrgan.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Summariser.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ArrayBiomass.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RUEModel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OrganArbitrator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Biomass.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CompositeBiomass.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\EmergingPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GerminatingPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LeafAppearancePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\EndPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureDepthFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Phenology.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Leaf.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LeafCohort.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Root.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenericAboveGroundOrgan.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AddFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhotoperiodFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhotoperiodDeltaFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Zadok.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\XYPairs.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AgeCalculatorFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SigmoidFunction2.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SigmoidFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MaximumFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Constant.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MinimumFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SubtractFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SplineInterpolationFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ExpressionFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DivideFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ExponentialFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\VariableReference.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PowerFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\InPhaseTtFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DeltaFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureWeightedFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhaseLookupValue.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OnEventFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\BellCurveFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\StageBasedInterpolation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AccumulateFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LessThanFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AirTemperatureFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WeightedTemperatureFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhaseLookup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\PhaseBasedSwitch.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ExternalVariable.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MultiplyFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LinearInterpolationFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
@@ -624,7 +695,28 @@
     <EmbeddedResource Include="Resources\MenuImages\Help.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

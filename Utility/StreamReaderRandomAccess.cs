@@ -9,6 +9,7 @@ namespace Utility
     {
         const int BUFFER_SIZE = 1024;
 
+
         private StreamReader g_file = null;
         private int g_position = 0;
         private char[] g_buffer = new char[BUFFER_SIZE + 1];
