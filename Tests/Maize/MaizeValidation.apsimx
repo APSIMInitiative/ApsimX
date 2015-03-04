@@ -786,7 +786,7 @@
           <Name>Sow</Name>
           <Operation>
             <Date>2012-10-23T00:00:00</Date>
-            <Action>[Maize].Sow(population:12, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);</Action>
+            <Action>[Maize].Sow(population:11, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);</Action>
           </Operation>
         </Operations>
         <Manager>
@@ -1223,6 +1223,26 @@ namespace Models
             <Y>
               <TableName>Report</TableName>
               <FieldName>Maize.Structure.MainStemPrimordiaNo</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Series8</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <X>
+              <TableName>observed</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>observed</TableName>
+              <FieldName>Leaf.ExpandedCohortNo</FieldName>
             </Y>
             <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>true</ShowInLegend>
@@ -1752,26 +1772,6 @@ namespace Models
           </Series>
           <Series>
             <Title>DM Allocated</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Maize.Arbitrator.DMAllocated</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>DM Sink limitation</Title>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2604,7 +2604,7 @@ namespace Models
             <FieldName>Maize.Leaf.AppearedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -3485,7 +3485,7 @@ namespace Models
             <FieldName>ProfileWater</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -8059,5 +8059,5 @@ namespace Models
       <Slope>0</Slope>
     </Simulation>
   </Experiment>
-  <ExplorerWidth>310</ExplorerWidth>
+  <ExplorerWidth>278</ExplorerWidth>
 </Simulations>
