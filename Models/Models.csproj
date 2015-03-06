@@ -415,6 +415,7 @@
     <None Include="Resources\MCSP.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Resources\FodderBeet.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -750,6 +750,7 @@ namespace Models
             SetupCropTypes("wheat", "Crop");
             SetupCropTypes("WheatPMFPrototype", "Crop");
             SetupCropTypes("WhiteClover", "Legume");
+            SetupCropTypes("FodderBeet", "Crop");
         }
 
         /// <summary>Setups the crop types.</summary>
