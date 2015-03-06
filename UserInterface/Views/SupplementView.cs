@@ -69,6 +69,7 @@ namespace UserInterface.Views
             {
                 TSupplement.TSuppAttribute tagEnum = (TSupplement.TSuppAttribute)tb.Tag;
                 double maxVal = 0.0;
+                double scale = 1.0;
                 switch (tagEnum)
                 {
                     case TSupplement.TSuppAttribute.spaDMP:
@@ -76,17 +77,20 @@ namespace UserInterface.Views
                     case TSupplement.TSuppAttribute.spaEE:
                     case TSupplement.TSuppAttribute.spaDG:
                         maxVal = 100.0;
+                        scale = 0.01;
                         break;
                     case TSupplement.TSuppAttribute.spaMEDM:
                         maxVal = 20.0;
                         break;
                     case TSupplement.TSuppAttribute.spaCP:
                         maxVal = 300.0;
+                        scale = 0.01;
                         break;
                     case TSupplement.TSuppAttribute.spaPH:
                     case TSupplement.TSuppAttribute.spaSU:
                     case TSupplement.TSuppAttribute.spaADIP:
                         maxVal = 200.0;  // Why 200?
+                        scale = 0.01;
                         break;
                     default:
                         maxVal = 100.0;
@@ -106,7 +110,7 @@ namespace UserInterface.Views
                     {
                         TSuppAttrArgs args = new TSuppAttrArgs();
                         args.attr = (int)tagEnum;
-                        args.attrVal = value;
+                        args.attrVal = value * scale;
                         SuppAttrChanged.Invoke(sender, args);
                         tb.Modified = false;
                     }

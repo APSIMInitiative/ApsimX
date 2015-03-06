@@ -169,9 +169,10 @@ namespace UserInterface.Presenters
             int iSuppNo = TSupplementLibrary.DefaultSuppConsts.IndexOf(sNewName);
             if (iSuppNo >= 0)
             {
+                double oldAmount = supplement[idx].Amount;
                 supplement[idx].Assign(TSupplementLibrary.DefaultSuppConsts[iSuppNo]);
                 supplement[idx].sName = sNewName;
-                //supplement[idx].Amount = 0.0;
+                supplement[idx].Amount = oldAmount;
             }
         }
 
@@ -186,7 +187,7 @@ namespace UserInterface.Presenters
             {
                 supplement[suppIdx].Amount = e.attrVal;
             }
-            else if (attr < 0)
+            else if (attr >= 0)
             {
                 TSupplement.TSuppAttribute tagEnum = (TSupplement.TSuppAttribute)e.attr;
                 switch (tagEnum)

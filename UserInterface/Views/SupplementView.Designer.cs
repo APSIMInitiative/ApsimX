@@ -81,7 +81,7 @@
             this.tbSulph.Location = new System.Drawing.Point(245, 208);
             this.tbSulph.Name = "tbSulph";
             this.tbSulph.Size = new System.Drawing.Size(37, 20);
-            this.tbSulph.TabIndex = 50;
+            this.tbSulph.TabIndex = 17;
             this.toolTip1.SetToolTip(this.tbSulph, "Enter the fraction of the dry weight which is sulphur for the current supplement");
             this.tbSulph.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
             // 
@@ -99,7 +99,7 @@
             this.tbPhos.Location = new System.Drawing.Point(80, 206);
             this.tbPhos.Name = "tbPhos";
             this.tbPhos.Size = new System.Drawing.Size(37, 20);
-            this.tbPhos.TabIndex = 48;
+            this.tbPhos.TabIndex = 16;
             this.toolTip1.SetToolTip(this.tbPhos, "Enter the fraction of the crude prodein which is insoluble in acid detergent for " +
         "the current supplement");
             this.tbPhos.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
@@ -109,7 +109,7 @@
             this.tbADIP2CP.Location = new System.Drawing.Point(80, 180);
             this.tbADIP2CP.Name = "tbADIP2CP";
             this.tbADIP2CP.Size = new System.Drawing.Size(37, 20);
-            this.tbADIP2CP.TabIndex = 47;
+            this.tbADIP2CP.TabIndex = 15;
             this.toolTip1.SetToolTip(this.tbADIP2CP, "Enter the fraction of the crude prodein which is insoluble in acid detergent for " +
         "the current supplement");
             this.tbADIP2CP.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
@@ -137,7 +137,7 @@
             this.tbProtDegrad.Location = new System.Drawing.Point(245, 152);
             this.tbProtDegrad.Name = "tbProtDegrad";
             this.tbProtDegrad.Size = new System.Drawing.Size(37, 20);
-            this.tbProtDegrad.TabIndex = 44;
+            this.tbProtDegrad.TabIndex = 14;
             this.toolTip1.SetToolTip(this.tbProtDegrad, "Enter the fraction of the crude protein in the current supplement which is rumen-" +
         "degradable");
             this.tbProtDegrad.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
@@ -147,7 +147,7 @@
             this.tbEE.Location = new System.Drawing.Point(245, 128);
             this.tbEE.Name = "tbEE";
             this.tbEE.Size = new System.Drawing.Size(37, 20);
-            this.tbEE.TabIndex = 43;
+            this.tbEE.TabIndex = 12;
             this.toolTip1.SetToolTip(this.tbEE, "Enter the fraction of the dry weight of the current supplement which is extractab" +
         "le in ether (i.e. fats && oils)");
             this.tbEE.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
@@ -166,7 +166,7 @@
             this.tbCP.Location = new System.Drawing.Point(80, 157);
             this.tbCP.Name = "tbCP";
             this.tbCP.Size = new System.Drawing.Size(37, 20);
-            this.tbCP.TabIndex = 40;
+            this.tbCP.TabIndex = 13;
             this.toolTip1.SetToolTip(this.tbCP, "Enter the fraction of the dry weight which is crude protein for the current suppl" +
         "ement");
             this.tbCP.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
@@ -176,7 +176,7 @@
             this.tbME.Location = new System.Drawing.Point(80, 131);
             this.tbME.Name = "tbME";
             this.tbME.Size = new System.Drawing.Size(37, 20);
-            this.tbME.TabIndex = 39;
+            this.tbME.TabIndex = 11;
             this.toolTip1.SetToolTip(this.tbME, "Enter the quantity of metabolizable energy (ME) per unit weight for the current s" +
         "upplement");
             this.tbME.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
@@ -204,7 +204,7 @@
             this.tbDMD.Location = new System.Drawing.Point(245, 102);
             this.tbDMD.Name = "tbDMD";
             this.tbDMD.Size = new System.Drawing.Size(37, 20);
-            this.tbDMD.TabIndex = 36;
+            this.tbDMD.TabIndex = 10;
             this.toolTip1.SetToolTip(this.tbDMD, "Enter the dry matter digestibility for the current supplement");
             this.tbDMD.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
             // 
@@ -222,7 +222,7 @@
             this.tbDM.Location = new System.Drawing.Point(80, 103);
             this.tbDM.Name = "tbDM";
             this.tbDM.Size = new System.Drawing.Size(37, 20);
-            this.tbDM.TabIndex = 34;
+            this.tbDM.TabIndex = 9;
             this.toolTip1.SetToolTip(this.tbDM, "Enter the ratio of dry weight to fresh weight for the current supplement");
             this.tbDM.Validating += new System.ComponentModel.CancelEventHandler(this.RealEditValidator);
             // 
@@ -264,7 +264,7 @@
             this.groupBox1.Location = new System.Drawing.Point(250, 18);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(314, 244);
-            this.groupBox1.TabIndex = 35;
+            this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Composition of currrently selected supplement";
             // 
@@ -383,7 +383,7 @@
             this.cbxRoughage.Location = new System.Drawing.Point(11, 77);
             this.cbxRoughage.Name = "cbxRoughage";
             this.cbxRoughage.Size = new System.Drawing.Size(76, 17);
-            this.cbxRoughage.TabIndex = 32;
+            this.cbxRoughage.TabIndex = 8;
             this.cbxRoughage.Text = "Roughage";
             this.cbxRoughage.UseVisualStyleBackColor = true;
             this.cbxRoughage.CheckedChanged += new System.EventHandler(this.cbxRoughage_CheckedChanged);
@@ -393,7 +393,7 @@
             this.tbAmount.Location = new System.Drawing.Point(96, 51);
             this.tbAmount.Name = "tbAmount";
             this.tbAmount.Size = new System.Drawing.Size(86, 20);
-            this.tbAmount.TabIndex = 17;
+            this.tbAmount.TabIndex = 7;
             this.toolTip1.SetToolTip(this.tbAmount, "Enter the initial amount of supplement available for feeding out (fresh weight ba" +
         "sis)");
             this.tbAmount.Validating += new System.ComponentModel.CancelEventHandler(this.tbAmount_Validating);
@@ -412,7 +412,7 @@
             this.tbName.Location = new System.Drawing.Point(96, 25);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(186, 20);
-            this.tbName.TabIndex = 15;
+            this.tbName.TabIndex = 6;
             this.toolTip1.SetToolTip(this.tbName, "Enter the name of the supplement here (it will be converted to lower-case)");
             this.tbName.Validating += new System.ComponentModel.CancelEventHandler(this.tbName_Validating);
             // 
@@ -435,7 +435,7 @@
             this.groupBox2.Location = new System.Drawing.Point(13, 18);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(231, 244);
-            this.groupBox2.TabIndex = 36;
+            this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Create a list of supplements";
             // 
@@ -449,7 +449,7 @@
             this.lvSupps.MultiSelect = false;
             this.lvSupps.Name = "lvSupps";
             this.lvSupps.Size = new System.Drawing.Size(216, 184);
-            this.lvSupps.TabIndex = 6;
+            this.lvSupps.TabIndex = 1;
             this.lvSupps.UseCompatibleStateImageBehavior = false;
             this.lvSupps.View = System.Windows.Forms.View.Details;
             this.lvSupps.SelectedIndexChanged += new System.EventHandler(this.lvSupps_SelectedIndexChanged);
