@@ -160,7 +160,7 @@ namespace Models.Grazplan
             internal string sText;
         };
 
-        internal string sName;
+        public string sName;
         internal TTranslation[] FTranslations = new TTranslation[0];
         public bool IsRoughage { get; set; }
 

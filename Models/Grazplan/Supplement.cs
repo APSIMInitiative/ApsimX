@@ -443,8 +443,8 @@ namespace Models.Grazplan
     /// TODO: Update summary.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.SupplementView")]
+    [PresenterName("UserInterface.Presenters.SupplementPresenter")]
     public class Supplement : Model
     {
 
@@ -528,7 +528,7 @@ namespace Models.Grazplan
                     theModel[jdx].ADIP_2_CP = value[i].ADIP2CP;
                     theModel[jdx].AshAlkalinity = value[i].AshAlk;
                     theModel[jdx].MaxPassage = value[i].MaxPassage;
-                    // RegisterNewStore(value[i].Name); // I don't this this is feasible under ApsimX
+                    // RegisterNewStore(value[i].Name); // I don't think this is feasible under ApsimX
                 }
             }
         }
@@ -676,7 +676,18 @@ namespace Models.Grazplan
             }
         }
 
-        // How should this be done in ApsimX?
+        public TSupplementItem this[int idx]
+        {
+            get
+            {
+                if (idx >= 0 && idx < theModel.Count)
+                    return theModel[idx];
+                else
+                    return null;
+            }
+        }
+
+        // How should this be done in ApsimX? This probably isn't the best way to go about it...
         public SuppEatenType[] SuppEaten
         {
             set
@@ -789,5 +800,15 @@ namespace Models.Grazplan
             theModel.Blend(source, amount, destination);
         }
 
+        public int Add(string suppName)
+        {
+            int iDefSuppNo = TSupplementLibrary.DefaultSuppConsts.IndexOf(suppName);
+            return theModel.AddToStore(0.0, TSupplementLibrary.DefaultSuppConsts[iDefSuppNo]);
+        }
+
+        public void Delete(int idx)
+        {
+            theModel.Delete(idx);
+        }
     }
 }
