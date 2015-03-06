@@ -38,7 +38,11 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
-        private int suppIdx;
+        /// <summary>
+        /// Index of the currently selected supplement.
+        /// Index 0 points to the fodder supplement, which we don't want expose
+        /// </summary>
+        private int suppIdx; 
 
         /// <summary>
         /// Attach the model and view to this presenter.
@@ -97,7 +101,7 @@ namespace UserInterface.Presenters
 
         private void OnSupplementSelected(object sender, TIntArgs e)
         {
-            suppIdx = e.value + 1;
+            suppIdx = e.value + 1;  // Offset by 1 to skip fodder
             supplementView.SelectedSupplementValues = supplement[suppIdx];
         }
 
@@ -106,18 +110,18 @@ namespace UserInterface.Presenters
             suppIdx = supplement.Add(e.name);
             PopulateSupplementNames();
             supplementView.SelectedSupplementValues = supplement[suppIdx];
-            supplementView.SelectedSupplementIndex = suppIdx - 1;
+            supplementView.SelectedSupplementIndex = suppIdx - 1;  // Offset by 1 to skip fodder
         }
 
         private void OnSupplementDeleted(object sender, System.EventArgs e)
         {
-            if (suppIdx > 0)
+            if (suppIdx > 0) // Don't delete fodder
             {
                 supplement.Delete(suppIdx);
                 suppIdx = Math.Min(suppIdx, supplement.NoStores - 1);
                 PopulateSupplementNames();
                 supplementView.SelectedSupplementValues = supplement[suppIdx];
-                supplementView.SelectedSupplementIndex = suppIdx - 1;
+                supplementView.SelectedSupplementIndex = suppIdx - 1;  // Offset by 1 to skip fodder
             }
         }
 
@@ -129,7 +133,7 @@ namespace UserInterface.Presenters
         /// <param name="e"></param>
         private void OnSupplementReset(object sender, System.EventArgs e)
         {
-            if (suppIdx >= 0)
+            if (suppIdx > 0)  // Don't reset fodder
             {
                 InitSupplement(suppIdx, supplement[suppIdx].sName);
                 supplementView.SelectedSupplementValues = supplement[suppIdx];
@@ -144,11 +148,12 @@ namespace UserInterface.Presenters
         /// <param name="e"></param>
         private void OnAllSupplementsReset(object sender, System.EventArgs e)
         {
-            for (int i = 0; i < supplement.NoStores; i++)
+            for (int i = 1; i < supplement.NoStores; i++) // Don't reset fodder
             {
                 InitSupplement(i, supplement[i].sName);
             }
-            supplementView.SelectedSupplementValues = supplement[suppIdx];
+            if (suppIdx > 0) 
+                supplementView.SelectedSupplementValues = supplement[suppIdx];
         }
 
         /// <summary>
@@ -275,7 +280,7 @@ namespace UserInterface.Presenters
             {
                 suppIdx = 1;
                 supplementView.SelectedSupplementValues = supplement[suppIdx];
-                supplementView.SelectedSupplementIndex = suppIdx - 1;
+                supplementView.SelectedSupplementIndex = suppIdx - 1; // Offset by 1 to skip fodder
             }
         }
 
