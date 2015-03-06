@@ -130,6 +130,8 @@
     <Compile Include="EventArguments\HoverPointArgs.cs" />
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
+    <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -236,6 +238,12 @@
     </Compile>
     <Compile Include="Views\SummaryView.Designer.cs">
       <DependentUpon>SummaryView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SupplementView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\SupplementView.Designer.cs">
+      <DependentUpon>SupplementView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\TestView.cs">
       <SubType>UserControl</SubType>
@@ -380,6 +388,9 @@
     <EmbeddedResource Include="Views\SummaryView.resx">
       <DependentUpon>SummaryView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\SupplementView.resx">
+      <DependentUpon>SupplementView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\TestView.resx">
       <DependentUpon>TestView.cs</DependentUpon>
     </EmbeddedResource>
@@ -437,6 +448,7 @@
     <EmbeddedResource Include="Views\TabbedMetDataView.resx">
       <DependentUpon>TabbedMetDataView.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
