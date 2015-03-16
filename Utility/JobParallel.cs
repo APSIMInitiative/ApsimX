@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="JobSequence.cs" company="APSIM Initiative">
+// <copyright file="JobSequenceParallel.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
@@ -12,10 +12,10 @@ namespace Utility
     using System.Threading;
 
     /// <summary>
-    /// A composite class for a sequence of jobs that will be run sequentially.
-    /// If an error occurs in any job, then subsequent jobs won't be run.
+    /// A composite class for a sequence of jobs that will be run asynchronously.
+    /// If an error occurs in any job, then this job will also produce an error.
     /// </summary>
-    public class JobSequence : Utility.JobManager.IRunnable
+    public class JobParallel : Utility.JobManager.IRunnable
     {
         /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
         public bool IsComputationallyTimeConsuming { get { return false; } }
@@ -28,7 +28,7 @@ namespace Utility
 
         /// <summary>Gets the error message. Can be null if no error. Set by JobManager.</summary>
         public string ErrorMessage { get; set; }
-
+        
         /// <summary>Called to start the job.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -37,18 +37,20 @@ namespace Utility
             // Get a reference to the JobManager so that we can add jobs to it.
             Utility.JobManager jobManager = e.Argument as Utility.JobManager;
 
-            for (int j = 0; j < Jobs.Count; j++)
-            {
-                // Add job to the queue
-                jobManager.AddJob(Jobs[j]);
+            // Add all jobs to the queue
+            foreach (Utility.JobManager.IRunnable job in Jobs)
+                jobManager.AddJob(job);
 
-                // Wait for it to be completed.
-                while (!Jobs[j].IsCompleted)
-                    Thread.Sleep(200);
+            // Wait for it to be completed.
+            while (!AllCompleted)
+                Thread.Sleep(200);
 
-                if (Jobs[j].ErrorMessage != null)
-                    throw new Exception(Jobs[j].ErrorMessage);
-            }            
+            // Get a possible error message. Null if no error.
+            string ErrorMessage = string.Empty;
+            foreach (Utility.JobManager.IRunnable job in Jobs)
+                ErrorMessage += job.ErrorMessage;
+            if (ErrorMessage != string.Empty)
+                throw new Exception(ErrorMessage);
         }
 
         /// <summary>

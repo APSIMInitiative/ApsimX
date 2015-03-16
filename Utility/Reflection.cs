@@ -143,6 +143,8 @@ namespace Utility
                     P.SetValue(obj, Convert.ToDouble(value), null);
                 else if (P.PropertyType == typeof(int))
                     P.SetValue(obj, Convert.ToInt32(value), null);
+                else if (P.PropertyType.IsEnum)
+                    P.SetValue(obj, Enum.Parse(P.PropertyType, value.ToString()), null);
                 else
                     P.SetValue(obj, value, null);
                 return true;

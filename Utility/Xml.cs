@@ -870,20 +870,20 @@ namespace Utility
                     doc.AppendChild(doc.CreateElement(TypeName));
                     doc.DocumentElement.InnerXml = Reader.ReadInnerXml();
                     Reader = new XmlNodeReader(doc);
-                    //Reader.ReadStartElement();
                 }
                 // Try using the pre built serialization assembly first.
-                string DeserializerFileName = System.IO.Path.ChangeExtension(Assembly.GetExecutingAssembly().Location,
-                                                                             ".XmlSerializers.dll");
+                string[] DeserializerFileNames = System.IO.Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
+                                                                             "*.XmlSerializers.dll");
 
                 // Under MONO it seems that if a class is not in the serialization assembly then exception will 
                 // be thrown. Under windows this doesn't happen. For now, only use the prebuilt serialisation
                 // dll if on windows.
                 if ((Environment.OSVersion.Platform == PlatformID.Win32NT ||
                     Environment.OSVersion.Platform == PlatformID.Win32Windows) &&
-                    File.Exists(DeserializerFileName))
+                    DeserializerFileNames.Length > 0 &&
+                    File.Exists(DeserializerFileNames[0]))
                 {
-                    Assembly SerialiserAssembly = Assembly.LoadFile(DeserializerFileName);
+                    Assembly SerialiserAssembly = Assembly.LoadFile(DeserializerFileNames[0]);
                     string SerialiserFullName = "Microsoft.Xml.Serialization.GeneratedAssembly." + TypeName + "Serializer";
                     object Serialiser = SerialiserAssembly.CreateInstance(SerialiserFullName);
 
@@ -908,9 +908,6 @@ namespace Utility
                     ReturnObj = serial.Deserialize(Reader);
                 }
 
-                //MethodInfo OnSerialised = ReturnObj.GetType().GetMethod("OnSerialised");
-                //if (OnSerialised != null)
-                //    OnSerialised.Invoke(ReturnObj, null);
                 return ReturnObj;
             }
             catch (Exception exp)
@@ -918,6 +915,16 @@ namespace Utility
                 Console.WriteLine(exp.Message);
                 return null;  // most likely invalid xml.
             }
+        }
+
+        /// <summary>Deserialise from the specified XmlNode.</summary>
+        /// <param name="Node">The node.</param>
+        /// <returns>Returns the newly created object or null if not found.</returns>
+        public static object Deserialise(XmlNode Node, Type t)
+        {
+            XmlReader Reader = new XmlNodeReader(Node);
+            XmlSerializer serial = new XmlSerializer(t);
+            return serial.Deserialize(Reader);
         }
 
         /// <summary>
@@ -968,6 +975,19 @@ namespace Utility
             M.Seek(0, SeekOrigin.Begin);
             StreamReader R = new StreamReader(M);
             return R.ReadToEnd();
+        }
+
+        /// <summary>Clones the specified object.</summary>
+        /// <param name="obj">The object to clone</param>
+        /// <returns>The newly created object</returns>
+        public static object Clone(object obj)
+        {
+            string xml = Serialise(obj, true);
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            return Deserialise(doc.DocumentElement, obj.GetType());
+
         }
     }
 }

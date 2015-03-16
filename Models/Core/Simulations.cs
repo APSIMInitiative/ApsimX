@@ -6,6 +6,7 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 using Models.Factorial;
+using System.Threading;
 
 namespace Models.Core
 {
@@ -23,7 +24,16 @@ namespace Models.Core
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
 
+        /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
+        [XmlIgnore]
+        public bool IsCompleted { get; set; }
 
+        /// <summary>Gets the error message. Can be null if no error. Set by JobManager.</summary>
+        [XmlIgnore]
+        public string ErrorMessage { get; set; }
+
+        /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
+        public bool IsComputationallyTimeConsuming { get { return false; } }
 
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
@@ -310,55 +320,43 @@ namespace Models.Core
             NumCompleted = 0;
 
             if (NumToRun == 1)
-            {
-                // Skip running in another thread.
-                simulationsToRun[0].Commencing -= OnSimulationCommencing;
-                simulationsToRun[0].Commencing += OnSimulationCommencing;
-                simulationsToRun[0].Run(null, null);
-            }
+                simulationsToRun[0].Run(null, null); // Skip running in another thread.
             else
-            {
                 foreach (Simulation simulation in simulationsToRun)
-                {
-                    simulation.Commencing -= OnSimulationCommencing;
-                    simulation.Commencing += OnSimulationCommencing;
                     jobManager.AddJob(simulation);
+
+            // Wait for all simulations to complete.
+            while (!AllCompleted(simulationsToRun))
+                Thread.Sleep(500);
+
+            // Grab all error messages.
+            string errors = string.Empty;
+            foreach (Simulation simulation in simulationsToRun)
+            {
+                if (simulation.ErrorMessage != null)
+                {
+                    errors += simulation.FileName + "\r\n" +
+                              simulation.ErrorMessage + "\r\n";
                 }
             }
-        }
 
-        /// <summary>This gets called everytime a simulation commences.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            // We trap the commencing event so that we can then subscribe to 
-            // the completed event. If we subscibe to the completed event
-            // before the simulation starts then our completed event will be
-            // called before all other models. We want to be last so that we
-            // can invoke the 'AllCompleted' event.
-            (sender as Simulation).Completed += OnSimulationCompleted;
+            if (errors != string.Empty)
+                ErrorMessage = errors;
+
+            CallAllCompleted();
         }
 
         /// <summary>
-        /// This gets called everytime a simulation completes. When all are done then
-        /// invoke each model's OnAllCompleted method.
+        /// Gets a value indicating whether all simulations are completed.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        /// <value><c>true</c> if completed; otherwise, <c>false</c>.</value>
+        private bool AllCompleted(Simulation[] simulations)
         {
-            bool RunAllCompleted = false;
-            lock (this)
-            {
-                NumCompleted++;
-                RunAllCompleted = NumCompleted == NumToRun;
-            }
-            if (RunAllCompleted)
-            {
-                CallAllCompleted();
-                (sender as Simulation).Commencing -= OnSimulationCommencing;
-            }
+            foreach (Utility.JobManager.IRunnable job in simulations)
+                if (!job.IsCompleted)
+                    return false;
+
+            return true;
         }
 
         /// <summary>Call the all completed event in all models.</summary>

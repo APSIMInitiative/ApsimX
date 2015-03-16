@@ -518,6 +518,10 @@
       <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
       <Name>Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{5BDAA3CD-C66F-4C91-94A2-31FB58177D4C}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\MenuImages\Check Soil.png" />
@@ -589,6 +593,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\DSSATModuleWrapper.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SugarCane.png" />
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenFile.png" />
