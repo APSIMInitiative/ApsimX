@@ -61,25 +61,42 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to   &lt;Plant&gt;
-        ///	&lt;Name&gt;Maize&lt;/Name&gt;
-        ///	&lt;CropType&gt;Maize&lt;/CropType&gt;
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Plant&gt;
+        ///	&lt;Name&gt;FodderBeet&lt;/Name&gt;
+        ///	&lt;CropType&gt;FodderBeet&lt;/CropType&gt;
         ///	&lt;Cultivar&gt;
-        ///		&lt;Name&gt;Pioneer_3153&lt;/Name&gt;
-        ///		&lt;Alias&gt;Pie&lt;/Alias&gt;
+        ///		&lt;Name&gt;Rivage&lt;/Name&gt;
         ///	&lt;/Cultivar&gt;
         ///	&lt;OrganArbitrator&gt;
         ///		&lt;Name&gt;Arbitrator&lt;/Name&gt;
-        ///		&lt;NArbitrationOption&gt;PrioritythenRelativeAllocation&lt;/NArbitrationOption&gt;
+        ///		&lt;NArbitrationOption&gt;RelativeAllocation&lt;/NArbitrationOption&gt;
         ///		&lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
-        ///	&lt;/OrganArbitrator&gt;
-        ///	&lt;Phenology&gt;
-        ///		&lt;Name&gt;Phenology&lt;/Name&gt;
-        ///		&lt;MultiplyFunction&gt;
-        ///			&lt;Name&gt;ThermalTime&lt;/Name&gt;
-        ///			&lt;PhaseLookup&gt;
-        ///				&lt;PhaseLookupValue&gt;
-        ///					&lt;Name&gt;SoilTemperature&lt;/Name [rest of string was truncated]&quot;;.
+        ///		&lt;Memo&gt;
+        ///          There are a number of passes involved in the allocation of Weight (Wt).
+        ///          Wt_Step 1. Set up DM supplies and demands.  Each organ may have a demand fo [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string FodderBeet {
+            get {
+                return ResourceManager.GetString("FodderBeet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Plant&gt;
+        ///  &lt;Name&gt;Maize&lt;/Name&gt;
+        ///  &lt;CropType&gt;Maize&lt;/CropType&gt;
+        ///  &lt;Cultivar&gt;
+        ///    &lt;Name&gt;Pioneer_3153&lt;/Name&gt;
+        ///    &lt;Alias&gt;Pie&lt;/Alias&gt;
+        ///  &lt;/Cultivar&gt;
+        ///  &lt;Cultivar&gt;
+        ///    &lt;Name&gt;Katumani&lt;/Name&gt;
+        ///    &lt;Command&gt;[Phenology].Juvenile.Target = 150&lt;/Command&gt;
+        ///    &lt;Command&gt;[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24&lt;/Command&gt;
+        ///    &lt;Command&gt;[Phenology].Photosensitive.Target.XYPairs.X = 0, 0, 115&lt;/Command&gt;
+        ///    &lt;Command&gt;[Phenology].FlagLeafToFlowering.Target = 10&lt;/Command&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Maize {
             get {
@@ -88,9 +105,10 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;Plant&gt;
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Plant&gt;
         ///	&lt;Name&gt;MCSP&lt;/Name&gt;
-        ///	&lt;CropType&gt;Maize&lt;/CropType&gt;
+        ///	&lt;CropType&gt;MCSP&lt;/CropType&gt;
         ///	&lt;OrganArbitrator&gt;
         ///		&lt;NArbitrationOption&gt;RelativeAllocation&lt;/NArbitrationOption&gt;
         ///		&lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
@@ -107,8 +125,7 @@ namespace Models.Properties {
         ///					&lt;double&gt;40&lt;/double&gt;
         ///				&lt;/X&gt;
         ///				&lt;Y&gt;
-        ///					&lt;double&gt;0&lt;/double&gt;
-        ///					&lt;double&gt;30&lt;/d [rest of string was truncated]&quot;;.
+        ///				 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MCSP {
             get {
@@ -174,30 +191,41 @@ namespace Models.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  &lt;Plant&gt;
-        ///	&lt;Name&gt;Slurp&lt;/Name&gt;
-        ///	&lt;CropType&gt;Slurp&lt;/CropType&gt;
-        ///	&lt;Cultivar&gt;
-        ///		&lt;Name&gt;StaticCrop&lt;/Name&gt;
-        ///		&lt;Alias&gt;StaticCrop&lt;/Alias&gt;
-        ///	&lt;/Cultivar&gt;
-        ///	&lt;OrganArbitrator&gt;
-        ///		&lt;Name&gt;Arbitrator&lt;/Name&gt;
-        ///		&lt;NArbitrationOption&gt;PriorityThenRelativeAllocation&lt;/NArbitrationOption&gt;
-        ///		&lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
-        ///	&lt;/OrganArbitrator&gt;
-        ///	&lt;Root&gt;
-        ///		&lt;Name&gt;Root&lt;/Name&gt;
-        ///		&lt;CompositeBiomass&gt;
-        ///			&lt;Name&gt;Live&lt;/Name&gt;
-        ///			&lt;Propertys&gt;
-        ///				&lt;string&gt;[Root].LayerLive&lt;/string&gt;
-        ///			&lt;/Propertys&gt;
-        ///		&lt;/CompositeBi [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Plant&gt;
+        ///  &lt;Name&gt;Slurp&lt;/Name&gt;
+        ///  &lt;CropType&gt;Slurp&lt;/CropType&gt;
+        ///  &lt;Cultivar&gt;
+        ///    &lt;Name&gt;StaticCrop&lt;/Name&gt;
+        ///    &lt;Alias&gt;StaticCrop&lt;/Alias&gt;
+        ///  &lt;/Cultivar&gt;
+        ///  &lt;OrganArbitrator&gt;
+        ///    &lt;Name&gt;Arbitrator&lt;/Name&gt;
+        ///    &lt;NArbitrationOption&gt;PriorityThenRelativeAllocation&lt;/NArbitrationOption&gt;
+        ///    &lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
+        ///  &lt;/OrganArbitrator&gt;
+        ///  &lt;Root&gt;
+        ///    &lt;Name&gt;Root&lt;/Name&gt;
+        ///    &lt;CompositeBiomass&gt;
+        ///      &lt;Name&gt;Live&lt;/Name&gt;
+        ///      &lt;Propertys&gt;
+        ///      [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Slurp {
             get {
                 return ResourceManager.GetString("Slurp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name                              |R    DM    DMD    M/D     EE     CP     dg    ADIP     P        S       AA    MaxP Locales
+        ///Alfalfa Hay Early-bloom           |Y  0.900  0.640   9.50  0.030  0.200  0.650  0.110  0.00250  0.00300  1.200  0.000 ca;us         es:&quot;Alfalfa Heno florac temprana&quot;
+        ///Alfalfa Hay Full-bloom            |Y  0.900  0.610   9.00  0.030  0.170  0.650  0.160  0.00240  0.00300  1.200  0.000 ca;us         es:&quot;Alfalfa Heno plena floración&quot;
+        ///Alfalfa Hay Mature                |Y  0.900  0.540  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Supplement {
+            get {
+                return ResourceManager.GetString("Supplement", resourceCulture);
             }
         }
         

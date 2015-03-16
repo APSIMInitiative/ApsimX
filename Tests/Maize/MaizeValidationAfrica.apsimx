@@ -1899,174 +1899,6 @@ namespace Models
       <DisabledSeries />
     </Graph>
   </Experiment>
-  <Graph>
-    <Name>GrainWt</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Series>
-      <Title>Series1</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.GrainWt</FieldName>
-      </X>
-      <Y>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.GrainWt</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>true</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>Biomass</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Series>
-      <Title>Series1</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.Biomass</FieldName>
-      </X>
-      <Y>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.Biomass</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>true</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>LAIMax</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Series>
-      <Title>Series1</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.LAImax</FieldName>
-      </X>
-      <Y>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.LAImax</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>true</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>GPSM</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Series>
-      <Title>Series1</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Observed.GPSM</FieldName>
-      </X>
-      <Y>
-        <TableName>PredictedObserved</TableName>
-        <FieldName>Predicted.GPSM</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>true</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
   <Experiment>
     <Name>BMW1</Name>
     <Memo>
@@ -12314,5 +12146,173 @@ namespace Models
       <DisabledSeries />
     </Graph>
   </Experiment>
+  <Graph>
+    <Name>GrainWt</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.GrainWt</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.GrainWt</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
+  <Graph>
+    <Name>Biomass</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.Biomass</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.Biomass</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
+  <Graph>
+    <Name>LAIMax</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.LAImax</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.LAImax</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
+  <Graph>
+    <Name>GPSM</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.GPSM</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.GPSM</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
+  </Graph>
   <ExplorerWidth>283</ExplorerWidth>
 </Simulations>

@@ -161,15 +161,17 @@ namespace Utility
         {
             List<Type> returnVal = new List<Type>();
 
-            Type[] assemblyTypes = Assembly.GetExecutingAssembly().GetTypes();
-            for (int j = 0; j < assemblyTypes.Length; j++)
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (assemblyTypes[j].Name == className)
+                Type[] assemblyTypes = assembly.GetTypes();
+                for (int j = 0; j < assemblyTypes.Length; j++)
                 {
-                    returnVal.Add(assemblyTypes[j]);
+                    if (assemblyTypes[j].Name == className)
+                    {
+                        returnVal.Add(assemblyTypes[j]);
+                    }
                 }
             }
-
             return returnVal.ToArray();
         }
 

@@ -319,11 +319,8 @@ namespace Models.Core
             NumToRun = simulationsToRun.Length;
             NumCompleted = 0;
 
-            if (NumToRun == 1)
-                simulationsToRun[0].Run(null, null); // Skip running in another thread.
-            else
-                foreach (Simulation simulation in simulationsToRun)
-                    jobManager.AddJob(simulation);
+            foreach (Simulation simulation in simulationsToRun)
+                jobManager.AddJob(simulation);
 
             // Wait for all simulations to complete.
             while (!AllCompleted(simulationsToRun))
