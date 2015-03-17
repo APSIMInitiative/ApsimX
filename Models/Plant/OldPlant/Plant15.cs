@@ -357,13 +357,15 @@ namespace Models.PMF.OldPlant
         public event NewCanopyDelegate NewCanopy;
         
         /// <summary>Occurs when [crop ending].</summary>
-        public event EventHandler<ModelArgs> PlantEnding;
+        ///public event EventHandler<ModelArgs> PlantEnding;
+        public event EventHandler PlantEnding;
 
         /// <summary>Occurs when [crop ending].</summary>
         public event NewCropDelegate CropEnding;
 
         /// <summary>Occurs when [harvesting].</summary>
-        public event EventHandler<ModelArgs> Harvesting;
+        ///public event EventHandler<ModelArgs> Harvesting;
+        public event EventHandler Harvesting;
 
         /// <summary>Gets the cover_green.</summary>
         /// <value>The cover_green.</value>
@@ -887,8 +889,9 @@ namespace Models.PMF.OldPlant
 
             // Tell the rest of the system we are about to harvest
             if (Harvesting != null)
-                Harvesting.Invoke(this, new ModelArgs() { Model = this });
-
+                //Harvesting.Invoke(this, new ModelArgs() { Model = this });
+                Harvesting.Invoke(this, new EventArgs());
+ 
             // Check some bounds
             if (Harvest.Remove < 0 || Harvest.Remove > 1.0)
                 throw new Exception("Harvest remove fraction needs to be between 0 and 1");
@@ -932,7 +935,8 @@ namespace Models.PMF.OldPlant
                 CropEnding.Invoke(Crop);
 
             if (PlantEnding != null)
-                PlantEnding.Invoke(this, new ModelArgs() { Model = this });
+                //PlantEnding.Invoke(this, new ModelArgs() { Model = this });
+                PlantEnding.Invoke(this, new EventArgs() );
 
             // Keep track of some variables for reporting.
             Biomass AboveGroundBiomass = new Biomass(AboveGround);
