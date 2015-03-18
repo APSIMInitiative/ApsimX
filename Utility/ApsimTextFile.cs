@@ -56,6 +56,18 @@ namespace Utility
         private StringCollection Words = new StringCollection();
         private Type[] ColumnTypes;
 
+        /// <summary>A helper to cleanly get a DataTable from the contents of a file.</summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>The data table.</returns>
+        public static System.Data.DataTable ToTable(string fileName)
+        {
+            Utility.ApsimTextFile file = new Utility.ApsimTextFile();
+            file.Open(fileName);
+            System.Data.DataTable data = file.ToTable();
+            file.Close();
+            return data;
+        }
+
         /// <summary>
         /// Open the file ready for reading.
         /// </summary>

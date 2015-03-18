@@ -9,20 +9,19 @@ namespace UserInterface.Presenters
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
-    using Views;
+    using Interfaces;
     using Models;
     using Models.Core;
     using Models.Grazplan;
-    using System.Reflection;
-    using Interfaces;
+    using Views;
 
     /// <summary>
     /// A presenter class for the supplement model
     /// </summary>
     public class SupplementPresenter : IPresenter
     {
-
         /// <summary>
         /// The supplement model.
         /// </summary>
@@ -40,7 +39,7 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Index of the currently selected supplement.
-        /// Index 0 points to the fodder supplement, which we don't want expose
+        /// Index 0 points to the fodder supplement, which we don't want exposed
         /// </summary>
         private int suppIdx; 
 
@@ -49,17 +48,17 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="model">The initial supplement model</param>
         /// <param name="view">The supplement view to work with</param>
-        /// <param name="explorerPresenter">The parent explorer presenter</param>
+        /// <param name="explrPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explrPresenter)
         {
-            supplement = model as Supplement;
-            supplementView = view as SupplementView;
-            explorerPresenter = explrPresenter;
+            this.supplement = model as Supplement;
+            this.supplementView = view as SupplementView;
+            this.explorerPresenter = explrPresenter;
 
-            ConnectViewEvents();
-            PopulateView();
+            this.ConnectViewEvents();
+            this.PopulateView();
 
-            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
@@ -67,8 +66,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            DisconnectViewEvents();
-            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.DisconnectViewEvents();
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
         /// <summary>
@@ -76,13 +75,13 @@ namespace UserInterface.Presenters
         /// </summary>
         private void ConnectViewEvents()
         {
-            supplementView.SupplementSelected += OnSupplementSelected;
-            supplementView.SupplementAdded += OnSupplementAdded;
-            supplementView.SupplementDeleted += OnSupplementDeleted;
-            supplementView.SupplementReset += OnSupplementReset;
-            supplementView.AllSupplementsReset += OnAllSupplementsReset;
-            supplementView.SuppAttrChanged += OnSuppAttrChanged;
-            supplementView.SuppNameChanged += OnSuppNameChanged;
+            this.supplementView.SupplementSelected += this.OnSupplementSelected;
+            this.supplementView.SupplementAdded += this.OnSupplementAdded;
+            this.supplementView.SupplementDeleted += this.OnSupplementDeleted;
+            this.supplementView.SupplementReset += this.OnSupplementReset;
+            this.supplementView.AllSupplementsReset += this.OnAllSupplementsReset;
+            this.supplementView.SuppAttrChanged += this.OnSuppAttrChanged;
+            this.supplementView.SuppNameChanged += this.OnSuppNameChanged;
         }
 
         /// <summary>
@@ -90,38 +89,59 @@ namespace UserInterface.Presenters
         /// </summary>
         private void DisconnectViewEvents()
         {
-            supplementView.SupplementSelected -= OnSupplementSelected;
-            supplementView.SupplementAdded -= OnSupplementAdded;
-            supplementView.SupplementDeleted -= OnSupplementDeleted;
-            supplementView.SupplementReset -= OnSupplementReset;
-            supplementView.AllSupplementsReset -= OnAllSupplementsReset;
-            supplementView.SuppAttrChanged -= OnSuppAttrChanged;
-            supplementView.SuppNameChanged -= OnSuppNameChanged;
+            this.supplementView.SupplementSelected -= this.OnSupplementSelected;
+            this.supplementView.SupplementAdded -= this.OnSupplementAdded;
+            this.supplementView.SupplementDeleted -= this.OnSupplementDeleted;
+            this.supplementView.SupplementReset -= this.OnSupplementReset;
+            this.supplementView.AllSupplementsReset -= this.OnAllSupplementsReset;
+            this.supplementView.SuppAttrChanged -= this.OnSuppAttrChanged;
+            this.supplementView.SuppNameChanged -= this.OnSuppNameChanged;
         }
 
+        /// <summary>
+        /// Handles supplement selected events sent from the view
+        /// </summary>
+        /// <param name="sender">The sending object (not used)</param>
+        /// <param name="e">
+        /// Event argument holding an integer value indicating the
+        /// index of the newly selected supplement
+        /// </param>
         private void OnSupplementSelected(object sender, TIntArgs e)
         {
-            suppIdx = e.value + 1;  // Offset by 1 to skip fodder
-            supplementView.SelectedSupplementValues = supplement[suppIdx];
+            this.suppIdx = e.value + 1;  // Offset by 1 to skip fodder
+            this.supplementView.SelectedSupplementValues = this.supplement[this.suppIdx];
         }
 
+        /// <summary>
+        /// Handled supplement added events sent from the view
+        /// </summary>
+        /// <param name="sender">The sending object (not used)</param>
+        /// <param name="e">Event argument holding a string with the
+        /// name of the supplement to be added.
+        /// </param>
         private void OnSupplementAdded(object sender, TStringArgs e)
         {
-            suppIdx = supplement.Add(e.name);
-            PopulateSupplementNames();
-            supplementView.SelectedSupplementValues = supplement[suppIdx];
-            supplementView.SelectedSupplementIndex = suppIdx - 1;  // Offset by 1 to skip fodder
+            this.suppIdx = this.supplement.Add(e.name);
+            this.PopulateSupplementNames();
+            this.supplementView.SelectedSupplementValues = this.supplement[this.suppIdx];
+            this.supplementView.SelectedSupplementIndex = this.suppIdx - 1;  // Offset by 1 to skip fodder
         }
 
+        /// <summary>
+        /// Handles supplement deleted events sent from the view
+        /// </summary>
+        /// <param name="sender">The sending object (not used)</param>
+        /// <param name="e">Event argument (empty; not used)</param>
         private void OnSupplementDeleted(object sender, System.EventArgs e)
         {
-            if (suppIdx > 0) // Don't delete fodder
+            // Don't delete fodder (index 0)
+            if (this.suppIdx > 0) 
             {
-                supplement.Delete(suppIdx);
-                suppIdx = Math.Min(suppIdx, supplement.NoStores - 1);
-                PopulateSupplementNames();
-                supplementView.SelectedSupplementValues = supplement[suppIdx];
-                supplementView.SelectedSupplementIndex = suppIdx - 1;  // Offset by 1 to skip fodder
+                this.supplement.Delete(this.suppIdx);
+                this.suppIdx = Math.Min(this.suppIdx, this.supplement.NoStores - 1);
+                this.PopulateSupplementNames();
+                this.supplementView.SelectedSupplementValues = this.supplement[this.suppIdx];
+                this.supplementView.SelectedSupplementIndex = this.suppIdx - 1;  // Offset by 1 to skip fodder
             }
         }
 
@@ -129,14 +149,15 @@ namespace UserInterface.Presenters
         /// Resets the composition values for the current supplement,
         /// provided its name matches a default supplement
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object (not used)</param>
+        /// <param name="e">Event argument (empty; not used)</param>
         private void OnSupplementReset(object sender, System.EventArgs e)
         {
-            if (suppIdx > 0)  // Don't reset fodder
+            // Don't reset fodder (index 0)
+            if (this.suppIdx > 0)  
             {
-                InitSupplement(suppIdx, supplement[suppIdx].sName);
-                supplementView.SelectedSupplementValues = supplement[suppIdx];
+                this.InitSupplement(this.suppIdx, this.supplement[this.suppIdx].sName);
+                this.supplementView.SelectedSupplementValues = this.supplement[this.suppIdx];
             }
         }
 
@@ -144,53 +165,63 @@ namespace UserInterface.Presenters
         /// Resets the composition values for all supplements which have
         /// a name which matches a default supplement
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sending object (not used)</param>
+        /// <param name="e">Event argument (empty; not used)</param>
         private void OnAllSupplementsReset(object sender, System.EventArgs e)
         {
-            for (int i = 1; i < supplement.NoStores; i++) // Don't reset fodder
+            // Don't reset fodder, so start with index 1
+            for (int i = 1; i < this.supplement.NoStores; i++) 
             {
-                InitSupplement(i, supplement[i].sName);
+                this.InitSupplement(i, this.supplement[i].sName);
             }
-            if (suppIdx > 0) 
-                supplementView.SelectedSupplementValues = supplement[suppIdx];
+            if (this.suppIdx > 0)
+                this.supplementView.SelectedSupplementValues = this.supplement[this.suppIdx];
         }
 
         /// <summary>
-        /// Initialises an entry in FValues describing a supplement. The Amount field is set to
-        /// zero (why???), while the TSupplement elements are set to default values depending
+        /// Initialises an entry in FValues describing a supplement.
+        /// The TSupplement elements are set to default values depending
         /// on the name passed to the routine.      
         /// </summary>
         /// <param name="idx">
         /// Index at which to initialise the new supplement.
-        ///</param>
-        /// <param name="sNewName">
+        /// </param>
+        /// <param name="newName">
         /// Name of the new supplement.  If this name matches an entry
         /// in grazSUPP.DefaultSuppConsts, supplement properties are
         /// copied from there; otherwise properties are left unchanged
         /// </param>
-        private void InitSupplement(int idx, string sNewName)
+        private void InitSupplement(int idx, string newName)
         {
-            int iSuppNo = TSupplementLibrary.DefaultSuppConsts.IndexOf(sNewName);
-            if (iSuppNo >= 0)
+            int suppNo = TSupplementLibrary.DefaultSuppConsts.IndexOf(newName);
+            if (suppNo >= 0)
             {
-                double oldAmount = supplement[idx].Amount;
-                supplement[idx].Assign(TSupplementLibrary.DefaultSuppConsts[iSuppNo]);
-                supplement[idx].sName = sNewName;
-                supplement[idx].Amount = oldAmount;
+                double oldAmount = this.supplement[idx].Amount;
+                this.supplement[idx].Assign(TSupplementLibrary.DefaultSuppConsts[suppNo]);
+                this.supplement[idx].sName = newName;
+                this.supplement[idx].Amount = oldAmount;
             }
         }
 
+        /// <summary>
+        /// Handle an event from the view indicating that the value for some
+        /// supplement attribute has changed
+        /// </summary>
+        /// <param name="sender">The sending object (not used)</param>
+        /// <param name="e">
+        /// Event argument holding a record with an integer value indicating the attribute
+        /// that has been changed, and a double value indicating its new value
+        /// </param>
         private void OnSuppAttrChanged(object sender, TSuppAttrArgs e)
         {
             int attr = e.attr;
             if (attr == -2)
             {
-                supplement[suppIdx].IsRoughage = e.attrVal != 0.0;
+                this.supplement[this.suppIdx].IsRoughage = e.attrVal != 0.0;
             }
             else if (attr == -1)
             {
-                supplement[suppIdx].Amount = e.attrVal;
+                this.supplement[this.suppIdx].Amount = e.attrVal;
             }
             else if (attr >= 0)
             {
@@ -198,31 +229,31 @@ namespace UserInterface.Presenters
                 switch (tagEnum)
                 {
                     case TSupplement.TSuppAttribute.spaDMP:
-                        supplement[suppIdx].DM_Propn = e.attrVal;
+                        this.supplement[this.suppIdx].DM_Propn = e.attrVal;
                         break;
                     case TSupplement.TSuppAttribute.spaDMD:
-                        supplement[suppIdx].DM_Digestibility = e.attrVal;
+                        this.supplement[this.suppIdx].DM_Digestibility = e.attrVal;
                         break;
                     case TSupplement.TSuppAttribute.spaMEDM:
-                        supplement[suppIdx].ME_2_DM = e.attrVal;
+                        this.supplement[this.suppIdx].ME_2_DM = e.attrVal;
                         break;
                     case TSupplement.TSuppAttribute.spaEE:
-                        supplement[suppIdx].EtherExtract = e.attrVal;
+                        this.supplement[this.suppIdx].EtherExtract = e.attrVal;
                         break;
                     case TSupplement.TSuppAttribute.spaCP:
-                        supplement[suppIdx].CrudeProt = e.attrVal;
+                        this.supplement[this.suppIdx].CrudeProt = e.attrVal;
                         break;
                     case TSupplement.TSuppAttribute.spaDG:
-                        supplement[suppIdx].DgProt = e.attrVal;
+                        this.supplement[this.suppIdx].DgProt = e.attrVal;
                         break;
                     case TSupplement.TSuppAttribute.spaADIP:
-                        supplement[suppIdx].ADIP_2_CP = e.attrVal;
+                        this.supplement[this.suppIdx].ADIP_2_CP = e.attrVal;
                         break;
                     case TSupplement.TSuppAttribute.spaPH:
-                        supplement[suppIdx].Phosphorus = e.attrVal;
+                        this.supplement[this.suppIdx].Phosphorus = e.attrVal;
                         break;
                     case TSupplement.TSuppAttribute.spaSU:
-                        supplement[suppIdx].Sulphur = e.attrVal;
+                        this.supplement[this.suppIdx].Sulphur = e.attrVal;
                         break;
                     default:
                         break;
@@ -230,9 +261,17 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Handling supplement name changed events from the view
+        /// </summary>
+        /// <param name="sender">The sending object (not used)</param>
+        /// <param name="e">
+        /// Event argument holding a string which is a new name for the 
+        /// currently selected supplement
+        /// </param>
         private void OnSuppNameChanged(object sender, TStringArgs e)
         {
-            supplement[suppIdx].sName = e.name;
+            this.supplement[this.suppIdx].sName = e.name;
         }
 
         /// <summary>
@@ -252,35 +291,40 @@ namespace UserInterface.Presenters
         private void PopulateSupplementNames()
         {
             List<string> names = new List<string>();
-            for (int i = 1; i < supplement.NoStores; i++ )  // SKIP element 0; that's reserved for fodder
+
+            // We skip element 0; that's reserved for fodder
+            for (int i = 1; i < this.supplement.NoStores; i++)
             {
-                if (string.IsNullOrWhiteSpace(supplement[i].sName))
+                if (string.IsNullOrWhiteSpace(this.supplement[i].sName))
                 {
                     names.Add("Supplement " + i.ToString());
                 }
                 else
                 {
-                    names.Add(supplement[i].sName);
+                    names.Add(this.supplement[i].sName);
                 }
             }
             this.supplementView.SupplementNames = names.ToArray();
 
-            if (names.Count > 0 && suppIdx <= supplement.NoStores)
+            if (names.Count > 0 && this.suppIdx <= this.supplement.NoStores)
             {
-                supplementView.SelectedSupplementValues = supplement[suppIdx];
+                this.supplementView.SelectedSupplementValues = this.supplement[this.suppIdx];
             }
         }
 
-        void PopulateView()
+        /// <summary>
+        /// Setup up the initial values for the view
+        /// </summary>
+        private void PopulateView()
         {
-            suppIdx = 0;
-            PopulateDefaultNames();
-            PopulateSupplementNames();
-            if (supplement.NoStores > 1)
+            this.suppIdx = 0;
+            this.PopulateDefaultNames();
+            this.PopulateSupplementNames();
+            if (this.supplement.NoStores > 1)
             {
-                suppIdx = 1;
-                supplementView.SelectedSupplementValues = supplement[suppIdx];
-                supplementView.SelectedSupplementIndex = suppIdx - 1; // Offset by 1 to skip fodder
+                this.suppIdx = 1;
+                this.supplementView.SelectedSupplementValues = this.supplement[this.suppIdx];
+                this.supplementView.SelectedSupplementIndex = this.suppIdx - 1; // Offset by 1 to skip fodder
             }
         }
 
@@ -288,11 +332,10 @@ namespace UserInterface.Presenters
         /// The model has changed. Update the view.
         /// </summary>
         /// <param name="changedModel">The model that has changed.</param>
-        void OnModelChanged(object changedModel)
+        private void OnModelChanged(object changedModel)
         {
-            if (changedModel == supplement)
-                PopulateView();
+            if (changedModel == this.supplement)
+                this.PopulateView();
         }
-    
     }
 }

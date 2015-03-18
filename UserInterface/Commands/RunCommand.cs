@@ -70,11 +70,8 @@ namespace UserInterface.Commands
         {
             Timer.Stop();
 
-            string errorMessage = string.Empty;
-
-            for (int j = 0; j < JobManager.CountOfJobs; j++)
-                errorMessage += JobManager.GetJobErrorMessage(j);
-            if (errorMessage == string.Empty)
+            string errorMessage = Simulations.ErrorMessage;
+            if (errorMessage == null)
                 ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
                         + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
             else

@@ -617,7 +617,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -642,7 +642,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -1198,7 +1198,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -1223,7 +1223,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 

@@ -384,6 +384,7 @@ namespace Models
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
             this.CO2 = 350;
+            OpenDataFile();
         }
 
         /// <summary>

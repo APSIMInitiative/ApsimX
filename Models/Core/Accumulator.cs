@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 
-namespace Utility
+namespace Models.Core
 {
     /// <summary>
     /// This class accumulats values of variables
