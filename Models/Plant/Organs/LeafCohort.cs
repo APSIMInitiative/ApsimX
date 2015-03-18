@@ -10,9 +10,10 @@ using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
-    /// <summary>
-    /// A leaf cohort model
-    /// </summary>
+    /*! <summary>
+     A leaf cohort model
+    </summary>
+    */
     [Serializable]
     public class LeafCohort : Model
     {

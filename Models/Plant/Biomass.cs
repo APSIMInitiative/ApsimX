@@ -27,9 +27,6 @@ namespace Models.PMF
     structural, non-structural and metabolic. 
     </remarks>
      */
-    /// <summary>
-    /// Biomass of plant organs
-    /// </summary>
     [Serializable]
     [XmlInclude(typeof(CompositeBiomass))]
     public class Biomass: Model

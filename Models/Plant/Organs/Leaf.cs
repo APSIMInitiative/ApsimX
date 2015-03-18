@@ -12,9 +12,38 @@ using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
-    /// <summary>
-    /// A leaf organ
-    /// </summary>
+    /*! <summary>
+        A generic leaf model
+        </summary>
+        
+        \retval MaxCover The maximum coverage (\f$C_{max}\f$) with default value 1, 
+            which is set by manager sowing. 
+        \retval LAI Leaf area index for green leaf (\f$\text{LAI}_{g}\f$, \f$m^2 m^{-2}\f$)
+        \retval LAIDead Leaf area index for dead leaf  (\f$\text{LAI}_{d}\f$, \f$m^2 m^{-2}\f$)
+        \retval LAITotal Total LAI including live and dead parts (\f$m^2 m^{-2}\f$)
+            \f[
+                LAI = \text{LAI}_{g} + \text{LAI}_{d}
+            \f]
+        \retval CoverGreen Cover for green leaf (\f$C_g\f$, unitless). 
+            \f$C_g\f$ is calculated according to
+            extinction coefficient of green leaf (\f$k_{g}\f$).
+            \f[
+                C_{g}=C_{max}(1-\exp(-k_{g}\frac{\text{LAI}_{g}}{C_{max}}))
+            \f]
+            where, \f$k\f$ is the extinction coefficient which calculates 
+            by parameter "ExtinctionCoeff". 
+            As the default value of \f$C_{max}\f$ is 1, the function is reduced to
+            \f[
+                C_{g}=1-\exp(-k_{g}\text{LAI}_{g})
+            \f]
+    
+        On commencing simulation
+        ------------------------
+        OnSimulationCommencing is called on commencing simulation. 
+        The leaves in the seed are initialized from all children with model 
+        \ref Models.PMF.Organs.LeafCohort LeafCohort.
+        are reset.
+    */
     [Serializable]
     [Description("Leaf Class")]
     public class Leaf : BaseOrgan, AboveGround, ICanopy
@@ -30,7 +59,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int MM2ToM2 = 1000000; // Conversion of mm2 to m2
+                int  = 1000000; // Conversion of mm2 to m2
                 double value = 0;
                 foreach (LeafCohort L in Leaves)
                     value = value + L.LiveArea / MM2ToM2;

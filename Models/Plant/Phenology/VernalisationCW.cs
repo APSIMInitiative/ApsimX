@@ -11,10 +11,10 @@ namespace Models.PMF.Phen
     /*! <summary>
     The vernalization and photoperiod effects from CERES wheat.
     </summary>
-    \pre A \ref Models.PMF.Phen.Phenology "Phenology" function has to exist.
+    \pre A \ref Models.PMF.Phen.Phenology "Phenology" model has to exist.
     \pre A \ref Models.PMF.Functions.PhotoperiodFunction "PhotoperiodFunction" 
-    function has to exist to calculate the day length.
-    \pre A \ref Models.WeatherFile "WeatherFile" function has to exist to 
+    model has to exist to calculate the day length.
+    \pre A \ref Models.WeatherFile "WeatherFile" model has to exist to 
     retrieve the daily minimum and maximum temperature.
     \param VernSens The vernalization sensitivity
     \param PhotopSens The photoperiod sensitivity
