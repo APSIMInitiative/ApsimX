@@ -132,7 +132,7 @@ namespace Models.PMF.Organs
         /// <summary>The cell division stress days</summary>
         [XmlIgnore]
         public double CellDivisionStressDays = 0;
-        //Leaf Initial status paramaters
+        //Leaf Initial status parameters
         /// <summary>The leaf start n retranslocation supply</summary>
         [XmlIgnore]
         public double LeafStartNRetranslocationSupply = 0;
