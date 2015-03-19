@@ -10,9 +10,52 @@ using Models.Soils.Arbitrator;
 
 namespace Models.PMF.Organs
 {
-    /// <summary>
-    /// The root organ
-    /// </summary>
+    /*! <summary>
+        The generic root model
+        </summary>
+        \param InitialDM <b>(Constant)</b> The initial dry weight of root (\f$g mm^{-2}\f$. CHECK).
+        \param SpecificRootLength <b>(Constant)</b> The length of the specific root 
+            (\f$m g^{-1}\f$. CHECK).
+        \param KNO3 <b>(Constant)</b> Fraction of extractable soil NO3 (\f$K_{NO3}\f$, unitless).  
+        \param KNH4 <b>(Constant)</b> Fraction of extractable soil NH4 (\f$K_{NH4}\f$, unitless).  
+        \param NitrogenDemandSwitch <b>(IFunction)</b> Whether to switch on nitrogen demand 
+            when nitrogen deficit is calculated (0 or 1, unitless).
+        \param RootFrontVelocity <b>(IFunction)</b> The daily growth speed of root depth 
+            (\f$mm d^{-1}\f$. CHECK).
+        \param PartitionFraction <b>(IFunction)</b> The fraction of biomass partitioning 
+            into root (0-1, unitless).
+        \param KLModifier <b>(IFunction)</b> The modifier for KL factor which is defined as 
+            the fraction of available water able to be extracted per day, and empirically 
+            derived incorporating both plant and soil factors which limit rate of water 
+            update (0-1, unitless).
+        \param TemperatureEffect <b>(IFunction)</b> 
+            The temperature effects on root depth growth (0-1, unitless).
+        \param MaximumNConc <b>(IFunction)</b> 
+            Maximum nitrogen concentration (\f$g m^{-2}\f$. CHECK).
+        \param MinimumNConc <b>(IFunction)</b> 
+            Minimum nitrogen concentration (\f$g m^{-2}\f$. CHECK).
+        \param MaxDailyNUptake <b>(IFunction)</b> 
+            Maximum daily nitrogen update (\f$kg ha^{-1}\f$. CHECK).
+        
+        \param SenescenceRate <b>(IFunction, Optional)</b> The daily senescence rate of 
+            root length (0-1, unitless).
+            
+        \retval Length Total root length (mm).
+        \retval Depth Root depth (mm).
+        
+        <remarks>
+        
+        Potential root growth 
+        ------------------------
+         
+        Actual root growth
+        ------------------------
+        
+        Nitrogen deficit 
+        ------------------------
+        
+        </remarks>
+    */
     [Serializable]
     public class Root : BaseOrgan, BelowGround
     {
@@ -37,10 +80,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the length of the specific root.</summary>
         /// <value>The length of the specific root.</value>
         public double SpecificRootLength { get; set; }
-        /// <summary>Gets or sets the kn o3.</summary>
+        /// <summary>Gets or sets the kno3.</summary>
         /// <value>The kn o3.</value>
         public double KNO3 { get; set; }
-        /// <summary>Gets or sets the kn h4.</summary>
+        /// <summary>Gets or sets the knh4.</summary>
         /// <value>The kn h4.</value>
         public double KNH4 { get; set; }
 

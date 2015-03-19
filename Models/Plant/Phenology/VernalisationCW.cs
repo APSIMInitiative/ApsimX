@@ -57,9 +57,6 @@ namespace Models.PMF.Phen
     where \f$L_{P}\f$ is the day length (h) from \ref Models.PMF.Functions.PhotoperiodFunction.
     </remarks>
     */
-    /// <summary>
-    /// Vernalisation model
-    /// </summary>
     [Serializable]
     public class VernalisationCW : Model
     {
