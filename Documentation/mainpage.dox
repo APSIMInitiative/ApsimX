@@ -14,5 +14,6 @@ in the APSIM model.
 - \subpage pathspecification "Path Specification"
 - \subpage initialisation "Initialisation"
 - \subpage runsimulation "Run simulation"
+- \subpage events "Events"
 - \subpage tutorial "Tutorials"
 */
