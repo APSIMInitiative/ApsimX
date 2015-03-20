@@ -10,9 +10,45 @@ using Models.PMF.Functions.StructureFunctions;
 
 namespace Models.PMF
 {
-    /// <summary>
-    /// A structure model for plant
-    /// </summary>
+    /*!
+        <summary>
+        A structure model for plant
+        </summary>
+        \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
+            sowing data, e.g. population, bud number.
+        \pre A \ref Models.PMF.Organs.Leaf "Leaf" model has to exist to 
+            access leaf initialisation an number.
+        \pre A \ref Models.PMF.Phen.Phenology "Phenology" model has to exist 
+            to check whether plant is initialised.
+        \param InitialiseStage <b>(Constant)</b> The initialise stage. 
+            The primordia number, node number and stem population start to 
+            increase since initialise stage.
+        \param PrimaryBudNo <b>(Constant)</b> The primary bud number in each node. 
+            However, PrimaryBudNo is reset at sowing using sowing script 
+            with default value 1.
+            
+        \param ThermalTime <b>(IFunction)</b> The daily thermal time (<sup>o</sup>Cd).
+        \param MainStemPrimordiaInitiationRate <b>(IFunction)</b> The initiation rate 
+            of primordia in main stem (# <sup>o</sup>Cd<sup>-1</sup>).
+        \param MainStemNodeAppearanceRate <b>(IFunction)</b> The appearance rate 
+            of node in main stem (# <sup>o</sup>Cd<sup>-1</sup>).
+        \param MainStemFinalNodeNumber <b>(IFunction)</b> The maximum node number
+            in main stem (#). The maximum node is calculated by model 
+            MainStemFinalNodeNumberFunction if MainStemFinalNodeNumber is 
+            specified to MainStemFinalNodeNumberFunction.
+        \param HeightModel <b>(IFunction)</b> Plant height (mm).
+        \param BranchingRate <b>(IFunction)</b> The rate of new branching (#).
+        \param ShadeInducedBranchMortality <b>(IFunction)</b> 
+            The branch mortality induced by shading (0-1).
+        \param DroughtInducedBranchMortality <b>(IFunction)</b> 
+            The branch mortality induced by drought (0-1).
+        \param PlantMortality <b>(IFunction, Optional)</b> The plant mortality 
+            to reduce plant population.
+            
+        \retval
+        <remarks>
+        </remarks>
+    */
     [Serializable]
     [Description("Keeps Track of Plants Structural Development")]
     public class Structure : Model
