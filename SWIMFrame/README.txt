@@ -1,0 +1,2 @@
+﻿This project is a testing framework for the new SWIM code. It will be used for the duration of the FORTRAN conversion and is keep seperate from APSIM to allow for testing using the original test suite. Once the port is completed and tested it will be integrated into APSIM and this project will be removed.
+--Justin Fainges 10/3/15

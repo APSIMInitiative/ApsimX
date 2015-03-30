@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.csproj", "{5BDAA3CD-C66F-4C91-94A2-31FB58177D4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWIMFrame", "SWIMFrame\SWIMFrame.csproj", "{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = ApsimX.vsmdi
@@ -91,6 +93,16 @@ Global
 		{5BDAA3CD-C66F-4C91-94A2-31FB58177D4C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5BDAA3CD-C66F-4C91-94A2-31FB58177D4C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5BDAA3CD-C66F-4C91-94A2-31FB58177D4C}.Release|x86.ActiveCfg = Release|Any CPU
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Debug|x86.ActiveCfg = Debug|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Debug|x86.Build.0 = Debug|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Release|Any CPU.ActiveCfg = Release|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Release|Mixed Platforms.Build.0 = Release|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Release|x86.ActiveCfg = Release|x86
+		{E456ABA4-BF7B-4BE7-9C29-26E66F49922B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
