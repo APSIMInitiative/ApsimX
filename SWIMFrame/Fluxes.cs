@@ -248,8 +248,9 @@ namespace SWIMFrame
             Vector<double> t3 = daV.SubVector(0, np);
             Vector<double> t4 = daV.SubVector(1, np - 1);
 
+            //u[0] = Utility.Math.Sum(Utility.Math.Divide_Value(Utility.Math.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), Utility.Math.Add(Utility.Math.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
             u[0] = Utility.Math.Sum(Utility.Math.Divide_Value(Utility.Math.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), Utility.Math.Add(Utility.Math.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
-            da = Utility.Math.Multiply(da,da);
+            da = Utility.Math.Multiply(da, da);
             db = Utility.Math.Multiply(db, db);
             u[1] = Utility.Math.Sum(Utility.Math.Divide_Value(Utility.Math.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), Utility.Math.Add(Utility.Math.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
             return u;
