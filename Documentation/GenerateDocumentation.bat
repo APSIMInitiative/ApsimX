@@ -1,4 +1,4 @@
-    @echo off
+     @echo off
 
 rem Generate model validation and configuration documentation
 ..\Bin\UserInterface.exe CreateModelDocumentation.cs
