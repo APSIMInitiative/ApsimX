@@ -117,8 +117,6 @@ namespace Models.PMF.Organs
         #region States and variables
         /// <summary>The _ water allocation</summary>
         private double _WaterAllocation;
-        /// <summary>The n shortage</summary>
-        private double NShortage = 0;   //if an N Shoratge how Much;
         /// <summary>The biomass yesterday</summary>
         public double BiomassYesterday = 0;
         /// <summary>The _ structural fraction</summary>
@@ -276,10 +274,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets or sets the n demand.</summary>
-        /// <value>The n demand.</value>
-       // public override BiomassPoolType NDemand { get; set; }
-
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
         /// <exception cref="System.Exception">
@@ -373,7 +367,7 @@ namespace Models.PMF.Organs
         }
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {

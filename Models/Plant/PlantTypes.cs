@@ -4,8 +4,14 @@
     using Models.Soils;
     using Models.Core;
 
+    /// <summary>
+    /// An event arguments class for some events.
+    /// </summary>
     public class ModelArgs : EventArgs
     {
+        /// <summary>
+        /// The model
+        /// </summary>
         public IModel Model;
     }
 

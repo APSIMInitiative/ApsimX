@@ -1145,11 +1145,6 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-        #region Event Handelers
-
-        /// <summary>Occurs when [biomass removed].</summary>
-        public event BiomassRemovedDelegate BiomassRemoved;
-        #endregion
     }
 }
    

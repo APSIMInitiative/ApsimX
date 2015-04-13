@@ -28,10 +28,6 @@ namespace Models.Arbitrator
         [Link]
         Soils.Soil Soil = null;
 
-        /// <summary>The summary</summary>
-        [Link]
-        Summary Summary = null;
-
         /// <summary>The zone</summary>
         [Link]
         Zone zone = null;

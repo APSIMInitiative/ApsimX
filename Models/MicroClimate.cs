@@ -608,6 +608,9 @@ namespace Models
             /// <summary>The crop2</summary>
             public ICrop2 Crop2;
 
+            /// <summary>
+            /// The canopy
+            /// </summary>
             public ICanopy Canopy;
 
             /// <summary>The lai</summary>

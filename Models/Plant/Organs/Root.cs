@@ -77,8 +77,6 @@ namespace Models.PMF.Organs
         #region States
         /// <summary>The kgha2gsm</summary>
         private const double kgha2gsm = 0.1;
-        /// <summary>The sw supply</summary>
-        private double[] SWSupply = null;
         /// <summary>The uptake</summary>
         private double[] Uptake = null;
         /// <summary>The delta n h4</summary>
@@ -87,8 +85,6 @@ namespace Models.PMF.Organs
         private double[] DeltaNO3;
         /// <summary>The _ senescence rate</summary>
         private double _SenescenceRate = 0;
-        /// <summary>The _ nuptake</summary>
-        private double _Nuptake = 0;
         /// <summary>The Nuptake</summary>
         private double[] NitUptake = null;
 
@@ -115,12 +111,10 @@ namespace Models.PMF.Organs
         protected override void Clear()
         {
             base.Clear();
-            SWSupply = null;
             Uptake = null;
             DeltaNH4 = null;
             DeltaNO3 = null;
             _SenescenceRate = 0;
-            _Nuptake = 0;
             Length = 0;
             Depth = 0;
 
@@ -159,17 +153,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The soil crop</summary>
         private SoilCrop soilCrop;
-
-        /// <summary>Gets the n uptake.</summary>
-        /// <value>The n uptake.</value>
-      /*  [Units("kg/ha")]
-        public double NUptake
-        {
-            get
-            {
-                return _Nuptake / kgha2gsm;
-            }
-        } */
 
         /// <summary>Gets the l ldep.</summary>
         /// <value>The l ldep.</value>
@@ -212,6 +195,9 @@ namespace Models.PMF.Organs
 
         #region Functions
 
+        /// <summary>
+        /// Gets or sets the nuptake supply.
+        /// </summary>
         public double NuptakeSupply { get; set; }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -323,7 +309,8 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
-        /// <param name="Amount">The amount.</param>
+        /// <param name="NO3NAmount">The NO3NAmount.</param>
+        /// <param name="NH4NAmount">The NH4NAmount.</param>
         public override void DoNitrogenUptake(double[] NO3NAmount, double[] NH4NAmount)
         {
             // Send the delta water back to SoilN that we're going to uptake.
@@ -448,7 +435,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {

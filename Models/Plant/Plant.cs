@@ -40,7 +40,6 @@ namespace Models.PMF
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
         public Root Root = null;
-        /// <summary>The base function class</summary>
 
         #endregion
 

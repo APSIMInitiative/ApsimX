@@ -11,7 +11,6 @@ namespace SWIMFrame
     public class Fluxes
     {
         public static FluxTable ft = new FluxTable();
-        SoilProps sp;
         static int mx = 100; // max no. of phi values
         static int i, j, ni, ns, nt, nu, nit, nfu, nphif, ip, nfs, ii, ie;
         static int[] iphif = new int[mx];
@@ -221,7 +220,6 @@ namespace SWIMFrame
         private static double[] odef(int n1, int n2, double[] aK, double[] hpK)
         {
             double[] u = new double[2];
-            int m = 4;
             int np;
             double[] da = new double[n2 - n1 + 1];
             double[] db = new double[n2 - n1];

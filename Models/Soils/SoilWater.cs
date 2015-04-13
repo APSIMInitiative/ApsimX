@@ -18,11 +18,11 @@ using Models.Interfaces;
 namespace Models.Soils
 {
 
-    ///<summary>
+    /// <summary>
     /// .NET port of the Fortran SoilWat model
     /// Ported by Shaun Verrall Mar 2011
     /// Extended by Eric Zurcher Mar 2012
-    ///</summary>
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
@@ -47,14 +47,33 @@ namespace Models.Soils
 
         //different evap for summer and winter
         //summer
+
+        /// <summary>
+        /// Gets or sets the summer date.
+        /// </summary>
+        /// <value>
+        /// The summer date.
+        /// </value>
         [Description("Start Date for Summer evaporation (dd-mmm)")]
         public string SummerDate { get; set; }
 
+        /// <summary>
+        /// Gets or sets the summer u.
+        /// </summary>
+        /// <value>
+        /// The summer u.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 40.0)]
         [Units("mm")]
         [Description("Summer: Cummulative Evap for end of stage 1 soil evaporation (U)")]
         public double SummerU { get; set; }
 
+        /// <summary>
+        /// Gets or sets the summer cona.
+        /// </summary>
+        /// <value>
+        /// The summer cona.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Description("Summer: Stage 2 drying coefficient (Cona)")]
         public double SummerCona { get; set; }
@@ -64,14 +83,32 @@ namespace Models.Soils
 
         //winter
 
+        /// <summary>
+        /// Gets or sets the winter date.
+        /// </summary>
+        /// <value>
+        /// The winter date.
+        /// </value>
         [Description("Start Date for Winter evaporation (dd-mmm)")]
         public string WinterDate { get; set; }
 
+        /// <summary>
+        /// Gets or sets the winter u.
+        /// </summary>
+        /// <value>
+        /// The winter u.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("mm")]
         [Description("Winter: Cummulative Evap for end of stage 1 soil evaporation (U)")]
         public double WinterU { get; set; }
 
+        /// <summary>
+        /// Gets or sets the winter cona.
+        /// </summary>
+        /// <value>
+        /// The winter cona.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Description("Winter: Stage 2 drying coefficient (Cona)")]
         public double WinterCona { get; set; }
@@ -80,14 +117,32 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Gets or sets the diffus constant.
+        /// </summary>
+        /// <value>
+        /// The diffus constant.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Description("Diffusivity constant for soil texture")]
         public double DiffusConst { get; set; }
 
+        /// <summary>
+        /// Gets or sets the diffus slope.
+        /// </summary>
+        /// <value>
+        /// The diffus slope.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Description("Diffusivity slope for diffusivity/soil water content relationship")]
         public double DiffusSlope { get; set; }
 
+        /// <summary>
+        /// Gets or sets the salb.
+        /// </summary>
+        /// <value>
+        /// The salb.
+        /// </value>
         [Description("Bare soil albedo")]
         public double Salb { get; set; }
 
@@ -96,16 +151,34 @@ namespace Models.Soils
         //Runoff
 
 
+        /// <summary>
+        /// Gets or sets the c n2 bare.
+        /// </summary>
+        /// <value>
+        /// The c n2 bare.
+        /// </value>
         [Bounds(Lower = 1.0, Upper = 100.0)]
         [Units("0-100")]
         [Description("Runoff Curve Number of bare soil with average moisture (cn2_bare)")]
         public double CN2Bare { get; set; }
 
+        /// <summary>
+        /// Gets or sets the cn red.
+        /// </summary>
+        /// <value>
+        /// The cn red.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("0-100")]
         [Description("Maximum reduction in cn2_bare due to cover (cn_red)")]
         public double CNRed { get; set; }
 
+        /// <summary>
+        /// Gets or sets the cn cov.
+        /// </summary>
+        /// <value>
+        /// The cn cov.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Cover at which cn_red occurs (cn_cov)")]
@@ -115,16 +188,34 @@ namespace Models.Soils
 
         //Lateral flow
 
+        /// <summary>
+        /// Gets or sets the slope.
+        /// </summary>
+        /// <value>
+        /// The slope.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [Description("Lateral Flow: Slope of Catchment Area")]
         public double slope { get; set; }
 
+        /// <summary>
+        /// Gets or sets the discharge_width.
+        /// </summary>
+        /// <value>
+        /// The discharge_width.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m")]
         [Description("Lateral Flow: Basal width of downslope boundary of the catchment")]
         public double discharge_width { get; set; }
 
+        /// <summary>
+        /// Gets or sets the catchment_area.
+        /// </summary>
+        /// <value>
+        /// The catchment_area.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]     //1.0e8F = 100000000
         [Units("m^2")]
         [Description("Lateral Flow: Catchment Area")]
@@ -134,6 +225,12 @@ namespace Models.Soils
 
         //Ponding
 
+        /// <summary>
+        /// Gets or sets the max_pond.
+        /// </summary>
+        /// <value>
+        /// The max_pond.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
         [Description("Maximum Ponding Depth (eg. Rice Paddy)")]
@@ -170,10 +267,9 @@ namespace Models.Soils
         /// Thicknesses specified in "SoilWater" node of GUI (in mm as double).
         /// This is the NON standard layer thickness.
         /// </summary>
-        [Units("mm")]
-        /// <summary>
-        /// Thicknesses specified in SoilWater node of GUI
-        /// </summary>
+        /// <value>
+        /// The thickness.
+        /// </value>
         public double[] Thickness { get; set; }
 
 
@@ -182,6 +278,9 @@ namespace Models.Soils
         /// This "Depth" variable is only needed for the "Depth" column in the "SoilWater" node of the GUI.
         /// Just converts back and forth between "Depth" (in cm as string) AND "Thickness" (in mm as double).
         /// </summary>
+        /// <value>
+        /// The depth.
+        /// </value>
         [XmlIgnore]
         [Units("cm")]
         [Description("Depth")]
@@ -204,6 +303,9 @@ namespace Models.Soils
         /// At thicknesses specified in "SoilWater" node of GUI.
         /// Use Soil.SWCON for SWCON in standard thickness
         /// </summary>
+        /// <value>
+        /// The swcon.
+        /// </value>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
         [Description("SWCON")]
@@ -215,6 +317,9 @@ namespace Models.Soils
         /// At thicknesses specified in "SoilWater" node of GUI.
         /// Use Soil.KLAT for KLAT in standard thickness
         /// </summary>
+        /// <value>
+        /// The klat.
+        /// </value>
         [Bounds(Lower = 0, Upper = 1.0e3F)] //1.0e3F = 1000
         [Units("mm/d")]
         [Description("KLAT")]
@@ -235,14 +340,18 @@ namespace Models.Soils
 
         #region Links
 
-        /// <summary>The clock</summary>
+        /// <summary>
+        /// The clock
+        /// </summary>
         [Link]
         private Clock Clock = null;
 
 
-        /// <summary>The weather</summary>
+        /// <summary>
+        /// The weather
+        /// </summary>
         [Link]
-        Weather Weather;
+        private Weather Weather = null;
 
 
         ////needed for "interception"
@@ -250,7 +359,9 @@ namespace Models.Soils
         //MicroClimate MicroClimate;
 
 
-        /// <summary>The soil</summary>
+        /// <summary>
+        /// The soil
+        /// </summary>
         [Link]
         private Soil Soil = null;
 
@@ -261,18 +372,24 @@ namespace Models.Soils
 
 
         //Paddock is needed to find all the Crops so you can work out Canopy data.
-        /// <summary>The paddock</summary>
+        /// <summary>
+        /// The paddock
+        /// </summary>
         [Link]
-        Simulation paddock;
+        private Simulation paddock = null;
 
 
         //Needed for SurfaceCover
-        /// <summary>The surface om</summary>
+        /// <summary>
+        /// The surface om
+        /// </summary>
         [Link]
         SurfaceOrganicMatter SurfaceOM = null;
 
 
-        /// <summary>The summary</summary>
+        /// <summary>
+        /// The summary
+        /// </summary>
         [Link]
         ISummary Summary = null;
 
@@ -284,169 +401,184 @@ namespace Models.Soils
 
         #region Module Constants (Default Values) (NOT specified in GUI)
 
+        /// <summary>
+        /// Temperature below which eeq decreases
+        /// </summary>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("oC")]
-        /// <summary>
-        ///Temperature below which eeq decreases 
-        /// </summary>
-        public double min_crit_temp {get; set;}
+        public double min_crit_temp { get; set; }
 
 
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 50.0)]
-        [Units("oC")]
         /// <summary>
         /// Temperature above which eeq increases
         /// </summary>
-        public double max_crit_temp {get; set;}
-
-
+        /// <value>
+        /// The max_crit_temp.
+        /// </value>
         [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Bounds(Lower = 0.0, Upper = 50.0)]
+        [Units("oC")]
+        public double max_crit_temp { get; set; }
+
+
         /// <summary>
         /// Maximum bare ground soil albedo
         /// </summary>
-        public double max_albedo {get; set;}
-
-
+        /// <value>
+        /// The max_albedo.
+        /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        public double max_albedo { get; set; }
+
+
         /// <summary>
-        ///Factor to convert 'A' to coefficient in Adam's type residue effect on Eos 
+        /// Factor to convert 'A' to coefficient in Adam's type residue effect on Eos
         /// </summary>
-        public double A_to_evap_fact {get; set;}
-
-
+        /// <value>
+        /// The a_to_evap_fact.
+        /// </value>
         [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Units("0-10")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("0-1")]
+        public double A_to_evap_fact { get; set; }
+
+
         /// <summary>
         /// Coefficient in cover Eos reduction equation
         /// </summary>
-        public double canopy_eos_coef {get; set;}
-
-
+        /// <value>
+        /// The canopy_eos_coef.
+        /// </value>
         [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Units("0-10")]
+        public double canopy_eos_coef { get; set; }
+
+
         /// <summary>
         /// Critical sw ratio in top layer below which stage 2 evaporation occurs
         /// </summary>
-        public double sw_top_crit {get; set;}
-
-
+        /// <value>
+        /// The sw_top_crit.
+        /// </value>
         [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        [Units("mm")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("0-1")]
+        public double sw_top_crit { get; set; }
+
+
         /// <summary>
         /// Upper limit of sumes1
         /// </summary>
-        public double sumes1_max {get; set;}
-
-
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
+        public double sumes1_max { get; set; }
+
+
         /// <summary>
         /// Upper limit of sumes2
         /// </summary>
-        public double sumes2_max {get; set;}
-
-
         [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Bounds(Lower = 0.0, Upper = 1000.0)]
+        [Units("mm")]
+        public double sumes2_max { get; set; }
+
+
         /// <summary>
         /// Efficiency of moving solute with unsaturated flow
         /// </summary>
-        public double[] solute_flow_eff {get; set;}
-
-
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        public double[] solute_flow_eff { get; set; }
+
+
         /// <summary>
         /// Efficiency of moving solute with flux (saturated flow)
         /// </summary>
-        public double[] solute_flux_eff {get; set;}
-
-
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        public double[] solute_flux_eff { get; set; }
+
+
         /// <summary>
         /// Gradient due to hydraulic differentials
         /// </summary>
-        public double gravity_gradient {get; set;}
-
-
         [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 3.0)]
-        [Units("g/cm^3")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("0-1")]
+        public double gravity_gradient { get; set; }
+
+
         /// <summary>
         /// Specific bulk density
         /// </summary>
-        public double specific_bd {get; set;}
-
-
         [XmlIgnore]
-        [Bounds(Lower = 1.0, Upper = 1000.0)]
-        [Units("mm")]
+        [Bounds(Lower = 0.0, Upper = 3.0)]
+        [Units("g/cm^3")]
+        public double specific_bd { get; set; }
+
+
         /// <summary>
         /// Hydrologically effective depth for runoff
         /// </summary>
-        public double hydrol_effective_depth {get; set;}
-
-
         [XmlIgnore]
+        [Bounds(Lower = 1.0, Upper = 1000.0)]
+        [Units("mm")]
+        public double hydrol_effective_depth { get; set; }
+
+
         /// <summary>
         /// Names of all possible mobile solutes
         /// </summary>
-        public string[] mobile_solutes {get; set;}
-
-
         [XmlIgnore]
+        public string[] mobile_solutes { get; set; }
+
+
         /// <summary>
         /// Names of all possible immobile solutes
         /// </summary>
-        public string[] immobile_solutes {get; set;}
-
-
         [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        public string[] immobile_solutes { get; set; }
+
+
         /// <summary>
         /// Canopy factors for cover runoff effect
         /// </summary>
-        public double[] canopy_fact {get; set;}
-
-
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 100000.0)]
-        [Units("mm")]
-        /// <summary>
-        /// Heights for canopy factors
-        /// </summary>
-        public double[] canopy_fact_height {get; set;}
-
-
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
+        public double[] canopy_fact { get; set; }
+
+
+        /// <summary>
+        /// Heights for canopy factors
+        /// </summary>
+        [XmlIgnore]
+        [Bounds(Lower = 0.0, Upper = 100000.0)]
+        [Units("mm")]
+        public double[] canopy_fact_height { get; set; }
+
+
         /// <summary>
         /// Default canopy factor in absence of height
         /// </summary>
-        public double canopy_fact_default {get; set;}
-
-
         [XmlIgnore]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("0-1")]
+        public double canopy_fact_default { get; set; }
+
+
         /// <summary>
-        ///Actual soil evaporation model being used 
+        /// Actual soil evaporation model being used
         /// </summary>
-        public string act_evap_method {get; set;}  
+        [XmlIgnore]
+        public string act_evap_method { get; set; }  
  
 
 
@@ -480,6 +612,9 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SoilWater"/> class.
+        /// </summary>
         public SoilWater()
             {
 
@@ -552,13 +687,19 @@ namespace Models.Soils
         /// <summary>
         /// Effective potential evapotranspiration
         /// </summary>
+        /// <value>
+        /// The eo.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Eo { get{return surface.Eo;} }                     
+        public double Eo { get{return surface.Eo;} }
 
         /// <summary>
-        /// Pot evap after modification for green cover & residue wt
+        /// Gets the eos.
         /// </summary>
+        /// <value>
+        /// The eos.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double Eos { get{return surface.Eos;} }
@@ -567,6 +708,9 @@ namespace Models.Soils
         /// <summary>
         /// Total es
         /// </summary>
+        /// <value>
+        /// The es.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double Es { get { return surface.Es; } }
@@ -574,6 +718,9 @@ namespace Models.Soils
         /// <summary>
         /// time after 2nd-stage soil evaporation begins (d)
         /// </summary>
+        /// <value>
+        /// The t.
+        /// </value>
         [XmlIgnore]
         [Units("d")]
         public double t
@@ -598,8 +745,11 @@ namespace Models.Soils
             }
 
         /// <summary>
-        /// New cn2 after modification for crop cover & residue cover
+        /// Gets the cn2_new.
         /// </summary>
+        /// <value>
+        /// The cn2_new.
+        /// </value>
         [XmlIgnore]
         public double cn2_new
             {
@@ -624,26 +774,41 @@ namespace Models.Soils
         /// <summary>
         /// Drainage rate from bottom layer
         /// </summary>
+        /// <value>
+        /// The drainage.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double Drainage { get{return SoilObject.Drainage;} }
 
 
 
-        /// <summary>Drainage rate from bottom layer</summary>
-        /// <value>The leach n o3.</value>
+        /// <summary>
+        /// Drainage rate from bottom layer
+        /// </summary>
+        /// <value>
+        /// The leach n o3.
+        /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double LeachNO3 { get { return SoilObject.LeachNO3; } }         //! Leaching from bottom layer (kg/ha) // 
 
-        /// <summary>Drainage rate from bottom layer</summary>
-        /// <value>The leach n h4.</value>
+        /// <summary>
+        /// Drainage rate from bottom layer
+        /// </summary>
+        /// <value>
+        /// The leach n h4.
+        /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double LeachNH4 { get { return SoilObject.LeachNH4; } }         //! Leaching from bottom layer (kg/ha) // 
 
-        /// <summary>Drainage rate from bottom layer</summary>
-        /// <value>The leach urea.</value>
+        /// <summary>
+        /// Drainage rate from bottom layer
+        /// </summary>
+        /// <value>
+        /// The leach urea.
+        /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double LeachUrea { get { return SoilObject.LeachUrea; } }         //! Leaching from bottom layer (kg/ha) // 
@@ -654,20 +819,29 @@ namespace Models.Soils
         /// <summary>
         /// Infiltration into top layer
         /// </summary>
+        /// <value>
+        /// The infiltration.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Infiltration { get{return surface.Infiltration;} }     
+        public double Infiltration { get{return surface.Infiltration;} }
 
         /// <summary>
         /// Runoff from top layer
         /// </summary>
+        /// <value>
+        /// The runoff.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Runoff { get{return surface.Runoff;} }           
-        
+        public double Runoff { get{return surface.Runoff;} }
+
         /// <summary>
         /// Evaporation from the surface of the pond
         /// </summary>
+        /// <value>
+        /// The pond_evap.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double pond_evap
@@ -688,6 +862,9 @@ namespace Models.Soils
         /// <summary>
         /// Surface water ponding depth
         /// </summary>
+        /// <value>
+        /// The pond.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double pond
@@ -706,9 +883,12 @@ namespace Models.Soils
             }
 
         /// <summary>
-        /// Water table depth 
+        /// Water table depth
         /// (depth below the ground surface of the first saturated layer)
         /// </summary>
+        /// <value>
+        /// The water table.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double WaterTable
@@ -719,9 +899,12 @@ namespace Models.Soils
 
 
         /// <summary>
-        /// Extractable Soil Water 
-        /// (sw - ll15) of each layer summed over the profile. 
+        /// Extractable Soil Water
+        /// (sw - ll15) of each layer summed over the profile.
         /// </summary>
+        /// <value>
+        /// The esw.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double ESW
@@ -729,7 +912,7 @@ namespace Models.Soils
 
 
 
-    
+
 
         /// <summary>
         /// Layer that irrigation went into.
@@ -737,8 +920,11 @@ namespace Models.Soils
         /// It is helpful to see exactly which layer that depth put the irrigation into.
         /// layer = 0 means, top layer but via a surface irrigation (depth = 0) (NOT subsurface)
         /// layer = 1 means, top layer but via a subsurface irrigation
-        /// layer > 1 means that layer (one based not zero based)
+        /// layer &gt; 1 means that layer (one based not zero based)
         /// </summary>
+        /// <value>
+        /// The irrig layer.
+        /// </value>
         [XmlIgnore]
         [Units("")]
         public int IrrigLayer
@@ -753,6 +939,12 @@ namespace Models.Soils
         #region Outputs (Layered)
 
 
+        /// <summary>
+        /// Gets the dlayer.
+        /// </summary>
+        /// <value>
+        /// The dlayer.
+        /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
@@ -763,16 +955,34 @@ namespace Models.Soils
 
         //ARRAYS IN MILLIMETERS
 
+        /// <summary>
+        /// Gets the sa TMM.
+        /// </summary>
+        /// <value>
+        /// The sa TMM.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] SATmm
         { get { return SoilObject.sat_dep; } }
 
+        /// <summary>
+        /// Gets the du LMM.
+        /// </summary>
+        /// <value>
+        /// The du LMM.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] DULmm
         { get { return SoilObject.dul_dep; } }
 
+        /// <summary>
+        /// Gets or sets the s WMM.
+        /// </summary>
+        /// <value>
+        /// The s WMM.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] SWmm
@@ -786,11 +996,23 @@ namespace Models.Soils
             set { SetWater_mm(value); }  //TODO: remove this later, have manager scripts directly use SoilWater.SetWater_mm(amount) instead
             }
 
+        /// <summary>
+        /// Gets the l L15MM.
+        /// </summary>
+        /// <value>
+        /// The l L15MM.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] LL15mm
         { get { return SoilObject.ll15_dep; } }
 
+        /// <summary>
+        /// Gets the airdr ymm.
+        /// </summary>
+        /// <value>
+        /// The airdr ymm.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] AIRDRYmm
@@ -801,18 +1023,36 @@ namespace Models.Soils
 
         //ARRAYS AS FRACTIONS
 
+        /// <summary>
+        /// Gets the sat.
+        /// </summary>
+        /// <value>
+        /// The sat.
+        /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         public double[] SAT
         { get { return SoilObject.sat; } }
 
+        /// <summary>
+        /// Gets the dul.
+        /// </summary>
+        /// <value>
+        /// The dul.
+        /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         public double[] DUL
         { get { return SoilObject.dul; } }
 
+        /// <summary>
+        /// Gets or sets the sw.
+        /// </summary>
+        /// <value>
+        /// The sw.
+        /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
@@ -822,12 +1062,24 @@ namespace Models.Soils
             set { SetWater_frac(value); } //TODO: remove this later, have manager scripts directly use SoilWater.SetWater_frac(amount) instead
             }
 
+        /// <summary>
+        /// Gets the l L15.
+        /// </summary>
+        /// <value>
+        /// The l L15.
+        /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         public double[] LL15
         { get { return SoilObject.ll15; } }
 
+        /// <summary>
+        /// Gets the airdry.
+        /// </summary>
+        /// <value>
+        /// The airdry.
+        /// </value>
         [XmlIgnore]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
@@ -836,16 +1088,34 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Gets the flow.
+        /// </summary>
+        /// <value>
+        /// The flow.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] flow
         { get { return SoilObject.flow; } }
 
+        /// <summary>
+        /// Gets the flux.
+        /// </summary>
+        /// <value>
+        /// The flux.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] flux
         { get { return SoilObject.flux; } }
 
+        /// <summary>
+        /// Gets the outflow_lat.
+        /// </summary>
+        /// <value>
+        /// The outflow_lat.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] outflow_lat
@@ -856,16 +1126,34 @@ namespace Models.Soils
 
         //DELTA ARRAY FOR A SOLUTE
 
+        /// <summary>
+        /// Gets the flow_no3.
+        /// </summary>
+        /// <value>
+        /// The flow_no3.
+        /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] flow_no3
         { get { return SoilObject.GetFlowArrayForASolute("NO3"); } }
 
+        /// <summary>
+        /// Gets the flow_nh4.
+        /// </summary>
+        /// <value>
+        /// The flow_nh4.
+        /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] flow_nh4
         { get { return SoilObject.GetFlowArrayForASolute("NH4"); } }
 
+        /// <summary>
+        /// Gets the flow_urea.
+        /// </summary>
+        /// <value>
+        /// The flow_urea.
+        /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] flow_urea
@@ -886,6 +1174,9 @@ namespace Models.Soils
 
         #region Reset
 
+        /// <summary>
+        /// Resets this instance.
+        /// </summary>
         public void Reset()
             {
             Summary.WriteMessage(this, "Resetting Soil Water Balance");
@@ -904,6 +1195,11 @@ namespace Models.Soils
         #region Tillage
 
 
+        /// <summary>
+        /// Tillages the specified default tillage name.
+        /// </summary>
+        /// <param name="DefaultTillageName">Default name of the tillage.</param>
+        /// <exception cref="ApsimXException"></exception>
         public void Tillage(string DefaultTillageName)
             {
             //****************
@@ -968,6 +1264,11 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Tillages the specified data.
+        /// </summary>
+        /// <param name="Data">The data.</param>
+        /// <exception cref="ApsimXException"></exception>
         public void Tillage(TillageType Data)
             {
             //*     ===========================================================
@@ -1037,6 +1338,12 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Writes the tillage to summary file.
+        /// </summary>
+        /// <param name="TillageName">Name of the tillage.</param>
+        /// <param name="CnReduction">The cn reduction.</param>
+        /// <param name="CnCumWater">The cn cum water.</param>
         private void WriteTillageToSummaryFile(string TillageName, double CnReduction, double CnCumWater)
             {
             //sv- write what we are doing to the summary file.
@@ -1053,6 +1360,11 @@ namespace Models.Soils
 
         #region Irrigation
 
+        /// <summary>
+        /// Called when [irrigated].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="IrrigationData">The irrigation data.</param>
         [EventSubscribe("Irrigated")]
         private void OnIrrigated(object sender, Models.Soils.IrrigationApplicationType IrrigationData)
             {
@@ -1103,6 +1415,10 @@ namespace Models.Soils
         #region Set Max Pond (change depth of pond during a simulation)
 
 
+        /// <summary>
+        /// Sets the maximum pond.
+        /// </summary>
+        /// <param name="NewDepth">The new depth.</param>
         public void SetMaxPond(double NewDepth)
             {
             SoilObject.max_pond = NewDepth;
@@ -1120,6 +1436,10 @@ namespace Models.Soils
         #region Set WaterTable
 
 
+        /// <summary>
+        /// Sets the water table.
+        /// </summary>
+        /// <param name="InitialDepth">The initial depth.</param>
         public void SetWaterTable(double InitialDepth)
             {
             SoilObject.SetWaterTable(InitialDepth);
@@ -1134,13 +1454,17 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Sets the water_mm.
+        /// </summary>
+        /// <param name="New_SW_dep">The new_ s w_dep.</param>
         public void SetWater_mm(double[] New_SW_dep)
             {
             SoilObject.SetWater_mm(New_SW_dep); 
             }
 
         /// <summary>
-        /// 
+        /// Sets the s WMM.
         /// </summary>
         /// <param name="Layer">Zero Based Layer Number</param>
         /// <param name="NewSWmm">New value for SWmm for the specified Layer</param>
@@ -1150,6 +1474,10 @@ namespace Models.Soils
             }
 
 
+        /// <summary>
+        /// Sets the water_frac.
+        /// </summary>
+        /// <param name="New_SW">The new_ sw.</param>
         public void SetWater_frac(double[] New_SW)
             {
             SoilObject.SetWater_frac(New_SW); 
@@ -1157,6 +1485,12 @@ namespace Models.Soils
 
 
         //TODO: Change these delta properties into methods and change the manager scripts to call the methods instead.
+        /// <summary>
+        /// Sets the dlt_sw_dep.
+        /// </summary>
+        /// <value>
+        /// The dlt_sw_dep.
+        /// </value>
         [XmlIgnore]
         [Units("mm")]
         public double[] dlt_sw_dep
@@ -1167,6 +1501,12 @@ namespace Models.Soils
                 }
             }
 
+        /// <summary>
+        /// Sets the DLT_SW.
+        /// </summary>
+        /// <value>
+        /// The DLT_SW.
+        /// </value>
         [XmlIgnore]
         [Units("0-1")]
         public double[] dlt_sw
@@ -1179,6 +1519,10 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Called when [water changed].
+        /// </summary>
+        /// <param name="WaterChanged">The water changed.</param>
         [EventSubscribe("WaterChanged")]
         private void OnWaterChanged(WaterChangedType WaterChanged)
             {
@@ -1216,15 +1560,27 @@ namespace Models.Soils
 
 
         //Constants
+        /// <summary>
+        /// The constants
+        /// </summary>
         private Constants constants;
 
 
         //Surface
+        /// <summary>
+        /// The surface factory
+        /// </summary>
         private SurfaceFactory surfaceFactory;
+        /// <summary>
+        /// The surface
+        /// </summary>
         private Surface surface;
 
 
         //Soil
+        /// <summary>
+        /// The soil object
+        /// </summary>
         private SoilWaterSoil SoilObject;
 
 
@@ -1244,18 +1600,30 @@ namespace Models.Soils
         #region Daily Input (Data Variables)
 
         //Met 
+        /// <summary>
+        /// The met
+        /// </summary>
         private MetData met;
 
 
         //Irrigation
+        /// <summary>
+        /// The irrig
+        /// </summary>
         private IrrigData irrig;
 
 
         //Canopy data from all the Crops in this Paddock.
+        /// <summary>
+        /// The canopy
+        /// </summary>
         private CanopyData canopy;
 
 
         //SurfaceCover
+        /// <summary>
+        /// The surface cover
+        /// </summary>
         private SurfaceCoverData surfaceCover;
 
 
@@ -1269,12 +1637,18 @@ namespace Models.Soils
 
         //Runon can be specified in a met file or sparse data file or manager script
         //[Input(IsOptional = true)]
+        /// <summary>
+        /// The runon
+        /// </summary>
         [Units("mm/d")]
         private double runon;      //! external run-on of H2O (mm/d)
 
 
         //inflow_lat can be specified in a met file or sparse data file or manager script
         //[Input(IsOptional = true)]
+        /// <summary>
+        /// The inflow_lat
+        /// </summary>
         [Units("mm")]
         private double[] inflow_lat;       //! inflowing lateral water
 
@@ -1284,6 +1658,9 @@ namespace Models.Soils
         //used in runoff and in infilitration calculation
 
         //[Input(IsOptional = true)]
+        /// <summary>
+        /// The interception
+        /// </summary>
         [Units("mm")]
         private double interception;      //! canopy interception loss (mm)
 
@@ -1294,6 +1671,9 @@ namespace Models.Soils
 
         //residueinterception is only used in ResiduesTrial.apsimx
         //[Input(IsOptional = true)]
+        /// <summary>
+        /// The residueinterception
+        /// </summary>
         [Units("mm")]
         public double residueinterception;     //residue interception loss (mm)
 
@@ -1306,6 +1686,9 @@ namespace Models.Soils
         #region Get Variables from other Modules
 
 
+        /// <summary>
+        /// Gets the todays optional variables.
+        /// </summary>
         private void GetTodaysOptionalVariables()
             {
             //zero to get rid of yesterdays value in case there isn't one none today.
@@ -1336,6 +1719,9 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Gets the todays canopy data.
+        /// </summary>
         private void GetTodaysCanopyData()
             {
             //private void soilwat2_get_crop_variables()
@@ -1398,6 +1784,9 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Gets the todays surface cover.
+        /// </summary>
         private void GetTodaysSurfaceCover()
             {
             surfaceCover.ZeroSurfaceCover();
@@ -1409,6 +1798,9 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Gets the todays solute amounts.
+        /// </summary>
         private void GetTodaysSoluteAmounts()
             {
             //private void soilwat2_get_solute_variables()
@@ -1462,6 +1854,11 @@ namespace Models.Soils
 
         //ToDo: Need to work out what the NewSolute event will be.
 
+        /// <summary>
+        /// Called when [new solute].
+        /// </summary>
+        /// <param name="NewSolutes">The new solutes.</param>
+        /// <exception cref="ApsimXException">No solute mobility information for  + name +  , please specify as mobile or immobile in the SoilWater ini file.</exception>
         [EventSubscribe("NewSolute")]
         private void OnNewSolute(NewSoluteType NewSolutes)
         {
@@ -1510,6 +1907,12 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>
+        /// Positions the in character array.
+        /// </summary>
+        /// <param name="Name">The name.</param>
+        /// <param name="NameList">The name list.</param>
+        /// <returns></returns>
         private int PositionInCharArray(string Name, string[] NameList)
         {
             //!+ Purpose
@@ -1531,6 +1934,9 @@ namespace Models.Soils
         #region Clock Event Handlers
 
 
+        /// <summary>
+        /// Saves the module constants.
+        /// </summary>
         private void SaveModuleConstants()
             {
             constants = new Constants();
@@ -1562,6 +1968,9 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Called when [loaded].
+        /// </summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
@@ -1569,6 +1978,14 @@ namespace Models.Soils
         }
 
 
+        /// <summary>
+        /// Called when [simulation commencing].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">
+        /// SoilWater module has detected that the Soil has no layers.
+        /// </exception>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -1612,6 +2029,11 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Called when [new weather data available].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
         {
@@ -1631,6 +2053,11 @@ namespace Models.Soils
 
 
 
+        /// <summary>
+        /// Called when [do soil water movement].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
@@ -1795,9 +2222,15 @@ namespace Models.Soils
         #region Send Nitrogen Changed Event
 
 
+        /// <summary>
+        /// Occurs when [nitrogen changed].
+        /// </summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
 
+        /// <summary>
+        /// Sends the nitrogen changed event.
+        /// </summary>
         private void SendNitrogenChangedEvent()
             {
 

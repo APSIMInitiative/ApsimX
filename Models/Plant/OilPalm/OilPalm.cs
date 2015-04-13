@@ -771,9 +771,6 @@ namespace Models.PMF.OilPalm
                 Harvesting.Invoke(this, new EventArgs());
         }
 
-        /// <summary>Occurs when [new crop].</summary>
-        public event NewCropDelegate NewCrop;
-
         /// <summary>Occurs when [sowing].</summary>
         public event EventHandler Sowing;
 
@@ -828,7 +825,7 @@ namespace Models.PMF.OilPalm
         }
 
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <param name="soilstate">soil state</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
@@ -836,7 +833,7 @@ namespace Models.PMF.OilPalm
         }
 
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <param name="soilstate">soil state</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
@@ -1502,6 +1499,8 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Sizes the function.</summary>
         /// <param name="Age">The age.</param>
+        /// <param name="FMA">FMA</param>
+        /// <param name="GrowthDuration">Groth duration</param>
         /// <returns></returns>
         protected double SizeFunction(double Age, double FMA, double GrowthDuration)
         {

@@ -198,7 +198,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        private new void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (Plant.IsEmerged)
             {
@@ -206,11 +206,12 @@ namespace Models.PMF.Organs
                     _LAI = LAIFunction.Value;
             }
         }
+
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        private new void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
                         
         }

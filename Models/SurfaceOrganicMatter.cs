@@ -1583,26 +1583,6 @@
             Tillage(data);
         }
 
-        /// <summary>Adds the specified type.</summary>
-        /// <param name="type">The type.</param>
-        /// <param name="mass">The mass.</param>
-        /// <param name="N">The n.</param>
-        /// <param name="name">The name.</param>
-        //public void Add(string type, double mass, double N, string name)
-        //{
-        //    Add_surfaceomType data = new Add_surfaceomType();
-        //    if (name == null)
-        //        data.name = type;
-        //    else
-        //        data.name = name;
-        //    data.type = type;
-        //    data.mass = mass;
-        //    data.n = N;
-
-
-        //    AddSurfom(data);
-        //}
-
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

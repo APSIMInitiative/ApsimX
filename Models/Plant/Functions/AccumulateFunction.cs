@@ -42,6 +42,7 @@ namespace Models.PMF.Functions
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
         /// <param name="sender">Plant.cs</param>
+        /// <param name="e">Event arguments</param>
         [EventSubscribe("PostPhenology")]
         private void PostPhenology(object sender, EventArgs e)
         {

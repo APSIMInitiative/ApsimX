@@ -354,9 +354,6 @@ namespace Models.PMF.OldPlant
         [Link]
         Clock Clock = null;
 
-        /// <summary>Occurs when [new canopy].</summary>
-        public event NewCanopyDelegate NewCanopy;
-        
         /// <summary>Occurs when [crop ending].</summary>
         public event EventHandler<ModelArgs> PlantEnding;
 
@@ -1252,7 +1249,7 @@ namespace Models.PMF.OldPlant
         #endregion
 
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="zones"></param>
+        /// <param name="soilstate">Soil state</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
@@ -1280,7 +1277,7 @@ namespace Models.PMF.OldPlant
                 return null;
         }
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="zones"></param>
+        /// <param name="soilstate">soil state</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
@@ -1316,6 +1313,7 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
+        /// <param name="info">zone information</param>
         public void SetSWUptake(List<ZoneWaterAndN> info)
         {
             Root.ArbitratorSWUptake = info[0].Water;
@@ -1323,6 +1321,7 @@ namespace Models.PMF.OldPlant
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
+        /// <param name="info">zone information</param>
         public void SetNUptake(List<ZoneWaterAndN> info)
         {
             Root.ArbitratorNO3Uptake = info[0].NO3N;

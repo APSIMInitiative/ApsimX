@@ -18,22 +18,49 @@ namespace Models.Soils.SoilWaterBackend
     #region Solute in a layer
 
 
-    /// <summary>
-    /// This is an individual solute in an individual layer of the Soil
-    /// </summary>
+        /// <summary>
+        /// This is an individual solute in an individual layer of the Soil
+        /// </summary>
     [Serializable]
     public class SoluteInLayer
         {
 
+        /// <summary>
+        /// The name
+        /// </summary>
         public string name = "";        // Name of the solute
+        /// <summary>
+        /// The owner name
+        /// </summary>
         public string ownerName = "";    // FQN of the component handling this solute
+        /// <summary>
+        /// The mobility
+        /// </summary>
         public bool mobility = false;      // Is the solute mobile?
+        /// <summary>
+        /// The amount
+        /// </summary>
         public double amount;    // amount of solute in each layer (kg/ha)
+        /// <summary>
+        /// The delta
+        /// </summary>
         public double delta;     // change in solute in each layer (kg/ha)
+        /// <summary>
+        /// Up
+        /// </summary>
         public double up;        // amount "upped" from each layer (kg/ha)
+        /// <summary>
+        /// The leach
+        /// </summary>
         public double leach;     // amount leached from each layer (kg/ha)
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SoluteInLayer"/> class.
+        /// </summary>
+        /// <param name="Name">The name.</param>
+        /// <param name="OwnerName">Name of the owner.</param>
+        /// <param name="Mobility">if set to <c>true</c> [mobility].</param>
         public SoluteInLayer(string Name, string OwnerName, bool Mobility)
             {
 
@@ -75,6 +102,11 @@ namespace Models.Soils.SoilWaterBackend
 
 
         //Default Comparer for a Layer (used by the Soil's List of Layers to do a List.Sort()) 
+            /// <summary>
+            /// Compares to.
+            /// </summary>
+            /// <param name="ObjectToCompareThisTo">The object to compare this to.</param>
+            /// <returns></returns>
         public int CompareTo(Object ObjectToCompareThisTo)
             {
             Layer LayerToCompareThisTo = ObjectToCompareThisTo as Layer;
@@ -87,6 +119,9 @@ namespace Models.Soils.SoilWaterBackend
 
         //CONSTRUCTOR
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Layer"/> class.
+        /// </summary>
         public Layer()
             {
             solutes = new List<SoluteInLayer>();
@@ -96,29 +131,62 @@ namespace Models.Soils.SoilWaterBackend
         //PROPERTIES OF A LAYER
 
 
+        /// <summary>
+        /// The number
+        /// </summary>
         public int number;
 
+        /// <summary>
+        /// The dlayer
+        /// </summary>
         public double dlayer;    //! thickness of soil layer (mm)
 
+        /// <summary>
+        /// The bd
+        /// </summary>
         public double bd;      //! moist bulk density of soil (g/cm^3) // ??? Is this "moist" or "dry"; how moist?
 
 
 
+        /// <summary>
+        /// Gets or sets the sat.
+        /// </summary>
+        /// <value>
+        /// The sat.
+        /// </value>
         public double sat
             {
             get { return MM2Frac(sat_dep); }
             set { sat_dep = Frac2MM(value); }
             }
+        /// <summary>
+        /// Gets or sets the dul.
+        /// </summary>
+        /// <value>
+        /// The dul.
+        /// </value>
         public double dul
             {
             get { return MM2Frac(dul_dep); }
             set { dul_dep = Frac2MM(value); }
             }
+        /// <summary>
+        /// Gets or sets the LL15.
+        /// </summary>
+        /// <value>
+        /// The LL15.
+        /// </value>
         public double ll15
             {
             get { return MM2Frac(ll15_dep); }
             set { ll15_dep = Frac2MM(value); }
             }
+        /// <summary>
+        /// Gets or sets the air_dry.
+        /// </summary>
+        /// <value>
+        /// The air_dry.
+        /// </value>
         public double air_dry
             {
             get { return MM2Frac(air_dry_dep); }
@@ -126,11 +194,21 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Frac2s the mm.
+        /// </summary>
+        /// <param name="Fraction">The fraction.</param>
+        /// <returns></returns>
         public double Frac2MM(double Fraction)
             {
             return Fraction * dlayer;
             }
 
+        /// <summary>
+        /// ms the m2 frac.
+        /// </summary>
+        /// <param name="MM">The mm.</param>
+        /// <returns></returns>
         public double MM2Frac(double MM)
             {
             return MathUtilities.Divide(MM, dlayer, 0.0);
@@ -139,15 +217,27 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// The sat_dep
+        /// </summary>
         public double sat_dep;      //! saturated water content for this layer (mm water)
 
 
+        /// <summary>
+        /// The dul_dep
+        /// </summary>
         public double dul_dep;      //! drained upper limit soil water content for this layer (mm water)
 
 
+        /// <summary>
+        /// The ll15_dep
+        /// </summary>
         public double ll15_dep;     //! 15 bar lower limit of extractable soil water for this layer (mm water)
 
 
+        /// <summary>
+        /// The air_dry_dep
+        /// </summary>
         public double air_dry_dep;  //! air dry soil water content for this layer (mm water)
 
 
@@ -155,14 +245,29 @@ namespace Models.Soils.SoilWaterBackend
         //VARIABLES
 
 
+        /// <summary>
+        /// The sw_dep
+        /// </summary>
         public double sw_dep;    // sw * dlayer //see soilwat2_init() for initialisation
 
+        /// <summary>
+        /// Gets or sets the sw.
+        /// </summary>
+        /// <value>
+        /// The sw.
+        /// </value>
         public double sw        //! soil water content of layer
             {
             get { return MM2Frac(sw_dep); }
             set { sw_dep = Frac2MM(value); }
             }
 
+        /// <summary>
+        /// Gets the esw.
+        /// </summary>
+        /// <value>
+        /// The esw.
+        /// </value>
         public double esw                    //! potential extractable sw in profile 
             { 
             get { 
@@ -172,21 +277,51 @@ namespace Models.Soils.SoilWaterBackend
                 else
                     return 0.0;
                 } 
-            }  
+            }
 
 
+        /// <summary>
+        /// Gets the amnt_to_sat.
+        /// </summary>
+        /// <value>
+        /// The amnt_to_sat.
+        /// </value>
         public double amnt_to_sat           //change this to sw_to_sat
         { get { return sat_dep - sw_dep; } }
 
+        /// <summary>
+        /// Gets the amnt_to_dul.
+        /// </summary>
+        /// <value>
+        /// The amnt_to_dul.
+        /// </value>
         public double amnt_to_dul           //change this to sw_to_dul
         { get { return dul_dep - sw_dep; } }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is drainable.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is drainable; otherwise, <c>false</c>.
+        /// </value>
         public bool isDrainable             //change this to sw_above_dul
         { get { return (sw_dep > dul_dep) ? true : false; } }
 
+        /// <summary>
+        /// Gets the drainable_capacity.
+        /// </summary>
+        /// <value>
+        /// The drainable_capacity.
+        /// </value>
         public double drainable_capacity    //change this to dul_to_sat
         { get { return sat_dep - dul_dep; } }
 
+        /// <summary>
+        /// Gets the drainable.
+        /// </summary>
+        /// <value>
+        /// The drainable.
+        /// </value>
         public double drainable             //change this to amnt_drainable
             {
             get
@@ -197,11 +332,23 @@ namespace Models.Soils.SoilWaterBackend
                     return 0.0;
                 }
             }
+        /// <summary>
+        /// Gets the saturated_fraction.
+        /// </summary>
+        /// <value>
+        /// The saturated_fraction.
+        /// </value>
         public double saturated_fraction
         { get { return MathUtilities.Divide(drainable, drainable_capacity, 0.0); } }
 
 
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Layer"/> is layer_is_fully_saturated.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if layer_is_fully_saturated; otherwise, <c>false</c>.
+        /// </value>
         public bool layer_is_fully_saturated //shorten to is_fully_saturated
             {
             get {
@@ -213,6 +360,12 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Layer"/> is layer_is_saturated.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if layer_is_saturated; otherwise, <c>false</c>.
+        /// </value>
         public bool layer_is_saturated  //shorten to is_saturated or is_above_dul (Actually this is the same as isDrainable)
             {
             get {
@@ -232,10 +385,19 @@ namespace Models.Soils.SoilWaterBackend
 
         //SW MOVEMENT PROPERTIES 
 
+        /// <summary>
+        /// The ks
+        /// </summary>
         public double ks;        //! saturated conductivity (mm/d)
 
+        /// <summary>
+        /// The swcon
+        /// </summary>
         public double SWCON;     //! soil water conductivity constant (1/d) //! ie day**-1 for each soil layer
 
+        /// <summary>
+        /// The klat
+        /// </summary>
         public double KLAT;
 
 
@@ -245,8 +407,14 @@ namespace Models.Soils.SoilWaterBackend
         //DELTA_SW VARIABLES
 
 
+        /// <summary>
+        /// The flow
+        /// </summary>
         public double flow;        //sv- Unsaturated Flow //! depth of water moving from layer i+1 into layer i because of unsaturated flow; (positive value indicates upward movement into layer i) (negative value indicates downward movement (mm) out of layer i)
 
+        /// <summary>
+        /// The flux
+        /// </summary>
         public double flux;       //sv- Drainage (Saturated Flow) //! initially, water moving downward into layer i (mm), then water moving downward out of layer i (mm)
 
         //public double flow_u;   //sv- unsaturated flow
@@ -254,17 +422,29 @@ namespace Models.Soils.SoilWaterBackend
         //public double flow_a;   //sv- excess water flow  (above saturfation flow).
         //public double flow      //sv- actual flow (aka. flow_water)
 
+        /// <summary>
+        /// Gets the flow_water.
+        /// </summary>
+        /// <value>
+        /// The flow_water.
+        /// </value>
         public double flow_water         //flow_water[layer] = flux[layer] - flow[layer] 
         { get { return flux - flow; } }
 
 
 
 
+        /// <summary>
+        /// The outflow_lat
+        /// </summary>
         public double outflow_lat;   //! outflowing lateral water   //lateral outflow
 
 
         //temporary variables. Refactor and remove these later.
         //TODO: make these private not public
+        /// <summary>
+        /// The new_sw_dep
+        /// </summary>
         public double new_sw_dep;
         //public double solute_up;    //only used in solute unsaturated flow
         //public double remain;       //only used in solute unsaturated flow
@@ -276,17 +456,34 @@ namespace Models.Soils.SoilWaterBackend
 
         //SOLUTES IN THIS LAYER
 
+        /// <summary>
+        /// The solutes
+        /// </summary>
         private List<SoluteInLayer> solutes;  //The List of solutes in this layer
-        
+
+        /// <summary>
+        /// Gets the num_solutes.
+        /// </summary>
+        /// <value>
+        /// The num_solutes.
+        /// </value>
         public int num_solutes { get { return solutes.Count; } }
 
 
+        /// <summary>
+        /// Adds the solute.
+        /// </summary>
+        /// <param name="NewSolute">The new solute.</param>
         public void AddSolute(SoluteInLayer NewSolute)
             {
             solutes.Add(NewSolute);
             }
 
 
+        /// <summary>
+        /// Removes the solute.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
         public void RemoveSolute(string SoluteName)
             {
             SoluteInLayer solute;
@@ -295,6 +492,11 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Gets a solute.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
+        /// <returns></returns>
         public SoluteInLayer GetASolute(string SoluteName)
             {
             SoluteInLayer foundSolute;
@@ -307,12 +509,20 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Gets all solutes.
+        /// </summary>
+        /// <returns></returns>
         public List<SoluteInLayer> GetAllSolutes()
             {
             return solutes;
             }
 
 
+        /// <summary>
+        /// Gets all mobile solutes.
+        /// </summary>
+        /// <returns></returns>
         public List<SoluteInLayer> GetAllMobileSolutes()
             {
             List<SoluteInLayer> mobiles = new List<SoluteInLayer>();
@@ -325,6 +535,10 @@ namespace Models.Soils.SoilWaterBackend
             return mobiles;
             }
 
+        /// <summary>
+        /// Gets the mobile solute names.
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetMobileSoluteNames()
             {
             List<string> mobileNames = new List<string>();
@@ -337,6 +551,9 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Zeroes the mobile solutes deltas.
+        /// </summary>
         public void ZeroMobileSolutesDeltas()
             {
             foreach (SoluteInLayer sol in GetAllMobileSolutes())
@@ -365,7 +582,7 @@ namespace Models.Soils.SoilWaterBackend
     #region The Soil
 
     /// <summary>
-    /// The Soil. 
+    /// The Soil.
     /// (Also contains methods for modifying the soil
     /// as well as the natural movement of water/solutes within the soil)
     /// </summary>
@@ -374,8 +591,14 @@ namespace Models.Soils.SoilWaterBackend
         {
 
 
+            /// <summary>
+            /// The constants
+            /// </summary>
         public Constants Constants;
 
+        /// <summary>
+        /// The using_ks
+        /// </summary>
         private bool using_ks;       //! flag to determine if Ks has been chosen for use. //sv- set in soilwat2_init() by checking if mwcon exists
 
 
@@ -387,37 +610,85 @@ namespace Models.Soils.SoilWaterBackend
         //different evap for summer and winter
         //summer
 
+        /// <summary>
+        /// The summer date
+        /// </summary>
         public string SummerDate;
+        /// <summary>
+        /// The summer u
+        /// </summary>
         public double SummerU;
+        /// <summary>
+        /// The summer cona
+        /// </summary>
         public double SummerCona;
 
         //winter
+        /// <summary>
+        /// The winter date
+        /// </summary>
         public string WinterDate;
+        /// <summary>
+        /// The winter u
+        /// </summary>
         public double WinterU;
+        /// <summary>
+        /// The winter cona
+        /// </summary>
         public double WinterCona;
 
 
-        public double DiffusConst;      
-        public double DiffusSlope;         
+        /// <summary>
+        /// The diffus constant
+        /// </summary>
+        public double DiffusConst;
+        /// <summary>
+        /// The diffus slope
+        /// </summary>
+        public double DiffusSlope;
 
 
-        public double Salb;           
+        /// <summary>
+        /// The salb
+        /// </summary>
+        public double Salb;
 
 
+        /// <summary>
+        /// The cn2_bare
+        /// </summary>
         public double cn2_bare;
+        /// <summary>
+        /// The cn_red
+        /// </summary>
         public double cn_red;
+        /// <summary>
+        /// The cn_cov
+        /// </summary>
         public double cn_cov;
 
 
 
         //Lateral flow properties  
 
+        /// <summary>
+        /// The slope
+        /// </summary>
         public double slope;
-        public double discharge_width; 
-        public double catchment_area;   
+        /// <summary>
+        /// The discharge_width
+        /// </summary>
+        public double discharge_width;
+        /// <summary>
+        /// The catchment_area
+        /// </summary>
+        public double catchment_area;
 
 
 
+        /// <summary>
+        /// The max_pond
+        /// </summary>
         public double max_pond;
 
 
@@ -430,11 +701,21 @@ namespace Models.Soils.SoilWaterBackend
 
         #region Single Values
 
+        /// <summary>
+        /// The depth to water table
+        /// </summary>
         public double DepthToWaterTable;
+        /// <summary>
+        /// The drainage
+        /// </summary>
         public double Drainage;         //Drainage out of the bottom layer.   
 
-        /// <summary>Leaching from bottom layer (kg/ha) </summary>
-        /// <value>The leach n o3.</value>
+        /// <summary>
+        /// Leaching from bottom layer (kg/ha)
+        /// </summary>
+        /// <value>
+        /// The leach n o3.
+        /// </value>
         public double LeachNO3 
             {
             get
@@ -443,10 +724,14 @@ namespace Models.Soils.SoilWaterBackend
                 SoluteInLayer sol = btm.GetASolute("NO3");
                 return sol.leach;
                 }
-            }         
+            }
 
-        /// <summary>Leaching from bottom layer (kg/ha) </summary>
-        /// <value>The leach n h4.</value>
+        /// <summary>
+        /// Leaching from bottom layer (kg/ha)
+        /// </summary>
+        /// <value>
+        /// The leach n h4.
+        /// </value>
         public double LeachNH4
             {
             get
@@ -455,10 +740,14 @@ namespace Models.Soils.SoilWaterBackend
                 SoluteInLayer sol = btm.GetASolute("NH4");
                 return sol.leach;
                 }
-            }  
+            }
 
-        /// <summary>Leaching from bottom layer (kg/ha) </summary>
-        /// <value>The leach urea.</value>
+        /// <summary>
+        /// Leaching from bottom layer (kg/ha)
+        /// </summary>
+        /// <value>
+        /// The leach urea.
+        /// </value>
         public double LeachUrea
             {
             get
@@ -467,9 +756,15 @@ namespace Models.Soils.SoilWaterBackend
                 SoluteInLayer sol = btm.GetASolute("urea");
                 return sol.leach;
                 }
-            }  
+            }
 
 
+        /// <summary>
+        /// Gets the esw.
+        /// </summary>
+        /// <value>
+        /// The esw.
+        /// </value>
         public double esw
             {
             get
@@ -491,6 +786,12 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Gets the dlayer.
+        /// </summary>
+        /// <value>
+        /// The dlayer.
+        /// </value>
         public double[] dlayer
             {
             get
@@ -508,6 +809,12 @@ namespace Models.Soils.SoilWaterBackend
 
         //ARRAYS IN MILLIMETERS
 
+        /// <summary>
+        /// Gets the sat_dep.
+        /// </summary>
+        /// <value>
+        /// The sat_dep.
+        /// </value>
         public double[] sat_dep
             {
             get
@@ -521,6 +828,12 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
+        /// <summary>
+        /// Gets the dul_dep.
+        /// </summary>
+        /// <value>
+        /// The dul_dep.
+        /// </value>
         public double[] dul_dep
             {
             get
@@ -535,6 +848,12 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Gets the sw_dep.
+        /// </summary>
+        /// <value>
+        /// The sw_dep.
+        /// </value>
         public double[] sw_dep
             {
             get
@@ -550,6 +869,12 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Gets the ll15_dep.
+        /// </summary>
+        /// <value>
+        /// The ll15_dep.
+        /// </value>
         public double[] ll15_dep
             {
             get
@@ -564,6 +889,12 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
+        /// <summary>
+        /// Gets the air_dry_dep.
+        /// </summary>
+        /// <value>
+        /// The air_dry_dep.
+        /// </value>
         public double[] air_dry_dep
             {
             get
@@ -583,6 +914,12 @@ namespace Models.Soils.SoilWaterBackend
         //ARRAYS AS FRACTIONS
 
 
+        /// <summary>
+        /// Gets the sat.
+        /// </summary>
+        /// <value>
+        /// The sat.
+        /// </value>
         public double[] sat
             {
             get
@@ -596,6 +933,12 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
 
+        /// <summary>
+        /// Gets the dul.
+        /// </summary>
+        /// <value>
+        /// The dul.
+        /// </value>
         public double[] dul
             {
             get
@@ -610,6 +953,12 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Gets the sw.
+        /// </summary>
+        /// <value>
+        /// The sw.
+        /// </value>
         public double[] sw
             {
             get
@@ -625,6 +974,12 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Gets the LL15.
+        /// </summary>
+        /// <value>
+        /// The LL15.
+        /// </value>
         public double[] ll15
             {
             get
@@ -639,6 +994,12 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
+        /// <summary>
+        /// Gets the air_dry.
+        /// </summary>
+        /// <value>
+        /// The air_dry.
+        /// </value>
         public double[] air_dry
             {
             get
@@ -658,6 +1019,12 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Gets the flow.
+        /// </summary>
+        /// <value>
+        /// The flow.
+        /// </value>
         public double[] flow
             {
             get
@@ -672,6 +1039,12 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Gets the flux.
+        /// </summary>
+        /// <value>
+        /// The flux.
+        /// </value>
         public double[] flux
             {
             get
@@ -686,6 +1059,12 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Gets the outflow_lat.
+        /// </summary>
+        /// <value>
+        /// The outflow_lat.
+        /// </value>
         public double[] outflow_lat
             {
             get
@@ -709,6 +1088,11 @@ namespace Models.Soils.SoilWaterBackend
         //but this code uses sol.delta = sol.delta + in_solute - out_solute. 
         //Should be (out_solute - in_solute) to match (sol_leach - sol_up) in soilwat.
 
+        /// <summary>
+        /// Gets the flow array for a solute.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
+        /// <returns></returns>
         public double[] GetFlowArrayForASolute(string SoluteName)
             {
 
@@ -723,6 +1107,11 @@ namespace Models.Soils.SoilWaterBackend
 
             }
 
+        /// <summary>
+        /// Gets the delta array for a solute.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
+        /// <returns></returns>
         public double[] GetDeltaArrayForASolute(string SoluteName)
             {
 
@@ -749,6 +1138,9 @@ namespace Models.Soils.SoilWaterBackend
         //SOIL LAYERS
 
 
+        /// <summary>
+        /// The layers
+        /// </summary>
         private List<Layer> layers;
 
 
@@ -756,13 +1148,28 @@ namespace Models.Soils.SoilWaterBackend
 
         //http://msdn.microsoft.com/en-us/library/vstudio/65zzykke(v=vs.100).aspx
 
+        /// <summary>
+        /// Gets the top.
+        /// </summary>
+        /// <value>
+        /// The top.
+        /// </value>
         private int top { get { return 1; } }  //one based
+        /// <summary>
+        /// Gets the bottom.
+        /// </summary>
+        /// <value>
+        /// The bottom.
+        /// </value>
         private int bottom { get { return layers.Count; } }  //one based 
 
 
         /// <summary>
         /// Default Iterator from top layer to bottom layer.
         /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
+        /// </returns>
         public IEnumerator GetEnumerator()
             {
             //layers.Sort();
@@ -776,6 +1183,7 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// Iterator from bottom layer to top layer.
         /// </summary>
+        /// <returns></returns>
         public IEnumerable BottomToTop()
             {
             //layers.Sort();
@@ -791,6 +1199,7 @@ namespace Models.Soils.SoilWaterBackend
         /// Including layer X.
         /// </summary>
         /// <param name="X">X is 1 based</param>
+        /// <returns></returns>
         public IEnumerable TopToX(int X)
             {
             //layers.Sort();
@@ -806,6 +1215,7 @@ namespace Models.Soils.SoilWaterBackend
         /// Including layer X.
         /// </summary>
         /// <param name="X">X is 1 based</param>
+        /// <returns></returns>
         public IEnumerable XToTop(int X)
             {
             //layers.Sort();
@@ -821,6 +1231,7 @@ namespace Models.Soils.SoilWaterBackend
         /// Including layer X.
         /// </summary>
         /// <param name="X">X is 1 based</param>
+        /// <returns></returns>
         public IEnumerable XToBottom(int X)
             {
             //layers.Sort();
@@ -836,6 +1247,7 @@ namespace Models.Soils.SoilWaterBackend
         /// Including layer X.
         /// </summary>
         /// <param name="X">X is 1 based</param>
+        /// <returns></returns>
         public IEnumerable BottomToX(int X)
             {
             //layers.Sort();
@@ -855,6 +1267,10 @@ namespace Models.Soils.SoilWaterBackend
         #region Get Layer Functions
 
 
+        /// <summary>
+        /// Gets the top layer.
+        /// </summary>
+        /// <returns></returns>
         public Layer GetTopLayer()
             {
             if (layers != null)
@@ -868,9 +1284,10 @@ namespace Models.Soils.SoilWaterBackend
 
 
         /// <summary>
-        /// Returns the specified layer 
+        /// Returns the specified layer
         /// </summary>
         /// <param name="LayerNumber">LayerNumber is 1 based</param>
+        /// <returns></returns>
         public Layer GetLayer(int LayerNumber)
             {
             if (layers != null)
@@ -883,6 +1300,10 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Gets the bottom layer.
+        /// </summary>
+        /// <returns></returns>
         public Layer GetBottomLayer()
             {
             if (layers != null)
@@ -909,11 +1330,23 @@ namespace Models.Soils.SoilWaterBackend
         #region Layer Helper Functions
 
 
+        /// <summary>
+        /// Gets the num_layers.
+        /// </summary>
+        /// <value>
+        /// The num_layers.
+        /// </value>
         public int num_layers  //one based.
         { get { return layers.Count; } }
 
 
 
+        /// <summary>
+        /// Gets the depth total.
+        /// </summary>
+        /// <value>
+        /// The depth total.
+        /// </value>
         public double DepthTotal
             {
             get
@@ -928,6 +1361,11 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Depthes down to bottom of layer.
+        /// </summary>
+        /// <param name="LayerNumber">The layer number.</param>
+        /// <returns></returns>
         public double DepthDownToBottomOfLayer(int LayerNumber)
             {
             double depth = 0.0;
@@ -944,8 +1382,10 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// Find the layer number of the specified depth.
         /// </summary>
-        /// <param name="Depth"></param>
-        /// <returns>1 based Layer Number</returns>
+        /// <param name="Depth">The depth.</param>
+        /// <returns>
+        /// 1 based Layer Number
+        /// </returns>
         public int FindLayerNo(double Depth)
             {
             // Find the soil layer in which the indicated depth is located
@@ -972,6 +1412,10 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Gets the mobile solute names.
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetMobileSoluteNames()
             {
             Layer top = GetTopLayer();
@@ -981,6 +1425,10 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Gets all solutes in a layer.
+        /// </summary>
+        /// <returns></returns>
         public List<SoluteInLayer> GetAllSolutesInALayer()
             {
             Layer top = GetTopLayer();
@@ -990,6 +1438,11 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Updates the solute amounts.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
+        /// <param name="Amounts">The amounts.</param>
         public void UpdateSoluteAmounts(string SoluteName, double[] Amounts)
             {
             SoluteInLayer sol;
@@ -1014,6 +1467,10 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Adds the sub surface irrig to soil.
+        /// </summary>
+        /// <param name="Irrig">The irrig.</param>
         public void AddSubSurfaceIrrigToSoil(IrrigData Irrig)
             {
 
@@ -1026,6 +1483,10 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Sets the water_mm.
+        /// </summary>
+        /// <param name="New_SW_dep">The new_ s w_dep.</param>
         public void SetWater_mm(double[] New_SW_dep)
             {
             foreach (Layer lyr in this)
@@ -1036,7 +1497,7 @@ namespace Models.Soils.SoilWaterBackend
             }
 
         /// <summary>
-        /// 
+        /// Sets the water_mm.
         /// </summary>
         /// <param name="Layer">Zero Based Layer Number</param>
         /// <param name="SW_dep">New Value</param>
@@ -1047,6 +1508,10 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Sets the water_frac.
+        /// </summary>
+        /// <param name="New_SW">The new_ sw.</param>
         public void SetWater_frac(double[] New_SW)
             {
             foreach (Layer lyr in this)
@@ -1057,6 +1522,10 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Deltas the water_mm.
+        /// </summary>
+        /// <param name="Delta_mm">The delta_mm.</param>
         public void DeltaWater_mm(double[] Delta_mm)
             {
             foreach (Layer lyr in this)
@@ -1067,6 +1536,10 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Deltas the water_frac.
+        /// </summary>
+        /// <param name="Delta_frac">The delta_frac.</param>
         public void DeltaWater_frac(double[] Delta_frac)
             {
             foreach (Layer lyr in this)
@@ -1085,6 +1558,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Checks the soil for errors.
+        /// </summary>
         public void CheckSoilForErrors()
             {
             ////can't use an iterator because throwing an apsim warning inside the iterator causes an iterator error.
@@ -1270,6 +1746,12 @@ namespace Models.Soils.SoilWaterBackend
 
 
         //Constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SoilWaterSoil"/> class.
+        /// </summary>
+        /// <param name="Consts">The consts.</param>
+        /// <param name="Soil">The soil.</param>
+        /// <exception cref="System.Exception">Constructor for SoilWaterSoil failed because there are no layers</exception>
         public SoilWaterSoil(Constants Consts, Soil Soil)
             {
 
@@ -1294,6 +1776,11 @@ namespace Models.Soils.SoilWaterBackend
 
 
         //Reset
+        /// <summary>
+        /// Resets the soil.
+        /// </summary>
+        /// <param name="Consts">The consts.</param>
+        /// <param name="Soil">The soil.</param>
         public void ResetSoil(Constants Consts, Soil Soil)
             {
             Constants = Consts;
@@ -1301,6 +1788,10 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Uses the starting values to initialise.
+        /// </summary>
+        /// <param name="Soil">The soil.</param>
         private void UseStartingValuesToInitialise(Soil Soil)
             {
 
@@ -1436,6 +1927,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Zeroes the outputs.
+        /// </summary>
         public void ZeroOutputs()
             {
             ZeroSoilOutputs();
@@ -1443,6 +1937,9 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Zeroes the soil outputs.
+        /// </summary>
         private void ZeroSoilOutputs()
             {
             //Soil Properties
@@ -1452,6 +1949,9 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Zeroes the layer deltas.
+        /// </summary>
         private void ZeroLayerDeltas()
             {
 
@@ -1477,6 +1977,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Zeroes the layer temporary vars.
+        /// </summary>
         private void ZeroLayerTemporaryVars()
             {
             foreach (Layer lyr in this)
@@ -1505,6 +2008,10 @@ namespace Models.Soils.SoilWaterBackend
         //TODO: Replace w_in, w_out with Layer above.flux and Layer below.flux variables.
 
 
+        /// <summary>
+        /// Calc_s the saturated_ flow.
+        /// </summary>
+        /// <returns></returns>
         public double Calc_Saturated_Flow()
             {
             //private void soilwat2_drainage(ref double ExtraRunoff)
@@ -1651,6 +2158,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Do_s the saturated_ flow.
+        /// </summary>
         public void Do_Saturated_Flow()
             {
 
@@ -1689,6 +2199,9 @@ namespace Models.Soils.SoilWaterBackend
         //TODO: Replace w_in, w_out with Layer above.flow and Layer below.flow variables.
 
 
+        /// <summary>
+        /// Calc_s the unsaturated_ flow.
+        /// </summary>
         public void Calc_Unsaturated_Flow()
             {
             //private void soilwat2_unsat_flow()
@@ -1837,6 +2350,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Do_s the unsaturated_ flow.
+        /// </summary>
         public void Do_Unsaturated_Flow()
             {
 
@@ -1872,6 +2388,10 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Adds the solutes due to irrigation.
+        /// </summary>
+        /// <param name="Irrig">The irrig.</param>
         public void AddSolutesDueToIrrigation(IrrigData Irrig)
             {
 
@@ -1946,6 +2466,10 @@ namespace Models.Soils.SoilWaterBackend
         //sv- solute movement during Drainage (Saturated Flow)
 
 
+        /// <summary>
+        /// Calc_s the solute_ leach_ sat flow.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
         public void Calc_Solute_Leach_SatFlow(string SoluteName)
             {
             //private void soilwat2_solute_flux(ref double[] solute_out, double[] solute_kg)
@@ -2013,6 +2537,10 @@ namespace Models.Soils.SoilWaterBackend
 
         //sv- solute movement during Unsaturated Flow
 
+        /// <summary>
+        /// Calc_s the solute_ up_ unsat flow.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
         public void Calc_Solute_Up_UnsatFlow(string SoluteName)
             {
 
@@ -2193,6 +2721,10 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Moves down solute.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
         public void MoveDownSolute(string SoluteName)
             {
 
@@ -2220,6 +2752,10 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Moves up solute.
+        /// </summary>
+        /// <param name="SoluteName">Name of the solute.</param>
         public void MoveUpSolute(string SoluteName)
             {
 
@@ -2250,6 +2786,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Do_s the solutes_ sat flow.
+        /// </summary>
         public void Do_Solutes_SatFlow()
             {
             //private void soilwat2_move_solute_down()
@@ -2271,6 +2810,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Do_s the solutes_ unsat flow.
+        /// </summary>
         public void Do_Solutes_UnsatFlow()
             {
             //private void soilwat2_move_solute_up()
@@ -2298,6 +2840,9 @@ namespace Models.Soils.SoilWaterBackend
         #region Water Table
 
 
+        /// <summary>
+        /// Calc_s the depth to water table.
+        /// </summary>
         public void Calc_DepthToWaterTable()
             {
             //private double soilwat_water_table()
@@ -2478,6 +3023,10 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Sets the water table.
+        /// </summary>
+        /// <param name="InitialDepth">The initial depth.</param>
         public void SetWaterTable(double InitialDepth)
             {
 
@@ -2522,6 +3071,10 @@ namespace Models.Soils.SoilWaterBackend
 
         #region Lateral Flow
 
+        /// <summary>
+        /// Do_s the lateral_ flow.
+        /// </summary>
+        /// <param name="Inflow_lat">The inflow_lat.</param>
         public void Do_Lateral_Flow(double[] Inflow_lat)
             {
             //private void Lateral_process()

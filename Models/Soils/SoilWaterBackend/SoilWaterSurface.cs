@@ -6,23 +6,70 @@ using System.Text;
 namespace Models.Soils.SoilWaterBackend
     {
 
-    public enum Surfaces { NormalSurface, PondSurface };
+    /// <summary>
+    /// Surfaces enumeration
+    /// </summary>
+    public enum Surfaces 
+    {
+        /// <summary>
+        /// The normal surface
+        /// </summary>
+        NormalSurface,
+
+        /// <summary>
+        /// The pond surface
+        /// </summary>
+        PondSurface 
+    };
 
 
+    /// <summary>
+    /// A surface class.
+    /// </summary>
     [Serializable]
     public class Surface
         {
 
+        /// <summary>
+        /// The surface type
+        /// </summary>
         public Surfaces SurfaceType;
 
+        /// <summary>
+        /// The runoff
+        /// </summary>
         public double Runoff;
+        /// <summary>
+        /// The infiltration
+        /// </summary>
         public double Infiltration;
+        /// <summary>
+        /// Gets or sets the eo.
+        /// </summary>
+        /// <value>
+        /// The eo.
+        /// </value>
         public double Eo {get; set;}  //external modules might set this value. 
+        /// <summary>
+        /// The eos
+        /// </summary>
         public double Eos;
+        /// <summary>
+        /// The es
+        /// </summary>
         public double Es;
 
+        /// <summary>
+        /// Calculates the runoff.
+        /// </summary>
         public virtual void CalcRunoff(){}
+        /// <summary>
+        /// Calculates the infiltration.
+        /// </summary>
         public virtual void CalcInfiltration(){}
+        /// <summary>
+        /// Calculates the evaporation.
+        /// </summary>
         public virtual void CalcEvaporation() {}
 
 
@@ -31,26 +78,69 @@ namespace Models.Soils.SoilWaterBackend
         //    the top layer but multiple layers. Also these surfaces might want to remove evaporation from 
         //    multiple layers and not just the top layer. They will need logic to decide what fractions of
         //    infiltration or evaporation that they want to remove from which layers.
+        /// <summary>
+        /// Adds the infiltration to soil.
+        /// </summary>
+        /// <param name="SoilOject">The soil oject.</param>
         public virtual void AddInfiltrationToSoil(ref SoilWaterSoil SoilOject) { }
+        /// <summary>
+        /// Removes the evaporation from soil.
+        /// </summary>
+        /// <param name="SoilObject">The soil object.</param>
         public virtual void RemoveEvaporationFromSoil(ref SoilWaterSoil SoilObject) { }
 
+        /// <summary>
+        /// Adds the backed up water to surface.
+        /// </summary>
+        /// <param name="BackedUp">The backed up.</param>
+        /// <param name="SoilObject">The soil object.</param>
         public virtual void AddBackedUpWaterToSurface(double BackedUp, ref SoilWaterSoil SoilObject) { }
 
 
+        /// <summary>
+        /// The constants
+        /// </summary>
         internal Constants constants;
 
 
         //The following below need to be updated each day.
         //they are used as parmeters in the methods above.
+        /// <summary>
+        /// The clock
+        /// </summary>
         public Clock Clock;
+        /// <summary>
+        /// The met
+        /// </summary>
         public MetData Met;
+        /// <summary>
+        /// The runon
+        /// </summary>
         public double Runon;
+        /// <summary>
+        /// The irrig
+        /// </summary>
         public IrrigData Irrig;
+        /// <summary>
+        /// The canopy
+        /// </summary>
         public CanopyData Canopy;
+        /// <summary>
+        /// The surface cover
+        /// </summary>
         public SurfaceCoverData SurfaceCover;
+        /// <summary>
+        /// The soil object
+        /// </summary>
         public SoilWaterSoil SoilObject;
 
 
+        /// <summary>
+        /// Gets the todays water for runoff.
+        /// </summary>
+        /// <value>
+        /// The todays water for runoff.
+        /// </value>
         public double TodaysWaterForRunoff
             {
             get
@@ -69,6 +159,12 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Gets the todays water for infiltration.
+        /// </summary>
+        /// <value>
+        /// The todays water for infiltration.
+        /// </value>
         public double TodaysWaterForInfiltration
             {
             get
@@ -92,10 +188,19 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class SurfaceFactory 
         {
 
+            /// <summary>
+            /// Gets the surface.
+            /// </summary>
+            /// <param name="SoilObject">The soil object.</param>
+            /// <param name="Clock">The clock.</param>
+            /// <returns></returns>
         public Surface GetSurface(SoilWaterSoil SoilObject, Clock Clock)
             {
             Surface surface;
@@ -113,6 +218,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class NormalSurface : Surface
         {
@@ -120,23 +228,49 @@ namespace Models.Soils.SoilWaterBackend
         //OUTPUTS
 
         //Runoff
+            /// <summary>
+            /// The cover_surface_runoff
+            /// </summary>
         public double cover_surface_runoff;
+        /// <summary>
+        /// The cn2_new
+        /// </summary>
         public double cn2_new;
 
 
         //Evaporation
 
+        /// <summary>
+        /// The sumes1
+        /// </summary>
         public double sumes1;       //! cumulative soil evaporation in stage 1 (mm)
+        /// <summary>
+        /// The sumes2
+        /// </summary>
         public double sumes2;       //! cumulative soil evaporation in stage 2 (mm)
+        /// <summary>
+        /// The t
+        /// </summary>
         public double t;            //! time after 2nd-stage soil evaporation begins (d)
 
 
 
 
+        /// <summary>
+        /// The runoff
+        /// </summary>
         internal NormalRunoff runoff;    //let derived PondSurface see this but not outside world.
+        /// <summary>
+        /// The evap
+        /// </summary>
         internal NormalEvaporation evap;
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NormalSurface"/> class.
+        /// </summary>
+        /// <param name="SoilObject">The soil object.</param>
+        /// <param name="Clock">The clock.</param>
         public NormalSurface(SoilWaterSoil SoilObject, Clock Clock)
             {
             SurfaceType = Surfaces.NormalSurface;
@@ -148,6 +282,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Calculates the runoff.
+        /// </summary>
         public override void CalcRunoff()
             {
             runoff.CalcCoverForRunoff(base.Canopy, base.SurfaceCover);
@@ -160,6 +297,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Calculates the infiltration.
+        /// </summary>
         public override void CalcInfiltration()
             {
             Infiltration = base.TodaysWaterForInfiltration - Runoff;  //remove the runoff because it did not infiltrate.
@@ -167,6 +307,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Calculates the evaporation.
+        /// </summary>
         public override void CalcEvaporation()
             {
 
@@ -183,18 +326,31 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Adds the infiltration to soil.
+        /// </summary>
+        /// <param name="SoilObject">The soil object.</param>
         public override void AddInfiltrationToSoil(ref SoilWaterSoil SoilObject)
             {
             Layer top = SoilObject.GetTopLayer();
             top.sw_dep = top.sw_dep + Infiltration;
             }
 
+        /// <summary>
+        /// Removes the evaporation from soil.
+        /// </summary>
+        /// <param name="SoilObject">The soil object.</param>
         public override void RemoveEvaporationFromSoil(ref SoilWaterSoil SoilObject)
             {
             Layer top = SoilObject.GetTopLayer();
             top.sw_dep = top.sw_dep - Es;
             }
 
+        /// <summary>
+        /// Adds the backed up water to surface.
+        /// </summary>
+        /// <param name="BackedUp">The backed up.</param>
+        /// <param name="SoilObject">The soil object.</param>
         public override void AddBackedUpWaterToSurface(double BackedUp, ref SoilWaterSoil SoilObject)
             {
             //If Infiltration was more water that the top layer of soil had empty then the extra water had no choice but to back up. 
@@ -217,12 +373,20 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
+        /// <summary>
+        /// Updates the tillage cn red vars.
+        /// </summary>
+        /// <param name="CumWater">The cum water.</param>
+        /// <param name="Reduction">The reduction.</param>
         public void UpdateTillageCnRedVars(double CumWater, double Reduction)
             {
             runoff.tillageCnCumWater = CumWater;
             runoff.tillageCnRed = Reduction;
             }
 
+        /// <summary>
+        /// Resets the cum water since tillage.
+        /// </summary>
         public void ResetCumWaterSinceTillage()
             {
             runoff.cumWaterSinceTillage = 0.0;
@@ -236,18 +400,32 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class PondSurface : NormalSurface
         {
 
 
+            /// <summary>
+            /// The pond
+            /// </summary>
         public double pond;
+        /// <summary>
+        /// The pond_evap
+        /// </summary>
         public double pond_evap;
-        
 
 
 
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PondSurface"/> class.
+        /// </summary>
+        /// <param name="SoilObject">The soil object.</param>
+        /// <param name="Clock">The clock.</param>
         public PondSurface(SoilWaterSoil SoilObject, Clock Clock):base(SoilObject, Clock)
             {
             base.SurfaceType = Surfaces.PondSurface;
@@ -258,6 +436,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Calculates the runoff.
+        /// </summary>
         public override void CalcRunoff()
             {
 
@@ -272,6 +453,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Calculates the infiltration.
+        /// </summary>
         public override void CalcInfiltration()
             {
 
@@ -285,6 +469,9 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Calculates the evaporation.
+        /// </summary>
         public override void CalcEvaporation()
             {
 
@@ -355,6 +542,11 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
+        /// <summary>
+        /// Adds the backed up water to surface.
+        /// </summary>
+        /// <param name="BackedUp">The backed up.</param>
+        /// <param name="SoilObject">The soil object.</param>
         public override void AddBackedUpWaterToSurface(double BackedUp, ref SoilWaterSoil SoilObject)
             {
             //do normal surface add backup to surface
