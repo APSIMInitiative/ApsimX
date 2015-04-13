@@ -9,6 +9,7 @@ namespace Models.Soils
     using System.Collections.Generic;
     using Models.Core;
     using System.Xml.Serialization;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Represents the simulation initial water status. There are multiple ways
@@ -88,13 +89,13 @@ namespace Models.Soils
                     }
 
                     // Convert from mm/mm to mm and sum over the profile.
-                    pawc = Utility.Math.Multiply(pawc, this.Soil.Thickness);
-                    double totalPAWC = Utility.Math.Sum(pawc);
+                    pawc = MathUtilities.Multiply(pawc, this.Soil.Thickness);
+                    double totalPAWC = MathUtilities.Sum(pawc);
 
                     // Convert from total to a fraction.
                     if (totalPAWC > 0)
                     {
-                        return Utility.Math.Bound(PAW / totalPAWC, 0, 100);
+                        return MathUtilities.Bound(PAW / totalPAWC, 0, 100);
                     }
                     else
                     {
@@ -181,11 +182,11 @@ namespace Models.Soils
                 double[] sw = this.SW(this.Soil.Thickness, ll, this.Soil.DUL, xf);
 
                 // Calculate the plant available water (mm/mm)
-                double[] pawVolumetric = Utility.Math.Subtract(sw, ll);
+                double[] pawVolumetric = MathUtilities.Subtract(sw, ll);
 
                 // Convert from mm/mm to mm and return
-                double[] paw = Utility.Math.Multiply(pawVolumetric, this.Soil.Thickness);
-                return Utility.Math.Sum(paw);
+                double[] paw = MathUtilities.Multiply(pawVolumetric, this.Soil.Thickness);
+                return MathUtilities.Sum(paw);
             }
 
             set
@@ -202,13 +203,13 @@ namespace Models.Soils
                 }
 
                 // Convert from mm/mm to mm and sum over the profile.
-                pawc = Utility.Math.Multiply(pawc, this.Soil.Thickness);
-                double totalPAWC = Utility.Math.Sum(pawc);
+                pawc = MathUtilities.Multiply(pawc, this.Soil.Thickness);
+                double totalPAWC = MathUtilities.Sum(pawc);
 
                 // Convert from total to a fraction.
                 if (totalPAWC > 0)
                 {
-                    this.fractionFull = Utility.Math.Bound(value / totalPAWC, 0, 100);
+                    this.fractionFull = MathUtilities.Bound(value / totalPAWC, 0, 100);
                 }
                 else
                 {
@@ -297,9 +298,9 @@ namespace Models.Soils
                 return sw;
             }
 
-            double[] pawcmm = Utility.Math.Multiply(Utility.Math.Subtract(dul, ll), thickness);
+            double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
 
-            double amountWater = Utility.Math.Sum(pawcmm) * this.FractionFull;
+            double amountWater = MathUtilities.Sum(pawcmm) * this.FractionFull;
             for (int layer = 0; layer < ll.Length; layer++)
             {
                 if (amountWater >= 0 && xf != null && xf[layer] == 0)

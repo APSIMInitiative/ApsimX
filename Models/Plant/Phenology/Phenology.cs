@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
 using Models.PMF.OldPlant;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Phen
 {
@@ -493,12 +494,12 @@ namespace Models.PMF.Phen
         /// <exception cref="System.Exception">Cannot test between stages  + Start +   + End</exception>
         public bool Between(String Start, String End)
         {
-            string StartFractionSt = Utility.String.SplitOffBracketedValue(ref Start, '(', ')');
+            string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
                 StartFraction = Convert.ToDouble(StartFractionSt);
 
-            string EndFractionSt = Utility.String.SplitOffBracketedValue(ref Start, '(', ')');
+            string EndFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double EndFraction = 0;
             if (EndFractionSt != "")
                 EndFraction = Convert.ToDouble(EndFractionSt);

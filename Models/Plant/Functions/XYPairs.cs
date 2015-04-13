@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -31,7 +32,7 @@ namespace Models.PMF.Functions
         public double ValueIndexed(double dX)
         {
             bool DidInterpolate = false;
-            return Utility.Math.LinearInterpReal(dX, X, Y, out DidInterpolate);
+            return MathUtilities.LinearInterpReal(dX, X, Y, out DidInterpolate);
         }
     }
 }

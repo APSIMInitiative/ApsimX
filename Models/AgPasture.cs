@@ -12,6 +12,7 @@ using Models.Core;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -7889,7 +7890,7 @@ namespace Models
         public double Value(double dX)
         {
             bool DidInterpolate = false;
-            return Utility.Math.LinearInterpReal(dX, X, Y, out DidInterpolate);
+            return MathUtilities.LinearInterpReal(dX, X, Y, out DidInterpolate);
         }
     }
 }

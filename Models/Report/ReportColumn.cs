@@ -13,6 +13,7 @@ namespace Models.Report
     using System.Reflection;
     using System.Text.RegularExpressions;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A class for looking after a column of output. A column will store a value 
@@ -378,7 +379,7 @@ namespace Models.Report
             else
             {
                 if (value.GetType().IsArray || value.GetType().IsClass)
-                    value = Utility.Reflection.Clone(value);
+                    value = ReflectionUtilities.Clone(value);
 
                 this.values.Add(value);
             }
@@ -398,7 +399,7 @@ namespace Models.Report
                 else
                 {
                     if (value.GetType().IsArray || value.GetType().IsClass)
-                        value = Utility.Reflection.Clone(value);
+                        value = ReflectionUtilities.Clone(value);
 
                     this.valuesToAggregate.Add(value);
                 }
@@ -416,13 +417,13 @@ namespace Models.Report
             if (this.valuesToAggregate.Count > 0 && this.aggregationFunction != null)
             {
                 if (this.aggregationFunction == "sum")
-                    result = Utility.Math.Sum(this.valuesToAggregate);
+                    result = MathUtilities.Sum(this.valuesToAggregate);
                 else if (this.aggregationFunction == "avg")
-                    result = Utility.Math.Average(this.valuesToAggregate);
+                    result = MathUtilities.Average(this.valuesToAggregate);
                 else if (this.aggregationFunction == "min")
-                    result = Utility.Math.Min(this.valuesToAggregate);
+                    result = MathUtilities.Min(this.valuesToAggregate);
                 else if (this.aggregationFunction == "max")
-                    result = Utility.Math.Max(this.valuesToAggregate);
+                    result = MathUtilities.Max(this.valuesToAggregate);
                 else if (this.aggregationFunction == "first")
                     result = Convert.ToDouble(this.valuesToAggregate.First());
                 else if (this.aggregationFunction == "last")
@@ -538,7 +539,7 @@ namespace Models.Report
             else
             {
                 // A struct or class
-                foreach (PropertyInfo property in Utility.Reflection.GetPropertiesSorted(type, BindingFlags.Instance | BindingFlags.Public))
+                foreach (PropertyInfo property in ReflectionUtilities.GetPropertiesSorted(type, BindingFlags.Instance | BindingFlags.Public))
                 {
                     string heading = name + "." + property.Name;
                     object classElement = property.GetValue(value, null);

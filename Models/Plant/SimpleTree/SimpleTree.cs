@@ -7,6 +7,7 @@ using Models.Soils;
 using System.Xml.Serialization;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF
 {
@@ -167,7 +168,7 @@ namespace Models.PMF
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (MyZone.Water[j] - Soil.SoilWater.LL15mm[j]));
 
-            double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
+            double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
             
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PotentialEP / TotPotSWUptake);
@@ -205,7 +206,7 @@ namespace Models.PMF
                 PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NO3N[j]);
                 PotNH4Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NH4N[j]);
             }
-            double TotPotNUptake = Utility.Math.Sum(PotNO3Uptake) + Utility.Math.Sum(PotNH4Uptake);
+            double TotPotNUptake = MathUtilities.Sum(PotNO3Uptake) + MathUtilities.Sum(PotNH4Uptake);
 
             for (int j = 0; j < Soil.NO3N.Length; j++)
             {
@@ -229,7 +230,7 @@ namespace Models.PMF
         public void SetSWUptake(List<ZoneWaterAndN> info)
         {
             SWUptake = info[0].Water;
-            EP = Utility.Math.Sum(SWUptake);
+            EP = MathUtilities.Sum(SWUptake);
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
                 Soil.SoilWater.SetSWmm(j, Soil.SoilWater.SWmm[j] - SWUptake[j]);

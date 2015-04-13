@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -420,7 +421,7 @@ namespace UserInterface.Presenters
             if (destinationModel != null)
             {
                 DragObject dragObject = e.DragObject as DragObject;
-                ValidParentAttribute validParent = Utility.Reflection.GetAttribute(dragObject.ModelType, typeof(ValidParentAttribute), false) as ValidParentAttribute;
+                ValidParentAttribute validParent = ReflectionUtilities.GetAttribute(dragObject.ModelType, typeof(ValidParentAttribute), false) as ValidParentAttribute;
                 if (validParent == null || validParent.ParentModels.Length == 0)
                 {
                     e.Allow = true;
@@ -449,7 +450,7 @@ namespace UserInterface.Presenters
             // Go look for all [UserInterfaceAction]
             foreach (MethodInfo method in typeof(MainMenu).GetMethods())
             {
-                MainMenuAttribute mainMenuName = Utility.Reflection.GetAttribute(method, typeof(MainMenuAttribute), false) as MainMenuAttribute;
+                MainMenuAttribute mainMenuName = ReflectionUtilities.GetAttribute(method, typeof(MainMenuAttribute), false) as MainMenuAttribute;
                 if (mainMenuName != null)
                 {
                     MenuDescriptionArgs.Description desc = new MenuDescriptionArgs.Description();
@@ -478,7 +479,7 @@ namespace UserInterface.Presenters
             // Go look for all [UserInterfaceAction]
             foreach (MethodInfo method in typeof(ContextMenu).GetMethods())
             {
-                ContextMenuAttribute contextMenuAttr = Utility.Reflection.GetAttribute(method, typeof(ContextMenuAttribute), false) as ContextMenuAttribute;
+                ContextMenuAttribute contextMenuAttr = ReflectionUtilities.GetAttribute(method, typeof(ContextMenuAttribute), false) as ContextMenuAttribute;
                 if (contextMenuAttr != null)
                 {
                     bool ok = true;
@@ -612,7 +613,7 @@ namespace UserInterface.Presenters
             if (dragObject != null && toParent != null)
             {
                 string fromModelXml = dragObject.Xml;
-                string fromParentPath = Utility.String.ParentName(dragObject.NodePath);
+                string fromParentPath = StringUtilities.ParentName(dragObject.NodePath);
 
                 ICommand cmd = null;
                 if (e.Copied)
@@ -654,7 +655,7 @@ namespace UserInterface.Presenters
                     if (model != null && model.GetType().Name != "Simulations" /*&& e.NewName != null*/ && e.NewName != string.Empty)
                     {
                         this.HideRightHandPanel();
-                        string parentModelPath = Utility.String.ParentName(e.NodePath);
+                        string parentModelPath = StringUtilities.ParentName(e.NodePath);
                         RenameModelCommand cmd = new RenameModelCommand(model, parentModelPath, e.NewName);
                         CommandHistory.Add(cmd);
                         this.view.CurrentNodePath = parentModelPath + "." + e.NewName;
@@ -826,8 +827,8 @@ namespace UserInterface.Presenters
 
                 if (model != null)
                 {
-                    ViewNameAttribute viewName = Utility.Reflection.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                    PresenterNameAttribute presenterName = Utility.Reflection.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
 
                     if (this.advancedMode)
                     {

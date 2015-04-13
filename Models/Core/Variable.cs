@@ -3,6 +3,7 @@
     using System;
     using System.Reflection;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
 
     /// <summary>
@@ -34,7 +35,7 @@
         {
             get
             {
-                return Utility.Reflection.GetValueOfFieldOrProperty("Name", Object) as string;
+                return ReflectionUtilities.GetValueOfFieldOrProperty("Name", Object) as string;
             }
         }
 
@@ -118,7 +119,7 @@
                 if (FieldInfo.Name.Contains("BackingField"))
                 {
                     string st = FieldInfo.Name;
-                    return "[" + Utility.String.SplitOffBracketedValue(ref st, '<', '>') + "]";
+                    return "[" + StringUtilities.SplitOffBracketedValue(ref st, '<', '>') + "]";
                 }
                 return FieldInfo.Name; 
             } 
@@ -146,7 +147,7 @@
         {
             get
             {
-                DescriptionAttribute descriptionAttribute = Utility.Reflection.GetAttribute(FieldInfo, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                DescriptionAttribute descriptionAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (descriptionAttribute != null && descriptionAttribute.ToString() != "")
                     return descriptionAttribute.ToString();
                 return null;
@@ -160,7 +161,7 @@
         {
             get
             {
-                UnitsAttribute unitsAttribute = Utility.Reflection.GetAttribute(FieldInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(FieldInfo, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (unitsAttribute != null)
                     return "(" + unitsAttribute.ToString() + ")";
                 return null;

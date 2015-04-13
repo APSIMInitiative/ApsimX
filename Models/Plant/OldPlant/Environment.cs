@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -32,7 +33,7 @@ namespace Models.PMF.OldPlant
             {
                 const double SVPfrac = 0.75;
 
-                return SVPfrac * (Utility.Met.svp(MetData.MaxT) - Utility.Met.svp(MetData.MinT)) / 10;
+                return SVPfrac * (MetUtilities.svp(MetData.MaxT) - MetUtilities.svp(MetData.MinT)) / 10;
             }
         }
 

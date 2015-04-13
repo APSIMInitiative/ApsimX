@@ -487,6 +487,8 @@
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -535,6 +537,8 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -546,7 +550,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -571,7 +575,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -580,7 +584,7 @@ namespace Models
 		{
 			accumulatedRain.Update();
 			
-			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
@@ -1126,6 +1130,8 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -1174,6 +1180,8 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -1185,7 +1193,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -1210,7 +1218,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -1219,7 +1227,7 @@ namespace Models
 		{
 			accumulatedRain.Update();
 			
-			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
@@ -1934,6 +1942,8 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -1982,6 +1992,8 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -1993,7 +2005,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -2018,7 +2030,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -2027,7 +2039,7 @@ namespace Models
 		{
 			accumulatedRain.Update();
 			
-			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
@@ -2511,6 +2523,8 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -2559,6 +2573,8 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -2570,7 +2586,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -2595,7 +2611,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -2604,7 +2620,7 @@ namespace Models
 		{
 			accumulatedRain.Update();
 			
-			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
@@ -3213,6 +3229,8 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -3261,6 +3279,8 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -3272,7 +3292,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -3297,7 +3317,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -3306,7 +3326,7 @@ namespace Models
 		{
 			accumulatedRain.Update();
 			
-			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
@@ -3790,6 +3810,8 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -3838,6 +3860,8 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -3849,7 +3873,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -3874,7 +3898,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -3883,7 +3907,7 @@ namespace Models
 		{
 			accumulatedRain.Update();
 			
-			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
@@ -6573,6 +6597,8 @@ namespace Models
         using System;
         using Models.Core;
         using Models.PMF;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
            [Serializable] 
@@ -6625,6 +6651,8 @@ namespace Models
         using Models.Core;
         using Models.PMF;
         using System.Xml.Serialization;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
            [Serializable] 
@@ -6684,6 +6712,8 @@ using Models.Soils;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable] 
@@ -6753,16 +6783,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.NO3N);
-			NH4N = Utility.Math.Sum(Soil.NH4N);
-			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
+			NO3N = MathUtilities.Sum(Soil.NO3N);
+			NH4N = MathUtilities.Sum(Soil.NH4N);
+			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -6774,8 +6804,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -6788,7 +6818,7 @@ namespace Models
 			AccumRainfall += Met.Rain;
 			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
+			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
 			
 			//!!!!!! Thermal time calculation !!!!!!
@@ -6800,17 +6830,17 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
-			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
+			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }
@@ -9631,6 +9661,8 @@ namespace Models
         using System;
         using Models.Core;
         using Models.PMF;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
            [Serializable] 
@@ -9694,6 +9726,8 @@ namespace Models
         using Models.Core;
         using Models.PMF;
         using System.Xml.Serialization;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
            [Serializable] 
@@ -9755,6 +9789,8 @@ using Models.Soils;
 using Models.PMF;
 using Models;
 using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable] 
@@ -9824,16 +9860,16 @@ namespace Models
 		{
 			//!!!!!! Nitrogen balance components !!!!!!
 			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
+           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			OrganicN = FomN + HumN + BiomN;
-			NO3N = Utility.Math.Sum(Soil.NO3N);
-			NH4N = Utility.Math.Sum(Soil.NH4N);
-			UreaN = Utility.Math.Sum(Soil.SoilNitrogen.urea);
+			NO3N = MathUtilities.Sum(Soil.NO3N);
+			NH4N = MathUtilities.Sum(Soil.NH4N);
+			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
 			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = Utility.Math.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
+			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
+			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
             int layers = Soil.Thickness.Length;
 			if (InitialDay == true)
 			{
@@ -9845,8 +9881,8 @@ namespace Models
 			AccumFert += Fert.NitrogenApplied;
 			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += Utility.Math.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
+            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
 			AccumPlantN -= (double)zone.Get("Potato.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
@@ -9859,7 +9895,7 @@ namespace Models
 			AccumRainfall += Met.Rain;
 			AccumEP -= (double)zone.Get("Potato.Leaf.Transpiration");
 			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = Utility.Math.Sum(Soil.SoilWater.outflow_lat);
+			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
 			
 			//!!!!!! Thermal time calculation !!!!!!
@@ -9871,17 +9907,17 @@ namespace Models
 		[EventSubscribe("DoManagementCalculations")]
 		private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			FomN = Utility.Math.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = Utility.Math.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = Utility.Math.Sum(Soil.SoilNitrogen.MicrobialN);
+			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
+			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
+		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
 			
 			
 			AccumEO -= Soil.SoilWater.Eo;
 			AccumES -= Soil.SoilWater.Es; 
 			AccumDrainage -= Soil.SoilWater.Drainage;
 			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = Utility.Math.Sum(Soil.SoilWater.SWmm);
-			DUL = Utility.Math.Sum(Soil.SoilWater.DULmm);
+			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
 		}
 	}
 }

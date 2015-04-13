@@ -6,6 +6,8 @@ using System.Xml.Schema;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using APSIM.Shared.Utilities;
+using System.Reflection;
 
 namespace Models.Core
 {
@@ -75,7 +77,7 @@ namespace Models.Core
                     {
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(xml);
-                        Model ModelFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as Model;
+                        Model ModelFromResource = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as Model;
                         Children.AddRange(ModelFromResource.Children);
 
                         SetNotVisible(ModelFromResource);

@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using APSIM.Shared.Utilities;
 
 /// <summary>
 /// Calculates the average soil temperature at the centre of each layer, based on the soil temperature model of EPIC (Williams et al 1984)
@@ -190,7 +191,7 @@ public class simpleSoilTemp
             cum_depth += _dlayer[layer];
 
             // depth lag factor - This reduces changes in soil temperature with depth (radians of a year)
-            double depth_lag = Utility.Math.Divide(cum_depth, DampingDepth, 0.0);
+            double depth_lag = MathUtilities.Divide(cum_depth, DampingDepth, 0.0);
 
             // soil temperature
             st[layer] = LayerTemp(depth_lag, alx, TempChange);
@@ -222,7 +223,7 @@ public class simpleSoilTemp
             int dayDoY = _today.AddDays(- day).DayOfYear - 1;
             ave_surf_temp += surf_temp[dayDoY];
         }
-        ave_surf_temp = Utility.Math.Divide(ave_surf_temp, ndays, 0.0);
+        ave_surf_temp = MathUtilities.Divide(ave_surf_temp, ndays, 0.0);
 
         // Calculate today's normal surface soil temperature.
         // There is no depth lag, being the surface, and there is no adjustment for the current temperature conditions
@@ -276,7 +277,7 @@ public class simpleSoilTemp
             cum_depth += _dlayer[layer];
         }
 
-        ave_bd = Utility.Math.Divide(ave_bd, cum_depth, 0.0);
+        ave_bd = MathUtilities.Divide(ave_bd, cum_depth, 0.0);
 
         // bd factor ranges from almost 0 to almost 1 (sigmoid funtion)
         double favbd = ave_bd / (ave_bd + 686.0 * Math.Exp(-5.63 * ave_bd));
@@ -295,7 +296,7 @@ public class simpleSoilTemp
 
         // get fractional water content
         // wc can range from 0 to 1 while wcf ranges from 1 to 0
-        double wc = Utility.Math.Divide(sw_avail_tot, ww * cum_depth, 1.0);
+        double wc = MathUtilities.Divide(sw_avail_tot, ww * cum_depth, 1.0);
         wc = Math.Max(0.0, Math.Min(1.0, wc));
         double wcf = (1.0 - wc) / (1.0 + wc);
 
@@ -303,7 +304,7 @@ public class simpleSoilTemp
         // When wc is 0, wcf=1 and f=500/damp_depth_max and soiln2_SoilTemp_DampDepth=500
         // When wc is 1, wcf=0 and f=1 and soiln2_SoilTemp_DampDepth=damp_depth_max
         //   and that damp_depth_max is the maximum.
-        //double b = Math.Log(Utility.Math.Divide(500.0, damp_depth_max, 1.0e10));
+        //double b = Math.Log(MathUtilities.Divide(500.0, damp_depth_max, 1.0e10));
         double b = Math.Log(500.0 / damp_depth_max);
         double f = Math.Exp(b * wcf * wcf);
 

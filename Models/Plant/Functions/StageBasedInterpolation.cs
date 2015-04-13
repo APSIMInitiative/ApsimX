@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -84,7 +85,7 @@ namespace Models.PMF.Functions
 
                         if (Proportional)
                         {
-                            double slope = Utility.Math.Divide(Codes[i] - Codes[i - 1],
+                            double slope = MathUtilities.Divide(Codes[i] - Codes[i - 1],
                                                                 StageCodes[i] - StageCodes[i - 1],
                                                                 Codes[i]);
                             return Codes[i] + slope * (Phenology.Stage - StageCodes[i]);

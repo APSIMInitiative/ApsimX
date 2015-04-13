@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -30,8 +31,8 @@ namespace Models.PMF.Functions
         {
             get
             {
-                double PhotoperiodToday = Utility.Math.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
-                double PhotoperiodYesterday = Utility.Math.DayLength(Clock.Today.DayOfYear - 1, Twilight, MetData.Latitude);
+                double PhotoperiodToday = MathUtilities.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
+                double PhotoperiodYesterday = MathUtilities.DayLength(Clock.Today.DayOfYear - 1, Twilight, MetData.Latitude);
                 double PhotoperiodDelta = PhotoperiodToday - PhotoperiodYesterday;
                 return PhotoperiodDelta;
             }

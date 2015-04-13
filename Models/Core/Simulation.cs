@@ -6,6 +6,7 @@ using System.Xml;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.Core 
 {
@@ -13,10 +14,21 @@ namespace Models.Core
     /// A simulation model
     /// </summary>
     [Serializable]
-    public class Simulation : Zone, Utility.JobManager.IRunnable
+    public class Simulation : Zone, JobManager.IRunnable
     {
         /// <summary>The _ is running</summary>
         private bool _IsRunning = false;
+
+        /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
+        [XmlIgnore]
+        public bool IsCompleted { get; set; }
+
+        /// <summary>Gets the error message. Can be null if no error. Set by JobManager.</summary>
+        [XmlIgnore]
+        public string ErrorMessage { get; set; }
+
+        /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
+        public bool IsComputationallyTimeConsuming { get { return true; } }
 
         /// <summary>The timer</summary>
         [NonSerialized]

@@ -6,6 +6,7 @@
 namespace Models.Soils.Arbitrator
 {
     using System;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Represents a zone (point, field etc) that has water and N values.
@@ -25,7 +26,7 @@ namespace Models.Soils.Arbitrator
         public double[] NH4N;
 
         /// <summary>Gets the sum of 'Water' (mm)</summary>
-        public double TotalWater { get { return Utility.Math.Sum(Water); } }
+        public double TotalWater { get { return MathUtilities.Sum(Water); } }
 
         /// <summary>Implements the operator *.</summary>
         /// <param name="zone">The zone</param>
@@ -35,9 +36,9 @@ namespace Models.Soils.Arbitrator
         {
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
             NewZ.Name = zone.Name;
-            NewZ.Water = Utility.Math.Multiply_Value(zone.Water, value);
-            NewZ.NO3N = Utility.Math.Multiply_Value(zone.NO3N, value);
-            NewZ.NH4N = Utility.Math.Multiply_Value(zone.NH4N, value);
+            NewZ.Water = MathUtilities.Multiply_Value(zone.Water, value);
+            NewZ.NO3N = MathUtilities.Multiply_Value(zone.NO3N, value);
+            NewZ.NH4N = MathUtilities.Multiply_Value(zone.NH4N, value);
             return NewZ;
         }
 
@@ -52,9 +53,9 @@ namespace Models.Soils.Arbitrator
                 throw new Exception("Cannot add zones with different names");
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
             NewZ.Name = zone1.Name;
-            NewZ.Water = Utility.Math.Add(zone1.Water, zone2.Water);
-            NewZ.NO3N = Utility.Math.Add(zone1.NO3N, zone2.NO3N);
-            NewZ.NH4N = Utility.Math.Add(zone1.NH4N, zone2.NH4N);
+            NewZ.Water = MathUtilities.Add(zone1.Water, zone2.Water);
+            NewZ.NO3N = MathUtilities.Add(zone1.NO3N, zone2.NO3N);
+            NewZ.NH4N = MathUtilities.Add(zone1.NH4N, zone2.NH4N);
             return NewZ;
         }
 
@@ -69,9 +70,9 @@ namespace Models.Soils.Arbitrator
                 throw new Exception("Cannot subtract zones with different names");
             ZoneWaterAndN NewZ = new ZoneWaterAndN();
             NewZ.Name = zone1.Name;
-            NewZ.Water = Utility.Math.Subtract(zone1.Water, zone2.Water);
-            NewZ.NO3N = Utility.Math.Subtract(zone1.NO3N, zone2.NO3N);
-            NewZ.NH4N = Utility.Math.Subtract(zone1.NH4N, zone2.NH4N);
+            NewZ.Water = MathUtilities.Subtract(zone1.Water, zone2.Water);
+            NewZ.NO3N = MathUtilities.Subtract(zone1.NO3N, zone2.NO3N);
+            NewZ.NH4N = MathUtilities.Subtract(zone1.NH4N, zone2.NH4N);
             return NewZ;
         }
     }

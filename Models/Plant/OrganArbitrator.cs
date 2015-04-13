@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF
 {
@@ -479,7 +480,7 @@ namespace Models.PMF
                     if (organSupply != null)
                     {
                         supply = organSupply;
-                        Supply += Utility.Math.Sum(organSupply);
+                        Supply += MathUtilities.Sum(organSupply);
                     }
                     Demand += o.WaterDemand;
                 }
@@ -490,7 +491,7 @@ namespace Models.PMF
 
                 ZoneWaterAndN uptake = new ZoneWaterAndN();
                 uptake.Name = soilstate.Zones[0].Name;
-                uptake.Water = Utility.Math.Multiply_Value(supply, FractionUsed);
+                uptake.Water = MathUtilities.Multiply_Value(supply, FractionUsed);
                 uptake.NO3N = new double[uptake.Water.Length];
                 uptake.NH4N = new double[uptake.Water.Length];
 
@@ -507,7 +508,7 @@ namespace Models.PMF
         public void SetSWUptake(List<ZoneWaterAndN> zones)
         {
             double[] uptake = zones[0].Water;
-            double Supply = Utility.Math.Sum(uptake);
+            double Supply = MathUtilities.Sum(uptake);
             double Demand = 0;
             foreach (IArbitration o in Organs)
                 Demand += o.WaterDemand;
@@ -641,12 +642,12 @@ namespace Models.PMF
             //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
             for (int i = 0; i < Organs.Length; i++)
             {   //Allocation of n involves resetting UptakeSupply from the potential value calculated on DoNUptakeDemandCalculations to an actual value based on what soil arbitrator allocated
-                N.UptakeSupply[i] = Utility.Math.Sum(AllocatedNO3Nuptake) * kgha2gsm * proportion[i];
-                N.UptakeSupply[i] += Utility.Math.Sum(AllocatedNH4Nuptake) * kgha2gsm * proportion[i];
+                N.UptakeSupply[i] = MathUtilities.Sum(AllocatedNO3Nuptake) * kgha2gsm * proportion[i];
+                N.UptakeSupply[i] += MathUtilities.Sum(AllocatedNH4Nuptake) * kgha2gsm * proportion[i];
             }
             
             //Recalculate totals based on actual supply
-            N.TotalUptakeSupply = Utility.Math.Sum(N.UptakeSupply);
+            N.TotalUptakeSupply = MathUtilities.Sum(N.UptakeSupply);
             N.TotalPlantSupply = N.TotalReallocationSupply + N.TotalUptakeSupply + N.TotalFixationSupply + N.TotalRetranslocationSupply;
             
             //Allocate N that the SoilArbitrator has allocated the plant to each organ
@@ -700,10 +701,10 @@ namespace Models.PMF
                 DM.Start += Organs[i].TotalDM;
             }
 
-            DM.TotalReallocationSupply = Utility.Math.Sum(DM.ReallocationSupply);
-            DM.TotalUptakeSupply = Utility.Math.Sum(DM.UptakeSupply);
-            DM.TotalFixationSupply = Utility.Math.Sum(DM.FixationSupply);
-            DM.TotalRetranslocationSupply = Utility.Math.Sum(DM.RetranslocationSupply);
+            DM.TotalReallocationSupply = MathUtilities.Sum(DM.ReallocationSupply);
+            DM.TotalUptakeSupply = MathUtilities.Sum(DM.UptakeSupply);
+            DM.TotalFixationSupply = MathUtilities.Sum(DM.FixationSupply);
+            DM.TotalRetranslocationSupply = MathUtilities.Sum(DM.RetranslocationSupply);
             DM.TotalPlantSupply = DM.TotalReallocationSupply + DM.TotalUptakeSupply + DM.TotalFixationSupply + DM.TotalRetranslocationSupply;
             
             // SET OTHER ORGAN VARIABLES AND CALCULATE TOTALS
@@ -724,9 +725,9 @@ namespace Models.PMF
                 DM.NonStructuralAllocation[i] = 0;
             }
 
-            DM.TotalStructuralDemand = Utility.Math.Sum(DM.StructuralDemand);
-            DM.TotalMetabolicDemand = Utility.Math.Sum(DM.MetabolicDemand);
-            DM.TotalNonStructuralDemand = Utility.Math.Sum(DM.NonStructuralDemand);
+            DM.TotalStructuralDemand = MathUtilities.Sum(DM.StructuralDemand);
+            DM.TotalMetabolicDemand = MathUtilities.Sum(DM.MetabolicDemand);
+            DM.TotalNonStructuralDemand = MathUtilities.Sum(DM.NonStructuralDemand);
             DM.TotalPlantDemand = DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalNonStructuralDemand;
 
             DM.TotalStructuralAllocation = 0;
@@ -753,9 +754,9 @@ namespace Models.PMF
         virtual public void SendPotentialDMAllocations(IArbitration[] Organs)
         {
             //  Allocate to meet Organs demands
-            DM.TotalStructuralAllocation = Utility.Math.Sum(DM.StructuralAllocation);
-            DM.TotalMetabolicAllocation = Utility.Math.Sum(DM.MetabolicAllocation);
-            DM.TotalNonStructuralAllocation = Utility.Math.Sum(DM.NonStructuralAllocation);
+            DM.TotalStructuralAllocation = MathUtilities.Sum(DM.StructuralAllocation);
+            DM.TotalMetabolicAllocation = MathUtilities.Sum(DM.MetabolicAllocation);
+            DM.TotalNonStructuralAllocation = MathUtilities.Sum(DM.NonStructuralAllocation);
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
             DM.SinkLimitation = Math.Max(0.0, DM.TotalFixationSupply + DM.TotalRetranslocationSupply + DM.TotalReallocationSupply - DM.Allocated);
             
@@ -797,10 +798,10 @@ namespace Models.PMF
                 BAT.Start += Organs[i].TotalN;
             }
 
-            BAT.TotalReallocationSupply = Utility.Math.Sum(BAT.ReallocationSupply);
-            //BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);       This is done on DoNutrientUptakeCalculations
-            BAT.TotalFixationSupply = Utility.Math.Sum(BAT.FixationSupply);
-            BAT.TotalRetranslocationSupply = Utility.Math.Sum(BAT.RetranslocationSupply);
+            BAT.TotalReallocationSupply = MathUtilities.Sum(BAT.ReallocationSupply);
+            //BAT.TotalUptakeSupply = MathUtilities.Sum(BAT.UptakeSupply);       This is done on DoNutrientUptakeCalculations
+            BAT.TotalFixationSupply = MathUtilities.Sum(BAT.FixationSupply);
+            BAT.TotalRetranslocationSupply = MathUtilities.Sum(BAT.RetranslocationSupply);
             BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
             
             for (int i = 0; i < Organs.Length; i++)
@@ -820,9 +821,9 @@ namespace Models.PMF
                 BAT.NonStructuralAllocation[i] = 0;
             }
 
-            BAT.TotalStructuralDemand = Utility.Math.Sum(BAT.StructuralDemand);
-            BAT.TotalMetabolicDemand = Utility.Math.Sum(BAT.MetabolicDemand);
-            BAT.TotalNonStructuralDemand = Utility.Math.Sum(BAT.NonStructuralDemand);
+            BAT.TotalStructuralDemand = MathUtilities.Sum(BAT.StructuralDemand);
+            BAT.TotalMetabolicDemand = MathUtilities.Sum(BAT.MetabolicDemand);
+            BAT.TotalNonStructuralDemand = MathUtilities.Sum(BAT.NonStructuralDemand);
             BAT.TotalPlantDemand = BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalNonStructuralDemand;
 
             BAT.TotalStructuralAllocation = 0;
@@ -866,7 +867,7 @@ namespace Models.PMF
                         BAT.Reallocation[i] += BiomassReallocated * RelativeSupply;
                     }
                 }
-                BAT.TotalReallocation = Utility.Math.Sum(BAT.Reallocation);
+                BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
             }
         }
         /// <summary>Does the uptake.</summary>
@@ -884,28 +885,28 @@ namespace Models.PMF
                 double[] organNO3Supply = Organs[i].NO3NSupply(soilstate.Zones);
                 if (organNO3Supply != null)
                 {
-                    PotentialNO3NUptake = Utility.Math.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
-                    BAT.UptakeSupply[i] = Utility.Math.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
+                    PotentialNO3NUptake = MathUtilities.Add(PotentialNO3NUptake, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                    BAT.UptakeSupply[i] = MathUtilities.Sum(organNO3Supply) * kgha2gsm;    //Populate uptakeSupply for each organ for internal allocation routines
                 }
 
                 double[] organNH4Supply = Organs[i].NH4NSupply(soilstate.Zones);
                 if (organNH4Supply != null)
                 {
-                    PotentialNH4NUptake = Utility.Math.Add(PotentialNH4NUptake, organNH4Supply);
-                    BAT.UptakeSupply[i] += Utility.Math.Sum(organNH4Supply) * kgha2gsm;
+                    PotentialNH4NUptake = MathUtilities.Add(PotentialNH4NUptake, organNH4Supply);
+                    BAT.UptakeSupply[i] += MathUtilities.Sum(organNH4Supply) * kgha2gsm;
                 }
             }
             
             //Calculate plant level supply totals.
-            BAT.TotalUptakeSupply = Utility.Math.Sum(BAT.UptakeSupply);
+            BAT.TotalUptakeSupply = MathUtilities.Sum(BAT.UptakeSupply);
             BAT.TotalPlantSupply = BAT.TotalReallocationSupply + BAT.TotalUptakeSupply + BAT.TotalFixationSupply + BAT.TotalRetranslocationSupply;
 
             //If NUsupply is greater than uptake (total demand - reallocatio nsupply) reduce the PotentialUptakes that we pass to the soil arbitrator
             if (BAT.TotalUptakeSupply > (BAT.TotalPlantDemand - BAT.TotalReallocation))
             {
                 double ratio = Math.Min(1.0, (BAT.TotalPlantDemand - BAT.TotalReallocation) / BAT.TotalUptakeSupply);
-                PotentialNO3NUptake = Utility.Math.Multiply_Value(PotentialNO3NUptake, ratio);
-                PotentialNH4NUptake = Utility.Math.Multiply_Value(PotentialNH4NUptake, ratio);
+                PotentialNO3NUptake = MathUtilities.Multiply_Value(PotentialNO3NUptake, ratio);
+                PotentialNH4NUptake = MathUtilities.Multiply_Value(PotentialNH4NUptake, ratio);
             }
 
         }
@@ -995,7 +996,7 @@ namespace Models.PMF
                             double Respiration = BiomassFixed * RelativeSupply * Organs[i].NFixationCost;  //Calculalte how much respirtion is associated with fixation
                             DM.Respiration[i] = Respiration; // allocate it to the organ
                         }
-                        DM.TotalRespiration = Utility.Math.Sum(DM.Respiration);
+                        DM.TotalRespiration = MathUtilities.Sum(DM.Respiration);
                     }
                 }
 
@@ -1091,9 +1092,9 @@ namespace Models.PMF
                 }
             }
             //Recalculated DM Allocation totals
-            DM.TotalStructuralAllocation = Utility.Math.Sum(DM.StructuralAllocation);
-            DM.TotalMetabolicAllocation = Utility.Math.Sum(DM.MetabolicAllocation);
-            DM.TotalNonStructuralAllocation = Utility.Math.Sum(DM.NonStructuralAllocation);
+            DM.TotalStructuralAllocation = MathUtilities.Sum(DM.StructuralAllocation);
+            DM.TotalMetabolicAllocation = MathUtilities.Sum(DM.MetabolicAllocation);
+            DM.TotalNonStructuralAllocation = MathUtilities.Sum(DM.NonStructuralAllocation);
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }

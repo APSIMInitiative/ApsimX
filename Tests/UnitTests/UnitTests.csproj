@@ -68,6 +68,10 @@
     <None Include="Resources\Test3.apsimxForUnitTest" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
+      <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
+      <Name>APSIM.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Models\Importer\Importer.csproj">
       <Project>{075F2644-F14E-4010-BA52-35E4B0011835}</Project>
       <Name>Importer</Name>

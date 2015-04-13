@@ -9,6 +9,7 @@ namespace Models.Graph
     using System.Collections;
     using System.Collections.Generic;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// GraphValues encapsulates all ways that data (a series of values) can be supplied to 
@@ -39,7 +40,7 @@ namespace Models.Graph
             if (graph.DataStore != null && this.TableName != null && this.TableName != string.Empty)
             {
                 List<string> names = new List<string>();
-                names.AddRange(Utility.DataTable.GetColumnNames(graph.DataStore.GetData("*", this.TableName)));
+                names.AddRange(DataTableUtilities.GetColumnNames(graph.DataStore.GetData("*", this.TableName)));
                 return names.ToArray();
             }
             return null;
@@ -66,7 +67,7 @@ namespace Models.Graph
                     if (modelWithData == null)
                     {
                         // Try by assuming the name is a type.
-                        Type t = Utility.Reflection.GetTypeFromUnqualifiedName(modelName);
+                        Type t = ReflectionUtilities.GetTypeFromUnqualifiedName(modelName);
                         if (t != null)
                         {
                             modelWithData = Apsim.Find(graph, t) as IModel;

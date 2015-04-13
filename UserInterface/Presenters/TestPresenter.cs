@@ -15,6 +15,7 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The presenter for the Test object
@@ -329,7 +330,7 @@ namespace UserInterface.Presenters
                     DataTable data = this.dataStore.GetData("*", tableName);
                     if (data != null)
                     {
-                        foreach (string columnName in Utility.DataTable.GetColumnNames(data))
+                        foreach (string columnName in DataTableUtilities.GetColumnNames(data))
                             e.AllItems.Add(new NeedContextItemsArgs.ContextItem() { Name = columnName });
                     }
                 }

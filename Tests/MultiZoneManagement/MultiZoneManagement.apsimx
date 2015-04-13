@@ -40,7 +40,7 @@ using Models.Core;
 using Models.PMF;
 using System.Collections.Generic;
 using Models.Soils;
-
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -78,7 +78,7 @@ namespace Models
 			  for (int i = 0; i < Zones.Length; i++)
               {
               Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;
-              SoilWaterDeficit[i] = Utility.Math.Sum(soil.SoilWater.DULmm) - Utility.Math.Sum(soil.SoilWater.SWmm);
+              SoilWaterDeficit[i] = MathUtilities.Sum(soil.SoilWater.DULmm) - MathUtilities.Sum(soil.SoilWater.SWmm);
               Irrigation irrigation = Apsim.Find(Zones[i], typeof(Irrigation)) as Irrigation;
               irrigation.Apply(SoilWaterDeficit[i]);
               }
@@ -558,6 +558,8 @@ namespace Models
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -606,6 +608,8 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -617,7 +621,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -642,7 +646,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -651,7 +655,7 @@ namespace Models
 		{
 			accumulatedRain.Update();
 			
-			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
@@ -1139,6 +1143,8 @@ namespace Models
         <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -1187,6 +1193,8 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -1198,7 +1206,7 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Plant15 Wheat;
 		[Link] Soil Soil; 
-		Utility.Accumulator accumulatedRain;
+		Accumulator accumulatedRain;
 		
 		[Description("Start of sowing window (d-mmm)")]
 		public string StartDate { get; set;}
@@ -1223,7 +1231,7 @@ namespace Models
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Utility.Accumulator(this, "[Weather].Rain", RainDays);
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
 		
 
@@ -1232,7 +1240,7 @@ namespace Models
 		{
 			accumulatedRain.Update();
 			
-			if (Utility.Date.WithinDates(StartDate,Clock.Today,EndDate) &&
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
 			    Soil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)

@@ -9,6 +9,7 @@ using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -786,7 +787,7 @@ namespace Models.PMF.Organs
             int Count = 0;
             foreach (LeafCohort L in Leaves)
             {
-                object o = Utility.Reflection.GetValueOfFieldOrProperty(Condition, L);
+                object o = ReflectionUtilities.GetValueOfFieldOrProperty(Condition, L);
                 if (o == null)
                     throw new NotImplementedException();
                 bool ok = (bool)o;
@@ -1233,7 +1234,7 @@ namespace Models.PMF.Organs
                         remainder = Math.Max(0.0, remainder - ReAlloc);
                         DMReAllocationCohort[i] = ReAlloc;
                     }
-                    if (!Utility.Math.FloatsAreEqual(remainder, 0.0))
+                    if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
                         throw new Exception(Name + " DM Reallocation demand left over after processing.");
                 }
 
@@ -1422,7 +1423,7 @@ namespace Models.PMF.Organs
                         NRetranslocationCohort[i] = Retrans;
                         remainder = Math.Max(0.0, remainder - Retrans);
                     }
-                    if (!Utility.Math.FloatsAreEqual(remainder, 0.0))
+                    if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
                         throw new Exception(Name + " N Retranslocation demand left over after processing.");
                 }
 
@@ -1443,7 +1444,7 @@ namespace Models.PMF.Organs
                         NReallocationCohort[i] = ReAlloc;
                         remainder = Math.Max(0.0, remainder - ReAlloc);
                     }
-                    if (!Utility.Math.FloatsAreEqual(remainder, 0.0))
+                    if (!MathUtilities.FloatsAreEqual(remainder, 0.0))
                         throw new Exception(Name + " N Reallocation demand left over after processing.");
                 }
 

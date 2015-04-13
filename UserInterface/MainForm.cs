@@ -6,6 +6,7 @@ using System.IO;
 using UserInterface.Commands;
 using UserInterface.Presenters;
 using System.Reflection;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface
 {
@@ -140,7 +141,7 @@ namespace UserInterface
             StreamReader reader = new StreamReader(fileName);
             string code = reader.ReadToEnd();
             reader.Close();
-            Assembly compiledAssembly = Utility.Reflection.CompileTextToAssembly(code, null);
+            Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(code, null);
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");

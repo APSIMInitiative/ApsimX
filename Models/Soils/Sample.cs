@@ -9,6 +9,7 @@ namespace Models.Soils
     using System.Diagnostics.CodeAnalysis;
     using System.Xml.Serialization;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The class represents a soil sample.
@@ -343,11 +344,11 @@ namespace Models.Soils
                 {
                     if (this.SWUnits == SWUnitsEnum.Volumetric)
                     {
-                        return Utility.Math.Multiply(this.SW, this.Thickness);
+                        return MathUtilities.Multiply(this.SW, this.Thickness);
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
-                        return Utility.Math.Multiply(Utility.Math.Multiply(this.SW, this.Soil.BDMapped(this.Thickness)), this.Thickness);
+                        return MathUtilities.Multiply(MathUtilities.Multiply(this.SW, this.Soil.BDMapped(this.Thickness)), this.Thickness);
                     }
                     else
                     {
@@ -374,11 +375,11 @@ namespace Models.Soils
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
-                        return Utility.Math.Multiply(this.SW, this.Soil.BDMapped(this.Thickness));
+                        return MathUtilities.Multiply(this.SW, this.Soil.BDMapped(this.Thickness));
                     }
                     else
                     {
-                        return Utility.Math.Divide(this.SW, this.Thickness);
+                        return MathUtilities.Divide(this.SW, this.Thickness);
                     }
                 }
 
@@ -395,7 +396,7 @@ namespace Models.Soils
             {
                 if (this.OCUnits == OCSampleUnitsEnum.WalkleyBlack)
                 {
-                    return Utility.Math.Multiply_Value(this.OC, 1.3);
+                    return MathUtilities.Multiply_Value(this.OC, 1.3);
                 }
                 else
                 {
@@ -414,7 +415,7 @@ namespace Models.Soils
                 if (this.PHUnits == PHSampleUnitsEnum.CaCl2)
                 {
                     // pH in water = (pH in CaCl X 1.1045) - 0.1375
-                    return Utility.Math.Subtract_Value(Utility.Math.Multiply_Value(this.PH, 1.1045), 0.1375);
+                    return MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(this.PH, 1.1045), 0.1375);
                 }
                 else
                 {

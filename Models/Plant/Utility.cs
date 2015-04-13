@@ -9,6 +9,7 @@ using System.Collections;
 using System.Reflection;
 using Models.Core;
 using Models.PMF.OldPlant;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF
 {
@@ -92,15 +93,15 @@ namespace Models.PMF
                 {
                     // now we need to divvy
                     new_index = (int)(p_index + Math.Min(1.0, dlt_index));
-                    if (Utility.Math.FloatsAreEqual(Math.IEEERemainder(p_index, 1.0), 0.0))
+                    if (MathUtilities.FloatsAreEqual(Math.IEEERemainder(p_index, 1.0), 0.0))
                     {
-                        fract_in_old = 1.0 - Utility.Math.Divide(index_devel - 1.0, dlt_index, 0.0);
+                        fract_in_old = 1.0 - MathUtilities.Divide(index_devel - 1.0, dlt_index, 0.0);
                         portion_in_old = fract_in_old * (value + array[current_index]) -
                                              array[current_index];
                     }
                     else
                     {
-                        fract_in_old = 1.0f - Utility.Math.Divide(index_devel - 1.0, dlt_index, 0.0);
+                        fract_in_old = 1.0f - MathUtilities.Divide(index_devel - 1.0, dlt_index, 0.0);
                         portion_in_old = fract_in_old * value;
                     }
                     portion_in_new = value - portion_in_old;
@@ -145,9 +146,9 @@ namespace Models.PMF
                                          double n_deficit_uptake_fraction,
                                          ref double NDemand, ref double NMax)
         {
-            double part_fract = Utility.Math.Divide(Growth.Wt, dltDm, 0.0);
+            double part_fract = MathUtilities.Divide(Growth.Wt, dltDm, 0.0);
             double dlt_dm_pot = dltDmPotRue * part_fract;         // potential dry weight increase (g/m^2)
-            dlt_dm_pot = Utility.Math.Constrain(dlt_dm_pot, 0.0, dltDmPotRue);
+            dlt_dm_pot = MathUtilities.Constrain(dlt_dm_pot, 0.0, dltDmPotRue);
 
             if (Green.Wt > 0.0)
             {
@@ -174,8 +175,8 @@ namespace Models.PMF
                 NDemand = N_demand_old + N_demand_new;
                 NMax = N_max_old + N_max_new;
 
-                NDemand = Utility.Math.Constrain(NDemand, 0.0, double.MaxValue);
-                NMax = Utility.Math.Constrain(NMax, 0.0, double.MaxValue);
+                NDemand = MathUtilities.Constrain(NDemand, 0.0, double.MaxValue);
+                NMax = MathUtilities.Constrain(NMax, 0.0, double.MaxValue);
             }
             else
                 NDemand = NMax = 0.0;
@@ -220,7 +221,7 @@ namespace Models.PMF
         /// </summary>
         internal static Biomass RemoveDM(double delta, Biomass Pool, string OrganName)
         {
-            double fraction = Utility.Math.Divide(delta, Pool.Wt, 0.0);
+            double fraction = MathUtilities.Divide(delta, Pool.Wt, 0.0);
             Biomass RemovedPool = Pool * fraction;
 
             double error_margin = 1.0e-6f;

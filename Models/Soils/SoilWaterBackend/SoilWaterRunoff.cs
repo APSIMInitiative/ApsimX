@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils.SoilWaterBackend
     {
@@ -170,7 +171,7 @@ namespace Models.Soils.SoilWaterBackend
                 if (Canopy.canopy_height[crop] >= 0.0)
                     {
                     bool bDidInterpolate;
-                    canopyfact = Utility.Math.LinearInterpReal(Canopy.canopy_height[crop], cons.canopy_fact_height, cons.canopy_fact, out bDidInterpolate);
+                    canopyfact = MathUtilities.LinearInterpReal(Canopy.canopy_height[crop], cons.canopy_fact_height, cons.canopy_fact, out bDidInterpolate);
                     }
                 else
                     {
@@ -279,7 +280,7 @@ namespace Models.Soils.SoilWaterBackend
             cnpd = 0.0;
             foreach (Layer lyr in SoilObject)
                 {
-                dul_fraction = Utility.Math.Divide((lyr.sw_dep - lyr.ll15_dep), (lyr.dul_dep - lyr.ll15_dep), 0.0);
+                dul_fraction = MathUtilities.Divide((lyr.sw_dep - lyr.ll15_dep), (lyr.dul_dep - lyr.ll15_dep), 0.0);
                 cnpd = cnpd + dul_fraction * runoff_wf[lyr.number-1]; //zero based array.
                 }
             cnpd = cons.bound(cnpd, 0.0, 1.0);
@@ -287,7 +288,7 @@ namespace Models.Soils.SoilWaterBackend
 
             //reduce cn2 for the day due to the cover effect
             //nb. cover_surface_runoff should really be a parameter to this function
-            cover_fract = Utility.Math.Divide(cover_surface_runoff, coverCnCov, 0.0);
+            cover_fract = MathUtilities.Divide(cover_surface_runoff, coverCnCov, 0.0);
             cover_fract = cons.bound(cover_fract, 0.0, 1.0);
             cover_reduction = coverCnRed * cover_fract;
             cn2_new = _cn2_bare - cover_reduction;
@@ -300,7 +301,7 @@ namespace Models.Soils.SoilWaterBackend
                 //We minus 1 because we want the opposite fraction. 
                 //Tillage Reduction is biggest (CnRed value) straight after Tillage and gets smaller and becomes 0 when reaches CumWater.
                 //unlike the Cover Reduction, where the reduction starts out smallest (0) and gets bigger and becomes (CnRed value) when you hit CnCover.
-                tillage_fract = Utility.Math.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0) - 1.0; 
+                tillage_fract = MathUtilities.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0) - 1.0; 
                 tillage_reduction = tillageCnRed * tillage_fract;
                 cn2_new = cn2_new + tillage_reduction;
                 }
@@ -313,17 +314,17 @@ namespace Models.Soils.SoilWaterBackend
             //! cut off response to cover at high covers if p%cn_red < 100.
             cn2_new = cons.bound(cn2_new, 0.0, 100.0);
 
-            cn1 = Utility.Math.Divide(cn2_new, (2.334 - 0.01334 * cn2_new), 0.0);
-            cn3 = Utility.Math.Divide(cn2_new, (0.4036 + 0.005964 * cn2_new), 0.0);
+            cn1 = MathUtilities.Divide(cn2_new, (2.334 - 0.01334 * cn2_new), 0.0);
+            cn3 = MathUtilities.Divide(cn2_new, (0.4036 + 0.005964 * cn2_new), 0.0);
             cn = cn1 + (cn3 - cn1) * cnpd;
 
             // ! curve number will be decided from scs curve number table ??dms
-            s = 254.0 * (Utility.Math.Divide(100.0, cn, 1000000.0) - 1.0);
+            s = 254.0 * (MathUtilities.Divide(100.0, cn, 1000000.0) - 1.0);
             xpb = WaterForRunoff - 0.2 * s;
             xpb = Math.Max(xpb, 0.0);
 
             //assign the output variable
-            Runoff = Utility.Math.Divide(xpb * xpb, (WaterForRunoff + 0.8 * s), 0.0);
+            Runoff = MathUtilities.Divide(xpb * xpb, (WaterForRunoff + 0.8 * s), 0.0);
 
             //sv- I added these output variables
             cn_red_cov = cover_reduction;
@@ -381,7 +382,7 @@ namespace Models.Soils.SoilWaterBackend
 
                 //! assume water content to c%hydrol_effective_depth affects runoff
                 //! sum of wf should = 1 - may need to be bounded? <dms 7-7-95>
-                wx = scale_fact * (1.0 - Math.Exp(-4.16 * Utility.Math.Divide(cum_depth, hydrol_effective_depth_local, 0.0)));
+                wx = scale_fact * (1.0 - Math.Exp(-4.16 * MathUtilities.Divide(cum_depth, hydrol_effective_depth_local, 0.0)));
                 runoff_wf[lyr.number-1] = wx - xx;  //zero based array
                 xx = wx;
 

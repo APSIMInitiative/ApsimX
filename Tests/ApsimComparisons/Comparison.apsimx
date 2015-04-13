@@ -784,6 +784,7 @@ using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
 using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -819,10 +820,10 @@ namespace Models
        [EventSubscribe("DoManagementCalculations")]
        private void OnDoManagementCalculations(object sender, EventArgs e)
 		{
-			TotalNO3 = Utility.Math.Sum(Soil.NO3N);
-			SW = Utility.Math.Sum(Soil.SoilWater.SWmm);
-			TotalN = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
-			TotalC = Utility.Math.Sum(Soil.SoilNitrogen.TotalC);
+			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
+			SW = MathUtilities.Sum(Soil.SoilWater.SWmm);
+			TotalN = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
+			TotalC = MathUtilities.Sum(Soil.SoilNitrogen.TotalC);
 		}
 	}
 }
@@ -838,6 +839,7 @@ namespace Models
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
+      <ErrorMessage />
       <FileName>Apsim.out</FileName>
     </Input>
     <AutoExport>false</AutoExport>
@@ -878,7 +880,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -897,7 +899,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
@@ -939,7 +941,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -958,7 +960,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
@@ -1000,7 +1002,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1019,7 +1021,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
@@ -1061,7 +1063,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1080,7 +1082,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
@@ -1129,7 +1131,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <Series>
       <Type>Line</Type>
@@ -1148,7 +1150,7 @@ namespace Models
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>

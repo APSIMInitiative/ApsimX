@@ -7,6 +7,7 @@ using Models.PMF.Functions;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -294,14 +295,14 @@ namespace Models.PMF.Organs
                     Live.NonStructuralN += value.NonStructural;
 
                 // Retranslocation
-                if (Utility.Math.IsGreaterThan(value.Retranslocation, StartLive.NonStructuralN - StartNRetranslocationSupply))
+                if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.NonStructuralN - StartNRetranslocationSupply))
                     throw new Exception("N Retranslocation exceeds nonstructural nitrogen in organ: " + Name);
                 if (value.Retranslocation < -0.000000001)
                     throw new Exception("-ve N Retranslocation requested from " + Name);
                 Live.NonStructuralN -= value.Retranslocation;
 
                 // Reallocation
-                if (Utility.Math.IsGreaterThan(value.Reallocation, StartLive.NonStructuralN))
+                if (MathUtilities.IsGreaterThan(value.Reallocation, StartLive.NonStructuralN))
                     throw new Exception("N Reallocation exceeds nonstructural nitrogen in organ: " + Name);
                 if (value.Reallocation < -0.000000001)
                     throw new Exception("-ve N Reallocation requested from " + Name);

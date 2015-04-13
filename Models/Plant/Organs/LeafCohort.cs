@@ -7,6 +7,7 @@ using Models.PMF.Functions;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -327,7 +328,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Utility.Math.FloatsAreEqual(LiveArea, 0.0) && !Utility.Math.FloatsAreEqual(DeadArea, 0.0);
+                return MathUtilities.FloatsAreEqual(LiveArea, 0.0) && !MathUtilities.FloatsAreEqual(DeadArea, 0.0);
             }
         }
         /// <summary>Gets the maximum size.</summary>

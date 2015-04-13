@@ -8,6 +8,7 @@ namespace Models.Soils
     using System;
     using System.Xml.Serialization;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A soil crop parameterization class.
@@ -65,7 +66,7 @@ namespace Models.Soils
             {
                 Soil parentSoil = Soil;
                 if (parentSoil != null)
-                    return Utility.Math.Multiply(Soil.CalcPAWC(parentSoil.Thickness, this.LL, parentSoil.DUL, this.XF), parentSoil.Thickness);
+                    return MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, this.LL, parentSoil.DUL, this.XF), parentSoil.Thickness);
                 else
                     return new double[0];
             }

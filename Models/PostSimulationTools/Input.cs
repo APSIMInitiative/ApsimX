@@ -6,6 +6,7 @@ using Models.Core;
 using System.IO;
 using System.Data;
 using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
 
 namespace Models.PostSimulationTools
 {
@@ -40,14 +41,14 @@ namespace Models.PostSimulationTools
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations != null && simulations.FileName != null && this.FileName != null)
-                    return Utility.PathUtils.GetAbsolutePath(this.FileName, simulations.FileName);
+                    return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
                 return null;
             }
 
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                this.FileName = Utility.PathUtils.GetRelativePath(value, simulations.FileName);
+                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
             }
         }
 
@@ -84,7 +85,7 @@ namespace Models.PostSimulationTools
             {
                 if (File.Exists(fullFileName))
                 {
-                    Utility.ApsimTextFile textFile = new Utility.ApsimTextFile();
+                    ApsimTextFile textFile = new ApsimTextFile();
                     try
                     {
                         textFile.Open(fullFileName);

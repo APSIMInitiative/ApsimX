@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
@@ -57,10 +58,10 @@ namespace Models.PMF.Functions.SupplyFunctions
             {
                 const double SVPfrac = 0.66;
 
-                double VPDmint = Utility.Met.svp((float)MetData.MinT) - MetData.VP;
+                double VPDmint = MetUtilities.svp((float)MetData.MinT) - MetData.VP;
                 VPDmint = Math.Max(VPDmint, 0.0);
 
-                double VPDmaxt = Utility.Met.svp((float)MetData.MaxT) - MetData.VP;
+                double VPDmaxt = MetUtilities.svp((float)MetData.MaxT) - MetData.VP;
                 VPDmaxt = Math.Max(VPDmaxt, 0.0);
 
                 return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;

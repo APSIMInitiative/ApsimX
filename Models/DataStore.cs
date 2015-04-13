@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -22,7 +23,7 @@ namespace Models
     {
         /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
         [NonSerialized]
-        private Utility.SQLite Connection = null;
+        private SQLite Connection = null;
 
         /// <summary>The filename of the SQLite .db</summary>
         /// <value>The filename.</value>
@@ -213,7 +214,7 @@ namespace Models
             string[] simulationNames = this.SimulationNames;
             foreach (string simulationNameToKeep in simulationNamesToKeep)
             {
-                if (!Utility.String.Contains(simulationNames, simulationNameToKeep))
+                if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
                 {
                     RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameToKeep + "')");
                 }
@@ -351,9 +352,9 @@ namespace Models
                     DataTable table = Connection.ExecuteQuery("SELECT Name FROM Simulations ORDER BY Name");
                     if (table == null)
                         return new string[0];
-                    return Utility.DataTable.GetColumnAsStrings(table, "Name");
+                    return DataTableUtilities.GetColumnAsStrings(table, "Name");
                 }
-                catch (Utility.SQLiteException )
+                catch (SQLiteException )
                 {
                     return new string[0];
                 }
@@ -375,7 +376,7 @@ namespace Models
                         List<string> tables = new List<string>();
                         if (table != null)
                         {
-                            tables.AddRange(Utility.DataTable.GetColumnAsStrings(table, "Name"));
+                            tables.AddRange(DataTableUtilities.GetColumnAsStrings(table, "Name"));
 
                             // remove the simulations table
                             int simulationsI = tables.IndexOf("Simulations");
@@ -386,7 +387,7 @@ namespace Models
                     }
                     return new string[0];
                 }
-                catch (Utility.SQLiteException )
+                catch (SQLiteException )
                 {
                     return new string[0];
                 }
@@ -610,7 +611,7 @@ namespace Models
                     {
                         if (!File.Exists(Filename))
                         {
-                            Connection = new Utility.SQLite();
+                            Connection = new SQLite();
                             Connection.OpenDatabase(Filename, readOnly: false);
                             Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
                             Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
@@ -623,7 +624,7 @@ namespace Models
                         }
                         else
                         {
-                            Connection = new Utility.SQLite();
+                            Connection = new SQLite();
                             Connection.OpenDatabase(Filename, readOnly: !forWriting);
                         }
 
@@ -779,7 +780,7 @@ namespace Models
                     if (ForWriting == false)
                     {
                         Disconnect();
-                        Connection = new Utility.SQLite();
+                        Connection = new SQLite();
                         Connection.OpenDatabase(Filename, readOnly: false);
                         ForWriting = true;
                     }
@@ -822,7 +823,7 @@ namespace Models
                         if (data != null && data.Rows.Count > 0)
                         {
                             StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
-                            report.Write(Utility.DataTable.DataTableToText(data, 0, ",", true));
+                            report.Write(DataTableUtilities.DataTableToText(data, 0, ",", true));
                             report.Close();
                         }
                     }
@@ -838,7 +839,7 @@ namespace Models
         /// <param name="tableName">Name of the table.</param>
         /// <param name="names">The names.</param>
         /// <param name="types">The types.</param>
-        private static void AddMissingColumnsToTable(Utility.SQLite Connection, string tableName, string[] names, Type[] types)
+        private static void AddMissingColumnsToTable(SQLite Connection, string tableName, string[] names, Type[] types)
         {
             List<string> columnNames = Connection.GetColumnNames(tableName);
 
@@ -858,7 +859,7 @@ namespace Models
         /// <param name="tableName">Name of the table.</param>
         /// <param name="names">The names.</param>
         /// <returns></returns>
-        private static IntPtr PrepareInsertIntoTable(Utility.SQLite Connection, string tableName, string[] names)
+        private static IntPtr PrepareInsertIntoTable(SQLite Connection, string tableName, string[] names)
         {
             string Cmd = "INSERT INTO " + tableName + "(";
 
@@ -892,10 +893,10 @@ namespace Models
             if (idTable == null)
                 throw new ApsimXException(this, "Cannot find Simulations table");
             List<double> ids = new List<double>();
-            ids.AddRange(Utility.DataTable.GetColumnAsDoubles(idTable, "ID"));
+            ids.AddRange(DataTableUtilities.GetColumnAsDoubles(idTable, "ID"));
 
             List<string> simulationNames = new List<string>();
-            simulationNames.AddRange(Utility.DataTable.GetColumnAsStrings(idTable, "Name"));
+            simulationNames.AddRange(DataTableUtilities.GetColumnAsStrings(idTable, "Name"));
 
             table.Columns.Add("SimulationID", typeof(int)).SetOrdinal(0);
             foreach (DataRow row in table.Rows)
@@ -903,7 +904,7 @@ namespace Models
                 string simulationName = row["SimulationName"].ToString();
                 if (simulationName != null)
                 {
-                    int index = Utility.String.IndexOfCaseInsensitive(simulationNames, simulationName);
+                    int index = StringUtilities.IndexOfCaseInsensitive(simulationNames, simulationName);
                     if (index != -1)
                         row["SimulationID"] = ids[index];
                     else

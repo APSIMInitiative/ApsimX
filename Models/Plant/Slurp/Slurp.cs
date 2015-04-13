@@ -10,6 +10,7 @@ using Models.Soils;
 using System.Xml.Serialization;
 using Models.PMF;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 
 namespace Models.PMF.Slurp
@@ -259,14 +260,14 @@ namespace Models.PMF.Slurp
                 }
                 else if (tempDepthLower <= localRootDepth)
                 {
-                    localRootExplorationByLayer[j] = Utility.Math.Divide(localRootDepth - tempDepthUpper, Soil.Thickness[j], 0.0);
+                    localRootExplorationByLayer[j] = MathUtilities.Divide(localRootDepth - tempDepthUpper, Soil.Thickness[j], 0.0);
                 }
                 else
                 {
                     localRootExplorationByLayer[j] = 0.0;
                 }
                 // set a triangular root length density by scaling layer depth against maximum rooting depth, constrain the multiplier between 0 and 1
-                localRootLengthDensityByVolume[j] = localSurfaceRootLengthDensity * localRootExplorationByLayer[j] * (1.0 - Utility.Math.Constrain(Utility.Math.Divide(tempDepthMiddle, localRootDepth, 0.0), 0.0, 1.0));
+                localRootLengthDensityByVolume[j] = localSurfaceRootLengthDensity * localRootExplorationByLayer[j] * (1.0 - MathUtilities.Constrain(MathUtilities.Divide(tempDepthMiddle, localRootDepth, 0.0), 0.0, 1.0));
             }
             RootProperties.RootExplorationByLayer = localRootExplorationByLayer;
             RootProperties.RootLengthDensityByVolume = localRootLengthDensityByVolume;

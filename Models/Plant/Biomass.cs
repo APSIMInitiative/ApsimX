@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF
 {
@@ -58,7 +59,7 @@ namespace Models.PMF
             get { return _NonStructuralN; }
             set
             {
-                _NonStructuralN = Utility.Math.RoundToZero(value);
+                _NonStructuralN = MathUtilities.RoundToZero(value);
 
             }
         }
@@ -72,7 +73,7 @@ namespace Models.PMF
             get { return _StructuralN; }
             set
             {
-                _StructuralN = Utility.Math.RoundToZero(value);
+                _StructuralN = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -85,7 +86,7 @@ namespace Models.PMF
             get { return _NonStructuralWt; }
             set
             {
-                _NonStructuralWt = Utility.Math.RoundToZero(value);
+                _NonStructuralWt = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -98,7 +99,7 @@ namespace Models.PMF
             get { return _StructuralWt; }
             set
             {
-                _StructuralWt = Utility.Math.RoundToZero(value);
+                _StructuralWt = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -111,7 +112,7 @@ namespace Models.PMF
             get { return _PotentialDMAllocation; }
             set
             {
-                _PotentialDMAllocation = Utility.Math.RoundToZero(value);
+                _PotentialDMAllocation = MathUtilities.RoundToZero(value);
             }
         } //FIXME  This was only added because it was the only way I could get potential DM allocation values into a root layer array.  need to pull back to the root module
 
@@ -124,7 +125,7 @@ namespace Models.PMF
             get { return _MetabolicWt; }
             set
             {
-                _MetabolicWt = Utility.Math.RoundToZero(value);
+                _MetabolicWt = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -137,7 +138,7 @@ namespace Models.PMF
             get { return _MetabolicN; }
             set
             {
-                _MetabolicN = Utility.Math.RoundToZero(value);
+                _MetabolicN = MathUtilities.RoundToZero(value);
             }
         }
 

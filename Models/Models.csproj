@@ -73,45 +73,6 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Utility\ApsimTextFile.cs">
-      <Link>Utility\ApsimTextFile.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\DataTable.cs">
-      <Link>Utility\DataTable.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\Date.cs">
-      <Link>Utility\Date.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\Directory.cs">
-      <Link>Utility\Directory.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\Math.cs">
-      <Link>Utility\Math.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\Path.cs">
-      <Link>Utility\Path.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\Process.cs">
-      <Link>Utility\Process.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\Reflection.cs">
-      <Link>Utility\Reflection.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\SQLite.cs">
-      <Link>Utility\SQLite.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\StreamReaderRandomAccess.cs">
-      <Link>Utility\StreamReaderRandomAccess.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\String.cs">
-      <Link>Utility\String.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\Web.cs">
-      <Link>Utility\Web.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\Xml.cs">
-      <Link>Utility\Xml.cs</Link>
-    </Compile>
     <Compile Include="AgPasture.cs" />
     <Compile Include="AgPasture\AgPasture1.Sward.cs" />
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
@@ -193,8 +154,6 @@
     <Compile Include="SugarCane\CultivarConstants.cs" />
     <Compile Include="SugarCane\MathUtil.cs" />
     <Compile Include="SugarCane\SugarCane.cs" />
-    <Compile Include="Utility\Accumulator.cs" />
-    <Compile Include="Utility\JobManager.cs" />
     <Compile Include="Core\Variable.cs" />
     <Compile Include="Fertiliser.cs" />
     <Compile Include="Graph\GraphValues.cs" />
@@ -345,8 +304,7 @@
     <Compile Include="Clock.cs" />
     <Compile Include="Core\ICrop.cs" />
     <Compile Include="Graph\Graph.cs" />
-    <Compile Include="Utility\ExpressionEvaluator.cs" />
-    <Compile Include="Utility\Met.cs" />
+    <Compile Include="Utilities\Accumulator.cs" />
     <Compile Include="Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Project.cs" />
@@ -398,6 +356,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+      <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
+      <Name>APSIM.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ApServer\ApServer.csproj">
       <Project>{7726F6D0-1CE6-475E-8790-E93999818545}</Project>
       <Name>ApServer</Name>

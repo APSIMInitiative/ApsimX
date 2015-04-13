@@ -7,6 +7,7 @@ using System.Xml.Schema;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Windows.Forms;
+using APSIM.Shared.Utilities;
 namespace Models
 {
     /// <summary>
@@ -192,7 +193,7 @@ namespace Models
                     {
                         try
                         {
-                            compiledAssembly = Utility.Reflection.CompileTextToAssembly(Code, null);
+                            compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, null);
                             // Get the script 'Type' from the compiled assembly.
                             if (compiledAssembly.GetType("Models.Script") == null)
                                 throw new ApsimXException(this, "Cannot find a public class called 'Script'");
@@ -262,7 +263,7 @@ namespace Models
             {
                 PropertyInfo property = Script.GetType().GetProperty(element.Name);
                 if (property != null)
-                    property.SetValue(script, Utility.Reflection.StringToObject(property.PropertyType, element.InnerText), null);
+                    property.SetValue(script, ReflectionUtilities.StringToObject(property.PropertyType, element.InnerText), null);
             }
         }
 
@@ -276,13 +277,13 @@ namespace Models
             foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
             {
                 if (property.CanRead && property.CanWrite && 
-                    Utility.Reflection.GetAttribute(property, typeof(XmlIgnoreAttribute), false) == null)
+                    ReflectionUtilities.GetAttribute(property, typeof(XmlIgnoreAttribute), false) == null)
                 {
                     object value = property.GetValue(script, null);
                     if (value == null)
                         value = "";
-                    Utility.Xml.SetValue(doc.DocumentElement, property.Name, 
-                                         Utility.Reflection.ObjectToString(value));
+                    XmlUtilities.SetValue(doc.DocumentElement, property.Name, 
+                                         ReflectionUtilities.ObjectToString(value));
                 }
             }
             return doc.DocumentElement;

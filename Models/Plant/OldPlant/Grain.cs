@@ -10,6 +10,7 @@ using Models.PMF.Organs;
 using System.Xml.Serialization;
 using System.IO;
 using Models.PMF.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -224,7 +225,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Constrain(DMGreenDemand - Growth.Wt, 0.0, Double.MaxValue);
+                return MathUtilities.Constrain(DMGreenDemand - Growth.Wt, 0.0, Double.MaxValue);
             }
         }
         /// <summary>Does the dm demand.</summary>
@@ -235,7 +236,7 @@ namespace Models.PMF.OldPlant
         /// <param name="DMDemandDifferentialTotal">The dm demand differential total.</param>
         public override void DoDmRetranslocate(double DMAvail, double DMDemandDifferentialTotal)
         {
-            Retranslocation.NonStructuralWt = DMAvail * Utility.Math.Divide(DMDemandDifferential, DMDemandDifferentialTotal, 0.0);
+            Retranslocation.NonStructuralWt = DMAvail * MathUtilities.Divide(DMDemandDifferential, DMDemandDifferentialTotal, 0.0);
             Util.Debug("meal.Retranslocation=%f", Retranslocation.NonStructuralWt);
         }
         /// <summary>Gives the dm green.</summary>
@@ -250,7 +251,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -290,7 +291,7 @@ namespace Models.PMF.OldPlant
         public override double NCapacity { get { return 0.0; } }
         /// <summary>Gets the n demand differential.</summary>
         /// <value>The n demand differential.</value>
-        public override double NDemandDifferential { get { return Utility.Math.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
+        public override double NDemandDifferential { get { return MathUtilities.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
         /// <summary>Gets the available retranslocate n.</summary>
         /// <value>The available retranslocate n.</value>
         public override double AvailableRetranslocateN { get { return 0.0; } }
@@ -314,7 +315,7 @@ namespace Models.PMF.OldPlant
         public override void DoSoilNDemand()
         {
             _SoilNDemand = NDemand - dlt_n_senesced_retrans;
-            _SoilNDemand = Utility.Math.Constrain(_SoilNDemand, 0.0, double.MaxValue);
+            _SoilNDemand = MathUtilities.Constrain(_SoilNDemand, 0.0, double.MaxValue);
             Util.Debug("meal.SoilNDemand=%f", _SoilNDemand);
         }
         /// <summary>Does the n supply.</summary>
@@ -340,15 +341,15 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the n senescence.</summary>
         public override void DoNSenescence()
         {
-            double green_n_conc = Utility.Math.Divide(Live.N, Live.Wt, 0.0);
+            double green_n_conc = MathUtilities.Divide(Live.N, Live.Wt, 0.0);
             double dlt_n_in_senescing_part = Senescing.Wt * green_n_conc;
             double sen_n_conc = Math.Min(NSenescenceConcentration, green_n_conc);
 
             double SenescingN = Senescing.Wt * sen_n_conc;
-            Senescing.StructuralN = Utility.Math.Constrain(SenescingN, double.MinValue, Live.N);
+            Senescing.StructuralN = MathUtilities.Constrain(SenescingN, double.MinValue, Live.N);
 
             dlt_n_senesced_trans = dlt_n_in_senescing_part - Senescing.N;
-            dlt_n_senesced_trans = Utility.Math.Constrain(dlt_n_senesced_trans, 0.0, double.MaxValue);
+            dlt_n_senesced_trans = MathUtilities.Constrain(dlt_n_senesced_trans, 0.0, double.MaxValue);
 
             Util.Debug("meal.SenescingN=%f", SenescingN);
             Util.Debug("meal.dlt.n_senesced_trans=%f", dlt_n_senesced_trans);
@@ -358,7 +359,7 @@ namespace Models.PMF.OldPlant
         /// <param name="n_demand_tot">The n_demand_tot.</param>
         public override void DoNSenescedRetranslocation(double navail, double n_demand_tot)
         {
-            dlt_n_senesced_retrans = navail * Utility.Math.Divide(NDemand, n_demand_tot, 0.0);
+            dlt_n_senesced_retrans = navail * MathUtilities.Divide(NDemand, n_demand_tot, 0.0);
             Util.Debug("meal.dlt.n_senesced_retrans=%f", dlt_n_senesced_retrans);
         }
         /// <summary>Does the n partition.</summary>
@@ -372,7 +373,7 @@ namespace Models.PMF.OldPlant
         /// <param name="nFixDemandTotal">The n fix demand total.</param>
         public override void DoNFixRetranslocate(double NFixUptake, double nFixDemandTotal)
         {
-            Growth.StructuralN += NFixUptake * Utility.Math.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
+            Growth.StructuralN += NFixUptake * MathUtilities.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
         }
         /// <summary>Does the n conccentration limits.</summary>
         public override void DoNConccentrationLimits()
@@ -476,7 +477,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Divide(Live.N + Dead.N,
+                return MathUtilities.Divide(Live.N + Dead.N,
                                           Live.Wt + Dead.Wt,
                                           0.0) * Conversions.fract2pcnt;
             }
@@ -500,7 +501,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Divide(Live.Wt + Dead.Wt,
+                return MathUtilities.Divide(Live.Wt + Dead.Wt,
                                           GrainNo,
                                           0.0);
             }
@@ -508,7 +509,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>Gets the n demand2.</summary>
         /// <value>The n demand2.</value>
-        internal double NDemand2 { get { return Utility.Math.Constrain(NDemand - dlt_n_senesced_retrans - Growth.N, 0.0, double.MaxValue); } }
+        internal double NDemand2 { get { return MathUtilities.Constrain(NDemand - dlt_n_senesced_retrans - Growth.N, 0.0, double.MaxValue); } }
         /// <summary>Does the process bio demand.</summary>
         internal void doProcessBioDemand()
         {
@@ -618,13 +619,13 @@ namespace Models.PMF.OldPlant
                 // during grain C filling period so make sure that C filling is still
                 // going on otherwise stop putting N in now
 
-                grain_growth = Utility.Math.Divide(Growth.Wt + Retranslocation.Wt, GrainNo, 0.0);
+                grain_growth = MathUtilities.Divide(Growth.Wt + Retranslocation.Wt, GrainNo, 0.0);
                 if (grain_growth < CriticalGrainFillingRate)
                 {
                     //! grain filling has stopped - stop n flow as well
                     N_grain_demand = 0.0;
                 }
-                double dailyNconc = Utility.Math.Divide(N_grain_demand, (Growth.Wt + Retranslocation.Wt), 1.0);
+                double dailyNconc = MathUtilities.Divide(N_grain_demand, (Growth.Wt + Retranslocation.Wt), 1.0);
                 if (dailyNconc > GrainMaxDailyNConc)
                     N_grain_demand = (Growth.Wt + Retranslocation.Wt) * GrainMaxDailyNConc;
             }

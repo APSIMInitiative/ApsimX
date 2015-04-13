@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Xml;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {
@@ -722,8 +723,8 @@ namespace Models.Soils
                     biom_c[0] += g.pond_biom_C;       // biom material from breakdown of residues in pond
 
                     // reset the N amounts of N in hum and biom pools
-                    hum_n[0] = Utility.Math.Divide(hum_c[0], g.hum_cn, 0.0);
-                    biom_n[0] = Utility.Math.Divide(biom_c[0], g.biom_cn, 0.0);
+                    hum_n[0] = MathUtilities.Divide(hum_c[0], g.hum_cn, 0.0);
+                    biom_n[0] = MathUtilities.Divide(biom_c[0], g.biom_cn, 0.0);
                 }
                 else
                 {
@@ -741,8 +742,8 @@ namespace Models.Soils
                     // update N content in hum and biom pools as well as the mineral N
                     for (int layer = 0; layer < nLayers; layer++)
                     {
-                        hum_n[layer] = Utility.Math.Divide(hum_c[layer], g.hum_cn, 0.0);
-                        biom_n[layer] = Utility.Math.Divide(biom_c[layer], g.biom_cn, 0.0);
+                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.hum_cn, 0.0);
+                        biom_n[layer] = MathUtilities.Divide(biom_c[layer], g.biom_cn, 0.0);
 
                         // update soil mineral N
                         _nh4[layer] += dlt_nh4_decomp[layer];
@@ -839,12 +840,12 @@ namespace Models.Soils
                     hum_c[layer] += dlt_c_biom_2_hum[layer] - dlt_c_hum_2_biom[layer] - dlt_c_hum_2_atm[layer] +
                                    dlt_c_fom_2_hum[0][layer] + dlt_c_fom_2_hum[1][layer] + dlt_c_fom_2_hum[2][layer];
 
-                    hum_n[layer] = Utility.Math.Divide(hum_c[layer], g.hum_cn, 0.0);
+                    hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.hum_cn, 0.0);
 
                     biom_c[layer] += dlt_c_hum_2_biom[layer] - dlt_c_biom_2_hum[layer] - dlt_c_biom_2_atm[layer] +
                                    dlt_c_fom_2_biom[0][layer] + dlt_c_fom_2_biom[1][layer] + dlt_c_fom_2_biom[2][layer];
 
-                    biom_n[layer] = Utility.Math.Divide(biom_c[layer], g.biom_cn, 0.0);
+                    biom_n[layer] = MathUtilities.Divide(biom_c[layer], g.biom_cn, 0.0);
 
                     fom_c_pool1[layer] -= (dlt_c_fom_2_hum[0][layer] + dlt_c_fom_2_biom[0][layer] + dlt_c_fom_2_atm[0][layer]);
                     fom_c_pool2[layer] -= (dlt_c_fom_2_hum[1][layer] + dlt_c_fom_2_biom[1][layer] + dlt_c_fom_2_atm[1][layer]);
@@ -1003,14 +1004,14 @@ namespace Models.Soils
                 double n_available = SumDoubleArray(no3_available) + SumDoubleArray(nh4_available) + SumDoubleArray(pot_n_decomp);
 
                 // get N demand from potential decomposition
-                double n_demand = Utility.Math.Divide(SumDoubleArray(pot_c_decomp) * g.ef_res * g.fr_res_biom, g.biom_cn, 0.0) +
-                                  Utility.Math.Divide(SumDoubleArray(pot_c_decomp) * g.ef_res * (1.0 - g.fr_res_biom), g.hum_cn, 0.0);
+                double n_demand = MathUtilities.Divide(SumDoubleArray(pot_c_decomp) * g.ef_res * g.fr_res_biom, g.biom_cn, 0.0) +
+                                  MathUtilities.Divide(SumDoubleArray(pot_c_decomp) * g.ef_res * (1.0 - g.fr_res_biom), g.hum_cn, 0.0);
 
                 // test whether there is adequate N available to meet potential immobilisation demand
                 //      if not, calculate a factor to reduce the mineralisation rates
                 double ReductionFactor = 1.0;
                 if (n_demand > n_available)
-                    ReductionFactor = Math.Max(0.0, Math.Min(1.0, Utility.Math.Divide(SumDoubleArray(no3_available) + SumDoubleArray(nh4_available), n_demand - SumDoubleArray(pot_n_decomp), 0.0)));
+                    ReductionFactor = Math.Max(0.0, Math.Min(1.0, MathUtilities.Divide(SumDoubleArray(no3_available) + SumDoubleArray(nh4_available), n_demand - SumDoubleArray(pot_n_decomp), 0.0)));
 
                 // Partition the additions of C and N to layers
                 double dlt_n_decomp_tot = 0.0;
@@ -1103,12 +1104,12 @@ namespace Models.Soils
 
                 // get the rate of mineralisation of N from the humic pool
                 double dlt_c_min_hum = (hum_c[layer] - inert_c[layer]) * g.rd_hum[index - 1] * tf * wf;
-                double dlt_n_min_hum = Utility.Math.Divide(dlt_c_min_hum, g.hum_cn, 0.0);
+                double dlt_n_min_hum = MathUtilities.Divide(dlt_c_min_hum, g.hum_cn, 0.0);
 
                 // distribute the mineralised N and C
                 dlt_c_hum_2_biom[layer] = dlt_c_min_hum * g.ef_hum;
                 dlt_c_hum_2_atm[layer] = dlt_c_min_hum * (1.0 - g.ef_hum);
-                dlt_n_hum_2_min[layer] = dlt_n_min_hum - Utility.Math.Divide(dlt_c_hum_2_biom[layer], g.biom_cn, 0.0);
+                dlt_n_hum_2_min[layer] = dlt_n_min_hum - MathUtilities.Divide(dlt_c_hum_2_biom[layer], g.biom_cn, 0.0);
             }
 
             private void MineraliseBiomass(int layer)
@@ -1152,7 +1153,7 @@ namespace Models.Soils
                 dlt_c_biom_2_atm[layer] = dlt_c_min_biom * (1.0 - g.ef_biom);
 
                 // calculate net N mineralisation
-                dlt_n_biom_2_min[layer] = dlt_n_min_biom - Utility.Math.Divide(dlt_c_biom_2_hum[layer], g.hum_cn, 0.0) - Utility.Math.Divide((dlt_c_min_biom - dlt_c_biom_2_atm[layer] - dlt_c_biom_2_hum[layer]), g.biom_cn, 0.0);
+                dlt_n_biom_2_min[layer] = dlt_n_min_biom - MathUtilities.Divide(dlt_c_biom_2_hum[layer], g.hum_cn, 0.0) - MathUtilities.Divide((dlt_c_min_biom - dlt_c_biom_2_atm[layer] - dlt_c_biom_2_hum[layer]), g.biom_cn, 0.0);
             }
 
             private void MineraliseFOM(int layer, out double[] dlt_c_biom, out double[] dlt_c_hum, out double[] dlt_c_atm, out double[] dlt_fom_n, out double dlt_n_min)
@@ -1180,7 +1181,7 @@ namespace Models.Soils
                 double fomN = fom_n_pool1[layer] + fom_n_pool2[layer] + fom_n_pool3[layer];
 
                 // ratio of C in fresh OM to N available for decay
-                double cnr = Utility.Math.Divide(fomC, fomN + nitTot, 0.0);
+                double cnr = MathUtilities.Divide(fomC, fomN + nitTot, 0.0);
 
                 // calculate the C:N ratio factor - Bound to [0, 1]
                 double cnrf = Math.Max(0.0, Math.Min(1.0, Math.Exp(-g.cnrf_coeff * (cnr - g.cnrf_optcn) / g.cnrf_optcn)));
@@ -1206,7 +1207,7 @@ namespace Models.Soils
                     double[] dlt_c_min_tot = new double[3]; // amount of C mineralised (kg/ha) from each pool
 
                     // C:N ratio of fom
-                    double fom_cn = Utility.Math.Divide(fomC, fomN, 0.0);
+                    double fom_cn = MathUtilities.Divide(fomC, fomN, 0.0);
 
                     // get the decomposition of carbohydrate-like, cellulose-like and lignin-like fractions (fpools) in turn.
                     for (int fractn = 0; fractn < 3; fractn++)
@@ -1233,13 +1234,13 @@ namespace Models.Soils
                     double dlt_c_hum_tot = dlt_c_min_fom * g.ef_fom * (1.0 - g.fr_fom_biom);
 
                     // test whether there is adequate N available to meet immobilisation demand
-                    double n_demand = Utility.Math.Divide(dlt_c_biom_tot, g.biom_cn, 0.0) + Utility.Math.Divide(dlt_c_hum_tot, g.hum_cn, 0.0);
+                    double n_demand = MathUtilities.Divide(dlt_c_biom_tot, g.biom_cn, 0.0) + MathUtilities.Divide(dlt_c_hum_tot, g.hum_cn, 0.0);
                     double n_avail = nitTot + dlt_n_min_fom;
 
                     // factor to reduce mineralisation rates if insufficient N to meet immobilisation demand
                     double Navail_factor = 1.0;
                     if (n_demand > n_avail)
-                        Navail_factor = Math.Max(0.0, Math.Min(1.0, Utility.Math.Divide(nitTot, n_demand - dlt_n_min_fom, 0.0)));
+                        Navail_factor = Math.Max(0.0, Math.Min(1.0, MathUtilities.Divide(nitTot, n_demand - dlt_n_min_fom, 0.0)));
 
                     // now adjust carbon transformations etc. and similarly for npools
                     for (int fractn = 0; fractn < 3; fractn++)
@@ -1249,10 +1250,10 @@ namespace Models.Soils
                         dlt_c_atm[fractn] = dlt_c_min_tot[fractn] * (1.0 - g.ef_fom) * Navail_factor;
                         dlt_fom_n[fractn] = dlt_n_min_tot[fractn] * Navail_factor;
 
-                        dlt_c_hum[fractn] = Utility.Math.RoundToZero(dlt_c_hum[fractn]);
-                        dlt_c_biom[fractn] = Utility.Math.RoundToZero(dlt_c_biom[fractn]);
-                        dlt_c_atm[fractn] = Utility.Math.RoundToZero(dlt_c_atm[fractn]);
-                        dlt_fom_n[fractn] = Utility.Math.RoundToZero(dlt_fom_n[fractn]);
+                        dlt_c_hum[fractn] = MathUtilities.RoundToZero(dlt_c_hum[fractn]);
+                        dlt_c_biom[fractn] = MathUtilities.RoundToZero(dlt_c_biom[fractn]);
+                        dlt_c_atm[fractn] = MathUtilities.RoundToZero(dlt_c_atm[fractn]);
+                        dlt_fom_n[fractn] = MathUtilities.RoundToZero(dlt_fom_n[fractn]);
                     }
 
                     dlt_n_min = (dlt_n_min_fom - n_demand) * Navail_factor;
@@ -1284,7 +1285,7 @@ namespace Models.Soils
                 double fomN = fom_n_pool1[layer] + fom_n_pool2[layer] + fom_n_pool3[layer];
 
                 // ratio of C in fresh OM to N available for decay
-                double cnr = Utility.Math.Divide(fomC, fomN + nitTot, 0.0);
+                double cnr = MathUtilities.Divide(fomC, fomN + nitTot, 0.0);
 
                 // calculate the C:N ratio factor - Bound to [0, 1]
                 double cnrf = Math.Max(0.0, Math.Min(1.0, Math.Exp(-g.cnrf_coeff * (cnr - g.cnrf_optcn) / g.cnrf_optcn)));
@@ -1336,7 +1337,7 @@ namespace Models.Soils
                     double[] dlt_c_min_tot = new double[3]; // amount of C mineralised (kg/ha) from each pool
 
                     // C:N ratio of fom
-                    double fom_cn = Utility.Math.Divide(fomC, fomN, 0.0);
+                    double fom_cn = MathUtilities.Divide(fomC, fomN, 0.0);
 
                     // get the decomposition of carbohydrate-like, cellulose-like and lignin-like fractions (fpools) in turn.
                     for (int fractn = 0; fractn < 3; fractn++)
@@ -1363,13 +1364,13 @@ namespace Models.Soils
                     double dlt_c_hum_tot = dlt_c_min_fom * g.ef_fom * (1.0 - g.fr_fom_biom);
 
                     // test whether there is adequate N available to meet immobilisation demand
-                    double n_demand = Utility.Math.Divide(dlt_c_biom_tot, g.biom_cn, 0.0) + Utility.Math.Divide(dlt_c_hum_tot, g.hum_cn, 0.0);
+                    double n_demand = MathUtilities.Divide(dlt_c_biom_tot, g.biom_cn, 0.0) + MathUtilities.Divide(dlt_c_hum_tot, g.hum_cn, 0.0);
                     double n_avail = nitTot + dlt_n_min_fom;
 
                     // factor to reduce mineralisation rates if insufficient N to meet immobilisation demand
                     double Navail_factor = 1.0;
                     if (n_demand > n_avail)
-                        Navail_factor = Math.Max(0.0, Math.Min(1.0, Utility.Math.Divide(nitTot, n_demand - dlt_n_min_fom, 0.0)));
+                        Navail_factor = Math.Max(0.0, Math.Min(1.0, MathUtilities.Divide(nitTot, n_demand - dlt_n_min_fom, 0.0)));
 
                     // now adjust carbon transformations etc. and similarly for npools
                     for (int fractn = 0; fractn < 3; fractn++)
@@ -1379,10 +1380,10 @@ namespace Models.Soils
                         dlt_c_atm[fractn] = dlt_c_min_tot[fractn] * (1.0 - g.ef_fom) * Navail_factor;
                         dlt_fom_n[fractn] = dlt_n_min_tot[fractn] * Navail_factor;
 
-                        dlt_c_hum[fractn] = Utility.Math.RoundToZero(dlt_c_hum[fractn]);
-                        dlt_c_biom[fractn] = Utility.Math.RoundToZero(dlt_c_biom[fractn]);
-                        dlt_c_atm[fractn] = Utility.Math.RoundToZero(dlt_c_atm[fractn]);
-                        dlt_fom_n[fractn] = Utility.Math.RoundToZero(dlt_fom_n[fractn]);
+                        dlt_c_hum[fractn] = MathUtilities.RoundToZero(dlt_c_hum[fractn]);
+                        dlt_c_biom[fractn] = MathUtilities.RoundToZero(dlt_c_biom[fractn]);
+                        dlt_c_atm[fractn] = MathUtilities.RoundToZero(dlt_c_atm[fractn]);
+                        dlt_fom_n[fractn] = MathUtilities.RoundToZero(dlt_fom_n[fractn]);
                     }
 
                     dlt_n_min = (dlt_n_min_fom - n_demand) * Navail_factor;
@@ -1628,10 +1629,10 @@ namespace Models.Soils
 
                 // calculate the optimum nitrification rate (ppm)
                 double nh4_ppm = _nh4[layer] * convFactor_kgha2ppm(layer);
-                double opt_nitrif_rate_ppm = Utility.Math.Divide(g.nitrification_pot * nh4_ppm, nh4_ppm + g.nh4_at_half_pot, 0.0);
+                double opt_nitrif_rate_ppm = MathUtilities.Divide(g.nitrification_pot * nh4_ppm, nh4_ppm + g.nh4_at_half_pot, 0.0);
 
                 // convert the optimum nitrification rate (kgN/ha)
-                double opt_nitrif_rate = Utility.Math.Divide(opt_nitrif_rate_ppm, convFactor_kgha2ppm(layer), 0.0);
+                double opt_nitrif_rate = MathUtilities.Divide(opt_nitrif_rate_ppm, convFactor_kgha2ppm(layer), 0.0);
 
                 // calculate the actual nitrification rate (after limiting factor and inhibition)
                 double actual_nitrif_rate = opt_nitrif_rate * pni * Math.Max(0.0, 1.0 - g.InhibitionFactor_Nitrification[layer]);
@@ -1675,10 +1676,10 @@ namespace Models.Soils
 
                 // calculate the optimum nitrification rate (ppm)
                 double nh4_ppm = _nh4[layer] * convFactor_kgha2ppm(layer);
-                double opt_nitrif_rate_ppm = Utility.Math.Divide(g.nitrification_pot * nh4_ppm, nh4_ppm + g.nh4_at_half_pot, 0.0);
+                double opt_nitrif_rate_ppm = MathUtilities.Divide(g.nitrification_pot * nh4_ppm, nh4_ppm + g.nh4_at_half_pot, 0.0);
 
                 // calculate the optimum nitrification rate (kgN/ha)
-                double opt_nitrif_rate = Utility.Math.Divide(opt_nitrif_rate_ppm, convFactor_kgha2ppm(layer), 0.0);
+                double opt_nitrif_rate = MathUtilities.Divide(opt_nitrif_rate_ppm, convFactor_kgha2ppm(layer), 0.0);
 
                 // calculate the actual nitrification rate (after limiting factors and inhibition)
                 double actual_nitrif_rate = opt_nitrif_rate * Math.Min(swf, Math.Min(stf, phf))
@@ -1898,7 +1899,7 @@ namespace Models.Soils
                     RtermB = g.dnit_k1 * Math.Exp(g.N2N2O_parmB * (_no3[layer] / CO2_prod));
                 double RtermC = 0.1;
                 bool didInterpolate;
-                double RtermD = Utility.Math.LinearInterpReal(WFPS, g.dnit_wfps, g.dnit_n2o_factor, out didInterpolate);
+                double RtermD = MathUtilities.LinearInterpReal(WFPS, g.dnit_wfps, g.dnit_n2o_factor, out didInterpolate);
                 // RTermD = (0.015 * WFPS) - 0.32;
 
                 double result = Math.Max(RtermA, RtermB) * Math.Max(RtermC, RtermD);
@@ -2323,7 +2324,7 @@ namespace Models.Soils
                      g.dnit_k1 * (Math.Exp(-0.8 * (_no3[layer] * convFactor_kgha2ppm(layer) / CO2))) : 0.0;
                 double RtermC = 0.1;
                 bool didInterpolate;
-                double RtermD = Utility.Math.LinearInterpReal(WFPS, g.dnit_wfps, g.dnit_n2o_factor, out didInterpolate);
+                double RtermD = MathUtilities.LinearInterpReal(WFPS, g.dnit_wfps, g.dnit_n2o_factor, out didInterpolate);
                 // RTermD = (0.015 * WFPS) - 0.32;
                 double N2N2O = Math.Max(RtermA, RtermB) * Math.Max(RtermC, RtermD);
 
@@ -2408,7 +2409,7 @@ namespace Models.Soils
                 soilp_dlt_res_c_hum = new double[nLayers];
                 soilp_dlt_res_c_biom = new double[nLayers];
                 soilp_dlt_org_p = new double[nLayers];
-                double soilp_cpr = Utility.Math.Divide(SumDoubleArray(pot_p_decomp), SumDoubleArray(pot_c_decomp), 0.0);  // C:P ratio for potential decomposition
+                double soilp_cpr = MathUtilities.Divide(SumDoubleArray(pot_p_decomp), SumDoubleArray(pot_c_decomp), 0.0);  // C:P ratio for potential decomposition
 
                 //SurfaceOrganicMatterDecompType SOMDecomp = new SurfaceOrganicMatterDecompType();
                 SOMDecomp = new SurfaceOrganicMatterDecompType();
@@ -2686,7 +2687,7 @@ namespace Models.Soils
                 double profile_depth = SumDoubleArray(g.dlayer);
                 double new_profile_depth = SumDoubleArray(new_dlayer);
 
-                if (Utility.Math.FloatsAreEqual(profile_depth, new_profile_depth))
+                if (MathUtilities.FloatsAreEqual(profile_depth, new_profile_depth))
                 {
                     // move from below bottom layer - assume it has same properties as bottom layer
                     layer_loss = variable[lowest_layer - 1] * LayerFract(lowest_layer - 1);
@@ -2728,7 +2729,7 @@ namespace Models.Soils
                 // check mass balance
                 double todays_n = SumDoubleArray(variable);
                 yesterdays_n += profile_gain - profile_loss;
-                if (!Utility.Math.FloatsAreEqual(todays_n, yesterdays_n))
+                if (!MathUtilities.FloatsAreEqual(todays_n, yesterdays_n))
                 {
                     throw new Exception("N mass balance out");
                 }
@@ -2763,7 +2764,7 @@ namespace Models.Soils
                 //      Calculates a 0-1 pH factor for nitrification.
 
                 bool DidInterpolate;
-                return Utility.Math.LinearInterpReal(g.ph[layer], g.pHf_nit_pH, g.pHf_nit_values, out DidInterpolate);
+                return MathUtilities.LinearInterpReal(g.ph[layer], g.pHf_nit_pH, g.pHf_nit_values, out DidInterpolate);
             }
 
             private double WFNitrf(int layer, int index)
@@ -2785,13 +2786,13 @@ namespace Models.Soils
                 {
                     // unsaturated
                     // assumes rate of mineralisation is at optimum rate until soil moisture midway between dul and ll15
-                    wfd = Utility.Math.Divide(g.sw_dep[layer] - g.ll15_dep[layer], g.dul_dep[layer] - g.ll15_dep[layer], 0.0);
+                    wfd = MathUtilities.Divide(g.sw_dep[layer] - g.ll15_dep[layer], g.dul_dep[layer] - g.ll15_dep[layer], 0.0);
                     wfd = Math.Max(0.0, Math.Min(1.0, wfd));
                 }
 
                 bool didInterpolate;
                 if (index == 1)
-                    return Utility.Math.LinearInterpReal(wfd, g.wfnit_index, g.wfnit_values, out didInterpolate);
+                    return MathUtilities.LinearInterpReal(wfd, g.wfnit_index, g.wfnit_values, out didInterpolate);
                 else
                     // if pond is active, and aerobic conditions dominate, assume wf_nitrf = 0
                     return 0.0;
@@ -2805,7 +2806,7 @@ namespace Models.Soils
                 // temporary water factor (0-1); 0 is used if unsaturated
                 double wfd = 0.0;
                 if (g.sw_dep[layer] > g.dul_dep[layer])  // saturated
-                    wfd = Math.Pow(Utility.Math.Divide(g.sw_dep[layer] - g.dul_dep[layer], g.sat_dep[layer] - g.dul_dep[layer], 0.0), g.dnit_wf_power);
+                    wfd = Math.Pow(MathUtilities.Divide(g.sw_dep[layer] - g.dul_dep[layer], g.sat_dep[layer] - g.dul_dep[layer], 0.0), g.dnit_wf_power);
                 return Math.Max(0.0, Math.Min(1.0, wfd));
             }
 
@@ -2822,18 +2823,18 @@ namespace Models.Soils
                 if (g.sw_dep[layer] > g.dul_dep[layer])
                 { // saturated
                     wfd = Math.Max(1.0, Math.Min(2.0, 1.0 +
-                        Utility.Math.Divide(g.sw_dep[layer] - g.dul_dep[layer], g.sat_dep[layer] - g.dul_dep[layer], 0.0)));
+                        MathUtilities.Divide(g.sw_dep[layer] - g.dul_dep[layer], g.sat_dep[layer] - g.dul_dep[layer], 0.0)));
                 }
                 else
                 { // unsaturated
                     // assumes rate of mineralisation is at optimum rate until soil moisture midway between dul and ll15
-                    wfd = Math.Max(0.0, Math.Min(1.0, Utility.Math.Divide(g.sw_dep[layer] - g.ll15_dep[layer], g.dul_dep[layer] - g.ll15_dep[layer], 0.0)));
+                    wfd = Math.Max(0.0, Math.Min(1.0, MathUtilities.Divide(g.sw_dep[layer] - g.ll15_dep[layer], g.dul_dep[layer] - g.ll15_dep[layer], 0.0)));
                 }
 
                 if (index == 1)
                 {
                     bool didInterpolate;
-                    return Utility.Math.LinearInterpReal(wfd, g.wfmin_index, g.wfmin_values, out didInterpolate);
+                    return MathUtilities.LinearInterpReal(wfd, g.wfmin_index, g.wfmin_values, out didInterpolate);
                 }
                 else if (index == 2) // if pond is active, and liquid conditions dominate, assume wf = 1
                     return 1.0;
@@ -2855,7 +2856,7 @@ namespace Models.Soils
                 // alternative quadratic temperature function is preferred with optimum temperature (CM - used 32 deg)
 
                 if (g.Tsoil[layer] > 0.0)
-                    return Math.Max(0.0, Math.Min(1.0, Utility.Math.Divide(g.Tsoil[layer] * g.Tsoil[layer], g.opt_temp[index - 1] * g.opt_temp[index - 1], 0.0)));
+                    return Math.Max(0.0, Math.Min(1.0, MathUtilities.Divide(g.Tsoil[layer] * g.Tsoil[layer], g.opt_temp[index - 1] * g.opt_temp[index - 1], 0.0)));
                 else
                     return 0.0;     // soil is too cold for mineralisation
             }
@@ -2952,10 +2953,10 @@ namespace Models.Soils
                     // get the modified soil water variable
                     double[] yVals = { 0.0, 1.0, 2.0, 3.0 };
                     double[] xVals = { 0.0, g.ll15_dep[layer], g.dul_dep[layer], g.sat_dep[layer] };
-                    double myX = Utility.Math.LinearInterpReal(g.sw_dep[layer], xVals, yVals, out didInterpolate);
+                    double myX = MathUtilities.LinearInterpReal(g.sw_dep[layer], xVals, yVals, out didInterpolate);
 
                     // get the soil moist factor
-                    return Utility.Math.LinearInterpReal(myX, Parameters.xVals, Parameters.yVals, out didInterpolate);
+                    return MathUtilities.LinearInterpReal(myX, Parameters.xVals, Parameters.yVals, out didInterpolate);
                 }
                 else if (index == 1) // if pond is active
                     return 1.0;
@@ -2984,7 +2985,7 @@ namespace Models.Soils
                     double WFPS = g.sw_dep[layer] / g.sat_dep[layer] * 100.0;
 
                     // get the WFPS factor
-                    return Utility.Math.LinearInterpReal(WFPS, Parameters.xVals, Parameters.yVals, out didInterpolate);
+                    return MathUtilities.LinearInterpReal(WFPS, Parameters.xVals, Parameters.yVals, out didInterpolate);
                 }
                 else if (index == 1) // if pond is active
                     return 1.0;
@@ -3002,7 +3003,7 @@ namespace Models.Soils
             private double SoilpHFactor(int layer, int index, BrokenStickData Parameters)
             {
                 bool DidInterpolate;
-                return Utility.Math.LinearInterpReal(g.ph[layer], Parameters.xVals, Parameters.yVals, out DidInterpolate);
+                return MathUtilities.LinearInterpReal(g.ph[layer], Parameters.xVals, Parameters.yVals, out DidInterpolate);
             }
 
             /// <summary>
@@ -3025,7 +3026,7 @@ namespace Models.Soils
                 double fomN = fom_n_pool1[layer] + fom_n_pool2[layer] + fom_n_pool3[layer];
 
                 // ratio of C in fresh OM to N available for decay
-                double cnr = Utility.Math.Divide(fomC, fomN + nitTot, 0.0);
+                double cnr = MathUtilities.Divide(fomC, fomN + nitTot, 0.0);
 
                 return Math.Max(0.0, Math.Min(1.0, Math.Exp(-rateCN * (cnr - OptCN) / OptCN)));
             }
@@ -3113,7 +3114,7 @@ namespace Models.Soils
                     return 0.0;
                     throw new Exception(" Error on computing convertion factor, kg/ha to ppm. Value for dlayer or bulk density not valid");
                 }
-                return Utility.Math.Divide(100.0, g.bd[layer] * g.dlayer[layer], 0.0);
+                return MathUtilities.Divide(100.0, g.bd[layer] * g.dlayer[layer], 0.0);
             }
 
             private double SumDoubleArray(double[] anArray)

@@ -10,6 +10,7 @@ using Models.PMF.Organs;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -403,8 +404,8 @@ namespace Models.PMF.OldPlant
                     // Capping of sw demand will create an effective TE- recalculate it here
                     // In an ideal world this should NOT be changed here - NIH
                     double SWDemandMax = Supply * CoverGreen;
-                    sw_demand = Utility.Math.Constrain(sw_demand_te, Double.MinValue, SWDemandMax);
-                    transpEff = transpEff * Utility.Math.Divide(sw_demand_te, sw_demand, 1.0);
+                    sw_demand = MathUtilities.Constrain(sw_demand_te, Double.MinValue, SWDemandMax);
+                    transpEff = transpEff * MathUtilities.Divide(sw_demand_te, sw_demand, 1.0);
                 }
             }
             Util.Debug("Leaf.sw_demand=%f", sw_demand);
@@ -433,7 +434,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Constrain(Live.NonStructuralWt, 0.0, double.MaxValue);
+                return MathUtilities.Constrain(Live.NonStructuralWt, 0.0, double.MaxValue);
             }
         }
         /// <summary>Gets the DLT dm pot rue.</summary>
@@ -446,7 +447,7 @@ namespace Models.PMF.OldPlant
             get
             {
                 // Maximum DM this part can take today (PFR)
-                return Utility.Math.Divide(dltLAI_stressed, SLAMin * Conversions.smm2sm, 0.0);
+                return MathUtilities.Divide(dltLAI_stressed, SLAMin * Conversions.smm2sm, 0.0);
             }
         }
         /// <summary>Gets the dm demand differential.</summary>
@@ -471,7 +472,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -509,8 +510,8 @@ namespace Models.PMF.OldPlant
         /// <summary>Removes the biomass.</summary>
         public override void RemoveBiomass()
         {
-            double chop_fr_green = Utility.Math.Divide(GreenRemoved.Wt, Live.Wt, 0.0);
-            double chop_fr_sen = Utility.Math.Divide(SenescedRemoved.Wt, Dead.Wt, 0.0);
+            double chop_fr_green = MathUtilities.Divide(GreenRemoved.Wt, Live.Wt, 0.0);
+            double chop_fr_sen = MathUtilities.Divide(SenescedRemoved.Wt, Dead.Wt, 0.0);
 
             double dlt_lai = LAI * chop_fr_green;
             double dlt_slai = SLAI * chop_fr_sen;
@@ -518,7 +519,7 @@ namespace Models.PMF.OldPlant
             // keep leaf area above a minimum
             double lai_init = InitialTPLA * Conversions.smm2sm * Population.Density;
             double dlt_lai_max = LAI - lai_init;
-            dlt_lai = Utility.Math.Constrain(dlt_lai, double.MinValue, dlt_lai_max);
+            dlt_lai = MathUtilities.Constrain(dlt_lai, double.MinValue, dlt_lai_max);
 
             _LAI -= dlt_lai;
             _SLAI -= dlt_slai;
@@ -562,12 +563,12 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Constrain(NMax - NDemand, 0.0, double.MaxValue);
+                return MathUtilities.Constrain(NMax - NDemand, 0.0, double.MaxValue);
             }
         }
         /// <summary>Gets the n demand differential.</summary>
         /// <value>The n demand differential.</value>
-        public override double NDemandDifferential { get { return Utility.Math.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
+        public override double NDemandDifferential { get { return MathUtilities.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
         /// <summary>Gets the available retranslocate n.</summary>
         /// <value>The available retranslocate n.</value>
         public override double AvailableRetranslocateN
@@ -575,7 +576,7 @@ namespace Models.PMF.OldPlant
             get
             {
                 double N_min = n_conc_min * Live.Wt;
-                double N_avail = Utility.Math.Constrain(Live.N - N_min, 0.0, double.MaxValue);
+                double N_avail = MathUtilities.Constrain(Live.N - N_min, 0.0, double.MaxValue);
                 double n_retrans_fraction = 1.0;
                 return (N_avail * n_retrans_fraction);
             }
@@ -610,7 +611,7 @@ namespace Models.PMF.OldPlant
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
-            Growth.StructuralWt = dltDmPotRue * Utility.Math.Divide(Live.Wt, TotalLive.Wt, 0.0);
+            Growth.StructuralWt = dltDmPotRue * MathUtilities.Divide(Live.Wt, TotalLive.Wt, 0.0);
             Util.Debug("Leaf.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,
                        ref _NDemand, ref NMax);
@@ -623,7 +624,7 @@ namespace Models.PMF.OldPlant
         public override void DoSoilNDemand()
         {
             _SoilNDemand = NDemand - dlt_n_senesced_retrans;
-            _SoilNDemand = Utility.Math.Constrain(_SoilNDemand, 0.0, double.MaxValue);
+            _SoilNDemand = MathUtilities.Constrain(_SoilNDemand, 0.0, double.MaxValue);
             Util.Debug("Leaf.SoilNDemand=%f", _SoilNDemand);
         }
         /// <summary>Does the n supply.</summary>
@@ -643,22 +644,22 @@ namespace Models.PMF.OldPlant
             {
                 // supply greater than demand.
                 // Retranslocate what is needed
-                Retranslocation.StructuralN = -GrainNDemand * Utility.Math.Divide(AvailableRetranslocateN, NSupply, 0.0);
+                Retranslocation.StructuralN = -GrainNDemand * MathUtilities.Divide(AvailableRetranslocateN, NSupply, 0.0);
             }
             Util.Debug("Leaf.Retranslocation.N=%f", Retranslocation.N);
         }
         /// <summary>Does the n senescence.</summary>
         public override void DoNSenescence()
         {
-            double green_n_conc = Utility.Math.Divide(Live.N, Live.Wt, 0.0);
+            double green_n_conc = MathUtilities.Divide(Live.N, Live.Wt, 0.0);
             double dlt_n_in_senescing_part = Senescing.Wt * green_n_conc;
             double sen_n_conc = Math.Min(NSenescenceConcentration, green_n_conc);
 
             double SenescingN = Senescing.Wt * sen_n_conc;
-            Senescing.StructuralN = Utility.Math.Constrain(SenescingN, double.MinValue, Live.N);
+            Senescing.StructuralN = MathUtilities.Constrain(SenescingN, double.MinValue, Live.N);
 
             dlt_n_senesced_trans = dlt_n_in_senescing_part - Senescing.N;
-            dlt_n_senesced_trans = Utility.Math.Constrain(dlt_n_senesced_trans, 0.0, double.MaxValue);
+            dlt_n_senesced_trans = MathUtilities.Constrain(dlt_n_senesced_trans, 0.0, double.MaxValue);
 
             Util.Debug("Leaf.SenescingN=%f", SenescingN);
             Util.Debug("Leaf.dlt.n_senesced_trans=%f", dlt_n_senesced_trans);
@@ -668,7 +669,7 @@ namespace Models.PMF.OldPlant
         /// <param name="n_demand_tot">The n_demand_tot.</param>
         public override void DoNSenescedRetranslocation(double navail, double n_demand_tot)
         {
-            dlt_n_senesced_retrans = navail * Utility.Math.Divide(NDemand, n_demand_tot, 0.0);
+            dlt_n_senesced_retrans = navail * MathUtilities.Divide(NDemand, n_demand_tot, 0.0);
             Util.Debug("Leaf.dlt.n_senesced_retrans=%f", dlt_n_senesced_retrans);
         }
         /// <summary>Does the n partition.</summary>
@@ -682,7 +683,7 @@ namespace Models.PMF.OldPlant
         /// <param name="nFixDemandTotal">The n fix demand total.</param>
         public override void DoNFixRetranslocate(double NFixUptake, double nFixDemandTotal)
         {
-            Growth.StructuralN += NFixUptake * Utility.Math.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
+            Growth.StructuralN += NFixUptake * MathUtilities.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
         }
         /// <summary>Does the n conccentration limits.</summary>
         public override void DoNConccentrationLimits()
@@ -782,7 +783,7 @@ namespace Models.PMF.OldPlant
 
             Util.Accumulate(dltLeafNo, LeafNo, node_no - 1.0f, dltNodeNo);
 
-            double leaf_no_sen_tot = Utility.Math.Sum(LeafNoSen) + dltLeafNoSen;
+            double leaf_no_sen_tot = MathUtilities.Sum(LeafNoSen) + dltLeafNoSen;
 
             for (int node = 0; node < max_node; node++)
             {
@@ -812,8 +813,8 @@ namespace Models.PMF.OldPlant
 
             maxLAI = Math.Max(maxLAI, _LAI);
 
-            Util.Debug("leaf.LeafNo=%f", Utility.Math.Sum(LeafNo));
-            Util.Debug("leaf.LeafNoSen=%f", Utility.Math.Sum(LeafNoSen));
+            Util.Debug("leaf.LeafNo=%f", MathUtilities.Sum(LeafNo));
+            Util.Debug("leaf.LeafNoSen=%f", MathUtilities.Sum(LeafNoSen));
             Util.Debug("leaf.NodeNo=%f", NodeNo);
             Util.Debug("leaf.LAI=%f", _LAI);
             Util.Debug("leaf.SLAI=%f", _SLAI);
@@ -839,10 +840,10 @@ namespace Models.PMF.OldPlant
 
         /// <summary>Gets the leaf number.</summary>
         /// <value>The leaf number.</value>
-        public double LeafNumber { get { return Utility.Math.Sum(LeafNo); } }
+        public double LeafNumber { get { return MathUtilities.Sum(LeafNo); } }
         /// <summary>Gets the leaf number dead.</summary>
         /// <value>The leaf number dead.</value>
-        public double LeafNumberDead { get { return Utility.Math.Sum(LeafNoSen); } }
+        public double LeafNumberDead { get { return MathUtilities.Sum(LeafNoSen); } }
         /// <summary>Gets the node number now.</summary>
         /// <value>The node number now.</value>
          public double NodeNumberNow { get { return NodeNo + NodeNumberCorrection; } }
@@ -852,18 +853,18 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Divide(dltLAI, dltLAI_stressed, 0.0);
+                return MathUtilities.Divide(dltLAI, dltLAI_stressed, 0.0);
             }
         }
         /// <summary>Gets the fraction canopy senescing.</summary>
         /// <value>The fraction canopy senescing.</value>
-        public double FractionCanopySenescing { get { return Utility.Math.Divide(dltSLAI, _LAI + dltLAI, 0.0); } }
+        public double FractionCanopySenescing { get { return MathUtilities.Divide(dltSLAI, _LAI + dltLAI, 0.0); } }
         /// <summary>Does the canopy expansion.</summary>
         public void DoCanopyExpansion()
         {
             dltNodeNoPot = 0.0;
             if (NodeFormationPeriod.Value == 1)
-                dltNodeNoPot = Utility.Math.Divide(Phenology.CurrentPhase.TTForToday, NodeAppearanceRate.Value, 0.0);
+                dltNodeNoPot = MathUtilities.Divide(Phenology.CurrentPhase.TTForToday, NodeAppearanceRate.Value, 0.0);
 
             dltLeafNoPot = 0;
             if (Phenology.OnDayOf("Emergence"))
@@ -925,35 +926,35 @@ namespace Models.PMF.OldPlant
         {
             double leaf_no_sen_now;                       // total number of dead leaves yesterday
 
-            double leaf_no_now = Utility.Math.Sum(LeafNo);
+            double leaf_no_now = MathUtilities.Sum(LeafNo);
 
             double leaf_per_node = leaf_no_now * FractionLeafSenescenceRate;
 
-            double node_sen_rate = Utility.Math.Divide(NodeSenescenceRate,
+            double node_sen_rate = MathUtilities.Divide(NodeSenescenceRate,
                                                       1.0 + NFactLeafSenescenceRate * (1.0 - NStress.Expansion),
                                                       0.0);
 
-            double leaf_death_rate = Utility.Math.Divide(node_sen_rate, leaf_per_node, 0.0);
+            double leaf_death_rate = MathUtilities.Divide(node_sen_rate, leaf_per_node, 0.0);
 
             if (Phenology.InPhase("ReadyForHarvesting"))
             {
                 // Constrain leaf death to remaining leaves
                 //cnh do we really want to do this?;  XXXX
-                leaf_no_sen_now = Utility.Math.Sum(LeafNoSen);
-                dltLeafNoSen = Utility.Math.Constrain(leaf_no_now - leaf_no_sen_now, 0.0, double.MaxValue);
+                leaf_no_sen_now = MathUtilities.Sum(LeafNoSen);
+                dltLeafNoSen = MathUtilities.Constrain(leaf_no_now - leaf_no_sen_now, 0.0, double.MaxValue);
             }
             else if (LeafSenescencePeriod.Value == 1)
             {
-                dltLeafNoSen = Utility.Math.Divide(Phenology.CurrentPhase.TTForToday, leaf_death_rate, 0.0);
+                dltLeafNoSen = MathUtilities.Divide(Phenology.CurrentPhase.TTForToday, leaf_death_rate, 0.0);
 
                 // Ensure minimum leaf area remains
-                double tpla_now = Utility.Math.Sum(LeafArea);
-                double max_sen_area = Utility.Math.Constrain(tpla_now - MinTPLA, 0.0, double.MaxValue) * Population.Density;
+                double tpla_now = MathUtilities.Sum(LeafArea);
+                double max_sen_area = MathUtilities.Constrain(tpla_now - MinTPLA, 0.0, double.MaxValue) * Population.Density;
                 double max_sleaf_no_now = LeafNumberFromArea(LeafArea, LeafNo, max_node, max_sen_area);
 
                 // Constrain leaf death to remaining leaves
-                leaf_no_sen_now = Utility.Math.Sum(LeafNoSen);
-                dltLeafNoSen = Utility.Math.Constrain(dltLeafNoSen, double.MinValue, max_sleaf_no_now - leaf_no_sen_now);
+                leaf_no_sen_now = MathUtilities.Sum(LeafNoSen);
+                dltLeafNoSen = MathUtilities.Constrain(dltLeafNoSen, double.MinValue, max_sleaf_no_now - leaf_no_sen_now);
             }
             else
             {
@@ -1048,11 +1049,11 @@ namespace Models.PMF.OldPlant
         /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnHarvest(HarvestType Harvest, BiomassRemovedType BiomassRemoved)
         {
-            double dm_init = Utility.Math.Constrain(InitialWt * Population.Density, double.MinValue, Live.Wt);
-            double n_init = Utility.Math.Constrain(dm_init * InitialNConcentration, double.MinValue, Live.N);
-            //double p_init = Utility.Math.Constrain(dm_init * SimplePart::c.p_init_conc, double.MinValue, Green.P);
+            double dm_init = MathUtilities.Constrain(InitialWt * Population.Density, double.MinValue, Live.Wt);
+            double n_init = MathUtilities.Constrain(dm_init * InitialNConcentration, double.MinValue, Live.N);
+            //double p_init = MathUtilities.Constrain(dm_init * SimplePart::c.p_init_conc, double.MinValue, Green.P);
 
-            double retain_fr_green = Utility.Math.Divide(dm_init, Live.Wt, 0.0);
+            double retain_fr_green = MathUtilities.Divide(dm_init, Live.Wt, 0.0);
             double retain_fr_sen = 0.0;
 
             double dlt_dm_harvest = Live.Wt + Dead.Wt - dm_init;
@@ -1123,7 +1124,7 @@ namespace Models.PMF.OldPlant
 
             LeafNo[leaf_no_emerged] = leaf_emerging_fract;
 
-            double avg_leaf_area = Utility.Math.Divide(InitialTPLA, InitialLeafNumber, 0.0);
+            double avg_leaf_area = MathUtilities.Divide(InitialTPLA, InitialLeafNumber, 0.0);
             for (int leaf = 0; leaf < leaf_no_emerged; leaf++)
                 LeafArea[leaf] = avg_leaf_area * Population.Density;
 
@@ -1135,8 +1136,8 @@ namespace Models.PMF.OldPlant
 
             Util.Debug("Leaf.InitGreen.StructuralWt=%f", Live.StructuralWt);
             Util.Debug("Leaf.InitGreen.StructuralN=%f", Live.StructuralN);
-            Util.Debug("Leaf.InitLeafNo=%f", Utility.Math.Sum(LeafNo));
-            Util.Debug("Leaf.InitLeafArea=%f", Utility.Math.Sum(LeafArea));
+            Util.Debug("Leaf.InitLeafNo=%f", MathUtilities.Sum(LeafNo));
+            Util.Debug("Leaf.InitLeafArea=%f", MathUtilities.Sum(LeafArea));
             Util.Debug("Leaf.InitLAI=%f", LAI);
             Util.Debug("Leaf.InitSLAI=%f", SLAI);
         }
@@ -1176,7 +1177,7 @@ namespace Models.PMF.OldPlant
 
 
                 // interception on ground area basis
-                return Utility.Math.Divide(cover_green_leaf_canopy, CanopyFactor, 0);
+                return MathUtilities.Divide(cover_green_leaf_canopy, CanopyFactor, 0);
             }
             else
                 return 0.0;
@@ -1192,15 +1193,15 @@ namespace Models.PMF.OldPlant
             int node_no = 1 + Util.GetCumulativeIndex(pla, g_leaf_area, NumNodes);
 
             // number of complete nodes
-            double node_area_whole = Utility.Math.Sum(g_leaf_area, 0, node_no - 1, 0.0);
+            double node_area_whole = MathUtilities.Sum(g_leaf_area, 0, node_no - 1, 0.0);
 
             // area from last node (mm^2)
             double node_area_part = pla - node_area_whole;
 
             // fraction of last node (0-1)
-            double node_fract = Utility.Math.Divide(node_area_part, g_leaf_area[node_no - 1], 0.0);
+            double node_fract = MathUtilities.Divide(node_area_part, g_leaf_area[node_no - 1], 0.0);
 
-            return Utility.Math.Sum(g_leaf_no, 0, node_no, 0.0) + node_fract * g_leaf_no[node_no - 1];
+            return MathUtilities.Sum(g_leaf_no, 0, node_no, 0.0) + node_fract * g_leaf_no[node_no - 1];
         }
 
         /// <summary>
@@ -1211,26 +1212,26 @@ namespace Models.PMF.OldPlant
         private double LeafAreaSenescenceAge()
         {
             // get highest leaf no. senescing today
-            double leaf_no_dead = Utility.Math.Sum(LeafNoSen) + dltLeafNoSen;
+            double leaf_no_dead = MathUtilities.Sum(LeafNoSen) + dltLeafNoSen;
             int dying_node = Util.GetCumulativeIndex(leaf_no_dead, LeafNo, max_node);
 
             // get area senesced from highest leaf no.
             if (dying_node >= 0)
             {
                 // senesced leaf area from current node dying (mm^2)
-                double area_sen_dying_node = Utility.Math.Divide(leaf_no_dead - Utility.Math.Sum(LeafNo, 0, dying_node, 0)
+                double area_sen_dying_node = MathUtilities.Divide(leaf_no_dead - MathUtilities.Sum(LeafNo, 0, dying_node, 0)
                                               , LeafNo[dying_node]
                                               , 0.0) * LeafArea[dying_node];
 
                 // lai senesced by natural ageing
                 const double Density = 1.0;  // because LeafArea is on an area basis and not a plant basis
-                double slai_age = (Utility.Math.Sum(LeafArea, 0, dying_node, 0)
+                double slai_age = (MathUtilities.Sum(LeafArea, 0, dying_node, 0)
                               + area_sen_dying_node)
                               * Conversions.smm2sm * Density;
 
                 double min_lai = MinTPLA * Density * Conversions.smm2sm;
-                double max_sen = Utility.Math.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
-                return Utility.Math.Constrain(slai_age - _SLAI, 0.0, max_sen);
+                double max_sen = MathUtilities.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
+                return MathUtilities.Constrain(slai_age - _SLAI, 0.0, max_sen);
             }
             return 0.0;
         }
@@ -1250,9 +1251,9 @@ namespace Models.PMF.OldPlant
                 slai_light_fac = 0.0;
 
             double min_lai = MinTPLA * Population.Density * Conversions.smm2sm;
-            double max_sen = Utility.Math.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
+            double max_sen = MathUtilities.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
 
-            return Utility.Math.Constrain(_LAI * slai_light_fac, 0.0, max_sen);
+            return MathUtilities.Constrain(_LAI * slai_light_fac, 0.0, max_sen);
         }
 
         /// <summary>Return the lai that would senesce on the current day due to water stress</summary>
@@ -1263,8 +1264,8 @@ namespace Models.PMF.OldPlant
             double slai_water_fac = SenRateWater * (1.0 - SWStress.Photo);
             double dlt_slai_water = _LAI * slai_water_fac;
             double min_lai = MinTPLA * Population.Density * Conversions.smm2sm;
-            double max_sen = Utility.Math.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
-            return Utility.Math.Constrain(dlt_slai_water, 0.0, max_sen);
+            double max_sen = MathUtilities.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
+            return MathUtilities.Constrain(dlt_slai_water, 0.0, max_sen);
         }
 
         /// <summary>
@@ -1276,8 +1277,8 @@ namespace Models.PMF.OldPlant
         {
             double dlt_slai_low_temp = LeafSenescenceFrost.Value * _LAI;
             double min_lai = MinTPLA * Population.Density * Conversions.smm2sm;
-            double max_sen = Utility.Math.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
-            return Utility.Math.Constrain(dlt_slai_low_temp, 0.0, max_sen);
+            double max_sen = MathUtilities.Constrain(_LAI - min_lai, 0.0, double.MaxValue);
+            return MathUtilities.Constrain(dlt_slai_low_temp, 0.0, max_sen);
         }
 
 
@@ -1323,7 +1324,7 @@ namespace Models.PMF.OldPlant
             // calc new node number
             for (int node = max_node - 1; node >= 0; node--)
             {
-                if (!Utility.Math.FloatsAreEqual(LeafArea[node], 0.0, 1.0E-4f))    // Slop?
+                if (!MathUtilities.FloatsAreEqual(LeafArea[node], 0.0, 1.0E-4f))    // Slop?
                 {
                     NodeNo = (double)node;  //FIXME - need adjustment for leafs remaining in for this node
                     break;

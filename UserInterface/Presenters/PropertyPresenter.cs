@@ -14,6 +14,7 @@ namespace UserInterface.Presenters
     using Interfaces;
     using Models;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// <para>
@@ -156,7 +157,7 @@ namespace UserInterface.Presenters
 
                     if (includeProperty)
                     {
-                        Attribute descriptionAttribute = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), true);
+                        Attribute descriptionAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), true);
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
                 }
@@ -215,7 +216,7 @@ namespace UserInterface.Presenters
                     else if (cellValue.GetType().IsEnum)
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = Utility.String.EnumToStrings(cellValue);
+                        cell.DropDownStrings = StringUtilities.EnumToStrings(cellValue);
                     }
                     else if (cellValue.GetType() == typeof(ICrop))
                     {
@@ -303,11 +304,11 @@ namespace UserInterface.Presenters
                 string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (property.DataType == typeof(double[]))
                 {
-                    value = Utility.Math.StringsToDoubles(stringValues);
+                    value = MathUtilities.StringsToDoubles(stringValues);
                 }
                 else if (property.DataType == typeof(int[]))
                 {
-                    value = Utility.Math.StringsToDoubles(stringValues);
+                    value = MathUtilities.StringsToDoubles(stringValues);
                 }
                 else if (property.DataType == typeof(string[]))
                 {

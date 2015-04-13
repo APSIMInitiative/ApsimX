@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using Models;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {
@@ -1186,15 +1187,15 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    double sumOld = Utility.Math.Sum(urea);      // original amount
+                    double sumOld = MathUtilities.Sum(urea);      // original amount
 
                     for (int layer = 0; layer < value.Length; ++layer)
-                        value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
+                        value[layer] = MathUtilities.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].urea = value;
 
                     if (!inReset)
-                        SendExternalMassFlowN(Utility.Math.Sum(urea) - sumOld);
+                        SendExternalMassFlowN(MathUtilities.Sum(urea) - sumOld);
 
                 }
                 else
@@ -1224,12 +1225,12 @@ namespace Models.Soils
             }
             set  // should this be private?
             {
-                double sumOld = Utility.Math.Sum(urea);
+                double sumOld = MathUtilities.Sum(urea);
 
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].urea = value;
 
-                SendExternalMassFlowN(Utility.Math.Sum(urea) - sumOld);
+                SendExternalMassFlowN(MathUtilities.Sum(urea) - sumOld);
             }
         }
 
@@ -1262,15 +1263,15 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    double sumOld = Utility.Math.Sum(NH4);   // original values
+                    double sumOld = MathUtilities.Sum(NH4);   // original values
 
                     for (int layer = 0; layer < value.Length; ++layer)
-                        value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
+                        value[layer] = MathUtilities.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].nh4 = value;
 
                     if (!inReset)
-                        SendExternalMassFlowN(Utility.Math.Sum(NH4) - sumOld);
+                        SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld);
                 }
                 else
                     nh4ppm_reset = value;
@@ -1299,12 +1300,12 @@ namespace Models.Soils
             }
             set  // should this be private?
             {
-                double sumOld = Utility.Math.Sum(NH4);
+                double sumOld = MathUtilities.Sum(NH4);
 
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].nh4 = value;
 
-                SendExternalMassFlowN(Utility.Math.Sum(NH4) - sumOld);
+                SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld);
             }
         }
 
@@ -1338,14 +1339,14 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    double sumOld = Utility.Math.Sum(NO3);   // original values
+                    double sumOld = MathUtilities.Sum(NO3);   // original values
                     for (int layer = 0; layer < value.Length; ++layer)
-                        value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
+                        value[layer] = MathUtilities.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);       //Convert from ppm to kg/ha
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].no3 = value;
 
                     if (!inReset)
-                        SendExternalMassFlowN(Utility.Math.Sum(NO3) - sumOld);
+                        SendExternalMassFlowN(MathUtilities.Sum(NO3) - sumOld);
                 }
                 else
                     no3ppm_reset = value;
@@ -1374,11 +1375,11 @@ namespace Models.Soils
             }
             set  // should this be private? or not exist at all?
             {
-                double sumOld = Utility.Math.Sum(NO3);
+                double sumOld = MathUtilities.Sum(NO3);
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].no3 = value;
 
-                SendExternalMassFlowN(Utility.Math.Sum(NO3) - sumOld);
+                SendExternalMassFlowN(MathUtilities.Sum(NO3) - sumOld);
             }
         }
 
@@ -1576,7 +1577,7 @@ namespace Models.Soils
             {
                 // for now any incoming dlt is passed to all patches, this will have to be handled differently in the future
                 for (int layer = 0; layer < value.Length; ++layer)
-                    value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);  // convert from ppm to kg/ha
+                    value[layer] = MathUtilities.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);  // convert from ppm to kg/ha
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].dlt_urea = value;
             }
@@ -1606,7 +1607,7 @@ namespace Models.Soils
             {
                 // for now any incoming dlt is passed to all patches, this will have to be handled differently in the future
                 for (int layer = 0; layer < value.Length; ++layer)
-                    value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);  // convert from ppm to kg/ha
+                    value[layer] = MathUtilities.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);  // convert from ppm to kg/ha
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].dlt_nh4 = value;
             }
@@ -1636,7 +1637,7 @@ namespace Models.Soils
             {
                 // for now any incoming dlt is passed to all patches, this will have to be handled differently in the future
                 for (int layer = 0; layer < value.Length; ++layer)
-                    value[layer] = Utility.Math.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);  // convert from ppm to kg/ha
+                    value[layer] = MathUtilities.Divide(value[layer], convFactor_kgha2ppm(layer), 0.0);  // convert from ppm to kg/ha
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].dlt_no3 = value;
             }

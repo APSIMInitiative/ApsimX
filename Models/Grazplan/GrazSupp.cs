@@ -11,7 +11,7 @@ namespace Models.Grazplan
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Utility;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Class containing some common routine for dealing with parameter sets
@@ -332,7 +332,7 @@ namespace Models.Grazplan
             else
                 IsRoughage = Supp2.IsRoughage;
             double propn2 = 1.0 - propn1;                                  // Proportion of suppt 2 on a FW basis
-            double DMpropn1 = Utility.Math.Divide(propn1 * Supp1.DM_Propn, // Proportion of suppt 1 on a DM basis
+            double DMpropn1 = MathUtilities.Divide(propn1 * Supp1.DM_Propn, // Proportion of suppt 1 on a DM basis
                       propn1 * Supp1.DM_Propn + propn2 * Supp2.DM_Propn, 0.0);
             double DMpropn2 = 1.0 - DMpropn1;                              // Proportion of suppt 2 on a DM basis 
 
@@ -445,9 +445,9 @@ namespace Models.Grazplan
         private bool ParseKeyword(ref string suppSt, string token, string units,
                                   double scalar, ref double value)
         {
-            bool result = Utility.String.MatchToken(ref suppSt, token) &&
-                          Utility.String.TokenDouble(ref suppSt, ref value) &&
-                          Utility.String.MatchToken(ref suppSt, units);
+            bool result = StringUtilities.MatchToken(ref suppSt, token) &&
+                          StringUtilities.TokenDouble(ref suppSt, ref value) &&
+                          StringUtilities.MatchToken(ref suppSt, units);
             if (result)
                 value *= scalar;
             return result;
@@ -490,7 +490,7 @@ namespace Models.Grazplan
             else             // ... otherwise set to an arbitrary concentrate and use the given name
             {
                 sName = suppSt;
-                Utility.String.TextToken(ref suppSt, out nameStr);
+                StringUtilities.TextToken(ref suppSt, out nameStr);
                 if (!bNameOnly && suppSt != "")
                     sName = nameStr;
             }
@@ -1029,17 +1029,17 @@ namespace Models.Grazplan
                     newSupp.IsRoughage = sAttrStr[0] == 'Y';
                     sAttrStr = sAttrStr.Remove(0, 1);
 
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._DM_Propn);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._DM_Digestibility);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._ME_2_DM);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._EtherExtract);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._CrudeProt);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._DgProt);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._ADIP_2_CP);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._Phosphorus);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._Sulphur);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._AshAlkalinity);
-                    Utility.String.TokenDouble(ref sAttrStr, ref newSupp._MaxPassage);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._DM_Propn);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._DM_Digestibility);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._ME_2_DM);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._EtherExtract);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._CrudeProt);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._DgProt);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._ADIP_2_CP);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._Phosphorus);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._Sulphur);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._AshAlkalinity);
+                    StringUtilities.TokenDouble(ref sAttrStr, ref newSupp._MaxPassage);
 
                     sAttrStr = sAttrStr.Trim();
                     string sTransStr;
@@ -1060,11 +1060,11 @@ namespace Models.Grazplan
 
                     while (sTransStr != "")
                     {
-                        Utility.String.TextToken(ref sTransStr, out sLang);
+                        StringUtilities.TextToken(ref sTransStr, out sLang);
                         if (sTransStr[0] == ':')
                         {
                             sTransStr = sTransStr.Substring(1);
-                            Utility.String.TextToken(ref sTransStr, out sTransName, true);
+                            StringUtilities.TextToken(ref sTransStr, out sTransName, true);
                             newSupp.AddTranslation(sLang, sTransName);
                         }
                         if (sTransStr.Length > 0 && sTransStr[0] == ';')

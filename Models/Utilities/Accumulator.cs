@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
-namespace Utility
+namespace Models.Utilities
 {
     /// <summary>
     /// This class accumulats values of variables
@@ -45,6 +46,6 @@ namespace Utility
         /// <summary>
         /// Return the sum 
         /// </summary>
-        public double Sum { get { return Utility.Math.Sum(values); } }
+        public double Sum { get { return MathUtilities.Sum(values); } }
     }
 }

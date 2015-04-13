@@ -11,6 +11,7 @@ namespace Models.Core
     using System.Linq;
     using System.Text;
     using System.Collections;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// TODO: Update summary.
@@ -25,7 +26,7 @@ namespace Models.Core
         /// <summary>
         /// An instance of the expression evaluator once the expression has been parsed.
         /// </summary>
-        private Utility.ExpressionEvaluator fn = null;
+        private ExpressionEvaluator fn = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableExpression" /> class.
@@ -38,7 +39,7 @@ namespace Models.Core
             this.Object = model;
 
             // Perform initial parsing.
-            this.fn = new Utility.ExpressionEvaluator();
+            this.fn = new ExpressionEvaluator();
             this.fn.Parse(this.expression.Trim());
             this.fn.Infix2Postfix();
         }
@@ -121,7 +122,7 @@ namespace Models.Core
             ArrayList variablesToFill = fn.Variables;
             for (int i = 0; i < variablesToFill.Count; i++)
             {
-                Utility.Symbol sym = (Utility.Symbol) variablesToFill[i];
+                Symbol sym = (Symbol) variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
                 object sometypeofobject = Apsim.Get(Object as Model, sym.m_name.Trim());

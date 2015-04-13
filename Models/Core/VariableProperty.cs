@@ -11,6 +11,7 @@ namespace Models.Core
     using System.Reflection;
     using Models.Soils;
     using System.Globalization;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
@@ -94,7 +95,7 @@ namespace Models.Core
         {
             get
             {
-                DescriptionAttribute descriptionAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                DescriptionAttribute descriptionAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (descriptionAttribute == null)
                 {
                     return null;
@@ -121,7 +122,7 @@ namespace Models.Core
             {
                 // Get units from property
                 string unitString = null;
-                UnitsAttribute unitsAttribute = Utility.Reflection.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
                 MethodInfo unitsToStringInfo = this.Object.GetType().GetMethod(this.property.Name + "UnitsToString");
                 if (unitsAttribute != null)
@@ -331,7 +332,7 @@ namespace Models.Core
         {
             get
             {
-                DisplayAttribute displayFormatAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
                 if (displayFormatAttribute != null && displayFormatAttribute.Format != null)
                 {
                     return displayFormatAttribute.Format;
@@ -368,14 +369,14 @@ namespace Models.Core
         {
             get
             {
-                DisplayAttribute displayFormatAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                DisplayAttribute displayFormatAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
                 bool hasDisplayTotal = displayFormatAttribute != null && displayFormatAttribute.ShowTotal;
                 if (hasDisplayTotal && this.Value != null && (Units == "mm" || Units == "kg/ha"))
                 {
                     double sum = 0.0;
                     foreach (double doubleValue in this.Value as IEnumerable<double>)
                     {
-                        if (doubleValue != Utility.Math.MissingValue)
+                        if (doubleValue != MathUtilities.MissingValue)
                         {
                             sum += doubleValue;
                         }
@@ -395,7 +396,7 @@ namespace Models.Core
         {
             get
             {
-                DisplayAttribute displayAttribute = Utility.Reflection.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                DisplayAttribute displayAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(DisplayAttribute), false) as DisplayAttribute;
                 if (displayAttribute != null)
                 {
                     return displayAttribute.DisplayType;
@@ -418,11 +419,11 @@ namespace Models.Core
                 string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (this.DataType == typeof(double[]))
                 {
-                    this.Value = Utility.Math.StringsToDoubles(stringValues);
+                    this.Value = MathUtilities.StringsToDoubles(stringValues);
                 }
                 else if (this.DataType == typeof(int[]))
                 {
-                    this.Value = Utility.Math.StringsToDoubles(stringValues);
+                    this.Value = MathUtilities.StringsToDoubles(stringValues);
                 }
                 else if (this.DataType == typeof(string[]))
                 {

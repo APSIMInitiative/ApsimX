@@ -17,6 +17,7 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -111,7 +112,7 @@ namespace UserInterface.Presenters
             // find the properties and methods
             if (typeName != string.Empty)
             {
-                Type atype = Utility.Reflection.GetTypeFromUnqualifiedName(typeName);
+                Type atype = ReflectionUtilities.GetTypeFromUnqualifiedName(typeName);
                 if (posPeriod != -1)
                 {
                     string childName = e.ObjectName.Substring(posPeriod + 1);

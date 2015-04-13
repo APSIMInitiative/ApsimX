@@ -5,6 +5,7 @@ using Models.Core;
 
 using System.Reflection;
 using System.Collections;
+using APSIM.Shared.Utilities;
 
 
 namespace Models.PMF.OilPalm
@@ -138,7 +139,7 @@ namespace Models.PMF.OilPalm
             BiomassRemovedData.crop_type = Crop_Type;
             BiomassRemovedData.dm_type = new string[1] { "litter" };
             BiomassRemovedData.dlt_crop_dm = new float[1] { (float)(DltDM * 10) };
-            BiomassRemovedData.dlt_dm_n = new float[1] { (float)(NFixation + Utility.Math.Sum(NUptake)) };
+            BiomassRemovedData.dlt_dm_n = new float[1] { (float)(NFixation + MathUtilities.Sum(NUptake)) };
             BiomassRemovedData.dlt_dm_p = new float[1] { 0 };
             BiomassRemovedData.fraction_to_residue = new float[1] { 1 };
             BiomassRemoved.Invoke(BiomassRemovedData);
@@ -167,7 +168,7 @@ namespace Models.PMF.OilPalm
             for (int j = 0; j < SoilWat.Thickness.Length; j++)
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * kl * (SoilWat.SWmm[j] - SoilWat.LL15mm[j]));
 
-            double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
+            double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
 
             EP = 0.0;
             for (int j = 0; j < SoilWat.Thickness.Length; j++)
@@ -205,7 +206,7 @@ namespace Models.PMF.OilPalm
                 PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * SoilN.NO3[j]);
             }
 
-            double TotPotNUptake = Utility.Math.Sum(PotNUptake);
+            double TotPotNUptake = MathUtilities.Sum(PotNUptake);
             double Fr = Math.Min(1.0, (Ndemand - NFixation) / TotPotNUptake);
 
             for (int j = 0; j < SoilWat.Thickness.Length; j++)

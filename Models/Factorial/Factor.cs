@@ -13,6 +13,7 @@ namespace Models.Factorial
     using System.Xml.Serialization;
     using System.Xml;
     using System.Globalization;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A class representing a series of factor values.
@@ -116,7 +117,7 @@ namespace Models.Factorial
             // factor value for each value.
 
             string path = specification;
-            string value = Utility.String.SplitOffAfterDelimiter(ref path, "=");
+            string value = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
 
             if (value == null)
                 throw new ApsimXException(this, "Cannot find any values on the specification line: " + Specifications[0]);
@@ -139,7 +140,7 @@ namespace Models.Factorial
             // Format of a range:
             //    value1 to value2 step increment.
             string path = specification;
-            string rangeString = Utility.String.SplitOffAfterDelimiter(ref path, "=");
+            string rangeString = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
             string[] rangeBits = rangeString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             double from = Convert.ToDouble(rangeBits[0], CultureInfo.InvariantCulture);

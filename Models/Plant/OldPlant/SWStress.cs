@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -77,10 +78,10 @@ namespace Models.PMF.OldPlant
         public double Photo { get { return _Photo; } }
         /// <summary>Gets the photo average.</summary>
         /// <value>The photo average.</value>
-        public double PhotoAverage { get { return Utility.Math.Divide(_PhotoSum, _PhotoCount, 0.0); } }
+        public double PhotoAverage { get { return MathUtilities.Divide(_PhotoSum, _PhotoCount, 0.0); } }
         /// <summary>Gets the expansion average.</summary>
         /// <value>The expansion average.</value>
-        public double ExpansionAverage { get { return Utility.Math.Divide(_ExpansionSum, _ExpansionCount, 0.0); } }
+        public double ExpansionAverage { get { return MathUtilities.Divide(_ExpansionSum, _ExpansionCount, 0.0); } }
         /// <summary>Gets the fixation.</summary>
         /// <value>The fixation.</value>
         public double Fixation { get { return _Fixation; } }
@@ -144,8 +145,8 @@ namespace Models.PMF.OldPlant
                 double SWUptake = 0;
                 foreach (Organ1 Organ in Plant.Organ1s)
                     SWUptake += Organ.SWUptake;
-                double sw_demand_ratio = Utility.Math.Divide(SWUptake, sw_demand, 1.0);
-                return Utility.Math.Constrain(sw_demand_ratio, 0.0, 1.0);
+                double sw_demand_ratio = MathUtilities.Divide(SWUptake, sw_demand, 1.0);
+                return MathUtilities.Constrain(sw_demand_ratio, 0.0, 1.0);
             }
             else
                 return 1.0;

@@ -970,6 +970,8 @@
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -1027,34 +1029,34 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+            <SoilCtpha>NaN</SoilCtpha>
+            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
-            <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
-            <SoilCtpha>NaN</SoilCtpha>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <OilPalmYield>0</OilPalmYield>
-            <TotalNO3>NaN</TotalNO3>
-            <NitTot>NaN</NitTot>
-            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
             <AnnualPalmNUptake>0</AnnualPalmNUptake>
-            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
-            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
-            <AnnualFrondNPP>0</AnnualFrondNPP>
-            <AnnualStemNPP>0</AnnualStemNPP>
             <AnnualRootNPP>0</AnnualRootNPP>
+            <AnnualStemNPP>0</AnnualStemNPP>
+            <AnnualFrondNPP>0</AnnualFrondNPP>
             <AnnualBunchNPP>0</AnnualBunchNPP>
+            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
             <AnnualTotalNInput>0</AnnualTotalNInput>
             <AnnualFertiliserNAdded>0</AnnualFertiliserNAdded>
             <AnnualNRemoved>0</AnnualNRemoved>
             <AnnualDenitrification>0</AnnualDenitrification>
             <AnnualN2O>0</AnnualN2O>
             <AnnualLeaching>0</AnnualLeaching>
+            <Offset>6</Offset>
+            <OilPalmYield>0</OilPalmYield>
+            <TotalNO3>NaN</TotalNO3>
+            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -1062,6 +1064,7 @@ using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
 using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
 
 namespace Models
 { 
@@ -1173,15 +1176,15 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += Weather.Rain;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
+			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.NO3N);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
+			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
+			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
-			AnnualUnderstoryNUptake += Utility.Math.Sum(OilPalm.UnderstoryNUptake);
-			AnnualPalmNUptake += Utility.Math.Sum(OilPalm.NUptake);
+			AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
+			AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
 			AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
 
 
@@ -1194,8 +1197,8 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-            AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
+            AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             
 		}
@@ -2486,6 +2489,8 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -2546,34 +2551,34 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+            <SoilCtpha>NaN</SoilCtpha>
+            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
-            <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
-            <SoilCtpha>NaN</SoilCtpha>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <OilPalmYield>0</OilPalmYield>
-            <TotalNO3>NaN</TotalNO3>
-            <NitTot>NaN</NitTot>
-            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
             <AnnualPalmNUptake>0</AnnualPalmNUptake>
-            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
-            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
-            <AnnualFrondNPP>0</AnnualFrondNPP>
-            <AnnualStemNPP>0</AnnualStemNPP>
             <AnnualRootNPP>0</AnnualRootNPP>
+            <AnnualStemNPP>0</AnnualStemNPP>
+            <AnnualFrondNPP>0</AnnualFrondNPP>
             <AnnualBunchNPP>0</AnnualBunchNPP>
+            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
             <AnnualTotalNInput>0</AnnualTotalNInput>
             <AnnualFertiliserNAdded>0</AnnualFertiliserNAdded>
             <AnnualNRemoved>0</AnnualNRemoved>
             <AnnualDenitrification>0</AnnualDenitrification>
             <AnnualN2O>0</AnnualN2O>
             <AnnualLeaching>0</AnnualLeaching>
+            <Offset>6</Offset>
+            <OilPalmYield>0</OilPalmYield>
+            <TotalNO3>NaN</TotalNO3>
+            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -2581,6 +2586,7 @@ using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
 using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
 
 namespace Models
 { 
@@ -2692,15 +2698,15 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += Weather.Rain;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
+			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.NO3N);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
+			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
+			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
-			AnnualUnderstoryNUptake += Utility.Math.Sum(OilPalm.UnderstoryNUptake);
-			AnnualPalmNUptake += Utility.Math.Sum(OilPalm.NUptake);
+			AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
+			AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
 			AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
 
 
@@ -2713,8 +2719,8 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-            AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
+            AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             
 		}
@@ -4153,6 +4159,8 @@ namespace Models
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OilPalm;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -4213,34 +4221,34 @@ namespace Models
         <Manager>
           <Name>Calculations</Name>
           <Script>
+            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
+            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
+            <SoilCtpha>NaN</SoilCtpha>
+            <NitTot>NaN</NitTot>
             <AnnualRain>0</AnnualRain>
-            <Offset>6</Offset>
             <AnnualFronds>0</AnnualFronds>
             <AnnualBunches>0</AnnualBunches>
             <AnnualYield>0</AnnualYield>
             <AnnualBunchSize>0</AnnualBunchSize>
-            <SoilCtpha>NaN</SoilCtpha>
-            <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-            <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-            <OilPalmYield>0</OilPalmYield>
-            <TotalNO3>NaN</TotalNO3>
-            <NitTot>NaN</NitTot>
-            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNPP>NaN</AnnualUnderstoryNPP>
+            <AnnualUnderstoryNFixation>NaN</AnnualUnderstoryNFixation>
             <AnnualUnderstoryNUptake>NaN</AnnualUnderstoryNUptake>
             <AnnualPalmNUptake>0</AnnualPalmNUptake>
-            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
-            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
-            <AnnualFrondNPP>0</AnnualFrondNPP>
-            <AnnualStemNPP>0</AnnualStemNPP>
             <AnnualRootNPP>0</AnnualRootNPP>
+            <AnnualStemNPP>0</AnnualStemNPP>
+            <AnnualFrondNPP>0</AnnualFrondNPP>
             <AnnualBunchNPP>0</AnnualBunchNPP>
+            <AnnualTotalVegetativeNPP>0</AnnualTotalVegetativeNPP>
             <AnnualTotalNInput>0</AnnualTotalNInput>
             <AnnualFertiliserNAdded>0</AnnualFertiliserNAdded>
             <AnnualNRemoved>0</AnnualNRemoved>
             <AnnualDenitrification>0</AnnualDenitrification>
             <AnnualN2O>0</AnnualN2O>
             <AnnualLeaching>0</AnnualLeaching>
+            <Offset>6</Offset>
+            <OilPalmYield>0</OilPalmYield>
+            <TotalNO3>NaN</TotalNO3>
+            <AnnualPalmVegetativeNPP>0</AnnualPalmVegetativeNPP>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -4248,6 +4256,7 @@ using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
 using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
 
 namespace Models
 { 
@@ -4359,15 +4368,15 @@ namespace Models
        private void OnDoManagement(object sender, EventArgs e)
 		{
             AnnualRain += Weather.Rain;
-			SoilCtpha = Utility.Math.Sum(Soil.SoilNitrogen.TotalC) / 1000;
+			SoilCtpha = MathUtilities.Sum(Soil.SoilNitrogen.TotalC) / 1000;
 			surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-			TotalNO3 = Utility.Math.Sum(Soil.NO3N);
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
+			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
+			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
 
 			AnnualUnderstoryNFixation += OilPalm.UnderstoryNFixation;
 			AnnualUnderstoryNPP += (OilPalm.UnderstoryDltDM * 10);
-			AnnualUnderstoryNUptake += Utility.Math.Sum(OilPalm.UnderstoryNUptake);
-			AnnualPalmNUptake += Utility.Math.Sum(OilPalm.NUptake);
+			AnnualUnderstoryNUptake += MathUtilities.Sum(OilPalm.UnderstoryNUptake);
+			AnnualPalmNUptake += MathUtilities.Sum(OilPalm.NUptake);
 			AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;							
 
 
@@ -4380,8 +4389,8 @@ namespace Models
 
             AnnualTotalNInput += OilPalm.UnderstoryNFixation + Fertiliser.NitrogenApplied;
             AnnualFertiliserNAdded +=Fertiliser.NitrogenApplied;
-            AnnualDenitrification += Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
-            AnnualN2O += Utility.Math.Sum(Soil.SoilNitrogen.n2o_atm);
+            AnnualDenitrification += MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
+            AnnualN2O += MathUtilities.Sum(Soil.SoilNitrogen.n2o_atm);
             AnnualLeaching += Soil.SoilWater.LeachNO3;
             
 		}

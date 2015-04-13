@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Text;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -13,7 +14,7 @@ namespace Models
 
         private double CalcDayLength(double latitude, int day, double sunAngle)
         {
-            return Utility.Math.DayLength(day, sunAngle, latitude);
+            return MathUtilities.DayLength(day, sunAngle, latitude);
         }
 
         private double CalcAverageT(double mint, double maxt)
@@ -55,11 +56,11 @@ namespace Models
 
             double numerator = layerSolRad + cropR50;
             double denominator = layerSolRad * Math.Exp(-1.0 * layerK * layerLAI) + cropR50;
-            double hyperbolic = Utility.Math.Divide(numerator, denominator, 0.0);
+            double hyperbolic = MathUtilities.Divide(numerator, denominator, 0.0);
 
             hyperbolic = Math.Max(1.0, hyperbolic);
 
-            return Math.Max(0.0001, Utility.Math.Divide(cropGsMax * cropRGfac * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
+            return Math.Max(0.0001, MathUtilities.Divide(cropGsMax * cropRGfac * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
         }
 
         /// <summary>
@@ -87,8 +88,8 @@ namespace Models
 
             if ((Z0m != 0) && (Z0h != 0))
             {
-                mterm = Utility.Math.Divide(vonKarman, Math.Log(Utility.Math.Divide(Zm - d, Z0m, 0.0)), 0.0);
-                hterm = Utility.Math.Divide(vonKarman, Math.Log(Utility.Math.Divide(Zh - d, Z0h, 0.0)), 0.0);
+                mterm = MathUtilities.Divide(vonKarman, Math.Log(MathUtilities.Divide(Zm - d, Z0m, 0.0)), 0.0);
+                hterm = MathUtilities.Divide(vonKarman, Math.Log(MathUtilities.Divide(Zh - d, Z0h, 0.0)), 0.0);
             }
 
             return Math.Max(0.001, windSpeed * mterm * hterm);
@@ -105,12 +106,12 @@ namespace Models
             double lambda = CalcLambda(averageT);
 
             double specificVPD = CalcSpecificVPD(vp, mint, maxt, airPressure);
-            double denominator = nondQsdT + Utility.Math.Divide(Ga, Gc, 0.0) + 1.0;
+            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;
             // unitless
 
-            double PETr = Utility.Math.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
+            double PETr = MathUtilities.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
 
-            double PETa = Utility.Math.Divide(RhoA * specificVPD * Ga, denominator, 0.0) * 1000.0 * (day_length * hr2s) / RhoW;
+            double PETa = MathUtilities.Divide(RhoA * specificVPD * Ga, denominator, 0.0) * 1000.0 * (day_length * hr2s) / RhoW;
 
             return PETr + PETa;
         }
@@ -123,9 +124,9 @@ namespace Models
             double averageT = CalcAverageT(mint, maxt);
             double nondQsdT = CalcNondQsdT(averageT, airPressure);
             double lambda = CalcLambda(averageT);
-            double denominator = nondQsdT + Utility.Math.Divide(Ga, Gc, 0.0) + 1.0;
+            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;
 
-            return Utility.Math.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
+            return MathUtilities.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
 
         }
 
@@ -137,13 +138,13 @@ namespace Models
             double averageT = CalcAverageT(mint, maxt);
             double nondQsdT = CalcNondQsdT(averageT, airPressure);
             double lambda = CalcLambda(averageT);
-            double denominator = nondQsdT + Utility.Math.Divide(Ga, Gc, 0.0) + 1.0;
+            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;
 
             double RhoA = CalcRhoA(averageT, airPressure);
 
             double specificVPD = CalcSpecificVPD(vp, mint, maxt, airPressure);
 
-            return Utility.Math.Divide(RhoA * specificVPD * Ga, denominator, 0.0) * 1000.0 * (day_length * hr2s) / RhoW;
+            return MathUtilities.Divide(RhoA * specificVPD * Ga, denominator, 0.0) * 1000.0 * (day_length * hr2s) / RhoW;
 
         }
 
@@ -153,7 +154,7 @@ namespace Models
         private double CalcRhoA(double temperature, double airPressure)
         {
             // air pressure converted to Pa
-            return Utility.Math.Divide(mwair * airPressure * 100.0, (abs_temp + temperature) * r_gas, 0.0);
+            return MathUtilities.Divide(mwair * airPressure * 100.0, (abs_temp + temperature) * r_gas, 0.0);
         }
 
         /// <summary>
@@ -162,7 +163,7 @@ namespace Models
         private double CalcOmega(double mint, double maxt, double airPressure, double aerodynamicCond, double canopyCond)
         {
             double Non_dQs_dT = CalcNondQsdT((mint + maxt) / 2.0, airPressure);
-            return Utility.Math.Divide(Non_dQs_dT + 1.0, Non_dQs_dT + 1.0 + Utility.Math.Divide(aerodynamicCond, canopyCond, 0.0), 0.0);
+            return MathUtilities.Divide(Non_dQs_dT + 1.0, Non_dQs_dT + 1.0 + MathUtilities.Divide(aerodynamicCond, canopyCond, 0.0), 0.0);
         }
 
         /// <summary>
@@ -249,7 +250,7 @@ namespace Models
 
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Rs[i] = Rint * Utility.Math.Divide(ComponentData[j].Ftot[i] * ComponentData[j].Ktot, layerKtot[i], 0.0);
+                    ComponentData[j].Rs[i] = Rint * MathUtilities.Divide(ComponentData[j].Ftot[i] * ComponentData[j].Ktot, layerKtot[i], 0.0);
                 }
                 Rin -= Rint;
             }
@@ -268,14 +269,14 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    _albedo += Utility.Math.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Albedo;
-                    emissivity += Utility.Math.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Emissivity;
+                    _albedo += MathUtilities.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Albedo;
+                    emissivity += MathUtilities.Divide(ComponentData[j].Rs[i], radn, 0.0) * ComponentData[j].Emissivity;
                     sumRs += ComponentData[j].Rs[i];
                 }
             }
 
-            _albedo += (1.0 - Utility.Math.Divide(sumRs, radn, 0.0)) * soil_albedo;
-            emissivity += (1.0 - Utility.Math.Divide(sumRs, radn, 0.0)) * soil_emissivity;
+            _albedo += (1.0 - MathUtilities.Divide(sumRs, radn, 0.0)) * soil_albedo;
+            emissivity += (1.0 - MathUtilities.Divide(sumRs, radn, 0.0)) * soil_emissivity;
         }
 
         /// <summary>
@@ -291,7 +292,7 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Rl[i] = Utility.Math.Divide(ComponentData[j].Rs[i], radn, 0.0) * netLongWave;
+                    ComponentData[j].Rl[i] = MathUtilities.Divide(ComponentData[j].Rs[i], radn, 0.0) * netLongWave;
                 }
             }
         }
@@ -355,7 +356,7 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Rsoil[i] = Utility.Math.Divide(ComponentData[j].Rs[i], radn, 0.0) * soil_heat;
+                    ComponentData[j].Rsoil[i] = MathUtilities.Divide(ComponentData[j].Rs[i], radn, 0.0) * soil_heat;
                 }
             }
         }
@@ -378,7 +379,7 @@ namespace Models
         {
             double klGreen = -Math.Log(1.0 - ComponentData[j].CoverGreen);
             double klTot = -Math.Log(1.0 - ComponentData[j].CoverTot);
-            return Utility.Math.Divide(klGreen, klTot, 0.0);
+            return MathUtilities.Divide(klGreen, klTot, 0.0);
         }
 
     }

@@ -9,6 +9,7 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -159,7 +160,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Constrain(Live.NonStructuralWt, 0.0, double.MaxValue);
+                return MathUtilities.Constrain(Live.NonStructuralWt, 0.0, double.MaxValue);
             }
         }
         /// <summary>Gets the DLT dm pot rue.</summary>
@@ -190,7 +191,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -213,7 +214,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Adjusts the morphology after a remove biomass.</summary>
         internal void AdjustMorphologyAfterARemoveBiomass()
         {
-            double dm_plant = Utility.Math.Divide(Live.Wt, Population.Density, 0.0);
+            double dm_plant = MathUtilities.Divide(Live.Wt, Population.Density, 0.0);
 
             if (HeightFunction != null)
                 Height = HeightFunction.Value;
@@ -237,12 +238,12 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Constrain(NMax - NDemand, 0.0, double.MaxValue);
+                return MathUtilities.Constrain(NMax - NDemand, 0.0, double.MaxValue);
             }
         }
         /// <summary>Gets the n demand differential.</summary>
         /// <value>The n demand differential.</value>
-        public override double NDemandDifferential { get { return Utility.Math.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
+        public override double NDemandDifferential { get { return MathUtilities.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
         /// <summary>Gets the available retranslocate n.</summary>
         /// <value>The available retranslocate n.</value>
         public override double AvailableRetranslocateN
@@ -250,7 +251,7 @@ namespace Models.PMF.OldPlant
             get
             {
                 double N_min = n_conc_min * Live.Wt;
-                double N_avail = Utility.Math.Constrain(Live.N - N_min, 0.0, double.MaxValue);
+                double N_avail = MathUtilities.Constrain(Live.N - N_min, 0.0, double.MaxValue);
                 double n_retrans_fraction = 1.0;
                 return (N_avail * n_retrans_fraction);
             }
@@ -285,7 +286,7 @@ namespace Models.PMF.OldPlant
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
-            Growth.StructuralWt = dltDmPotRue * Utility.Math.Divide(Live.Wt, Plant.TotalLive.Wt, 0.0);
+            Growth.StructuralWt = dltDmPotRue * MathUtilities.Divide(Live.Wt, Plant.TotalLive.Wt, 0.0);
             Util.Debug("Stem.Growth.StructuralWt=%f", Growth.StructuralWt);
 
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,
@@ -299,7 +300,7 @@ namespace Models.PMF.OldPlant
         public override void DoSoilNDemand()
         {
             _SoilNDemand = NDemand - dlt_n_senesced_retrans;
-            _SoilNDemand = Utility.Math.Constrain(_SoilNDemand, 0.0, double.MaxValue);
+            _SoilNDemand = MathUtilities.Constrain(_SoilNDemand, 0.0, double.MaxValue);
             Util.Debug("Stem.SoilNDemand=%f", _SoilNDemand);
         }
         /// <summary>Does the n supply.</summary>
@@ -319,22 +320,22 @@ namespace Models.PMF.OldPlant
             {
                 // supply greater than demand.
                 // Retranslocate what is needed
-                Retranslocation.StructuralN = -GrainNDemand * Utility.Math.Divide(AvailableRetranslocateN, NSupply, 0.0);
+                Retranslocation.StructuralN = -GrainNDemand * MathUtilities.Divide(AvailableRetranslocateN, NSupply, 0.0);
             }
             Util.Debug("Stem.Retranslocation.N=%f", Retranslocation.N);
         }
         /// <summary>Does the n senescence.</summary>
         public override void DoNSenescence()
         {
-            double green_n_conc = Utility.Math.Divide(Live.N, Live.Wt, 0.0);
+            double green_n_conc = MathUtilities.Divide(Live.N, Live.Wt, 0.0);
             double dlt_n_in_senescing_part = Senescing.Wt * green_n_conc;
             double sen_n_conc = Math.Min(NSenescenceConcentration, green_n_conc);
 
             double SenescingN = Senescing.Wt * sen_n_conc;
-            Senescing.StructuralN = Utility.Math.Constrain(SenescingN, double.MinValue, Live.N);
+            Senescing.StructuralN = MathUtilities.Constrain(SenescingN, double.MinValue, Live.N);
 
             dlt_n_senesced_trans = dlt_n_in_senescing_part - Senescing.N;
-            dlt_n_senesced_trans = Utility.Math.Constrain(dlt_n_senesced_trans, 0.0, double.MaxValue);
+            dlt_n_senesced_trans = MathUtilities.Constrain(dlt_n_senesced_trans, 0.0, double.MaxValue);
 
             Util.Debug("Stem.SenescingN=%f", SenescingN);
             Util.Debug("Stem.dlt.n_senesced_trans=%f", dlt_n_senesced_trans);
@@ -344,7 +345,7 @@ namespace Models.PMF.OldPlant
         /// <param name="n_demand_tot">The n_demand_tot.</param>
         public override void DoNSenescedRetranslocation(double navail, double n_demand_tot)
         {
-            dlt_n_senesced_retrans = navail * Utility.Math.Divide(NDemand, n_demand_tot, 0.0);
+            dlt_n_senesced_retrans = navail * MathUtilities.Divide(NDemand, n_demand_tot, 0.0);
             Util.Debug("Stem.dlt.n_senesced_retrans=%f", dlt_n_senesced_retrans);
         }
         /// <summary>Does the n partition.</summary>
@@ -358,7 +359,7 @@ namespace Models.PMF.OldPlant
         /// <param name="nFixDemandTotal">The n fix demand total.</param>
         public override void DoNFixRetranslocate(double NFixUptake, double nFixDemandTotal)
         {
-            Growth.StructuralN += NFixUptake * Utility.Math.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
+            Growth.StructuralN += NFixUptake * MathUtilities.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
         }
         /// <summary>Does the n conccentration limits.</summary>
         public override void DoNConccentrationLimits()
@@ -447,12 +448,12 @@ namespace Models.PMF.OldPlant
         public double FractionHeightRemoved { get; private set; }
         /// <summary>Gets the green wt per plant.</summary>
         /// <value>The green wt per plant.</value>
-        public double GreenWtPerPlant { get { return Utility.Math.Divide(Live.Wt, Population.Density, 0.0); } }
+        public double GreenWtPerPlant { get { return MathUtilities.Divide(Live.Wt, Population.Density, 0.0); } }
 
         /// <summary>Morphologies this instance.</summary>
         internal void Morphology()
         {
-            DeltaHeight = Utility.Math.Constrain(HeightFunction.Value - Height, 0.0, double.MaxValue);
+            DeltaHeight = MathUtilities.Constrain(HeightFunction.Value - Height, 0.0, double.MaxValue);
             Util.Debug("Stem.DeltaHeight=%f", DeltaHeight);
         }
 
@@ -505,7 +506,7 @@ namespace Models.PMF.OldPlant
         public override void OnHarvest(HarvestType Harvest, BiomassRemovedType BiomassRemoved)
         {
             // Some biomass is removed according to harvest height
-            FractionHeightRemoved = Utility.Math.Divide(Harvest.Height, Height, 0.0);
+            FractionHeightRemoved = MathUtilities.Divide(Harvest.Height, Height, 0.0);
 
             double chop_fr_green = (1.0 - RetainFraction.Value);
             double chop_fr_sen = (1.0 - RetainFraction.Value);
@@ -522,7 +523,7 @@ namespace Models.PMF.OldPlant
             Dead = Dead * RetainFraction.Value;
             Live = Live * RetainFraction.Value;
 
-            Height = Utility.Math.Constrain(Harvest.Height, 1.0, double.MaxValue);
+            Height = MathUtilities.Constrain(Harvest.Height, 1.0, double.MaxValue);
 
             int i = Util.IncreaseSizeOfBiomassRemoved(BiomassRemoved);
             BiomassRemoved.dm_type[i] = Name;

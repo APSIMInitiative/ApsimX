@@ -14,6 +14,7 @@ namespace UserInterface.EventArguments
     using System.Reflection;
 using Models.Core;
 using System.Text;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -69,7 +70,7 @@ using System.Text;
                     {
                         if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_"))
                         {
-                            DescriptionAttribute descriptionAttribute = Utility.Reflection.GetAttribute(atype, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                            DescriptionAttribute descriptionAttribute = ReflectionUtilities.GetAttribute(atype, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                             NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
                             item.Name = method.Name;
                             item.IsProperty = false;

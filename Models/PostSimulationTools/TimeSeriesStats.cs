@@ -9,6 +9,7 @@ namespace Models.PostSimulationTools
     using System.Collections.Generic;
     using System.Data;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A post processing model that produces time series stats.
@@ -50,7 +51,7 @@ namespace Models.PostSimulationTools
             if (simulationData != null)
             {
                 DataView view = new DataView(simulationData);
-                string[] columnNames = Utility.DataTable.GetColumnNames(simulationData);
+                string[] columnNames = DataTableUtilities.GetColumnNames(simulationData);
 
                 foreach (string observedColumnName in columnNames)
                 {
@@ -112,7 +113,7 @@ namespace Models.PostSimulationTools
 
             if (observedData.Count > 0)
             {
-                Utility.Math.Stats stats = Utility.Math.CalcTimeSeriesStats(
+                MathUtilities.Stats stats = MathUtilities.CalcTimeSeriesStats(
                                            observedData.ToArray(),
                                            predictedData.ToArray());
 

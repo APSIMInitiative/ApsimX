@@ -7,6 +7,8 @@
     using System.Data;
     using System.Xml;
     using Models.Core;
+    using APSIM.Shared.Utilities;
+    using System.Reflection;
 
     /// <summary>
     /// Graph utility functions.
@@ -22,7 +24,7 @@
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(graphXmL);
 
-                return Utility.Xml.Deserialise(doc.DocumentElement) as Models.Graph.Graph;
+                return XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as Models.Graph.Graph;
             }
             return null;
         }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
 using System.Globalization;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -72,7 +73,7 @@ namespace Models
                 if (operation.Date == Clock.Today)
                 {
                     string st = operation.Action;
-                    string argumentsString = Utility.String.SplitOffBracketedValue(ref st, '(', ')');
+                    string argumentsString = StringUtilities.SplitOffBracketedValue(ref st, '(', ')');
                     string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
                     int posPeriod = st.LastIndexOf('.');
