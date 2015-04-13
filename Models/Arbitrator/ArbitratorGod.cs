@@ -6,6 +6,7 @@ using Models.Core;
 using System.Xml.Serialization;
 using Models.PMF;
 using Models.Soils;
+using APSIM.Shared.Utilities;
 
 namespace Models.ArbitratorGod
 {
@@ -409,11 +410,11 @@ namespace Models.ArbitratorGod
         /// </summary>
         private void ZeroDailyVariables()
         {
-            Utility.Math.Zero(demandWater);
-            Utility.Math.Zero(demandNitrogen);
-            Utility.Math.Zero(rootExploration);
-            Utility.Math.Zero(lowerBound);
-            Utility.Math.Zero(uptakePreference);
+            MathUtilities.Zero(demandWater);
+            MathUtilities.Zero(demandNitrogen);
+            MathUtilities.Zero(rootExploration);
+            MathUtilities.Zero(lowerBound);
+            MathUtilities.Zero(uptakePreference);
         }
 
         /// <summary>
@@ -421,13 +422,13 @@ namespace Models.ArbitratorGod
         /// </summary>
         private void ZeroCalculationVariables()
         {
-            Utility.Math.Zero(resource);
-            Utility.Math.Zero(extractable);
-            Utility.Math.Zero(demand);
-            Utility.Math.Zero(uptake);
-            Utility.Math.Zero(demandForResource);
-            Utility.Math.Zero(totalForResource);
-            Utility.Math.Zero(extractableByPlant);
+            MathUtilities.Zero(resource);
+            MathUtilities.Zero(extractable);
+            MathUtilities.Zero(demand);
+            MathUtilities.Zero(uptake);
+            MathUtilities.Zero(demandForResource);
+            MathUtilities.Zero(totalForResource);
+            MathUtilities.Zero(extractableByPlant);
 
         }
 
@@ -615,7 +616,7 @@ namespace Models.ArbitratorGod
                                 }
                                 else if (resourceToArbitrate.ToLower() == "nitrogen")
                                 {
-                                    double relativeSoilWaterContent = Utility.Math.Constrain(Utility.Math.Divide((Soil.Water[l] - Soil.SoilWater.LL15mm[l]), (Soil.SoilWater.DULmm[l] - Soil.SoilWater.LL15mm[l]), 0.0), 0.0, 1.0);
+                                    double relativeSoilWaterContent = MathUtilities.Constrain(MathUtilities.Divide((Soil.Water[l] - Soil.SoilWater.LL15mm[l]), (Soil.SoilWater.DULmm[l] - Soil.SoilWater.LL15mm[l]), 0.0), 0.0, 1.0);
                                     if (f == 0)
                                     {
                                         extractable[p, l, z, b, f] = relativeSoilWaterContent
@@ -680,7 +681,7 @@ namespace Models.ArbitratorGod
                                 if (resourceToArbitrate.ToLower() == "water")
                                 {
                                     demand[p, l, z, b, f] = Math.Min(plants[p].demandWater, extractableByPlant[p])                                                           // ramp back the demand if not enough extractable resource
-                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // and then distribute it over layers etc 
+                                                          * MathUtilities.Constrain(MathUtilities.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // and then distribute it over layers etc 
 
                                     demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
                                     totalForResource[0, l, z, b, f] += resource[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
@@ -688,7 +689,7 @@ namespace Models.ArbitratorGod
                                 else if (resourceToArbitrate.ToLower() == "nitrogen")
                                 {
                                     demand[p, l, z, b, f] = Math.Min(plants[p].demandNitrogen, extractableByPlant[p])                                                        // ramp back the demand if not enough extractable resource
-                                                          * Utility.Math.Constrain(Utility.Math.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // and then distribute it over layers etc 
+                                                          * MathUtilities.Constrain(MathUtilities.Divide(extractable[p, l, z, b, f], extractableByPlant[p], 0.0), 0.0, 1.0);   // and then distribute it over layers etc 
                                     demandForResource[0, l, z, b, f] += demand[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
                                     totalForResource[0, l, z, b, f] += resource[p, l, z, b, f]; // this is the summed demand of all the plants for the layer, zone, bound and form - retain the first dimension for convienience
                                 }
@@ -731,7 +732,7 @@ namespace Models.ArbitratorGod
                             for (int f = 0; f < forms; f++)
                             {
                                 // ramp everything back if the resource < demand - note that resource is already only that which can potententially be extracted (i.e. not necessarily the total amount in the soil
-                                uptake[p, l, z, b, f] = Utility.Math.Constrain(Utility.Math.Divide(totalForResource[0, l, z, b, f], demandForResource[0, l, z, b, f], 0.0), 0.0, 1.0)
+                                uptake[p, l, z, b, f] = MathUtilities.Constrain(MathUtilities.Divide(totalForResource[0, l, z, b, f], demandForResource[0, l, z, b, f], 0.0), 0.0, 1.0)
                                                       * demand[p, l, z, b, f];
                             }
                         }
@@ -836,7 +837,7 @@ namespace Models.ArbitratorGod
                     plants[p].uptakeNitrogen = dummyArray1;
                     for (int l = 0; l < Soil.Thickness.Length; l++)  // don't forget to deal with zones at some point
                     {
-                        dummyArray2[l] = Utility.Math.Divide(dummyArray2[l], dummyArray1[l], 0.0);  // would be nice to have a utility for this
+                        dummyArray2[l] = MathUtilities.Divide(dummyArray2[l], dummyArray1[l], 0.0);  // would be nice to have a utility for this
                     }
                     plants[p].uptakeNitrogenPropNO3 = dummyArray2;
                 }

@@ -1,5 +1,6 @@
 ﻿
 using Models.Core;
+using APSIM.Shared.Utilities;
 namespace UserInterface.Commands
 {
     class RenameModelCommand : ICommand
@@ -19,7 +20,7 @@ namespace UserInterface.Commands
         public void Do(CommandHistory CommandHistory)
         {
             // Get original value of property so that we can restore it in Undo if needed.
-            OriginalName = Utility.Reflection.Name(modelToRename);
+            OriginalName = ReflectionUtilities.Name(modelToRename);
 
             // Set the new name.
             this.modelToRename.Name = NewName;
@@ -29,7 +30,7 @@ namespace UserInterface.Commands
 
         public void Undo(CommandHistory CommandHistory)
         {
-            Utility.Reflection.SetName(modelToRename, OriginalName);
+            ReflectionUtilities.SetName(modelToRename, OriginalName);
             CommandHistory.InvokeModelStructureChanged(this.modelToRename.Parent);
         }
     }

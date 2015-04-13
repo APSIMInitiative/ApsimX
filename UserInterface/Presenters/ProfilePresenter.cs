@@ -17,6 +17,7 @@ namespace UserInterface.Presenters
     using Models.Graph;
     using Models.Soils;
     using Views;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// <para>
@@ -229,7 +230,7 @@ namespace UserInterface.Presenters
                 if (property.IsReadOnly)
                 {
                     foregroundColour = Color.Gray;
-                    toolTips = Utility.String.CreateStringArray("Calculated", this.view.ProfileGrid.RowCount);
+                    toolTips = StringUtilities.CreateStringArray("Calculated", this.view.ProfileGrid.RowCount);
                 }
                 else
                 {
@@ -337,7 +338,7 @@ namespace UserInterface.Presenters
 
                 }
 
-                Utility.DataTable.AddColumnOfObjects(table, columnName, values);
+                DataTableUtilities.AddColumnOfObjects(table, columnName, values);
             }
 
             return table;
@@ -386,27 +387,27 @@ namespace UserInterface.Presenters
                     Array values;
                     if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
                     {
-                        values = Utility.DataTable.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
-                        if (!Utility.Math.ValuesInArray((double[])values))
+                        values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
+                        if (!MathUtilities.ValuesInArray((double[])values))
                             values = null;
                         else
-                            values = Utility.Math.RemoveMissingValuesFromBottom((double[])values);
+                            values = MathUtilities.RemoveMissingValuesFromBottom((double[])values);
                     }
                     else
                     {
-                        values = Utility.DataTable.GetColumnAsStrings(data, data.Columns[i].ColumnName);
-                        values = Utility.Math.RemoveMissingValuesFromBottom((string[])values);
+                        values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName);
+                        values = MathUtilities.RemoveMissingValuesFromBottom((string[])values);
                     }
 
                     // Is the value any different to the former property value?
                     bool changedValues;
                     if (this.propertiesInGrid[i].DataType == typeof(double[]))
                     {
-                        changedValues = !Utility.Math.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);
+                        changedValues = !MathUtilities.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);
                     }
                     else
                     {
-                        changedValues = !Utility.Math.AreEqual((string[])values, (string[])this.propertiesInGrid[i].Value);
+                        changedValues = !MathUtilities.AreEqual((string[])values, (string[])this.propertiesInGrid[i].Value);
                     }
 
                     if (changedValues)
@@ -448,7 +449,7 @@ namespace UserInterface.Presenters
                     foreach (object value in property.Value as IEnumerable<double>)
                     {
                         object valueForCell = value;
-                        bool missingValue = (double)value == Utility.Math.MissingValue || double.IsNaN((double)value);
+                        bool missingValue = (double)value == MathUtilities.MissingValue || double.IsNaN((double)value);
 
                         if (missingValue)
                         {

@@ -7,6 +7,7 @@ using Models.Core;
 using Models;
 using System.Xml.Serialization;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {
@@ -1345,7 +1346,7 @@ namespace Models.Soils
 
                 double tot_rain = SWIMRainAmt[SWIMRainAmt.Length - 1] - SWIMRainAmt[start];
 
-                double fraction = Utility.Math.Divide(amount, tot_rain, 1e6);
+                double fraction = MathUtilities.Divide(amount, tot_rain, 1e6);
                 if (fraction > 1.0)
                     throw new Exception("Interception > Rainfall");
                 else
@@ -1361,7 +1362,7 @@ namespace Models.Soils
         /// </summary>
         private void CalcEvapVariables()
         {
-            if (!Utility.Math.FloatsAreEqual(apsim_timestep, 1440.0))
+            if (!MathUtilities.FloatsAreEqual(apsim_timestep, 1440.0))
                 throw new Exception("apswim can only calculate Eo for daily timestep");
 
             string time;
@@ -1721,7 +1722,7 @@ namespace Models.Soils
                 double eqrain = 0.0;
                 double amount = (SWIMRainAmt[counter] - SWIMRainAmt[counter - 1]) / 10.0;
                 double duration = SWIMRainTime[counter] - SWIMRainTime[counter - 1];
-                double avinten = Utility.Math.Divide(amount, duration, 0.0);
+                double avinten = MathUtilities.Divide(amount, duration, 0.0);
 
                 if (avinten > 0.0)
                     eqrain = (1.0 + effpar * Math.Log(avinten / 2.5)) * amount;
@@ -1783,7 +1784,7 @@ namespace Models.Soils
                 if (canopy_height[crop] >= 0.0)
                 {
                     bool didInterp;
-                    canopyFact = Utility.Math.LinearInterpReal(canopy_height[crop], canopy_fact_height, canopy_fact, out didInterp);
+                    canopyFact = MathUtilities.LinearInterpReal(canopy_height[crop], canopy_fact_height, canopy_fact, out didInterp);
                 }
                 else
                 {
@@ -1861,24 +1862,24 @@ namespace Models.Soils
             {
                 cnpd = cnpd + (th[layer] - _ll15[layer]) / (_dul[layer] - _ll15[layer]) * runoff_wf[layer];
             }
-            cnpd = Utility.Math.Bound(cnpd, 0.0, 1.0);
+            cnpd = MathUtilities.Bound(cnpd, 0.0, 1.0);
 
             // reduce CN2 for the day due to cover effect
 
-            double cover_fract = Utility.Math.Divide(cover_surface_runoff, cn_cov, 0.0);
-            cover_fract = Utility.Math.Bound(cover_fract, 0.0, 1.0);
+            double cover_fract = MathUtilities.Divide(cover_surface_runoff, cn_cov, 0.0);
+            cover_fract = MathUtilities.Bound(cover_fract, 0.0, 1.0);
 
             double cn2_new = cn2_bare - (cn_red * cover_fract);
 
-            cn2_new = Utility.Math.Bound(cn2_new, 0.0, 100.0);
+            cn2_new = MathUtilities.Bound(cn2_new, 0.0, 100.0);
 
-            double cn1 = Utility.Math.Divide(cn2_new, (2.334 - 0.01334 * cn2_new), 0.0);
-            double cn3 = Utility.Math.Divide(cn2_new, (0.4036 + 0.005964 * cn2_new), 0.0);
+            double cn1 = MathUtilities.Divide(cn2_new, (2.334 - 0.01334 * cn2_new), 0.0);
+            double cn3 = MathUtilities.Divide(cn2_new, (0.4036 + 0.005964 * cn2_new), 0.0);
             double cn = cn1 + (cn3 - cn1) * cnpd;
 
             //! curve number will be decided from scs curve number table ??dms
 
-            double s = 254.0 * (Utility.Math.Divide(100.0, cn, 1000000.0) - 1.0);
+            double s = 254.0 * (MathUtilities.Divide(100.0, cn, 1000000.0) - 1.0);
             double xpb = rain - 0.2 * s;
             xpb = Math.Max(xpb, 0.0);
 
@@ -1921,7 +1922,7 @@ namespace Models.Soils
 
             // check if hydro_effective_depth applies for eroded profile.
 
-            profile_depth = Utility.Math.Sum(_dlayer);
+            profile_depth = MathUtilities.Sum(_dlayer);
 
             hydrolEffectiveDepth = Math.Min(hydrol_effective_depth, profile_depth);
 
@@ -1973,12 +1974,12 @@ namespace Models.Soils
         {
             // first we must calculate the julian date for the starting date.
             // We will calculate time relative to this date.
-            double beginStartYear = Utility.Date.DateTimeToJulianDayNumber(new DateTime(start_year, 1, 1)) - 1.0;
+            double beginStartYear = DateUtilities.DateTimeToJulianDayNumber(new DateTime(start_year, 1, 1)) - 1.0;
             double julianStartDate = beginStartYear + start_day - 1.0;
 
             // all times are relative to beginning of the day
 
-            double beginYear = Utility.Date.DateTimeToJulianDayNumber(new DateTime(yy, 1, 1)) - 1.0;
+            double beginYear = DateUtilities.DateTimeToJulianDayNumber(new DateTime(yy, 1, 1)) - 1.0;
             double julianDate = beginYear + dd - 1.0;
 
             return (julianDate - julianStartDate) * 24.0 + tt / 60.0; // Convert to hours
@@ -2036,13 +2037,13 @@ namespace Models.Soils
                 if (time < SWIMTime[0])
                     throw new Exception("log time before start of run");
 
-                SAmt = Utility.Math.LinearInterpReal(time, SWIMTime, SWIMAmt, out inserted);
-                FAmt = Utility.Math.LinearInterpReal(FTime, SWIMTime, SWIMAmt, out inserted);
+                SAmt = MathUtilities.LinearInterpReal(time, SWIMTime, SWIMAmt, out inserted);
+                FAmt = MathUtilities.LinearInterpReal(FTime, SWIMTime, SWIMAmt, out inserted);
 
                 // Insert starting element placeholder into log
                 for (int counter = 0; counter < SWIMTime.Length; counter++)
                 {
-                    if (Utility.Math.FloatsAreEqual(SWIMTime[counter], time))
+                    if (MathUtilities.FloatsAreEqual(SWIMTime[counter], time))
                     {
                         inserted = true;
                         break;  // There is already a placeholder there
@@ -2076,7 +2077,7 @@ namespace Models.Soils
             inserted = false;
             for (int counter = 0; counter < SWIMTime.Length; counter++)
             {
-                if (Utility.Math.FloatsAreEqual(SWIMTime[counter], FTime))
+                if (MathUtilities.FloatsAreEqual(SWIMTime[counter], FTime))
                 {
                     inserted = true;
                     break;  // There is already a placeholder there
@@ -2280,7 +2281,7 @@ namespace Models.Soils
                 // conversion factor of 10.
 
                 bool interp;
-                return Utility.Math.LinearInterpReal(time, STime, SAmount, out interp) * 10.0;
+                return MathUtilities.LinearInterpReal(time, STime, SAmount, out interp) * 10.0;
             }
             else
                 return 0.0;
@@ -2293,7 +2294,7 @@ namespace Models.Soils
         {
             bool interp;
             if (SWIMRainTime.Length > 0)
-                return Utility.Math.LinearInterpReal(time, SWIMRainTime, SWIMRainAmt, out interp) / 10.0;
+                return MathUtilities.LinearInterpReal(time, SWIMRainTime, SWIMRainAmt, out interp) / 10.0;
             else
                 return 0.0;
         }
@@ -2305,7 +2306,7 @@ namespace Models.Soils
         {
             bool interp;
             if (SWIMEvapTime.Length > 0)
-                return Utility.Math.LinearInterpReal(time, SWIMEvapTime, SWIMEvapAmt, out interp) / 10.0;
+                return MathUtilities.LinearInterpReal(time, SWIMEvapTime, SWIMEvapAmt, out interp) / 10.0;
             else
                 return 0.0;
         }
@@ -2317,7 +2318,7 @@ namespace Models.Soils
         {
             bool interp;
             if (SWIMEqRainTime.Length > 0)
-                return Utility.Math.LinearInterpReal(time, SWIMEqRainTime, SWIMEqRainAmt, out interp);
+                return MathUtilities.LinearInterpReal(time, SWIMEqRainTime, SWIMEqRainAmt, out interp);
             else
                 return 0.0;
         }
@@ -2537,13 +2538,13 @@ namespace Models.Soils
 
                 // Start with first guess as largest size_of possible
                 _dt = dtmax;
-                if (Utility.Math.FloatsAreEqual(dtmin, dtmax))
+                if (MathUtilities.FloatsAreEqual(dtmin, dtmax))
                     _dt = dtmin;
                 else
                 {
                     if (!run_has_started)
                     {
-                        if (Utility.Math.FloatsAreEqual(dtmin, 0.0))
+                        if (MathUtilities.FloatsAreEqual(dtmin, 0.0))
                             _dt = Math.Min(0.01 * (timestepRemaining), 0.25);
                         else
                             _dt = dtmin;
@@ -2566,7 +2567,7 @@ namespace Models.Soils
                         }
                         qmax = Math.Max(qmax, Math.Abs(q[n + 1]));
                         if (qmax > 0.0)
-                            _dt = Utility.Math.Divide(dw, qmax, 0.0);
+                            _dt = MathUtilities.Divide(dw, qmax, 0.0);
                     }
 
                     _dt = Math.Min(_dt, timestepRemaining);
@@ -2692,7 +2693,7 @@ namespace Models.Soils
                     TD_drain += q[n + 1] * _dt * 10.0;
                     TD_rain += ron * _dt * 10.0;
                     TD_pevap += resp * _dt * 10.0;
-                    TD_subsurface_drain += Utility.Math.Sum(qssof) * _dt * 10.0;
+                    TD_subsurface_drain += MathUtilities.Sum(qssof) * _dt * 10.0;
                     for (int node = 0; node <= n + 1; node++)
                         TD_wflow[node] += q[node] * _dt * 10.0;
 
@@ -2791,9 +2792,9 @@ namespace Models.Soils
                 // first calculate the amount of Energy that must have been
                 // applied to reach the current g%hmin.
 
-                double decayFraction = Utility.Math.Divide(_hmin - _hm0, _hm1 - _hm0, 0.0);
+                double decayFraction = MathUtilities.Divide(_hmin - _hm0, _hm1 - _hm0, 0.0);
 
-                if (Utility.Math.FloatsAreEqual(decayFraction, 0.0))
+                if (MathUtilities.FloatsAreEqual(decayFraction, 0.0))
                 {
                     // the roughness is totally decayed
                     sstorage = _hm0;
@@ -2836,9 +2837,9 @@ namespace Models.Soils
                 // first calculate the amount of Energy that must have been
                 // applied to reach the current conductance.
 
-                double decayFraction = Utility.Math.Divide(gsurf - _g0, _g1 - _g0, 0.0);
+                double decayFraction = MathUtilities.Divide(gsurf - _g0, _g1 - _g0, 0.0);
 
-                if (Utility.Math.FloatsAreEqual(decayFraction, 0.0))
+                if (MathUtilities.FloatsAreEqual(decayFraction, 0.0))
                 {
                     // seal is totally decayed
                     surfcon = _g0;
@@ -2940,7 +2941,7 @@ namespace Models.Soils
                         _p[j] += dp[i];
                         if (j > 0 && j < n - 1)
                         {
-                            if (Utility.Math.FloatsAreEqual(x[j], x[j + 1]))
+                            if (MathUtilities.FloatsAreEqual(x[j], x[j + 1]))
                             {
                                 j++;
                                 _p[j] = _p[j - 1];
@@ -3084,7 +3085,7 @@ namespace Models.Soils
 
                 //Peter's CHANGE 21/10/98 to ensure zero exchange is treated as linear
                 //         if (p%fip(solnum,j).eq.1.) then
-                if ((Utility.Math.FloatsAreEqual(ex[solnum][j], 0.0)) || (Utility.Math.FloatsAreEqual(fip[solnum][j], 1.0)))
+                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0)) || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0)))
                 {
                     //           linear exchange isotherm
                     c2[i] = 1.0;
@@ -3119,7 +3120,7 @@ namespace Models.Soils
 
             for (int i = 1; i <= n; i++) // NOTE: staring from 1 is deliberate this time
             {
-                if (!Utility.Math.FloatsAreEqual(x[i - 1], x[i]))
+                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
                 {
                     double w1;
                     double thav = 0.5 * (th[i - 1] + th[i]);
@@ -3130,7 +3131,7 @@ namespace Models.Soils
                     if (slswt >= 0.5 && slswt <= 1.0)
                     {
                         //              use fixed space weighting on convection
-                        w1 = Utility.Math.Sign(2.0 * slswt, q[i]);
+                        w1 = MathUtilities.Sign(2.0 * slswt, q[i]);
                     }
                     else
                     {
@@ -3141,7 +3142,7 @@ namespace Models.Soils
                         double accept = Math.Max(1.0, -slswt);
                         double wt = 0.0;
                         if (aq != 0.0)
-                            wt = Utility.Math.Sign(Math.Max(0.0, 1.0 - 2.0 * accept * dfac / aq), q[i]);
+                            wt = MathUtilities.Sign(Math.Max(0.0, 1.0 - 2.0 * accept * dfac / aq), q[i]);
                         w1 = 1.0 + wt;
                     }
                     double w2 = 2.0 - w1;
@@ -3210,7 +3211,7 @@ namespace Models.Soils
             j = 0;
             for (int i = 1; i <= n; i++)
             {
-                if (!Utility.Math.FloatsAreEqual(x[i - 1], x[i]))
+                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
                 {
                     j = j + 1;
                     a[j] = a[i];
@@ -3253,7 +3254,7 @@ namespace Models.Soils
             }
             for (int i = n - 1; i > 0; i--)
             {
-                if (!Utility.Math.FloatsAreEqual(x[i], x[i + 1]))
+                if (!MathUtilities.FloatsAreEqual(x[i], x[i + 1]))
                 {
                     csl[solnum][i] = csl[solnum][j];
                     j--;
@@ -3288,14 +3289,14 @@ namespace Models.Soils
                     j = 0;
                     for (int i = 0; i <= n; i++)
                     {
-                        if (!Utility.Math.FloatsAreEqual(x[i - 1], x[i]))
+                        if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
                         {
                             if (i > 0)
                                 j++;
                         }
                         //cnh               kk=indxsl(solnum,i)
                         int kk = i;
-                        if (!Utility.Math.FloatsAreEqual(fip[solnum][i], 1.0))
+                        if (!MathUtilities.FloatsAreEqual(fip[solnum][i], 1.0))
                         {
                             double cp = 0.0;
                             if (csl[solnum][i] > 0.0)
@@ -3359,14 +3360,14 @@ namespace Models.Soils
             //     get solute fluxes
             for (int i = 1; i <= n; i++)
             {
-                if (!Utility.Math.FloatsAreEqual(x[i - 1], x[i]))
+                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
                 {
                     double dfac = 0.5 * (th[i - 1] + th[i]) * dc[solnum][i] / (x[i] - x[i - 1]);
                     double aq = Math.Abs(q[i]);
                     double accept = Math.Max(1.0, -slswt);
                     double wt = 0.0;
                     if (aq != 0.0)
-                        wt = Utility.Math.Sign(Math.Max(0.0, 1.0 - 2.0 * accept * dfac / aq), q[i]);
+                        wt = MathUtilities.Sign(Math.Max(0.0, 1.0 - 2.0 * accept * dfac / aq), q[i]);
                     //Peter's CHANGES 21/10/98 to remove/restore Crank-Nicolson time weighting
                     //for convection
                     //            g%qsl(solnum,i)=g%qsl(solnum,i)
@@ -3380,7 +3381,7 @@ namespace Models.Soils
             }
             for (int i = 2; i < n; i++)
             {
-                if (Utility.Math.FloatsAreEqual(x[i - 1], x[i]))
+                if (MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
                 {
                     qsl[solnum][i] = (dx[i] * qsl[solnum][i - 1] + dx[i - 1] * qsl[solnum][i + 1]) / (dx[i - 1] + dx[i]);
                 }
@@ -3392,7 +3393,7 @@ namespace Models.Soils
                 //nh         j=indxsl(solnum,i)
                 j = i;
                 double cp = 1.0;
-                if (!Utility.Math.FloatsAreEqual(fip[solnum][i], 1.0))
+                if (!MathUtilities.FloatsAreEqual(fip[solnum][i], 1.0))
                 {
                     cp = 0.0;
                     if (csl[solnum][i] > 0.0)
@@ -3762,15 +3763,15 @@ namespace Models.Soils
                 // Ctot is OK, proceed to calculations
 
                 // Check for no adsorption and whether the isotherm is linear
-                if (Utility.Math.FloatsAreEqual(ex[solnum][node], 0.0))
+                if (MathUtilities.FloatsAreEqual(ex[solnum][node], 0.0))
                 {
                     //There is no adsorption:
 
-                    Cw = Utility.Math.Divide(Ctot, th[node], 0.0);
+                    Cw = MathUtilities.Divide(Ctot, th[node], 0.0);
                     solved = true;
                 }
 
-                else if (Utility.Math.FloatsAreEqual(fip[solnum][node], 0.0))
+                else if (MathUtilities.FloatsAreEqual(fip[solnum][node], 0.0))
                 {
                     // Full adsorption, solute is immobile:
 
@@ -3778,11 +3779,11 @@ namespace Models.Soils
                     solved = true;
                 }
 
-                else if (Utility.Math.FloatsAreEqual(fip[solnum][node], 1.0))
+                else if (MathUtilities.FloatsAreEqual(fip[solnum][node], 1.0))
                 {
                     // Linear adsorption:
 
-                    Cw = Utility.Math.Divide(Ctot, th[node] + ex[solnum][node], 0.0);
+                    Cw = MathUtilities.Divide(Ctot, th[node] + ex[solnum][node], 0.0);
                     solved = true;
                 }
                 else
@@ -3790,7 +3791,7 @@ namespace Models.Soils
                     // Non linear isotherm:
 
                     // take initial guess for Cw
-                    Cw = Math.Pow(Utility.Math.Divide(Ctot, (th[node] + ex[solnum][node]), 0.0), (1.0 / fip[solnum][node]));
+                    Cw = Math.Pow(MathUtilities.Divide(Ctot, (th[node] + ex[solnum][node]), 0.0), (1.0 / fip[solnum][node]));
                     if (Cw < 0.0)            // test added by RCichota 09/Jul/2010
                     {
                         string mess = String.Format("  {0}({1}) = {2,12:G6} - Iteration: 0",
@@ -3833,7 +3834,7 @@ namespace Models.Soils
                         {
 
                             // next value for Cw
-                            Cw = Cw - Utility.Math.Divide(error_amount, 2 * dfdCw, 0.0);
+                            Cw = Cw - MathUtilities.Divide(error_amount, 2 * dfdCw, 0.0);
                             if (Cw < 0.0)             // test added by RCichota 09/Jul/2010
                             {
                                 string mess = String.Format("  {0}({1}) = {2,12:G6} - Iteration: {3}",
@@ -3895,7 +3896,7 @@ namespace Models.Soils
                 // A solution was not found
 
                 throw new Exception("APSwim failed to solve the freundlich isotherm");
-                //return Utility.Math.Divide(Ctot, th[node], 0.0);
+                //return MathUtilities.Divide(Ctot, th[node], 0.0);
             }
         }
 
@@ -3939,8 +3940,8 @@ namespace Models.Soils
             {
                 // Cw is positive, proceed with the calculations
 
-                if ((Utility.Math.FloatsAreEqual(fip[solnum][node], 1.0))
-                     || (Utility.Math.FloatsAreEqual(ex[solnum][node], 0.0)))
+                if ((MathUtilities.FloatsAreEqual(fip[solnum][node], 1.0))
+                     || (MathUtilities.FloatsAreEqual(ex[solnum][node], 0.0)))
                 {
                     // Linear isotherm or no adsorption
 
@@ -4035,7 +4036,7 @@ namespace Models.Soils
                 double TD_Eo = CEvap(end_of_day) - CEvap(start_of_day);
 
                 for (int j = 0; j < nveg; j++)
-                    rtp[j] = Utility.Math.Divide(pep[j], TD_Eo, 0.0) * rep;
+                    rtp[j] = MathUtilities.Divide(pep[j], TD_Eo, 0.0) * rep;
 
                 // pot soil evap rate is not linked to apsim timestep
                 tresp = sep / _dt;
@@ -4412,7 +4413,7 @@ namespace Models.Soils
             double hsoil;
             for (int i = 1; i <= n; i++)
             {
-                if (!Utility.Math.FloatsAreEqual(x[i - 1], x[i]))
+                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
                 {
                     deltax = x[i] - x[i - 1];
                     deltap = _p[i] - _p[i - 1];
@@ -4424,7 +4425,7 @@ namespace Models.Soils
                     if (swt >= 0.5 && swt <= 1.0)
                     {
                         //              use fixed space weighting on gravity flow
-                        w1 = Utility.Math.Sign(2.0 * swt, gf);
+                        w1 = MathUtilities.Sign(2.0 * swt, gf);
                     }
                     else
                     {
@@ -4443,7 +4444,7 @@ namespace Models.Soils
                                 //                     value=1.-accept*(skd+(g%p(i)-g%p(i-1))*hkdp2)/(absgf*deltax*hkp(i))
                                 double value = 1.0 - accept * (skd) / (Math.Abs(gfhkp) * deltax);
                                 //                     value=min(1d0,value)
-                                swta[i] = Utility.Math.Sign(Math.Max(0.0, value), gfhkp);
+                                swta[i] = MathUtilities.Sign(Math.Max(0.0, value), gfhkp);
                             }
                             wt = swta[i];
                         }
@@ -4720,7 +4721,7 @@ namespace Models.Soils
                     //           j is next different node, k is equation
                     if (i > 0 && i < n - 1)
                     {
-                        if (Utility.Math.FloatsAreEqual(x[i], x[i + 1]))
+                        if (MathUtilities.FloatsAreEqual(x[i], x[i + 1]))
                         {
                             xipdif = false;
                             j = i + 2;

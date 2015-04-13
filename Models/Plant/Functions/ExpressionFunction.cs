@@ -7,6 +7,7 @@ using System.Reflection;
 
 using System.Data;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -21,7 +22,7 @@ namespace Models.PMF.Functions
         public string Expression = "";
 
         /// <summary>The function</summary>
-        private Utility.ExpressionEvaluator fn = new Utility.ExpressionEvaluator();
+        private ExpressionEvaluator fn = new ExpressionEvaluator();
         /// <summary>The parsed</summary>
         private bool parsed = false;
 
@@ -46,7 +47,7 @@ namespace Models.PMF.Functions
         /// <summary>Parses the specified function.</summary>
         /// <param name="fn">The function.</param>
         /// <param name="ExpressionProperty">The expression property.</param>
-        private static void Parse(Utility.ExpressionEvaluator fn, string ExpressionProperty)
+        private static void Parse(ExpressionEvaluator fn, string ExpressionProperty)
         {
             fn.Parse(ExpressionProperty.Trim());
             fn.Infix2Postfix();
@@ -56,15 +57,15 @@ namespace Models.PMF.Functions
         /// <param name="fn">The function.</param>
         /// <param name="RelativeTo">The relative to.</param>
         /// <exception cref="System.Exception">Cannot find variable:  + sym.m_name +  in function:  + RelativeTo.Name</exception>
-        private static void FillVariableNames(Utility.ExpressionEvaluator fn, Model RelativeTo)
+        private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo)
         {
             ArrayList varUnfilled = fn.Variables;
             ArrayList varFilled = new ArrayList();
-            Utility.Symbol symFilled;
-            foreach (Utility.Symbol sym in varUnfilled)
+            Symbol symFilled;
+            foreach (Symbol sym in varUnfilled)
             {
                 symFilled.m_name = sym.m_name;
-                symFilled.m_type = Utility.ExpressionType.Variable;
+                symFilled.m_type = ExpressionType.Variable;
                 symFilled.m_values = null;
                 symFilled.m_value = 0;
                 object sometypeofobject = Apsim.Get(RelativeTo, sym.m_name.Trim());
@@ -79,7 +80,7 @@ namespace Models.PMF.Functions
         /// <summary>Evaluates the specified function.</summary>
         /// <param name="fn">The function.</param>
         /// <exception cref="System.Exception"></exception>
-        private static void Evaluate(Utility.ExpressionEvaluator fn)
+        private static void Evaluate(ExpressionEvaluator fn)
         {
             fn.EvaluatePostfix();
             if (fn.Error)
@@ -109,7 +110,7 @@ namespace Models.PMF.Functions
         /// <returns></returns>
         public static object Evaluate(string Expression, Model RelativeTo)
         {
-            Utility.ExpressionEvaluator fn = new Utility.ExpressionEvaluator();
+            ExpressionEvaluator fn = new ExpressionEvaluator();
             Parse(fn, Expression);
             FillVariableNames(fn, RelativeTo);
             Evaluate(fn);

@@ -8,6 +8,7 @@ namespace Models.Soils.Arbitrator
     using System;
     using System.Collections.Generic;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Encapsulates the state of water and N in multiple zones.
@@ -65,9 +66,9 @@ namespace Models.Soils.Arbitrator
                     foreach (ZoneWaterAndN NewZ in NewState.Zones)
                         if (Z.Name == NewZ.Name)
                         {
-                            NewZ.Water = Utility.Math.Subtract(NewZ.Water, Z.Water);
-                            NewZ.NO3N = Utility.Math.Subtract(NewZ.NO3N, Z.NO3N);
-                            NewZ.NH4N = Utility.Math.Subtract(NewZ.NH4N, Z.NH4N);
+                            NewZ.Water = MathUtilities.Subtract(NewZ.Water, Z.Water);
+                            NewZ.NO3N = MathUtilities.Subtract(NewZ.NO3N, Z.NO3N);
+                            NewZ.NH4N = MathUtilities.Subtract(NewZ.NH4N, Z.NH4N);
                         }
             return NewState;
         }

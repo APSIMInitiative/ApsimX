@@ -7,6 +7,7 @@ using Models.PMF.Functions;
 using Models.Soils;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -163,7 +164,7 @@ namespace Models.PMF.Organs
             //    //foreach (Zone SubPaddock in this.Models)
             //    //{
             //    //    SWSupply = (double[]) this.Get(SubPaddock.FullPath + "." + Plant.Name + "Root.SWSupply");
-            //    //    Total += Utility.Math.Sum(SWSupply);
+            //    //    Total += MathUtilities.Sum(SWSupply);
             //    //}
             //    return Total;
             //}
@@ -178,7 +179,7 @@ namespace Models.PMF.Organs
         /// </exception>
         public override void DoWaterUptake(double[] Amount)
         {
-            Uptake = Utility.Math.Sum(Amount);
+            Uptake = MathUtilities.Sum(Amount);
             if (TalkDirectlyToRoot)
                 //MyPaddock.Set(OurName + "Root.SWUptake", Amount);
                 throw new NotImplementedException();
@@ -192,10 +193,10 @@ namespace Models.PMF.Organs
                 //{
                 //    string ModelName = SubPaddock.FullPath + "." + Plant.Name + "Root";
                 //    double[] SWSupply = (double[])this.Get(ModelName + ".SWSupply");
-                //    Supply.Add(Utility.Math.Sum(SWSupply));
+                //    Supply.Add(MathUtilities.Sum(SWSupply));
                 //    ModelNames.Add(ModelName);
                 //}
-                //double fraction = Amount / Utility.Math.Sum(Supply);
+                //double fraction = Amount / MathUtilities.Sum(Supply);
                 //if (fraction > 1)
                 //    throw new Exception("Requested SW uptake > Available supplies.");
                 ////int i = 0;

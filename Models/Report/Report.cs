@@ -9,6 +9,7 @@ namespace Models.Report
     using System.Collections.Generic;
     using System.Data;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -64,7 +65,7 @@ namespace Models.Report
             List<string> variableNames = new List<string>();
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
-                bool isDuplicate = Utility.String.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
+                bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
                 if (!isDuplicate && this.VariableNames[i] != string.Empty)
                     variableNames.Add(this.VariableNames[i].Trim());
             }

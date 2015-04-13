@@ -98,13 +98,6 @@
     <Compile Include="..\Models\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="..\Utility\ColumnXYSeries.cs">
-      <Link>Utility\ColumnXYSeries.cs</Link>
-    </Compile>
-    <Compile Include="..\Utility\DateTimeCellType.cs">
-      <Link>Utility\DateTimeCellType.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Attributes\ContextMenuAttribute.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
@@ -138,6 +131,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="Utility\ColumnXYSeries.cs" />
+    <Compile Include="Utility\DateTimeCellType.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utility\FindAndReplaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -535,6 +532,10 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCropOilPalm.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+      <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
+      <Name>APSIM.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Models\Importer\Importer.csproj">
       <Project>{075F2644-F14E-4010-BA52-35E4B0011835}</Project>
       <Name>Importer</Name>

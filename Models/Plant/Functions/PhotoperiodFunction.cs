@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
     /// <summary>The day length for a specified day and location</summary>
-    /// <remarks>The day length is calculated with \ref Utility.Math.DayLength.</remarks>
+    /// <remarks>The day length is calculated with \ref MathUtilities.DayLength.</remarks>
     /// \pre A \ref Models.WeatherFile function has to exist.
     /// \pre A \ref Models.Clock function has to be existed to retrieve day of year
     /// \param Twilight The interval between sunrise or sunset and the time when the true centre of the sun is below the horizon as a specified angle.
@@ -42,10 +43,10 @@ namespace Models.PMF.Functions
                     if (CCPP > 0.0)
                         return Convert.ToDouble(val);
                     else
-                        return Utility.Math.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
+                        return MathUtilities.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
                 }
                 else
-                    return Utility.Math.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
+                    return MathUtilities.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
             }
         }
 

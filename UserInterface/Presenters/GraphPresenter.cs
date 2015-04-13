@@ -13,6 +13,7 @@ using System.Data;
 using Models;
 using UserInterface.EventArguments;
 using Models.Soils;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -130,7 +131,7 @@ namespace UserInterface.Presenters
                     }
                 }
 
-                Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(x, y);
+                MathUtilities.RegrStats stats = MathUtilities.CalcRegressionStats(x, y);
                 AddRegressionToGraph(this.GraphView, stats, Axis.AxisType.Bottom, Axis.AxisType.Left,
                                         Color.Black, seriesIndex);
                 seriesIndex++;
@@ -140,7 +141,7 @@ namespace UserInterface.Presenters
             {
                 if (seriesInfo.X != null && seriesInfo.Y != null && seriesInfo.series.ShowRegressionLine)
                 {
-                    Utility.Math.RegrStats stats = Utility.Math.CalcRegressionStats(seriesInfo.X, seriesInfo.Y);
+                    MathUtilities.RegrStats stats = MathUtilities.CalcRegressionStats(seriesInfo.X, seriesInfo.Y);
                     if (stats != null)
                     {
                         AddRegressionToGraph(this.GraphView, stats, seriesInfo.series.XAxis, seriesInfo.series.YAxis, seriesInfo.Colour, seriesIndex);
@@ -247,7 +248,7 @@ namespace UserInterface.Presenters
         {
             foreach (Experiment experiment in experiments)
             {
-                string filter = "NAME IN " + "(" + Utility.String.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                string filter = "NAME IN " + "(" + StringUtilities.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
 
                 int seriesIndex = Array.IndexOf(experiments, experiment);
 
@@ -312,7 +313,7 @@ namespace UserInterface.Presenters
                 }
 
                 // Create a default title by appending all 'names' together.
-                title = Utility.String.BuildString(names.ToArray(), ", ");
+                title = StringUtilities.BuildString(names.ToArray(), ", ");
             }
             GraphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval);
         }
@@ -509,7 +510,7 @@ namespace UserInterface.Presenters
         /// <param name="colour">The color to use</param>
         /// <param name="seriesIndex">The series index</param>
         private static void AddRegressionToGraph(IGraphView graphView, 
-                                                 Utility.Math.RegrStats stats,
+                                                 MathUtilities.RegrStats stats,
                                                  Axis.AxisType xAxis, Axis.AxisType yAxis,
                                                  Color colour,
                                                  int seriesIndex)
@@ -660,7 +661,7 @@ namespace UserInterface.Presenters
                     IEnumerable data = GetData(series.Y);
                     if (series.Cumulative)
                     {
-                        data = Utility.Math.Cumulative((IEnumerable<double>)data);
+                        data = MathUtilities.Cumulative((IEnumerable<double>)data);
                     }
 
                     return data;
@@ -738,8 +739,8 @@ namespace UserInterface.Presenters
 
                         if (rowX is double && rowY is double)
                         {
-                            if (Utility.Math.FloatsAreEqual(x, (double)rowX) &&
-                                Utility.Math.FloatsAreEqual(y, (double)rowY))
+                            if (MathUtilities.FloatsAreEqual(x, (double)rowX) &&
+                                MathUtilities.FloatsAreEqual(y, (double)rowY))
                             {
                                 object simulationName = row["SimulationName"];
                                 if (simulationName != null)
@@ -777,15 +778,15 @@ namespace UserInterface.Presenters
                     {
                         if (this.data.Columns[graphValues.FieldName].DataType == typeof(DateTime))
                         {
-                            return Utility.DataTable.GetColumnAsDates(this.data, graphValues.FieldName);
+                            return DataTableUtilities.GetColumnAsDates(this.data, graphValues.FieldName);
                         }
                         else if (this.data.Columns[graphValues.FieldName].DataType == typeof(string))
                         {
-                            return Utility.DataTable.GetColumnAsStrings(this.data, graphValues.FieldName);
+                            return DataTableUtilities.GetColumnAsStrings(this.data, graphValues.FieldName);
                         }
                         else
                         {
-                            return Utility.DataTable.GetColumnAsDoubles(this.data, graphValues.FieldName);
+                            return DataTableUtilities.GetColumnAsDoubles(this.data, graphValues.FieldName);
                         }
                     }
                 }

@@ -11,6 +11,7 @@ using Models.PMF.Phen;
 using System.Xml.Serialization;
 using System.IO;
 using Models.PMF.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -290,13 +291,13 @@ namespace Models.PMF.OldPlant
         // Soil water
         /// <summary>Gets the sw supply.</summary>
         /// <value>The sw supply.</value>
-        public override double SWSupply { get { return Utility.Math.Sum(sw_supply); } }
+        public override double SWSupply { get { return MathUtilities.Sum(sw_supply); } }
         /// <summary>Gets the sw demand.</summary>
         /// <value>The sw demand.</value>
         public override double SWDemand { get { return sw_demand; } }
         /// <summary>Gets the sw uptake.</summary>
         /// <value>The sw uptake.</value>
-        public override double SWUptake { get { return -Utility.Math.Sum(dlt_sw_dep); } }
+        public override double SWUptake { get { return -MathUtilities.Sum(dlt_sw_dep); } }
         /// <summary>Does the sw demand.</summary>
         /// <param name="Supply">The supply.</param>
         public override void DoSWDemand(double Supply) { }
@@ -312,17 +313,17 @@ namespace Models.PMF.OldPlant
             if (SwimIsPresent)
             {
                 dlt_sw_dep = (double[])Apsim.Get(this, "uptake_water_" + Plant.CropType);
-                dlt_sw_dep = Utility.Math.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
+                dlt_sw_dep = MathUtilities.Multiply_Value(dlt_sw_dep, -1);   // make them negative numbers.
             }
             else if (ArbitratorSWUptake != null)
             {
-                //dlt_sw_dep = Utility.Math.Multiply_Value(AribtratorSWUptake, -1);   // make them negative numbers.
+                //dlt_sw_dep = MathUtilities.Multiply_Value(AribtratorSWUptake, -1);   // make them negative numbers.
                 dlt_sw_dep = ArbitratorSWUptake;   // make them negative numbers.
                 //Util.ZeroArray(AribtratorSWUptake);
             }
             else { }
  
-            Util.Debug("Root.dlt_sw_dep=%f", Utility.Math.Sum(dlt_sw_dep));
+            Util.Debug("Root.dlt_sw_dep=%f", MathUtilities.Sum(dlt_sw_dep));
         }
 
         /// <summary>Calculate SW uptake for a given demand and soil water content</summary>
@@ -344,8 +345,8 @@ namespace Models.PMF.OldPlant
 
             CalculateNSupply(NO3N, NH4N, ref no3gsm_uptake_pot, ref nh4gsm_uptake_pot);
             DoNUptakeCalculation(0.0);
-            NO3NUp = Utility.Math.Multiply_Value(dlt_no3gsm, -10);
-            NH4NUp = Utility.Math.Multiply_Value(dlt_nh4gsm, -10);
+            NO3NUp = MathUtilities.Multiply_Value(dlt_no3gsm, -10);
+            NH4NUp = MathUtilities.Multiply_Value(dlt_nh4gsm, -10);
             
         }
 
@@ -369,8 +370,8 @@ namespace Models.PMF.OldPlant
                 ; /* nothing */
 
             int RootLayerMax = deepest_layer + 1;
-            double RootDepthMax = Utility.Math.Sum(Soil.Thickness, 0, deepest_layer + 1, 0.0);
-            dltRootDepth = Utility.Math.Constrain(dltRootDepth, double.MinValue, RootDepthMax - RootDepth);
+            double RootDepthMax = MathUtilities.Sum(Soil.Thickness, 0, deepest_layer + 1, 0.0);
+            dltRootDepth = MathUtilities.Constrain(dltRootDepth, double.MinValue, RootDepthMax - RootDepth);
 
             if (dltRootDepth < 0.0)
                 throw new Exception("negative root growth??");
@@ -419,7 +420,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
-            double fraction_senescing = Utility.Math.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -453,8 +454,8 @@ namespace Models.PMF.OldPlant
             get
             {
                 int deepest_layer = FindLayerNo(RootDepth);
-                return Utility.Math.Sum(no3gsm_uptake_pot, 0, deepest_layer + 1, 0) +
-                       Utility.Math.Sum(nh4gsm_uptake_pot, 0, deepest_layer + 1, 0);
+                return MathUtilities.Sum(no3gsm_uptake_pot, 0, deepest_layer + 1, 0) +
+                       MathUtilities.Sum(nh4gsm_uptake_pot, 0, deepest_layer + 1, 0);
             }
         }
         /// <summary>Gets the n uptake.</summary>
@@ -464,8 +465,8 @@ namespace Models.PMF.OldPlant
             get
             {
                 int deepest_layer = FindLayerNo(RootDepth);
-                return -Utility.Math.Sum(dlt_no3gsm, 0, deepest_layer + 1, 0)
-                        - Utility.Math.Sum(dlt_nh4gsm, 0, deepest_layer + 1, 0);
+                return -MathUtilities.Sum(dlt_no3gsm, 0, deepest_layer + 1, 0)
+                        - MathUtilities.Sum(dlt_nh4gsm, 0, deepest_layer + 1, 0);
             }
         }
         /// <summary>Gets the soil n demand.</summary>
@@ -477,12 +478,12 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Utility.Math.Constrain(NMax - NDemand, 0.0, double.MaxValue);
+                return MathUtilities.Constrain(NMax - NDemand, 0.0, double.MaxValue);
             }
         }
         /// <summary>Gets the n demand differential.</summary>
         /// <value>The n demand differential.</value>
-        public override double NDemandDifferential { get { return Utility.Math.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
+        public override double NDemandDifferential { get { return MathUtilities.Constrain(NDemand - Growth.N, 0.0, double.MaxValue); } }
         /// <summary>Gets the available retranslocate n.</summary>
         /// <value>The available retranslocate n.</value>
         public override double AvailableRetranslocateN
@@ -490,7 +491,7 @@ namespace Models.PMF.OldPlant
             get
             {
                 double N_min = n_conc_min * Live.Wt;
-                double N_avail = Utility.Math.Constrain(Live.N - N_min, 0.0, double.MaxValue);
+                double N_avail = MathUtilities.Constrain(Live.N - N_min, 0.0, double.MaxValue);
                 double n_retrans_fraction = 1.0;
                 return (N_avail * n_retrans_fraction);
             }
@@ -525,7 +526,7 @@ namespace Models.PMF.OldPlant
         public override void DoNDemand1Pot(double dltDmPotRue)
         {
             Biomass OldGrowth = Growth;
-            Growth.StructuralWt = dltDmPotRue * Utility.Math.Divide(Live.Wt, Plant.TotalLive.Wt, 0.0);
+            Growth.StructuralWt = dltDmPotRue * MathUtilities.Divide(Live.Wt, Plant.TotalLive.Wt, 0.0);
             Util.Debug("Root.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,
                        ref _NDemand, ref NMax);
@@ -538,7 +539,7 @@ namespace Models.PMF.OldPlant
         public override void DoSoilNDemand()
         {
             _SoilNDemand = NDemand - dlt_n_senesced_retrans;
-            _SoilNDemand = Utility.Math.Constrain(_SoilNDemand, 0.0, double.MaxValue);
+            _SoilNDemand = MathUtilities.Constrain(_SoilNDemand, 0.0, double.MaxValue);
             Util.Debug("Root.SoilNDemand=%f", _SoilNDemand);
         }
         /// <summary>Does the n supply.</summary>
@@ -555,8 +556,8 @@ namespace Models.PMF.OldPlant
 
         private void CalculateNSupply(double[] NO3N, double[] NH4N, ref double[] no3gsm_uptake_pot, ref double[] nh4gsm_uptake_pot)
         {
-            double[] no3gsm = Utility.Math.Multiply_Value(NO3N, Conversions.kg2gm / Conversions.ha2sm);
-            double[] nh4gsm = Utility.Math.Multiply_Value(NH4N, Conversions.kg2gm / Conversions.ha2sm);
+            double[] no3gsm = MathUtilities.Multiply_Value(NO3N, Conversions.kg2gm / Conversions.ha2sm);
+            double[] nh4gsm = MathUtilities.Multiply_Value(NH4N, Conversions.kg2gm / Conversions.ha2sm);
 
             (NUptakeFunction as NUptake3).DoNUptake(RootDepth, no3gsm, nh4gsm,
                                              Soil.BD, Soil.Thickness, sw_avail, sw_avail_pot, no3gsm_min, nh4gsm_min,
@@ -578,22 +579,22 @@ namespace Models.PMF.OldPlant
             {
                 // supply greater than demand.
                 // Retranslocate what is needed
-                Retranslocation.StructuralN = GrainNDemand * Utility.Math.Divide(AvailableRetranslocateN, NSupply, 0.0);
+                Retranslocation.StructuralN = GrainNDemand * MathUtilities.Divide(AvailableRetranslocateN, NSupply, 0.0);
             }
             Util.Debug("Root.Retranslocation.N=%f", Retranslocation.N);
         }
         /// <summary>Does the n senescence.</summary>
         public override void DoNSenescence()
         {
-            double green_n_conc = Utility.Math.Divide(Live.N, Live.Wt, 0.0);
+            double green_n_conc = MathUtilities.Divide(Live.N, Live.Wt, 0.0);
             double dlt_n_in_senescing_part = Senescing.Wt * green_n_conc;
             double sen_n_conc = Math.Min(NSenescenceConcentration, green_n_conc);
 
             double SenescingN = Senescing.Wt * sen_n_conc;
-            Senescing.StructuralN = Utility.Math.Constrain(SenescingN, double.MinValue, Live.N);
+            Senescing.StructuralN = MathUtilities.Constrain(SenescingN, double.MinValue, Live.N);
 
             dlt_n_senesced_trans = dlt_n_in_senescing_part - Senescing.N;
-            dlt_n_senesced_trans = Utility.Math.Constrain(dlt_n_senesced_trans, 0.0, double.MaxValue);
+            dlt_n_senesced_trans = MathUtilities.Constrain(dlt_n_senesced_trans, 0.0, double.MaxValue);
 
             Util.Debug("Root.SenescingN=%f", SenescingN);
             Util.Debug("Root.dlt.n_senesced_trans=%f", dlt_n_senesced_trans);
@@ -603,7 +604,7 @@ namespace Models.PMF.OldPlant
         /// <param name="n_demand_tot">The n_demand_tot.</param>
         public override void DoNSenescedRetranslocation(double navail, double n_demand_tot)
         {
-            dlt_n_senesced_retrans = navail * Utility.Math.Divide(NDemand, n_demand_tot, 0.0);
+            dlt_n_senesced_retrans = navail * MathUtilities.Divide(NDemand, n_demand_tot, 0.0);
             Util.Debug("Root.dlt.n_senesced_retrans=%f", dlt_n_senesced_retrans);
         }
         /// <summary>Does the n partition.</summary>
@@ -617,7 +618,7 @@ namespace Models.PMF.OldPlant
         /// <param name="nFixDemandTotal">The n fix demand total.</param>
         public override void DoNFixRetranslocate(double NFixUptake, double nFixDemandTotal)
         {
-            Growth.StructuralN += NFixUptake * Utility.Math.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
+            Growth.StructuralN += NFixUptake * MathUtilities.Divide(NDemandDifferential, nFixDemandTotal, 0.0);
         }
         /// <summary>Does the n conccentration limits.</summary>
         public override void DoNConccentrationLimits()
@@ -641,8 +642,8 @@ namespace Models.PMF.OldPlant
         {
             if (ArbitratorNO3Uptake!=null)
             {
-                dlt_no3gsm = Utility.Math.Multiply_Value(ArbitratorNO3Uptake, -0.1);  // need to make it -ve and change from kg/ha to g/m2
-                dlt_nh4gsm = Utility.Math.Multiply_Value(ArbitratorNH4Uptake, -0.1);
+                dlt_no3gsm = MathUtilities.Multiply_Value(ArbitratorNO3Uptake, -0.1);  // need to make it -ve and change from kg/ha to g/m2
+                dlt_nh4gsm = MathUtilities.Multiply_Value(ArbitratorNH4Uptake, -0.1);
                 }
              else
                 DoNUptakeCalculation(PotNFix);
@@ -655,7 +656,7 @@ namespace Models.PMF.OldPlant
             //if (SwimIsPresent)
             //{
             //    My.Get("uptake_no3_" + Plant.CropType, out dlt_no3gsm);
-            //    Utility.Math.Multiply_Value(dlt_no3gsm, -Conversions.kg2gm/Conversions.ha2sm);   // convert units and make them negative.
+            //    MathUtilities.Multiply_Value(dlt_no3gsm, -Conversions.kg2gm/Conversions.ha2sm);   // convert units and make them negative.
             //}
             //else
 
@@ -666,12 +667,12 @@ namespace Models.PMF.OldPlant
             int deepest_layer = FindLayerNo(RootDepth);
 
 
-            double ngsm_supply = Utility.Math.Sum(no3gsm_uptake_pot, 0, deepest_layer + 1, 0)
-                               + Utility.Math.Sum(nh4gsm_uptake_pot, 0, deepest_layer + 1, 0);
+            double ngsm_supply = MathUtilities.Sum(no3gsm_uptake_pot, 0, deepest_layer + 1, 0)
+                               + MathUtilities.Sum(nh4gsm_uptake_pot, 0, deepest_layer + 1, 0);
 
 
             if (NSupplyPreference == "fixation")
-                n_demand = Utility.Math.Constrain(n_demand - PotNFix, 0.0, double.MaxValue);
+                n_demand = MathUtilities.Constrain(n_demand - PotNFix, 0.0, double.MaxValue);
 
             // get actual change in N contents
             Util.ZeroArray(dlt_no3gsm);
@@ -685,7 +686,7 @@ namespace Models.PMF.OldPlant
                 // no3 below zero.
             }
             else
-                scalef = Utility.Math.Divide(n_demand, ngsm_supply, 0.0);
+                scalef = MathUtilities.Divide(n_demand, ngsm_supply, 0.0);
 
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
@@ -698,8 +699,8 @@ namespace Models.PMF.OldPlant
                 dlt_nh4gsm[layer] = -nh4gsm_uptake;
             }
 
-            Util.Debug("Root.dlt_no3gsm=%f", Utility.Math.Sum(dlt_no3gsm));
-            Util.Debug("Root.dlt_nh4gsm=%f", Utility.Math.Sum(dlt_nh4gsm));
+            Util.Debug("Root.dlt_no3gsm=%f", MathUtilities.Sum(dlt_no3gsm));
+            Util.Debug("Root.dlt_nh4gsm=%f", MathUtilities.Sum(dlt_nh4gsm));
 
                 
         }
@@ -771,13 +772,13 @@ namespace Models.PMF.OldPlant
                 RootLengthSenesced[layer] += dltRootLengthDead[layer];
             }
 
-            double CumDepth = Utility.Math.Sum(Soil.Thickness);
+            double CumDepth = MathUtilities.Sum(Soil.Thickness);
             if (RootDepth < 0 || RootDepth > CumDepth)
                 throw new Exception("Invalid root depth: " + RootDepth.ToString());
 
             Util.Debug("root.RootDepth=%f", RootDepth);
-            Util.Debug("root.RootLength=%f", Utility.Math.Sum(RootLength));
-            Util.Debug("root.RootLengthSenesced=%f", Utility.Math.Sum(RootLengthSenesced));
+            Util.Debug("root.RootLength=%f", MathUtilities.Sum(RootLength));
+            Util.Debug("root.RootLengthSenesced=%f", MathUtilities.Sum(RootLengthSenesced));
 
             UpdateWaterAndNBalance();
         }
@@ -855,8 +856,8 @@ namespace Models.PMF.OldPlant
                 double[] FASW = new double[Soil.Thickness.Length];
                 for (int i = 0; i < Soil.Thickness.Length; i++)
                 {
-                    FASW[i] = Utility.Math.Divide(Soil.Water[i] - ll_dep[i], DULmm[i] - ll_dep[i], 0.0);
-                    FASW[i] = Utility.Math.Constrain(FASW[i], 0.0, 1.0);
+                    FASW[i] = MathUtilities.Divide(Soil.Water[i] - ll_dep[i], DULmm[i] - ll_dep[i], 0.0);
+                    FASW[i] = MathUtilities.Constrain(FASW[i], 0.0, 1.0);
                 }
                 return FASW;
             }
@@ -871,12 +872,12 @@ namespace Models.PMF.OldPlant
                 int layer = FindLayerNo(RootDepth);
                 int deepest_layer = Soil.Thickness.Length - 1;
 
-                double CumDepth = Utility.Math.Sum(Soil.Thickness, 0, layer + 1, 0.0);
+                double CumDepth = MathUtilities.Sum(Soil.Thickness, 0, layer + 1, 0.0);
 
                 double rootdepth_in_layer = Soil.Thickness[layer] - (CumDepth - RootDepth);
-                rootdepth_in_layer = Utility.Math.Constrain(rootdepth_in_layer, 0.0, Soil.Thickness[layer]);
+                rootdepth_in_layer = MathUtilities.Constrain(rootdepth_in_layer, 0.0, Soil.Thickness[layer]);
 
-                double weighting_factor = Utility.Math.Divide(rootdepth_in_layer, Soil.Thickness[layer], 0.0);
+                double weighting_factor = MathUtilities.Divide(rootdepth_in_layer, Soil.Thickness[layer], 0.0);
                 int next_layer = Math.Min(layer + 1, deepest_layer);
 
                 double fasw1 = FASWLayered[layer];
@@ -891,7 +892,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Root length density - needed by SWIM</summary>
         /// <value>The root length density.</value>
         [Units("mm/mm^3")]
-        public double[] RootLengthDensity { get { return Utility.Math.Divide(RootLength, Soil.Thickness); } }
+        public double[] RootLengthDensity { get { return MathUtilities.Divide(RootLength, Soil.Thickness); } }
         /// <summary>Calculate the extractable soil water in the root zone (mm).</summary>
         /// <value>The esw in root zone.</value>
         internal double ESWInRootZone
@@ -901,7 +902,7 @@ namespace Models.PMF.OldPlant
                 double ESW = 0;
                 int deepest_layer = FindLayerNo(RootDepth);
                 for (int layer = 0; layer <= deepest_layer; layer++)
-                    ESW += Utility.Math.Constrain(Soil.Water[layer] - ll_dep[layer], 0.0, double.MaxValue);
+                    ESW += MathUtilities.Constrain(Soil.Water[layer] - ll_dep[layer], 0.0, double.MaxValue);
                 return ESW;
             }
         }
@@ -950,17 +951,17 @@ namespace Models.PMF.OldPlant
                 rlv_factor[layer] = sWFactorRootLength[layer] *
                                     branching_factor *                                   // branching factor
                                     xf[layer] *                                          // growth factor
-                                    Utility.Math.Divide(Soil.Thickness[layer], RootDepth, 0.0);   // space weighting factor
+                                    MathUtilities.Divide(Soil.Thickness[layer], RootDepth, 0.0);   // space weighting factor
 
-                rlv_factor[layer] = Utility.Math.Constrain(rlv_factor[layer], 1e-6, double.MaxValue);
+                rlv_factor[layer] = MathUtilities.Constrain(rlv_factor[layer], 1e-6, double.MaxValue);
                 rlv_factor_tot += rlv_factor[layer];
             }
 
             double dlt_length_tot = Growth.Wt / Conversions.sm2smm * SpecificRootLength;
 
             for (int layer = 0; layer <= deepest_layer; layer++)
-                dltRootLength[layer] = dlt_length_tot * Utility.Math.Divide(rlv_factor[layer], rlv_factor_tot, 0.0);
-            Util.Debug("Root.dltRootLength=%f", Utility.Math.Sum(dltRootLength));
+                dltRootLength[layer] = dlt_length_tot * MathUtilities.Divide(rlv_factor[layer], rlv_factor_tot, 0.0);
+            Util.Debug("Root.dltRootLength=%f", MathUtilities.Sum(dltRootLength));
         }
 
         /// <summary>
@@ -972,7 +973,7 @@ namespace Models.PMF.OldPlant
             Util.ZeroArray(dltRootLengthSenesced);
             double senesced_length = Senescing.Wt / Conversions.sm2smm * SpecificRootLength;
             dltRootLengthSenesced = RootDist(senesced_length, RootLength);
-            Util.Debug("Root.dltRootLengthSenesced=%f", Utility.Math.Sum(dltRootLengthSenesced));
+            Util.Debug("Root.dltRootLengthSenesced=%f", MathUtilities.Sum(dltRootLengthSenesced));
         }
 
         /// <summary>Write a summary to the summary file.</summary>
@@ -995,7 +996,7 @@ namespace Models.PMF.OldPlant
                 writer.WriteLine(string.Format("{0,9:F1}{1,10:F3}{2,15:F3}{3,12:F3}",
                                   Soil.Thickness[layer],
                                   getModifiedKL(layer),
-                                  Utility.Math.Divide(ll_dep[layer], Soil.Thickness[layer], 0.0),
+                                  MathUtilities.Divide(ll_dep[layer], Soil.Thickness[layer], 0.0),
                                   xf[layer]));
                 dep_tot += Soil.Thickness[layer];
                 esw_tot += DULmm[layer] - ll_dep[layer];
@@ -1007,7 +1008,7 @@ namespace Models.PMF.OldPlant
             writer.WriteLine("Extractable SW: {0,5:F0}mm in {1,5:F0}mm total depth ({2,3:F0}%).",
                                             esw_tot,
                                             dep_tot,
-                                            Conversions.fract2pcnt * Utility.Math.Divide(esw_tot, dep_tot, 0.0));
+                                            Conversions.fract2pcnt * MathUtilities.Divide(esw_tot, dep_tot, 0.0));
         }
 
         /// <summary>Remove biomass from the root system due to senescence or plant death</summary>
@@ -1071,9 +1072,9 @@ namespace Models.PMF.OldPlant
             ll = soilCrop.LL;
             kl = soilCrop.KL;
             xf = soilCrop.XF;
-            DULmm = Utility.Math.Multiply(Soil.DUL, Soil.Thickness);
+            DULmm = MathUtilities.Multiply(Soil.DUL, Soil.Thickness);
 
-            ll_dep = Utility.Math.Multiply(ll, Soil.Thickness);
+            ll_dep = MathUtilities.Multiply(ll, Soil.Thickness);
             Util.ZeroArray(no3gsm_min);
             Util.ZeroArray(nh4gsm_min);
         }
@@ -1156,7 +1157,7 @@ namespace Models.PMF.OldPlant
                 double initial_root_length = Live.Wt / Conversions.sm2smm * SpecificRootLength;
 
                 // initial root length density (mm/mm^3)
-                double rld = Utility.Math.Divide(initial_root_length, RootDepth, 0.0);
+                double rld = MathUtilities.Divide(initial_root_length, RootDepth, 0.0);
 
                 int deepest_layer = FindLayerNo(RootDepth);
 
@@ -1165,7 +1166,7 @@ namespace Models.PMF.OldPlant
 
                 Util.Debug("Root.InitGreen.StructuralWt=%f", Live.StructuralWt);
                 Util.Debug("Root.InitGreen.StructuralN=%f", Live.StructuralN);
-                Util.Debug("Root.InitRootLength=%f", Utility.Math.Sum(RootLength));
+                Util.Debug("Root.InitRootLength=%f", MathUtilities.Sum(RootLength));
             }
         }
 
@@ -1275,7 +1276,7 @@ namespace Models.PMF.OldPlant
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
                 sw_avail[layer] = SW[layer] - ll_dep[layer];
-                sw_avail[layer] = Utility.Math.Constrain(sw_avail[layer], 0.0, double.MaxValue);
+                sw_avail[layer] = MathUtilities.Constrain(sw_avail[layer], 0.0, double.MaxValue);
             }
             // correct bottom layer for actual root penetration
             sw_avail[deepest_layer] = sw_avail[deepest_layer] * RootProportion(deepest_layer, RootDepth);
@@ -1298,7 +1299,7 @@ namespace Models.PMF.OldPlant
             {
                 sw_avail = (SW[i] - ll_dep[i]);
                 sw_supply[i] = sw_avail * getModifiedKL(i);
-                sw_supply[i] = Utility.Math.Constrain(sw_supply[i], 0.0, double.MaxValue);
+                sw_supply[i] = MathUtilities.Constrain(sw_supply[i], 0.0, double.MaxValue);
             }
             //now adjust bottom layer for depth of root
             sw_supply[deepest_layer] = sw_supply[deepest_layer] * RootProportion(deepest_layer, RootDepth);
@@ -1311,7 +1312,7 @@ namespace Models.PMF.OldPlant
         {
             double[] dlt = new double[sw_supply.Length];
             int deepest_layer = FindLayerNo(RootDepth);
-            double sw_supply_sum = Utility.Math.Sum(sw_supply, 0, deepest_layer + 1, 0.0);
+            double sw_supply_sum = MathUtilities.Sum(sw_supply, 0, deepest_layer + 1, 0.0);
 
             if ((sw_supply_sum < 0.0) || (sw_demand < 0.0))
             {
@@ -1329,7 +1330,7 @@ namespace Models.PMF.OldPlant
                     // distribute demand proportionately in all layers.
                     for (int layer = 0; layer <= deepest_layer; layer++)
                     {
-                        dlt[layer] = -1.0 * Utility.Math.Divide(sw_supply[layer], sw_supply_sum, 0.0) * sw_demand;
+                        dlt[layer] = -1.0 * MathUtilities.Divide(sw_supply[layer], sw_supply_sum, 0.0) * sw_demand;
                     }
                 }
                 else
@@ -1359,11 +1360,11 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         private double RootProportion(int layer, double RootDepth)
         {
-            double depth_to_layer_bottom = Utility.Math.Sum(Soil.Thickness, 0, layer + 1, 0.0);
+            double depth_to_layer_bottom = MathUtilities.Sum(Soil.Thickness, 0, layer + 1, 0.0);
             double depth_to_layer_top = depth_to_layer_bottom - Soil.Thickness[layer];
             double depth_to_root = Math.Min(depth_to_layer_bottom, RootDepth);
             double depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
-            return (Utility.Math.Divide(depth_of_root_in_layer, Soil.Thickness[layer], 0.0));
+            return (MathUtilities.Divide(depth_of_root_in_layer, Soil.Thickness[layer], 0.0));
         }
 
         /// <summary>
@@ -1377,11 +1378,11 @@ namespace Models.PMF.OldPlant
         {
             int deepest_layer = FindLayerNo(RootDepth);
 
-            double root_length_sum = Utility.Math.Sum(RootLength, 0, deepest_layer + 1, 0.0);
+            double root_length_sum = MathUtilities.Sum(RootLength, 0, deepest_layer + 1, 0.0);
 
             double[] RootArray = new double[RootLength.Length];
             for (int layer = 0; layer <= deepest_layer; layer++)
-                RootArray[layer] = root_sum * Utility.Math.Divide(RootLength[layer], root_length_sum, 0.0);
+                RootArray[layer] = root_sum * MathUtilities.Divide(RootLength[layer], root_length_sum, 0.0);
             return RootArray;
         }
 
@@ -1390,9 +1391,9 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         private double WFPS(int layer)
         {
-            double wfps = Utility.Math.Divide(Soil.Water[layer] - Soil.SoilWater.LL15mm[layer],
+            double wfps = MathUtilities.Divide(Soil.Water[layer] - Soil.SoilWater.LL15mm[layer],
                                             Soil.SoilWater.SATmm[layer] - Soil.SoilWater.LL15mm[layer], 0.0);
-            return Utility.Math.Constrain(wfps, 0.0, 1.0);
+            return MathUtilities.Constrain(wfps, 0.0, 1.0);
         }
 
         /// <summary>Update the water and N balance.</summary>
@@ -1401,10 +1402,10 @@ namespace Models.PMF.OldPlant
             NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
             NitrogenUptake.Sender = "Plant";
             NitrogenUptake.SenderType = "Plant";
-            NitrogenUptake.DeltaNO3 = Utility.Math.Multiply_Value(dlt_no3gsm, Conversions.gm2kg / Conversions.sm2ha);
-            NitrogenUptake.DeltaNH4 = Utility.Math.Multiply_Value(dlt_nh4gsm, Conversions.gm2kg / Conversions.sm2ha);
-            Util.Debug("Root.NitrogenUptake.DeltaNO3=%f", Utility.Math.Sum(NitrogenUptake.DeltaNO3));
-            Util.Debug("Root.NitrogenUptake.DeltaNH4=%f", Utility.Math.Sum(NitrogenUptake.DeltaNH4));
+            NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(dlt_no3gsm, Conversions.gm2kg / Conversions.sm2ha);
+            NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(dlt_nh4gsm, Conversions.gm2kg / Conversions.sm2ha);
+            Util.Debug("Root.NitrogenUptake.DeltaNO3=%f", MathUtilities.Sum(NitrogenUptake.DeltaNO3));
+            Util.Debug("Root.NitrogenUptake.DeltaNH4=%f", MathUtilities.Sum(NitrogenUptake.DeltaNH4));
             NitrogenChanged.Invoke(NitrogenUptake);
 
             // Send back delta water and nitrogen back to APSIM.
@@ -1412,7 +1413,7 @@ namespace Models.PMF.OldPlant
             {
                 WaterChangedType WaterUptake = new WaterChangedType();
                 WaterUptake.DeltaWater = dlt_sw_dep;
-                Util.Debug("Root.WaterUptake=%f", Utility.Math.Sum(WaterUptake.DeltaWater));
+                Util.Debug("Root.WaterUptake=%f", MathUtilities.Sum(WaterUptake.DeltaWater));
                 WaterChanged.Invoke(WaterUptake);
 
             }

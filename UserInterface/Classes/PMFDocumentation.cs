@@ -16,6 +16,7 @@ namespace UserInterface.Classes
     using System.Drawing;
     using Views;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// TODO: Update summary.
@@ -33,7 +34,7 @@ namespace UserInterface.Classes
 
         public static int Go(string DocFileName, Model parentModel)
         {
-            string xml = Utility.Xml.Serialise(parentModel, true);
+            string xml = XmlUtilities.Serialise(parentModel, true);
 
             XmlDocument XML = new XmlDocument();
             XML.LoadXml(xml);
@@ -59,12 +60,12 @@ namespace UserInterface.Classes
                 OutputFile.WriteLine("<link rel=\"stylesheet\" type=\"text/css\" href=\"Plant2.css\" >");
                 OutputFile.WriteLine("</head>");
                 OutputFile.WriteLine("<body>");
-                string TitleText = "The APSIM " + Utility.Xml.Value(XML.DocumentElement, "Name") + " Module";
+                string TitleText = "The APSIM " + XmlUtilities.Value(XML.DocumentElement, "Name") + " Module";
                 OutputFile.WriteLine(Title(TitleText));
                 OutputFile.WriteLine(Center(Header(TitleText, 1)));
-                XmlNode image = Utility.Xml.FindByType(XML.DocumentElement, "MetaData");
+                XmlNode image = XmlUtilities.FindByType(XML.DocumentElement, "MetaData");
 
-                List<XmlNode> children = Utility.Xml.ChildNodes(image, "");
+                List<XmlNode> children = XmlUtilities.ChildNodes(image, "");
 
                 OutputFile.WriteLine("<h2>Validation</h2>");
                 OutputFile.WriteLine("<A HREF=\"Index.html\">Model validation can be found here.<A>");
@@ -84,7 +85,7 @@ namespace UserInterface.Classes
                 }
                 OutputFile.WriteLine("</td></tbody></table>");
 
-                //XmlNode PlantNode = Utility.Xml.FindByType(XML.DocumentElement, "Model/Plant");
+                //XmlNode PlantNode = XmlUtilities.FindByType(XML.DocumentElement, "Model/Plant");
                 DocumentNodeAndChildren(OutputFile, XML.DocumentElement, 2, parentModel);
 
                 DocumentVariables(OutputFile, parentModel);
@@ -124,7 +125,7 @@ namespace UserInterface.Classes
             string Indent = new string(' ', Level * 3);
             if (N.Name.Contains("Leaf") || N.Name.Contains("Root")) //Nodes to add parameter doc to
                 paramTable = DocumentParams(OutputFile, N);
-            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
+            OutputFile.WriteLine(Header(XmlUtilities.Value(N, "Name"), Level, XmlUtilities.Value(N.ParentNode, "Name")));
 
             WriteDescriptionForTypeName(OutputFile, N, parentModel);
 
@@ -132,7 +133,7 @@ namespace UserInterface.Classes
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(paramTable);
 
-            foreach (XmlNode CN in Utility.Xml.ChildNodes(N, ""))
+            foreach (XmlNode CN in XmlUtilities.ChildNodes(N, ""))
                 DocumentNode(OutputFile, CN, Level + 1, parentModel);
 
             OutputFile.WriteLine("</blockquote>");
@@ -144,36 +145,36 @@ namespace UserInterface.Classes
             if (N.Name == "Name")
                 return;
 
-            if (Utility.Xml.Attribute(N, "shortcut") != "")
+            if (XmlUtilities.Attribute(N, "shortcut") != "")
             {
-                OutputFile.WriteLine("<p>" + Utility.Xml.Value(N, "Name") + " uses the same value as " + Utility.Xml.Attribute(N, "shortcut"));
+                OutputFile.WriteLine("<p>" + XmlUtilities.Value(N, "Name") + " uses the same value as " + XmlUtilities.Attribute(N, "shortcut"));
             }
             else if (N.Name == "Constant")
             {
-                OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+                OutputFile.WriteLine(Header(XmlUtilities.Value(N, "Name"), NextLevel, XmlUtilities.Value(N.ParentNode, "Name")));
 
                 WriteDescriptionForTypeName(OutputFile, N, parentModel);
                 TryDocumentMemo(OutputFile, N, NextLevel);
 
-                OutputFile.WriteLine("<p>Value = " + Utility.Xml.Value(N, "Value") + "</p>");
+                OutputFile.WriteLine("<p>Value = " + XmlUtilities.Value(N, "Value") + "</p>");
             }
-            else if (Utility.Xml.ChildNodes(N, "").Count == 0)
+            else if (XmlUtilities.ChildNodes(N, "").Count == 0)
             {
                 WriteDescriptionForTypeName(OutputFile, N, parentModel);
 
                 DocumentProperty(OutputFile, N, NextLevel);
             }
-            else if (Utility.Xml.ChildNodes(N, "XYPairs").Count > 0)
+            else if (XmlUtilities.ChildNodes(N, "XYPairs").Count > 0)
             {
-                CreateGraph(OutputFile, Utility.Xml.ChildNodes(N, "XYPairs")[0], NextLevel, parentModel);
+                CreateGraph(OutputFile, XmlUtilities.ChildNodes(N, "XYPairs")[0], NextLevel, parentModel);
             }
-            else if (Utility.Xml.Type(N) == "TemperatureFunction")
+            else if (XmlUtilities.Type(N) == "TemperatureFunction")
                 DocumentTemperatureFunction(OutputFile, N, NextLevel, parentModel);
-            //else if (Utility.Xml.Type(N) == "GenericPhase")
+            //else if (XmlUtilities.Type(N) == "GenericPhase")
             //   DocumentFixedPhase(OutputFile, N, NextLevel);
-            // else if (Utility.Xml.Type(N) == "PhaseLookupValue")
+            // else if (XmlUtilities.Type(N) == "PhaseLookupValue")
             //   DocumentPhaseLookupValue(OutputFile, N, NextLevel);
-            else if (Utility.Xml.Type(N) == "ChillingPhase")
+            else if (XmlUtilities.Type(N) == "ChillingPhase")
                 ChillingPhaseFunction(OutputFile, N, NextLevel);
             else if (N.Name == "Memo")
             {
@@ -181,7 +182,7 @@ namespace UserInterface.Classes
             }
             else
             {
-                string childName = Utility.Xml.Value(N, "Name");
+                string childName = XmlUtilities.Value(N, "Name");
                 Model childModel = null;
                 if (parentModel != null)
                     childModel = Apsim.Child(parentModel, childName) as Model;
@@ -191,24 +192,24 @@ namespace UserInterface.Classes
 
         private static void TryDocumentMemo(StreamWriter OutputFile, XmlNode N, int NextLevel)
         {
-            XmlNode memo = Utility.Xml.Find(N, "Memo");
+            XmlNode memo = XmlUtilities.Find(N, "Memo");
             if (memo != null)
                 DocumentMemo(OutputFile, memo, NextLevel);
         }
 
         private static void DocumentMemo(StreamWriter OutputFile, XmlNode N, int NextLevel)
         {
-            if (Utility.Xml.Value(N, "Name") != "Memo")
+            if (XmlUtilities.Value(N, "Name") != "Memo")
             {
-                OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode, "Name")));
+                OutputFile.WriteLine(Header(XmlUtilities.Value(N, "Name"), NextLevel, XmlUtilities.Value(N.ParentNode, "Name")));
             }
-            string contents = Utility.Xml.Value(N, "MemoText");
+            string contents = XmlUtilities.Value(N, "MemoText");
             string line;
             if (contents.Contains('<'))
             {
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(contents);
-                line = Utility.Xml.Value(doc.DocumentElement, "/html/body");
+                line = XmlUtilities.Value(doc.DocumentElement, "/html/body");
             }
             else
             {
@@ -224,16 +225,16 @@ namespace UserInterface.Classes
         {
             if (parentModel != null)
             {
-                PropertyInfo property = parentModel.GetType().GetProperty(Utility.Xml.Value(node, "Name"));
+                PropertyInfo property = parentModel.GetType().GetProperty(XmlUtilities.Value(node, "Name"));
                 if (property != null)
                 {
-                    UnitsAttribute units = Utility.Reflection.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                    UnitsAttribute units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
                     if (units != null)
                     {
                         OutputFile.WriteLine("<p>Units: " + units.ToString() + "</p>");
                     }
 
-                    DescriptionAttribute description = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                    DescriptionAttribute description = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                     if (description != null)
                     {
                         OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
@@ -241,16 +242,16 @@ namespace UserInterface.Classes
                 }
                 else
                 {
-                    FieldInfo field = parentModel.GetType().GetField(Utility.Xml.Value(node, "Name"), BindingFlags.NonPublic | BindingFlags.Instance);
+                    FieldInfo field = parentModel.GetType().GetField(XmlUtilities.Value(node, "Name"), BindingFlags.NonPublic | BindingFlags.Instance);
                     if (field != null)
                     {
-                        UnitsAttribute units = Utility.Reflection.GetAttribute(field, typeof(UnitsAttribute), false) as UnitsAttribute;
+                        UnitsAttribute units = ReflectionUtilities.GetAttribute(field, typeof(UnitsAttribute), false) as UnitsAttribute;
                         if (units != null)
                         {
                             OutputFile.WriteLine("<p>Units: " + units.ToString() + "</p>");
                         }
 
-                        DescriptionAttribute description = Utility.Reflection.GetAttribute(field, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                        DescriptionAttribute description = ReflectionUtilities.GetAttribute(field, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                         if (description != null)
                         {
                             OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
@@ -259,10 +260,10 @@ namespace UserInterface.Classes
                 }
             }
 
-            Type[] t = Utility.Reflection.GetTypeWithoutNameSpace(node.Name);
+            Type[] t = ReflectionUtilities.GetTypeWithoutNameSpace(node.Name, Assembly.GetExecutingAssembly());
             if (t.Length == 1)
             {
-                DescriptionAttribute description = Utility.Reflection.GetAttribute(t[0], typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                DescriptionAttribute description = ReflectionUtilities.GetAttribute(t[0], typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (description != null)
                 {
                     OutputFile.WriteLine("<p>" + description.ToString() + "</p>");
@@ -343,14 +344,14 @@ namespace UserInterface.Classes
 
         private static void ChillingPhaseFunction(StreamWriter OutputFile, XmlNode N, int Level)
         {
-            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
+            OutputFile.WriteLine(Header(XmlUtilities.Value(N, "Name"), Level, XmlUtilities.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
-            string start = Utility.Xml.FindByType(N, "Start").InnerText;
-            string end = Utility.Xml.FindByType(N, "End").InnerText;
-            string CDTarget = Utility.Xml.FindByType(N, "CDTarget").InnerText;
+            string start = XmlUtilities.FindByType(N, "Start").InnerText;
+            string end = XmlUtilities.FindByType(N, "End").InnerText;
+            string CDTarget = XmlUtilities.FindByType(N, "CDTarget").InnerText;
             string text = "";
-            text = Utility.Xml.Value(N, "Name") + " extends from " + start + " to " + end + " with a Chilling Days Target of " + CDTarget + " days.";
+            text = XmlUtilities.Value(N, "Name") + " extends from " + start + " to " + end + " with a Chilling Days Target of " + CDTarget + " days.";
             OutputFile.WriteLine(text);
             OutputFile.WriteLine("</blockquote>");
         }
@@ -361,12 +362,12 @@ namespace UserInterface.Classes
             string[] values = null;
             if (N.Name != "XProperty")
             {
-                if (Utility.Xml.Value(N, "Name").Contains("Stages"))
+                if (XmlUtilities.Value(N, "Name").Contains("Stages"))
                 {
                     stages = N.InnerText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     values = N.NextSibling.InnerText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 }
-                else if (Utility.Xml.Value(N, "Name").Contains("Values"))
+                else if (XmlUtilities.Value(N, "Name").Contains("Values"))
                 {
                     //processed above so skip it
                 }
@@ -390,38 +391,38 @@ namespace UserInterface.Classes
 
         private static void DocumentFixedPhase(StreamWriter OutputFile, XmlNode N, int Level)
         {
-            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
+            OutputFile.WriteLine(Header(XmlUtilities.Value(N, "Name"), Level, XmlUtilities.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
-            string start = Utility.Xml.FindByType(N, "Start").InnerText;
-            string end = Utility.Xml.FindByType(N, "End").InnerText;
-            string TTT = Utility.Xml.FindByType(N, "Target").InnerText;
+            string start = XmlUtilities.FindByType(N, "Start").InnerText;
+            string end = XmlUtilities.FindByType(N, "End").InnerText;
+            string TTT = XmlUtilities.FindByType(N, "Target").InnerText;
             string text = "";
-            text = Utility.Xml.Value(N, "Name") + " extends from " + start + " to " + end + " with a fixed thermal time duration of " + TTT + " degree.days.";
+            text = XmlUtilities.Value(N, "Name") + " extends from " + start + " to " + end + " with a fixed thermal time duration of " + TTT + " degree.days.";
             OutputFile.WriteLine(text);
             OutputFile.WriteLine("</blockquote>");
         }
 
         private static void DocumentTemperatureFunction(StreamWriter OutputFile, XmlNode N, int Level, Model parentModel)
         {
-            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
+            OutputFile.WriteLine(Header(XmlUtilities.Value(N, "Name"), Level, XmlUtilities.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
-            CreateGraph(OutputFile, Utility.Xml.FindByType(N, "XYPairs"), Level, parentModel);
+            CreateGraph(OutputFile, XmlUtilities.FindByType(N, "XYPairs"), Level, parentModel);
             OutputFile.WriteLine("</blockquote>");
         }
 
         private static void DocumentPhaseLookupValue(StreamWriter OutputFile, XmlNode N, int Level, Model parentModel)
         {
-            OutputFile.WriteLine(Header(Utility.Xml.Value(N, "Name"), Level, Utility.Xml.Value(N.ParentNode, "Name")));
+            OutputFile.WriteLine(Header(XmlUtilities.Value(N, "Name"), Level, XmlUtilities.Value(N.ParentNode, "Name")));
             OutputFile.WriteLine("<blockquote>");
             OutputFile.WriteLine(ClassDescription(N));
-            string start = Utility.Xml.FindByType(N, "Start").InnerText;
-            string end = Utility.Xml.FindByType(N, "End").InnerText;
+            string start = XmlUtilities.FindByType(N, "Start").InnerText;
+            string end = XmlUtilities.FindByType(N, "End").InnerText;
 
-            string text = "The value of " + Utility.Xml.Value(N, "Name") + " during the period from " + start + " to " + end + " is calculated as follows:";
+            string text = "The value of " + XmlUtilities.Value(N, "Name") + " during the period from " + start + " to " + end + " is calculated as follows:";
             OutputFile.WriteLine(text);
-            DocumentNode(OutputFile, Utility.Xml.Find(N, "Function"), Level, parentModel);
+            DocumentNode(OutputFile, XmlUtilities.Find(N, "Function"), Level, parentModel);
             OutputFile.WriteLine("</blockquote>");
         }
 
@@ -429,7 +430,7 @@ namespace UserInterface.Classes
         {
             object P = new Plant();
             Assembly A = Assembly.GetAssembly(P.GetType());
-            Type T = A.GetType(Utility.Xml.Type(Node));
+            Type T = A.GetType(XmlUtilities.Type(Node));
             if (T != null)
             {
                 object[] Attributes = T.GetCustomAttributes(true);
@@ -452,7 +453,7 @@ namespace UserInterface.Classes
         {
             object P = new Plant();
             Assembly A = Assembly.GetAssembly(P.GetType());
-            Type T = A.GetType(Utility.Xml.Type(Node));
+            Type T = A.GetType(XmlUtilities.Type(Node));
             List<string> paramaters = new List<string>();
             if (T == null)
                 return null;
@@ -487,7 +488,7 @@ namespace UserInterface.Classes
         static List<NameDescUnitsValue> Outputs(XmlNode N)
         {
             List<NameDescUnitsValue> OutputList = new List<NameDescUnitsValue>();
-            string Type = Utility.Xml.Type(N);
+            string Type = XmlUtilities.Type(N);
             object P = new Plant();
             Assembly A = Assembly.GetAssembly(P.GetType());
             Type T = A.GetType(Type);
@@ -542,14 +543,14 @@ namespace UserInterface.Classes
         private static void CreateGraph(StreamWriter OutputFile, XmlNode N, int NextLevel, Model parentModel)
         {
 
-            string InstanceName = Utility.Xml.Value(N.OwnerDocument.DocumentElement, "Name");
+            string InstanceName = XmlUtilities.Value(N.OwnerDocument.DocumentElement, "Name");
             string GraphName;
             if (N.Name == "XYPairs")
-                GraphName = Utility.Xml.Value(N.ParentNode.ParentNode, "Name") + Utility.Xml.Value(N.ParentNode, "Name") + "Graph";
+                GraphName = XmlUtilities.Value(N.ParentNode.ParentNode, "Name") + XmlUtilities.Value(N.ParentNode, "Name") + "Graph";
             else
-                GraphName = Utility.Xml.Value(N.ParentNode.ParentNode, "Name") + Utility.Xml.Value(N, "Name") + "Graph";
+                GraphName = XmlUtilities.Value(N.ParentNode.ParentNode, "Name") + XmlUtilities.Value(N, "Name") + "Graph";
 
-            OutputFile.WriteLine(Header(Utility.Xml.Value(N.ParentNode, "Name"), NextLevel, Utility.Xml.Value(N.ParentNode.ParentNode, "Name")));
+            OutputFile.WriteLine(Header(XmlUtilities.Value(N.ParentNode, "Name"), NextLevel, XmlUtilities.Value(N.ParentNode.ParentNode, "Name")));
 
             WriteDescriptionForTypeName(OutputFile, N.ParentNode, parentModel);
             TryDocumentMemo(OutputFile, N.ParentNode, NextLevel);
@@ -559,17 +560,17 @@ namespace UserInterface.Classes
             string GifFileName = InstanceName + "Graphs\\" + GraphName + ".gif";
 
             // work out x and y variable names.
-            string XName = Utility.Xml.Value(N.ParentNode, "XProperty");
+            string XName = XmlUtilities.Value(N.ParentNode, "XProperty");
             if (N.ParentNode.Name == "TemperatureFunction" || N.ParentNode.Name == "AirTemperatureFunction")
                 XName = "Temperature (oC)";
 
             string YName;
             if (N.Name == "XYPairs")
-                YName = Utility.Xml.Value(N.ParentNode, "Name");
+                YName = XmlUtilities.Value(N.ParentNode, "Name");
             else
-                YName = Utility.Xml.Value(N, "Name");
+                YName = XmlUtilities.Value(N, "Name");
             if (YName == "Function")
-                YName = Utility.Xml.Value(N.ParentNode.ParentNode, "Name");
+                YName = XmlUtilities.Value(N.ParentNode.ParentNode, "Name");
 
             // Set up to write a table.
             OutputFile.WriteLine("<table border=\"0\">");
@@ -580,8 +581,8 @@ namespace UserInterface.Classes
             OutputFile.WriteLine("<td>");
             OutputFile.WriteLine("<table width=\"250\">");
             OutputFile.WriteLine("<td><b>" + XName + "</b></td><td><b>" + YName + "</b></td>");
-            double[] x = Utility.Math.StringsToDoubles(Utility.Xml.Values(N, "X/double"));
-            double[] y = Utility.Math.StringsToDoubles(Utility.Xml.Values(N, "Y/double"));
+            double[] x = MathUtilities.StringsToDoubles(XmlUtilities.Values(N, "X/double"));
+            double[] y = MathUtilities.StringsToDoubles(XmlUtilities.Values(N, "Y/double"));
             for (int i = 0; i < x.Length; i++)
             {
                 OutputFile.WriteLine("<tr><td>" + x[i] + "</td><td>" + y[i] + "</td></tr>");
@@ -632,14 +633,14 @@ namespace UserInterface.Classes
             {
 
                 string unitsString = string.Empty;
-                UnitsAttribute units = Utility.Reflection.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                UnitsAttribute units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (units != null)
                 {
                     unitsString = units.ToString();
                 }
 
                 string descriptionString = string.Empty;
-                DescriptionAttribute description = Utility.Reflection.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                DescriptionAttribute description = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (description != null)
                 {
                     descriptionString = description.ToString();

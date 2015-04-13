@@ -10,6 +10,7 @@ namespace UserInterface.Classes
     using System.Windows.Forms;
     using Interfaces;
     using Views;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Represents a grid cell.
@@ -63,7 +64,7 @@ namespace UserInterface.Classes
                 {
                     return EditorTypeEnum.Colour;
                 }
-                else if (this.gridView.Grid[this.ColumnIndex, this.RowIndex] is Utility.DataGridViewCalendarCell.CalendarCell)
+                else if (this.gridView.Grid[this.ColumnIndex, this.RowIndex] is CalendarCell)
                 {
                     return EditorTypeEnum.DateTime;
                 }
@@ -99,7 +100,7 @@ namespace UserInterface.Classes
 
                     case EditorTypeEnum.DateTime:
                         {
-                            this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new Utility.DataGridViewCalendarCell.CalendarCell();
+                            this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new CalendarCell();
                             break;
                         }
 

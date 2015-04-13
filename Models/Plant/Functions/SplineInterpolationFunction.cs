@@ -6,6 +6,7 @@ using MathNet.Numerics.Interpolation;
 
 using System.Collections;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -37,7 +38,7 @@ namespace Models.PMF.Functions
         public SplineInterpolationFunction()
         {
             PropertyName = XProperty;
-            ArraySpec = Utility.String.SplitOffBracketedValue(ref PropertyName, '[', ']');
+            ArraySpec = StringUtilities.SplitOffBracketedValue(ref PropertyName, '[', ']');
         }
 
         /// <summary>Gets the value.</summary>

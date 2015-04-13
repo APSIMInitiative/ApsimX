@@ -11,6 +11,7 @@ using Models.Soils;
 using Models.PMF;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 //nb. when adding a NEW model you need to add it as a child model in Models.cs (otherwise it just ignores the xml)
 
@@ -1340,7 +1341,7 @@ namespace Models
             depth_to_root = u_bound(depth_to_layer_bottom, RootDepth);
 
             depth_of_root_in_layer = mu.dim(depth_to_root, depth_to_layer_top);
-            return Utility.Math.Divide(depth_of_root_in_layer, Dlayer[zb(Layer_ob)], 0.0);
+            return MathUtilities.Divide(depth_of_root_in_layer, Dlayer[zb(Layer_ob)], 0.0);
 
             }
 
@@ -1438,7 +1439,7 @@ namespace Models
                 //! get a three-hour air temperature
 
                 l_tmean_3hour = temp_3hr(i_tmax, i_tmin, period);
-                l_y_3hour = Utility.Math.LinearInterpReal(l_tmean_3hour, i_temps, i_y, out l_didInterpolate);
+                l_y_3hour = MathUtilities.LinearInterpReal(l_tmean_3hour, i_temps, i_y, out l_didInterpolate);
 
                 l_tot = l_tot + l_y_3hour;
                 }
@@ -1825,7 +1826,7 @@ namespace Models
             }
 
 
-        //TODO: Replace this will Utility.Math.Sum()
+        //TODO: Replace this will MathUtilities.Sum()
         private double SumArray(double[] A, int StopLayer_ob)
             {
             double sum = 0;
@@ -2170,7 +2171,7 @@ namespace Models
 
             //! calculate actual N concentrations
 
-            l_N_conc_leaf = Utility.Math.Divide(i_N_green[leaf], i_dm_green[leaf], 0.0);
+            l_N_conc_leaf = MathUtilities.Divide(i_N_green[leaf], i_dm_green[leaf], 0.0);
 
 
 
@@ -2178,20 +2179,20 @@ namespace Models
             //       Base N deficiency on leaf N concentrations
 
             l_N_leaf_crit = i_N_conc_crit[leaf] * i_dm_green[leaf];
-            l_N_conc_leaf_crit = Utility.Math.Divide(l_N_leaf_crit, i_dm_green[leaf], 0.0);
+            l_N_conc_leaf_crit = MathUtilities.Divide(l_N_leaf_crit, i_dm_green[leaf], 0.0);
 
 
 
             //! calculate minimum N concentrations
 
             l_N_leaf_min = i_N_conc_min[leaf] * i_dm_green[leaf];
-            l_N_conc_leaf_min = Utility.Math.Divide(l_N_leaf_min, i_dm_green[leaf], 0.0);
+            l_N_conc_leaf_min = MathUtilities.Divide(l_N_leaf_min, i_dm_green[leaf], 0.0);
 
 
 
             //! calculate shortfall in N concentrations
 
-            l_N_conc_ratio = Utility.Math.Divide((l_N_conc_leaf - l_N_conc_leaf_min), (l_N_conc_leaf_crit - l_N_conc_leaf_min), 0.0);
+            l_N_conc_ratio = MathUtilities.Divide((l_N_conc_leaf - l_N_conc_leaf_min), (l_N_conc_leaf_crit - l_N_conc_leaf_min), 0.0);
 
 
 
@@ -2235,7 +2236,7 @@ namespace Models
 
             l_ave_temp = (i_maxt + i_mint) / 2.0;
 
-            o_tfac = Utility.Math.LinearInterpReal(l_ave_temp, c_x_ave_temp, c_y_stress_photo, out l_DidInterpolate);
+            o_tfac = MathUtilities.LinearInterpReal(l_ave_temp, c_x_ave_temp, c_y_stress_photo, out l_DidInterpolate);
             o_tfac = bound(o_tfac, 0.0, 1.0);
 
             }
@@ -2284,7 +2285,7 @@ namespace Models
 
             //if you are not using the Canopy module in this simulation.
 
-            if (Utility.Math.FloatsAreEqual(i_fr_intc_radn, 0.0))
+            if (MathUtilities.FloatsAreEqual(i_fr_intc_radn, 0.0))
                 {
                 //! we need to calculate our own interception
 
@@ -2398,7 +2399,7 @@ namespace Models
             //                = transp_eff_cf / vpd /g2mm
 
 
-            return Utility.Math.Divide(c_transp_eff_cf[zb(l_current_phase)], l_vpd, 0.0) / g2mm;
+            return MathUtilities.Divide(c_transp_eff_cf[zb(l_current_phase)], l_vpd, 0.0) / g2mm;
 
             }
 
@@ -2460,7 +2461,7 @@ namespace Models
             //! Return crop water demand from soil by the crop (mm) calculated by dividing (biomass production limited by radiation) by transpiration efficiency.       
             //! get potential transpiration from potential carbohydrate production and transpiration efficiency
             //Start - cproc_sw_demand1() 
-            g_sw_demand_te = Utility.Math.Divide(i_dlt_dm_pot_rue, i_transp_eff, 0.0);
+            g_sw_demand_te = MathUtilities.Divide(i_dlt_dm_pot_rue, i_transp_eff, 0.0);
             //End - cproc_sw_demand1()  
 
             l_cover_green = 1.0 - Math.Exp(-crop.extinction_coef * i_lai);
@@ -2548,7 +2549,7 @@ namespace Models
 
             for (int part = 0; part < max_part; part++)
                 {
-                l_dlt_dm_green_pot[part] = i_dlt_dm_pot_rue_pot * Utility.Math.Divide(i_dm_green[part], l_dm_green_tot, 0.0);
+                l_dlt_dm_green_pot[part] = i_dlt_dm_pot_rue_pot * MathUtilities.Divide(i_dm_green[part], l_dm_green_tot, 0.0);
                 //l_dlt_N_retrans[part] = 0.0;
                 }
 
@@ -2765,8 +2766,8 @@ namespace Models
 
             l_pesw = i_sw_dep[zb(i_layer_ob)] - i_ll_dep[zb(i_layer_ob)];
             l_pesw_capacity = i_dul_dep[zb(i_layer_ob)] - i_ll_dep[zb(i_layer_ob)];
-            l_sw_avail_ratio = Utility.Math.Divide(l_pesw, l_pesw_capacity, 10.0);
-            return Utility.Math.LinearInterpReal(l_sw_avail_ratio, c_x_sw_ratio, c_y_sw_fac_root, out l_didInterpolate);
+            l_sw_avail_ratio = MathUtilities.Divide(l_pesw, l_pesw_capacity, 10.0);
+            return MathUtilities.LinearInterpReal(l_sw_avail_ratio, c_x_sw_ratio, c_y_sw_fac_root, out l_didInterpolate);
             }
 
 
@@ -2787,9 +2788,9 @@ namespace Models
             double l_afps;
             bool l_didInterpolate;
 
-            l_afps = Utility.Math.Divide((sat_dep[zb(i_layer_ob)] - sw_dep[zb(i_layer_ob)]), dlayer[zb(i_layer_ob)], 0.0);
+            l_afps = MathUtilities.Divide((sat_dep[zb(i_layer_ob)] - sw_dep[zb(i_layer_ob)]), dlayer[zb(i_layer_ob)], 0.0);
 
-            return Utility.Math.LinearInterpReal(l_afps, crop.x_afps, crop.y_afps_fac, out l_didInterpolate);
+            return MathUtilities.LinearInterpReal(l_afps, crop.x_afps, crop.y_afps_fac, out l_didInterpolate);
 
 
             }
@@ -3003,9 +3004,9 @@ namespace Models
             for (int layer = 0; layer < i_dlayer.Length; layer++)
                 {
 
-                l_sw = Utility.Math.Divide(i_sw_dep[layer], i_dlayer[layer], 0.0);
-                l_dul = Utility.Math.Divide(i_dul_dep[layer], i_dlayer[layer], 0.0);
-                l_ll = Utility.Math.Divide(i_ll_dep[layer], i_dlayer[layer], 0.0);
+                l_sw = MathUtilities.Divide(i_sw_dep[layer], i_dlayer[layer], 0.0);
+                l_dul = MathUtilities.Divide(i_dul_dep[layer], i_dlayer[layer], 0.0);
+                l_ll = MathUtilities.Divide(i_ll_dep[layer], i_dlayer[layer], 0.0);
 
                 if (l_ll + error_margin(l_ll) < c_minsw)
                     {
@@ -3251,7 +3252,7 @@ namespace Models
 
                     for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                         {
-                        o_dlt_sw_dep[layer] = -Utility.Math.Divide(i_sw_supply[layer], l_sw_supply_sum, 0.0) * i_sw_demand;
+                        o_dlt_sw_dep[layer] = -MathUtilities.Divide(i_sw_supply[layer], l_sw_supply_sum, 0.0) * i_sw_demand;
                         }
                     }
                 else
@@ -3311,8 +3312,8 @@ namespace Models
             //! get potential water that can be taken up when profile is full
 
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
-            l_sw_demand_ratio = Utility.Math.Divide(l_sw_supply_sum, i_sw_demand, 10.0);
-            o_swdef = Utility.Math.LinearInterpReal(l_sw_demand_ratio, c_x_sw_demand_ratio, c_y_swdef_leaf, out l_didInterpolate);
+            l_sw_demand_ratio = MathUtilities.Divide(l_sw_supply_sum, i_sw_demand, 10.0);
+            o_swdef = MathUtilities.LinearInterpReal(l_sw_demand_ratio, c_x_sw_demand_ratio, c_y_swdef_leaf, out l_didInterpolate);
 
             }
 
@@ -3352,9 +3353,9 @@ namespace Models
             //! get potential water that can be taken up when profile is full
 
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
-            l_sw_demand_ratio = Utility.Math.Divide(l_sw_supply_sum, i_sw_demand, 10.0);
+            l_sw_demand_ratio = MathUtilities.Divide(l_sw_supply_sum, i_sw_demand, 10.0);
 
-            o_swdef = Utility.Math.LinearInterpReal(l_sw_demand_ratio, c_x_sw_demand_ratio, c_y_swdef_leaf, out l_didInterpolate);
+            o_swdef = MathUtilities.LinearInterpReal(l_sw_demand_ratio, c_x_sw_demand_ratio, c_y_swdef_leaf, out l_didInterpolate);
 
             }
 
@@ -3395,9 +3396,9 @@ namespace Models
             deepest_layer_ob = FindLayerNo_ob(i_root_depth);
             sw_avail_pot_sum = SumArray(i_sw_avail_pot, deepest_layer_ob);
             sw_avail_sum = SumArray(i_sw_avail, deepest_layer_ob);
-            sw_avail_ratio = Utility.Math.Divide(sw_avail_sum, sw_avail_pot_sum, 1.0); //!???
+            sw_avail_ratio = MathUtilities.Divide(sw_avail_sum, sw_avail_pot_sum, 1.0); //!???
             sw_avail_ratio = bound(sw_avail_ratio, 0.0, 1.0);
-            o_swdef = Utility.Math.LinearInterpReal(sw_avail_ratio, c_x_sw_avail_ratio, c_y_swdef_pheno, out didInterpolate);
+            o_swdef = MathUtilities.LinearInterpReal(sw_avail_ratio, c_x_sw_avail_ratio, c_y_swdef_pheno, out didInterpolate);
 
             }
 
@@ -3432,7 +3433,7 @@ namespace Models
             l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
             //! get potential water that can be taken up when profile is full
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
-            l_sw_demand_ratio = Utility.Math.Divide(l_sw_supply_sum, i_sw_demand, 1.0);
+            l_sw_demand_ratio = MathUtilities.Divide(l_sw_supply_sum, i_sw_demand, 1.0);
             o_swdef = bound(l_sw_demand_ratio, 0.0, 1.0);
 
             }
@@ -3769,7 +3770,7 @@ namespace Models
             if (stage_is_between(i_sowing_stage, i_germ_stage, i_current_stage))
                 {
                 l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
-                l_pesw_seed = Utility.Math.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dlayer[zb(l_layer_no_seed)], 0.0);
+                l_pesw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dlayer[zb(l_layer_no_seed)], 0.0);
 
                 //! can't germinate on same day as sowing, because miss out on day of sowing else_where
 
@@ -3837,10 +3838,10 @@ namespace Models
             if (l_current_phase == i_germ_phase)
                 {
                 l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
-                l_fasw_seed = Utility.Math.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dul_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], 0.0);
+                l_fasw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dul_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], 0.0);
                 l_fasw_seed = bound(l_fasw_seed, 0.0, 1.0);
 
-                l_rel_emerg_rate = Utility.Math.LinearInterpReal(l_fasw_seed, c_fasw_emerg, c_rel_emerg_rate, out l_didInterpolate);
+                l_rel_emerg_rate = MathUtilities.LinearInterpReal(l_fasw_seed, c_fasw_emerg, c_rel_emerg_rate, out l_didInterpolate);
                 io_dlt_tt = io_dlt_tt * l_rel_emerg_rate;
                 }
             else
@@ -3875,7 +3876,7 @@ namespace Models
 
             l_phase = (int)Math.Floor(i_stage_no);
 
-            return Utility.Math.Divide(i_tt_tot[zb(l_phase)] + i_dlt_tt, i_phase_tt[zb(l_phase)], 1.0);
+            return MathUtilities.Divide(i_tt_tot[zb(l_phase)] + i_dlt_tt, i_phase_tt[zb(l_phase)], 1.0);
 
             }
 
@@ -3976,8 +3977,8 @@ namespace Models
             double l_dlt_canopy_height;
 
 
-            l_dm_stem_plant = Utility.Math.Divide(i_dm_green[i_stem], i_plants, 0.0);
-            l_new_height = Utility.Math.LinearInterpReal(l_dm_stem_plant, i_x_stem_wt, i_y_height, out l_didInterpolate);
+            l_dm_stem_plant = MathUtilities.Divide(i_dm_green[i_stem], i_plants, 0.0);
+            l_new_height = MathUtilities.LinearInterpReal(l_dm_stem_plant, i_x_stem_wt, i_y_height, out l_didInterpolate);
 
             l_dlt_canopy_height = l_new_height - i_canopy_height;
             l_dlt_canopy_height = l_bound(l_dlt_canopy_height, 0.0);
@@ -4103,13 +4104,13 @@ namespace Models
 
             l_node_no_now_ob = sum_between(i_start_node_app, i_end_node_app, i_node_no_zb);
 
-            l_node_app_rate = Utility.Math.LinearInterpReal(l_node_no_now_ob, c_x_node_no_app, c_y_node_app_rate, out l_didInterpolate);
+            l_node_app_rate = MathUtilities.LinearInterpReal(l_node_no_now_ob, c_x_node_no_app, c_y_node_app_rate, out l_didInterpolate);
 
-            l_leaves_per_node = Utility.Math.LinearInterpReal(l_node_no_now_ob, c_x_node_no_leaf, c_y_leaves_per_node, out l_didInterpolate);
+            l_leaves_per_node = MathUtilities.LinearInterpReal(l_node_no_now_ob, c_x_node_no_leaf, c_y_leaves_per_node, out l_didInterpolate);
 
             if (stage_is_between(i_start_node_app, i_end_node_app, i_current_stage))
                 {
-                o_dlt_node_no_pot = Utility.Math.Divide(i_dlt_tt, l_node_app_rate, 0.0);
+                o_dlt_node_no_pot = MathUtilities.Divide(i_dlt_tt, l_node_app_rate, 0.0);
                 }
             else
                 {
@@ -4283,9 +4284,9 @@ namespace Models
             bool l_didInterpolate;
 
 
-            l_leaf_size = Utility.Math.LinearInterpReal(i_leaf_no_ob, c_leaf_size_no, c_leaf_size, out l_didInterpolate);
+            l_leaf_size = MathUtilities.LinearInterpReal(i_leaf_no_ob, c_leaf_size_no, c_leaf_size, out l_didInterpolate);
 
-            l_tiller_factor = Utility.Math.LinearInterpReal(i_leaf_no_ob, c_tillerf_leaf_size_no, c_tillerf_leaf_size, out l_didInterpolate);
+            l_tiller_factor = MathUtilities.LinearInterpReal(i_leaf_no_ob, c_tillerf_leaf_size_no, c_tillerf_leaf_size, out l_didInterpolate);
 
             //l_leaf_size = au.linear_interp_real(i_leaf_no_ob, c_leaf_size_no, c_leaf_size, cult.num_leaf_size);
 
@@ -4431,14 +4432,14 @@ namespace Models
 
             for (int layer = 0; layer < l_num_root_layers; layer++)
                 {
-                l_wfps = Utility.Math.Divide(i_sw_dep[layer] - i_ll15_dep[layer], i_sat_dep[layer] - i_ll15_dep[layer], 0.0);
+                l_wfps = MathUtilities.Divide(i_sw_dep[layer] - i_ll15_dep[layer], i_sat_dep[layer] - i_ll15_dep[layer], 0.0);
                 l_wfps = bound(l_wfps, 0.0, 1.0);
 
                 l_wet_root_fr = l_wet_root_fr + l_wfps * l_root_fr[layer];
                 }
 
 
-            return Utility.Math.LinearInterpReal(l_wet_root_fr, c_oxdef_photo_rtfr, c_oxdef_photo, out l_didInterpolate);
+            return MathUtilities.LinearInterpReal(l_wet_root_fr, c_oxdef_photo_rtfr, c_oxdef_photo, out l_didInterpolate);
 
             }
 
@@ -4483,7 +4484,7 @@ namespace Models
 
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
-                o_root_array[layer] = i_root_sum * Utility.Math.Divide(i_root_length[layer], l_root_length_sum, 0.0);
+                o_root_array[layer] = i_root_sum * MathUtilities.Divide(i_root_length[layer], l_root_length_sum, 0.0);
                 }
 
             }
@@ -4682,7 +4683,7 @@ namespace Models
                 for (int layer = 0; layer < l_num_layers; layer++)
                     {
                     l_root_length_layer = i_root_length[layer] * sm2smm;
-                    l_root_wt_layer = Utility.Math.Divide(l_root_length_layer, c_specific_root_length, 0.0);
+                    l_root_wt_layer = MathUtilities.Divide(l_root_length_layer, c_specific_root_length, 0.0);
                     io_dm_green[root] = io_dm_green[root] + l_root_wt_layer;
                     }
 
@@ -4794,7 +4795,7 @@ namespace Models
 
         //    l_leaf_no_today = sum_between(emerg, now, g_leaf_no) + g_dlt_leaf_no;
 
-        //    g_sla_min = Utility.Math.LinearInterpReal((double)l_leaf_no_today, crop.sla_lfno, crop.sla_min, out l_didInterpolate);   // sugar_sla_min()  //Return the minimum specific leaf area (mm^2/g) of a specified leaf no.
+        //    g_sla_min = MathUtilities.LinearInterpReal((double)l_leaf_no_today, crop.sla_lfno, crop.sla_min, out l_didInterpolate);   // sugar_sla_min()  //Return the minimum specific leaf area (mm^2/g) of a specified leaf no.
 
         //    g_sucrose_fraction = sugar_sucrose_fraction(cult.stress_factor_stalk, cult.sucrose_fraction_stalk, g_swdef_stalk, g_nfact_stalk, g_temp_stress_stalk, g_lodge_redn_sucrose);
 
@@ -4843,7 +4844,7 @@ namespace Models
 
             //! this should give same results as old version for now
 
-            l_sucrose_fraction = Utility.Math.LinearInterpReal(l_stress_factor_min, c_stress_factor_stalk, c_sucrose_fraction_stalk, out l_didInterpolate) * i_lodge_redn_sucrose;
+            l_sucrose_fraction = MathUtilities.LinearInterpReal(l_stress_factor_min, c_stress_factor_stalk, c_sucrose_fraction_stalk, out l_didInterpolate) * i_lodge_redn_sucrose;
 
             bound_check_real_var(l_sucrose_fraction, 0.0, 1.0, "fraction of Cane C to sucrose");
 
@@ -4924,7 +4925,7 @@ namespace Models
             o_dlt_dm_green[root] = c_ratio_root_shoot[zb(l_current_phase)] * i_dlt_dm;
 
 
-            l_dlt_leaf_max = Utility.Math.Divide(i_dlt_lai_pot, i_sla_min * smm2sm, 0.0);
+            l_dlt_leaf_max = MathUtilities.Divide(i_dlt_lai_pot, i_sla_min * smm2sm, 0.0);
 
             if (stage_is_between(emerg, begcane, i_current_stage))
                 {
@@ -5098,7 +5099,7 @@ namespace Models
 
             l_leaf_no_today_ob = sum_between_zb(zb(emerg), zb(now), i_leaf_no_zb) + i_dlt_leaf_no;
 
-            l_sla_max = Utility.Math.LinearInterpReal((double)l_leaf_no_today_ob, c_sla_lfno, c_sla_max, out l_didInterpolate);  //sugar_sla_max()  //Return the maximum specific leaf area (mm^2/g) of a specified leaf no.
+            l_sla_max = MathUtilities.LinearInterpReal((double)l_leaf_no_today_ob, c_sla_lfno, c_sla_max, out l_didInterpolate);  //sugar_sla_max()  //Return the maximum specific leaf area (mm^2/g) of a specified leaf no.
 
             l_dlt_lai_carbon = i_dlt_dm_green[leaf] * l_sla_max * smm2sm;
 
@@ -5191,16 +5192,16 @@ namespace Models
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                     {
 
-                    l_rld = Utility.Math.Divide(i_root_length[layer], i_dlayer[layer], 0.0);
+                    l_rld = MathUtilities.Divide(i_root_length[layer], i_dlayer[layer], 0.0);
 
-                    l_plant_rld = Utility.Math.Divide(l_rld, i_plants, 0.0);
+                    l_plant_rld = MathUtilities.Divide(l_rld, i_plants, 0.0);
 
-                    l_branching_factor = Utility.Math.LinearInterpReal(l_plant_rld, c_x_plant_rld, c_y_rel_root_rate, out l_didInterpolate);
+                    l_branching_factor = MathUtilities.LinearInterpReal(l_plant_rld, c_x_plant_rld, c_y_rel_root_rate, out l_didInterpolate);
 
                     l_rlv_factor[layer] = crop_sw_avail_fac(c_x_sw_ratio, c_y_sw_fac_root, i_dul_dep, i_sw_dep, i_ll_dep, ob(layer))
                                                             * l_branching_factor         //! branching factor
                                                             * i_xf[layer]                //! growth factor
-                                                            * Utility.Math.Divide(i_dlayer[layer], i_root_depth, 0.0);   //! space weighting factor
+                                                            * MathUtilities.Divide(i_dlayer[layer], i_root_depth, 0.0);   //! space weighting factor
 
                     l_rlv_factor[layer] = l_bound(l_rlv_factor[layer], 1e-6);
                     l_rlv_factor_tot = l_rlv_factor_tot + l_rlv_factor[layer];
@@ -5210,7 +5211,7 @@ namespace Models
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                     {
-                    o_dlt_root_length[layer] = l_dlt_length_tot * Utility.Math.Divide(l_rlv_factor[layer], l_rlv_factor_tot, 0.0);
+                    o_dlt_root_length[layer] = l_dlt_length_tot * MathUtilities.Divide(l_rlv_factor[layer], l_rlv_factor_tot, 0.0);
                     }
 
                 }
@@ -5477,7 +5478,7 @@ namespace Models
 
 
             //! low temperature factor
-            l_sen_fac_temp = Utility.Math.LinearInterpReal(i_mint, i_frost_temp, i_frost_fraction, out l_didInterpolate);
+            l_sen_fac_temp = MathUtilities.LinearInterpReal(i_mint, i_frost_temp, i_frost_fraction, out l_didInterpolate);
 
             l_dlt_slai_low_temp = l_sen_fac_temp * i_lai;
             l_min_lai = i_min_tpla * i_plants * smm2sm;
@@ -5572,7 +5573,7 @@ namespace Models
 
                 //! Take related cabbage with the dying leaf
 
-                o_dlt_dm_senesced[cabbage] = Utility.Math.Divide(o_dlt_dm_senesced[leaf], c_leaf_cabbage_ratio, 0.0) * c_cabbage_sheath_fr;
+                o_dlt_dm_senesced[cabbage] = MathUtilities.Divide(o_dlt_dm_senesced[leaf], c_leaf_cabbage_ratio, 0.0) * c_cabbage_sheath_fr;
 
                 //c         dlt_dm_senesced(cabbage) =
                 //c     :         u_bound(dlt_dm_senesced(cabbage),
@@ -5618,12 +5619,12 @@ namespace Models
             double l_leaf_fract;            //! fraction of last leaf (0-1)
 
 
-            l_leaf_area = Utility.Math.Divide(i_lai, i_plants, 0.0) * sm2smm;
+            l_leaf_area = MathUtilities.Divide(i_lai, i_plants, 0.0) * sm2smm;
             l_leaf_no = get_cumulative_index_real(l_leaf_area, i_leaf_area);
 
             l_leaf_area_whole = SumArray(i_leaf_area, (l_leaf_no - 1));
             l_leaf_area_part = l_leaf_area - l_leaf_area_whole;
-            l_leaf_fract = Utility.Math.Divide(l_leaf_area_part, i_leaf_area[zb(l_leaf_no)], 0.0);
+            l_leaf_fract = MathUtilities.Divide(l_leaf_area_part, i_leaf_area[zb(l_leaf_no)], 0.0);
             return (double)(l_leaf_no - 1) + l_leaf_fract;
 
             }
@@ -5899,7 +5900,7 @@ namespace Models
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 //! get  NO3 concentration
-                l_NO3_conc = Utility.Math.Divide(i_no3gsm[layer], i_sw_dep[layer], 0.0);
+                l_NO3_conc = MathUtilities.Divide(i_no3gsm[layer], i_sw_dep[layer], 0.0);
                 //! get potential uptake by mass flow
                 l_NO3gsm_mflow = l_NO3_conc * (-i_dlt_sw_dep[layer]);
                 o_no3gsm_mflow_pot[layer] = u_bound(l_NO3gsm_mflow, i_no3gsm[layer] - i_no3gsm_min[layer]);
@@ -5951,7 +5952,7 @@ namespace Models
             l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
-                l_sw_avail_fract = Utility.Math.Divide(i_sw_avail[layer], i_sw_avail_pot[layer], 0.0);
+                l_sw_avail_fract = MathUtilities.Divide(i_sw_avail[layer], i_sw_avail_pot[layer], 0.0);
                 l_sw_avail_fract = bound(l_sw_avail_fract, 0.0, 1.0);
                 //! get extractable NO3
                 //! restricts NO3 available for diffusion to NO3 in plant
@@ -6050,10 +6051,10 @@ namespace Models
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                     {
 
-                    l_no3ppm = i_no3gsm[layer] * Utility.Math.Divide(1000.0, i_bd[layer] * i_dlayer[layer], 0.0);
-                    l_nh4ppm = i_nh4gsm[layer] * Utility.Math.Divide(1000.0, i_bd[layer] * i_dlayer[layer], 0.0);
+                    l_no3ppm = i_no3gsm[layer] * MathUtilities.Divide(1000.0, i_bd[layer] * i_dlayer[layer], 0.0);
+                    l_nh4ppm = i_nh4gsm[layer] * MathUtilities.Divide(1000.0, i_bd[layer] * i_dlayer[layer], 0.0);
 
-                    l_swfac = Utility.Math.Divide(i_sw_avail[layer], i_sw_avail_pot[layer], 0.0);
+                    l_swfac = MathUtilities.Divide(i_sw_avail[layer], i_sw_avail_pot[layer], 0.0);
                     l_swfac = bound(l_swfac, 0.0, 1.0);
 
                     o_no3gsm_uptake_pot[layer] = i_no3gsm[layer] * c_kno3 * (l_no3ppm - c_no3ppm_min) * l_swfac;
@@ -6075,8 +6076,8 @@ namespace Models
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                     {
-                    l_no3ppm = i_no3gsm[layer] * Utility.Math.Divide(1000.0, i_bd[layer] * i_dlayer[layer], 0.0);
-                    l_nh4ppm = i_nh4gsm[layer] * Utility.Math.Divide(1000.0, i_bd[layer] * i_dlayer[layer], 0.0);
+                    l_no3ppm = i_no3gsm[layer] * MathUtilities.Divide(1000.0, i_bd[layer] * i_dlayer[layer], 0.0);
+                    l_nh4ppm = i_nh4gsm[layer] * MathUtilities.Divide(1000.0, i_bd[layer] * i_dlayer[layer], 0.0);
 
                     if ((c_kno3 > 0) && (l_no3ppm > c_no3ppm_min))
                         o_no3gsm_uptake_pot[layer] = l_bound(i_no3gsm[layer] - i_no3gsm_min[layer], 0.0);
@@ -6094,7 +6095,7 @@ namespace Models
 
 
             l_total_n_uptake_pot = SumArray(o_no3gsm_uptake_pot, l_deepest_layer_ob) + SumArray(o_nh4gsm_uptake_pot, l_deepest_layer_ob);
-            l_scalef = Utility.Math.Divide(c_total_n_uptake_max, l_total_n_uptake_pot, 0.0);
+            l_scalef = MathUtilities.Divide(c_total_n_uptake_max, l_total_n_uptake_pot, 0.0);
             l_scalef = bound(l_scalef, 0.0, 1.0);
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
@@ -6376,7 +6377,7 @@ namespace Models
                     throw new ApsimXException(this, "bad n supply preference");
                     }
 
-                l_NO3gsm_diffn = Utility.Math.Divide(l_NO3gsm_diffn, c_no3_diffn_const, 0.0);
+                l_NO3gsm_diffn = MathUtilities.Divide(l_NO3gsm_diffn, c_no3_diffn_const, 0.0);
                 }
 
 
@@ -6392,9 +6393,9 @@ namespace Models
                 //! Find proportion of nitrate uptake to be taken from layer
                 //! by diffusion and mass flow
 
-                l_mflow_fract = Utility.Math.Divide(i_no3gsm_mflow_avail[layer], l_NO3gsm_mflow_supply, 0.0);
+                l_mflow_fract = MathUtilities.Divide(i_no3gsm_mflow_avail[layer], l_NO3gsm_mflow_supply, 0.0);
 
-                l_diffn_fract = Utility.Math.Divide(l_NO3gsm_diffn_avail[layer], l_NO3gsm_diffn_supply, 0.0);
+                l_diffn_fract = MathUtilities.Divide(l_NO3gsm_diffn_avail[layer], l_NO3gsm_diffn_supply, 0.0);
 
                 //! now find how much nitrate the plant removes from
                 //! the layer by both processes
@@ -6458,7 +6459,7 @@ namespace Models
                 }
             else
                 {
-                l_scalef = Utility.Math.Divide(l_N_demand, l_Ngsm_supply, 0.0);
+                l_scalef = MathUtilities.Divide(l_N_demand, l_Ngsm_supply, 0.0);
                 }
 
             for (int layer = 1; layer < l_deepest_layer_ob; layer++)
@@ -6527,7 +6528,7 @@ namespace Models
 
             for (int part = 0; part < max_part; part++)  //! plant part number
                 {
-                l_plant_part_fract = Utility.Math.Divide(i_N_demand[part], l_N_demand, 0.0);
+                l_plant_part_fract = MathUtilities.Divide(i_N_demand[part], l_N_demand, 0.0);
                 o_dlt_N_green[part] = Math.Min(l_N_uptake_sum, l_N_demand) * l_plant_part_fract;
                 }
 
@@ -6588,17 +6589,17 @@ namespace Models
 
             l_tt = sum_between_zb(zb(begcane), zb(now), i_tt_tot);
 
-            l_cane_dmf_max = Utility.Math.LinearInterpReal(l_tt, c_cane_dmf_tt, c_cane_dmf_max, out l_didInterpolate);
+            l_cane_dmf_max = MathUtilities.LinearInterpReal(l_tt, c_cane_dmf_tt, c_cane_dmf_max, out l_didInterpolate);
 
-            l_cane_dmf_min = Utility.Math.LinearInterpReal(l_tt, c_cane_dmf_tt, c_cane_dmf_min, out l_didInterpolate);
+            l_cane_dmf_min = MathUtilities.LinearInterpReal(l_tt, c_cane_dmf_tt, c_cane_dmf_min, out l_didInterpolate);
 
             l_stress_factor_min = min(i_swdef_stalk, i_nfact_stalk, i_temp_stress_stalk);
 
             l_cane_dmf = l_cane_dmf_max - l_stress_factor_min * (l_cane_dmf_max - l_cane_dmf_min);
 
-            l_sucrose_fraction = Utility.Math.Divide(i_dlt_dm_green[sucrose], i_dlt_dm_green[sstem] + i_dlt_dm_green[sucrose], 0.0);
+            l_sucrose_fraction = MathUtilities.Divide(i_dlt_dm_green[sucrose], i_dlt_dm_green[sstem] + i_dlt_dm_green[sucrose], 0.0);
 
-            i_dlt_plant_wc[sstem] = Utility.Math.Divide(i_dlt_dm_green[sstem], l_cane_dmf, 0.0) * (1.0 - l_sucrose_fraction);
+            i_dlt_plant_wc[sstem] = MathUtilities.Divide(i_dlt_dm_green[sstem], l_cane_dmf, 0.0) * (1.0 - l_sucrose_fraction);
 
             //! Approach above is unstable - assume DMF is fixed
             l_cane_dmf = 0.3;
@@ -6813,7 +6814,7 @@ namespace Models
                 {
                 l_min_stress_factor = Math.Min(i_swdef_photo, i_oxdef_photo);
 
-                l_death_fraction = Utility.Math.LinearInterpReal(l_min_stress_factor, c_stress_lodge, c_death_fr_lodge, out l_didInterpolate);
+                l_death_fraction = MathUtilities.LinearInterpReal(l_min_stress_factor, c_stress_lodge, c_death_fr_lodge, out l_didInterpolate);
 
                 o_dlt_plants_death_lodging = -i_plants * l_death_fraction;
                 }
@@ -6865,12 +6866,12 @@ namespace Models
             fill_real_array(ref o_dlt_dm_realloc, 0.0, i_max_part);
             fill_real_array(ref o_dlt_n_realloc, 0.0, i_max_part);
 
-            l_realloc_wt = i_dlt_dm_senesced[i_cabbage] * (Utility.Math.Divide(1.0, c_cabbage_sheath_fr, 0.0) - 1.0);
+            l_realloc_wt = i_dlt_dm_senesced[i_cabbage] * (MathUtilities.Divide(1.0, c_cabbage_sheath_fr, 0.0) - 1.0);
             o_dlt_dm_realloc[i_cabbage] = -l_realloc_wt;
             o_dlt_dm_realloc[i_sstem] = l_realloc_wt;
 
             //! this is not 100% accurate but swings and round-abouts will look after it - I hope (NIH)
-            l_realloc_n = Utility.Math.Divide(i_n_green[i_cabbage], i_dm_green[i_cabbage], 0.0) * l_realloc_wt;
+            l_realloc_n = MathUtilities.Divide(i_n_green[i_cabbage], i_dm_green[i_cabbage], 0.0) * l_realloc_wt;
             o_dlt_n_realloc[i_cabbage] = -l_realloc_n;
             o_dlt_n_realloc[i_sstem] = l_realloc_n;
 
@@ -7209,13 +7210,13 @@ namespace Models
 
 
             //! take out water with detached stems
-            io_plant_wc[sstem] = io_plant_wc[sstem] * (1.0 - Utility.Math.Divide(i_dlt_dm_dead_detached[sstem], io_dm_dead[sstem] + io_dm_green[sstem], 0.0));
+            io_plant_wc[sstem] = io_plant_wc[sstem] * (1.0 - MathUtilities.Divide(i_dlt_dm_dead_detached[sstem], io_dm_dead[sstem] + io_dm_green[sstem], 0.0));
             AddArray(i_dlt_plant_wc, ref io_plant_wc, max_part);
 
 
             //! transfer N
 
-            l_dying_fract = Utility.Math.Divide(-i_dlt_plants, io_plants, 0.0);
+            l_dying_fract = MathUtilities.Divide(-i_dlt_plants, io_plants, 0.0);
 
             for (int part = 0; part < max_part; part++)
                 {
@@ -7242,7 +7243,7 @@ namespace Models
 
             //! Transfer plant dry matter
 
-            l_dlt_dm_plant = Utility.Math.Divide(i_dlt_dm, io_plants, 0.0);
+            l_dlt_dm_plant = MathUtilities.Divide(i_dlt_dm, io_plants, 0.0);
 
             accumulate_zb(l_dlt_dm_plant, ref io_dm_plant_top_tot, zb_d(i_previous_stage), i_dlt_stage);
 
@@ -7312,11 +7313,11 @@ namespace Models
 
 
 
-            l_dlt_leaf_area = Utility.Math.Divide(i_dlt_lai, io_plants, 0.0) * sm2smm;
+            l_dlt_leaf_area = MathUtilities.Divide(i_dlt_lai, io_plants, 0.0) * sm2smm;
             accumulate_zb(l_dlt_leaf_area, ref io_leaf_area, zb_d(l_node_no_ob), i_dlt_node_no);
 
 
-            l_dlt_dm_plant_leaf = Utility.Math.Divide(i_dlt_dm_green[leaf], io_plants, 0.0);
+            l_dlt_dm_plant_leaf = MathUtilities.Divide(i_dlt_dm_green[leaf], io_plants, 0.0);
             accumulate_zb(l_dlt_dm_plant_leaf, ref io_leaf_dm, zb_d(l_node_no_ob), i_dlt_node_no);
 
             accumulate_zb(i_dlt_leaf_no, ref io_leaf_no_zb, zb_d(i_previous_stage), i_dlt_stage);
@@ -7328,8 +7329,8 @@ namespace Models
             //! detached leaf area needs to be accounted for
 
             //sv-work out delta in "leaf area" and "leaf dm" caused by senescence. (per plant)  
-            l_dlt_leaf_area_sen = Utility.Math.Divide(i_dlt_slai_detached, io_plants, 0.0) * sm2smm;
-            l_dlt_leaf_dm_sen = Utility.Math.Divide(i_dlt_dm_detached[leaf], io_plants, 0.0);
+            l_dlt_leaf_area_sen = MathUtilities.Divide(i_dlt_slai_detached, io_plants, 0.0) * sm2smm;
+            l_dlt_leaf_dm_sen = MathUtilities.Divide(i_dlt_dm_detached[leaf], io_plants, 0.0);
 
             int l_num_leaves;            //! number of leaves on plant
             l_num_leaves = count_of_real_vals(io_leaf_area, max_leaf);   //sv- this is pointless, considering what the next line does.
@@ -7519,20 +7520,20 @@ namespace Models
 
                 //! nih - I put cane critical conc in the sstem element of the
                 //! array because there is no 'cane' (sstem+sucrose) pool
-                o_n_conc_crit[sstem] = Utility.Math.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_crit_cane, out l_didInterpolate);
-                o_n_conc_crit[leaf] = Utility.Math.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_crit_leaf, out l_didInterpolate);
-                o_n_conc_crit[cabbage] = Utility.Math.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_crit_cabbage, out l_didInterpolate);
+                o_n_conc_crit[sstem] = MathUtilities.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_crit_cane, out l_didInterpolate);
+                o_n_conc_crit[leaf] = MathUtilities.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_crit_leaf, out l_didInterpolate);
+                o_n_conc_crit[cabbage] = MathUtilities.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_crit_cabbage, out l_didInterpolate);
 
                 //    ! the  minimum N concentration is the N concentration
                 //    ! below which N does not fall.
 
                 //! nih - I put cane minimum conc in the sstem element of the
                 //! array because there is no 'cane' (sstem+sucrose) pool
-                o_n_conc_min[sstem] = Utility.Math.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_min_cane, out l_didInterpolate);
+                o_n_conc_min[sstem] = MathUtilities.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_min_cane, out l_didInterpolate);
 
-                o_n_conc_min[leaf] = Utility.Math.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_min_leaf, out l_didInterpolate);
+                o_n_conc_min[leaf] = MathUtilities.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_min_leaf, out l_didInterpolate);
 
-                o_n_conc_min[cabbage] = Utility.Math.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_min_cabbage, out l_didInterpolate);
+                o_n_conc_min[cabbage] = MathUtilities.LinearInterpReal(l_stage_code, c_x_stage_code, c_y_n_conc_min_cabbage, out l_didInterpolate);
                 }
 
             }
@@ -7583,7 +7584,7 @@ namespace Models
                         //! we have found its place
                         l_tt_tot = sum_between_zb(zb(l_this_stage), zb(l_next_stage), i_tt_tot);
                         l_phase_tt = sum_between_zb(zb(l_this_stage), zb(l_next_stage), i_phase_tt);
-                        l_fraction_of = Utility.Math.Divide(l_tt_tot, l_phase_tt, 0.0);
+                        l_fraction_of = MathUtilities.Divide(l_tt_tot, l_phase_tt, 0.0);
                         l_x_stage_code = i_stage_table[i - 1] + (i_stage_table[i] - i_stage_table[i - 1]) * l_fraction_of;
                         break;
                         }
@@ -7760,7 +7761,7 @@ namespace Models
             //cnh I have removed most of the variables because they were either calculated wrongly or irrelevant.
 
             //! get totals
-            l_N_conc_stover = Utility.Math.Divide((i_n_green[leaf] + i_n_green[sstem] + i_n_green[cabbage] + i_n_green[sucrose]), (i_dm_green[leaf] + i_dm_green[sstem] + i_dm_green[cabbage] + i_dm_green[sucrose]), 0.0);
+            l_N_conc_stover = MathUtilities.Divide((i_n_green[leaf] + i_n_green[sstem] + i_n_green[cabbage] + i_n_green[sucrose]), (i_dm_green[leaf] + i_dm_green[sstem] + i_dm_green[cabbage] + i_dm_green[sucrose]), 0.0);
 
             //! note - g_N_conc_crit should be done before the stages change
             //cnh wrong!!!
@@ -7864,7 +7865,7 @@ namespace Models
 
                 l_N_green = SumArray(i_n_green, max_part) - i_n_green[root];
 
-                l_N_green_conc_percent = Utility.Math.Divide(l_N_green, l_dm_green, 0.0) * fract2pcnt;
+                l_N_green_conc_percent = MathUtilities.Divide(l_N_green, l_dm_green, 0.0) * fract2pcnt;
 
                 l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
 
@@ -7942,7 +7943,7 @@ namespace Models
                 asw = asw + u_bound(g_sw_avail[layer], g_sw_avail_pot[layer]);
                 }
 
-            return Utility.Math.Divide(asw, asw_pot, 0.0);
+            return MathUtilities.Divide(asw, asw_pot, 0.0);
 
             }
 
@@ -8304,7 +8305,7 @@ namespace Models
                 double[] l_rlv = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     {
-                    l_rlv[layer] = Utility.Math.Divide(g_root_length[layer], dlayer[layer], 0.0) * sugar_afps_fac(layer);
+                    l_rlv[layer] = MathUtilities.Divide(g_root_length[layer], dlayer[layer], 0.0) * sugar_afps_fac(layer);
                     }
                 return l_rlv;
                 }
@@ -8322,7 +8323,7 @@ namespace Models
                 double[] l_rlv = new double[num_layers];
                 for (int layer = 0; layer < num_layers; layer++)
                     {
-                    l_rlv[layer] = Utility.Math.Divide(g_root_length[layer], dlayer[layer], 0.0);
+                    l_rlv[layer] = MathUtilities.Divide(g_root_length[layer], dlayer[layer], 0.0);
                     }
                 return l_rlv;
                 }
@@ -8420,7 +8421,7 @@ namespace Models
             {
             get
                 {
-                double l_cane_dmf = Utility.Math.Divide(g_dm_green[sstem] + g_dm_green[sucrose],
+                double l_cane_dmf = MathUtilities.Divide(g_dm_green[sstem] + g_dm_green[sucrose],
                                                      g_dm_green[sstem] + g_dm_green[sucrose] + g_plant_wc[sstem],
                                                      0.0);
                 return l_cane_dmf;
@@ -8452,7 +8453,7 @@ namespace Models
             get
                 {
                 double l_canefw = (g_dm_green[sstem] + g_dm_green[sucrose] + g_plant_wc[sstem]);  //TODO: is this missing the dead pool for lodged crops as in canefw property above/ also g2t conversion?
-                double l_scmstf = Utility.Math.Divide(g_dm_green[sucrose], l_canefw, 0.0);
+                double l_scmstf = MathUtilities.Divide(g_dm_green[sucrose], l_canefw, 0.0);
                 double l_ccs = 1.23 * l_scmstf - 0.029;
                 l_ccs = l_bound(l_ccs, 0.0);
                 l_ccs = l_ccs * 100.0;          //! convert to %             
@@ -8469,7 +8470,7 @@ namespace Models
             get
                 {
                 double l_canefw = (g_dm_green[sstem] + g_dm_green[sucrose] + g_plant_wc[sstem]);
-                double l_scmstf = Utility.Math.Divide(g_dm_green[sucrose], l_canefw, 0.0);
+                double l_scmstf = MathUtilities.Divide(g_dm_green[sucrose], l_canefw, 0.0);
                 return l_scmstf;
                 }
             }
@@ -8483,7 +8484,7 @@ namespace Models
             get
                 {
                 double l_cane_wt = g_dm_green[sstem] + g_dm_green[sucrose];
-                double l_scmst = Utility.Math.Divide(g_dm_green[sucrose], l_cane_wt, 0.0);
+                double l_scmst = MathUtilities.Divide(g_dm_green[sucrose], l_cane_wt, 0.0);
                 return l_scmst;
                 }
             }
@@ -8620,7 +8621,7 @@ namespace Models
             {
             get
                 {
-                double l_Conc_N_leaf = Utility.Math.Divide(g_n_green[leaf], g_dm_green[leaf], 0.0);
+                double l_Conc_N_leaf = MathUtilities.Divide(g_n_green[leaf], g_dm_green[leaf], 0.0);
                 return Math.Round(l_Conc_N_leaf,2);
                 }
             }
@@ -8632,7 +8633,7 @@ namespace Models
             {
             get
                 {
-                double l_Conc_N_cab = Utility.Math.Divide(g_n_green[cabbage], g_dm_green[cabbage], 0.0);
+                double l_Conc_N_cab = MathUtilities.Divide(g_n_green[cabbage], g_dm_green[cabbage], 0.0);
                 return Math.Round(l_Conc_N_cab,2);
                 }
             }
@@ -8644,7 +8645,7 @@ namespace Models
             {
             get
                 {
-                double l_Conc_N_cane = Utility.Math.Divide(g_n_green[sstem] + g_n_green[sucrose], g_dm_green[sstem] + g_dm_green[sucrose], 0.0);
+                double l_Conc_N_cane = MathUtilities.Divide(g_n_green[sstem] + g_n_green[sucrose], g_dm_green[sstem] + g_dm_green[sucrose], 0.0);
                 return Math.Round(l_Conc_N_cane,2);
                 }
             }
@@ -9766,7 +9767,7 @@ namespace Models
 
                     l_leaf_no_today_ob = sum_between_zb(zb(emerg), zb(now), g_leaf_no_zb) + g_dlt_leaf_no;
 
-                    g_sla_min = Utility.Math.LinearInterpReal((double)l_leaf_no_today_ob, crop.sla_lfno, crop.sla_min, out l_didInterpolate);   // sugar_sla_min()  //Return the minimum specific leaf area (mm^2/g) of a specified leaf no.
+                    g_sla_min = MathUtilities.LinearInterpReal((double)l_leaf_no_today_ob, crop.sla_lfno, crop.sla_min, out l_didInterpolate);   // sugar_sla_min()  //Return the minimum specific leaf area (mm^2/g) of a specified leaf no.
 
                     g_sucrose_fraction = sugar_sucrose_fraction(cult.stress_factor_stalk, cult.sucrose_fraction_stalk,
                                                                 g_swdef_stalk, g_nfact_stalk, g_temp_stress_stalk, g_lodge_redn_sucrose);
@@ -10449,9 +10450,9 @@ namespace Models
 
             for (l_phase = zb(emerg_to_begcane); l_phase <= zb(flowering_to_crop_end); l_phase++)
                 {
-                l_si1 = Utility.Math.Divide(g_cswd_photo[l_phase], g_days_tot[l_phase], 0.0);
-                l_si2 = Utility.Math.Divide(g_cswd_expansion[l_phase], g_days_tot[l_phase], 0.0);
-                l_si4 = Utility.Math.Divide(g_cnd_photo[l_phase], g_days_tot[l_phase], 0.0);
+                l_si1 = MathUtilities.Divide(g_cswd_photo[l_phase], g_days_tot[l_phase], 0.0);
+                l_si2 = MathUtilities.Divide(g_cswd_expansion[l_phase], g_days_tot[l_phase], 0.0);
+                l_si4 = MathUtilities.Divide(g_cnd_photo[l_phase], g_days_tot[l_phase], 0.0);
 
                 //Summary.WriteMessage(this, );
                 //Summary.WriteMessage(this, );
@@ -10998,7 +10999,7 @@ namespace Models
 
         //    //! calculate the fractional reduction in total profile depth
         //    //! ---------------------------------------------------------
-        //    l_pro_red_fr = Utility.Math.Divide(root_depth_new, root_depth_old, 0.0);
+        //    l_pro_red_fr = MathUtilities.Divide(root_depth_new, root_depth_old, 0.0);
 
         //    //! build interpolation pairs based on 'squashed' original root profile
         //    //! -------------------------------------------------------------------
@@ -11027,8 +11028,8 @@ namespace Models
         //        {
         //        l_layer_bottom_depth = SumArray(dlayer_new, ob(layer));
         //        l_layer_top_depth = l_layer_bottom_depth - dlayer_new[layer];
-        //        l_cum_root_top = Utility.Math.LinearInterpReal(l_layer_top_depth, l_cum_root_depth, l_cum_root_length, l_nlayr_rt_old + 1);
-        //        l_cum_root_bottom = Utility.Math.LinearInterpReal(l_layer_bottom_depth, l_cum_root_depth, l_cum_root_length, l_nlayr_rt_old + 1);
+        //        l_cum_root_top = MathUtilities.LinearInterpReal(l_layer_top_depth, l_cum_root_depth, l_cum_root_length, l_nlayr_rt_old + 1);
+        //        l_cum_root_bottom = MathUtilities.LinearInterpReal(l_layer_bottom_depth, l_cum_root_depth, l_cum_root_length, l_nlayr_rt_old + 1);
         //        root_length[layer] = l_cum_root_bottom - l_cum_root_top;
         //        }
 

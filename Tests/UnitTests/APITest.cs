@@ -14,6 +14,7 @@ namespace UnitTests
     using Models.Graph;
     using Models.Soils;
     using NUnit.Framework;
+    using APSIM.Shared.Utilities;
 
     /// <summary> 
     /// This is a test class for SystemComponentTest and is intended
@@ -212,10 +213,10 @@ namespace UnitTests
             Assert.IsNull(field1.Get("Weather"));
 
             // Make sure we can get a top level model from Field1 using a full path.
-            Assert.AreEqual(Utility.Reflection.Name(field1.Get(".Simulations.Test.Weather")), "Weather");
+            Assert.AreEqual(ReflectionUtilities.Name(field1.Get(".Simulations.Test.Weather")), "Weather");
 
             // Make sure we can get a model in Field2 from Field1 using a full path.
-            Assert.AreEqual(Utility.Reflection.Name(field1.Get(".Simulations.Test.Field2.Graph1")), "Graph1");
+            Assert.AreEqual(ReflectionUtilities.Name(field1.Get(".Simulations.Test.Field2.Graph1")), "Graph1");
 
             // Make sure we can get a property from a model in Field2 from Field1 using a full path.
             Assert.AreEqual(field1.Get(".Simulations.Test.Field2.Graph1.Name"), "Graph1");

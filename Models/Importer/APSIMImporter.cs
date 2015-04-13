@@ -15,6 +15,7 @@ namespace Importer
     using System.Xml;
     using ApsimFile;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This is a worker class for the import process that converts
@@ -188,7 +189,7 @@ namespace Importer
 
                 // write to temporary xfile
                 StreamWriter xmlWriter = new StreamWriter(xfile);
-                xmlWriter.Write(Utility.Xml.FormattedXML(xdoc.OuterXml));
+                xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
                 xmlWriter.Close();
 
                 try
@@ -223,7 +224,7 @@ namespace Importer
                     this.AddComponent(child, ref destParent);
                 else if (child.Name == "folder")
                 {
-                    XmlNode newFolder = this.AddCompNode(destParent, "Folder", Utility.Xml.NameAttr(child));
+                    XmlNode newFolder = this.AddCompNode(destParent, "Folder", XmlUtilities.NameAttr(child));
                     this.AddFoldersAndSimulations(child, newFolder);
                 }
                 child = child.NextSibling;
@@ -259,12 +260,12 @@ namespace Importer
             {
                 if (compNode.Name == "simulation")
                 {
-                    XmlNode newSim = this.AddCompNode(destParent, "Simulation", Utility.Xml.NameAttr(compNode));
+                    XmlNode newSim = this.AddCompNode(destParent, "Simulation", XmlUtilities.NameAttr(compNode));
                     this.AddChildComponents(compNode, newSim);
                 }
                 else if (compNode.Name == "folder")
                 {
-                    XmlNode newFolder = this.AddCompNode(destParent, "Folder", Utility.Xml.NameAttr(compNode));
+                    XmlNode newFolder = this.AddCompNode(destParent, "Folder", XmlUtilities.NameAttr(compNode));
                     this.AddChildComponents(compNode, newFolder);
                 }
                 else if (compNode.Name == "clock")
@@ -297,7 +298,7 @@ namespace Importer
                 }
                 else if (compNode.Name == "summaryfile")
                 {
-                    newNode = this.AddCompNode(destParent, "Summary", Utility.Xml.NameAttr(compNode));
+                    newNode = this.AddCompNode(destParent, "Summary", XmlUtilities.NameAttr(compNode));
                     XmlNode childNode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("html"));
                     childNode.InnerText = "true";
                 }
@@ -339,13 +340,13 @@ namespace Importer
                 }
                 else if (compNode.Name == "area")
                 {
-                    newNode = this.AddCompNode(destParent, "Zone", Utility.Xml.NameAttr(compNode));
+                    newNode = this.AddCompNode(destParent, "Zone", XmlUtilities.NameAttr(compNode));
                     XmlNode newPaddockNode = newNode;
 
                     string area = this.GetInnerText(compNode, "paddock_area");
                     if (area == string.Empty)
                     {
-                        Utility.Xml.SetValue(compNode, "paddock_area", "1.0");
+                        XmlUtilities.SetValue(compNode, "paddock_area", "1.0");
                     }
                     this.CopyNodeAndValue(compNode, newPaddockNode, "paddock_area", "Area", true);
                     this.surfOMExists = false;
@@ -358,7 +359,7 @@ namespace Importer
                     // if it contains a soilwater then
                     if (this.soilWaterExists && !this.surfOMExists)   
                     {
-                        Console.WriteLine("Added SurfaceOM to " + Utility.Xml.FullPathUsingName(newPaddockNode));
+                        Console.WriteLine("Added SurfaceOM to " + XmlUtilities.FullPathUsingName(newPaddockNode));
                         Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
 
                         mysom.PoolName = "wheat_stubble";
@@ -384,7 +385,7 @@ namespace Importer
                 }
                 else if (compNode.Name == "memo")
                 {
-                    newNode = this.AddCompNode(destParent, "Memo", Utility.Xml.NameAttr(compNode));
+                    newNode = this.AddCompNode(destParent, "Memo", XmlUtilities.NameAttr(compNode));
                     XmlNode memoTextNode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("MemoText"));
                     memoTextNode.InnerText = compNode.InnerText;
                 }
@@ -410,7 +411,7 @@ namespace Importer
                         else
                         {
                             // objects like root may have a name attribute
-                            string usename = Utility.Xml.NameAttr(compNode);
+                            string usename = XmlUtilities.NameAttr(compNode);
                             if (usename.Length < 1)
                                 usename = compNode.Name;
                             newNode = this.AddCompNode(destParent, classname, usename);    // found a model component that should be added to the simulation
@@ -434,7 +435,7 @@ namespace Importer
         /// <returns>The newly created node</returns>
         private XmlNode ImportPlant(XmlNode compNode, XmlNode destParent, XmlNode plantNode)
         {
-            string name = Utility.Xml.NameAttr(compNode);
+            string name = XmlUtilities.NameAttr(compNode);
 
             Model plantModel;
             if (name == "wheat")
@@ -452,7 +453,7 @@ namespace Importer
 
             plantNode = ImportObject(destParent, plantNode, plantModel, name);
 
-            Utility.Xml.SetValue(plantNode, "ResourceName", Utility.String.CamelCase(name));
+            XmlUtilities.SetValue(plantNode, "ResourceName", StringUtilities.CamelCase(name));
 
             XmlNode cropTypeNode = plantNode.AppendChild(plantNode.OwnerDocument.CreateElement("CropType"));
             cropTypeNode.InnerText = name;
@@ -468,11 +469,11 @@ namespace Importer
         private void AddLinkedObjects(XmlNode plantNode, object model)
         {
             // Go looking for [Link]s
-            foreach (FieldInfo field in Utility.Reflection.GetAllFields(
+            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
                                                                         model.GetType(),
                                                                         BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
             {
-                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
+                LinkAttribute link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null)
                 {
                     if (!field.FieldType.IsAbstract && !link.IsOptional)
@@ -506,7 +507,7 @@ namespace Importer
                 mymicro.b_interception = this.GetChildDouble(compNode, "b_interception", 0);
                 mymicro.c_interception = this.GetChildDouble(compNode, "c_interception", 0);
                 mymicro.d_interception = this.GetChildDouble(compNode, "d_interception", 0);
-                newName = Utility.Xml.NameAttr(compNode);
+                newName = XmlUtilities.NameAttr(compNode);
             }
             newNode = ImportObject(destParent, newNode, mymicro, newName);
 
@@ -530,9 +531,9 @@ namespace Importer
             mycrop.KL = this.GetChildDoubles(compNode, "KL", 0);
             mycrop.XF = this.GetChildDoubles(compNode, "XF", 0);
 
-            string name = Utility.Xml.NameAttr(compNode);
+            string name = XmlUtilities.NameAttr(compNode);
             if (name == "SoilCrop")
-                name = Utility.Xml.Value(compNode, "Name");
+                name = XmlUtilities.Value(compNode, "Name");
             
             newNode = ImportObject(destParent, newNode, mycrop, name);
 
@@ -557,7 +558,7 @@ namespace Importer
             mysom.cpr = this.GetInnerText(compNode, "cpr");
             mysom.standing_fraction = this.GetInnerText(compNode, "standing_fraction");
 
-            newNode = ImportObject(destParent, newNode, mysom, Utility.Xml.NameAttr(compNode));
+            newNode = ImportObject(destParent, newNode, mysom, XmlUtilities.NameAttr(compNode));
 
             return newNode;
         }
@@ -574,7 +575,7 @@ namespace Importer
             Models.Graph.Graph mygraph = new Models.Graph.Graph();
 
             // set any values here
-            newNode = ImportObject(destParent, newNode, mygraph, Utility.Xml.NameAttr(compNode));
+            newNode = ImportObject(destParent, newNode, mygraph, XmlUtilities.NameAttr(compNode));
 
             return newNode;
         }
@@ -601,9 +602,9 @@ namespace Importer
                     mywater.PercentMethod = methodValue;
             }
 
-            string name = Utility.Xml.NameAttr(compNode);
-            if (name == "InitialWater" && Utility.Xml.Value(compNode, "Name") != "")
-                name = Utility.Xml.Value(compNode, "Name");
+            string name = XmlUtilities.NameAttr(compNode);
+            if (name == "InitialWater" && XmlUtilities.Value(compNode, "Name") != "")
+                name = XmlUtilities.Value(compNode, "Name");
 
             newNode = ImportObject(destParent, newNode, mywater, name);
 
@@ -619,14 +620,14 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportAnalysis(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = this.AddCompNode(destParent, "Analysis", Utility.Xml.NameAttr(compNode));
+            newNode = this.AddCompNode(destParent, "Analysis", XmlUtilities.NameAttr(compNode));
 
             XmlNode childNode;
 
             // thickness array
-            childNode = Utility.Xml.Find(compNode, "Thickness");
+            childNode = XmlUtilities.Find(compNode, "Thickness");
             this.CopyNodeAndValueArray(childNode, newNode, "Thickness", "Thickness");
-            childNode = Utility.Xml.Find(compNode, "PH");
+            childNode = XmlUtilities.Find(compNode, "PH");
             this.CopyNodeAndValueArray(childNode, newNode, "PH", "PH");
 
             return newNode;
@@ -641,7 +642,7 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportSOM(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = this.AddCompNode(destParent, "SoilOrganicMatter", Utility.Xml.NameAttr(compNode));
+            newNode = this.AddCompNode(destParent, "SoilOrganicMatter", XmlUtilities.NameAttr(compNode));
 
             XmlNode childNode;
             this.CopyNodeAndValue(compNode, newNode, "RootCN", "RootCN", false);
@@ -651,13 +652,13 @@ namespace Importer
             this.CopyNodeAndValue(compNode, newNode, "EnrBCoeff", "EnrBCoeff", false);
 
             // thickness array
-            childNode = Utility.Xml.Find(compNode, "Thickness");
+            childNode = XmlUtilities.Find(compNode, "Thickness");
             this.CopyNodeAndValueArray(childNode, newNode, "Thickness", "Thickness");
-            childNode = Utility.Xml.Find(compNode, "OC");
+            childNode = XmlUtilities.Find(compNode, "OC");
             this.CopyNodeAndValueArray(childNode, newNode, "OC", "OC");
-            childNode = Utility.Xml.Find(compNode, "FBiom");
+            childNode = XmlUtilities.Find(compNode, "FBiom");
             this.CopyNodeAndValueArray(childNode, newNode, "FBiom", "FBiom");
-            childNode = Utility.Xml.Find(compNode, "FInert");
+            childNode = XmlUtilities.Find(compNode, "FInert");
             this.CopyNodeAndValueArray(childNode, newNode, "FInert", "FInert");
             
             return newNode;
@@ -691,7 +692,7 @@ namespace Importer
             mysoilwater.SWCON = this.GetChildDoubles(compNode, "SWCON", 0);
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, mysoilwater, Utility.Xml.NameAttr(compNode));
+            newNode = ImportObject(destParent, newNode, mysoilwater, XmlUtilities.NameAttr(compNode));
 
             return newNode;
         }
@@ -707,7 +708,7 @@ namespace Importer
         private static XmlNode ImportObject(XmlNode destParent, XmlNode newNode, Model newObject, string objName)
         {
             newObject.Name = objName;
-            string newObjxml = Utility.Xml.Serialise(newObject, false);
+            string newObjxml = XmlUtilities.Serialise(newObject, false);
             XmlDocument xdoc = new XmlDocument();
             xdoc.LoadXml(newObjxml);
             newNode = destParent.OwnerDocument.ImportNode(xdoc.DocumentElement, true);
@@ -725,28 +726,28 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportWater(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = this.AddCompNode(destParent, "Water", Utility.Xml.NameAttr(compNode));
+            newNode = this.AddCompNode(destParent, "Water", XmlUtilities.NameAttr(compNode));
 
             XmlNode childNode;
 
             // thickness array
-            childNode = Utility.Xml.Find(compNode, "Thickness");
+            childNode = XmlUtilities.Find(compNode, "Thickness");
             this.CopyNodeAndValueArray(childNode, newNode, "Thickness", "Thickness");
 
             // NO3 array
-            childNode = Utility.Xml.Find(compNode, "BD");
+            childNode = XmlUtilities.Find(compNode, "BD");
             this.CopyNodeAndValueArray(childNode, newNode, "BD", "BD");
 
             // NH4 array
-            childNode = Utility.Xml.Find(compNode, "AirDry");
+            childNode = XmlUtilities.Find(compNode, "AirDry");
             this.CopyNodeAndValueArray(childNode, newNode, "AirDry", "AirDry");
 
             // SW array
-            childNode = Utility.Xml.Find(compNode, "LL15");
+            childNode = XmlUtilities.Find(compNode, "LL15");
             this.CopyNodeAndValueArray(childNode, newNode, "LL15", "LL15");
-            childNode = Utility.Xml.Find(compNode, "DUL");
+            childNode = XmlUtilities.Find(compNode, "DUL");
             this.CopyNodeAndValueArray(childNode, newNode, "DUL", "DUL");
-            childNode = Utility.Xml.Find(compNode, "SAT");
+            childNode = XmlUtilities.Find(compNode, "SAT");
             this.CopyNodeAndValueArray(childNode, newNode, "SAT", "SAT");
 
             this.AddChildComponents(compNode, newNode);
@@ -763,31 +764,31 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportSample(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            string name = Utility.Xml.NameAttr(compNode);
-            if (Utility.Xml.Value(compNode, "Name") != "")
-                name = Utility.Xml.Value(compNode, "Name");
+            string name = XmlUtilities.NameAttr(compNode);
+            if (XmlUtilities.Value(compNode, "Name") != "")
+                name = XmlUtilities.Value(compNode, "Name");
 
-            newNode = this.AddCompNode(destParent, "Sample", Utility.Xml.NameAttr(compNode));
+            newNode = this.AddCompNode(destParent, "Sample", XmlUtilities.NameAttr(compNode));
 
             string date = this.GetInnerText(compNode, "Date");
             XmlNode dateNode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("Date"));
-            dateNode.InnerText = Utility.Date.DMYtoISO(date);
+            dateNode.InnerText = DateUtilities.DMYtoISO(date);
             XmlNode childNode;
 
             // thickness array
-            childNode = Utility.Xml.Find(compNode, "Thickness");
+            childNode = XmlUtilities.Find(compNode, "Thickness");
             this.CopyNodeAndValueArray(childNode, newNode, "Thickness", "Thickness");
 
             // NO3 array
-            childNode = Utility.Xml.Find(compNode, "NO3");
+            childNode = XmlUtilities.Find(compNode, "NO3");
             this.CopyNodeAndValueArray(childNode, newNode, "NO3", "NO3");
 
             // NH4 array
-            childNode = Utility.Xml.Find(compNode, "NH4");
+            childNode = XmlUtilities.Find(compNode, "NH4");
             this.CopyNodeAndValueArray(childNode, newNode, "NH4", "NH4");
 
             // SW array
-            childNode = Utility.Xml.Find(compNode, "SW");
+            childNode = XmlUtilities.Find(compNode, "SW");
             this.CopyNodeAndValueArray(childNode, newNode, "SW", "SW");
 
             this.CopyNodeAndValue(compNode, newNode, "NO3Units", "NO3Units", false);
@@ -810,11 +811,11 @@ namespace Importer
             //// mysoil.SoilType = GetInnerText(compNode, "SoilType");
 
             // import this object into the new xml document
-            //// newNode = ImportObject(destParent, newNode, mysoil, Utility.Xml.Name(compNode));
+            //// newNode = ImportObject(destParent, newNode, mysoil, XmlUtilities.Name(compNode));
 
-            string name = Utility.Xml.Attribute(compNode, "name");
+            string name = XmlUtilities.Attribute(compNode, "name");
             if (name == "")
-                name = Utility.Xml.Value(compNode, "Name");
+                name = XmlUtilities.Value(compNode, "Name");
             if (name == "")
                 name = compNode.Name;
             newNode = this.AddCompNode(destParent, "Soil", name);
@@ -860,7 +861,7 @@ namespace Importer
 
             // compNode/variables array
             List<XmlNode> nodes = new List<XmlNode>();
-            Utility.Xml.FindAllRecursively(compNode, "variable", ref nodes);
+            XmlUtilities.FindAllRecursively(compNode, "variable", ref nodes);
             myreport.VariableNames = new string[nodes.Count];
             int i = 0;
             foreach (XmlNode var in nodes)
@@ -878,7 +879,7 @@ namespace Importer
 
             // now for the events
             nodes.Clear();
-            Utility.Xml.FindAllRecursively(compNode, "event", ref nodes);
+            XmlUtilities.FindAllRecursively(compNode, "event", ref nodes);
             myreport.EventNames = new string[nodes.Count];
             i = 0;
             foreach (XmlNode theEvent in nodes)
@@ -899,7 +900,7 @@ namespace Importer
             }
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, myreport, Utility.Xml.NameAttr(compNode));
+            newNode = ImportObject(destParent, newNode, myreport, XmlUtilities.NameAttr(compNode));
 
             return newNode;
         }
@@ -929,14 +930,14 @@ namespace Importer
             List<string> unknownHandlerScripts = new List<string>();
 
             List<XmlNode> nodes = new List<XmlNode>();
-            Utility.Xml.FindAllRecursivelyByType(compNode, "script", ref nodes);
+            XmlUtilities.FindAllRecursivelyByType(compNode, "script", ref nodes);
             foreach (XmlNode script in nodes)
             {
                 // find the event
-                XmlNode eventNode = Utility.Xml.Find(script, "event");
+                XmlNode eventNode = XmlUtilities.Find(script, "event");
 
                 // find the text
-                XmlNode textNode = Utility.Xml.Find(script, "text");
+                XmlNode textNode = XmlUtilities.Find(script, "text");
                 if ((textNode != null) && (textNode.InnerText.Length > 0))
                 {
                     if (eventNode.InnerText.ToLower() == "init")
@@ -1017,7 +1018,7 @@ namespace Importer
             mymanager.Code = code.ToString();   
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, mymanager, Utility.Xml.NameAttr(compNode));
+            newNode = ImportObject(destParent, newNode, mymanager, XmlUtilities.NameAttr(compNode));
             
             // some Manager components have Memo children. For ApsimX the import
             // will just put them as the next sibling of the Manager rather
@@ -1061,7 +1062,7 @@ namespace Importer
             // copy code here
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, mymanager, Utility.Xml.NameAttr(compNode));
+            newNode = ImportObject(destParent, newNode, mymanager, XmlUtilities.NameAttr(compNode));
 
             // some Manager components have Memo children. For ApsimX the import
             // will just put them as the next sibling of the Manager rather
@@ -1084,7 +1085,7 @@ namespace Importer
 
             // compNode/filename value
             XmlNode anode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("FileName"));
-            string metfilepath = Utility.PathUtils.OSFilePath(this.GetInnerText(compNode, "filename"));
+            string metfilepath = PathUtilities.OSFilePath(this.GetInnerText(compNode, "filename"));
 
             anode.InnerText = metfilepath.Replace("%apsim%", this.ApsimPath);
 
@@ -1104,12 +1105,12 @@ namespace Importer
 
             string startDate = this.GetInnerText(compNode, "start_date");
             string endDate = this.GetInnerText(compNode, "end_date");
-            myclock.StartDate = Utility.Date.DMYtoDate(startDate);
+            myclock.StartDate = DateUtilities.DMYtoDate(startDate);
             this.startDate = myclock.StartDate;
-            myclock.EndDate   = Utility.Date.DMYtoDate(endDate);
+            myclock.EndDate   = DateUtilities.DMYtoDate(endDate);
 
             // import this object into the new xml document
-            newNode = ImportObject(destParent, newNode, myclock, Utility.Xml.NameAttr(compNode));
+            newNode = ImportObject(destParent, newNode, myclock, XmlUtilities.NameAttr(compNode));
  
             return newNode;
         }
@@ -1123,28 +1124,28 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportOperations(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            newNode = this.AddCompNode(destParent, "Operations", Utility.Xml.NameAttr(compNode));
+            newNode = this.AddCompNode(destParent, "Operations", XmlUtilities.NameAttr(compNode));
 
             XmlNode childNode;
             
             List<XmlNode> nodes = new List<XmlNode>();
-            Utility.Xml.FindAllRecursively(compNode, "operation", ref nodes);
+            XmlUtilities.FindAllRecursively(compNode, "operation", ref nodes);
             foreach (XmlNode oper in nodes)
             {
                 XmlNode operationNode = newNode.AppendChild(destParent.OwnerDocument.CreateElement("Operation"));
                 XmlNode dateNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Date"));
 
                 string childText = string.Empty;
-                childNode = Utility.Xml.Find(oper, "date");
+                childNode = XmlUtilities.Find(oper, "date");
                 DateTime when;
                 if (childNode != null && DateTime.TryParse(childNode.InnerText, out when))
                     childText = when.ToString("yyyy-MM-dd");
                 else if (childNode != null && childNode.InnerText != string.Empty)
                 {
-                    childText = Utility.Date.DMYtoISO(childNode.InnerText);
+                    childText = DateUtilities.DMYtoISO(childNode.InnerText);
                     if (childText == "0001-01-01")
                     {
-                        childText = Utility.Date.GetDate(childNode.InnerText, this.startDate).ToString("yyyy-MM-dd");
+                        childText = DateUtilities.GetDate(childNode.InnerText, this.startDate).ToString("yyyy-MM-dd");
                     }
                 }
                 else
@@ -1154,7 +1155,7 @@ namespace Importer
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 
                 childText = " ";
-                childNode = Utility.Xml.Find(oper, "action");
+                childNode = XmlUtilities.Find(oper, "action");
                 if (childNode != null)
                 {
                     childText = childNode.InnerText;    
@@ -1289,7 +1290,7 @@ namespace Importer
         {
             if (srcParentNode != null)
             {
-                XmlNode srcChildNode = Utility.Xml.Find(srcParentNode, srcName);
+                XmlNode srcChildNode = XmlUtilities.Find(srcParentNode, srcName);
                 if (forceCreate || (srcChildNode != null))
                 {
                     XmlNode childNode = destParentNode.AppendChild(destParentNode.OwnerDocument.CreateElement(destName));
@@ -1341,10 +1342,10 @@ namespace Importer
         {
             double[] values = null;
 
-            XmlNode srcNode = Utility.Xml.Find(parentNode, nodePath);
+            XmlNode srcNode = XmlUtilities.Find(parentNode, nodePath);
             if (srcNode != null)
             {
-                List<XmlNode> nodes = Utility.Xml.ChildNodesByName(srcNode, "double");
+                List<XmlNode> nodes = XmlUtilities.ChildNodesByName(srcNode, "double");
                 values = new double[nodes.Count];
 
                 for (int i = 0; i < nodes.Count; i++)
@@ -1369,7 +1370,7 @@ namespace Importer
         /// <returns>The floating point value or the default value</returns>
         private double GetChildDouble(XmlNode parentNode, string nodePath, double defValue)
         {
-            XmlNode srcNode = Utility.Xml.Find(parentNode, nodePath);
+            XmlNode srcNode = XmlUtilities.Find(parentNode, nodePath);
             if ((srcNode != null) && (srcNode.InnerText.Length > 0))
                 return Convert.ToDouble(srcNode.InnerText);
             else
@@ -1384,7 +1385,7 @@ namespace Importer
         /// <returns>The inner text for the node</returns>
         private string GetInnerText(XmlNode parentNode, string nodePath)
         {
-            XmlNode srcNode = Utility.Xml.Find(parentNode, nodePath);
+            XmlNode srcNode = XmlUtilities.Find(parentNode, nodePath);
             if (srcNode != null)
                 return srcNode.InnerText;
             else

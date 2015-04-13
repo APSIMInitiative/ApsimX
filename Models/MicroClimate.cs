@@ -10,6 +10,7 @@ using Models;
 using Models.PMF;
 using System.Xml.Serialization;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -985,7 +986,7 @@ namespace Models
 
             sunshineHours = CalcSunshineHours(radn, dayLengthLight, Weather.Latitude, day);
 
-            fractionClearSky = Utility.Math.Divide(sunshineHours, dayLengthLight, 0.0);
+            fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
         }
 
         /// <summary>Break the combined Canopy into layers</summary>
@@ -1050,7 +1051,7 @@ namespace Models
 
                 componentData.layerLAI = new double[numLayers];
                 componentData.layerLAItot = new double[numLayers];
-                Ld[j] = Utility.Math.Divide(componentData.LAItot, componentData.Depth, 0.0);
+                Ld[j] = MathUtilities.Divide(componentData.LAItot, componentData.Depth, 0.0);
             }
             double top = 0.0;
             double bottom = 0.0;
@@ -1070,7 +1071,7 @@ namespace Models
                     if ((componentData.Height > bottom) && (componentData.Height - componentData.Depth < top))
                     {
                         componentData.layerLAItot[i] = Ld[j] * DeltaZ[i];
-                        componentData.layerLAI[i] = componentData.layerLAItot[i] * Utility.Math.Divide(componentData.LAI, componentData.LAItot, 0.0);
+                        componentData.layerLAI[i] = componentData.layerLAItot[i] * MathUtilities.Divide(componentData.LAI, componentData.LAItot, 0.0);
                         layerLAIsum[i] += componentData.layerLAItot[i];
                     }
                 }
@@ -1081,9 +1082,9 @@ namespace Models
                 {
                     ComponentDataStruct componentData = ComponentData[j];
 
-                    componentData.Ftot[i] = Utility.Math.Divide(componentData.layerLAItot[i], layerLAIsum[i], 0.0);
+                    componentData.Ftot[i] = MathUtilities.Divide(componentData.layerLAItot[i], layerLAIsum[i], 0.0);
                     // Note: Sum of Fgreen will be < 1 as it is green over total
-                    componentData.Fgreen[i] = Utility.Math.Divide(componentData.layerLAI[i], layerLAIsum[i], 0.0);
+                    componentData.Fgreen[i] = MathUtilities.Divide(componentData.layerLAI[i], layerLAIsum[i], 0.0);
                 }
             }
         }
@@ -1098,13 +1099,13 @@ namespace Models
             {
                 ComponentDataStruct componentData = ComponentData[j];
 
-                if (Utility.Math.FloatsAreEqual(ComponentData[j].CoverGreen, 1.0, 1E-05))
+                if (MathUtilities.FloatsAreEqual(ComponentData[j].CoverGreen, 1.0, 1E-05))
                 {
                     throw new Exception("Unrealistically high cover value in MicroMet i.e. > -.9999");
                 }
 
-                componentData.K = Utility.Math.Divide(-Math.Log(1.0 - componentData.CoverGreen), componentData.LAI, 0.0);
-                componentData.Ktot = Utility.Math.Divide(-Math.Log(1.0 - componentData.CoverTot), componentData.LAItot, 0.0);
+                componentData.K = MathUtilities.Divide(-Math.Log(1.0 - componentData.CoverGreen), componentData.LAI, 0.0);
+                componentData.Ktot = MathUtilities.Divide(-Math.Log(1.0 - componentData.CoverTot), componentData.LAItot, 0.0);
             }
 
             // Calculate extinction for individual layers
@@ -1182,7 +1183,7 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].Ga[i] = totalGa * Utility.Math.Divide(ComponentData[j].Rs[i], sumRs, 0.0);
+                    ComponentData[j].Ga[i] = totalGa * MathUtilities.Divide(ComponentData[j].Rs[i], sumRs, 0.0);
                 }
             }
         }
@@ -1209,7 +1210,7 @@ namespace Models
             {
                 for (int j = 0; j <= ComponentData.Count - 1; j++)
                 {
-                    ComponentData[j].interception[i] = Utility.Math.Divide(ComponentData[j].layerLAI[i], sumLAI, 0.0) * totalInterception;
+                    ComponentData[j].interception[i] = MathUtilities.Divide(ComponentData[j].layerLAI[i], sumLAI, 0.0) * totalInterception;
                 }
             }
         }
@@ -1244,7 +1245,7 @@ namespace Models
             // =infinite surface conductance
             double freeEvap = CalcPenmanMonteith(netRadiation, mint, maxt, vp, air_pressure, dayLength, freeEvapGa, freeEvapGc);
 
-            dryleaffraction = 1.0 - Utility.Math.Divide(sumInterception * (1.0 - night_interception_fraction), freeEvap, 0.0);
+            dryleaffraction = 1.0 - MathUtilities.Divide(sumInterception * (1.0 - night_interception_fraction), freeEvap, 0.0);
             dryleaffraction = Math.Max(0.0, dryleaffraction);
 
             for (int i = 0; i <= numLayers - 1; i++)

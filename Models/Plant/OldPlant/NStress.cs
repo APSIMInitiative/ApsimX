@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -68,7 +69,7 @@ namespace Models.PMF.OldPlant
         public double Pheno { get { return pheno; } }
         /// <summary>Gets the photo average.</summary>
         /// <value>The photo average.</value>
-        public double PhotoAverage { get { return Utility.Math.Divide(_PhotoSum, _PhotoCount, 0); } }
+        public double PhotoAverage { get { return MathUtilities.Divide(_PhotoSum, _PhotoCount, 0); } }
         /// <summary>Gets the expansion.</summary>
         /// <value>The expansion.</value>
         public double Expansion { get { return expansion; } }
@@ -77,7 +78,7 @@ namespace Models.PMF.OldPlant
         public double Grain { get { return grain; } }
         /// <summary>Gets the grain average.</summary>
         /// <value>The grain average.</value>
-        public double GrainAverage { get { return Utility.Math.Divide(_GrainSum, _GrainCount, 0); } }
+        public double GrainAverage { get { return MathUtilities.Divide(_GrainSum, _GrainCount, 0); } }
 
         /// <summary>Does the plant n stress.</summary>
         public void DoPlantNStress()
@@ -158,7 +159,7 @@ namespace Models.PMF.OldPlant
                 if (divisor != 0)
                 {
                     double result = multiplier * dividend / divisor;
-                    return Utility.Math.Bound(result, 0.0, 1.0);
+                    return MathUtilities.Bound(result, 0.0, 1.0);
                 }
             }
             return (1.0);

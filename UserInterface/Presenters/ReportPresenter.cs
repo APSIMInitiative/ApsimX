@@ -12,6 +12,7 @@ using UserInterface.Interfaces;
 using UserInterface.EventArguments;
 using Models.Report;
 using Models.Factorial;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -131,7 +132,7 @@ namespace UserInterface.Presenters
                 if (simulation.Parent is Experiment)
                 {
                     Experiment experiment = simulation.Parent as Experiment;
-                    string filter = "NAME IN " + "(" + Utility.String.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
+                    string filter = "NAME IN " + "(" + StringUtilities.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
                     View.DataGrid.DataSource = DataStore.GetFilteredData(Report.Name, filter);
                     View.DataGrid.AutoFilterOn = true;
                 }

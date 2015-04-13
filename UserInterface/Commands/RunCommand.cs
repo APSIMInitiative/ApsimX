@@ -6,6 +6,7 @@ using UserInterface.Presenters;
 using System.Diagnostics;
 using System.Threading;
 using Models.Factorial;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Commands
 {
@@ -13,7 +14,7 @@ namespace UserInterface.Commands
     {
         private Model ModelClicked;
         private Simulations Simulations;
-        private Utility.JobManager JobManager;
+        private JobManager JobManager;
         private ExplorerPresenter ExplorerPresenter;
         private Stopwatch Timer = new Stopwatch(); 
         public bool ok { get; set; }
@@ -28,7 +29,7 @@ namespace UserInterface.Commands
             this.ModelClicked = Simulation;
             this.ExplorerPresenter = presenter;
 
-            JobManager = new Utility.JobManager();
+            JobManager = new JobManager();
             JobManager.AllJobsCompleted += OnComplete;
         }
 
@@ -70,11 +71,8 @@ namespace UserInterface.Commands
         {
             Timer.Stop();
 
-            string errorMessage = string.Empty;
-
-            for (int j = 0; j < JobManager.CountOfJobs; j++)
-                errorMessage += JobManager.GetJobErrorMessage(j);
-            if (errorMessage == string.Empty)
+            string errorMessage = Simulations.ErrorMessage;
+            if (errorMessage == null)
                 ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
                         + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
             else

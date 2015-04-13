@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Collections; //needed for IEnumerable interface.
+using System.Collections;
+using APSIM.Shared.Utilities; //needed for IEnumerable interface.
 
 namespace Models.Soils.SoilWaterBackend
     {
@@ -132,7 +133,7 @@ namespace Models.Soils.SoilWaterBackend
 
         public double MM2Frac(double MM)
             {
-            return Utility.Math.Divide(MM, dlayer, 0.0);
+            return MathUtilities.Divide(MM, dlayer, 0.0);
             }
 
 
@@ -197,7 +198,7 @@ namespace Models.Soils.SoilWaterBackend
                 }
             }
         public double saturated_fraction
-        { get { return Utility.Math.Divide(drainable, drainable_capacity, 0.0); } }
+        { get { return MathUtilities.Divide(drainable, drainable_capacity, 0.0); } }
 
 
 
@@ -1139,7 +1140,7 @@ namespace Models.Soils.SoilWaterBackend
             Layer lyr = GetLayer(LayerNumber);
 
 
-            max_sw = 1.0 - Utility.Math.Divide(lyr.bd, Constants.specific_bd, 0.0);  //ie. Total Porosity
+            max_sw = 1.0 - MathUtilities.Divide(lyr.bd, Constants.specific_bd, 0.0);  //ie. Total Porosity
 
 
             sw_errmargin = Constants.error_margin;
@@ -1747,8 +1748,8 @@ namespace Models.Soils.SoilWaterBackend
 
                 //! theta1 is excess of water content above lower limit,
                 //! theta2 is the same but for next layer down.
-                theta1 = Utility.Math.Divide(esw_dep1, lyr.dlayer, 0.0);
-                theta2 = Utility.Math.Divide(esw_dep2, below.dlayer, 0.0);
+                theta1 = MathUtilities.Divide(esw_dep1, lyr.dlayer, 0.0);
+                theta2 = MathUtilities.Divide(esw_dep2, below.dlayer, 0.0);
 
                 //! find diffusivity, a function of mean thet.
                 dbar = DiffusConst * Math.Exp(DiffusSlope * (theta1 + theta2) * 0.5);
@@ -1759,15 +1760,15 @@ namespace Models.Soils.SoilWaterBackend
 
                 dbar = Constants.bound(dbar, 0.0, 10000.0);
 
-                sw1 = Utility.Math.Divide((lyr.sw_dep - w_out), lyr.dlayer, 0.0);
+                sw1 = MathUtilities.Divide((lyr.sw_dep - w_out), lyr.dlayer, 0.0);
                 sw1 = Math.Max(sw1, 0.0);
 
-                sw2 = Utility.Math.Divide(below.sw_dep, below.dlayer, 0.0);
+                sw2 = MathUtilities.Divide(below.sw_dep, below.dlayer, 0.0);
                 sw2 = Math.Max(sw2, 0.0);
 
                 //    ! gradient is defined in terms of absolute sw content
                 //cjh          subtract gravity gradient to prevent gradient being +ve when flow_max is -ve, resulting in sw > sat.
-                gradient = Utility.Math.Divide((sw2 - sw1), ave_dlayer, 0.0) - Constants.gravity_gradient;
+                gradient = MathUtilities.Divide((sw2 - sw1), ave_dlayer, 0.0) - Constants.gravity_gradient;
 
 
                 //!  flow (positive up) = diffusivity * gradient in water content
@@ -1778,8 +1779,8 @@ namespace Models.Soils.SoilWaterBackend
                 swg = Constants.gravity_gradient * ave_dlayer;
 
                 //! calculate maximum flow
-                sum_inverse_dlayer = Utility.Math.Divide(1.0, lyr.dlayer, 0.0) + Utility.Math.Divide(1.0, below.dlayer, 0.0);
-                flow_max = Utility.Math.Divide((sw2 - sw1 - swg), sum_inverse_dlayer, 0.0);
+                sum_inverse_dlayer = MathUtilities.Divide(1.0, lyr.dlayer, 0.0) + MathUtilities.Divide(1.0, below.dlayer, 0.0);
+                flow_max = MathUtilities.Divide((sw2 - sw1 - swg), sum_inverse_dlayer, 0.0);
 
 
                 //c dsg 260202
@@ -1927,7 +1928,7 @@ namespace Models.Soils.SoilWaterBackend
                  {
                  //!assume all rainfall goes into layer 1
                  //! therefore mass_solute = mass_rain * g%solute_conc_rain (in ppm) / 10^6
-                 mass_solute = Utility.Math.Divide(mass_rain * solute_conc_rain[solnum], 1000000.0, 0.0);
+                 mass_solute = MathUtilities.Divide(mass_rain * solute_conc_rain[solnum], 1000000.0, 0.0);
                  solute[solnum,0]   = solute[solnum,0] + mass_solute;
                  dlt_solute[solnum,0] = dlt_solute[solnum,0] + mass_solute;
                  }
@@ -1994,7 +1995,7 @@ namespace Models.Soils.SoilWaterBackend
                     solute_flux_eff_local = Constants.solute_flux_eff[lyr.number - 1];
                     }
                 water = lyr.sw_dep + out_w;
-                out_solute = solute_kg_layer * Utility.Math.Divide(out_w, water, 0.0) * solute_flux_eff_local;
+                out_solute = solute_kg_layer * MathUtilities.Divide(out_w, water, 0.0) * solute_flux_eff_local;
 
                 //! don't allow the n to be reduced below a minimum level
                 out_max = Math.Max(solute_kg_layer, 0.0);
@@ -2104,7 +2105,7 @@ namespace Models.Soils.SoilWaterBackend
                         {
                         solute_flow_eff_local = Constants.solute_flow_eff[lyr.number - 1];
                         }
-                    out_solute = solute_kg_layer * Utility.Math.Divide(out_w, water, 0.0) * solute_flow_eff_local;
+                    out_solute = solute_kg_layer * MathUtilities.Divide(out_w, water, 0.0) * solute_flow_eff_local;
 
                     //! don't allow the n to be reduced below a minimum level
                     out_solute = Constants.bound(out_solute, 0.0, solute_kg_layer);
@@ -2163,10 +2164,10 @@ namespace Models.Soils.SoilWaterBackend
                         solute_flow_eff_local = Constants.solute_flow_eff[lyr.number - 1];
                         }
 
-                    out_solute = solute_kg_layer * Utility.Math.Divide(out_w, water, 0.0) * solute_flow_eff_local;
+                    out_solute = solute_kg_layer * MathUtilities.Divide(out_w, water, 0.0) * solute_flow_eff_local;
 
                     //! don't allow the n to be reduced below a minimum level
-                    out_solute = Utility.Math.RoundToZero(out_solute);
+                    out_solute = MathUtilities.RoundToZero(out_solute);
                     out_solute = Constants.bound(out_solute, 0.0, solute_kg_layer);
                     }
                 solute_down[lyrindex] = out_solute;
@@ -2407,7 +2408,7 @@ namespace Models.Soils.SoilWaterBackend
             //        //! saturated fraction of layer above saturated layer
             //        drainable = lyrAboveSat.sw_dep - lyrAboveSat.dul_dep;
             //        drainable_capacity = lyrAboveSat.sat_dep - lyrAboveSat.dul_dep;
-            //        saturated_fraction_above = Utility.Math.Divide(drainable, drainable_capacity, 0.0);
+            //        saturated_fraction_above = MathUtilities.Divide(drainable, drainable_capacity, 0.0);
             //        }
             //    else
             //        {
@@ -2539,13 +2540,13 @@ namespace Models.Soils.SoilWaterBackend
                     lyr.sw_dep = lyr.sw_dep + Inflow_lat[lyr.number - 1];
 
 
-                d = lyr.dlayer * Utility.Math.Divide((lyr.sw_dep - lyr.dul_dep), (lyr.sat_dep - lyr.dul_dep), 0.0);
+                d = lyr.dlayer * MathUtilities.Divide((lyr.sw_dep - lyr.dul_dep), (lyr.sat_dep - lyr.dul_dep), 0.0);
                 d = Math.Max(0.0, d);  //! water table depth in layer must be +ve
 
                 double i, j;
                 i = lyr.KLAT * d * (discharge_width / Constants.mm2m) * slope;
                 j = (catchment_area * Constants.sm2smm) * (Math.Pow((1.0 + Math.Pow(slope, 2)), 0.5));
-                lyr.outflow_lat = Utility.Math.Divide(i, j, 0.0);
+                lyr.outflow_lat = MathUtilities.Divide(i, j, 0.0);
 
                 //! Cannot drop sw below dul
                 max_flow = Math.Max(0.0, (lyr.sw_dep - lyr.dul_dep));

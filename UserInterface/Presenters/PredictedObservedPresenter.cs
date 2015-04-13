@@ -6,6 +6,7 @@ using Models;
 using UserInterface.Views;
 using System.IO;
 using System.Data;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -63,7 +64,7 @@ namespace UserInterface.Presenters
             DataTable table = DataStore.GetData("*", PredictedObserved.ObservedTableName);
             if (table != null)
             {
-                View.FieldNames = Utility.DataTable.GetColumnNames(table);
+                View.FieldNames = DataTableUtilities.GetColumnNames(table);
                 View.FieldName = PredictedObserved.FieldNameUsedForMatch;
             }
         }

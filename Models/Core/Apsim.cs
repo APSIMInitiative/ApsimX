@@ -13,6 +13,7 @@ namespace Models.Core
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Xml;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -193,7 +194,7 @@ namespace Models.Core
         /// <returns>The newly created model.</returns>
         public static IModel Add(IModel parent, XmlNode node)
         {
-            IModel modelToAdd = Utility.Xml.Deserialise(node) as Model;
+            IModel modelToAdd = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Model;
 
             // Get all child models
             List<IModel> modelsToNotify = Apsim.ChildrenRecursively(modelToAdd);
@@ -240,7 +241,7 @@ namespace Models.Core
 
             // Do the serialisation
             StringWriter writer = new StringWriter();
-            writer.Write(Utility.Xml.Serialise(model, true));
+            writer.Write(XmlUtilities.Serialise(model, true));
 
             // Let all models know that we have completed serialisation.
             foreach (Model modelToNotify in modelsToNotify)
@@ -396,11 +397,11 @@ namespace Models.Core
             string errorMsg = string.Empty;
 
             // Go looking for [Link]s
-            foreach (FieldInfo field in Utility.Reflection.GetAllFields(
+            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
                                                             model.GetType(),
                                                             BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
             {
-                var link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
+                var link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null &&
                     (linkTypeToMatch == null || field.FieldType == linkTypeToMatch))
                 {
@@ -458,11 +459,11 @@ namespace Models.Core
         public static void UnresolveLinks(IModel model)
         {
             // Go looking for private [Link]s
-            foreach (FieldInfo field in Utility.Reflection.GetAllFields(
+            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
                                                 model.GetType(),
                                                 BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
             {
-                LinkAttribute link = Utility.Reflection.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
+                LinkAttribute link = ReflectionUtilities.GetAttribute(field, typeof(LinkAttribute), false) as LinkAttribute;
                 if (link != null)
                 {
                     field.SetValue(model, null);
@@ -493,10 +494,10 @@ namespace Models.Core
         public static void Subscribe(IModel model, string eventNameAndPath, EventHandler handler)
         {
             // Get the name of the component and event.
-            string componentName = Utility.String.ParentName(eventNameAndPath, '.');
+            string componentName = StringUtilities.ParentName(eventNameAndPath, '.');
             if (componentName == null)
                 throw new Exception("Invalid syntax for event: " + eventNameAndPath);
-            string eventName = Utility.String.ChildName(eventNameAndPath, '.');
+            string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
             object component = Apsim.Get(model, componentName);
@@ -521,10 +522,10 @@ namespace Models.Core
         public static void Unsubscribe(IModel model, string eventNameAndPath, EventHandler handler)
         {
             // Get the name of the component and event.
-            string componentName = Utility.String.ParentName(eventNameAndPath, '.');
+            string componentName = StringUtilities.ParentName(eventNameAndPath, '.');
             if (componentName == null)
                 throw new Exception("Invalid syntax for event: " + eventNameAndPath);
-            string eventName = Utility.String.ChildName(eventNameAndPath, '.');
+            string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
             object component = Apsim.Get(model, componentName);
@@ -790,7 +791,7 @@ namespace Models.Core
             List<EventSubscriber> subscribers = new List<EventSubscriber>();
             foreach (MethodInfo method in relativeTo.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
             {
-                EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)Utility.Reflection.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
                 if (subscriberAttribute != null && (eventName == null || subscriberAttribute.ToString() == eventName))
                     subscribers.Add(new EventSubscriber()
                     {

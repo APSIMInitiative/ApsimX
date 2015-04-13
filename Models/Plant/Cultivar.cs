@@ -9,6 +9,7 @@ namespace Models.PMF
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Cultivar class for holding cultivar overrides.
@@ -59,7 +60,7 @@ namespace Models.PMF
             foreach (Cultivar cultivar in cultivars)
             {
                 if (cultivar.Name.Equals(cultivarName, StringComparison.CurrentCultureIgnoreCase) ||
-                    (cultivar.Aliases != null && Utility.String.Contains(cultivar.Aliases, cultivarName)))
+                    (cultivar.Aliases != null && StringUtilities.Contains(cultivar.Aliases, cultivarName)))
                 {
                     return cultivar;
                 }
@@ -80,7 +81,7 @@ namespace Models.PMF
                 foreach (string command in this.Commands)
                 {
                     string propertyName = command;
-                    string propertyValue = Utility.String.SplitOffAfterDelimiter(ref propertyName, "=");
+                    string propertyValue = StringUtilities.SplitOffAfterDelimiter(ref propertyName, "=");
 
                     propertyName = propertyName.TrimEnd();
                     propertyValue = propertyValue.TrimEnd();

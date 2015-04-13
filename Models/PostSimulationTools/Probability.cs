@@ -9,6 +9,7 @@ namespace Models.PostSimulationTools
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A post processing model that creates a probability table.
@@ -62,21 +63,21 @@ namespace Models.PostSimulationTools
                     int startRow = probabilityData.Rows.Count;
 
                     // Add in a simulation column.
-                    string[] simulationNameColumnValues = Utility.String.CreateStringArray(simulationName, view.Count);
-                    Utility.DataTable.AddColumn(probabilityData, "SimulationName", simulationNameColumnValues);
+                    string[] simulationNameColumnValues = StringUtilities.CreateStringArray(simulationName, view.Count);
+                    DataTableUtilities.AddColumn(probabilityData, "SimulationName", simulationNameColumnValues);
 
                     // Add in the probability column
-                    double[] probabilityValues = Utility.Math.ProbabilityDistribution(view.Count, this.Exceedence);
-                    Utility.DataTable.AddColumn(probabilityData, "Probability", probabilityValues, startRow, view.Count);
+                    double[] probabilityValues = MathUtilities.ProbabilityDistribution(view.Count, this.Exceedence);
+                    DataTableUtilities.AddColumn(probabilityData, "Probability", probabilityValues, startRow, view.Count);
 
                     // Add in all other numeric columns.
                     foreach (DataColumn column in simulationData.Columns)
                     {
                         if (column.DataType == typeof(double))
                         {
-                            double[] values = Utility.DataTable.GetColumnAsDoubles(view, column.ColumnName);
+                            double[] values = DataTableUtilities.GetColumnAsDoubles(view, column.ColumnName);
                             Array.Sort<double>(values);
-                            Utility.DataTable.AddColumn(probabilityData, column.ColumnName, values, startRow, values.Length);
+                            DataTableUtilities.AddColumn(probabilityData, column.ColumnName, values, startRow, values.Length);
                         }
                     }
                 }

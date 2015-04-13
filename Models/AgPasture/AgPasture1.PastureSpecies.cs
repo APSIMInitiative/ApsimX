@@ -20,6 +20,7 @@ using Models.PMF;
 using Models.Arbitrator;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.AgPasture1
 {
@@ -2070,7 +2071,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StandingNConc
 		{
-			get { return Utility.Math.Divide(StandingN, StandingWt, 0.0); }
+			get { return MathUtilities.Divide(StandingN, StandingWt, 0.0); }
 		}
 
 		/// <summary>Gets the average N concentration of leaves.</summary>
@@ -2079,7 +2080,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double LeafNConc
 		{
-			get { return Utility.Math.Divide(LeafN, LeafWt, 0.0); }
+			get { return MathUtilities.Divide(LeafN, LeafWt, 0.0); }
 		}
 
 		/// <summary>Gets the average N concentration of stems and sheath.</summary>
@@ -2088,7 +2089,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StemNConc
 		{
-			get { return Utility.Math.Divide(StemN, StemWt, 0.0); }
+			get { return MathUtilities.Divide(StemN, StemWt, 0.0); }
 		}
 
 		/// <summary>Gets the average N concentration of stolons.</summary>
@@ -2097,7 +2098,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StolonNConc
 		{
-			get { return Utility.Math.Divide(StolonN, StolonWt, 0.0); }
+			get { return MathUtilities.Divide(StolonN, StolonWt, 0.0); }
 		}
 
 		/// <summary>Gets the average N concentration of roots.</summary>
@@ -2106,7 +2107,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double RootNConc
 		{
-			get { return Utility.Math.Divide(RootN, RootWt, 0.0); }
+			get { return MathUtilities.Divide(RootN, RootWt, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of leaves at stage1 (developing).</summary>
@@ -2115,7 +2116,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double LeafStage1NConc
 		{
-			get { return Utility.Math.Divide(Nleaf1, dmLeaf1, 0.0); }
+			get { return MathUtilities.Divide(Nleaf1, dmLeaf1, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of leaves at stage2 (mature).</summary>
@@ -2124,7 +2125,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double LeafStage2NConc
 		{
-			get { return Utility.Math.Divide(Nleaf2, dmLeaf2, 0.0); }
+			get { return MathUtilities.Divide(Nleaf2, dmLeaf2, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of leaves at stage3 (senescing).</summary>
@@ -2133,7 +2134,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double LeafStage3NConc
 		{
-			get { return Utility.Math.Divide(Nleaf3, dmLeaf3, 0.0); }
+			get { return MathUtilities.Divide(Nleaf3, dmLeaf3, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of leaves at stage4 (dead).</summary>
@@ -2142,7 +2143,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double LeafStage4NConc
 		{
-			get { return Utility.Math.Divide(Nleaf4, dmLeaf4, 0.0); }
+			get { return MathUtilities.Divide(Nleaf4, dmLeaf4, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of stems at stage1 (developing).</summary>
@@ -2151,7 +2152,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StemStage1NConc
 		{
-			get { return Utility.Math.Divide(Nstem1, dmStem1, 0.0); }
+			get { return MathUtilities.Divide(Nstem1, dmStem1, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of stems at stage2 (mature).</summary>
@@ -2160,7 +2161,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StemStage2NConc
 		{
-			get { return Utility.Math.Divide(Nstem2, dmStem2, 0.0); }
+			get { return MathUtilities.Divide(Nstem2, dmStem2, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of stems at stage3 (senescing).</summary>
@@ -2169,7 +2170,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StemStage3NConc
 		{
-			get { return Utility.Math.Divide(Nstem3, dmStem3, 0.0); }
+			get { return MathUtilities.Divide(Nstem3, dmStem3, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of stems at stage4 (dead).</summary>
@@ -2178,7 +2179,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StemStage4NConc
 		{
-			get { return Utility.Math.Divide(Nstem4, dmStem4, 0.0); }
+			get { return MathUtilities.Divide(Nstem4, dmStem4, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of stolons at stage1 (developing).</summary>
@@ -2187,7 +2188,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StolonStage1NConc
 		{
-			get { return Utility.Math.Divide(Nstolon1, dmStolon1, 0.0); }
+			get { return MathUtilities.Divide(Nstolon1, dmStolon1, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of stolons at stage2 (mature).</summary>
@@ -2196,7 +2197,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StolonStage2NConc
 		{
-			get { return Utility.Math.Divide(Nstolon2, dmStolon2, 0.0); }
+			get { return MathUtilities.Divide(Nstolon2, dmStolon2, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration of stolons at stage3 (senescing).</summary>
@@ -2205,7 +2206,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double StolonStage3NConc
 		{
-			get { return Utility.Math.Divide(Nstolon3, dmStolon3, 0.0); }
+			get { return MathUtilities.Divide(Nstolon3, dmStolon3, 0.0); }
 		}
 
 		/// <summary>Gets the N concentration in new grown tissue.</summary>
@@ -2214,7 +2215,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double ActualGrowthNConc
 		{
-			get { return Utility.Math.Divide(newGrowthN, dGrowthActual, 0.0); }
+			get { return MathUtilities.Divide(newGrowthN, dGrowthActual, 0.0); }
 		}
 
 
@@ -2688,7 +2689,7 @@ namespace Models.AgPasture1
 		[Units("kgN/kgDM")]
 		public double HarvestedNconc
 		{
-			get { return Utility.Math.Divide(HarvestedN, HarvestedWt, 0.0); }
+			get { return MathUtilities.Divide(HarvestedN, HarvestedWt, 0.0); }
 		}
 
 		/// <summary>Gets the average herbage digestibility.</summary>
@@ -3554,7 +3555,7 @@ namespace Models.AgPasture1
 			}
 
 			// fraction of sugar (soluble carbohydrates)  - RCichota: this ignores any stored reserves (TODO: revise this approach)
-			double fSugar = 0.5 * Utility.Math.Divide(dGrowthActual, dmGreen, 0.0);
+			double fSugar = 0.5 * MathUtilities.Divide(dGrowthActual, dmGreen, 0.0);
 
 			//Live
 			double digestLive = 0.0;
@@ -3563,7 +3564,7 @@ namespace Models.AgPasture1
 						  + Nstolon1 + Nstolon2 + Nstolon3;
 			if (dmGreen > 0.0 & Ngreen > 0.0)
 			{
-				double CNlive = Utility.Math.Divide(dmGreen * CarbonFractionInDM, Ngreen, 0.0);   //CN ratio of live shoot tissue
+				double CNlive = MathUtilities.Divide(dmGreen * CarbonFractionInDM, Ngreen, 0.0);   //CN ratio of live shoot tissue
 				double ratio1 = CNratioCellWall / CNlive;
 				double ratio2 = CNratioCellWall / CNratioProtein;
 				double fProteinLive = (ratio1 - (1 - fSugar)) / (ratio2 - 1);          //Fraction of protein in living shoot
@@ -3575,7 +3576,7 @@ namespace Models.AgPasture1
 			double digestDead = 0;
 			if (dmDead > 0.0 && (Nleaf4 + Nstem4) > 0.0)
 			{
-				double CNdead = Utility.Math.Divide(dmDead * CarbonFractionInDM, Nleaf4 + Nstem4, 0.0);   //CN ratio of standing dead;
+				double CNdead = MathUtilities.Divide(dmDead * CarbonFractionInDM, Nleaf4 + Nstem4, 0.0);   //CN ratio of standing dead;
 				double ratio1 = CNratioCellWall / CNdead;
 				double ratio2 = CNratioCellWall / CNratioProtein;
 				double fProteinDead = (ratio1 - 1) / (ratio2 - 1);          //Fraction of protein in standing dead
@@ -3583,7 +3584,7 @@ namespace Models.AgPasture1
 				digestDead = fProteinDead + digestibilityDead * fWallDead;
 			}
 
-			double deadFrac = Utility.Math.Divide(dmDead, dmLeaf + dmStem, 1.0);
+			double deadFrac = MathUtilities.Divide(dmDead, dmLeaf + dmStem, 1.0);
 			double result = (1 - deadFrac) * digestLive + deadFrac * digestDead;
 
 			return result;
@@ -3799,10 +3800,10 @@ namespace Models.AgPasture1
 					        + toStem * NcStemMax
 							+ toStolon * NcStolonMax
 							+ toRoot * NcRootMax;
-				double toLeafN = toLeaf * Utility.Math.Divide(leafNmax, Nsum, 0.0);
-				double toStemN = toStem * Utility.Math.Divide(NcStemMax, Nsum, 0.0);
-				double toStolonN = toStolon * Utility.Math.Divide(NcStolonMax, Nsum, 0.0);
-				double toRootN = toRoot * Utility.Math.Divide(NcRootMax, Nsum, 0.0);
+				double toLeafN = toLeaf * MathUtilities.Divide(leafNmax, Nsum, 0.0);
+				double toStemN = toStem * MathUtilities.Divide(NcStemMax, Nsum, 0.0);
+				double toStolonN = toStolon * MathUtilities.Divide(NcStolonMax, Nsum, 0.0);
+				double toRootN = toRoot * MathUtilities.Divide(NcRootMax, Nsum, 0.0);
 
 				// Checking mass balance
 				ToAll = toRootN + toLeafN + toStolonN + toStemN;
@@ -3820,8 +3821,8 @@ namespace Models.AgPasture1
 				if ((leftoverNremob > 0.0) && (prevState.Nleaf4 + prevState.Nstem4 > 0.0))
 				{
 					Nsum = prevState.Nleaf4 + prevState.Nstem4;
-					Nleaf4 += leftoverNremob * Utility.Math.Divide(prevState.Nleaf4, Nsum, 0.0);
-					Nstem4 += leftoverNremob * Utility.Math.Divide(prevState.Nstem4, Nsum, 0.0);
+					Nleaf4 += leftoverNremob * MathUtilities.Divide(prevState.Nleaf4, Nsum, 0.0);
+					Nstem4 += leftoverNremob * MathUtilities.Divide(prevState.Nstem4, Nsum, 0.0);
 					// Note: this is only valid for leaf and stems, the remaining (1-kappaNRemob4) and the amounts in roots
 					//  and stolon is disposed (added to soil FOM or Surface OM via litter)
 				}
@@ -3834,16 +3835,16 @@ namespace Models.AgPasture1
 					if (NFastRemob2 > 0.0)
 					{
 						Nsum = prevState.Nleaf2 + prevState.Nstem2 + prevState.Nstolon2;
-						Nleaf2 += NFastRemob2 * Utility.Math.Divide(prevState.Nleaf2, Nsum, 0.0);
-						Nstem2 += NFastRemob2 * Utility.Math.Divide(prevState.Nstem2, Nsum, 0.0);
-						Nstolon2 += NFastRemob2 * Utility.Math.Divide(prevState.Nstolon2, Nsum, 0.0);
+						Nleaf2 += NFastRemob2 * MathUtilities.Divide(prevState.Nleaf2, Nsum, 0.0);
+						Nstem2 += NFastRemob2 * MathUtilities.Divide(prevState.Nstem2, Nsum, 0.0);
+						Nstolon2 += NFastRemob2 * MathUtilities.Divide(prevState.Nstolon2, Nsum, 0.0);
 					}
 					if (NFastRemob3 > 0.0)
 					{
 						Nsum = prevState.Nleaf3 + prevState.Nstem3 + prevState.Nstolon3;
-						Nleaf3 += NFastRemob3 * Utility.Math.Divide(prevState.Nleaf3, Nsum, 0.0);
-						Nstem3 += NFastRemob3 * Utility.Math.Divide(prevState.Nstem3, Nsum, 0.0);
-						Nstolon3 += NFastRemob3 * Utility.Math.Divide(prevState.Nstolon3, Nsum, 0.0);
+						Nleaf3 += NFastRemob3 * MathUtilities.Divide(prevState.Nleaf3, Nsum, 0.0);
+						Nstem3 += NFastRemob3 * MathUtilities.Divide(prevState.Nstem3, Nsum, 0.0);
+						Nstolon3 += NFastRemob3 * MathUtilities.Divide(prevState.Nstolon3, Nsum, 0.0);
 					}
 				}
 			}
@@ -3876,18 +3877,18 @@ namespace Models.AgPasture1
 				if (doy > doyIniHighShoot)
 				{
 					if (doy < doyIncrease)
-						fac = 1 + shootSeasonalAllocationIncrease * Utility.Math.Divide(doy - doyIniHighShoot, higherShootAllocationPeriods[0], 0.0);
+						fac = 1 + shootSeasonalAllocationIncrease * MathUtilities.Divide(doy - doyIniHighShoot, higherShootAllocationPeriods[0], 0.0);
 					else if (doy <= doyPlateau)
 						fac = 1.0 + shootSeasonalAllocationIncrease;
 					else if (doy <= doyDecrease)
-						fac = 1 + shootSeasonalAllocationIncrease * (1 - Utility.Math.Divide(doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
+						fac = 1 + shootSeasonalAllocationIncrease * (1 - MathUtilities.Divide(doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
 					else
 						fac = 1;
 				}
 				else
 				{
 					if (doyDecrease > 365 && doy <= doyDecrease - 365)
-						fac = 1 + shootSeasonalAllocationIncrease * (1 - Utility.Math.Divide(365 + doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
+						fac = 1 + shootSeasonalAllocationIncrease * (1 - MathUtilities.Divide(365 + doy - doyPlateau, higherShootAllocationPeriods[2], 0.0));
 				}
 
 				double presentSRratio = dmGreen / prevState.dmRoot;
@@ -3977,17 +3978,17 @@ namespace Models.AgPasture1
 				{
 					if (phenoStage == 1)
 					{ //vegetative
-						gama *= Utility.Math.Divide(daysfromEmergence, daysEmgToAnth, 1.0);
-						gamaR *= Utility.Math.Divide(daysfromEmergence, daysEmgToAnth, 1.0);
+						gama *= MathUtilities.Divide(daysfromEmergence, daysEmgToAnth, 1.0);
+						gamaR *= MathUtilities.Divide(daysfromEmergence, daysEmgToAnth, 1.0);
 					}
 					else if (phenoStage == 2)
 					{ //reproductive
-						gama = 1 - (1 - gama) * (1 - Math.Pow(Utility.Math.Divide(daysfromAnthesis, daysToMature, 1.0), 2));
+						gama = 1 - (1 - gama) * (1 - Math.Pow(MathUtilities.Divide(daysfromAnthesis, daysToMature, 1.0), 2));
 					}
 				}
 
 				// Fraction of DM defoliated today
-				double FracDefoliated = Utility.Math.Divide(dmDefoliated, dmDefoliated + prevState.dmLeaf + prevState.dmStem + prevState.dmStolon, 0.0);
+				double FracDefoliated = MathUtilities.Divide(dmDefoliated, dmDefoliated + prevState.dmLeaf + prevState.dmStem + prevState.dmStolon, 0.0);
 
 				// Adjust stolon turnover due to defoliation (increase stolon senescence)
 				gamaS += FracDefoliated * (1 - gama);
@@ -4009,7 +4010,7 @@ namespace Models.AgPasture1
 					}
 					else
 					{
-						double gama_adj = Utility.Math.Divide(dmGreen + dGrowthShoot - minimumGreenWt,
+						double gama_adj = MathUtilities.Divide(dmGreen + dGrowthShoot - minimumGreenWt,
 										  prevState.dmLeaf3 + prevState.dmStem3 + prevState.dmStolon3, gama);
 						gamaR *= gama_adj / gama;
 						gamaD *= gama_adj / gama;
@@ -4304,7 +4305,7 @@ namespace Models.AgPasture1
 			PMF.WaterChangedType WaterTakenUp = new PMF.WaterChangedType();
 			WaterTakenUp.DeltaWater = new double[nLayers];
 
-			double uptakeFraction = Math.Min(1.0, Utility.Math.Divide(myWaterDemand, mySoilAvailableWater.Sum(), 0.0));
+			double uptakeFraction = Math.Min(1.0, MathUtilities.Divide(myWaterDemand, mySoilAvailableWater.Sum(), 0.0));
 			double[] result = new double[nLayers];
 
 			if (useAltWUptake == "no")
@@ -4377,7 +4378,7 @@ namespace Models.AgPasture1
 			{ // this module will compute the N uptake
 				MyNitrogenCalculations();
 				if (newGrowthN > 0.0)
-					glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(newGrowthN, NdemandOpt, 1.0)));
+					glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(newGrowthN, NdemandOpt, 1.0)));
 				else
 					glfN = 1.0;
 			}
@@ -4397,7 +4398,7 @@ namespace Models.AgPasture1
 				// get the amount of N taken up
 				GetNitrogenUptake();
 				if (newGrowthN > 0.0)
-					glfN = Math.Min(1.0, Math.Max(0.0, Utility.Math.Divide(newGrowthN, NdemandOpt, 1.0)));
+					glfN = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(newGrowthN, NdemandOpt, 1.0)));
 				else
 					glfN = 1.0;
 			}
@@ -4472,7 +4473,7 @@ namespace Models.AgPasture1
 				// evaluate N stress
 				double Nstress = 1.0;
 				if (NdemandLux > 0.0 && (NdemandLux > mySoilAvailableN.Sum() + iniFix))
-					Nstress = Utility.Math.Divide(mySoilAvailableN.Sum(), NdemandLux - iniFix, 1.0);
+					Nstress = MathUtilities.Divide(mySoilAvailableN.Sum(), NdemandLux - iniFix, 1.0);
 
 				// Update N fixation if under N stress
 				if (Nstress < 0.99)
@@ -4534,7 +4535,7 @@ namespace Models.AgPasture1
 					// N is available following water and a given 'availability' factor (for each N form) and the fraction of water taken up
 
 					// fraction of available water taken up
-					facWtaken = Utility.Math.Divide(mySoilWaterTakenUp[layer],
+					facWtaken = MathUtilities.Divide(mySoilWaterTakenUp[layer],
 								Math.Max(0.0, Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]), 0.0);
 
 					// Theoretical amount available
@@ -4649,7 +4650,7 @@ namespace Models.AgPasture1
 					if (useAltNUptake == "no")
 					{
 						if (mySoilAvailableN.Sum() > 0.0)
-							uptakeFraction = Math.Min(1.0, Utility.Math.Divide(mySoilNuptake, mySoilAvailableN.Sum(), 0.0));
+							uptakeFraction = Math.Min(1.0, MathUtilities.Divide(mySoilNuptake, mySoilAvailableN.Sum(), 0.0));
 
 						for (int layer = 0; layer <= myRootFrontier; layer++)
 						{
@@ -4670,18 +4671,18 @@ namespace Models.AgPasture1
 						double totWuptake = mySoilWaterTakenUp.Sum();
 						for (int layer = 0; layer < nLayers; layer++)
 						{
-							fNH4Avail[layer] = Math.Min(1.0, Utility.Math.Divide(mySoilAvailableN[layer], totNH4Available, 0.0));
-							fNO3Avail[layer] = Math.Min(1.0, Utility.Math.Divide(mySoilAvailableN[layer], totNO3Available, 0.0));
-							fWUptake[layer] = Math.Min(1.0, Utility.Math.Divide(mySoilWaterTakenUp[layer], totWuptake, 0.0));
+							fNH4Avail[layer] = Math.Min(1.0, MathUtilities.Divide(mySoilAvailableN[layer], totNH4Available, 0.0));
+							fNO3Avail[layer] = Math.Min(1.0, MathUtilities.Divide(mySoilAvailableN[layer], totNO3Available, 0.0));
+							fWUptake[layer] = Math.Min(1.0, MathUtilities.Divide(mySoilWaterTakenUp[layer], totWuptake, 0.0));
 						}
 						double totFacNH4 = fNH4Avail.Sum() + fWUptake.Sum();
 						double totFacNO3 = fNO3Avail.Sum() + fWUptake.Sum();
 						for (int layer = 0; layer < nLayers; layer++)
 						{
-							uptakeFraction = Math.Min(1.0, Utility.Math.Divide(fNH4Avail[layer] + fWUptake[layer], totFacNH4, 0.0));
+							uptakeFraction = Math.Min(1.0, MathUtilities.Divide(fNH4Avail[layer] + fWUptake[layer], totFacNH4, 0.0));
 							NUptake.DeltaNH4[layer] = -Soil.NH4N[layer] * uptakeFraction;
 
-							uptakeFraction = Math.Min(1.0, Utility.Math.Divide(fNO3Avail[layer] + fWUptake[layer], totFacNO3, 0.0));
+							uptakeFraction = Math.Min(1.0, MathUtilities.Divide(fNO3Avail[layer] + fWUptake[layer], totFacNO3, 0.0));
 							NUptake.DeltaNO3[layer] = -Soil.NO3N[layer] * uptakeFraction;
 
 							mySoilNitrogenTakenUp[layer] = NUptake.DeltaNH4[layer] + NUptake.DeltaNO3[layer];
@@ -4945,7 +4946,7 @@ namespace Models.AgPasture1
 					{
 						if (LeafGreenWt - amountToRemove > 0.0)
 						{
-							fractionToRemove = Utility.Math.Divide(amountToRemove, LeafGreenWt, 0.0);
+							fractionToRemove = MathUtilities.Divide(amountToRemove, LeafGreenWt, 0.0);
 							RemoveFractionDM(fractionToRemove, plantPool, plantPart);
 						}
 					}
@@ -4953,7 +4954,7 @@ namespace Models.AgPasture1
 					{
 						if (StemGreenWt - amountToRemove > 0.0)
 						{
-							fractionToRemove = Utility.Math.Divide(amountToRemove, StemGreenWt, 0.0);
+							fractionToRemove = MathUtilities.Divide(amountToRemove, StemGreenWt, 0.0);
 							RemoveFractionDM(fractionToRemove, plantPool, plantPart);
 						}
 					}
@@ -4961,7 +4962,7 @@ namespace Models.AgPasture1
 					{
 						if (LeafDeadWt - amountToRemove > 0.0)
 						{
-							fractionToRemove = Utility.Math.Divide(amountToRemove, LeafDeadWt, 0.0);
+							fractionToRemove = MathUtilities.Divide(amountToRemove, LeafDeadWt, 0.0);
 							RemoveFractionDM(fractionToRemove, plantPool, plantPart);
 						}
 					}
@@ -4969,7 +4970,7 @@ namespace Models.AgPasture1
 					{
 						if (StemDeadWt - amountToRemove > 0.0)
 						{
-							fractionToRemove = Utility.Math.Divide(amountToRemove, StemDeadWt, 0.0);
+							fractionToRemove = MathUtilities.Divide(amountToRemove, StemDeadWt, 0.0);
 							RemoveFractionDM(fractionToRemove, plantPool, plantPart);
 						}
 					}
@@ -5042,7 +5043,7 @@ namespace Models.AgPasture1
 		public void RefreshAfterRemove()
 		{
 			// set values for fractionHarvest (in fact fraction harvested)
-			fractionHarvested = Utility.Math.Divide(dmDefoliated, StandingWt + dmDefoliated, 0.0);
+			fractionHarvested = MathUtilities.Divide(dmDefoliated, StandingWt + dmDefoliated, 0.0);
 
 			// recalc the digestibility
 			calcDigestibility();
@@ -5276,12 +5277,12 @@ namespace Models.AgPasture1
 				double fN = NCO2Effects();
 
 				double result = 1.0;
-				double NcleafGreen = Utility.Math.Divide(Nleaf1 + Nleaf2 + Nleaf3, dmLeaf1 + dmLeaf2 + dmLeaf3, 0.0);
+				double NcleafGreen = MathUtilities.Divide(Nleaf1 + Nleaf2 + Nleaf3, dmLeaf1 + dmLeaf2 + dmLeaf3, 0.0);
 				if (NcleafGreen < leafNopt * fN)
 				{
 					if (NcleafGreen > leafNmin)
 					{
-						result = Utility.Math.Divide(NcleafGreen - leafNmin, (leafNopt * fN) - leafNmin, 1.0);
+						result = MathUtilities.Divide(NcleafGreen - leafNmin, (leafNopt * fN) - leafNmin, 1.0);
 						result = Math.Min(1.0, Math.Max(0.0, result));
 					}
 					else
@@ -5471,7 +5472,7 @@ namespace Models.AgPasture1
 			}
 			if (sumProportion > 0)
 				for (int layer = 0; layer < nLayers; layer++)
-					result[layer] = Utility.Math.Divide(result[layer], sumProportion, 0.0);
+					result[layer] = MathUtilities.Divide(result[layer], sumProportion, 0.0);
 			else
 				throw new Exception("Could not calculate root distribution");
 			return result;
@@ -5655,7 +5656,7 @@ namespace Models.AgPasture1
 		public double Value(double newX)
 		{
 			bool DidInterpolate = false;
-			return Utility.Math.LinearInterpReal(newX, X, Y, out DidInterpolate);
+			return MathUtilities.LinearInterpReal(newX, X, Y, out DidInterpolate);
 		}
 	}
 }

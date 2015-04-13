@@ -14,6 +14,7 @@ namespace Models
     using System.Xml;
     using Models.Core;
     using System.Threading;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Class to hold a static main entry point.
@@ -52,11 +53,9 @@ namespace Models
                 Stopwatch timer = new Stopwatch();
                 timer.Start();
 
-                int numSimulations = 0;
                 if (commandLineSwitch == "/SingleThreaded")
-                {
-                    numSimulations = RunSingleThreaded(fileName);
-                }
+                    RunSingleThreaded(fileName);
+                
                 else if (args.Contains("/Network"))
                 {
                     try
@@ -90,35 +89,20 @@ namespace Models
                     RunDirectoryOfApsimFiles runApsim = new RunDirectoryOfApsimFiles();
                     runApsim.FileSpec = fileName;
                     runApsim.DoRecurse = args.Contains("/Recurse");
-                    Utility.JobManager jobManager = new Utility.JobManager();
+                    JobManager jobManager = new JobManager();
                     jobManager.AddJob(runApsim);
-                    jobManager.Start(waitUntilFinished: false);
-
-                    double percentComplete;
-                    do 
-                    {
-                        percentComplete = Math.Truncate(jobManager.CountOfJobsFinished * 1.0 / jobManager.CountOfJobs) * 100;
-                        Thread.Sleep(200);
-                    }
-                    while (percentComplete < 100);
+                    jobManager.Start(waitUntilFinished: true);
 
                     exitCode = 0;
-                    for (int j = 0; j < jobManager.CountOfJobs; j++)
+                    if (runApsim.ErrorMessage != null)
                     {
-                        string errorMessage = jobManager.GetJobErrorMessage(j);
-                        if (errorMessage != null && errorMessage != string.Empty)
-                        {
-                            Console.WriteLine(errorMessage);
-                            exitCode = 1;
-                        }
+                        Console.WriteLine(runApsim.ErrorMessage);
+                        exitCode = 1;
                     }
-
-                    // Write out the number of simulations run to the console.
-                    numSimulations = jobManager.CountOfJobs - 1;
                 }
 
                 timer.Stop();
-                Console.WriteLine("Finished running " + numSimulations.ToString() + " simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec.");
+                Console.WriteLine("Finished running simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec.");
             }
             catch (Exception err)
             {
@@ -134,19 +118,14 @@ namespace Models
         /// i.e. don't use the multi-threaded JobManager. Useful for profiling.
         /// </summary>
         /// <param name="fileName"> the name of file to run </param>
-        /// <returns> the number of simulations that were run</returns>
-        private static int RunSingleThreaded(string fileName)
+        private static void RunSingleThreaded(string fileName)
         {
             Simulations simulations = Simulations.Read(fileName);
 
             // Don't use JobManager - just run the simulations.
             Simulation[] simulationsToRun = Simulations.FindAllSimulationsToRun(simulations);
             foreach (Simulation simulation in simulationsToRun) 
-            {
                 simulation.Run(null, null);
-            }
-
-            return simulationsToRun.Length;
         }
 
         /// <summary>
@@ -211,7 +190,7 @@ namespace Models
                             continue;
                         }
 
-                        string tryFileName = Utility.PathUtils.GetAbsolutePath(tempList[i], s);
+                        string tryFileName = PathUtilities.GetAbsolutePath(tempList[i], s);
                         if (!File.Exists(tryFileName)) 
                         {
                             throw new ApsimXException(null, "Could not construct absolute path for " + tempList[i]);
@@ -284,8 +263,17 @@ namespace Models
         /// look for files in sub directories.
         /// </summary>
         [Serializable]
-        private class RunDirectoryOfApsimFiles : Utility.JobManager.IRunnable
+        private class RunDirectoryOfApsimFiles : JobManager.IRunnable
         {
+            /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
+            public bool IsCompleted { get; set; }
+
+            /// <summary>Gets the error message. Can be null if no error. Set by JobManager.</summary>
+            public string ErrorMessage { get; set; }
+
+            /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
+            public bool IsComputationallyTimeConsuming { get { return true; } }
+
             /// <summary>
             /// Gets or sets the filespec that we will look for
             /// </summary>
@@ -320,35 +308,27 @@ namespace Models
                 files.RemoveAll(s => s.Contains("UnitTests"));
 
                 // Get a reference to the JobManager so that we can add jobs to it.
-                Utility.JobManager jobManager = e.Argument as Utility.JobManager;
+                JobManager jobManager = e.Argument as JobManager;
 
                 // For each .apsimx file - read it in and create a job for each simulation it contains.
-                bool errorsFound = false;
+                string errors = string.Empty;
                 foreach (string apsimxFileName in files)
                 {
                     Simulations simulations = Simulations.Read(apsimxFileName);
                     if (simulations.LoadErrors.Count == 0)
-                    {
                         jobManager.AddJob(simulations);
-                    }
                     else
                     {
                         foreach (Exception err in simulations.LoadErrors)
                         {
-                            Console.WriteLine(err.Message);
-                            Console.WriteLine("Filename: " + apsimxFileName);
-                            Console.WriteLine(err.StackTrace);
-                            errorsFound = true;
+                            errors += err.Message + "\r\n";
+                            errors += err.StackTrace + "\r\n";
                         }
                     }                    
                 }
-                
-                if (errorsFound)
-                {
-                    // We've already outputted the load errors above. Just need to flag
-                    // that an error has occurred.
-                    throw new Exception(string.Empty); 
-                }
+
+                if (errors != string.Empty)
+                    ErrorMessage = errors;
             }
         }
     }

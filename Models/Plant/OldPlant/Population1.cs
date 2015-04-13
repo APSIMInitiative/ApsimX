@@ -5,6 +5,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Phen;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -150,7 +151,7 @@ namespace Models.PMF.OldPlant
 
             DeathActual();
             Util.Debug("Population.dlt_plants=%f", dlt_plants);
-            if (Utility.Math.FloatsAreEqual(dlt_plants + Density, 0.0))
+            if (MathUtilities.FloatsAreEqual(dlt_plants + Density, 0.0))
             {
                 //!!!!! fix problem with deltas in update when change from alive to dead ?zero deltas
 
@@ -225,9 +226,9 @@ namespace Models.PMF.OldPlant
         /// <returns></returns>
         private double CropFailureLeafSen()
         {
-            double leaf_area = Utility.Math.Divide(Leaf.LAI, Density, 0.0); // leaf area per plant
+            double leaf_area = MathUtilities.Divide(Leaf.LAI, Density, 0.0); // leaf area per plant
 
-            if (Utility.Math.FloatsAreEqual(leaf_area, 0.0, 1.0e-6))
+            if (MathUtilities.FloatsAreEqual(leaf_area, 0.0, 1.0e-6))
             {
                 Summary.WriteWarning(this, "Crop failure because of total leaf senescence.");
                 return -1.0 * Density;
@@ -262,10 +263,10 @@ namespace Models.PMF.OldPlant
 
             if (Leaf.LeafNumber < LeafNumberCritical &&
                 CumSWStressPhoto > SWStressPhotoLimit &&
-                !Utility.Math.FloatsAreEqual(SWStress.Photo, 1.0))
+                !MathUtilities.FloatsAreEqual(SWStress.Photo, 1.0))
             {
                 killfr = SWStressPhotoRate * (CumSWStressPhoto - SWStressPhotoLimit);
-                killfr = Utility.Math.Constrain(killfr, 0.0, 1.0);
+                killfr = MathUtilities.Constrain(killfr, 0.0, 1.0);
                 dlt_plants = -Density * killfr;
 
                 string msg = "Plant kill. ";
@@ -298,8 +299,8 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                double dying_fract_plants = Utility.Math.Divide(-dlt_plants, Density, 0.0);
-                return Utility.Math.Constrain(dying_fract_plants, 0.0, 1.0);
+                double dying_fract_plants = MathUtilities.Divide(-dlt_plants, Density, 0.0);
+                return MathUtilities.Constrain(dying_fract_plants, 0.0, 1.0);
             }
         }
 

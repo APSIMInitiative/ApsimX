@@ -11,6 +11,7 @@ namespace Models
     using System.IO;
     using System.Xml.Serialization;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Reads in weather data and makes it available to other models.
@@ -30,7 +31,7 @@ namespace Models
         /// A reference to the text file reader object
         /// </summary>
         [NonSerialized]
-        private Utility.ApsimTextFile reader = null;
+        private ApsimTextFile reader = null;
 
         /// <summary>
         /// The index of the maximum temperature column in the weather file
@@ -102,13 +103,13 @@ namespace Models
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
                 if (simulation == null)
                     return null;
-                return Utility.PathUtils.GetAbsolutePath(this.FileName, simulation.FileName);
+                return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
             }
 
             set
             {
                 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                this.FileName = Utility.PathUtils.GetRelativePath(value, simulation.FileName);
+                this.FileName = PathUtilities.GetRelativePath(value, simulation.FileName);
             }
         }
 
@@ -337,7 +338,7 @@ namespace Models
             get
             {
                 // APSIM uses civil twilight
-                return Utility.Math.DayLength(this.clock.Today.DayOfYear, -6.0, this.Latitude); 
+                return MathUtilities.DayLength(this.clock.Today.DayOfYear, -6.0, this.Latitude); 
             }
         }
 
@@ -449,7 +450,7 @@ namespace Models
             if (this.vapourPressureIndex == -1)
             {
                 // If VP is not present in the weather file assign a defalt value
-                this.todaysMetData.VP = Math.Max(0, Utility.Met.svp(this.MetData.Mint));
+                this.todaysMetData.VP = Math.Max(0, MetUtilities.svp(this.MetData.Mint));
             }
             else
             {
@@ -487,14 +488,14 @@ namespace Models
             {
                 if (this.reader == null)
                 {
-                    this.reader = new Utility.ApsimTextFile();
+                    this.reader = new ApsimTextFile();
                     this.reader.Open(this.FullFileName);
-                    this.maximumTemperatureIndex = Utility.String.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
-                    this.minimumTemperatureIndex = Utility.String.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
-                    this.radiationIndex = Utility.String.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
-                    this.rainIndex = Utility.String.IndexOfCaseInsensitive(this.reader.Headings, "Rain");
-                    this.vapourPressureIndex = Utility.String.IndexOfCaseInsensitive(this.reader.Headings, "VP");
-                    this.windIndex = Utility.String.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
+                    this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
+                    this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
+                    this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
+                    this.rainIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Rain");
+                    this.vapourPressureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "VP");
+                    this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     if (this.maximumTemperatureIndex == -1)
                     {
                         throw new Exception("Cannot find MaxT in weather file: " + this.FullFileName);

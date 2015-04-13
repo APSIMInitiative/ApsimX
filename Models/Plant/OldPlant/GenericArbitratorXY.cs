@@ -5,6 +5,7 @@ using System.Text;
 
 using Models.Core;
 using Models.PMF.Functions;
+using APSIM.Shared.Utilities;
 
 
 namespace Models.PMF.OldPlant
@@ -99,7 +100,7 @@ namespace Models.PMF.OldPlant
             }
 
 
-            if (!Utility.Math.FloatsAreEqual(dlt_dm_green_tot, DMSupply, 1.0E-4f))
+            if (!MathUtilities.FloatsAreEqual(dlt_dm_green_tot, DMSupply, 1.0E-4f))
             {
                 string msg = "dlt_dm_green_tot mass balance is off: "
                              + dlt_dm_green_tot.ToString("f6")
@@ -149,7 +150,7 @@ namespace Models.PMF.OldPlant
             double dm_demand_differential = 0;
             foreach (Organ1 Organ in Organs)
                 dm_demand_differential += Organ.DMDemandDifferential;
-            double dlt_dm_green_retrans = dlt_dm_retrans_to_fruit * Utility.Math.Divide(dm_demand_differential, demand_differential_begin, 0.0);
+            double dlt_dm_green_retrans = dlt_dm_retrans_to_fruit * MathUtilities.Divide(dm_demand_differential, demand_differential_begin, 0.0);
 
             // get available carbohydrate from local supply pools
             double Retranslocation = 0.0;
@@ -169,7 +170,7 @@ namespace Models.PMF.OldPlant
             }
 
             // do mass balance check
-            if (!Utility.Math.FloatsAreEqual(FinalRetranslocation, dlt_dm_green_retrans))
+            if (!MathUtilities.FloatsAreEqual(FinalRetranslocation, dlt_dm_green_retrans))
             {
                 string msg = "dlt_dm_green_retrans_tot mass balance is off: "
                              + FinalRetranslocation.ToString("f6")
@@ -241,7 +242,7 @@ namespace Models.PMF.OldPlant
                 nUptakeSum += Organ.NUptake;
             }
             double n_excess = nUptakeSum - NDemandTotal;
-            n_excess = Utility.Math.Constrain(n_excess, 0.0, double.MaxValue);
+            n_excess = MathUtilities.Constrain(n_excess, 0.0, double.MaxValue);
 
             // find the proportion of uptake to be distributed to
             // each plant part and distribute it.
@@ -249,12 +250,12 @@ namespace Models.PMF.OldPlant
             {
                 if (n_excess > 0.0)
                 {
-                    double plant_part_fract = Utility.Math.Divide(Organ.NCapacity, NCapacityTotal, 0.0);
+                    double plant_part_fract = MathUtilities.Divide(Organ.NCapacity, NCapacityTotal, 0.0);
                     Organ.DoNPartition(Organ.NDemand + n_excess * plant_part_fract);
                 }
                 else
                 {
-                    double plant_part_fract = Utility.Math.Divide(Organ.NDemand, NDemandTotal, 0.0);
+                    double plant_part_fract = MathUtilities.Divide(Organ.NDemand, NDemandTotal, 0.0);
                     Organ.DoNPartition(nUptakeSum * plant_part_fract);
                 }
 
@@ -266,7 +267,7 @@ namespace Models.PMF.OldPlant
             foreach (Organ1 Organ in Organs)
                 GrowthNTotal += Organ.Growth.N;
 
-            if (!Utility.Math.FloatsAreEqual(GrowthNTotal - nUptakeSum, 0.0))
+            if (!MathUtilities.FloatsAreEqual(GrowthNTotal - nUptakeSum, 0.0))
             {
                 string msg = "Crop dlt_n_green mass balance is off: dlt_n_green_sum ="
                               + GrowthNTotal.ToString("f6")
@@ -277,15 +278,15 @@ namespace Models.PMF.OldPlant
             Util.Debug("Arbitrator.nUptakeSum=%f", nUptakeSum);
 
             // Retranslocate N Fixed
-            double NFixDemandTotal = Utility.Math.Constrain(NDemandTotal - nUptakeSum, 0.0, double.MaxValue); // total demand for N fixation (g/m^2)
-            double NFixUptake = Utility.Math.Constrain(n_fix_pot, 0.0, NFixDemandTotal);
+            double NFixDemandTotal = MathUtilities.Constrain(NDemandTotal - nUptakeSum, 0.0, double.MaxValue); // total demand for N fixation (g/m^2)
+            double NFixUptake = MathUtilities.Constrain(n_fix_pot, 0.0, NFixDemandTotal);
 
             double n_demand_differential = 0;
             foreach (Organ1 Organ in Organs)
                 n_demand_differential += Organ.NDemandDifferential;
 
             // now distribute the n fixed to plant parts
-            NFixUptake = NFixUptake * Utility.Math.Divide(n_demand_differential, NFixDemandTotal, 0.0);
+            NFixUptake = NFixUptake * MathUtilities.Divide(n_demand_differential, NFixDemandTotal, 0.0);
             foreach (Organ1 Organ in Organs)
                 Organ.DoNFixRetranslocate(NFixUptake, n_demand_differential);
             Util.Debug("Arbitrator.n_demand_differential=%f", n_demand_differential);
@@ -308,7 +309,7 @@ namespace Models.PMF.OldPlant
                 n_demand_tot += Organ.NDemand;
 
             double navail = dlt_n_in_senescing_leaf - Leaf.Senescing.N;
-            navail = Utility.Math.Constrain(navail, 0.0, n_demand_tot);
+            navail = MathUtilities.Constrain(navail, 0.0, n_demand_tot);
 
             foreach (Organ1 Organ in Organs)
                 Organ.DoNSenescedRetranslocation(navail, n_demand_tot);

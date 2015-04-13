@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {
@@ -226,12 +227,12 @@ namespace Models.Soils
                 if (ToUnits == PHUnitsEnum.Water)
                 {
                     // pH in water = (pH in CaCl X 1.1045) - 0.1375
-                    PH = Utility.Math.Subtract_Value(Utility.Math.Multiply_Value(PH, 1.1045), 0.1375);
+                    PH = MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(PH, 1.1045), 0.1375);
                 }
                 else
                 {
                     // pH in CaCl = (pH in water + 0.1375) / 1.1045
-                    PH = Utility.Math.Divide_Value(Utility.Math.AddValue(PH, 0.1375), 1.1045);
+                    PH = MathUtilities.Divide_Value(MathUtilities.AddValue(PH, 0.1375), 1.1045);
                 }
                 PHUnits = ToUnits;
             }
@@ -281,7 +282,7 @@ namespace Models.Soils
                 if (PHUnits == PHUnitsEnum.CaCl2)
                 {
                     // pH in water = (pH in CaCl X 1.1045) - 0.1375
-                    return Utility.Math.Subtract_Value(Utility.Math.Multiply_Value(PH, 1.1045), 0.1375);
+                    return MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(PH, 1.1045), 0.1375);
                 }
                 else
                     return PH;

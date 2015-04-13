@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using System.Windows.Forms;
     using Interfaces;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -60,7 +61,7 @@ namespace UserInterface.Views
 
             set
             {
-                this.numericUpDown1.Value = Convert.ToInt32(Utility.Math.Bound(value, 0, 100));
+                this.numericUpDown1.Value = Convert.ToInt32(MathUtilities.Bound(value, 0, 100));
             }
         }
 

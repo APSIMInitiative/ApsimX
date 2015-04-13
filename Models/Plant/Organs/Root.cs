@@ -7,6 +7,7 @@ using Models.Soils;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -314,7 +315,7 @@ namespace Models.PMF.Organs
         {
             // Send the delta water back to SoilWat that we're going to uptake.
             WaterChangedType WaterUptake = new WaterChangedType();
-            WaterUptake.DeltaWater = Utility.Math.Multiply_Value(Amount, -1.0);
+            WaterUptake.DeltaWater = MathUtilities.Multiply_Value(Amount, -1.0);
 
             Uptake = WaterUptake.DeltaWater;
             if (WaterChanged != null)
@@ -327,10 +328,10 @@ namespace Models.PMF.Organs
         {
             // Send the delta water back to SoilN that we're going to uptake.
             NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-            NitrogenUptake.DeltaNO3 = Utility.Math.Multiply_Value(NO3NAmount, -1.0);
-            NitrogenUptake.DeltaNH4 = Utility.Math.Multiply_Value(NH4NAmount, -1.0);
+            NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(NO3NAmount, -1.0);
+            NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(NH4NAmount, -1.0);
 
-            NitUptake = Utility.Math.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
+            NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
             if (NitrogenChanged != null)
                 NitrogenChanged.Invoke(NitrogenUptake);
         }
@@ -648,7 +649,7 @@ namespace Models.PMF.Organs
                     double[] no3supply = new double[Soil.Thickness.Length];
                     double[] nh4supply = new double[Soil.Thickness.Length];
                     SoilNSupply(no3supply, nh4supply);
-                    double NSupply = (Math.Min(Utility.Math.Sum(no3supply), MaxDailyNUptake.Value) + Math.Min(Utility.Math.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
+                    double NSupply = (Math.Min(MathUtilities.Sum(no3supply), MaxDailyNUptake.Value) + Math.Min(MathUtilities.Sum(nh4supply), MaxDailyNUptake.Value)) * kgha2gsm;
                     NuptakeSupply = NSupply;
                     return new BiomassSupplyType { Uptake = NSupply };
                     
@@ -763,7 +764,7 @@ namespace Models.PMF.Organs
                         NAllocated += Allocation;
                     }
                 }
-                if (!Utility.Math.FloatsAreEqual(NAllocated - Supply, 0.0))
+                if (!MathUtilities.FloatsAreEqual(NAllocated - Supply, 0.0))
                 {
                     throw new Exception("Error in N Allocation: " + Name);
                 }
@@ -783,7 +784,7 @@ namespace Models.PMF.Organs
                 double[] no3supply = new double[Soil.Thickness.Length];
                 double[] nh4supply = new double[Soil.Thickness.Length];
                 SoilNSupply(no3supply, nh4supply);
-                double NSupply = Utility.Math.Sum(no3supply) + Utility.Math.Sum(nh4supply);
+                double NSupply = MathUtilities.Sum(no3supply) + MathUtilities.Sum(nh4supply);
                 if (Uptake > 0)
                 {
                     if (Uptake > NSupply + 0.001)
@@ -850,7 +851,7 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public override double WaterUptake
         {
-            get { return Uptake == null ? 0.0 : -Utility.Math.Sum(Uptake); }
+            get { return Uptake == null ? 0.0 : -MathUtilities.Sum(Uptake); }
         }
         
         /// <summary>Gets or sets the water uptake.</summary>
@@ -858,7 +859,7 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public override double NUptake
         {
-            get {return NitUptake == null ? 0.0 : -Utility.Math.Sum(NitUptake);}
+            get {return NitUptake == null ? 0.0 : -MathUtilities.Sum(NitUptake);}
         }
         #endregion
 

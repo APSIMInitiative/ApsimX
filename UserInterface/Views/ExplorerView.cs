@@ -20,6 +20,7 @@ namespace UserInterface.Views
     using Interfaces;
     using Views;
     using System.Reflection;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// An ExplorerView is a "Windows Explorer" like control that displays a virtual tree control on the left
@@ -654,7 +655,7 @@ namespace UserInterface.Views
                         {
                             string SourceParent = null;
                             if (sourcePathOfItemBeingDragged != null)
-                                SourceParent = Utility.String.ParentName(sourcePathOfItemBeingDragged);
+                                SourceParent = StringUtilities.ParentName(sourcePathOfItemBeingDragged);
 
                             // Now determine the effect. If the drag originated from a different view 
                             // (e.g. a toolbox or another file) then only copy is supported.

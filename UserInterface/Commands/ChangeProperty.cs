@@ -7,6 +7,7 @@ namespace UserInterface.Commands
 {
     using System;
     using System.Collections.Generic;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Perform one or more changes to properties in objects.
@@ -137,7 +138,7 @@ namespace UserInterface.Commands
                 try
                 {
                     // Get original value of property so that we can restore it in Undo if needed.
-                    this.oldValue = Utility.Reflection.GetValueOfFieldOrProperty(this.Name, this.Obj);
+                    this.oldValue = ReflectionUtilities.GetValueOfFieldOrProperty(this.Name, this.Obj);
 
                     if (this.oldValue != null && this.oldValue.Equals(this.NewValue))
                     {
@@ -145,7 +146,7 @@ namespace UserInterface.Commands
                     }
                     else
                     {
-                        this.wasModified = Utility.Reflection.SetValueOfProperty(this.Name, this.Obj, this.NewValue);
+                        this.wasModified = ReflectionUtilities.SetValueOfProperty(this.Name, this.Obj, this.NewValue);
                     }
                 }
                 catch (Exception)
@@ -164,7 +165,7 @@ namespace UserInterface.Commands
             {
                 if (this.wasModified)
                 {
-                    Utility.Reflection.SetValueOfProperty(this.Name, this.Obj, this.oldValue);
+                    ReflectionUtilities.SetValueOfProperty(this.Name, this.Obj, this.oldValue);
                 }
 
                 return this.wasModified;

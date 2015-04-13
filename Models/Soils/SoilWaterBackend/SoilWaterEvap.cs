@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils.SoilWaterBackend
     {
@@ -81,7 +82,7 @@ namespace Models.Soils.SoilWaterBackend
 
             //assign u and cona to either sumer or winter values
             // Need to add 12 hours to move from "midnight" to "noon", or this won't work as expected
-            if (Utility.Date.WithinDates(winterDate, Clock.Today, summerDate))
+            if (DateUtilities.WithinDates(winterDate, Clock.Today, summerDate))
                 {
                 cona = winterCona;
                 u = winterU;
@@ -111,16 +112,16 @@ namespace Models.Soils.SoilWaterBackend
             Layer top = SoilObject.GetTopLayer();
 
             //! set up evaporation stage
-            swr_top = Utility.Math.Divide((top.sw_dep - top.ll15_dep), (top.dul_dep - top.ll15_dep), 0.0);
+            swr_top = MathUtilities.Divide((top.sw_dep - top.ll15_dep), (top.dul_dep - top.ll15_dep), 0.0);
             swr_top = cons.bound(swr_top, 0.0, 1.0);
 
             //! are we in stage1 or stage2 evap?
             if (swr_top < cons.sw_top_crit)
                 {
                 //! stage 2 evap
-                sumes2 = cons.sumes2_max - (cons.sumes2_max * Utility.Math.Divide(swr_top, cons.sw_top_crit, 0.0));
+                sumes2 = cons.sumes2_max - (cons.sumes2_max * MathUtilities.Divide(swr_top, cons.sw_top_crit, 0.0));
                 sumes1 = u;
-                t = Utility.Math.Sqr(Utility.Math.Divide(sumes2, cona, 0.0));
+                t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, cona, 0.0));
                 }
             else
                 {
@@ -404,7 +405,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
             // Need to add 12 hours to move from "midnight" to "noon", or this won't work as expected
-            if (Utility.Date.WithinDates(winterDate, Clock.Today, summerDate))
+            if (DateUtilities.WithinDates(winterDate, Clock.Today, summerDate))
                 {
                 cona = winterCona;
                 u = winterU;
@@ -426,7 +427,7 @@ namespace Models.Soils.SoilWaterBackend
                 sumes1 = Math.Max(0.0, sumes1 - w_inf);
 
                 //! update t (incase sumes2 changed)
-                t = Utility.Math.Sqr(Utility.Math.Divide(sumes2, cona, 0.0));
+                t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, cona, 0.0));
                 }
             else
                 {
@@ -472,7 +473,7 @@ namespace Models.Soils.SoilWaterBackend
                 //!  update 1st and 2nd stage soil evaporation.     
                 sumes1 = sumes1 + esoil1;
                 sumes2 = sumes2 + esoil2;
-                t = Utility.Math.Sqr(Utility.Math.Divide(sumes2, cona, 0.0));
+                t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, cona, 0.0));
                 }
             else
                 {

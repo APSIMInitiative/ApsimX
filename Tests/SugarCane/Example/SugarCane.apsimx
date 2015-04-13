@@ -3143,7 +3143,7 @@
 using Models.Core;
 using Models.PMF;
 using Models.PMF.OldPlant;
-
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -3228,7 +3228,7 @@ namespace Models
                 SugarCane.HarvestCrop();
                 SugarCane.EndCrop();
 				}   
-            else if ( (SugarCane.crop_status == "out") && (Utility.Date.DatesEqual(planting_day, Clock.Today)) )
+            else if ( (SugarCane.crop_status == "out") && (DateUtilities.DatesEqual(planting_day, Clock.Today)) )
             	{
                 SugarCane.Sow(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);
                 SugarCane.plants = plant_stalks;
@@ -3257,6 +3257,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -3299,7 +3300,7 @@ namespace Models
 		private void OnStartOfDay(object sender, EventArgs e)
 		{
 
-        if (Utility.Date.DatesEqual(fert_date, Clock.Today))
+        if (DateUtilities.DatesEqual(fert_date, Clock.Today))
 			{
 				N_topsoil = Soil.SoilNitrogen.NO3[1] + Soil.SoilNitrogen.NH4[1] + Soil.SoilNitrogen.NO3[2] + Soil.SoilNitrogen.NH4[2];					
 				if (N_topsoil < fert_criteria)

@@ -11,6 +11,7 @@ namespace Models.PostSimulationTools
     using Excel;
     using Models.Core;
     using System.Xml.Serialization;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
@@ -35,13 +36,13 @@ namespace Models.PostSimulationTools
             get
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                return Utility.PathUtils.GetAbsolutePath(this.FileName, simulations.FileName);
+                return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
             }
 
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                this.FileName = Utility.PathUtils.GetRelativePath(value, simulations.FileName);
+                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
             }
         }
 
@@ -96,7 +97,7 @@ namespace Models.PostSimulationTools
                 // Write all sheets that are specified in 'SheetNames' to the data store
                 foreach (DataTable table in dataSet.Tables)
                 {
-                    bool keep = Utility.String.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
+                    bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
                     if (keep)
                     {
                         dataStore.WriteTable(null, table.TableName, table);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
+using APSIM.Shared.Utilities;
 
 
 namespace Models.PMF.OldPlant
@@ -68,22 +69,22 @@ namespace Models.PMF.OldPlant
                 // N stress period.
                 for (int layer = 0; layer <= deepest_layer; layer++)
                 {
-                    no3ppm = no3gsm[layer] * Utility.Math.Divide(1000.0, bd[layer] * dlayer[layer], 0.0);
-                    nh4ppm = nh4gsm[layer] * Utility.Math.Divide(1000.0, bd[layer] * dlayer[layer], 0.0);
+                    no3ppm = no3gsm[layer] * MathUtilities.Divide(1000.0, bd[layer] * dlayer[layer], 0.0);
+                    nh4ppm = nh4gsm[layer] * MathUtilities.Divide(1000.0, bd[layer] * dlayer[layer], 0.0);
 
-                    swfac = Utility.Math.Divide(sw_avail[layer], sw_avail_pot[layer], 0.0); //**2
-                    swfac = Utility.Math.Constrain(swfac, 0.0, 1.0);
+                    swfac = MathUtilities.Divide(sw_avail[layer], sw_avail_pot[layer], 0.0); //**2
+                    swfac = MathUtilities.Constrain(swfac, 0.0, 1.0);
 
                     no3gsm_uptake_pot[layer] = no3gsm[layer]
                                                * kno3 * (no3ppm - no3ppm_min) * swfac;
-                    no3gsm_uptake_pot[layer] = Utility.Math.Constrain(no3gsm_uptake_pot[layer], double.MinValue
+                    no3gsm_uptake_pot[layer] = MathUtilities.Constrain(no3gsm_uptake_pot[layer], double.MinValue
                                                         , no3gsm[layer] - no3gsm_min[layer]);
-                    no3gsm_uptake_pot[layer] = Utility.Math.Constrain(no3gsm_uptake_pot[layer], 0.0, double.MaxValue);
+                    no3gsm_uptake_pot[layer] = MathUtilities.Constrain(no3gsm_uptake_pot[layer], 0.0, double.MaxValue);
 
                     nh4gsm_uptake_pot[layer] = nh4gsm[layer] * knh4 * (nh4ppm - nh4ppm_min) * swfac;
-                    nh4gsm_uptake_pot[layer] = Utility.Math.Constrain(nh4gsm_uptake_pot[layer], double.MinValue
+                    nh4gsm_uptake_pot[layer] = MathUtilities.Constrain(nh4gsm_uptake_pot[layer], double.MinValue
                                                         , nh4gsm[layer] - nh4gsm_min[layer]);
-                    nh4gsm_uptake_pot[layer] = Utility.Math.Constrain(nh4gsm_uptake_pot[layer], 0.0, double.MaxValue);
+                    nh4gsm_uptake_pot[layer] = MathUtilities.Constrain(nh4gsm_uptake_pot[layer], 0.0, double.MaxValue);
                 }
 
             }
@@ -98,32 +99,32 @@ namespace Models.PMF.OldPlant
 
                 for (int layer = 0; layer <= deepest_layer; layer++)
                 {
-                    no3ppm = no3gsm[layer] * Utility.Math.Divide(1000.0, bd[layer] * dlayer[layer], 0.0);
-                    nh4ppm = nh4gsm[layer] * Utility.Math.Divide(1000.0, bd[layer] * dlayer[layer], 0.0);
+                    no3ppm = no3gsm[layer] * MathUtilities.Divide(1000.0, bd[layer] * dlayer[layer], 0.0);
+                    nh4ppm = nh4gsm[layer] * MathUtilities.Divide(1000.0, bd[layer] * dlayer[layer], 0.0);
 
 
                     if (kno3 > 0 && no3ppm > no3ppm_min)
-                        no3gsm_uptake_pot[layer] = Utility.Math.Constrain(no3gsm[layer] - no3gsm_min[layer], 0.0, double.MaxValue);
+                        no3gsm_uptake_pot[layer] = MathUtilities.Constrain(no3gsm[layer] - no3gsm_min[layer], 0.0, double.MaxValue);
                     else
                         no3gsm_uptake_pot[layer] = 0.0;
 
                     if (knh4 > 0 && nh4ppm > nh4ppm_min)
-                        nh4gsm_uptake_pot[layer] = Utility.Math.Constrain(nh4gsm[layer] - nh4gsm_min[layer], 0.0, double.MaxValue);
+                        nh4gsm_uptake_pot[layer] = MathUtilities.Constrain(nh4gsm[layer] - nh4gsm_min[layer], 0.0, double.MaxValue);
                     else
                         nh4gsm_uptake_pot[layer] = 0.0;
                 }
             }
-            double total_n_uptake_pot = Utility.Math.Sum(no3gsm_uptake_pot, 0, deepest_layer + 1, 0.0)
-                       + Utility.Math.Sum(nh4gsm_uptake_pot, 0, deepest_layer + 1, 0.0);
-            double scalef = Utility.Math.Divide(total_n_uptake_max, total_n_uptake_pot, 0.0);
-            scalef = Utility.Math.Constrain(scalef, 0.0, 1.0);
+            double total_n_uptake_pot = MathUtilities.Sum(no3gsm_uptake_pot, 0, deepest_layer + 1, 0.0)
+                       + MathUtilities.Sum(nh4gsm_uptake_pot, 0, deepest_layer + 1, 0.0);
+            double scalef = MathUtilities.Divide(total_n_uptake_max, total_n_uptake_pot, 0.0);
+            scalef = MathUtilities.Constrain(scalef, 0.0, 1.0);
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
                 no3gsm_uptake_pot[layer] = scalef * no3gsm_uptake_pot[layer];
                 nh4gsm_uptake_pot[layer] = scalef * nh4gsm_uptake_pot[layer]; ;
             }
-            Util.Debug("Root.no3gsm_uptake_pot=%f", Utility.Math.Sum(no3gsm_uptake_pot));
-            Util.Debug("Root.nh4gsm_uptake_pot=%f", Utility.Math.Sum(nh4gsm_uptake_pot));
+            Util.Debug("Root.no3gsm_uptake_pot=%f", MathUtilities.Sum(no3gsm_uptake_pot));
+            Util.Debug("Root.nh4gsm_uptake_pot=%f", MathUtilities.Sum(nh4gsm_uptake_pot));
 
         }
     }

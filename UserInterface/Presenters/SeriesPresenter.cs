@@ -15,6 +15,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using System.Reflection;
     using Interfaces;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A presenter class for graph series.
@@ -152,7 +153,7 @@ namespace UserInterface.Presenters
             int seriesIndex = Array.IndexOf(this.seriesView.SeriesNames, this.seriesView.SelectedSeriesName);
             if (seriesIndex != -1)
             {
-                seriesToAdd = Utility.Reflection.Clone(this.graph.Series[seriesIndex]) as Series;
+                seriesToAdd = ReflectionUtilities.Clone(this.graph.Series[seriesIndex]) as Series;
             }
             else
             {
@@ -537,7 +538,7 @@ namespace UserInterface.Presenters
                         DataTable data = dataStore.GetData("*", this.seriesView.SeriesEditor.DataSource);
                         if (data != null)
                         {
-                            this.seriesView.SeriesEditor.SetFieldNames(Utility.DataTable.GetColumnNames(data));
+                            this.seriesView.SeriesEditor.SetFieldNames(DataTableUtilities.GetColumnNames(data));
                         }
                     }
 

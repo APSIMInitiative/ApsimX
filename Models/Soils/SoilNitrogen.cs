@@ -6,6 +6,7 @@ using System.Xml;
 using System.Linq;
 using Models.Core;
 using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {
@@ -279,10 +280,10 @@ namespace Models.Soils
             initDone = false;
             dlayer = Soil.Thickness;
             bd = Soil.BD;
-            sat_dep = Utility.Math.Multiply(Soil.SAT, Soil.Thickness);
-            dul_dep = Utility.Math.Multiply(Soil.DUL, Soil.Thickness);
-            ll15_dep = Utility.Math.Multiply(Soil.LL15, Soil.Thickness);
-            sw_dep = Utility.Math.Multiply(Soil.InitialWaterVolumetric, Soil.Thickness);
+            sat_dep = MathUtilities.Multiply(Soil.SAT, Soil.Thickness);
+            dul_dep = MathUtilities.Multiply(Soil.DUL, Soil.Thickness);
+            ll15_dep = MathUtilities.Multiply(Soil.LL15, Soil.Thickness);
+            sw_dep = MathUtilities.Multiply(Soil.InitialWaterVolumetric, Soil.Thickness);
             oc = Soil.OC;
             ph = Soil.PH;
             salb = Soil.SoilWater.Salb;
@@ -401,9 +402,9 @@ namespace Models.Soils
             for (int layer = 0; layer < dlayer.Length; ++layer)
             {
                 convFact = convFactor_kgha2ppm(layer);
-                urea_min[layer] = Utility.Math.Divide(ureappm_min, convFact, 0.0);
-                nh4_min[layer] = Utility.Math.Divide(nh4ppm_min, convFact, 0.0);
-                no3_min[layer] = Utility.Math.Divide(no3ppm_min, convFact, 0.0);
+                urea_min[layer] = MathUtilities.Divide(ureappm_min, convFact, 0.0);
+                nh4_min[layer] = MathUtilities.Divide(nh4ppm_min, convFact, 0.0);
+                no3_min[layer] = MathUtilities.Divide(no3ppm_min, convFact, 0.0);
             }
 
             // Check if all fom values have been supplied
@@ -442,8 +443,8 @@ namespace Models.Soils
             int deepest_layer = getCumulativeIndex(iniFomDepth, dlayer);
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
-                fom_FracLayer[layer] = Math.Exp(-3.0 * Math.Min(1.0, Utility.Math.Divide(cum_depth + dlayer[layer], iniFomDepth, 0.0))) *
-                    Math.Min(1.0, Utility.Math.Divide(iniFomDepth - cum_depth, dlayer[layer], 0.0));
+                fom_FracLayer[layer] = Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cum_depth + dlayer[layer], iniFomDepth, 0.0))) *
+                    Math.Min(1.0, MathUtilities.Divide(iniFomDepth - cum_depth, dlayer[layer], 0.0));
                 cum_depth += dlayer[layer];
             }
             double fom_FracLayer_tot = SumDoubleArray(fom_FracLayer);
@@ -460,34 +461,34 @@ namespace Models.Soils
                 // check and distribute the mineral nitrogen
                 if (ureappm_reset != null)
                 {
-                    newValue = Utility.Math.Divide(ureappm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
+                    newValue = MathUtilities.Divide(ureappm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].urea[layer] = newValue;
                 }
-                newValue = Utility.Math.Divide(nh4ppm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
+                newValue = MathUtilities.Divide(nh4ppm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].nh4[layer] = newValue;
-                newValue = Utility.Math.Divide(no3ppm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
+                newValue = MathUtilities.Divide(no3ppm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
                 for (int k = 0; k < Patch.Count; k++)
                     Patch[k].no3[layer] = newValue;
 
                 // calculate total soil C
                 double Soil_OC = OC_reset[layer] * 10000;					// = (oc/100)*1000000 - convert from % to ppm
-                Soil_OC = Utility.Math.Divide(Soil_OC, convFact, 0.0);		//Convert from ppm to kg/ha
+                Soil_OC = MathUtilities.Divide(Soil_OC, convFact, 0.0);		//Convert from ppm to kg/ha
 
                 // calculate inert soil C
                 double InertC = finert[layer] * Soil_OC;
 
                 // calculate microbial biomass C and N
-                double BiomassC = Utility.Math.Divide((Soil_OC - InertC) * fbiom[layer], 1.0 + fbiom[layer], 0.0);
-                double BiomassN = Utility.Math.Divide(BiomassC, biom_cn, 0.0);
+                double BiomassC = MathUtilities.Divide((Soil_OC - InertC) * fbiom[layer], 1.0 + fbiom[layer], 0.0);
+                double BiomassN = MathUtilities.Divide(BiomassC, biom_cn, 0.0);
 
                 // calculate C and N values for active humus
                 double HumusC = Soil_OC - BiomassC;
-                double HumusN = Utility.Math.Divide(HumusC, hum_cn, 0.0);
+                double HumusN = MathUtilities.Divide(HumusC, hum_cn, 0.0);
 
                 // distribute and calculate the fom N and C
-                double fom = Utility.Math.Divide(iniFomWt * fom_FracLayer[layer], fom_FracLayer_tot, 0.0);
+                double fom = MathUtilities.Divide(iniFomWt * fom_FracLayer[layer], fom_FracLayer_tot, 0.0);
 
                 for (int k = 0; k < Patch.Count; k++)
                 {
@@ -499,9 +500,9 @@ namespace Models.Soils
                     Patch[k].fom_c_pool1[layer] = fom * fract_carb[0] * c_in_fom;
                     Patch[k].fom_c_pool2[layer] = fom * fract_cell[0] * c_in_fom;
                     Patch[k].fom_c_pool3[layer] = fom * fract_lign[0] * c_in_fom;
-                    Patch[k].fom_n_pool1[layer] = Utility.Math.Divide(Patch[k].fom_c_pool1[layer], fomPoolsCNratio[0], 0.0);
-                    Patch[k].fom_n_pool2[layer] = Utility.Math.Divide(Patch[k].fom_c_pool2[layer], fomPoolsCNratio[1], 0.0);
-                    Patch[k].fom_n_pool3[layer] = Utility.Math.Divide(Patch[k].fom_c_pool3[layer], fomPoolsCNratio[2], 0.0);
+                    Patch[k].fom_n_pool1[layer] = MathUtilities.Divide(Patch[k].fom_c_pool1[layer], fomPoolsCNratio[0], 0.0);
+                    Patch[k].fom_n_pool2[layer] = MathUtilities.Divide(Patch[k].fom_c_pool2[layer], fomPoolsCNratio[1], 0.0);
+                    Patch[k].fom_n_pool3[layer] = MathUtilities.Divide(Patch[k].fom_c_pool3[layer], fomPoolsCNratio[2], 0.0);
                 }
 
                 // store today's values
@@ -957,7 +958,7 @@ namespace Models.Soils
                 return 0.0;
                 throw new Exception(" Error on computing convertion factor, kg/ha to ppm. Value for dlayer or bulk density not valid");
             }
-            return Utility.Math.Divide(100.0, bd[Layer] * dlayer[Layer], 0.0);
+            return MathUtilities.Divide(100.0, bd[Layer] * dlayer[Layer], 0.0);
         }
 
         /// <summary>Check whether there is any considerable values in the array</summary>

@@ -12,6 +12,7 @@
     using Models.PMF;
     using Models.Soils;
     using Models.Interfaces;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The surface organic matter model, ported by Ben Jolley from the
@@ -789,7 +790,7 @@
         {
             get
             {
-                return SurfOM.Select<SurfOrganicMatterType, double>(x => Utility.Math.Divide(x.Standing[0].amount, x.Standing[0].amount + x.Lying[0].amount, 0)).ToArray<double>();
+                return SurfOM.Select<SurfOrganicMatterType, double>(x => MathUtilities.Divide(x.Standing[0].amount, x.Standing[0].amount + x.Lying[0].amount, 0)).ToArray<double>();
             }
         }
 
@@ -843,7 +844,7 @@
                     {
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(xml);
-                        ResidueTypesList ValuesFromResource = Utility.Xml.Deserialise(doc.DocumentElement) as ResidueTypesList;
+                        ResidueTypesList ValuesFromResource = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as ResidueTypesList;
                         if (ValuesFromResource != null)
                         {
                             foreach (ResidueType residueType in ValuesFromResource.residues)
@@ -1186,7 +1187,7 @@
         /// <param name="vname">The vname.</param>
         private void Bound_check_real_var(double value, double lower, double upper, string vname)
         {
-            if (Utility.Math.IsLessThan(value, lower) || Utility.Math.IsGreaterThan(value, upper))
+            if (MathUtilities.IsLessThan(value, lower) || MathUtilities.IsGreaterThan(value, upper))
                 summary.WriteWarning(this, string.Format(ApsimBoundWarningError, vname, lower, value, upper));
         }
 
@@ -1944,16 +1945,16 @@
                 }
 
                 // convert the ppm figures into kg/ha;
-                SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
-                SurfOM[SOMNo].nh4 += Utility.Math.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
-                SurfOM[SOMNo].po4 += Utility.Math.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
+                SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
+                SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
+                SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * Pools[i].Mass;
 
                 totC[i] = Pools[i].Mass * C_fract[SOMNo];
-                totN[i] = Utility.Math.Divide(totC[i], Pools[i].CNRatio, 0.0);
+                totN[i] = MathUtilities.Divide(totC[i], Pools[i].CNRatio, 0.0);
 
                 // If a C:P ratio is not provided, use the default
                 double cpr = double.IsNaN(Pools[i].CPRatio) ? DefaultCPRatio : Pools[i].CPRatio;
-                totP[i] = Utility.Math.Divide(totC[i], cpr, 0.0);
+                totP[i] = MathUtilities.Divide(totC[i], cpr, 0.0);
                 // Probably not really the best way to determine phosphorus "awareness"
                 phosphorusAware = !(double.IsNaN(Pools[i].CPRatio) || Pools[i].CPRatio == 0.0);
 
@@ -2060,12 +2061,12 @@
         private double TemperatureFactor()
         {
             double
-                ave_temp = Utility.Math.Divide((MetData.Maxt + MetData.Mint), 2.0, 0.0);  // today"s average air temp (oC)
+                ave_temp = MathUtilities.Divide((MetData.Maxt + MetData.Mint), 2.0, 0.0);  // today"s average air temp (oC)
             // tf;  // temperature factor;
 
             if (ave_temp > 0.0)
-                return Utility.Math.Bound(
-                    (double)Math.Pow(Utility.Math.Divide(ave_temp, OptimumDecompTemp, 0.0), 2.0),
+                return MathUtilities.Bound(
+                    (double)Math.Pow(MathUtilities.Divide(ave_temp, OptimumDecompTemp, 0.0), 2.0),
                     0.0,
                     1.0);
             else
@@ -2088,7 +2089,7 @@
             if (effSurfomMass <= CriticalResidueWeight)
                 return 1.0;
             else
-                return Utility.Math.Bound(Utility.Math.Divide(CriticalResidueWeight, effSurfomMass, 0.0), 0, 1);
+                return MathUtilities.Bound(MathUtilities.Divide(CriticalResidueWeight, effSurfomMass, 0.0), 0, 1);
         }
 
         /// <summary>Calculate C:N factor for decomposition (0-1).</summary>
@@ -2105,7 +2106,7 @@
                     total_C = SurfOM[residue].Lying.Sum<OMFractionType>(x => x.C),        // organic C component of this residue (kg/ha)
                     total_N = SurfOM[residue].Lying.Sum<OMFractionType>(x => x.N),        // organic N component of this residue (kg/ha)
                     total_mineral_n = SurfOM[residue].no3 + SurfOM[residue].nh4,          // mineral N component of this surfom (no3 + nh4)(kg/ha)
-                    cnr = Utility.Math.Divide(total_C, (total_N + total_mineral_n), 0.0); // C:N for this residue  (unitless)
+                    cnr = MathUtilities.Divide(total_C, (total_N + total_mineral_n), 0.0); // C:N for this residue  (unitless)
 
                 // As C:N increases above optcn cnrf decreases exponentially toward zero;
                 // As C:N decreases below optcn cnrf is constrained to one;
@@ -2116,7 +2117,7 @@
                 }
                 else
                 {
-                    return Utility.Math.Bound(
+                    return MathUtilities.Bound(
                         (double)Math.Exp(-CNRatioDecompCoeff * ((cnr - CNRatioDecompThreshold) / CNRatioDecompThreshold)),
                         0.0,
                         1.0);
@@ -2143,9 +2144,9 @@
                   //moisture factor decreases from 1. at start of cumeos and decreases;
                   //linearly to zero at MaxCumulativeEOS;
 
-                 mf = 1.0 - Utility.Math.Divide (cumeos, c.MaxCumulativeEOS, 0.0);
+                 mf = 1.0 - MathUtilities.Divide (cumeos, c.MaxCumulativeEOS, 0.0);
 
-                 mf = Utility.Math.Bound(mf, 0.0, 1.0);
+                 mf = MathUtilities.Bound(mf, 0.0, 1.0);
             return mf;
              * }
                  */
@@ -2157,7 +2158,7 @@
             }
             else
             {
-                return Utility.Math.Bound(1.0 - Utility.Math.Divide(cumeos, MaxCumulativeEOS, 0.0), 0.0, 1.0);
+                return MathUtilities.Bound(1.0 - MathUtilities.Divide(cumeos, MaxCumulativeEOS, 0.0), 0.0, 1.0);
             }
         }
 
@@ -2244,7 +2245,7 @@
             double po4Incorp;
 
             // Calculate Leaching Fraction;
-            _leaching_fr = Utility.Math.Bound(Utility.Math.Divide(leachRain, TotalLeachRain, 0.0), 0.0, 1.0);
+            _leaching_fr = MathUtilities.Bound(MathUtilities.Divide(leachRain, TotalLeachRain, 0.0), 0.0, 1.0);
 
 
             // Apply leaching fraction to all mineral pools;
@@ -2312,7 +2313,7 @@
 
                     FOM = new FOMType()
                     {
-                        amount = Utility.Math.Divide(c_pot_decomp[residue], C_fract[residue], 0.0),
+                        amount = MathUtilities.Divide(c_pot_decomp[residue], C_fract[residue], 0.0),
                         C = c_pot_decomp[residue],
                         N = n_pot_decomp[residue],
                         P = p_pot_decomp[residue],
@@ -2517,7 +2518,7 @@
                 SOMc = SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.C) + SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.C);
                 SOMn = SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.N) + SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.N);
 
-                SOMcnr = Utility.Math.Divide(SOMc, SOMn, 0.0);
+                SOMcnr = MathUtilities.Divide(SOMc, SOMn, 0.0);
 
                 if (reals_are_equal(totCDecomp, 0.0) && reals_are_equal(totNDecomp, 0.0))
                 {
@@ -2532,7 +2533,7 @@
                     throw new ApsimXException(this, "SurfaceOM - N decomposition exceeds potential rate");
                     // NIH - If both the following tests are empty then they can both be deleted.
                 }
-                else if (reals_are_equal(Utility.Math.Divide(totCDecomp, totNDecomp, 0.0), SOMcnr))
+                else if (reals_are_equal(MathUtilities.Divide(totCDecomp, totNDecomp, 0.0), SOMcnr))
                 {
                     // all ok - decomposition and residue pool have same C:N;
                 }
@@ -2543,7 +2544,7 @@
                 }
 
                 // calculate total p decomposition;
-                totPDecomp = totCDecomp * Utility.Math.Divide(pTotDecomp[residue_no], cPotDecomp[residue_no], 0.0);
+                totPDecomp = totCDecomp * MathUtilities.Divide(pTotDecomp[residue_no], cPotDecomp[residue_no], 0.0);
 
                 // Do actual decomposing - update pools for C, N, and P;
                 Decomp(totCDecomp, totNDecomp, totPDecomp, residue_no);
@@ -2561,7 +2562,7 @@
             double Fdecomp;  // decomposing fraction;
 
             // do C
-            Fdecomp = Utility.Math.Bound(Utility.Math.Divide(C_decomp, SurfOM[residue].Lying.Sum<OMFractionType>(x => x.C), 0.0), 0.0, 1.0);
+            Fdecomp = MathUtilities.Bound(MathUtilities.Divide(C_decomp, SurfOM[residue].Lying.Sum<OMFractionType>(x => x.C), 0.0), 0.0, 1.0);
             for (int i = 0; i < maxFr; i++)
             {
                 SurfOM[residue].Lying[i].C = SurfOM[residue].Lying[i].C * (1.0 - Fdecomp);
@@ -2569,12 +2570,12 @@
             }
 
             // do N
-            Fdecomp = Utility.Math.Divide(N_decomp, SurfOM[residue].Lying.Sum<OMFractionType>(x => x.N), 0.0);
+            Fdecomp = MathUtilities.Divide(N_decomp, SurfOM[residue].Lying.Sum<OMFractionType>(x => x.N), 0.0);
             for (int i = 0; i < maxFr; i++)
                 SurfOM[residue].Lying[i].N = SurfOM[residue].Lying[i].N * (1.0 - Fdecomp);
 
             // do P
-            Fdecomp = Utility.Math.Divide(P_decomp, SurfOM[residue].Lying.Sum<OMFractionType>(x => x.P), 0.0);
+            Fdecomp = MathUtilities.Divide(P_decomp, SurfOM[residue].Lying.Sum<OMFractionType>(x => x.P), 0.0);
             for (int i = 0; i < maxFr; i++)
                 SurfOM[residue].Lying[i].P = SurfOM[residue].Lying[i].P * (1.0 - Fdecomp);
         }
@@ -2654,7 +2655,7 @@
             FOMPoolType FPoolProfile = new FOMPoolType();
             ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
 
-            fIncorp = Utility.Math.Bound(fIncorp, 0.0, 1.0);
+            fIncorp = MathUtilities.Bound(fIncorp, 0.0, 1.0);
 
             deepestLayer = GetCumulativeIndexReal(tillageDepth, dlayer);
 
@@ -2666,7 +2667,7 @@
                 {
                     depthToGo = tillageDepth - cumDepth;
                     layerIncorpDepth = Math.Min(depthToGo, dlayer[layer]);
-                    F_incorp_layer = Utility.Math.Divide(layerIncorpDepth, tillageDepth, 0.0);
+                    F_incorp_layer = MathUtilities.Divide(layerIncorpDepth, tillageDepth, 0.0);
                     for (int i = 0; i < maxFr; i++)
                     {
                         CPool[i, layer] += (SurfOM[residue].Lying[i].C + SurfOM[residue].Standing[i].C) * fIncorp * F_incorp_layer;
@@ -2818,15 +2819,15 @@
                 surfomType = data.type;
 
             double
-                surfomMassAdded = Utility.Math.Bound(data.mass, -100000, 100000), // Mass of new surfom added (kg/ha)
+                surfomMassAdded = MathUtilities.Bound(data.mass, -100000, 100000), // Mass of new surfom added (kg/ha)
                 surfomCAdded = 0,                                         // C added in new material (kg/ha)
-                surfomNAdded = Utility.Math.Bound(data.n, -10000, 10000), // N added in new material (kg/ha)
+                surfomNAdded = MathUtilities.Bound(data.n, -10000, 10000), // N added in new material (kg/ha)
                 surfomNO3Added = 0,                                       // NO3 added in new material (kg/ha)
                 surfomNH4Added = 0,                                       // NH4 added in new material (kg/ha)
-                surfomCNrAdded = Utility.Math.Bound(data.cnr, 0, 10000),  // C:N ratio of new material;
-                surfomPAdded = Utility.Math.Bound(data.p, -10000, 10000), // P added in new material (kg/ha)
+                surfomCNrAdded = MathUtilities.Bound(data.cnr, 0, 10000),  // C:N ratio of new material;
+                surfomPAdded = MathUtilities.Bound(data.p, -10000, 10000), // P added in new material (kg/ha)
                 surfomPO4Added = 0,                                       // PO4 added in new material (kg/ha)
-                surfomCPrAdded = Utility.Math.Bound(data.cpr, 0, 10000),  // C:P ratio of new material;
+                surfomCPrAdded = MathUtilities.Bound(data.cpr, 0, 10000),  // C:P ratio of new material;
                 totMass = 0,
                 removedFromStanding = 0,
                 removedFromLying = 0;
@@ -2855,7 +2856,7 @@
                     // APSIM THING
                     // collect_real_var_optional ("cnr", "()", surfomCNrAdded, numval_cnr, 0.0, 10000.0);
 
-                        surfomNAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], surfomCNrAdded, 0.0);
+                        surfomNAdded = MathUtilities.Divide(surfomMassAdded * C_fract[SOMNo], surfomCNrAdded, 0.0);
 
                     // RCichota, disabled this error for now. WE have to see whether it is fair to add C and no N (I think so) or throw exception...
                         // If no N info provided, and no cnr info provided then throw error
@@ -2870,16 +2871,16 @@
                     // use default cpr and throw warning error to notify user;
                     if (surfomCPrAdded == 0)
                     {
-                        surfomPAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], DefaultCPRatio, 0.0);
+                        surfomPAdded = MathUtilities.Divide(surfomMassAdded * C_fract[SOMNo], DefaultCPRatio, 0.0);
                         summary.WriteMessage(this, "SurfOM P or SurfaceOM C:P ratio not specified - Default value applied.");
                     }
                     else
-                        surfomPAdded = Utility.Math.Divide(surfomMassAdded * C_fract[SOMNo], surfomCPrAdded, 0.0);
+                        surfomPAdded = MathUtilities.Divide(surfomMassAdded * C_fract[SOMNo], surfomCPrAdded, 0.0);
 
                 // convert the ppm figures into kg/ha;
-                surfomNO3Added = Utility.Math.Divide(no3ppm[SOMNo], 1000000, 0) * surfomMassAdded;
-                surfomNH4Added = Utility.Math.Divide(nh4ppm[SOMNo], 1000000, 0) * surfomMassAdded;
-                surfomPO4Added = Utility.Math.Divide(po4ppm[SOMNo], 1000000, 0) * surfomMassAdded;
+                surfomNO3Added = MathUtilities.Divide(no3ppm[SOMNo], 1000000, 0) * surfomMassAdded;
+                surfomNH4Added = MathUtilities.Divide(nh4ppm[SOMNo], 1000000, 0) * surfomMassAdded;
+                surfomPO4Added = MathUtilities.Divide(po4ppm[SOMNo], 1000000, 0) * surfomMassAdded;
 
                 SurfOM[SOMNo].no3 += surfomNO3Added;
                 SurfOM[SOMNo].nh4 += surfomNH4Added;
@@ -2904,20 +2905,20 @@
 
                     totMass = lying + standing;
 
-                    removedFromStanding = surfomMassAdded * Utility.Math.Divide(standing, totMass, 0.0);
+                    removedFromStanding = surfomMassAdded * MathUtilities.Divide(standing, totMass, 0.0);
                     removedFromLying = surfomMassAdded - removedFromStanding;
 
                     for (int i = 0; i < maxFr; i++)
                     {
                         SurfOM[SOMNo].Lying[i].amount = SurfOM[SOMNo].Lying[i].amount + removedFromLying * frPoolC[i, SOMNo];
                         SurfOM[SOMNo].Lying[i].C = SurfOM[SOMNo].Lying[i].C + removedFromLying * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].N = SurfOM[SOMNo].Lying[i].N + surfomNAdded * Utility.Math.Divide(removedFromLying, surfomMassAdded, 0.0) * frPoolN[i, SOMNo];
-                        SurfOM[SOMNo].Lying[i].P = SurfOM[SOMNo].Lying[i].P + surfomPAdded * Utility.Math.Divide(removedFromLying, surfomMassAdded, 0.0) * frPoolP[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].N = SurfOM[SOMNo].Lying[i].N + surfomNAdded * MathUtilities.Divide(removedFromLying, surfomMassAdded, 0.0) * frPoolN[i, SOMNo];
+                        SurfOM[SOMNo].Lying[i].P = SurfOM[SOMNo].Lying[i].P + surfomPAdded * MathUtilities.Divide(removedFromLying, surfomMassAdded, 0.0) * frPoolP[i, SOMNo];
                         SurfOM[SOMNo].Lying[i].AshAlk = 0.0;
                         SurfOM[SOMNo].Standing[i].amount = SurfOM[SOMNo].Standing[i].amount + removedFromStanding * frPoolC[i, SOMNo];
                         SurfOM[SOMNo].Standing[i].C = SurfOM[SOMNo].Standing[i].C + removedFromStanding * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                        SurfOM[SOMNo].Standing[i].N = SurfOM[SOMNo].Standing[i].N + surfomNAdded * Utility.Math.Divide(removedFromStanding, surfomMassAdded, 0.0) * frPoolN[i, SOMNo];
-                        SurfOM[SOMNo].Standing[i].P = SurfOM[SOMNo].Standing[i].P + surfomPAdded * Utility.Math.Divide(removedFromStanding, surfomMassAdded, 0.0) * frPoolP[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].N = SurfOM[SOMNo].Standing[i].N + surfomNAdded * MathUtilities.Divide(removedFromStanding, surfomMassAdded, 0.0) * frPoolN[i, SOMNo];
+                        SurfOM[SOMNo].Standing[i].P = SurfOM[SOMNo].Standing[i].P + surfomPAdded * MathUtilities.Divide(removedFromStanding, surfomMassAdded, 0.0) * frPoolP[i, SOMNo];
                         SurfOM[SOMNo].Standing[i].AshAlk = 0.0;
                     }
                 }
@@ -2995,13 +2996,13 @@
             if (thistype == null)
                 throw new ApsimXException(this, "Cannot find residue type description for '" + surfom_type + "'");
 
-            C_fract[i] = Utility.Math.Bound(thistype.fraction_C, 0.0, 1.0);
-            po4ppm[i] = Utility.Math.Bound(thistype.po4ppm, 0.0, 1000.0);
-            nh4ppm[i] = Utility.Math.Bound(thistype.nh4ppm, 0.0, 2000.0);
-            no3ppm[i] = Utility.Math.Bound(thistype.no3ppm, 0.0, 1000.0);
-            specific_area[i] = Utility.Math.Bound(thistype.specific_area, 0.0, 0.01);
+            C_fract[i] = MathUtilities.Bound(thistype.fraction_C, 0.0, 1.0);
+            po4ppm[i] = MathUtilities.Bound(thistype.po4ppm, 0.0, 1000.0);
+            nh4ppm[i] = MathUtilities.Bound(thistype.nh4ppm, 0.0, 2000.0);
+            no3ppm[i] = MathUtilities.Bound(thistype.no3ppm, 0.0, 1000.0);
+            specific_area[i] = MathUtilities.Bound(thistype.specific_area, 0.0, 0.01);
             cf_contrib[i] = Bound(thistype.cf_contrib, 0, 1);
-            pot_decomp_rate = Utility.Math.Bound(thistype.pot_decomp_rate, 0.0, 1.0);
+            pot_decomp_rate = MathUtilities.Bound(thistype.pot_decomp_rate, 0.0, 1.0);
 
             if (thistype.fr_c.Length != thistype.fr_n.Length || thistype.fr_n.Length != thistype.fr_p.Length)
                 throw new ApsimXException(this, "Error reading in fr_c/n/p values, inconsistent array lengths");
@@ -3051,7 +3052,7 @@
             areaStanding = specific_area[SOMindex] * sumStandAmount;
 
             F_Cover = AddCover(1.0 - (double)Math.Exp(-areaLying), 1.0 - (double)Math.Exp(-(StandingExtinctCoeff) * areaStanding));
-            F_Cover = Utility.Math.Bound(F_Cover, 0.0, 1.0);
+            F_Cover = MathUtilities.Bound(F_Cover, 0.0, 1.0);
 
             return F_Cover;
         }
@@ -3120,9 +3121,9 @@
             // else THIS ADDITION IS AN EXISTING COMPONENT OF THE SURFOM SYSTEM;
 
             // convert the ppm figures into kg/ha;
-            SurfOM[SOMNo].no3 += Utility.Math.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
-            SurfOM[SOMNo].nh4 += Utility.Math.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
-            SurfOM[SOMNo].po4 += Utility.Math.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
+            SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
+            SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+            SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
 
             // Assume all surfom added is in the LYING pool, ie No STANDING component;
             for (int i = 0; i < maxFr; i++)

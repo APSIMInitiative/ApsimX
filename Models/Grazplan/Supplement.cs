@@ -11,7 +11,6 @@ namespace Models.Grazplan
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Utility;
 
     /// <summary>
     /// TSupplementModel contains a list of supplement "stores", each of which

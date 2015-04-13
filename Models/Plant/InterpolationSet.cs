@@ -36,7 +36,7 @@ namespace Models.PMF
       public Single value(Single x)
          {
          Boolean flag;
-         return Utility.Math.LinearInterpReal(CType(x, Single), XVals, YVals, flag);
+         return MathUtilities.LinearInterpReal(CType(x, Single), XVals, YVals, flag);
          }
 
       public string shared widening operator CType (InterpolationSet d )

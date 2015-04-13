@@ -5,6 +5,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.PMF.Phen;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Functions
 {
@@ -44,7 +45,7 @@ namespace Models.PMF.Functions
                     double[] tillerno_y = { 0, 0, 5 };  // tiller no.
                     double[] tillerno_x = { 0, 5, 8 };  // leaf no.
                     bool DidInterpolate;
-                    double tiller_no_now = Utility.Math.LinearInterpReal(leaf_no_now,
+                    double tiller_no_now = MathUtilities.LinearInterpReal(leaf_no_now,
                                                                         tillerno_x, tillerno_y,
                                                                         out DidInterpolate);
                     if (tiller_no_now <= 0.0)
@@ -72,7 +73,7 @@ namespace Models.PMF.Functions
                     double[] zadok_code_y = { 30.0, 40.0, 65.0, 71.0, 87.0, 90.0, 100.0 };
                     double[] zadok_code_x = { 4.9, 5.4, 6.0, 7.0, 8.0, 9.0, 10.0 };
                     bool DidInterpolate;
-                    zadok_stage = Utility.Math.LinearInterpReal(Phenology.Stage,
+                    zadok_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
                                                                zadok_code_x, zadok_code_y,
                                                                out DidInterpolate);
                 }

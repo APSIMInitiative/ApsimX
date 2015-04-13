@@ -20,6 +20,7 @@ namespace UserInterface.Presenters
     using Models.Core;
     using Models.Factorial;
     using Models.Soils;
+    using APSIM.Shared.Utilities;
     
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -84,7 +85,7 @@ namespace UserInterface.Presenters
             {
                 XmlDocument document = new XmlDocument();
                 document.LoadXml(System.Windows.Forms.Clipboard.GetText());
-                object newModel = Utility.Xml.Deserialise(document.DocumentElement);
+                object newModel = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly());
 
                 // See if the presenter is happy with this model being added.
                 Model parentModel = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
@@ -210,10 +211,10 @@ namespace UserInterface.Presenters
                 string workingFolder = Path.Combine(new string[] { binFolder, ".." });
 
                 string arguments = "\"" + scriptFileName + "\" " + "\"" + this.explorerPresenter.ApsimXFile.FileName + "\"";
-                Process process = Utility.Process.RunProcess(pathToR, arguments, workingFolder);
+                Process process = ProcessUtilities.RunProcess(pathToR, arguments, workingFolder);
                 try
                 {
-                    string message = Utility.Process.CheckProcessExitedProperly(process);
+                    string message = ProcessUtilities.CheckProcessExitedProperly(process);
                     this.explorerPresenter.ShowMessage(message, DataStore.ErrorLevel.Information);
                 }
                 catch (Exception err)
@@ -239,8 +240,8 @@ namespace UserInterface.Presenters
                 "RunTest.Bat"
             });
             string workingFolder = apsimxFolder;
-            Process process = Utility.Process.RunProcess(scriptFileName, this.explorerPresenter.ApsimXFile.FileName, workingFolder);
-            string errorMessages = Utility.Process.CheckProcessExitedProperly(process);
+            Process process = ProcessUtilities.RunProcess(scriptFileName, this.explorerPresenter.ApsimXFile.FileName, workingFolder);
+            string errorMessages = ProcessUtilities.CheckProcessExitedProperly(process);
             }
         }
 

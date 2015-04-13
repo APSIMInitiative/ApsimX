@@ -19,6 +19,7 @@ namespace UserInterface.Views
     using OxyPlot.Series;
     using OxyPlot.WindowsForms;
     using EventArguments;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -219,7 +220,7 @@ namespace UserInterface.Views
             Color colour,
             bool showOnLegend)
         {
-            Utility.ColumnXYSeries series = new Utility.ColumnXYSeries();
+            ColumnXYSeries series = new ColumnXYSeries();
             if (showOnLegend)
                 series.Title = title;
             series.FillColor = ConverterExtensions.ToOxyColor(colour);

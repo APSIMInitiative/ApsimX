@@ -14,6 +14,7 @@ using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.OldPlant
 {
@@ -363,7 +364,7 @@ namespace Models.PMF.OldPlant
         public event NewCropDelegate CropEnding;
 
         /// <summary>Occurs when [harvesting].</summary>
-        public event EventHandler<ModelArgs> Harvesting;
+        public event EventHandler Harvesting;
 
         /// <summary>Gets the cover_green.</summary>
         /// <value>The cover_green.</value>
@@ -691,7 +692,7 @@ namespace Models.PMF.OldPlant
                                 StoverN += Organ.Live.N + Organ.Dead.N;
                             }
                         }
-                        double StoverNConc = Utility.Math.Divide(StoverN, StoverWt, 0) * Conversions.fract2pcnt;
+                        double StoverNConc = MathUtilities.Divide(StoverN, StoverWt, 0) * Conversions.fract2pcnt;
                         message += "\r\n";
                         message += string.Format("  biomass        = {0,8:F2} (g/m^2)\r\n" +
                                                  "  lai            = {1,8:F2} (m^2/m^2)\r\n" +
@@ -864,7 +865,7 @@ namespace Models.PMF.OldPlant
             {
                 // Remove potential fixation from demand term
                 ext_n_demand = ext_n_demand - n_fix_pot;
-                ext_n_demand = Utility.Math.Constrain(ext_n_demand, 0.0, Double.MaxValue);
+                ext_n_demand = MathUtilities.Constrain(ext_n_demand, 0.0, Double.MaxValue);
             }
             else
             {
@@ -887,7 +888,7 @@ namespace Models.PMF.OldPlant
 
             // Tell the rest of the system we are about to harvest
             if (Harvesting != null)
-                Harvesting.Invoke(this, new ModelArgs() { Model = this });
+                Harvesting.Invoke(this, new EventArgs());
 
             // Check some bounds
             if (Harvest.Remove < 0 || Harvest.Remove > 1.0)
@@ -1075,7 +1076,7 @@ namespace Models.PMF.OldPlant
             // crop harvested. Report status
             yield = Grain.Yield;
             grain_wt = Grain.Wt;
-            plant_grain_no = Utility.Math.Divide(Grain.GrainNo, Population.Density, 0.0);
+            plant_grain_no = MathUtilities.Divide(Grain.GrainNo, Population.Density, 0.0);
             n_grain = (Grain.Live.N + Grain.Dead.N) * 10;  // g/m2 to kg/ha
 
             double dmRoot = (Root.Live.Wt + Root.Dead.Wt) * 10;
@@ -1088,10 +1089,10 @@ namespace Models.PMF.OldPlant
             n_total = n_grain + n_stover;
 
             double stoverTot = Vegetative.Wt;
-            double DMRrootShootRatio = Utility.Math.Divide(dmRoot, AboveGround.Wt * 10, 0.0);
-            double HarvestIndex = Utility.Math.Divide(yield, AboveGround.Wt * 10, 0.0);
-            double StoverCNRatio     = Utility.Math.Divide(stoverTot * 10 *plant_c_frac, n_stover, 0.0);
-            double RootCNRatio       = Utility.Math.Divide(dmRoot*plant_c_frac, nRoot, 0.0);
+            double DMRrootShootRatio = MathUtilities.Divide(dmRoot, AboveGround.Wt * 10, 0.0);
+            double HarvestIndex = MathUtilities.Divide(yield, AboveGround.Wt * 10, 0.0);
+            double StoverCNRatio     = MathUtilities.Divide(stoverTot * 10 *plant_c_frac, n_stover, 0.0);
+            double RootCNRatio       = MathUtilities.Divide(dmRoot*plant_c_frac, nRoot, 0.0);
 
             Summary.WriteMessage(this, string.Empty);
             Summary.WriteMessage(this, string.Empty);
@@ -1210,7 +1211,7 @@ namespace Models.PMF.OldPlant
 
                 // Update biomass and N pools. Different types of plant pools are affected in different ways.
                 // Calculate Root Die Back
-                double chop_fr_green_leaf = Utility.Math.Divide(Leaf.GreenRemoved.Wt, Leaf.Live.Wt, 0.0);
+                double chop_fr_green_leaf = MathUtilities.Divide(Leaf.GreenRemoved.Wt, Leaf.Live.Wt, 0.0);
 
                 Root.RemoveBiomassFraction(chop_fr_green_leaf);
                 double biomassGreenTops = AboveGroundLive.Wt;
@@ -1229,7 +1230,7 @@ namespace Models.PMF.OldPlant
 
                 UpdateCanopy();
 
-                double remove_biom_pheno = Utility.Math.Divide(dmRemovedGreenTops, biomassGreenTops, 0.0);
+                double remove_biom_pheno = MathUtilities.Divide(dmRemovedGreenTops, biomassGreenTops, 0.0);
                 Phenology.OnRemoveBiomass(remove_biom_pheno);
 
                 foreach (Organ1 Organ in Organ1s)

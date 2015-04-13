@@ -16,6 +16,7 @@ namespace UserInterface.Presenters
     using Models;
     using System.Collections;
     using System.Drawing;
+    using APSIM.Shared.Utilities;
 
     /// <summary>A presenter for displaying weather data</summary>
     class MetDataPresenter : IPresenter
@@ -65,7 +66,7 @@ namespace UserInterface.Presenters
         {
             if (filename != null)
             {
-                this.weatherData.FullFileName = Utility.PathUtils.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 DataTable data = this.weatherData.GetAllData();
 
                 //format the data into useful columns
@@ -100,7 +101,7 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.weatherDataView.Filename = Utility.PathUtils.GetRelativePath(filename, explorerPresenter.ApsimXFile.FileName);
+            this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, explorerPresenter.ApsimXFile.FileName);
         }
         
         /// <summary>Format a summary string about the weather file</summary>
@@ -120,25 +121,25 @@ namespace UserInterface.Presenters
             DataTable table = this.weatherData.GetAllData();
             if (table != null && table.Rows.Count > 0)
             {
-                DateTime firstDate = Utility.DataTable.GetDateFromRow(table.Rows[0]);
-                DateTime lastDate = Utility.DataTable.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
+                DateTime firstDate = DataTableUtilities.GetDateFromRow(table.Rows[0]);
+                DateTime lastDate = DataTableUtilities.GetDateFromRow(table.Rows[table.Rows.Count - 1]);
                 if (firstDate.DayOfYear != 1)
                     firstDate = new DateTime(firstDate.Year + 1, 1, 1);
                 if (lastDate.Day != 31 || lastDate.Month != 12)
                     lastDate = new DateTime(lastDate.Year - 1, 12, 31);
 
-                double[] yearlyRainfall = Utility.Math.YearlyTotals(table, "Rain", firstDate, lastDate);
-                double[] monthlyRainfall = Utility.Math.AverageMonthlyTotals(table, "rain", firstDate, lastDate);
-                double[] monthlyMaxT = Utility.Math.AverageDailyTotalsForEachMonth(table, "maxt", firstDate, lastDate);
-                double[] monthlyMinT = Utility.Math.AverageDailyTotalsForEachMonth(table, "mint", firstDate, lastDate);
+                double[] yearlyRainfall = MathUtilities.YearlyTotals(table, "Rain", firstDate, lastDate);
+                double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", firstDate, lastDate);
+                double[] monthlyMaxT = MathUtilities.AverageDailyTotalsForEachMonth(table, "maxt", firstDate, lastDate);
+                double[] monthlyMinT = MathUtilities.AverageDailyTotalsForEachMonth(table, "mint", firstDate, lastDate);
 
                 // long term average rainfall
                 if (yearlyRainfall.Length != 0)
                 {
-                    double totalYearlyRainfall = Utility.Math.Sum(yearlyRainfall);
+                    double totalYearlyRainfall = MathUtilities.Sum(yearlyRainfall);
                     int numYears = lastDate.Year - firstDate.Year + 1;
                     double meanYearlyRainfall = totalYearlyRainfall / numYears;
-                    double stddev = Utility.Math.StandardDeviation(yearlyRainfall);
+                    double stddev = MathUtilities.StandardDeviation(yearlyRainfall);
 
                     summary.AppendLine(String.Format("For years : {0} - {1}", firstDate.Year, lastDate.Year));
                     summary.AppendLine("Long term average yearly rainfall : " + String.Format("{0,3:f2}mm", meanYearlyRainfall));
@@ -162,14 +163,14 @@ namespace UserInterface.Presenters
         {
             weatherDataView.Graph.Clear();
             weatherDataView.Graph.DrawBar("", 
-                                      Utility.Date.LowerCaseMonths,
+                                      DateUtilities.LowerCaseMonths,
                                       monthlyRain,
                                       Axis.AxisType.Bottom,
                                       Axis.AxisType.Left,
                                       Color.LightSkyBlue,
                                       true);
             weatherDataView.Graph.DrawLineAndMarkers("Maximum temperature",
-                                                     Utility.Date.LowerCaseMonths,
+                                                     DateUtilities.LowerCaseMonths,
                                                      montlyMaxt,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
@@ -178,7 +179,7 @@ namespace UserInterface.Presenters
                                                      Series.MarkerType.None,
                                                      true);
             weatherDataView.Graph.DrawLineAndMarkers("Minimum temperature",
-                                                     Utility.Date.LowerCaseMonths,
+                                                     DateUtilities.LowerCaseMonths,
                                                      monthlyMint,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,

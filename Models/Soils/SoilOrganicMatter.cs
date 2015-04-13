@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {
@@ -125,9 +126,9 @@ namespace Models.Soils
             {
                 // convert the numbers
                 if (ToUnits == OCUnitsEnum.WalkleyBlack)
-                    OC = Utility.Math.Divide_Value(OC, 1.3);
+                    OC = MathUtilities.Divide_Value(OC, 1.3);
                 else
-                    OC = Utility.Math.Multiply_Value(OC, 1.3);
+                    OC = MathUtilities.Multiply_Value(OC, 1.3);
                 OCUnits = ToUnits;
             }
         }
@@ -140,7 +141,7 @@ namespace Models.Soils
             get
             {
                 if (OCUnits == OCUnitsEnum.WalkleyBlack)
-                    return Utility.Math.Multiply_Value(OC, 1.3);
+                    return MathUtilities.Multiply_Value(OC, 1.3);
                 else
                     return OC;
             }

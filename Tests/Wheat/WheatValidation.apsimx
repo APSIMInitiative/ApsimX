@@ -191,6 +191,8 @@
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -722,6 +724,7 @@ using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
 using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -748,8 +751,8 @@ namespace Models
        [EventSubscribe("DoManagement")]
        private void OnDoManagement(object sender, EventArgs e)
 		{
-			NitTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalN);
-			CarbonTot = Utility.Math.Sum(Soil.SoilNitrogen.TotalC);
+			NitTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
+			CarbonTot = MathUtilities.Sum(Soil.SoilNitrogen.TotalC);
 		}
 	}
 }
@@ -2236,6 +2239,8 @@ namespace Models
         using Models.Soils;
         using Models;
         using System.Xml.Serialization;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
 [Serializable] 
@@ -2345,7 +2350,7 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
     OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.NO3N[layer];
@@ -4218,6 +4223,8 @@ private void OnDoManagement(object sender, EventArgs e)
         using Models.Soils;
         using Models;
         using System.Xml.Serialization;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
 [Serializable] 
@@ -4327,7 +4334,7 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
     OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.NO3N[layer];
@@ -5615,6 +5622,8 @@ private void OnDoManagement(object sender, EventArgs e)
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 [Serializable] 
@@ -7226,6 +7235,7 @@ using Models.PMF;
 using Models.PMF.OilPalm;
 using Models.Soils;
 using Models.SurfaceOM;
+using APSIM.Shared.Utilities;
 
 namespace Models
 { 
@@ -8304,6 +8314,8 @@ namespace Models
         using Models.Soils;
         using Models;
         using System.Xml.Serialization;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
 [Serializable] 
@@ -8413,7 +8425,7 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
     OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.NO3N[layer];
@@ -8463,6 +8475,8 @@ private void OnDoManagement(object sender, EventArgs e)
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -8494,6 +8508,8 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -9470,6 +9486,8 @@ namespace Models
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -9505,6 +9523,8 @@ namespace Models
         using Models.Soils;
         using Models;
         using System.Xml.Serialization;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
 [Serializable] 
@@ -9614,7 +9634,7 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
     OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.NO3N[layer];
@@ -11384,6 +11404,8 @@ private void OnDoManagement(object sender, EventArgs e)
           <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -11419,6 +11441,8 @@ namespace Models
         using Models.Soils;
         using Models;
         using System.Xml.Serialization;
+        using APSIM.Shared.Utilities;
+
         namespace Models
         {
 [Serializable] 
@@ -11528,7 +11552,7 @@ double OrganicN = 0;
    for (int layer = 0; layer < layers; layer++)
     { 
     AccumMineralisation += (Soil.SoilNitrogen.MineralisedN[layer] + Soil.SoilNitrogen.dlt_n_min_res[layer]);
-    AccumDenit -= Utility.Math.Sum(Soil.SoilNitrogen.Denitrification);
+    AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
     OrganicN += (Soil.SoilNitrogen.MicrobialN[layer] + Soil.SoilNitrogen.FOMN[layer] + Soil.SoilNitrogen.HumicN[layer]);
     MineralN += (Soil.NO3N[layer] + Soil.NH4N[layer] + Soil.SoilNitrogen.urea[layer]);
     TotalNO3 += Soil.NO3N[layer];

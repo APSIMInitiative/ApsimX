@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
+using APSIM.Shared.Utilities;
 
 namespace SWIMFrame
 {
@@ -229,8 +230,8 @@ namespace SWIMFrame
             np = n2 - n1 + 1;
             Vector<double> akV = Vector<double>.Build.DenseOfArray(aK);
             Vector<double> hpKV = Vector<double>.Build.DenseOfArray(hpK);
-            double[] daTemp = Utility.Math.Subtract_Value(akV.SubVector(n1, n2-n1+1).ToArray(), q);
-            double[] dbTemp = Utility.Math.Subtract_Value(akV.SubVector(n1, n2 - n1).ToArray(), q);
+            double[] daTemp = MathUtilities.Subtract_Value(akV.SubVector(n1, n2-n1+1).ToArray(), q);
+            double[] dbTemp = MathUtilities.Subtract_Value(akV.SubVector(n1, n2 - n1).ToArray(), q);
             for (int idx = 0; idx < da.Length; idx++)
             {
                 da[idx] = 1.0 / daTemp[idx];
@@ -248,11 +249,11 @@ namespace SWIMFrame
             Vector<double> t3 = daV.SubVector(0, np);
             Vector<double> t4 = daV.SubVector(1, np - 1);
 
-            //u[0] = Utility.Math.Sum(Utility.Math.Divide_Value(Utility.Math.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), Utility.Math.Add(Utility.Math.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
-            u[0] = Utility.Math.Sum(Utility.Math.Divide_Value(Utility.Math.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), Utility.Math.Add(Utility.Math.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
-            da = Utility.Math.Multiply(da, da);
-            db = Utility.Math.Multiply(db, db);
-            u[1] = Utility.Math.Sum(Utility.Math.Divide_Value(Utility.Math.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), Utility.Math.Add(Utility.Math.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
+            //u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
+            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
+            da = MathUtilities.Multiply(da, da);
+            db = MathUtilities.Multiply(db, db);
+            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
             return u;
         }
 
@@ -387,12 +388,12 @@ namespace SWIMFrame
             double[] yl = new double[n - 2];
             Vector<double> xV = Vector<double>.Build.DenseOfArray(x);
             Vector<double> yV = Vector<double>.Build.DenseOfArray(y);
-            s = Utility.Math.Divide(Utility.Math.Subtract(yV.SubVector(2, n - 1).ToArray(), yV.SubVector(0, n - 3).ToArray()), Utility.Math.Subtract(xV.SubVector(2, n - 1).ToArray(), xV.SubVector(0, n - 3).ToArray()));
-            yl = Utility.Math.Add(yV.SubVector(0, n - 3).ToArray(), 
-                                  Utility.Math.Multiply(Utility.Math.Subtract(xV.SubVector(1, n - 2).ToArray(),
+            s = MathUtilities.Divide(MathUtilities.Subtract(yV.SubVector(2, n - 1).ToArray(), yV.SubVector(0, n - 3).ToArray()), MathUtilities.Subtract(xV.SubVector(2, n - 1).ToArray(), xV.SubVector(0, n - 3).ToArray()));
+            yl = MathUtilities.Add(yV.SubVector(0, n - 3).ToArray(), 
+                                  MathUtilities.Multiply(MathUtilities.Subtract(xV.SubVector(1, n - 2).ToArray(),
                                                                                 xV.SubVector(0, n - 3).ToArray()),
                                                               s));
-            return Utility.Math.Subtract_Value(Utility.Math.Divide(yV.SubVector(1, n - 2).ToArray(), yl), 1);
+            return MathUtilities.Subtract_Value(MathUtilities.Divide(yV.SubVector(1, n - 2).ToArray(), yl), 1);
         }
 
         // get last point where (x,y) deviates from linearity by < re
@@ -415,10 +416,10 @@ namespace SWIMFrame
                 {
                     ylSub[idx] = y[0] + s * (xSub[i] - x[0]);
                 }
-                double[] div = Utility.Math.Subtract_Value(Utility.Math.Divide(ySub.ToArray(), ylSub.ToArray()), 1);
+                double[] div = MathUtilities.Subtract_Value(MathUtilities.Divide(ySub.ToArray(), ylSub.ToArray()), 1);
                 for (int idx = 0; idx < div.Length; idx++)
                     div[idx] = Math.Abs(div[idx]);
-                are = Utility.Math.Max(div);
+                are = MathUtilities.Max(div);
                 if (are > re)
                 {
                     return i - 1;
@@ -437,7 +438,7 @@ namespace SWIMFrame
             for (int idx = 0; idx < n; idx++)
             {
                 ac[idx] = Math.Abs(c[idx]);
-                di[idx] = (int)Math.Round(fac * Utility.Math.Max(ac) / ac[idx], MidpointRounding.ToEven); // min spacings
+                di[idx] = (int)Math.Round(fac * MathUtilities.Max(ac) / ac[idx], MidpointRounding.ToEven); // min spacings
             }
             isel[0] = 1; i = 1; j = 1;
             while (true) //will want to change this

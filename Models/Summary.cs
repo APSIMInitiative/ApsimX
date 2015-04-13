@@ -11,6 +11,7 @@ namespace Models
     using System.IO;
     using System.Reflection;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
@@ -431,7 +432,7 @@ namespace Models
             else
             {
                 bool showHeadings = className != "PropertyTable";
-                writer.WriteLine(Utility.DataTable.DataTableToText(table, 0, "  ", showHeadings));
+                writer.WriteLine(DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings));
             }
         }
 
@@ -469,7 +470,7 @@ namespace Models
                 }
                 else
                 {
-                    st = Utility.String.IndentText(st, 4);
+                    st = StringUtilities.IndentText(st, 4);
                 }
 
                 writer.WriteLine(st);
@@ -645,31 +646,31 @@ namespace Models
             if (dataTypeName == "Double[]")
             {
                 List<double> values = new List<double>();
-                values.AddRange(Utility.Math.StringsToDoubles(stringValues));
+                values.AddRange(MathUtilities.StringsToDoubles(stringValues));
                 if (showTotal)
                 {
-                    values.Add(Utility.Math.Sum(values));
+                    values.Add(MathUtilities.Sum(values));
                 }
 
-                stringValues = Utility.Math.DoublesToStrings(values, displayFormat);
+                stringValues = MathUtilities.DoublesToStrings(values, displayFormat);
             }
             else if (dataTypeName == "Int32[]")
             {
                 List<double> values = new List<double>();
-                values.AddRange(Utility.Math.StringsToDoubles(stringValues));
+                values.AddRange(MathUtilities.StringsToDoubles(stringValues));
                 if (showTotal)
                 {
-                    values.Add(Utility.Math.Sum(values));
+                    values.Add(MathUtilities.Sum(values));
                 }
 
-                stringValues = Utility.Math.DoublesToStrings(values, "N0");
+                stringValues = MathUtilities.DoublesToStrings(values, "N0");
             }
             else if (dataTypeName != "String[]")
             {
                 throw new ApsimXException(null, "Invalid property type: " + dataTypeName);
             }
 
-            Utility.DataTable.AddColumn(table, heading, stringValues);
+            DataTableUtilities.AddColumn(table, heading, stringValues);
         }
 
         /// <summary>

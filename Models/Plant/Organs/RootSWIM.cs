@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -27,7 +28,7 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public override double WaterUptake
         {
-            get { return -Utility.Math.Sum(Uptake); }
+            get { return -MathUtilities.Sum(Uptake); }
         }
 
 

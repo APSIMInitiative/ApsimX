@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 
 namespace Models.PMF.OilPalm
@@ -904,7 +905,7 @@ namespace Models.PMF.OilPalm
             int RootLayer = LayerIndex(RootDepth);
             RootDepth = RootDepth + RootFrontVelocity.Value * soilCrop.XF[RootLayer];
             RootDepth = Math.Min(MaximumRootDepth, RootDepth);
-            RootDepth = Math.Min(Utility.Math.Sum(Soil.Thickness), RootDepth);
+            RootDepth = Math.Min(MathUtilities.Sum(Soil.Thickness), RootDepth);
 
             // Calculate Root Activity Values for water and nitrogen
             double[] RAw = new double[Soil.Thickness.Length];
@@ -1019,13 +1020,13 @@ namespace Models.PMF.OilPalm
             double[] BunchDMD = new double[Bunches.Count];
             for (int i = 0; i < 6; i++)
                 BunchDMD[i] = BunchSizeMax.Value / (6 * frondAppearanceRate / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value;
-            double TotBunchDMD = Utility.Math.Sum(BunchDMD);
+            double TotBunchDMD = MathUtilities.Sum(BunchDMD);
 
             double[] FrondDMD = new double[Fronds.Count];
             double specificLeafArea = SpecificLeafArea.Value;
             for (int i = 0; i < Fronds.Count; i++)
                 FrondDMD[i] = (FrondsAgeDelta[i] - FrondsAge[i]) / specificLeafArea * Population * Fn;
-            double TotFrondDMD = Utility.Math.Sum(FrondDMD);
+            double TotFrondDMD = MathUtilities.Sum(FrondDMD);
 
             double StemDMD = TotFrondDMD * StemToFrondFraction.Value;
 
@@ -1135,7 +1136,7 @@ namespace Models.PMF.OilPalm
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
 
-            double TotPotSWUptake = Utility.Math.Sum(PotSWUptake);
+            double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
 
             EP = 0.0;
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
@@ -1189,7 +1190,7 @@ namespace Models.PMF.OilPalm
                 PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * Soil.NO3N[j] * swaf);
             }
 
-            double TotPotNUptake = Utility.Math.Sum(PotNUptake);
+            double TotPotNUptake = MathUtilities.Sum(PotNUptake);
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
@@ -1201,7 +1202,7 @@ namespace Models.PMF.OilPalm
             if (NitrogenChanged != null)
                 NitrogenChanged.Invoke(NUptakeType);
 
-            Fr = Math.Min(1.0, Math.Max(0, Utility.Math.Sum(NUptake) / BunchNDemand));
+            Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;
 
             double Tot = 0;
@@ -1213,7 +1214,7 @@ namespace Models.PMF.OilPalm
 
             // Calculate fraction of N demand for Vegetative Parts
             if ((Ndemand - DeltaBunchN) > 0)
-                Fr = Math.Max(0.0, ((Utility.Math.Sum(NUptake) - DeltaBunchN) / (Ndemand - DeltaBunchN)));
+                Fr = Math.Max(0.0, ((MathUtilities.Sum(NUptake) - DeltaBunchN) / (Ndemand - DeltaBunchN)));
             else
                 Fr = 0.0;
 
@@ -1234,7 +1235,7 @@ namespace Models.PMF.OilPalm
 
             double EndN = PlantN;
             double Change = EndN - StartN;
-            double Uptake = Utility.Math.Sum(NUptake) / 10.0;
+            double Uptake = MathUtilities.Sum(NUptake) / 10.0;
             if (Math.Abs(Change - Uptake) > 0.001)
                 throw new Exception("Error in N Allocation");
 
@@ -1568,7 +1569,7 @@ namespace Models.PMF.OilPalm
             BiomassRemovedData.crop_type = "OilPalmUnderstory";
             BiomassRemovedData.dm_type = new string[1] { "litter" };
             BiomassRemovedData.dlt_crop_dm = new float[1] { (float)(UnderstoryDltDM * 10) };
-            BiomassRemovedData.dlt_dm_n = new float[1] { (float)(UnderstoryNFixation + Utility.Math.Sum(UnderstoryNUptake)) };
+            BiomassRemovedData.dlt_dm_n = new float[1] { (float)(UnderstoryNFixation + MathUtilities.Sum(UnderstoryNUptake)) };
             BiomassRemovedData.dlt_dm_p = new float[1] { 0 };
             BiomassRemovedData.fraction_to_residue = new float[1] { 1 };
             BiomassRemoved.Invoke(BiomassRemovedData);
@@ -1591,7 +1592,7 @@ namespace Models.PMF.OilPalm
             for (int j = 0; j < Soil.Thickness.Length; j++)
                 UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
 
-            double TotUnderstoryPotSWUptake = Utility.Math.Sum(UnderstoryPotSWUptake);
+            double TotUnderstoryPotSWUptake = MathUtilities.Sum(UnderstoryPotSWUptake);
 
             UnderstoryEP = 0.0;
             double[] sw_dep = Soil.Water;
@@ -1623,7 +1624,7 @@ namespace Models.PMF.OilPalm
                 UnderstoryPotNUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * Soil.NO3N[j]);
             }
 
-            double TotUnderstoryPotNUptake = Utility.Math.Sum(UnderstoryPotNUptake);
+            double TotUnderstoryPotNUptake = MathUtilities.Sum(UnderstoryPotNUptake);
             double Fr = Math.Min(1.0, (UnderstoryNdemand - UnderstoryNFixation) / TotUnderstoryPotNUptake);
 
             double[] no3 = Soil.NO3N;
@@ -1634,9 +1635,9 @@ namespace Models.PMF.OilPalm
             }
             Soil.NO3N = no3;
 
-            //UnderstoryNFixation += UnderstoryNdemand - Utility.Math.Sum(UnderstoryNUptake);
+            //UnderstoryNFixation += UnderstoryNdemand - MathUtilities.Sum(UnderstoryNUptake);
 
-            //NFixation = Math.Max(0.0, Ndemand - Utility.Math.Sum(NUptake));
+            //NFixation = Math.Max(0.0, Ndemand - MathUtilities.Sum(NUptake));
 
         }
 

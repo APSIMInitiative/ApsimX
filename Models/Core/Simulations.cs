@@ -6,6 +6,7 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 using Models.Factorial;
+using APSIM.Shared.Utilities;
 
 namespace Models.Core
 {
@@ -15,7 +16,7 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    public class Simulations : Model, Utility.JobManager.IRunnable
+    public class Simulations : Model, JobManager.IRunnable
     {
         /// <summary>The _ file name</summary>
         private string _FileName;
@@ -23,7 +24,16 @@ namespace Models.Core
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
 
+        /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
+        [XmlIgnore]
+        public bool IsCompleted { get; set; }
 
+        /// <summary>Gets the error message. Can be null if no error. Set by JobManager.</summary>
+        [XmlIgnore]
+        public string ErrorMessage { get; set; }
+
+        /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
+        public bool IsComputationallyTimeConsuming { get { return false; } }
 
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
@@ -55,7 +65,7 @@ namespace Models.Core
         {
             
             // Deserialise
-            Simulations simulations = Utility.Xml.Deserialise(FileName) as Simulations;
+            Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
 
             if (simulations != null)
             {
@@ -104,7 +114,7 @@ namespace Models.Core
         {
 
             // Deserialise
-            Simulations simulations = Utility.Xml.Deserialise(node) as Simulations;
+            Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
 
             if (simulations != null)
             {
@@ -166,7 +176,7 @@ namespace Models.Core
 
             try
             {
-                stream.Write(Utility.Xml.Serialise(this, true));
+                stream.Write(XmlUtilities.Serialise(this, true));
             }
             finally
             {
@@ -284,7 +294,7 @@ namespace Models.Core
         public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             // Get a reference to the JobManager so that we can add jobs to it.
-            Utility.JobManager jobManager = e.Argument as Utility.JobManager;
+            JobManager jobManager = e.Argument as JobManager;
 
             // Get a reference to our child DataStore.
             DataStore store = Apsim.Child(this, typeof(DataStore)) as DataStore;
