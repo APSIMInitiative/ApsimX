@@ -10,9 +10,139 @@ using Models.PMF.Functions.StructureFunctions;
 
 namespace Models.PMF
 {
-    /// <summary>
-    /// A structure model for plant
-    /// </summary>
+    /*!
+        <summary>
+        A structure model for plant
+        </summary>
+        \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
+            sowing data, e.g. population, bud number.
+        \pre A \ref Models.PMF.Organs.Leaf "Leaf" model has to exist to 
+            access leaf initialisation an number.
+        \pre A \ref Models.PMF.Phen.Phenology "Phenology" model has to exist 
+            to check whether plant is initialised.
+        \param InitialiseStage <b>(Constant)</b> The initialise stage. 
+            The primordia number, node number and stem population start to 
+            increase since initialise stage.
+        \param PrimaryBudNo <b>(Constant)</b> The primary bud number in each node. 
+            However, PrimaryBudNo is reset at sowing using sowing script 
+            with default value 1.
+            
+        \param ThermalTime <b>(IFunction)</b> The daily thermal time (<sup>o</sup>Cd).
+        \param MainStemPrimordiaInitiationRate <b>(IFunction)</b> The initiation rate 
+            of primordia in main stem (# <sup>o</sup>Cd<sup>-1</sup>).
+        \param MainStemNodeAppearanceRate <b>(IFunction)</b> The appearance rate 
+            of node in main stem (# <sup>o</sup>Cd<sup>-1</sup>).
+        \param MainStemFinalNodeNumber <b>(IFunction)</b> The maximum node number
+            in main stem (#). The maximum node is calculated by model 
+            MainStemFinalNodeNumberFunction if MainStemFinalNodeNumber is 
+            specified to MainStemFinalNodeNumberFunction.
+        \param HeightModel <b>(IFunction)</b> Plant height (mm).
+        \param BranchingRate <b>(IFunction)</b> The rate of new branching (#).
+        \param ShadeInducedBranchMortality <b>(IFunction)</b> 
+            The branch mortality induced by shading (0-1).
+        \param DroughtInducedBranchMortality <b>(IFunction)</b> 
+            The branch mortality induced by drought (0-1).
+        \param PlantMortality <b>(IFunction, Optional)</b> The plant mortality 
+            to reduce plant population.
+            
+        \retval TotalStemPopn Number of stems including main and branch stems 
+            (m<sup>-2</sup>).
+        \retval MainStemPrimordiaNo Number of primordia initiated in main stem.
+        \retval MainStemNodeNo Number of nodes appeared in main stem.
+        \retval PlantTotalNodeNo Number of leaves appeared per plant including 
+            all main stem and branch leaves.
+        \retval ProportionBranchMortality Proportion of branch mortality.
+        \retval ProportionPlantMortality Proportion of plant mortality.
+        \retval DeltaNodeNumber The daily changes of node number.
+        
+        \retval MainStemPopn Number of main stem per square meter (m<sup>-2</sup>).
+        \retval RemainingNodeNo Number of leaves yet to appear.
+        \retval Height Plant height (mm).
+        \retval PrimaryBudTotalNodeNo Number of appeared bud (leaves) per primary 
+            bud unit including all main stem and branch leaves.
+        \retval MainStemFinalNodeNo The main stem final node number.
+        \retval RelativeNodeApperance Relative progress toward final leaf (0-1).
+        
+        <remarks>
+        The Structure model predicts the development and mortality of primordia, node (leaf) and branch
+        (tiller). The primary bud number assumes the same in seed and all axillary bud and set in the 
+        sowing data with default value 1 (Not sure the assumption is correct).
+        
+        ## Simulation commencing (OnSimulationCommencing)
+            Local variables are reset to 0 including total stem population, number of 
+            main stem primordia, main stem node and plant total node;
+            proportion of branch and plant mortality, changes of node number.
+            
+        ## Sowing (OnPlantSowing)
+            The primary bud number and population of main stem are initialised from 
+            sowing date. Primary bud number equals to bud number bud number at 
+            sowing data (default value equals to 1). The population of main stem
+            equals to bud number multiplying sowing population.
+            
+            The maximum node (leaf) number in main stem is calculated 
+                by MainStemFinalNodeNumber. 
+                \ref Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction "MainStemFinalNodeNumberFunction" is called if 
+                MainStemFinalNodeNumber specifies to MainStemFinalNodeNumberFunction.
+                
+            Plant height is calculated by HeightModel.
+            
+        ## Plant ending (OnPlantEnding)
+            See simulation commencing
+            
+        ## Potential growth (OnDoPotentialPlantGrowth)
+            Daily changes of primordia (\f$\Delta N_{p}\f$) and node (leaf) (\f$\Delta N_{n}\f$) 
+            number in main stem are calculated using plastochron (\f$P_{pla}\f$) 
+            and phyllochron (\f$P_{phy}\f$), respectively, after plant initialisation.
+            
+            \f[
+                \Delta N_{p}=\frac{\Delta TT_{d}}{P_{pla}}
+            \f]
+            
+            \f[
+                \Delta N_{n}=\frac{\Delta TT_{d}}{P_{phy}}
+            \f]
+            where, \f$\Delta TT_{d}\f$ is the daily thermal time, which calculates 
+            from parameter ThermalTime. \f$P_{pla}\f$ and \f$P_{phy}\f$ calculates
+            from parameter MainStemPrimordiaInitiationRate and MainStemNodeAppearanceRate,
+            respectively.
+            
+            Total number of primordia \f$N_{p}\f$ and node \f$N_{n}\f$ in main stem are summarised since initialisation.
+            \f[
+                N_{p}=\sum_{t=T_{i}}^{T}\Delta N_{p}
+            \f]
+            
+            \f[
+                N_{n}=\sum_{t=T_{i}}^{T}\Delta N_{n}
+            \f]
+            where, \f$T_{i}\f$ is day of plant initialisation. \f$T\f$ is today.
+            
+            Plant population (\f$P\f$) is daily reduced by the plant mortality (\f$\Delta P\f$).
+            \f[
+                P=P_{0}\prod_{t=T_{i}}^{T}(1-\Delta P)
+            \f]
+            where, \f$P_{0}\f$ is the sown population, which initialised at sowing.
+            
+            Total stem (main stem + branching) number (\f$N_{s}\f$) is initialised 
+            according plant population (\f$P\f$) and primary bud number (\f$N_b\f$).
+            \f[
+                N_{s}=P \times N_b
+            \f]
+            The total stem number is calculated by the daily increase of branching 
+            (\f$\Delta N_{s}\f$), and daily decrease caused by drought 
+            (\f$\Delta N_{drought}\f$) and shade mortality (\f$\Delta N_{shade}\f$).
+            \f[
+            N_{s}=PN_{b}[1+\sum_{t=t_{i}}^{T}\Delta N_{s}+\prod_{t=T_{i}}^{T}(1-\Delta N_{drought}-\Delta N_{shade})]
+            \f]
+            Daily increase of branching (\f$\Delta N_{s}\f$) is calculated by parameter
+            BranchingRate. The mortalities, caused by drought (\f$\Delta N_{drought}\f$)  
+            and shade (\f$\Delta N_{shade}\f$) are calculated by parameters 
+            DroughtInducedBranchMortality and ShadeInducedBranchMortality, respectively.
+            
+        ## Actual growth (OnDoActualPlantGrowth)
+            Plant total node number is updated according to appeared node (leaf) number 
+            and population.
+        </remarks>
+    */
     [Serializable]
     [Description("Keeps Track of Plants Structural Development")]
     public class Structure : Model
