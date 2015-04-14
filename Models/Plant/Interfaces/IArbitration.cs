@@ -83,17 +83,20 @@ namespace Models.PMF.Interfaces
         double NUptake { get; set; }
 
         /// <summary>Does the water uptake.</summary>
-        /// <param name="Demand">The demand.</param>
+        /// <param name="uptake">The uptake.</param>
         void DoWaterUptake(double[] uptake);
 
         /// <summary>Does the water uptake.</summary>
-        /// <param name="Demand">The demand.</param>
+        /// <param name="NO3NUptake">The NO3NUptake.</param>
+        /// <param name="NH4Uptake">The NH4Uptake.</param>
         void DoNitrogenUptake(double[] NO3NUptake, double[] NH4Uptake);
 
         /// <summary>Gets the Nitrate uptake supply for the given nitrogen state.</summary>
+        /// <param name="zones">water zones</param>
         double[] NO3NSupply(List<ZoneWaterAndN> zones);
 
         /// <summary>Gets the Ammonium uptake supply for the given nitrogen state.</summary>
+        /// <param name="zones">water zones</param>
         double[] NH4NSupply(List<ZoneWaterAndN> zones);
     }
 

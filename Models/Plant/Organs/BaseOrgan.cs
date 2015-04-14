@@ -109,11 +109,12 @@ namespace Models.PMF.Organs
             set { throw new Exception("Cannot set water allocation for " + Name); }
         }
         /// <summary>Does the water uptake.</summary>
-        /// <param name="Demand">The demand.</param>
+        /// <param name="uptake">The uptake.</param>
         virtual public void DoWaterUptake(double[] uptake) { }
         
         /// <summary>Does the N uptake.</summary>
-        /// <param name="Demand">The demand.</param>
+        /// <param name="NO3NUptake">The NO3NUptake.</param>
+        /// <param name="NH4Uptake">The NH4Uptake.</param>
         virtual public void DoNitrogenUptake(double[] NO3NUptake, double[] NH4Uptake) { }
 
         /// <summary>Does the potential nutrient.</summary>

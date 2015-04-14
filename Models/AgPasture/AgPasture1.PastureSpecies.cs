@@ -5107,14 +5107,14 @@ namespace Models.AgPasture1
 		#region Functions  -------------------------------------------------------------------------------------------------
 
 		/// <summary>Placeholder for SoilArbitrator</summary>
-		/// <param name="info"></param>
+        /// <param name="soilstate">soilstate</param>
 		/// <returns></returns>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
 		{
             throw new NotImplementedException();
 		}
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <param name="soilstate">soilstate</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {

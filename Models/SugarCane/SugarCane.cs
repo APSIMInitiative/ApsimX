@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models;
@@ -19,10 +18,10 @@ namespace Models
     {
 
 
-    ///<summary>
-    /// .NET port of the Fortran Sugar model
-    /// Ported by Shaun Verrall Nov 2014
-    ///</summary> 
+        /// <summary>
+        /// .NET port of the Fortran Sugar model
+        /// Ported by Shaun Verrall Nov 2014
+        /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -31,32 +30,50 @@ namespace Models
 
         #region Canopy interface
 
-        /// <summary>Canopy type</summary>
+        /// <summary>
+        /// Canopy type
+        /// </summary>
         public string CanopyType { get { return CropType; } }
 
-        /// <summary>Gets the LAI (m^2/m^2)</summary>
+        /// <summary>
+        /// Gets the LAI (m^2/m^2)
+        /// </summary>
         public double LAI { get { return lai; } }
 
-        /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
+        /// <summary>
+        /// Gets the maximum LAI (m^2/m^2)
+        /// </summary>
         public double LAITotal { get { return lai + g_slai; } }
 
-        /// <summary>Gets the cover green (0-1)</summary>
+        /// <summary>
+        /// Gets the cover green (0-1)
+        /// </summary>
         public double CoverGreen { get { return cover_green; } }
 
-        /// <summary>Gets the cover total (0-1)</summary>
+        /// <summary>
+        /// Gets the cover total (0-1)
+        /// </summary>
         public double CoverTotal { get { return cover_tot; } }
 
-        /// <summary>Gets the canopy height (mm)</summary>
+        /// <summary>
+        /// Gets the canopy height (mm)
+        /// </summary>
         public double Height { get { return height; } }
 
-        /// <summary>Gets the canopy depth (mm)</summary>
+        /// <summary>
+        /// Gets the canopy depth (mm)
+        /// </summary>
         public double Depth { get { return height; } }
 
-        /// <summary>Gets  FRGR.</summary>
+        /// <summary>
+        /// Gets  FRGR.
+        /// </summary>
         [XmlIgnore]
         public double FRGR { get { return 1; } }  //TODO: don't know how to implement FRGR in SugarCane. So just return 1.
 
-        /// <summary>Sets the potential evapotranspiration.</summary>
+        /// <summary>
+        /// Sets the potential evapotranspiration.
+        /// </summary>
         [XmlIgnore]
         public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
 
@@ -73,26 +90,34 @@ namespace Models
         #region Links
 
 
-        /// <summary>The clock</summary>
+        /// <summary>
+        /// The clock
+        /// </summary>
         [Link]
         private Clock Clock = null;
 
 
-        /// <summary>The weather</summary>
+        /// <summary>
+        /// The weather
+        /// </summary>
         [Link]
-        private Weather Weather;
+        private Weather Weather = null;
 
         
         //[Link]
         //private MicroClimate MicroClim; //added for fr_intc_radn_ , but don't know what the corresponding variable is in MicroClimate.
 
-        
-        /// <summary>The soil</summary>
+
+        /// <summary>
+        /// The soil
+        /// </summary>
         [Link]
         private Soil Soil = null;
 
 
-        /// <summary>The summary</summary>
+        /// <summary>
+        /// The summary
+        /// </summary>
         [Link]
         private ISummary Summary = null;
 
@@ -111,8 +136,17 @@ namespace Models
         //!      sugar_array_sizes
         //!     ================================================================
         //!      array size_of settings
+        /// <summary>
+        /// The max_leaf
+        /// </summary>
         const int max_leaf = 200;  //! maximum number of plant leaves
+        /// <summary>
+        /// The max_layer
+        /// </summary>
         const int max_layer = 100;  //! Maximum number of layers in soil
+        /// <summary>
+        /// The max_table
+        /// </summary>
         const int max_table = 10;   //! Maximum size_of of tables
 
 
@@ -120,8 +154,17 @@ namespace Models
         //!      sugar_crop status
         //!     ================================================================
         //!      crop status names
+        /// <summary>
+        /// The crop_alive
+        /// </summary>
         const String crop_alive = "alive";
+        /// <summary>
+        /// The crop_dead
+        /// </summary>
         const String crop_dead = "dead";
+        /// <summary>
+        /// The crop_out
+        /// </summary>
         const String crop_out = "out";
 
 
@@ -129,8 +172,17 @@ namespace Models
         //!      sugar_processes_for_stress
         //!     ================================================================
         //!      Process names used for stress
+        /// <summary>
+        /// The photo
+        /// </summary>
         const int photo = 1;    //! photosynthesis flag
+        /// <summary>
+        /// The expansion
+        /// </summary>
         const int expansion = 2;    //! cell expansion flag
+        /// <summary>
+        /// The pheno
+        /// </summary>
         const int pheno = 3;    //! phenological flag
 
 
@@ -139,14 +191,35 @@ namespace Models
         //!     ================================================================
         //!      plant part names
 
+        /// <summary>
+        /// The root
+        /// </summary>
         const int root = 0;    //! root
+        /// <summary>
+        /// The leaf
+        /// </summary>
         const int leaf = 1;    //! leaf
+        /// <summary>
+        /// The sstem
+        /// </summary>
         const int sstem = 2;    //! structural stem
+        /// <summary>
+        /// The cabbage
+        /// </summary>
         const int cabbage = 3;    //! cabbage
+        /// <summary>
+        /// The sucrose
+        /// </summary>
         const int sucrose = 4;    //! grain
 
+        /// <summary>
+        /// The max_part
+        /// </summary>
         const int max_part = 5;   //! number of plant parts
 
+        /// <summary>
+        /// The part_name
+        /// </summary>
         string[] part_name = new string[max_part] { "root", "leaf", "sstem", "cabbage", "sucrose" };
 
 
@@ -157,28 +230,70 @@ namespace Models
 
         //! administration
 
+        /// <summary>
+        /// The max_stage
+        /// </summary>
         const int max_stage = 6;              //! number of growth stages
+        /// <summary>
+        /// The now
+        /// </summary>
         const int now = max_stage + 1;        //! at this point in time ()
 
 
         //! mechanical operations
 
+        /// <summary>
+        /// The crop_end
+        /// </summary>
         const int crop_end = 6;        //! crop_end stage
+        /// <summary>
+        /// The fallow
+        /// </summary>
         const int fallow = crop_end;      //! fallow phase
 
+        /// <summary>
+        /// The sowing
+        /// </summary>
         const int sowing = 1;                //! Sowing stage
+        /// <summary>
+        /// The sow_to_sprouting
+        /// </summary>
         const int sow_to_sprouting = sowing;      //! seed sow_to_germ phase
 
+        /// <summary>
+        /// The sprouting
+        /// </summary>
         const int sprouting = 2;                //! Germination stage
+        /// <summary>
+        /// The sprouting_to_emerg
+        /// </summary>
         const int sprouting_to_emerg = sprouting; //! sprouting_to_emerg elongation phase
 
+        /// <summary>
+        /// The emerg
+        /// </summary>
         const int emerg = 3;                //! Emergence stage
+        /// <summary>
+        /// The emerg_to_begcane
+        /// </summary>
         const int emerg_to_begcane = emerg;       //! emergence to start of cane growth
 
+        /// <summary>
+        /// The begcane
+        /// </summary>
         const int begcane = 4;
+        /// <summary>
+        /// The begcane_to_flowering
+        /// </summary>
         const int begcane_to_flowering = begcane;
 
+        /// <summary>
+        /// The flowering
+        /// </summary>
         const int flowering = 5;
+        /// <summary>
+        /// The flowering_to_crop_end
+        /// </summary>
         const int flowering_to_crop_end = flowering;
 
 
@@ -197,19 +312,43 @@ namespace Models
 
       
         //[Output]
+        /// <summary>
+        /// Gets or sets the crop_type.
+        /// </summary>
+        /// <value>
+        /// The crop_type.
+        /// </value>
         [Units("()")]
         public string crop_type { get; set; }    //sv- this will be set to "SugarCane"   //sv- used by Micromet module
 
         //! upper limit
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the tt_emerg_to_begcane_ub.
+        /// </summary>
+        /// <value>
+        /// The tt_emerg_to_begcane_ub.
+        /// </value>
         public double tt_emerg_to_begcane_ub { get; set; }
 
         //! upper limit
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the tt_begcane_to_flowering_ub.
+        /// </summary>
+        /// <value>
+        /// The tt_begcane_to_flowering_ub.
+        /// </value>
         public double tt_begcane_to_flowering_ub { get; set; }
 
         //! upper limit
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the tt_flowering_to_crop_end_ub.
+        /// </summary>
+        /// <value>
+        /// The tt_flowering_to_crop_end_ub.
+        /// </value>
         [Units("oC")]
         public double tt_flowering_to_crop_end_ub { get; set; }
 
@@ -217,6 +356,12 @@ namespace Models
         //!    sugar_N_uptake
 
         //[Param(MinVal = 1, MaxVal = 2)]
+        /// <summary>
+        /// Gets or sets the n_uptake_option.
+        /// </summary>
+        /// <value>
+        /// The n_uptake_option.
+        /// </value>
         public int n_uptake_option { get; set; }
 
 
@@ -225,35 +370,77 @@ namespace Models
         //! time constant for uptake by  diffusion (days). H van Keulen & NG Seligman. Purdoe 1987. 
         //! This is the time it would take to take up by diffusion the current amount of N if it wasn't depleted between time steps
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 100.0, Name = "no3_diffn_const")]
+        /// <summary>
+        /// Gets or sets the n o3_diffn_const.
+        /// </summary>
+        /// <value>
+        /// The n o3_diffn_const.
+        /// </value>
         [Units("days")]
         public double NO3_diffn_const { get; set; }
 
 
         //[Param(IsOptional = true)]
+        /// <summary>
+        /// Gets or sets the n_supply_preference.
+        /// </summary>
+        /// <value>
+        /// The n_supply_preference.
+        /// </value>
         public string n_supply_preference { get; set; }
 
         //else
 
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 1.0)]
+        /// <summary>
+        /// Gets or sets the kno3.
+        /// </summary>
+        /// <value>
+        /// The kno3.
+        /// </value>
         [Units("/day")]
         public double kno3 { get; set; }
 
 
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 10.0)]
+        /// <summary>
+        /// Gets or sets the no3ppm_min.
+        /// </summary>
+        /// <value>
+        /// The no3ppm_min.
+        /// </value>
         [Units("oC")]
         public double no3ppm_min { get; set; }
 
 
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 1.0)]
+        /// <summary>
+        /// Gets or sets the KNH4.
+        /// </summary>
+        /// <value>
+        /// The KNH4.
+        /// </value>
         [Units("/day")]
         public double knh4 { get; set; }
 
 
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 10.0)]
+        /// <summary>
+        /// Gets or sets the nh4ppm_min.
+        /// </summary>
+        /// <value>
+        /// The nh4ppm_min.
+        /// </value>
         [Units("oC")]
         public double nh4ppm_min { get; set; }
 
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 100.0)]
+        /// <summary>
+        /// Gets or sets the total_n_uptake_max.
+        /// </summary>
+        /// <value>
+        /// The total_n_uptake_max.
+        /// </value>
         [Units("g/m2")]
         public double total_n_uptake_max { get; set; }
 
@@ -265,11 +452,23 @@ namespace Models
 
         //! upper limit of lower limit (mm/mm)
         //[Param(MinVal = 0.0, MaxVal = 1000.0)]
+        /// <summary>
+        /// Gets or sets the ll_ub.
+        /// </summary>
+        /// <value>
+        /// The ll_ub.
+        /// </value>
         [Units("oC")]
         public double ll_ub { get; set; }
 
         //! upper limit of water uptake factor
         //[Param(MinVal = 0.0, MaxVal = 1000.0)]
+        /// <summary>
+        /// Gets or sets the kl_ub.
+        /// </summary>
+        /// <value>
+        /// The kl_ub.
+        /// </value>
         [Units("oC")]
         public double kl_ub { get; set; }
 
@@ -278,6 +477,12 @@ namespace Models
 
         //! lowest acceptable value for ll
         //[Param(MinVal = 0.0, MaxVal = 1000.0)]
+        /// <summary>
+        /// Gets or sets the minsw.
+        /// </summary>
+        /// <value>
+        /// The minsw.
+        /// </value>
         public double minsw { get; set; }
 
 
@@ -288,11 +493,23 @@ namespace Models
 
         //! upper limit of latitude for model (oL)
         //[Param(MinVal = -90.0, MaxVal = 90.0)]
+        /// <summary>
+        /// Gets or sets the latitude_ub.
+        /// </summary>
+        /// <value>
+        /// The latitude_ub.
+        /// </value>
         [Units("oL")]
         public double latitude_ub { get; set; }
 
         //! lower limit of latitude for model(oL)
         //[Param(MinVal = -90.0, MaxVal = 90.0)]
+        /// <summary>
+        /// Gets or sets the latitude_lb.
+        /// </summary>
+        /// <value>
+        /// The latitude_lb.
+        /// </value>
         [Units("oL")]
         public double latitude_lb { get; set; }
 
@@ -300,11 +517,20 @@ namespace Models
 
         //! upper limit of maximum temperature (oC)
         //[Param(MinVal = 0.0, MaxVal = 60.0)]
+        /// <summary>
+        /// Gets or sets the maxt_ub.
+        /// </summary>
+        /// <value>
+        /// The maxt_ub.
+        /// </value>
         [Units("oC")]
         public double maxt_ub { get; set; }
 
         //! lower limit of maximum temperature (oC)
         //[Param(MinVal = 0.0, MaxVal = 60.0)]
+        /// <summary>
+        /// The maxt_lb
+        /// </summary>
         [Units("oC")]
         public double maxt_lb;
 
@@ -312,11 +538,23 @@ namespace Models
 
         //! upper limit of minimum temperature (oC)
         //[Param(MinVal = 0.0, MaxVal = 40.0)]
+        /// <summary>
+        /// Gets or sets the mint_ub.
+        /// </summary>
+        /// <value>
+        /// The mint_ub.
+        /// </value>
         [Units("oC")]
         public double mint_ub { get; set; }
 
         //! lower limit of minimum temperature (oC)
         //[Param(MinVal = -100.0, MaxVal = 100.0)]   //TODO: sv-THIS COULD CAUSE PROBLEMS MaxValue should be less then 40.0
+        /// <summary>
+        /// Gets or sets the mint_lb.
+        /// </summary>
+        /// <value>
+        /// The mint_lb.
+        /// </value>
         [Units("oC")]
         public double mint_lb { get; set; }
 
@@ -324,11 +562,23 @@ namespace Models
 
         //! upper limit of solar radiation (Mj/m^2)
         //[Param(MinVal = 0.0, MaxVal = 100.0)]
+        /// <summary>
+        /// Gets or sets the radn_ub.
+        /// </summary>
+        /// <value>
+        /// The radn_ub.
+        /// </value>
         [Units("MJ/m^2")]
         public double radn_ub { get; set; }
 
         //! lower limit of solar radiation (Mj/M^2)
         //[Param(MinVal = 0.0, MaxVal = 100.0)]
+        /// <summary>
+        /// Gets or sets the radn_lb.
+        /// </summary>
+        /// <value>
+        /// The radn_lb.
+        /// </value>
         [Units("MJ/m^2")]
         public double radn_lb { get; set; }
 
@@ -336,11 +586,23 @@ namespace Models
 
         //! upper limit of layer depth (mm)
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the dlayer_ub.
+        /// </summary>
+        /// <value>
+        /// The dlayer_ub.
+        /// </value>
         [Units("mm")]
         public double dlayer_ub { get; set; }
 
         //! lower limit of layer depth (mm)
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the dlayer_lb.
+        /// </summary>
+        /// <value>
+        /// The dlayer_lb.
+        /// </value>
         [Units("mm")]
         public double dlayer_lb { get; set; }
 
@@ -348,11 +610,23 @@ namespace Models
 
         //! upper limit of dul (mm)
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the dul_dep_ub.
+        /// </summary>
+        /// <value>
+        /// The dul_dep_ub.
+        /// </value>
         [Units("mm")]
         public double dul_dep_ub { get; set; }
 
         //! lower limit of dul (mm)
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the dul_dep_lb.
+        /// </summary>
+        /// <value>
+        /// The dul_dep_lb.
+        /// </value>
         [Units("mm")]
         public double dul_dep_lb { get; set; }
 
@@ -360,11 +634,23 @@ namespace Models
 
         //! upper limit of soilwater depth (mm)
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the sw_dep_ub.
+        /// </summary>
+        /// <value>
+        /// The sw_dep_ub.
+        /// </value>
         [Units("mm")]
         public double sw_dep_ub { get; set; }
 
         //! lower limit of soilwater depth (mm)
         //[Param(MinVal = 0.0, MaxVal = 10000.0)]
+        /// <summary>
+        /// Gets or sets the sw_dep_lb.
+        /// </summary>
+        /// <value>
+        /// The sw_dep_lb.
+        /// </value>
         [Units("mm")]
         public double sw_dep_lb { get; set; }
 
@@ -372,11 +658,23 @@ namespace Models
 
         //! upper limit of soil NO3 (kg/ha)
         //[Param(MinVal = 0.0, MaxVal = 100000.0, Name = "no3_ub")]
+        /// <summary>
+        /// Gets or sets the n o3_ub.
+        /// </summary>
+        /// <value>
+        /// The n o3_ub.
+        /// </value>
         [Units("kg/ha")]
         public double NO3_ub { get; set; }
 
         //! lower limit of soil NO3 (kg/ha)
         //[Param(MinVal = 0.0, MaxVal = 100000.0, Name = "no3_lb")]
+        /// <summary>
+        /// Gets or sets the n o3_lb.
+        /// </summary>
+        /// <value>
+        /// The n o3_lb.
+        /// </value>
         [Units("kg/ha")]
         public double NO3_lb { get; set; }
 
@@ -384,11 +682,23 @@ namespace Models
 
         //! upper limit of minimum soil NO3 (kg/ha)
         //[Param(MinVal = 0.0, MaxVal = 100000.0, Name = "no3_min_ub")]
+        /// <summary>
+        /// Gets or sets the n o3_min_ub.
+        /// </summary>
+        /// <value>
+        /// The n o3_min_ub.
+        /// </value>
         [Units("kg/ha")]
         public double NO3_min_ub { get; set; }
 
         //! lower limit of minimum soil NO3 (kg/ha)
         //[Param(MinVal = 0.0, MaxVal = 100000.0, Name = "no3_min_lb")]
+        /// <summary>
+        /// Gets or sets the n o3_min_lb.
+        /// </summary>
+        /// <value>
+        /// The n o3_min_lb.
+        /// </value>
         [Units("kg/ha")]
         public double NO3_min_lb { get; set; }
 
@@ -396,11 +706,23 @@ namespace Models
 
         //! upper limit of soil NO3 (kg/ha)
         //[Param(MinVal = 0.0, MaxVal = 100000.0, Name = "nh4_ub")]
+        /// <summary>
+        /// Gets or sets the n h4_ub.
+        /// </summary>
+        /// <value>
+        /// The n h4_ub.
+        /// </value>
         [Units("kg/ha")]
         public double NH4_ub { get; set; }
 
         //! lower limit of soil NO3 (kg/ha)
         //[Param(MinVal = 0.0, MaxVal = 100000.0, Name = "nh4_lb")]
+        /// <summary>
+        /// Gets or sets the n H4_LB.
+        /// </summary>
+        /// <value>
+        /// The n H4_LB.
+        /// </value>
         [Units("kg/ha")]
         public double NH4_lb { get; set; }
 
@@ -408,11 +730,23 @@ namespace Models
 
         //! upper limit of minimum soil NO3 (kg/ha)
         //[Param(MinVal = 0.0, MaxVal = 100000.0, Name = "nh4_min_ub")]
+        /// <summary>
+        /// Gets or sets the n h4_min_ub.
+        /// </summary>
+        /// <value>
+        /// The n h4_min_ub.
+        /// </value>
         [Units("kg/ha")]
         public double NH4_min_ub { get; set; }
 
         //! lower limit of minimum soil NO3 (kg/ha)
         //[Param(MinVal = 0.0, MaxVal = 100000.0, Name = "nh4_min_lb")]
+        /// <summary>
+        /// Gets or sets the n h4_min_lb.
+        /// </summary>
+        /// <value>
+        /// The n h4_min_lb.
+        /// </value>
         [Units("kg/ha")]
         public double NH4_min_lb { get; set; }
 
@@ -425,11 +759,26 @@ namespace Models
 
     
         //[XmlElement("plant")]   //this let you override what xml element to look for in the xml. Instead of looking for the variable name.
+        /// <summary>
+        /// Gets or sets the plant.
+        /// </summary>
+        /// <value>
+        /// The plant.
+        /// </value>
         public CropConstants plant { get; set; }
 
-    
+
+        /// <summary>
+        /// Gets or sets the ratoon.
+        /// </summary>
+        /// <value>
+        /// The ratoon.
+        /// </value>
         public CropConstants ratoon { get; set; }
 
+        /// <summary>
+        /// The crop
+        /// </summary>
         [XmlIgnore]
         private CropConstants crop;
 
@@ -440,8 +789,17 @@ namespace Models
         #region Cultivar Constants (for each cultivar)
 
 
+        /// <summary>
+        /// Gets or sets the cultivars.
+        /// </summary>
+        /// <value>
+        /// The cultivars.
+        /// </value>
         public CultivarConstants[] cultivars { get; set; }
 
+        /// <summary>
+        /// The cult
+        /// </summary>
         [XmlIgnore]
         private CultivarConstants cult;
 
@@ -460,12 +818,24 @@ namespace Models
         //! cproc_sw_demand_bound
 
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 100.0)]
+        /// <summary>
+        /// Gets or sets the eo_crop_factor.
+        /// </summary>
+        /// <value>
+        /// The eo_crop_factor.
+        /// </value>
         public double eo_crop_factor { get; set; }
         //double      eo_crop_factor = eo_crop_factor_default;
         //TODO: Either find a way to use this or remove 'eo_crop_factor_default' from the ini file.
 
 
         //[Param]
+        /// <summary>
+        /// Gets or sets the uptake_source.
+        /// </summary>
+        /// <value>
+        /// The uptake_source.
+        /// </value>
         public string uptake_source { get; set; }
 
 
@@ -474,6 +844,9 @@ namespace Models
 
         //[Param(MaxVal = 0.0, MinVal = 1.0)]
         //! eXtension rate Factor (0-1)
+        /// <summary>
+        /// The xf
+        /// </summary>
         [XmlIgnore]
         private double[] xf;
             //{
@@ -491,6 +864,9 @@ namespace Models
         //TODO: Either find a way to use this or remove 'll_ub' from the ini file.
         //[MinVal = 0.0, MaxVal = ll_ub]
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 1000.0)]
+        /// <summary>
+        /// The ll
+        /// </summary>
         private double[] ll;
             //{
             //get
@@ -509,6 +885,9 @@ namespace Models
         //[MinVal = 0.0, MaxVal = kl_ub]
         //[Param(MinVal = 0.0, MaxVal = 1.0)]
         //! root length density factor for water
+        /// <summary>
+        /// The kl
+        /// </summary>
         [XmlIgnore]
         private double[] kl;
             //{
@@ -523,6 +902,12 @@ namespace Models
 
 
         //[Param(MinVal = 0.0, MaxVal = 20.0)]
+        /// <summary>
+        /// Gets or sets the rlv_init.
+        /// </summary>
+        /// <value>
+        /// The rlv_init.
+        /// </value>
         public double[] rlv_init { get; set; }
 
 
@@ -541,6 +926,9 @@ namespace Models
         #region Constructor
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SugarCane"/> class.
+        /// </summary>
         public SugarCane()
             {
             //Initialise the Optional Params in the XML
@@ -577,6 +965,9 @@ namespace Models
         //need to remove the local variable fr_intc_radn as well. 
         //[ MinVal=0.0, MaxVal=1.0]
         //[Input(IsOptional = true)]
+        /// <summary>
+        /// The fr_intc_radn_
+        /// </summary>
         double fr_intc_radn_ = 0.0;  //set this to zero for now. MicroClimate has replaced Canopy in ApsimX but don't know what the equivalent variable is in MicroClimate.
 
 
@@ -594,6 +985,9 @@ namespace Models
 
         //[MinVal = 0.0, MaxVal = 1.0]
         //[Input(IsOptional = true)]
+        /// <summary>
+        /// The swim3
+        /// </summary>
         [XmlIgnore]
         public double swim3 = Double.NaN;  //swim is not in ApsimX yet.
 
@@ -620,10 +1014,19 @@ namespace Models
         ////[ MinVal=dlayer_lb, MaxVal=dlayer_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
+        /// <summary>
+        /// The dlayer
+        /// </summary>
         [XmlIgnore]
         public double[] dlayer = new double[max_layer];
 
 
+        /// <summary>
+        /// Gets the num_layers.
+        /// </summary>
+        /// <value>
+        /// The num_layers.
+        /// </value>
         [XmlIgnore]
         public int num_layers { get { return Soil.Thickness.Length; } }
 
@@ -631,6 +1034,9 @@ namespace Models
         ////[ MinVal=0.0, MaxVal=2.65]
         //[Input(IsOptional = true)]
         //[Units("g/cc")]
+        /// <summary>
+        /// The bd
+        /// </summary>
         [XmlIgnore]
         public double[] bd = new double[max_layer];
 
@@ -639,6 +1045,9 @@ namespace Models
         ////[MinVal=dul_dep_lb, MaxVal=dul_dep_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
+        /// <summary>
+        /// The dul_dep
+        /// </summary>
         [XmlIgnore]
         public double[] dul_dep = new double[max_layer];
 
@@ -646,18 +1055,27 @@ namespace Models
         ////[MinVal=sw_dep_lb, MaxValsw_dep_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
+        /// <summary>
+        /// The sw_dep
+        /// </summary>
         [XmlIgnore]
         public double[] sw_dep = new double[max_layer];
 
         ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
+        /// <summary>
+        /// The sat_dep
+        /// </summary>
         [XmlIgnore]
         public double[] sat_dep = new double[max_layer];
 
         ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
         //[Input(IsOptional = true)]
         //[Units("mm")]
+        /// <summary>
+        /// The ll15_dep
+        /// </summary>
         [XmlIgnore]
         public double[] ll15_dep = new double[max_layer];
 
@@ -701,6 +1119,12 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Gets or sets the plants.
+        /// </summary>
+        /// <value>
+        /// The plants.
+        /// </value>
         [Units("(/m2)")]
         [XmlIgnore]
         public double plants
@@ -723,7 +1147,13 @@ namespace Models
             }
 
 
-   
+
+        /// <summary>
+        /// Gets or sets the lodge_redn_photo.
+        /// </summary>
+        /// <value>
+        /// The lodge_redn_photo.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double lodge_redn_photo
@@ -741,6 +1171,12 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Gets or sets the lodge_redn_sucrose.
+        /// </summary>
+        /// <value>
+        /// The lodge_redn_sucrose.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double lodge_redn_sucrose
@@ -757,7 +1193,13 @@ namespace Models
             }
 
 
-       
+
+        /// <summary>
+        /// Gets or sets the lodge_redn_green_leaf.
+        /// </summary>
+        /// <value>
+        /// The lodge_redn_green_leaf.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double lodge_redn_green_leaf
@@ -789,7 +1231,13 @@ namespace Models
 
         //Root parameters that are calculated from values read in from the INI/SIM file
         //see sugar_read_root_params() for where they are calculated.
+        /// <summary>
+        /// The g_ll_dep
+        /// </summary>
         double[] g_ll_dep = new double[max_layer];          //! lower limit of plant-extractable soil water for soil layer L (mm)
+        /// <summary>
+        /// The g_root_length
+        /// </summary>
         double[] g_root_length = new double[max_layer];
 
 
@@ -799,29 +1247,95 @@ namespace Models
         //!     Sugar Globals
         //!     ================================================================
 
+        /// <summary>
+        /// The g_crop_status
+        /// </summary>
         string g_crop_status;       //! status of crop
+        /// <summary>
+        /// The g_crop_cultivar
+        /// </summary>
         string g_crop_cultivar;    //! cultivar name
+        /// <summary>
+        /// The g_plant_status_out_today
+        /// </summary>
         bool g_plant_status_out_today;
+        /// <summary>
+        /// The g_sowing_depth
+        /// </summary>
         double g_sowing_depth;        //! sowing depth (mm)
         //TODO: OnTick Event sets the year and day_of_year variables below. See SoilWater module for [Link] Clock method of setting thsese values.
+        /// <summary>
+        /// The g_year
+        /// </summary>
         int g_year; 	//! year
+        /// <summary>
+        /// The g_day_of_year
+        /// </summary>
         int g_day_of_year; 			//! day of year
         //double        sw_avail_fac_deepest_layer;
+        /// <summary>
+        /// The g_temp_stress_photo
+        /// </summary>
         double g_temp_stress_photo;
+        /// <summary>
+        /// The g_temp_stress_stalk
+        /// </summary>
         double g_temp_stress_stalk;
+        /// <summary>
+        /// The g_swdef_expansion
+        /// </summary>
         double g_swdef_expansion;
+        /// <summary>
+        /// The g_swdef_stalk
+        /// </summary>
         double g_swdef_stalk;
+        /// <summary>
+        /// The g_swdef_photo
+        /// </summary>
         double g_swdef_photo;
+        /// <summary>
+        /// The g_swdef_pheno
+        /// </summary>
         double g_swdef_pheno;
+        /// <summary>
+        /// The g_swdef_fixation
+        /// </summary>
         double g_swdef_fixation;
+        /// <summary>
+        /// The g_nfact_expansion
+        /// </summary>
         double g_nfact_expansion;
+        /// <summary>
+        /// The g_nfact_stalk
+        /// </summary>
         double g_nfact_stalk;
+        /// <summary>
+        /// The g_nfact_photo
+        /// </summary>
         double g_nfact_photo;
+        /// <summary>
+        /// The g_nfact_pheno
+        /// </summary>
         double g_nfact_pheno;
+        /// <summary>
+        /// The g_lodge_redn_photo
+        /// </summary>
         double g_lodge_redn_photo;
+        /// <summary>
+        /// The g_lodge_redn_sucrose
+        /// </summary>
         double g_lodge_redn_sucrose;
+        /// <summary>
+        /// The g_lodge_redn_green_leaf
+        /// </summary>
         double g_lodge_redn_green_leaf;
+        /// <summary>
+        /// The g_sucrose_fraction
+        /// </summary>
         double g_sucrose_fraction; 				//! fraction of cane C going to sucrose
+        /// <summary>
+        /// The g_oxdef_photo
+        /// </summary>
         double g_oxdef_photo;
         //double        fr_intc_radn; 				//! fraction of radiation intercepted by canopy
         //double        latitude; 				//! latitude (degrees, negative for southern hemisphere)
@@ -829,147 +1343,462 @@ namespace Models
         //double        eo; 				//! potential evapotranspiration (mm)
         //double        mint; 				//! minimum air temperature (oC)
         //double        maxt; 				//! maximum air temperature (oC)
+        /// <summary>
+        /// The g_cnd_photo
+        /// </summary>
         double[] g_cnd_photo = new double[max_stage]; 				//! cumulative nitrogen stress type 1
+        /// <summary>
+        /// The g_cswd_photo
+        /// </summary>
         double[] g_cswd_photo = new double[max_stage]; 				//! cumulative water stress type 1
+        /// <summary>
+        /// The g_cswd_expansion
+        /// </summary>
         double[] g_cswd_expansion = new double[max_stage]; 				//! cumulative water stress type 2
+        /// <summary>
+        /// The g_cswd_pheno
+        /// </summary>
         double[] g_cswd_pheno = new double[max_stage]; 				//! cumulative water stress type 3
+        /// <summary>
+        /// The G_DLT_TT
+        /// </summary>
         double g_dlt_tt; 				//! daily thermal time (growing deg day)
+        /// <summary>
+        /// The g_tt_tot
+        /// </summary>
         double[] g_tt_tot = new double[max_stage]; 				//! the sum of growing degree days for a phenological stage (oC d)
+        /// <summary>
+        /// The g_phase_tt
+        /// </summary>
         double[] g_phase_tt = new double[max_stage]; 				//! Cumulative growing degree days required for each stage (deg days)
 
+        /// <summary>
+        /// The g_dlt_stage
+        /// </summary>
         double g_dlt_stage; 				//! change in stage number
+        /// <summary>
+        /// The g_current_stage
+        /// </summary>
         double g_current_stage; 				//! current phenological stage
+        /// <summary>
+        /// The g_previous_stage
+        /// </summary>
         double g_previous_stage; 				//! previous phenological stage
+        /// <summary>
+        /// The g_days_tot
+        /// </summary>
         double[] g_days_tot = new double[max_stage]; 				//! duration of each phase (days)
+        /// <summary>
+        /// The g_dlt_canopy_height
+        /// </summary>
         double g_dlt_canopy_height; 				//! change in canopy height (mm)
+        /// <summary>
+        /// The g_canopy_height
+        /// </summary>
         double g_canopy_height; 				//! canopy height (mm)
+        /// <summary>
+        /// The g_phase_devel
+        /// </summary>
         double g_phase_devel; 				//! development of current phase ()
+        /// <summary>
+        /// The g_ratoon_no
+        /// </summary>
         int g_ratoon_no;
+        /// <summary>
+        /// The g_plants
+        /// </summary>
         double g_plants; 				//! Plant density (plants/m^2)
+        /// <summary>
+        /// The g_dlt_plants
+        /// </summary>
         double g_dlt_plants; 				//! change in Plant density (plants/m^2)
+        /// <summary>
+        /// The g_initial_plant_density
+        /// </summary>
         double g_initial_plant_density; 				//!sowing density (plants/m^2)
+        /// <summary>
+        /// The g_dlt_root_depth
+        /// </summary>
         double g_dlt_root_depth; 				//! increase in root depth (mm)
+        /// <summary>
+        /// The g_root_depth
+        /// </summary>
         double g_root_depth; 				//! depth of roots (mm)
+        /// <summary>
+        /// The g_lodge_flag
+        /// </summary>
         bool g_lodge_flag;
         //double        rue;
         //double[]      uptake_water = new double[max_layer]; 				//! sw uptake as provided by another module in APSIM (mm)
         //int           num_uptake_water; 				//! number of layers in uptake_water()
         //int           num_layers; 				//! number of layers in profile ()
+        /// <summary>
+        /// The g_transpiration_tot
+        /// </summary>
         double g_transpiration_tot; 				//! cumulative transpiration (mm)
         //double        g_N_uptake_tot; 				//! cumulative total N uptake (g/m^2)
+        /// <summary>
+        /// The g_n_demand_tot
+        /// </summary>
         double g_n_demand_tot; 				//! sum of N demand since last output (g/m^2)
+        /// <summary>
+        /// The g_n_conc_act_stover_tot
+        /// </summary>
         double g_n_conc_act_stover_tot; 				//! sum of tops actual N concentration (g N/g biomass)
         //double        N_conc_crit_stover_tot; 				//! sum of tops critical N concentration (g N/g biomass)
         //double        N_uptake_stover_tot; 				//! sum of tops N uptake (g N/m^2)
+        /// <summary>
+        /// The g_lai_max
+        /// </summary>
         double g_lai_max; 				//! maximum lai - occurs at flowering
+        /// <summary>
+        /// The g_isdate
+        /// </summary>
         int g_isdate; 				//! flowering day number
         //int           mdate; 				//! maturity day number
         //double        dm_graze; 				//! dm removed by grazing
         //double        n_graze; 				//! N removed by grazing
 
+        /// <summary>
+        /// The g_plant_wc
+        /// </summary>
         double[] g_plant_wc = new double[max_part];
+        /// <summary>
+        /// The g_dlt_plant_wc
+        /// </summary>
         double[] g_dlt_plant_wc = new double[max_part];
         //string        uptake_source;
         //double[]      dlayer  = new double[max_layer]; 				//! thickness of soil layer I (mm)
         //double[]      bd = new double[max_layer];
+        /// <summary>
+        /// The g_dlt_sw_dep
+        /// </summary>
         double[] g_dlt_sw_dep = new double[max_layer]; 				//! water uptake in each layer (mm water)
         //double[]      sat_dep  = new double[max_layer]; 				//!
         //double[]      dul_dep  = new double[max_layer]; 				//! drained upper limit soil water content for soil layer L (mm water)
         //double[]      ll15_dep  = new double[max_layer]; 				//!
         //double[]      sw_dep  = new double[max_layer]; 				//! soil water content of layer L (mm)
         //double[]      st  = new double[max_layer];
+        /// <summary>
+        /// The g_sw_demand
+        /// </summary>
         double g_sw_demand; 				//! total crop demand for water (mm)
+        /// <summary>
+        /// The g_sw_demand_te
+        /// </summary>
         double g_sw_demand_te; 				//! sw demand calculated from TE
+        /// <summary>
+        /// The g_sw_avail_pot
+        /// </summary>
         double[] g_sw_avail_pot = new double[max_layer]; 				//! potential extractable soil water (mm)
+        /// <summary>
+        /// The g_sw_avail
+        /// </summary>
         double[] g_sw_avail = new double[max_layer]; 				//! actual extractable soil water (mm)
+        /// <summary>
+        /// The g_sw_supply
+        /// </summary>
         double[] g_sw_supply = new double[max_layer]; 				//! potential water to take up (supply) from current soil water (mm)
+        /// <summary>
+        /// The g_dlt_root_length
+        /// </summary>
         double[] g_dlt_root_length = new double[max_layer];
+        /// <summary>
+        /// The g_dlt_root_length_senesced
+        /// </summary>
         double[] g_dlt_root_length_senesced = new double[max_layer];
         //double[]      root_length  = new double[max_layer];
+        /// <summary>
+        /// The g_dlt_plants_death_drought
+        /// </summary>
         double g_dlt_plants_death_drought;
+        /// <summary>
+        /// The g_dlt_plants_failure_leaf_sen
+        /// </summary>
         double g_dlt_plants_failure_leaf_sen;
+        /// <summary>
+        /// The g_dlt_plants_failure_emergence
+        /// </summary>
         double g_dlt_plants_failure_emergence;
+        /// <summary>
+        /// The g_dlt_plants_failure_germ
+        /// </summary>
         double g_dlt_plants_failure_germ;
+        /// <summary>
+        /// The g_dlt_plants_death_lodging
+        /// </summary>
         double g_dlt_plants_death_lodging;
+        /// <summary>
+        /// The G_DLT_DM
+        /// </summary>
         double g_dlt_dm; 				//! the daily biomass production (g/m^2)
+        /// <summary>
+        /// The g_dlt_dm_green
+        /// </summary>
         double[] g_dlt_dm_green = new double[max_part]; 				//! plant biomass growth (g/m^2)
         //double[]      dlt_dm_green_pot = new double[max_part]; 				//! plant biomass growth (g/m^2)
+        /// <summary>
+        /// The g_dlt_dm_senesced
+        /// </summary>
         double[] g_dlt_dm_senesced = new double[max_part]; 				//! plant biomass senescence (g/m^2)
+        /// <summary>
+        /// The g_dlt_dm_realloc
+        /// </summary>
         double[] g_dlt_dm_realloc = new double[max_part];
+        /// <summary>
+        /// The g_dlt_dm_detached
+        /// </summary>
         double[] g_dlt_dm_detached = new double[max_part]; 				//! plant biomass detached (g/m^2)
+        /// <summary>
+        /// The g_dlt_dm_dead_detached
+        /// </summary>
         double[] g_dlt_dm_dead_detached = new double[max_part]; 				//! plant biomass detached from dead plant (g/m^2)
+        /// <summary>
+        /// The g_dlt_dm_green_retrans
+        /// </summary>
         double[] g_dlt_dm_green_retrans = new double[max_part]; 				//! plant biomass retranslocated (g/m^2)
         //double[]      dm_stress_max= new double[max_stage]; 				//! sum of maximum daily stress on dm production per phase
         //double[]      dlt_dm_stress_max; 				//! maximum daily stress on dm production (0-1)
         //double[]      dm_green_demand = new double[max_part]; 				//! biomass demand of the plant parts (g/m^2)
+        /// <summary>
+        /// The g_dm_dead
+        /// </summary>
         double[] g_dm_dead = new double[max_part]; 				//! dry wt of dead plants (g/m^2)
+        /// <summary>
+        /// The g_dm_green
+        /// </summary>
         double[] g_dm_green = new double[max_part]; 				//! live plant dry weight (biomass) (g/m^2)
+        /// <summary>
+        /// The g_dm_senesced
+        /// </summary>
         double[] g_dm_senesced = new double[max_part]; 				//! senesced plant dry wt (g/m^2)
+        /// <summary>
+        /// The g_dm_plant_top_tot
+        /// </summary>
         double[] g_dm_plant_top_tot = new double[max_stage]; 				//! total carbohydrate production in tops per stage (g/plant)
+        /// <summary>
+        /// The g_partition_xs
+        /// </summary>
         double g_partition_xs; 				//! dm used in partitioning that was excess to plant demands.(g/m^2)
         //double        partition_xs_pot; 				//! dm used in partitioning that was excess to plant demands.(g/m^2)
+        /// <summary>
+        /// The g_dlt_dm_pot_rue
+        /// </summary>
         double g_dlt_dm_pot_rue;
+        /// <summary>
+        /// The g_dlt_dm_pot_te
+        /// </summary>
         double g_dlt_dm_pot_te;
+        /// <summary>
+        /// The g_dlt_dm_pot_rue_pot
+        /// </summary>
         double g_dlt_dm_pot_rue_pot;
+        /// <summary>
+        /// The g_radn_int
+        /// </summary>
         double g_radn_int;
+        /// <summary>
+        /// The g_transp_eff
+        /// </summary>
         double g_transp_eff;
+        /// <summary>
+        /// The g_min_sstem_sucrose
+        /// </summary>
         double g_min_sstem_sucrose;
+        /// <summary>
+        /// The g_slai
+        /// </summary>
         double g_slai; 				//! area of leaf that senesces from plant
+        /// <summary>
+        /// The g_dlt_slai
+        /// </summary>
         double g_dlt_slai; 				//! area of leaf that senesces from plant
+        /// <summary>
+        /// The g_dlt_lai
+        /// </summary>
         double g_dlt_lai; 				//! actual change in live plant lai
+        /// <summary>
+        /// The g_dlt_lai_pot
+        /// </summary>
         double g_dlt_lai_pot; 				//! potential change in live plant lai
+        /// <summary>
+        /// The g_dlt_lai_stressed
+        /// </summary>
         double g_dlt_lai_stressed; 				//! potential change in live plant lai after stresses applied
+        /// <summary>
+        /// The g_lai
+        /// </summary>
         double g_lai; 				//! live plant green lai
+        /// <summary>
+        /// The g_tlai_dead
+        /// </summary>
         double g_tlai_dead; 				//! total lai of dead plants
+        /// <summary>
+        /// The g_dlt_slai_detached
+        /// </summary>
         double g_dlt_slai_detached; 				//! plant senesced lai detached
+        /// <summary>
+        /// The g_dlt_tlai_dead_detached
+        /// </summary>
         double g_dlt_tlai_dead_detached; 				//! plant lai detached from dead plant
         //double        dlt_tlai_dead; 				//! plant lai change in dead plant
+        /// <summary>
+        /// The g_dlt_slai_age
+        /// </summary>
         double g_dlt_slai_age; 				//! senesced lai from age
+        /// <summary>
+        /// The g_dlt_slai_light
+        /// </summary>
         double g_dlt_slai_light; 				//! senesced lai from light
+        /// <summary>
+        /// The g_dlt_slai_water
+        /// </summary>
         double g_dlt_slai_water; 				//! senesced lai from water
+        /// <summary>
+        /// The g_dlt_slai_frost
+        /// </summary>
         double g_dlt_slai_frost; 				//! senesced lai from frost
+        /// <summary>
+        /// The g_sla_min
+        /// </summary>
         double g_sla_min; 				//! minimum specific leaf area (mm2/g)
+        /// <summary>
+        /// The g_leaf_no_zb
+        /// </summary>
         double[] g_leaf_no_zb = new double[max_stage]; 				//! number of fully expanded leaves ()
+        /// <summary>
+        /// The g_node_no_zb
+        /// </summary>
         double[] g_node_no_zb = new double[max_stage];
+        /// <summary>
+        /// The g_node_no_dead_zb
+        /// </summary>
         double[] g_node_no_dead_zb = new double[max_stage]; 				//! no of dead leaves ()
+        /// <summary>
+        /// The g_dlt_leaf_no
+        /// </summary>
         double g_dlt_leaf_no; 				//! fraction of oldest leaf expanded ()
+        /// <summary>
+        /// The g_dlt_node_no
+        /// </summary>
         double g_dlt_node_no;
+        /// <summary>
+        /// The g_dlt_node_no_dead
+        /// </summary>
         double g_dlt_node_no_dead; 				//! fraction of oldest green leaf senesced ()
         //double        leaf_no_final; 				//! total number of leaves the plant produces
+        /// <summary>
+        /// The g_leaf_area_zb
+        /// </summary>
         double[] g_leaf_area_zb = new double[max_leaf];  				//! leaf area of each leaf (mm^2)
+        /// <summary>
+        /// The g_leaf_dm_zb
+        /// </summary>
         double[] g_leaf_dm_zb = new double[max_leaf];  				//! dry matter of each leaf (g)
+        /// <summary>
+        /// The g_node_no_detached_ob
+        /// </summary>
         double g_node_no_detached_ob; 				//! no of dead leaves detached from records
 
+        /// <summary>
+        /// The g_n_demand
+        /// </summary>
         double[] g_n_demand = new double[max_part]; 				//! plant nitrogen demand (g/m^2)
         //double[]      N_max = new double[max_part]; 				//! max nitrogen demand(g/m^2)
+        /// <summary>
+        /// The g_dlt_n_green
+        /// </summary>
         double[] g_dlt_n_green = new double[max_part]; 				//! actual N uptake into plant (g/m^2)
+        /// <summary>
+        /// The g_dlt_n_senesced
+        /// </summary>
         double[] g_dlt_n_senesced = new double[max_part]; 				//! actual N loss with senesced plant (g/m^2)
+        /// <summary>
+        /// The g_dlt_n_realloc
+        /// </summary>
         double[] g_dlt_n_realloc = new double[max_part];
+        /// <summary>
+        /// The g_dlt_n_detached
+        /// </summary>
         double[] g_dlt_n_detached = new double[max_part]; 				//! actual N loss with detached plant (g/m^2)
+        /// <summary>
+        /// The g_dlt_n_dead_detached
+        /// </summary>
         double[] g_dlt_n_dead_detached = new double[max_part]; 				//! actual N loss with detached dead plant (g/m^2)
+        /// <summary>
+        /// The g_n_dead
+        /// </summary>
         double[] g_n_dead = new double[max_part]; 				//! plant N content of dead plants (g N/m^2)
+        /// <summary>
+        /// The g_n_green
+        /// </summary>
         double[] g_n_green = new double[max_part]; 				//! plant nitrogen content (g N/m^2)
+        /// <summary>
+        /// The g_n_senesced
+        /// </summary>
         double[] g_n_senesced = new double[max_part]; 				//! plant N content of senesced plant (g N/m^2)
+        /// <summary>
+        /// The g_dlt_n_retrans
+        /// </summary>
         double[] g_dlt_n_retrans = new double[max_part]; 				//! nitrogen retranslocated out from parts to grain (g/m^2)
+        /// <summary>
+        /// The g_dlt_no3gsm
+        /// </summary>
         double[] g_dlt_no3gsm = new double[max_layer]; 				//! actual NO3 uptake from soil (g/m^2)
+        /// <summary>
+        /// The G_DLT_NH4GSM
+        /// </summary>
         double[] g_dlt_nh4gsm = new double[max_layer]; 				//! actual NO3 uptake from soil (g/m^2)
+        /// <summary>
+        /// The g_no3gsm
+        /// </summary>
         double[] g_no3gsm = new double[max_layer]; 				//! nitrate nitrogen in layer L (g N/m^2)
+        /// <summary>
+        /// The G_NH4GSM
+        /// </summary>
         double[] g_nh4gsm = new double[max_layer]; 				//! nitrate nitrogen in layer L (g N/m^2)
+        /// <summary>
+        /// The g_no3gsm_min
+        /// </summary>
         double[] g_no3gsm_min = new double[max_layer]; 				//! minimum allowable NO3 in soil (g/m^2)
+        /// <summary>
+        /// The g_nh4gsm_min
+        /// </summary>
         double[] g_nh4gsm_min = new double[max_layer]; 				//! minimum allowable NO3 in soil (g/m^2)
         //double[]      uptake_no3 = new double[max_layer]; 				//! uptake of no3 as provided by another module in APSIM (kg/ha)
         //double[]      uptake_nh4 = new double[max_layer]; 				//! uptake of no3 as provided by another module in APSIM (kg/ha)
+        /// <summary>
+        /// The g_no3gsm_diffn_pot
+        /// </summary>
         double[] g_no3gsm_diffn_pot = new double[max_layer]; 				//! potential NO3 (supply) from soil (g/m^2), by diffusion
+        /// <summary>
+        /// The g_no3gsm_mflow_avail
+        /// </summary>
         double[] g_no3gsm_mflow_avail = new double[max_layer]; 				//! potential NO3 (supply) from soil (g/m^2) by mass flow
 
+        /// <summary>
+        /// The g_no3gsm_uptake_pot
+        /// </summary>
         double[] g_no3gsm_uptake_pot = new double[max_layer];
+        /// <summary>
+        /// The g_nh4gsm_uptake_pot
+        /// </summary>
         double[] g_nh4gsm_uptake_pot = new double[max_layer];
 
+        /// <summary>
+        /// The g_n_fix_pot
+        /// </summary>
         double g_n_fix_pot;
         //int           num_uptake_no3; 				//! number of layers in uptake_no3 ()
         //int           num_uptake_nh4; 				//! number of layers in uptake_no3 ()
+        /// <summary>
+        /// The g_n_conc_crit
+        /// </summary>
         double[] g_n_conc_crit = new double[max_part]; 				//! critical N concentration (g N/g biomass)
         //double[]      N_conc_max = new double[max_part]; 				//! max N concentration (g N/g biomass)
+        /// <summary>
+        /// The g_n_conc_min
+        /// </summary>
         double[] g_n_conc_min = new double[max_part]; 				//! minimum N concentration (g N/g biomass)
 
         //double[]      dm_plant_min = new double[max_part]; 				//! minimum weight of each plant part (g/plant)
@@ -1001,6 +1830,10 @@ namespace Models
         #region Functions to Zero Variables
 
 
+        /// <summary>
+        /// Zeroes the array.
+        /// </summary>
+        /// <param name="A">a.</param>
         private void ZeroArray(ref double[] A)
             {
             for (int i = 0; i < A.Length; i++)
@@ -1012,6 +1845,9 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_zero_globalses this instance.
+        /// </summary>
         private void sugar_zero_globals()
             {
 
@@ -1086,6 +1922,9 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_zero_daily_variableses this instance.
+        /// </summary>
         private void sugar_zero_daily_variables()
             {
 
@@ -1194,6 +2033,9 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_zero_variableses this instance.
+        /// </summary>
         private void sugar_zero_variables()
             {
 
@@ -1264,24 +2106,54 @@ namespace Models
 
         #region ConvertModule.f90 (FortranInfrastructure)
 
+        /// <summary>
+        /// The SMM2M
+        /// </summary>
         public const double smm2m = 1.0 / 1000.0;          //! conversion of mm to m
 
+        /// <summary>
+        /// The SM2SMM
+        /// </summary>
         public const double sm2smm = 1000000.0;       //! conversion of square metres to square mm
 
+        /// <summary>
+        /// The SMM2SM
+        /// </summary>
         public const double smm2sm = 1.0 / 1000000.0;      //! conversion factor of mm^2 to m^2
 
+        /// <summary>
+        /// The KG2GM
+        /// </summary>
         public const double kg2gm = 1000.0;             //! conversion of kilograms to grams
 
+        /// <summary>
+        /// The ha2sm
+        /// </summary>
         public const double ha2sm = 10000.0;            //! conversion of hectares to sq metres
 
+        /// <summary>
+        /// The fract2pcnt
+        /// </summary>
         public const double fract2pcnt = 100.0;          //! convert fraction to percent
 
+        /// <summary>
+        /// The GM2KG
+        /// </summary>
         public const double gm2kg = 1.0 / 1000.0;         //! constant to convert g to kg
 
+        /// <summary>
+        /// The sm2ha
+        /// </summary>
         public const double sm2ha = 1.0 / 10000.0;        //! constant to convert m^2 to hectares
 
+        /// <summary>
+        /// The T2G
+        /// </summary>
         public const double t2g = 1000.0 * 1000.0;        //! tonnes to grams
 
+        /// <summary>
+        /// The G2T
+        /// </summary>
         public const double g2t = 1.0 / t2g;             //! grams to tonnes
 
 
@@ -1292,6 +2164,11 @@ namespace Models
 
         #region Science.f90 (FortranInfrastructure)
 
+        /// <summary>
+        /// Finds the layer no_ob.
+        /// </summary>
+        /// <param name="Depth">The depth.</param>
+        /// <returns></returns>
         private int FindLayerNo_ob(double Depth)
             {
             // Find the soil layer in which the indicated depth is located
@@ -1307,6 +2184,13 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Root_proportions the specified layer_ob.
+        /// </summary>
+        /// <param name="Layer_ob">The layer_ob.</param>
+        /// <param name="Dlayer">The dlayer.</param>
+        /// <param name="RootDepth">The root depth.</param>
+        /// <returns></returns>
         public double root_proportion(int Layer_ob, double[] Dlayer, double RootDepth)
             {
 
@@ -1346,6 +2230,12 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// On_day_ofs the specified stage_no.
+        /// </summary>
+        /// <param name="stage_no">The stage_no.</param>
+        /// <param name="current_stage">The current_stage.</param>
+        /// <returns></returns>
         public bool on_day_of(int stage_no, double current_stage)
             {
             //!     ===========================================================
@@ -1370,6 +2260,13 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Stage_is_betweens the specified start_ob.
+        /// </summary>
+        /// <param name="start_ob">The start_ob.</param>
+        /// <param name="finish_ob">The finish_ob.</param>
+        /// <param name="current_stage">The current_stage.</param>
+        /// <returns></returns>
         public bool stage_is_between(int start_ob, int finish_ob, double current_stage)
             {
             //!     ===========================================================
@@ -1399,6 +2296,14 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Linint_3hrly_temps the specified i_tmax.
+        /// </summary>
+        /// <param name="i_tmax">The i_tmax.</param>
+        /// <param name="i_tmin">The i_tmin.</param>
+        /// <param name="i_temps">The i_temps.</param>
+        /// <param name="i_y">The i_y.</param>
+        /// <returns></returns>
         public double linint_3hrly_temp(double i_tmax, double i_tmin, double[] i_temps, double[] i_y)
             {
             //!     ===========================================================
@@ -1450,6 +2355,18 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Temp_3hrs the specified i_tmax.
+        /// </summary>
+        /// <param name="i_tmax">The i_tmax.</param>
+        /// <param name="i_tmin">The i_tmin.</param>
+        /// <param name="i_period">The i_period.</param>
+        /// <returns></returns>
+        /// <exception cref="ApsimXException">
+        ///  3 hr. number + i_period +  is below 1
+        /// or
+        ///  3 hr. number + i_period +  is above 8
+        /// </exception>
         public double temp_3hr(double i_tmax, double i_tmin, int i_period)
             {
 
@@ -1575,6 +2492,13 @@ namespace Models
         //    }
 
 
+        /// <summary>
+        /// Accumulate_obs the specified i_value.
+        /// </summary>
+        /// <param name="i_value">The i_value.</param>
+        /// <param name="i_array_zb">The i_array_zb.</param>
+        /// <param name="i_index_ob">The i_index_ob.</param>
+        /// <param name="i_dlt_index">The i_dlt_index.</param>
         public void accumulate_ob(double i_value, ref double[] i_array_zb, double i_index_ob, double i_dlt_index)
             {
             double i_index_zb = i_index_ob - 1.0;
@@ -1583,6 +2507,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Accumulate_zbs the specified i_value.
+        /// </summary>
+        /// <param name="i_value">The i_value.</param>
+        /// <param name="io_array_zb">The io_array_zb.</param>
+        /// <param name="i_index_zb">The i_index_zb.</param>
+        /// <param name="i_dlt_index">The i_dlt_index.</param>
         public void accumulate_zb(double i_value, ref double[] io_array_zb, double i_index_zb, double i_dlt_index)
             {
 
@@ -1675,6 +2606,11 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Error_margins the specified variable.
+        /// </summary>
+        /// <param name="Variable">The variable.</param>
+        /// <returns></returns>
         public double error_margin(double Variable)
             {
             /*
@@ -1693,6 +2629,12 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Get_cumulative_index_reals the specified cum_sum.
+        /// </summary>
+        /// <param name="cum_sum">The cum_sum.</param>
+        /// <param name="A">a.</param>
+        /// <returns></returns>
         public int get_cumulative_index_real(double cum_sum, double[] A)
             {
             //!     ===========================================================
@@ -1743,6 +2685,12 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Count_of_real_valses the specified a.
+        /// </summary>
+        /// <param name="A">a.</param>
+        /// <param name="StopLayer_ob">The stop layer_ob.</param>
+        /// <returns></returns>
         private int count_of_real_vals(double[] A, int StopLayer_ob)
             {
 
@@ -1772,6 +2720,12 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Adds the array.
+        /// </summary>
+        /// <param name="AddThis_zb">The add this_zb.</param>
+        /// <param name="ToThis_zb">To this_zb.</param>
+        /// <param name="NumElemToAdd_ob">The number elem to add_ob.</param>
         private void AddArray(double[] AddThis_zb, ref double[] ToThis_zb, int NumElemToAdd_ob)
             {
 
@@ -1799,6 +2753,12 @@ namespace Models
 
             }
 
+        /// <summary>
+        /// Subtracts the array.
+        /// </summary>
+        /// <param name="SubThis_zb">The sub this_zb.</param>
+        /// <param name="FromThis_zb">From this_zb.</param>
+        /// <param name="NumElemToSub_ob">The number elem to sub_ob.</param>
         private void SubtractArray(double[] SubThis_zb, ref double[] FromThis_zb, int NumElemToSub_ob)
             {
             // subroutine subtract_real_array (amount, store, dimen)
@@ -1827,6 +2787,12 @@ namespace Models
 
 
         //TODO: Replace this will MathUtilities.Sum()
+        /// <summary>
+        /// Sums the array.
+        /// </summary>
+        /// <param name="A">a.</param>
+        /// <param name="StopLayer_ob">The stop layer_ob.</param>
+        /// <returns></returns>
         private double SumArray(double[] A, int StopLayer_ob)
             {
             double sum = 0;
@@ -1838,6 +2804,13 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Sum_betweens the specified start_ob.
+        /// </summary>
+        /// <param name="start_ob">The start_ob.</param>
+        /// <param name="finish_ob">The finish_ob.</param>
+        /// <param name="array_zb">The array_zb.</param>
+        /// <returns></returns>
         private double sum_between(int start_ob, int finish_ob, double[] array_zb)
             {
             //!     ===========================================================
@@ -1877,6 +2850,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sum_between_zbs the specified start_zb.
+        /// </summary>
+        /// <param name="start_zb">The start_zb.</param>
+        /// <param name="finish_zb">The finish_zb.</param>
+        /// <param name="array_zb">The array_zb.</param>
+        /// <returns></returns>
         private double sum_between_zb(int start_zb, int finish_zb, double[] array_zb)
             {
 
@@ -1899,6 +2879,12 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Fill_real_arrays the specified a_zb.
+        /// </summary>
+        /// <param name="A_zb">The a_zb.</param>
+        /// <param name="Value">The value.</param>
+        /// <param name="StopLayer_ob">The stop layer_ob.</param>
         public void fill_real_array(ref double[] A_zb, double Value, int StopLayer_ob)
             {
             if (A_zb.Length < StopLayer_ob)
@@ -1912,6 +2898,12 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// L_bounds the specified a.
+        /// </summary>
+        /// <param name="A">a.</param>
+        /// <param name="MinVal">The minimum value.</param>
+        /// <returns></returns>
         public double l_bound(double A, double MinVal)
             {
             //force A to stay above the MinVal. Set A to MinVal if A is below it.
@@ -1919,6 +2911,12 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// U_bounds the specified a.
+        /// </summary>
+        /// <param name="A">a.</param>
+        /// <param name="MaxVal">The maximum value.</param>
+        /// <returns></returns>
         public double u_bound(double A, double MaxVal)
             {
             //force A to stay below the MaxVal. Set A to MaxVal if A is above it.
@@ -1926,6 +2924,13 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Bounds the specified a.
+        /// </summary>
+        /// <param name="A">a.</param>
+        /// <param name="MinVal">The minimum value.</param>
+        /// <param name="MaxVal">The maximum value.</param>
+        /// <returns></returns>
         public double bound(double A, double MinVal, double MaxVal)
             {
             //force A to stay between the MinVal and the MaxVal. Set A to the MaxVal or MinVal if it exceeds them.
@@ -1945,9 +2950,11 @@ namespace Models
 
 
         //Put this into CSGeneral. The existing Max in MathUtility only works on IEnumerable Collections.
-        ///<summary>
-        ///Allows any number of parameters (unlike Math.Max()) 
-        ///</summary>
+        /// <summary>
+        /// Allows any number of parameters (unlike Math.Max())
+        /// </summary>
+        /// <param name="A">a.</param>
+        /// <returns></returns>
         public double max(params double[] A)
             {
             double maximum = A[0];
@@ -1958,9 +2965,11 @@ namespace Models
             return maximum;
             }
 
-        ///<summary>
-        ///Allows any number of parameters (unlike Math.Min()) 
-        ///</summary>
+        /// <summary>
+        /// Allows any number of parameters (unlike Math.Min())
+        /// </summary>
+        /// <param name="A">a.</param>
+        /// <returns></returns>
         public double min(params double[] A)
             {
             double minimum = A[0];
@@ -1977,6 +2986,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Bound_check_real_arrays the specified array.
+        /// </summary>
+        /// <param name="array">The array.</param>
+        /// <param name="lower_bound">The lower_bound.</param>
+        /// <param name="upper_bound">The upper_bound.</param>
+        /// <param name="array_name">The array_name.</param>
+        /// <param name="array_size">The array_size.</param>
         private void bound_check_real_array(double[] array, double lower_bound, double upper_bound, string array_name, int array_size)
             {
             //! ================================================================
@@ -2024,6 +3041,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Bound_check_integer_vars the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="lower">The lower.</param>
+        /// <param name="upper">The upper.</param>
+        /// <param name="vname">The vname.</param>
         public void bound_check_integer_var(int value, int lower, int upper, string vname)
             {
             //! ===========================================================
@@ -2068,6 +3092,13 @@ namespace Models
 
 
         // Unlike u_bound and l_bound, this does not force the variable to be between the bounds. It just warns the user in the summary file.
+        /// <summary>
+        /// Bound_check_real_vars the specified variable.
+        /// </summary>
+        /// <param name="Variable">The variable.</param>
+        /// <param name="LowerBound">The lower bound.</param>
+        /// <param name="UpperBound">The upper bound.</param>
+        /// <param name="VariableName">Name of the variable.</param>
         protected void bound_check_real_var(double Variable, double LowerBound, double UpperBound, string VariableName)
             {
             string warningMsg = "";
@@ -2090,8 +3121,10 @@ namespace Models
         /// <summary>
         /// Returns Zero Based Index from One Based Index
         /// </summary>
-        /// <param name="OneBased"></param>
-        /// <returns>Zero Based Index</returns>
+        /// <param name="OneBased">The one based.</param>
+        /// <returns>
+        /// Zero Based Index
+        /// </returns>
         private int zb(int OneBased)
             {
             return OneBased - 1;
@@ -2100,13 +3133,20 @@ namespace Models
         /// <summary>
         /// Returns One Based Index from Zero Based Index
         /// </summary>
-        /// <param name="OneBased"></param>
-        /// <returns>One Based Index</returns>
+        /// <param name="ZeroBased">The zero based.</param>
+        /// <returns>
+        /// One Based Index
+        /// </returns>
         private int ob(int ZeroBased)
             {
             return ZeroBased + 1;
             }
 
+        /// <summary>
+        /// ZB_Ds the specified one based.
+        /// </summary>
+        /// <param name="OneBased">The one based.</param>
+        /// <returns></returns>
         private double zb_d(double OneBased)
             {
             return OneBased - 1.0;
@@ -2136,6 +3176,15 @@ namespace Models
         #region Nitrogen Stress Factor Calculations
 
 
+        /// <summary>
+        /// Sugar_nfacts the specified i_dm_green.
+        /// </summary>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_N_conc_crit">The i_ n_conc_crit.</param>
+        /// <param name="i_N_conc_min">The i_ n_conc_min.</param>
+        /// <param name="i_N_green">The i_ n_green.</param>
+        /// <param name="c_k_nfact">The c_k_nfact.</param>
+        /// <param name="o_nfact">The o_nfact.</param>
         void sugar_nfact(double[] i_dm_green, double[] i_N_conc_crit, double[] i_N_conc_min, double[] i_N_green, double c_k_nfact, ref double o_nfact)
             {
 
@@ -2211,6 +3260,15 @@ namespace Models
         #region Temperature Stress Factor Calculations
 
 
+        /// <summary>
+        /// Sugar_temperature_stresses the specified c_num_ave_temp.
+        /// </summary>
+        /// <param name="c_num_ave_temp">The c_num_ave_temp.</param>
+        /// <param name="c_x_ave_temp">The c_x_ave_temp.</param>
+        /// <param name="c_y_stress_photo">The c_y_stress_photo.</param>
+        /// <param name="i_maxt">The i_maxt.</param>
+        /// <param name="i_mint">The i_mint.</param>
+        /// <param name="o_tfac">The o_tfac.</param>
         void sugar_temperature_stress(int c_num_ave_temp, double[] c_x_ave_temp, double[] c_y_stress_photo, double i_maxt, double i_mint, ref double o_tfac)
             {
             //*+  Sub-Program Arguments
@@ -2249,6 +3307,14 @@ namespace Models
         #region Radiation Interception by Leaves
 
 
+        /// <summary>
+        /// Sugar_radn_ints the specified c_extinction_coef.
+        /// </summary>
+        /// <param name="c_extinction_coef">The c_extinction_coef.</param>
+        /// <param name="i_fr_intc_radn">The i_fr_intc_radn.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_radn">The i_radn.</param>
+        /// <returns></returns>
         double sugar_radn_int(double c_extinction_coef, double i_fr_intc_radn, double i_lai, double i_radn)
             {
             //sv- Also replaces the following function.
@@ -2312,6 +3378,15 @@ namespace Models
         #region Transpiration Efficiency  (based on today's weather)
 
 
+        /// <summary>
+        /// Cproc_transp_eff1s the specified c_svp_fract.
+        /// </summary>
+        /// <param name="c_svp_fract">The c_svp_fract.</param>
+        /// <param name="c_transp_eff_cf">The c_transp_eff_cf.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_maxt">The i_maxt.</param>
+        /// <param name="i_mint">The i_mint.</param>
+        /// <returns></returns>
         double cproc_transp_eff1(double c_svp_fract, double[] c_transp_eff_cf, double i_current_stage, double i_maxt, double i_mint)
             {
             //sv- This function was taken from the "CropTemplate" module which as far as I can tell seems to be a precursor to the "Plant" module. 
@@ -2405,6 +3480,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Vapour_pressure_deficits the specified c_svp_fract.
+        /// </summary>
+        /// <param name="c_svp_fract">The c_svp_fract.</param>
+        /// <param name="i_maxt">The i_maxt.</param>
+        /// <param name="i_mint">The i_mint.</param>
+        /// <returns></returns>
         double vapour_pressure_deficit(double c_svp_fract, double i_maxt, double i_mint)
             {
 
@@ -2429,6 +3511,11 @@ namespace Models
 
 
 
+        /// <summary>
+        /// SVPs the specified temp_arg.
+        /// </summary>
+        /// <param name="temp_arg">The temp_arg.</param>
+        /// <returns></returns>
         double svp(double temp_arg)
             {
 
@@ -2452,6 +3539,14 @@ namespace Models
         #region SW Demand (Atomospheric Potential)
 
 
+        /// <summary>
+        /// Sugar_water_demands the specified i_dlt_dm_pot_rue.
+        /// </summary>
+        /// <param name="i_dlt_dm_pot_rue">The i_dlt_dm_pot_rue.</param>
+        /// <param name="i_transp_eff">The i_transp_eff.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_eo">The i_eo.</param>
+        /// <returns></returns>
         double sugar_water_demand(double i_dlt_dm_pot_rue, double i_transp_eff, double i_lai, double i_eo)
             {
 
@@ -2474,6 +3569,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_sw_demand_bounds the specified i_sw_demand_unbounded.
+        /// </summary>
+        /// <param name="i_sw_demand_unbounded">The i_sw_demand_unbounded.</param>
+        /// <param name="i_eo_crop_factor">The i_eo_crop_factor.</param>
+        /// <param name="i_eo">The i_eo.</param>
+        /// <param name="i_cover_green">The i_cover_green.</param>
+        /// <returns></returns>
         double cproc_sw_demand_bound(double i_sw_demand_unbounded, double i_eo_crop_factor, double i_eo, double i_cover_green)
             {
             //sv- This function was taken from the "CropTemplate" module which as far as I can tell seems to be a precursor to the "Plant" module. 
@@ -2514,6 +3617,14 @@ namespace Models
 
         #region Nitrogen Demand
 
+        /// <summary>
+        /// Sugar_nit_demand_ests the specified i_dm_green.
+        /// </summary>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_dlt_dm_pot_rue_pot">The i_dlt_dm_pot_rue_pot.</param>
+        /// <param name="i_N_conc_crit">The i_ n_conc_crit.</param>
+        /// <param name="i_N_green">The i_ n_green.</param>
+        /// <param name="o_N_demand">The o_ n_demand.</param>
         void sugar_nit_demand_est(double[] i_dm_green, double i_dlt_dm_pot_rue_pot, double[] i_N_conc_crit, double[] i_N_green, ref double[] o_N_demand)
             {
             //* ====================================================================
@@ -2559,6 +3670,15 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_s the n_demand.
+        /// </summary>
+        /// <param name="i_dlt_dm_green_pot">The i_dlt_dm_green_pot.</param>
+        /// <param name="i_dlt_dm_pot_rue_pot">The i_dlt_dm_pot_rue_pot.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_N_conc_crit">The i_ n_conc_crit.</param>
+        /// <param name="i_N_green">The i_ n_green.</param>
+        /// <param name="o_N_demand">The o_ n_demand.</param>
         void sugar_N_demand(double[] i_dlt_dm_green_pot, double i_dlt_dm_pot_rue_pot, double[] i_dm_green, double[] i_N_conc_crit, double[] i_N_green, ref double[] o_N_demand)
             {
             //*     ===========================================================
@@ -2664,6 +3784,22 @@ namespace Models
         #region Root Growth
 
 
+        /// <summary>
+        /// Sugar_root_depth_growthes the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="c_x_sw_ratio">The c_x_sw_ratio.</param>
+        /// <param name="c_y_sw_fac_root">The c_y_sw_fac_root.</param>
+        /// <param name="c_x_afps">The c_x_afps.</param>
+        /// <param name="c_y_afps_fac">The c_y_afps_fac.</param>
+        /// <param name="i_dul_dep">The i_dul_dep.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="c_root_depth_rate">The c_root_depth_rate.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_xf">The i_xf.</param>
+        /// <param name="o_dlt_root_depth">The o_dlt_root_depth.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
         void sugar_root_depth_growth(double[] i_dlayer,
                                         double[] c_x_sw_ratio, double[] c_y_sw_fac_root,
                                         double[] c_x_afps, double[] c_y_afps_fac,
@@ -2731,6 +3867,16 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Crop_sw_avail_facs the specified c_x_sw_ratio.
+        /// </summary>
+        /// <param name="c_x_sw_ratio">The c_x_sw_ratio.</param>
+        /// <param name="c_y_sw_fac_root">The c_y_sw_fac_root.</param>
+        /// <param name="i_dul_dep">The i_dul_dep.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="i_layer_ob">The i_layer_ob.</param>
+        /// <returns></returns>
         double crop_sw_avail_fac(double[] c_x_sw_ratio, double[] c_y_sw_fac_root, double[] i_dul_dep, double[] i_sw_dep, double[] i_ll_dep, int i_layer_ob)
             {
             //!     ===========================================================
@@ -2772,6 +3918,11 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_afps_facs the specified i_layer_ob.
+        /// </summary>
+        /// <param name="i_layer_ob">The i_layer_ob.</param>
+        /// <returns></returns>
         double sugar_afps_fac(int i_layer_ob)
             {
             //      ===========================================================
@@ -2796,6 +3947,16 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Crop_root_depth_increases the specified c_root_depth_rate.
+        /// </summary>
+        /// <param name="c_root_depth_rate">The c_root_depth_rate.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_avail_fac_deepest_layer_ob">The i_sw_avail_fac_deepest_layer_ob.</param>
+        /// <param name="i_xf">The i_xf.</param>
+        /// <returns></returns>
         double crop_root_depth_increase(double[] c_root_depth_rate, double i_current_stage, double[] i_dlayer, double i_root_depth,
                                         double i_sw_avail_fac_deepest_layer_ob, double[] i_xf)
             {
@@ -2849,6 +4010,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_init_root_depthes the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_root_length">The i_root_length.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="o_dlt_root_depth">The o_dlt_root_depth.</param>
         void sugar_init_root_depth(double[] i_dlayer, double[] i_root_length, double i_root_depth, ref double o_dlt_root_depth)
             {
             //*     ===========================================================
@@ -2912,6 +4080,10 @@ namespace Models
         #region Potential Water Available to Roots (Water Supply)
 
 
+        /// <summary>
+        /// Gets the supply from swim.
+        /// </summary>
+        /// <exception cref="ApsimXException"> Sugar can't get 'supply' from  SWIM yet</exception>
         void GetSupplyFromSWIM()
             {
 
@@ -2935,6 +4107,19 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_sw_supply1s the specified C_SW_LB.
+        /// </summary>
+        /// <param name="c_sw_lb">The C_SW_LB.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="i_dul_dep">The i_dul_dep.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_kl">The i_kl.</param>
+        /// <param name="o_sw_avail">The o_sw_avail.</param>
+        /// <param name="o_sw_avail_pot">The o_sw_avail_pot.</param>
+        /// <param name="o_sw_supply">The o_sw_supply.</param>
         void cproc_sw_supply1(double c_sw_lb, double[] i_dlayer, double[] i_ll_dep, double[] i_dul_dep, double[] i_sw_dep, double i_root_depth, double[] i_kl,
                                 ref double[] o_sw_avail, ref double[] o_sw_avail_pot, ref double[] o_sw_supply)
             {
@@ -2970,6 +4155,14 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Crop_check_sws the specified c_minsw.
+        /// </summary>
+        /// <param name="c_minsw">The c_minsw.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_dul_dep">The i_dul_dep.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
         void crop_check_sw(double c_minsw, double[] i_dlayer, double[] i_dul_dep, double[] i_sw_dep, double[] i_ll_dep)
             {
             //!     ===========================================================
@@ -3030,6 +4223,14 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Crop_sw_avail_pots the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_dul_dep">The i_dul_dep.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="o_sw_avail_pot">The o_sw_avail_pot.</param>
         void crop_sw_avail_pot(double[] i_dlayer, double[] i_dul_dep, double i_root_depth, double[] i_ll_dep, ref double[] o_sw_avail_pot)
             {
 
@@ -3077,6 +4278,14 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Crop_sw_avails the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="o_sw_avail">The o_sw_avail.</param>
         void crop_sw_avail(double[] i_dlayer, double i_root_depth, double[] i_sw_dep, double[] i_ll_dep, ref double[] o_sw_avail)
             {
             //!     ===========================================================
@@ -3124,6 +4333,15 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Crop_sw_supplies the specified idlayer.
+        /// </summary>
+        /// <param name="idlayer">The idlayer.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_kl">The i_kl.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="o_sw_supply">The o_sw_supply.</param>
         void crop_sw_supply(double[] idlayer, double i_root_depth, double[] i_sw_dep, double[] i_kl, double[] i_ll_dep, ref double[] o_sw_supply)
             {
 
@@ -3186,6 +4404,10 @@ namespace Models
         #region Actual Water Extraction by Plant (Water Uptake)  (Limited by Roots ability to extract and Plant Demand (ie.SW Demand))
 
 
+        /// <summary>
+        /// Gets the uptake from swim.
+        /// </summary>
+        /// <exception cref="ApsimXException"> Sugar can't get 'uptake' from SWIM yet</exception>
         void GetUptakeFromSWIM()
             {
 
@@ -3202,6 +4424,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_sw_uptake1s the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_demand">The i_sw_demand.</param>
+        /// <param name="i_sw_supply">The i_sw_supply.</param>
+        /// <param name="o_dlt_sw_dep">The o_dlt_sw_dep.</param>
         void cproc_sw_uptake1(double[] i_dlayer, double i_root_depth, double i_sw_demand, double[] i_sw_supply, ref double[] o_dlt_sw_dep)
             {
             //!     ===========================================================
@@ -3279,6 +4509,15 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_swdef_expansions the specified c_x_sw_demand_ratio.
+        /// </summary>
+        /// <param name="c_x_sw_demand_ratio">The c_x_sw_demand_ratio.</param>
+        /// <param name="c_y_swdef_leaf">The c_y_swdef_leaf.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_demand">The i_sw_demand.</param>
+        /// <param name="i_sw_supply">The i_sw_supply.</param>
+        /// <param name="o_swdef">The o_swdef.</param>
         void crop_swdef_expansion(double[] c_x_sw_demand_ratio, double[] c_y_swdef_leaf,
                                       double i_root_depth, double i_sw_demand, double[] i_sw_supply, ref double o_swdef)
             {
@@ -3319,6 +4558,15 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_swdef_demand_ratioes the specified c_x_sw_demand_ratio.
+        /// </summary>
+        /// <param name="c_x_sw_demand_ratio">The c_x_sw_demand_ratio.</param>
+        /// <param name="c_y_swdef_leaf">The c_y_swdef_leaf.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_demand">The i_sw_demand.</param>
+        /// <param name="i_sw_supply">The i_sw_supply.</param>
+        /// <param name="o_swdef">The o_swdef.</param>
         void sugar_swdef_demand_ratio(double[] c_x_sw_demand_ratio, double[] c_y_swdef_leaf,
                                     double i_root_depth, double i_sw_demand, double[] i_sw_supply, ref double o_swdef)
             {
@@ -3361,6 +4609,15 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_swdef_phenoes the specified c_x_sw_avail_ratio.
+        /// </summary>
+        /// <param name="c_x_sw_avail_ratio">The c_x_sw_avail_ratio.</param>
+        /// <param name="c_y_swdef_pheno">The c_y_swdef_pheno.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_avail">The i_sw_avail.</param>
+        /// <param name="i_sw_avail_pot">The i_sw_avail_pot.</param>
+        /// <param name="o_swdef">The o_swdef.</param>
         void crop_swdef_pheno(double[] c_x_sw_avail_ratio, double[] c_y_swdef_pheno,
                             double i_root_depth, double[] i_sw_avail, double[] i_sw_avail_pot, ref double o_swdef)
             {
@@ -3404,6 +4661,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_swdef_photoes the specified i_root_depth.
+        /// </summary>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_demand">The i_sw_demand.</param>
+        /// <param name="i_sw_supply">The i_sw_supply.</param>
+        /// <param name="o_swdef">The o_swdef.</param>
         void crop_swdef_photo(double i_root_depth, double i_sw_demand, double[] i_sw_supply, ref double o_swdef)
             {
 
@@ -3448,6 +4712,10 @@ namespace Models
         #region  Set Minimum stuctural stem sucrose
 
 
+        /// <summary>
+        /// Sugar_min_sstem_sucroses the specified io_min_sstem_sucrose.
+        /// </summary>
+        /// <param name="io_min_sstem_sucrose">The io_min_sstem_sucrose.</param>
         void sugar_min_sstem_sucrose(ref double io_min_sstem_sucrose)
             {
 
@@ -3490,6 +4758,18 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_phen_inits the specified c_shoot_lag.
+        /// </summary>
+        /// <param name="c_shoot_lag">The c_shoot_lag.</param>
+        /// <param name="c_shoot_rate">The c_shoot_rate.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_sowing_depth">The i_sowing_depth.</param>
+        /// <param name="i_ratoon_no">The i_ratoon_no.</param>
+        /// <param name="c_tt_begcane_to_flowering">The c_tt_begcane_to_flowering.</param>
+        /// <param name="c_tt_emerg_to_begcane">The c_tt_emerg_to_begcane.</param>
+        /// <param name="c_tt_flowering_to_crop_end">The c_tt_flowering_to_crop_end.</param>
+        /// <param name="io_phase_tt">The io_phase_tt.</param>
         void sugar_phen_init(double c_shoot_lag, double c_shoot_rate, double i_current_stage, double i_sowing_depth, double i_ratoon_no,
                             double c_tt_begcane_to_flowering, double c_tt_emerg_to_begcane, double c_tt_flowering_to_crop_end, ref double[] io_phase_tt)
             {
@@ -3620,6 +4900,19 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_thermal_times the specified c_x_temp.
+        /// </summary>
+        /// <param name="c_x_temp">The c_x_temp.</param>
+        /// <param name="c_y_tt">The c_y_tt.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_maxt">The i_maxt.</param>
+        /// <param name="i_mint">The i_mint.</param>
+        /// <param name="i_start_stress_stage">The i_start_stress_stage.</param>
+        /// <param name="i_end_stress_stage">The i_end_stress_stage.</param>
+        /// <param name="i_nfact_pheno">The i_nfact_pheno.</param>
+        /// <param name="i_swdef_pheno">The i_swdef_pheno.</param>
+        /// <returns></returns>
         double crop_thermal_time(double[] c_x_temp, double[] c_y_tt, double i_current_stage, double i_maxt, double i_mint,
                                 int i_start_stress_stage, int i_end_stress_stage, double i_nfact_pheno, double i_swdef_pheno)
             {
@@ -3675,6 +4968,28 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_phase_devels the specified i_sowing_stage.
+        /// </summary>
+        /// <param name="i_sowing_stage">The i_sowing_stage.</param>
+        /// <param name="i_germ_stage">The i_germ_stage.</param>
+        /// <param name="i_end_development_stage">The i_end_development_stage.</param>
+        /// <param name="c_pesw_germ">The c_pesw_germ.</param>
+        /// <param name="c_fasw_emerg">The c_fasw_emerg.</param>
+        /// <param name="c_rel_emerg_rate">The c_rel_emerg_rate.</param>
+        /// <param name="c_num_fasw_emerg">The c_num_fasw_emerg.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_days_tot">The i_days_tot.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_max_layer">The i_max_layer.</param>
+        /// <param name="i_sowing_depth">The i_sowing_depth.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_dul_dep">The i_dul_dep.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="io_dlt_tt">The io_dlt_tt.</param>
+        /// <param name="i_phase_tt">The i_phase_tt.</param>
+        /// <param name="i_tt_tot">The i_tt_tot.</param>
+        /// <returns></returns>
         double crop_phase_devel(int i_sowing_stage, int i_germ_stage, int i_end_development_stage, double c_pesw_germ, double[] c_fasw_emerg, double[] c_rel_emerg_rate, int c_num_fasw_emerg,
                                 double i_current_stage, double[] i_days_tot, double[] i_dlayer, int i_max_layer,
                                 double i_sowing_depth, double[] i_sw_dep, double[] i_dul_dep, double[] i_ll_dep, ref double io_dlt_tt, double[] i_phase_tt, double[] i_tt_tot)
@@ -3733,6 +5048,18 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_germinations the specified i_sowing_stage.
+        /// </summary>
+        /// <param name="i_sowing_stage">The i_sowing_stage.</param>
+        /// <param name="i_germ_stage">The i_germ_stage.</param>
+        /// <param name="c_pesw_germ">The c_pesw_germ.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_sowing_depth">The i_sowing_depth.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <returns></returns>
         double crop_germination(int i_sowing_stage, int i_germ_stage, double c_pesw_germ, double i_current_stage, double[] i_dlayer, double i_sowing_depth,
                                 double[] i_sw_dep, double[] i_ll_dep)
             {
@@ -3797,6 +5124,18 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_germ_dlt_tts the specified c_fasw_emerg.
+        /// </summary>
+        /// <param name="c_fasw_emerg">The c_fasw_emerg.</param>
+        /// <param name="c_rel_emerg_rate">The c_rel_emerg_rate.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_germ_phase">The i_germ_phase.</param>
+        /// <param name="i_sowing_depth">The i_sowing_depth.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="i_dul_dep">The i_dul_dep.</param>
+        /// <param name="io_dlt_tt">The io_dlt_tt.</param>
         void crop_germ_dlt_tt(double[] c_fasw_emerg, double[] c_rel_emerg_rate, double i_current_stage, int i_germ_phase,
                     double i_sowing_depth, double[] i_sw_dep, double[] i_ll_dep, double[] i_dul_dep, ref double io_dlt_tt)
             {
@@ -3853,6 +5192,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_phase_tts the specified i_dlt_tt.
+        /// </summary>
+        /// <param name="i_dlt_tt">The i_dlt_tt.</param>
+        /// <param name="i_phase_tt">The i_phase_tt.</param>
+        /// <param name="i_tt_tot">The i_tt_tot.</param>
+        /// <param name="i_stage_no">The i_stage_no.</param>
+        /// <returns></returns>
         double crop_phase_tt(double i_dlt_tt, double[] i_phase_tt, double[] i_tt_tot, double i_stage_no)
             {
             //!     ===========================================================
@@ -3882,6 +5229,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_devels the specified i_current_stage.
+        /// </summary>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_max_stage">The i_max_stage.</param>
+        /// <param name="i_phase_devel">The i_phase_devel.</param>
+        /// <param name="o_dlt_stage">The o_dlt_stage.</param>
+        /// <param name="io_current_stage">The io_current_stage.</param>
         void crop_devel(double i_current_stage, int i_max_stage, double i_phase_devel, out double o_dlt_stage, ref double io_current_stage)
             {
             //TODO: Remove i_current_stage or io_curreent_stage. This is just stupid.
@@ -3938,6 +5293,16 @@ namespace Models
 
         #region Crop Height  (Process Event)
 
+        /// <summary>
+        /// Cproc_canopy_heights the specified i_canopy_height.
+        /// </summary>
+        /// <param name="i_canopy_height">The i_canopy_height.</param>
+        /// <param name="i_x_stem_wt">The i_x_stem_wt.</param>
+        /// <param name="i_y_height">The i_y_height.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_stem">The i_stem.</param>
+        /// <returns></returns>
         double cproc_canopy_height(double i_canopy_height, double[] i_x_stem_wt, double[] i_y_height, double[] i_dm_green, double i_plants, int i_stem)
             {
 
@@ -3994,6 +5359,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_leaf_no_init1s the specified c_leaf_no_at_emerg.
+        /// </summary>
+        /// <param name="c_leaf_no_at_emerg">The c_leaf_no_at_emerg.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_emerg">The i_emerg.</param>
+        /// <param name="o_leaf_no_zb">The o_leaf_no_zb.</param>
+        /// <param name="o_node_no_zb">The o_node_no_zb.</param>
         void cproc_leaf_no_init1(double c_leaf_no_at_emerg, double i_current_stage, int i_emerg, ref double[] o_leaf_no_zb, ref double[] o_node_no_zb)
             {
 
@@ -4048,6 +5421,21 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_leaf_no_pot1s the specified c_x_node_no_app.
+        /// </summary>
+        /// <param name="c_x_node_no_app">The c_x_node_no_app.</param>
+        /// <param name="c_y_node_app_rate">The c_y_node_app_rate.</param>
+        /// <param name="c_x_node_no_leaf">The c_x_node_no_leaf.</param>
+        /// <param name="c_y_leaves_per_node">The c_y_leaves_per_node.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_start_node_app">The i_start_node_app.</param>
+        /// <param name="i_end_node_app">The i_end_node_app.</param>
+        /// <param name="i_emerg">The i_emerg.</param>
+        /// <param name="i_dlt_tt">The i_dlt_tt.</param>
+        /// <param name="i_node_no_zb">The i_node_no_zb.</param>
+        /// <param name="o_dlt_leaf_no_pot">The o_dlt_leaf_no_pot.</param>
+        /// <param name="o_dlt_node_no_pot">The o_dlt_node_no_pot.</param>
         void cproc_leaf_no_pot1(double[] c_x_node_no_app, double[] c_y_node_app_rate, double[] c_x_node_no_leaf, double[] c_y_leaves_per_node,
                                 double i_current_stage, int i_start_node_app, int i_end_node_app, int i_emerg, double i_dlt_tt, double[] i_node_no_zb,
                                 out double o_dlt_leaf_no_pot, out double o_dlt_node_no_pot)
@@ -4186,6 +5574,18 @@ namespace Models
         //    }
 
 
+        /// <summary>
+        /// Sugar_leaf_area_devels the specified c_leaf_no_correction.
+        /// </summary>
+        /// <param name="c_leaf_no_correction">The c_leaf_no_correction.</param>
+        /// <param name="i_dlt_leaf_no">The i_dlt_leaf_no.</param>
+        /// <param name="i_leaf_no_zb">The i_leaf_no_zb.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="c_leaf_size">The c_leaf_size.</param>
+        /// <param name="c_leaf_size_no">The c_leaf_size_no.</param>
+        /// <param name="c_tillerf_leaf_size">The c_tillerf_leaf_size.</param>
+        /// <param name="c_tillerf_leaf_size_no">The c_tillerf_leaf_size_no.</param>
+        /// <returns></returns>
         double sugar_leaf_area_devel(double c_leaf_no_correction, double i_dlt_leaf_no, double[] i_leaf_no_zb, double i_plants,
                                     double[] c_leaf_size, double[] c_leaf_size_no,
                                     double[] c_tillerf_leaf_size, double[] c_tillerf_leaf_size_no)
@@ -4257,6 +5657,15 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Sugar_leaf_sizes the specified c_leaf_size.
+        /// </summary>
+        /// <param name="c_leaf_size">The c_leaf_size.</param>
+        /// <param name="c_leaf_size_no">The c_leaf_size_no.</param>
+        /// <param name="c_tillerf_leaf_size">The c_tillerf_leaf_size.</param>
+        /// <param name="c_tillerf_leaf_size_no">The c_tillerf_leaf_size_no.</param>
+        /// <param name="i_leaf_no_ob">The i_leaf_no_ob.</param>
+        /// <returns></returns>
         double sugar_leaf_size(double[] c_leaf_size, double[] c_leaf_size_no, double[] c_tillerf_leaf_size, double[] c_tillerf_leaf_size_no, double i_leaf_no_ob)
             {
             //*     ===========================================================
@@ -4316,6 +5725,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_bio_water1s the specified i_root_depth.
+        /// </summary>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_supply">The i_sw_supply.</param>
+        /// <param name="i_transp_eff">The i_transp_eff.</param>
+        /// <returns></returns>
         double cproc_bio_water1(double i_root_depth, double[] i_sw_supply, double i_transp_eff)
             {
             //*     ===========================================================
@@ -4375,6 +5791,18 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_oxdef_photo1s the specified c_oxdef_photo.
+        /// </summary>
+        /// <param name="c_oxdef_photo">The c_oxdef_photo.</param>
+        /// <param name="c_oxdef_photo_rtfr">The c_oxdef_photo_rtfr.</param>
+        /// <param name="i_ll15_dep">The i_ll15_dep.</param>
+        /// <param name="i_sat_dep">The i_sat_dep.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_root_length">The i_root_length.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <returns></returns>
         double crop_oxdef_photo1(double[] c_oxdef_photo, double[] c_oxdef_photo_rtfr,
                                 double[] i_ll15_dep, double[] i_sat_dep, double[] i_sw_dep, double[] i_dlayer, double[] i_root_length, double i_root_depth)
             {
@@ -4445,6 +5873,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_root_dists the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_root_length">The i_root_length.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="o_root_array">The o_root_array.</param>
+        /// <param name="i_root_sum">The i_root_sum.</param>
         void crop_root_dist(double[] i_dlayer, double[] i_root_length, double i_root_depth, ref double[] o_root_array, double i_root_sum)
             {
 
@@ -4509,6 +5945,17 @@ namespace Models
         #region Biomass (Dry Matter) Growth
 
 
+        /// <summary>
+        /// Sugar_dm_pot_rues the specified c_rue.
+        /// </summary>
+        /// <param name="c_rue">The c_rue.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_radn_int">The i_radn_int.</param>
+        /// <param name="i_nfact_photo">The i_nfact_photo.</param>
+        /// <param name="i_temp_stress_photo">The i_temp_stress_photo.</param>
+        /// <param name="i_oxdef_photo">The i_oxdef_photo.</param>
+        /// <param name="i_lodge_redn_photo">The i_lodge_redn_photo.</param>
+        /// <returns></returns>
         double sugar_dm_pot_rue(double[] c_rue, double i_current_stage, double i_radn_int, double i_nfact_photo, double i_temp_stress_photo, double i_oxdef_photo, double i_lodge_redn_photo)
             {
             //sv- Also partly replaces the following function.
@@ -4555,6 +6002,14 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Sugar_rue_reductions the specified i_nfact_photo.
+        /// </summary>
+        /// <param name="i_nfact_photo">The i_nfact_photo.</param>
+        /// <param name="i_temp_stress_photo">The i_temp_stress_photo.</param>
+        /// <param name="i_oxdef_photo">The i_oxdef_photo.</param>
+        /// <param name="i_lodge_redn_photo">The i_lodge_redn_photo.</param>
+        /// <returns></returns>
         double sugar_rue_reduction(double i_nfact_photo, double i_temp_stress_photo, double i_oxdef_photo, double i_lodge_redn_photo)
             {
 
@@ -4577,6 +6032,13 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Sugar_dm_pot_rue_pots the specified c_rue.
+        /// </summary>
+        /// <param name="c_rue">The c_rue.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_radn_int">The i_radn_int.</param>
+        /// <returns></returns>
         double sugar_dm_pot_rue_pot(double[] c_rue, double i_current_stage, double i_radn_int)
             {
             //sv- Also partly replaces the following function.
@@ -4618,6 +6080,20 @@ namespace Models
 
         #region Biomass(Dry Matter) Growth Actual
 
+        /// <summary>
+        /// Sugar_dm_inits the specified c_dm_cabbage_init.
+        /// </summary>
+        /// <param name="c_dm_cabbage_init">The c_dm_cabbage_init.</param>
+        /// <param name="c_dm_leaf_init">The c_dm_leaf_init.</param>
+        /// <param name="c_dm_sstem_init">The c_dm_sstem_init.</param>
+        /// <param name="c_dm_sucrose_init">The c_dm_sucrose_init.</param>
+        /// <param name="c_specific_root_length">The c_specific_root_length.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_root_length">The i_root_length.</param>
+        /// <param name="io_dm_green">The io_dm_green.</param>
+        /// <param name="o_leaf_dm">The o_leaf_dm.</param>
         void sugar_dm_init(double c_dm_cabbage_init, double c_dm_leaf_init, double c_dm_sstem_init, double c_dm_sucrose_init, double c_specific_root_length,
                             double i_current_stage, double[] i_dlayer, double i_plants, double[] i_root_length,
                             ref double[] io_dm_green, ref double[] o_leaf_dm)
@@ -4808,6 +6284,16 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_sucrose_fractions the specified c_stress_factor_stalk.
+        /// </summary>
+        /// <param name="c_stress_factor_stalk">The c_stress_factor_stalk.</param>
+        /// <param name="c_sucrose_fraction_stalk">The c_sucrose_fraction_stalk.</param>
+        /// <param name="i_swdef_stalk">The i_swdef_stalk.</param>
+        /// <param name="i_nfact_stalk">The i_nfact_stalk.</param>
+        /// <param name="i_temp_stress_stalk">The i_temp_stress_stalk.</param>
+        /// <param name="i_lodge_redn_sucrose">The i_lodge_redn_sucrose.</param>
+        /// <returns></returns>
         double sugar_sucrose_fraction(double[] c_stress_factor_stalk, double[] c_sucrose_fraction_stalk,
                                         double i_swdef_stalk, double i_nfact_stalk, double i_temp_stress_stalk, double i_lodge_redn_sucrose)
             {
@@ -4857,6 +6343,23 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_dm_partition_ruleses the specified c_cane_fraction.
+        /// </summary>
+        /// <param name="c_cane_fraction">The c_cane_fraction.</param>
+        /// <param name="c_leaf_cabbage_ratio">The c_leaf_cabbage_ratio.</param>
+        /// <param name="i_min_sstem_sucrose">The i_min_sstem_sucrose.</param>
+        /// <param name="c_ratio_root_shoot">The c_ratio_root_shoot.</param>
+        /// <param name="c_sucrose_delay">The c_sucrose_delay.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_sla_min">The i_sla_min.</param>
+        /// <param name="i_sucrose_fraction">The i_sucrose_fraction.</param>
+        /// <param name="i_tt_tot">The i_tt_tot.</param>
+        /// <param name="i_dlt_dm">The i_dlt_dm.</param>
+        /// <param name="i_dlt_lai_pot">The i_dlt_lai_pot.</param>
+        /// <param name="o_dlt_dm_green">The o_dlt_dm_green.</param>
+        /// <param name="o_partition_xs">The o_partition_xs.</param>
         void sugar_dm_partition_rules(double c_cane_fraction, double c_leaf_cabbage_ratio, double i_min_sstem_sucrose, double[] c_ratio_root_shoot, double c_sucrose_delay, double i_current_stage,
                                         double[] i_dm_green, double i_sla_min, double i_sucrose_fraction, double[] i_tt_tot, double i_dlt_dm, double i_dlt_lai_pot,
                                         ref double[] o_dlt_dm_green, ref double o_partition_xs)
@@ -5047,6 +6550,16 @@ namespace Models
         #region Leaf Area Actual
 
 
+        /// <summary>
+        /// Sugar_leaf_areas the specified i_dlt_dm_green.
+        /// </summary>
+        /// <param name="i_dlt_dm_green">The i_dlt_dm_green.</param>
+        /// <param name="i_dlt_lai_stressed">The i_dlt_lai_stressed.</param>
+        /// <param name="i_dlt_leaf_no">The i_dlt_leaf_no.</param>
+        /// <param name="i_leaf_no_zb">The i_leaf_no_zb.</param>
+        /// <param name="c_sla_lfno">The c_sla_lfno.</param>
+        /// <param name="c_sla_max">The c_sla_max.</param>
+        /// <returns></returns>
         double sugar_leaf_area(double[] i_dlt_dm_green, double i_dlt_lai_stressed, double i_dlt_leaf_no, double[] i_leaf_no_zb,
                                 double[] c_sla_lfno, double[] c_sla_max)
             {
@@ -5118,6 +6631,27 @@ namespace Models
         #region Root Distribution
 
 
+        /// <summary>
+        /// Cproc_root_length_growth1s the specified o_dlt_root_length.
+        /// </summary>
+        /// <param name="o_dlt_root_length">The o_dlt_root_length.</param>
+        /// <param name="c_specific_root_length">The c_specific_root_length.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_dlt_root_wt">The i_dlt_root_wt.</param>
+        /// <param name="i_dlt_root_depth">The i_dlt_root_depth.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_root_length">The i_root_length.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_xf">The i_xf.</param>
+        /// <param name="c_x_sw_ratio">The c_x_sw_ratio.</param>
+        /// <param name="c_y_sw_fac_root">The c_y_sw_fac_root.</param>
+        /// <param name="c_x_plant_rld">The c_x_plant_rld.</param>
+        /// <param name="c_y_rel_root_rate">The c_y_rel_root_rate.</param>
+        /// <param name="i_dul_dep">The i_dul_dep.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
+        /// <param name="i_max_layer">The i_max_layer.</param>
+        /// <exception cref="ApsimXException">Too many layers for crop routines</exception>
         void cproc_root_length_growth1(ref double[] o_dlt_root_length,
                                         double c_specific_root_length, double[] i_dlayer,
                                         double i_dlt_root_wt, double i_dlt_root_depth, double i_root_depth, double[] i_root_length, double i_plants, double[] i_xf,
@@ -5227,6 +6761,16 @@ namespace Models
         #region Leaf Senescence
 
 
+        /// <summary>
+        /// Sugar_leaf_death_grasses the specified c_green_leaf_no.
+        /// </summary>
+        /// <param name="c_green_leaf_no">The c_green_leaf_no.</param>
+        /// <param name="i_lodge_redn_green_leaf">The i_lodge_redn_green_leaf.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_dlt_leaf_no">The i_dlt_leaf_no.</param>
+        /// <param name="i_leaf_no">The i_leaf_no.</param>
+        /// <param name="i_node_no_dead">The i_node_no_dead.</param>
+        /// <returns></returns>
         double sugar_leaf_death_grass(double c_green_leaf_no, double i_lodge_redn_green_leaf, double i_current_stage,
                                         double i_dlt_leaf_no, double[] i_leaf_no, double[] i_node_no_dead)
             {
@@ -5298,6 +6842,18 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_leaf_area_sen_age0s the specified i_dlt_node_no_dead.
+        /// </summary>
+        /// <param name="i_dlt_node_no_dead">The i_dlt_node_no_dead.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_leaf_area_zb">The i_leaf_area_zb.</param>
+        /// <param name="i_node_no_dead_zb">The i_node_no_dead_zb.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_slai">The i_slai.</param>
+        /// <param name="i_node_no_detached_ob">The i_node_no_detached_ob.</param>
+        /// <param name="c_leaf_no_at_emerg">The c_leaf_no_at_emerg.</param>
+        /// <returns></returns>
         double sugar_leaf_area_sen_age0(double i_dlt_node_no_dead, double i_lai, double[] i_leaf_area_zb, double[] i_node_no_dead_zb, double i_plants,
                                         double i_slai, double i_node_no_detached_ob, double c_leaf_no_at_emerg)
             {
@@ -5358,6 +6914,15 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_leaf_area_sen_water1s the specified i_sen_rate_water.
+        /// </summary>
+        /// <param name="i_sen_rate_water">The i_sen_rate_water.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_swdef_photo">The i_swdef_photo.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_min_tpla">The i_min_tpla.</param>
+        /// <returns></returns>
         double crop_leaf_area_sen_water1(double i_sen_rate_water, double i_lai, double i_swdef_photo, double i_plants, double i_min_tpla)
             {
             //!     ===========================================================
@@ -5398,6 +6963,15 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_leaf_area_sen_light1s the specified i_lai_sen_light.
+        /// </summary>
+        /// <param name="i_lai_sen_light">The i_lai_sen_light.</param>
+        /// <param name="i_sen_light_slope">The i_sen_light_slope.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_min_tpla">The i_min_tpla.</param>
+        /// <returns></returns>
         double crop_leaf_area_sen_light1(double i_lai_sen_light, double i_sen_light_slope, double i_lai, double i_plants, double i_min_tpla)
             {
             //!     ===========================================================
@@ -5451,6 +7025,16 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_leaf_area_sen_frost1s the specified i_frost_temp.
+        /// </summary>
+        /// <param name="i_frost_temp">The i_frost_temp.</param>
+        /// <param name="i_frost_fraction">The i_frost_fraction.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_mint">The i_mint.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_min_tpla">The i_min_tpla.</param>
+        /// <returns></returns>
         double crop_leaf_area_sen_frost1(double[] i_frost_temp, double[] i_frost_fraction, double i_lai, double i_mint, double i_plants, double i_min_tpla)
             {
             //!     ===========================================================
@@ -5498,6 +7082,23 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_dm_senescences the specified c_dm_root_sen_frac.
+        /// </summary>
+        /// <param name="c_dm_root_sen_frac">The c_dm_root_sen_frac.</param>
+        /// <param name="c_leaf_cabbage_ratio">The c_leaf_cabbage_ratio.</param>
+        /// <param name="c_cabbage_sheath_fr">The c_cabbage_sheath_fr.</param>
+        /// <param name="i_dlt_dm_green">The i_dlt_dm_green.</param>
+        /// <param name="i_dlt_lai">The i_dlt_lai.</param>
+        /// <param name="i_dlt_slai">The i_dlt_slai.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_dm_senesced">The i_dm_senesced.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_leaf_dm">The i_leaf_dm.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_slai">The i_slai.</param>
+        /// <param name="i_leaf_area">The i_leaf_area.</param>
+        /// <param name="o_dlt_dm_senesced">The o_dlt_dm_senesced.</param>
         void sugar_dm_senescence(double c_dm_root_sen_frac, double c_leaf_cabbage_ratio, double c_cabbage_sheath_fr,
                                     double[] i_dlt_dm_green, double i_dlt_lai, double i_dlt_slai, double[] i_dm_green, double[] i_dm_senesced,
                                     double i_lai, double[] i_leaf_dm, double i_plants, double i_slai, double[] i_leaf_area, ref double[] o_dlt_dm_senesced)
@@ -5594,6 +7195,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_leaf_no_from_lais the specified i_leaf_area.
+        /// </summary>
+        /// <param name="i_leaf_area">The i_leaf_area.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <returns></returns>
         double sugar_leaf_no_from_lai(double[] i_leaf_area, double i_plants, double i_lai)
             {
 
@@ -5642,6 +7250,15 @@ namespace Models
         #region Root Length Senescence
 
 
+        /// <summary>
+        /// Cproc_root_length_senescence1s the specified c_specific_root_length.
+        /// </summary>
+        /// <param name="c_specific_root_length">The c_specific_root_length.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_dlt_root_dm_senesced">The i_dlt_root_dm_senesced.</param>
+        /// <param name="i_root_length">The i_root_length.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="o_dlt_root_length_senesced">The o_dlt_root_length_senesced.</param>
         void cproc_root_length_senescence1(double c_specific_root_length, double[] i_dlayer, double i_dlt_root_dm_senesced, double[] i_root_length, double i_root_depth,
                                              ref double[] o_dlt_root_length_senesced)
             {
@@ -5690,6 +7307,13 @@ namespace Models
         #region Nitrogen Retranslocation
 
 
+        /// <summary>
+        /// Sugar_s the n_retranslocate.
+        /// </summary>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_n_conc_min">The i_n_conc_min.</param>
+        /// <param name="i_n_green">The i_n_green.</param>
+        /// <param name="o_dlt_N_retrans">The o_dlt_ n_retrans.</param>
         void sugar_N_retranslocate(double[] i_dm_green, double[] i_n_conc_min, double[] i_n_green, ref double[] o_dlt_N_retrans)
             {
 
@@ -5725,6 +7349,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_s the n_retrans_avail.
+        /// </summary>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_N_conc_min">The i_ n_conc_min.</param>
+        /// <param name="i_N_green">The i_ n_green.</param>
+        /// <param name="o_N_avail">The o_ n_avail.</param>
         void sugar_N_retrans_avail(double[] i_dm_green, double[] i_N_conc_min, double[] i_N_green, ref double[] o_N_avail)
             {
 
@@ -5774,6 +7405,11 @@ namespace Models
         #region Nitrogen Supply
 
 
+        /// <summary>
+        /// Sugar_nit_supplies the specified i_option.
+        /// </summary>
+        /// <param name="i_option">The i_option.</param>
+        /// <exception cref="ApsimXException">Invalid template option</exception>
         void sugar_nit_supply(int i_option)
             {
             //*===========================================================
@@ -5823,6 +7459,25 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_n_supply2s the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_max_layer">The i_max_layer.</param>
+        /// <param name="i_dlt_sw_dep">The i_dlt_sw_dep.</param>
+        /// <param name="i_no3gsm">The i_no3gsm.</param>
+        /// <param name="i_no3gsm_min">The i_no3gsm_min.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="o_NO3gsm_mflow_avail">The o_ n o3gsm_mflow_avail.</param>
+        /// <param name="i_sw_avail">The i_sw_avail.</param>
+        /// <param name="i_sw_avail_pot">The i_sw_avail_pot.</param>
+        /// <param name="o_no3gsm_diffn_pot">The o_no3gsm_diffn_pot.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="c_n_fix_rate">The c_n_fix_rate.</param>
+        /// <param name="i_fixation_determinant">The i_fixation_determinant.</param>
+        /// <param name="i_swdef_fixation">The i_swdef_fixation.</param>
+        /// <param name="o_n_fix_pot">The o_n_fix_pot.</param>
         void cproc_n_supply2(double[] i_dlayer, int i_max_layer,
                             double[] i_dlt_sw_dep, double[] i_no3gsm, double[] i_no3gsm_min, double i_root_depth, double[] i_sw_dep, ref double[] o_NO3gsm_mflow_avail,
                             double[] i_sw_avail, double[] i_sw_avail_pot, ref double[] o_no3gsm_diffn_pot,
@@ -5866,6 +7521,17 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_s the n_mass_flow1.
+        /// </summary>
+        /// <param name="i_num_layer">The i_num_layer.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_dlt_sw_dep">The i_dlt_sw_dep.</param>
+        /// <param name="i_no3gsm">The i_no3gsm.</param>
+        /// <param name="i_no3gsm_min">The i_no3gsm_min.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="o_no3gsm_mflow_pot">The o_no3gsm_mflow_pot.</param>
         void crop_N_mass_flow1(int i_num_layer, double[] i_dlayer, double[] i_dlt_sw_dep, double[] i_no3gsm, double[] i_no3gsm_min, double i_root_depth, double[] i_sw_dep,
                                 ref double[] o_no3gsm_mflow_pot)
             {
@@ -5914,6 +7580,17 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_s the n_diffusion1.
+        /// </summary>
+        /// <param name="i_num_layer">The i_num_layer.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_no3gsm">The i_no3gsm.</param>
+        /// <param name="i_no3gsm_min">The i_no3gsm_min.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_avail">The i_sw_avail.</param>
+        /// <param name="i_sw_avail_pot">The i_sw_avail_pot.</param>
+        /// <param name="o_no3gsm_diffn_pot">The o_no3gsm_diffn_pot.</param>
         void crop_N_diffusion1(int i_num_layer, double[] i_dlayer, double[] i_no3gsm, double[] i_no3gsm_min, double i_root_depth, double[] i_sw_avail, double[] i_sw_avail_pot,
                                 ref double[] o_no3gsm_diffn_pot)
             {
@@ -5967,6 +7644,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_s the n_fixation_pot1.
+        /// </summary>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="c_n_fix_rate">The c_n_fix_rate.</param>
+        /// <param name="i_fixation_determinant">The i_fixation_determinant.</param>
+        /// <param name="i_swdef_fixation">The i_swdef_fixation.</param>
+        /// <param name="o_n_fix_pot">The o_n_fix_pot.</param>
         void crop_N_fixation_pot1(double i_current_stage, double[] c_n_fix_rate, double i_fixation_determinant, double i_swdef_fixation, ref double o_n_fix_pot)
             {
 
@@ -6000,6 +7685,32 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_n_supply4s the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_bd">The i_bd.</param>
+        /// <param name="i_max_layer">The i_max_layer.</param>
+        /// <param name="i_no3gsm">The i_no3gsm.</param>
+        /// <param name="i_no3gsm_min">The i_no3gsm_min.</param>
+        /// <param name="o_no3gsm_uptake_pot">The o_no3gsm_uptake_pot.</param>
+        /// <param name="i_nh4gsm">The i_nh4gsm.</param>
+        /// <param name="i_nh4gsm_min">The i_nh4gsm_min.</param>
+        /// <param name="o_nh4gsm_uptake_pot">The o_nh4gsm_uptake_pot.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="c_n_stress_start_stage">The c_n_stress_start_stage.</param>
+        /// <param name="c_kno3">The c_kno3.</param>
+        /// <param name="c_no3ppm_min">The c_no3ppm_min.</param>
+        /// <param name="c_knh4">The C_KNH4.</param>
+        /// <param name="c_nh4ppm_min">The c_nh4ppm_min.</param>
+        /// <param name="c_total_n_uptake_max">The c_total_n_uptake_max.</param>
+        /// <param name="i_sw_avail_pot">The i_sw_avail_pot.</param>
+        /// <param name="i_sw_avail">The i_sw_avail.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="c_n_fix_rate">The c_n_fix_rate.</param>
+        /// <param name="i_fixation_determinant">The i_fixation_determinant.</param>
+        /// <param name="i_swdef_fixation">The i_swdef_fixation.</param>
+        /// <param name="o_n_fix_pot">The o_n_fix_pot.</param>
         void cproc_n_supply4(double[] i_dlayer, double[] i_bd, int i_max_layer,
                              double[] i_no3gsm, double[] i_no3gsm_min, ref double[] o_no3gsm_uptake_pot,
                              double[] i_nh4gsm, double[] i_nh4gsm_min, ref double[] o_nh4gsm_uptake_pot,
@@ -6119,6 +7830,17 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_s the n_init.
+        /// </summary>
+        /// <param name="c_N_cabbage_init_conc">The c_ n_cabbage_init_conc.</param>
+        /// <param name="c_N_leaf_init_conc">The c_ n_leaf_init_conc.</param>
+        /// <param name="c_N_root_init_conc">The c_ n_root_init_conc.</param>
+        /// <param name="c_N_sstem_init_conc">The c_ n_sstem_init_conc.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_days_tot">The i_days_tot.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="o_N_green">The o_ n_green.</param>
         void sugar_N_init(double c_N_cabbage_init_conc, double c_N_leaf_init_conc, double c_N_root_init_conc, double c_N_sstem_init_conc, double i_current_stage,
                               double[] i_days_tot, double[] i_dm_green, ref double[] o_N_green)
             {
@@ -6171,6 +7893,11 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_nit_uptakes the specified i_option.
+        /// </summary>
+        /// <param name="i_option">The i_option.</param>
+        /// <exception cref="ApsimXException">Invalid template option</exception>
         void sugar_nit_uptake(int i_option)
             {
 
@@ -6289,6 +8016,22 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_s the n_uptake1.
+        /// </summary>
+        /// <param name="c_no3_diffn_const">The c_no3_diffn_const.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_max_layer">The i_max_layer.</param>
+        /// <param name="i_no3gsm_diffn_pot">The i_no3gsm_diffn_pot.</param>
+        /// <param name="i_no3gsm_mflow_avail">The i_no3gsm_mflow_avail.</param>
+        /// <param name="i_n_fix_pot">The i_n_fix_pot.</param>
+        /// <param name="c_n_supply_preference">The c_n_supply_preference.</param>
+        /// <param name="i_n_demand">The i_n_demand.</param>
+        /// <param name="i_n_max">The i_n_max.</param>
+        /// <param name="i_max_part">The i_max_part.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="o_dlt_NO3gsm">The o_dlt_ n o3gsm.</param>
+        /// <exception cref="ApsimXException">bad n supply preference</exception>
         void cproc_N_uptake1(double c_no3_diffn_const, double[] i_dlayer, int i_max_layer, double[] i_no3gsm_diffn_pot, double[] i_no3gsm_mflow_avail,
                             double i_n_fix_pot, string c_n_supply_preference, double[] i_n_demand, double[] i_n_max, int i_max_part, double i_root_depth,
                             ref double[] o_dlt_NO3gsm)
@@ -6409,6 +8152,21 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_n_uptake3s the specified i_dlayer.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_max_layer">The i_max_layer.</param>
+        /// <param name="i_no3gsm_uptake_pot">The i_no3gsm_uptake_pot.</param>
+        /// <param name="i_nh4gsm_uptake_pot">The i_nh4gsm_uptake_pot.</param>
+        /// <param name="i_n_fix_pot">The i_n_fix_pot.</param>
+        /// <param name="c_n_supply_preference">The c_n_supply_preference.</param>
+        /// <param name="i_soil_n_demand">The i_soil_n_demand.</param>
+        /// <param name="i_n_max">The i_n_max.</param>
+        /// <param name="i_max_part">The i_max_part.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="o_dlt_no3gsm">The o_dlt_no3gsm.</param>
+        /// <param name="o_dlt_nh4gsm">The o_dlt_nh4gsm.</param>
         void cproc_n_uptake3(double[] i_dlayer, int i_max_layer, double[] i_no3gsm_uptake_pot, double[] i_nh4gsm_uptake_pot, double i_n_fix_pot, string c_n_supply_preference,
                         double[] i_soil_n_demand, double[] i_n_max, int i_max_part, double i_root_depth, ref double[] o_dlt_no3gsm, ref double[] o_dlt_nh4gsm)
             {
@@ -6432,7 +8190,6 @@ namespace Models
             double l_N_demand;                         //! total nitrogen demand (g/m^2)
             double l_NO3gsm_uptake;                    //! plant NO3 uptake from layer (g/m^2)
             double l_NH4gsm_uptake;                    //! plant NO3 uptake from layer (g/m^2)
-            double l_N_max;                            //! potential N uptake per plant (g/m^2)
             double l_Ngsm_supply;
             double l_scalef;
 
@@ -6485,6 +8242,15 @@ namespace Models
         #region Nitrogen Partitioning
 
 
+        /// <summary>
+        /// Sugar_s the n_partition.
+        /// </summary>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_dlt_NO3gsm">The i_dlt_ n o3gsm.</param>
+        /// <param name="i_dlt_NH4gsm">The i_dlt_ n H4GSM.</param>
+        /// <param name="i_N_demand">The i_ n_demand.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="o_dlt_N_green">The o_dlt_ n_green.</param>
         void sugar_N_partition(double[] i_dlayer, double[] i_dlt_NO3gsm, double[] i_dlt_NH4gsm, double[] i_N_demand, double i_root_depth, ref double[] o_dlt_N_green)
             {
 
@@ -6546,6 +8312,22 @@ namespace Models
         #region Water Content of Cane
 
 
+        /// <summary>
+        /// Sugar_water_contents the specified c_cane_dmf_tt.
+        /// </summary>
+        /// <param name="c_cane_dmf_tt">The c_cane_dmf_tt.</param>
+        /// <param name="c_cane_dmf_min">The c_cane_dmf_min.</param>
+        /// <param name="c_cane_dmf_max">The c_cane_dmf_max.</param>
+        /// <param name="c_num_cane_dmf">The c_num_cane_dmf.</param>
+        /// <param name="c_cane_dmf_rate">The c_cane_dmf_rate.</param>
+        /// <param name="i_swdef_stalk">The i_swdef_stalk.</param>
+        /// <param name="i_nfact_stalk">The i_nfact_stalk.</param>
+        /// <param name="i_temp_stress_stalk">The i_temp_stress_stalk.</param>
+        /// <param name="i_dlt_dm_green">The i_dlt_dm_green.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_dlt_plant_wc">The i_dlt_plant_wc.</param>
+        /// <param name="o_plant_wc">The o_plant_wc.</param>
+        /// <param name="i_tt_tot">The i_tt_tot.</param>
         void sugar_water_content(double[] c_cane_dmf_tt, double[] c_cane_dmf_min, double[] c_cane_dmf_max, int c_num_cane_dmf, double c_cane_dmf_rate,
             double i_swdef_stalk, double i_nfact_stalk, double i_temp_stress_stalk, double[] i_dlt_dm_green, double[] i_dm_green, double[] i_dlt_plant_wc,
             ref double[] o_plant_wc, double[] i_tt_tot)
@@ -6616,6 +8398,9 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_plant_deathes this instance.
+        /// </summary>
         void sugar_plant_death()
             {
 
@@ -6653,6 +8438,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_failure_germinations the specified c_days_germ_limit.
+        /// </summary>
+        /// <param name="c_days_germ_limit">The c_days_germ_limit.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_days_tot">The i_days_tot.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="o_dlt_plants">The o_dlt_plants.</param>
         void sugar_failure_germination(double c_days_germ_limit, double i_current_stage, double[] i_days_tot, double i_plants, ref double o_dlt_plants)
             {
 
@@ -6683,6 +8476,14 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Sugar_failure_emergences the specified c_tt_emerg_limit.
+        /// </summary>
+        /// <param name="c_tt_emerg_limit">The c_tt_emerg_limit.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_tt_tot">The i_tt_tot.</param>
+        /// <param name="o_dlt_plants">The o_dlt_plants.</param>
         void sugar_failure_emergence(double c_tt_emerg_limit, double i_current_stage, double i_plants, double[] i_tt_tot, ref double o_dlt_plants)
             {
 
@@ -6712,6 +8513,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_failure_leaf_sens the specified i_current_stage.
+        /// </summary>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="o_dlt_plants">The o_dlt_plants.</param>
         void sugar_failure_leaf_sen(double i_current_stage, double i_lai, double i_plants, ref double o_dlt_plants)
             {
 
@@ -6742,6 +8550,17 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_death_droughts the specified c_leaf_no_crit.
+        /// </summary>
+        /// <param name="c_leaf_no_crit">The c_leaf_no_crit.</param>
+        /// <param name="c_swdf_photo_limit">The c_swdf_photo_limit.</param>
+        /// <param name="c_swdf_photo_rate">The c_swdf_photo_rate.</param>
+        /// <param name="i_cswd_photo">The i_cswd_photo.</param>
+        /// <param name="i_leaf_no">The i_leaf_no.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="i_swdef_photo">The i_swdef_photo.</param>
+        /// <param name="o_dlt_plants">The o_dlt_plants.</param>
         void sugar_death_drought(double c_leaf_no_crit, double c_swdf_photo_limit, double c_swdf_photo_rate, double[] i_cswd_photo,
                                 double[] i_leaf_no, double i_plants, double i_swdef_photo, ref double o_dlt_plants)
             {
@@ -6787,6 +8606,17 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_death_lodgings the specified i_lodge_flag.
+        /// </summary>
+        /// <param name="i_lodge_flag">if set to <c>true</c> [i_lodge_flag].</param>
+        /// <param name="i_swdef_photo">The i_swdef_photo.</param>
+        /// <param name="i_oxdef_photo">The i_oxdef_photo.</param>
+        /// <param name="c_stress_lodge">The c_stress_lodge.</param>
+        /// <param name="c_death_fr_lodge">The c_death_fr_lodge.</param>
+        /// <param name="c_num_stress_lodge">The c_num_stress_lodge.</param>
+        /// <param name="i_plants">The i_plants.</param>
+        /// <param name="o_dlt_plants_death_lodging">The o_dlt_plants_death_lodging.</param>
         void sugar_death_lodging(bool i_lodge_flag, double i_swdef_photo, double i_oxdef_photo, double[] c_stress_lodge, double[] c_death_fr_lodge,
                         int c_num_stress_lodge, double i_plants, ref double o_dlt_plants_death_lodging)
             {
@@ -6835,6 +8665,19 @@ namespace Models
         #region Reallocate Cabbage
 
 
+        /// <summary>
+        /// Sugar_realloc_cabbages the specified i_leaf.
+        /// </summary>
+        /// <param name="i_leaf">The i_leaf.</param>
+        /// <param name="i_cabbage">The i_cabbage.</param>
+        /// <param name="i_sstem">The i_sstem.</param>
+        /// <param name="i_max_part">The i_max_part.</param>
+        /// <param name="c_cabbage_sheath_fr">The c_cabbage_sheath_fr.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_dlt_dm_senesced">The i_dlt_dm_senesced.</param>
+        /// <param name="i_n_green">The i_n_green.</param>
+        /// <param name="o_dlt_dm_realloc">The o_dlt_dm_realloc.</param>
+        /// <param name="o_dlt_n_realloc">The o_dlt_n_realloc.</param>
         void sugar_realloc_cabbage(int i_leaf, int i_cabbage, int i_sstem, int i_max_part,
             double c_cabbage_sheath_fr, double[] i_dm_green, double[] i_dlt_dm_senesced, double[] i_n_green,
             ref double[] o_dlt_dm_realloc, ref double[] o_dlt_n_realloc)
@@ -6920,6 +8763,16 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_dm_detachment1s the specified i_max_part.
+        /// </summary>
+        /// <param name="i_max_part">The i_max_part.</param>
+        /// <param name="c_sen_detach_frac">The c_sen_detach_frac.</param>
+        /// <param name="i_dm_senesced">The i_dm_senesced.</param>
+        /// <param name="o_dlt_dm_detached">The o_dlt_dm_detached.</param>
+        /// <param name="c_dead_detach_frac">The c_dead_detach_frac.</param>
+        /// <param name="i_dm_dead">The i_dm_dead.</param>
+        /// <param name="o_dlt_dm_dead_detached">The o_dlt_dm_dead_detached.</param>
         void cproc_dm_detachment1(int i_max_part,
                                 double[] c_sen_detach_frac, double[] i_dm_senesced, ref double[] o_dlt_dm_detached,
                                 double[] c_dead_detach_frac, double[] i_dm_dead, ref double[] o_dlt_dm_dead_detached)
@@ -6946,6 +8799,16 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_n_detachment1s the specified i_max_part.
+        /// </summary>
+        /// <param name="i_max_part">The i_max_part.</param>
+        /// <param name="c_sen_detach_frac">The c_sen_detach_frac.</param>
+        /// <param name="i_n_senesced">The i_n_senesced.</param>
+        /// <param name="o_dlt_n_detached">The o_dlt_n_detached.</param>
+        /// <param name="c_dead_detach_frac">The c_dead_detach_frac.</param>
+        /// <param name="i_n_dead">The i_n_dead.</param>
+        /// <param name="o_dlt_n_dead_detached">The o_dlt_n_dead_detached.</param>
         void cproc_n_detachment1(int i_max_part,
                              double[] c_sen_detach_frac, double[] i_n_senesced, ref double[] o_dlt_n_detached,
                              double[] c_dead_detach_frac, double[] i_n_dead, ref double[] o_dlt_n_dead_detached)
@@ -6976,6 +8839,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_pool_fraction_deltas the specified i_num_part_ob.
+        /// </summary>
+        /// <param name="i_num_part_ob">The i_num_part_ob.</param>
+        /// <param name="i_fraction_zb">The i_fraction_zb.</param>
+        /// <param name="i_pool_zb">The i_pool_zb.</param>
+        /// <param name="o_dlt_pool_zb">The o_dlt_pool_zb.</param>
         void crop_pool_fraction_delta(int i_num_part_ob, double[] i_fraction_zb, double[] i_pool_zb, ref double[] o_dlt_pool_zb)
             {
 
@@ -7003,6 +8873,16 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Cproc_lai_detachment1s the specified i_leaf_zb.
+        /// </summary>
+        /// <param name="i_leaf_zb">The i_leaf_zb.</param>
+        /// <param name="c_sen_detach_frac">The c_sen_detach_frac.</param>
+        /// <param name="i_slai">The i_slai.</param>
+        /// <param name="o_dlt_slai_detached">The o_dlt_slai_detached.</param>
+        /// <param name="c_dead_detach_frac">The c_dead_detach_frac.</param>
+        /// <param name="i_tlai_dead">The i_tlai_dead.</param>
+        /// <param name="o_dlt_tlai_dead_detached">The o_dlt_tlai_dead_detached.</param>
         void cproc_lai_detachment1(int i_leaf_zb,
                             double[] c_sen_detach_frac, double i_slai, ref double o_dlt_slai_detached,
                             double[] c_dead_detach_frac, double i_tlai_dead, ref double o_dlt_tlai_dead_detached)
@@ -7032,6 +8912,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Crop_part_fraction_deltas the specified i_part_no_zb.
+        /// </summary>
+        /// <param name="i_part_no_zb">The i_part_no_zb.</param>
+        /// <param name="i_fraction_zb">The i_fraction_zb.</param>
+        /// <param name="i_part">The i_part.</param>
+        /// <param name="o_dlt_part">The o_dlt_part.</param>
         void crop_part_fraction_delta(int i_part_no_zb, double[] i_fraction_zb, double i_part, ref double o_dlt_part)
             {
 
@@ -7065,6 +8952,82 @@ namespace Models
 
         #region Update Variables
 
+        /// <summary>
+        /// Sugar_updates the specified io_canopy_height.
+        /// </summary>
+        /// <param name="io_canopy_height">The io_canopy_height.</param>
+        /// <param name="io_cnd_photo">The io_cnd_photo.</param>
+        /// <param name="io_cswd_expansion">The io_cswd_expansion.</param>
+        /// <param name="io_cswd_pheno">The io_cswd_pheno.</param>
+        /// <param name="io_cswd_photo">The io_cswd_photo.</param>
+        /// <param name="i_dlt_canopy_height">The i_dlt_canopy_height.</param>
+        /// <param name="i_dlt_dm">The i_dlt_dm.</param>
+        /// <param name="i_dlt_dm_dead_detached">The i_dlt_dm_dead_detached.</param>
+        /// <param name="i_dlt_dm_detached">The i_dlt_dm_detached.</param>
+        /// <param name="i_dlt_dm_green">The i_dlt_dm_green.</param>
+        /// <param name="i_dlt_dm_green_retrans">The i_dlt_dm_green_retrans.</param>
+        /// <param name="i_dlt_dm_senesced">The i_dlt_dm_senesced.</param>
+        /// <param name="i_dlt_dm_realloc">The i_dlt_dm_realloc.</param>
+        /// <param name="i_dlt_lai">The i_dlt_lai.</param>
+        /// <param name="i_dlt_leaf_no">The i_dlt_leaf_no.</param>
+        /// <param name="i_dlt_node_no">The i_dlt_node_no.</param>
+        /// <param name="i_dlt_node_no_dead">The i_dlt_node_no_dead.</param>
+        /// <param name="i_dlt_n_dead_detached">The i_dlt_n_dead_detached.</param>
+        /// <param name="i_dlt_n_detached">The i_dlt_n_detached.</param>
+        /// <param name="i_dlt_n_green">The i_dlt_n_green.</param>
+        /// <param name="i_dlt_n_retrans">The i_dlt_n_retrans.</param>
+        /// <param name="i_dlt_n_senesced">The i_dlt_n_senesced.</param>
+        /// <param name="i_dlt_n_realloc">The i_dlt_n_realloc.</param>
+        /// <param name="i_dlt_plants">The i_dlt_plants.</param>
+        /// <param name="i_dlt_plant_wc">The i_dlt_plant_wc.</param>
+        /// <param name="i_dlt_root_length">The i_dlt_root_length.</param>
+        /// <param name="i_dlt_root_length_senesced">The i_dlt_root_length_senesced.</param>
+        /// <param name="i_dlt_root_depth">The i_dlt_root_depth.</param>
+        /// <param name="i_dlt_slai">The i_dlt_slai.</param>
+        /// <param name="i_dlt_slai_detached">The i_dlt_slai_detached.</param>
+        /// <param name="i_dlt_stage">The i_dlt_stage.</param>
+        /// <param name="i_dlt_tlai_dead_detached">The i_dlt_tlai_dead_detached.</param>
+        /// <param name="io_dm_dead">The io_dm_dead.</param>
+        /// <param name="io_dm_green">The io_dm_green.</param>
+        /// <param name="io_dm_plant_top_tot">The io_dm_plant_top_tot.</param>
+        /// <param name="io_dm_senesced">The io_dm_senesced.</param>
+        /// <param name="io_lai">The io_lai.</param>
+        /// <param name="io_leaf_area">The io_leaf_area.</param>
+        /// <param name="io_leaf_dm">The io_leaf_dm.</param>
+        /// <param name="io_leaf_no_zb">The io_leaf_no_zb.</param>
+        /// <param name="io_node_no_zb">The io_node_no_zb.</param>
+        /// <param name="io_node_no_dead_zb">The io_node_no_dead_zb.</param>
+        /// <param name="i_nfact_photo">The i_nfact_photo.</param>
+        /// <param name="io_n_conc_crit">The io_n_conc_crit.</param>
+        /// <param name="io_n_conc_min">The io_n_conc_min.</param>
+        /// <param name="io_n_dead">The io_n_dead.</param>
+        /// <param name="io_n_green">The io_n_green.</param>
+        /// <param name="io_n_senesced">The io_n_senesced.</param>
+        /// <param name="io_plants">The io_plants.</param>
+        /// <param name="io_plant_wc">The io_plant_wc.</param>
+        /// <param name="i_previous_stage">The i_previous_stage.</param>
+        /// <param name="io_root_length">The io_root_length.</param>
+        /// <param name="io_root_depth">The io_root_depth.</param>
+        /// <param name="io_slai">The io_slai.</param>
+        /// <param name="i_swdef_expansion">The i_swdef_expansion.</param>
+        /// <param name="i_swdef_pheno">The i_swdef_pheno.</param>
+        /// <param name="i_swdef_photo">The i_swdef_photo.</param>
+        /// <param name="io_tlai_dead">The io_tlai_dead.</param>
+        /// <param name="c_n_conc_crit_root">The c_n_conc_crit_root.</param>
+        /// <param name="c_n_conc_min_root">The c_n_conc_min_root.</param>
+        /// <param name="c_x_stage_code">The c_x_stage_code.</param>
+        /// <param name="c_y_n_conc_crit_cabbage">The c_y_n_conc_crit_cabbage.</param>
+        /// <param name="c_y_n_conc_crit_cane">The c_y_n_conc_crit_cane.</param>
+        /// <param name="c_y_n_conc_crit_leaf">The c_y_n_conc_crit_leaf.</param>
+        /// <param name="c_y_n_conc_min_cabbage">The c_y_n_conc_min_cabbage.</param>
+        /// <param name="c_y_n_conc_min_cane">The c_y_n_conc_min_cane.</param>
+        /// <param name="c_y_n_conc_min_leaf">The c_y_n_conc_min_leaf.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="c_stage_code_list">The c_stage_code_list.</param>
+        /// <param name="i_phase_tt">The i_phase_tt.</param>
+        /// <param name="i_tt_tot">The i_tt_tot.</param>
+        /// <param name="io_node_no_detached_ob">The io_node_no_detached_ob.</param>
+        /// <param name="c_leaf_no_at_emerg">The c_leaf_no_at_emerg.</param>
         void sugar_update(ref double io_canopy_height, ref double[] io_cnd_photo, ref double[] io_cswd_expansion, ref double[] io_cswd_pheno, ref double[] io_cswd_photo,
                             double i_dlt_canopy_height,
                             double i_dlt_dm, double[] i_dlt_dm_dead_detached, double[] i_dlt_dm_detached, double[] i_dlt_dm_green,
@@ -7460,6 +9423,24 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_s the n_conc_limits.
+        /// </summary>
+        /// <param name="c_n_conc_crit_root">The c_n_conc_crit_root.</param>
+        /// <param name="c_n_conc_min_root">The c_n_conc_min_root.</param>
+        /// <param name="c_x_stage_code">The c_x_stage_code.</param>
+        /// <param name="c_y_n_conc_crit_cabbage">The c_y_n_conc_crit_cabbage.</param>
+        /// <param name="c_y_n_conc_crit_cane">The c_y_n_conc_crit_cane.</param>
+        /// <param name="c_y_n_conc_crit_leaf">The c_y_n_conc_crit_leaf.</param>
+        /// <param name="c_y_n_conc_min_cabbage">The c_y_n_conc_min_cabbage.</param>
+        /// <param name="c_y_n_conc_min_cane">The c_y_n_conc_min_cane.</param>
+        /// <param name="c_y_n_conc_min_leaf">The c_y_n_conc_min_leaf.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="c_stage_code_list">The c_stage_code_list.</param>
+        /// <param name="i_phase_tt">The i_phase_tt.</param>
+        /// <param name="i_tt_tot">The i_tt_tot.</param>
+        /// <param name="o_n_conc_crit">The o_n_conc_crit.</param>
+        /// <param name="o_n_conc_min">The o_n_conc_min.</param>
         void sugar_N_conc_limits(double c_n_conc_crit_root, double c_n_conc_min_root,
                                 double[] c_x_stage_code,
                                 double[] c_y_n_conc_crit_cabbage, double[] c_y_n_conc_crit_cane, double[] c_y_n_conc_crit_leaf,
@@ -7540,6 +9521,16 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_stage_codes the specified c_stage_code_list.
+        /// </summary>
+        /// <param name="c_stage_code_list">The c_stage_code_list.</param>
+        /// <param name="i_phase_tt">The i_phase_tt.</param>
+        /// <param name="i_tt_tot">The i_tt_tot.</param>
+        /// <param name="i_stage_no">The i_stage_no.</param>
+        /// <param name="i_stage_table">The i_stage_table.</param>
+        /// <param name="i_numvals">The i_numvals.</param>
+        /// <returns></returns>
         double sugar_stage_code(double[] c_stage_code_list, double[] i_phase_tt, double[] i_tt_tot, double i_stage_no, double[] i_stage_table, int i_numvals)
             {
 
@@ -7615,6 +9606,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Stage_no_of_obs the specified i_stage_code.
+        /// </summary>
+        /// <param name="i_stage_code">The i_stage_code.</param>
+        /// <param name="i_stage_code_list">The i_stage_code_list.</param>
+        /// <param name="i_list_size">The i_list_size.</param>
+        /// <returns></returns>
         int stage_no_of_ob(double i_stage_code, double[] i_stage_code_list, int i_list_size)
             {
             //!+ Sub-Program Arguments
@@ -7668,6 +9666,12 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Position_in_real_array_zbs the specified i_ number.
+        /// </summary>
+        /// <param name="i_Number">The i_ number.</param>
+        /// <param name="i_Array">The i_ array.</param>
+        /// <returns></returns>
         int position_in_real_array_zb(double i_Number, double[] i_Array)
             {
 
@@ -7723,6 +9727,24 @@ namespace Models
         #region Calculate Totals Variables
 
 
+        /// <summary>
+        /// Sugar_totalses the specified i_current_stage.
+        /// </summary>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_days_tot">The i_days_tot.</param>
+        /// <param name="i_day_of_year">The i_day_of_year.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_dlt_sw_dep">The i_dlt_sw_dep.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="o_isdate">The o_isdate.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="io_lai_max">The io_lai_max.</param>
+        /// <param name="o_n_conc_act_stover_tot">The o_n_conc_act_stover_tot.</param>
+        /// <param name="i_n_demand">The i_n_demand.</param>
+        /// <param name="io_n_demand_tot">The io_n_demand_tot.</param>
+        /// <param name="i_n_green">The i_n_green.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="io_transpiration_tot">The io_transpiration_tot.</param>
         void sugar_totals(double i_current_stage, double[] i_days_tot, int i_day_of_year, double[] i_dlayer, double[] i_dlt_sw_dep,
                   double[] i_dm_green, ref int o_isdate, double i_lai, ref double io_lai_max, ref double o_n_conc_act_stover_tot,
                   double[] i_n_demand, ref double io_n_demand_tot, double[] i_n_green, double i_root_depth, ref double io_transpiration_tot)
@@ -7803,6 +9825,24 @@ namespace Models
         #region Report Events That Occurred Today and Status of Variables
 
 
+        /// <summary>
+        /// Sugar_events the specified c_stage_code_list.
+        /// </summary>
+        /// <param name="c_stage_code_list">The c_stage_code_list.</param>
+        /// <param name="c_stage_names">The c_stage_names.</param>
+        /// <param name="i_current_stage">The i_current_stage.</param>
+        /// <param name="i_days_tot">The i_days_tot.</param>
+        /// <param name="i_day_of_year">The i_day_of_year.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_dm_dead">The i_dm_dead.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_dm_senesced">The i_dm_senesced.</param>
+        /// <param name="i_lai">The i_lai.</param>
+        /// <param name="i_n_green">The i_n_green.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="i_sw_dep">The i_sw_dep.</param>
+        /// <param name="i_year">The i_year.</param>
+        /// <param name="i_ll_dep">The i_ll_dep.</param>
         void sugar_event(double[] c_stage_code_list, string[] c_stage_names, double i_current_stage, double[] i_days_tot, int i_day_of_year,
                               double[] i_dlayer, double[] i_dm_dead, double[] i_dm_green, double[] i_dm_senesced, double i_lai,
                               double[] i_n_green, double i_root_depth, double[] i_sw_dep, int i_year, double[] i_ll_dep)
@@ -7924,6 +9964,10 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_profile_fasws this instance.
+        /// </summary>
+        /// <returns></returns>
         double sugar_profile_fasw()
             {
 
@@ -8016,7 +10060,13 @@ namespace Models
 
 
 
-        
+
+        /// <summary>
+        /// Gets the days after sowing.
+        /// </summary>
+        /// <value>
+        /// The days after sowing.
+        /// </value>
         [Units("(days)")]
         [XmlIgnore]
         public int DaysAfterSowing
@@ -8030,21 +10080,39 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the crop_status.
+        /// </summary>
+        /// <value>
+        /// The crop_status.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public string crop_status
         { get { return g_crop_status; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the stage.
+        /// </summary>
+        /// <value>
+        /// The stage.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double stage
         { get { return g_current_stage; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the stage_code.
+        /// </summary>
+        /// <value>
+        /// The stage_code.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double stage_code
@@ -8063,7 +10131,13 @@ namespace Models
                 }
             }
 
-        
+
+        /// <summary>
+        /// Gets the stagename.
+        /// </summary>
+        /// <value>
+        /// The stagename.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public string stagename
@@ -8095,21 +10169,39 @@ namespace Models
         //   { get {return g_plants;} }
 
 
-        
+
+        /// <summary>
+        /// Gets the ratoon_no.
+        /// </summary>
+        /// <value>
+        /// The ratoon_no.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public int ratoon_no
         { get { return g_ratoon_no; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the phase_tt.
+        /// </summary>
+        /// <value>
+        /// The phase_tt.
+        /// </value>
         [Units("(oC)")]
         [XmlIgnore]
         public double[] phase_tt
         { get { return g_phase_tt; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the tt_tot.
+        /// </summary>
+        /// <value>
+        /// The tt_tot.
+        /// </value>
         [Units("(oC)")]
         [XmlIgnore]
         public double[] tt_tot
@@ -8122,21 +10214,39 @@ namespace Models
         //nb.  node number and leaf number is the same thing since only 1 leaf per node.
 
 
-        
+
+        /// <summary>
+        /// Gets the leaf_no.
+        /// </summary>
+        /// <value>
+        /// The leaf_no.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double[] leaf_no
         { get { return g_leaf_no_zb; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the node_no_dead.
+        /// </summary>
+        /// <value>
+        /// The node_no_dead.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double[] node_no_dead
         { get { return g_node_no_dead_zb; } }
 
         //!sv- I added this, 1 Aug 2014
-        
+
+        /// <summary>
+        /// Gets the node_no_detached.
+        /// </summary>
+        /// <value>
+        /// The node_no_detached.
+        /// </value>
         [Units("()")]
         public double node_no_detached //scalar not an array. Which is why it is one based. 
         { get { return g_node_no_detached_ob; } }
@@ -8149,19 +10259,37 @@ namespace Models
         //!sv- START - Leaves still on the Plant at any given time
         //(added this section on 1 Aug 2014)
 
-        
+
+        /// <summary>
+        /// Gets the leaves.
+        /// </summary>
+        /// <value>
+        /// The leaves.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double leaves
         { get { return SumArray(g_leaf_no_zb, max_stage) - g_node_no_detached_ob; } }
 
-        
+
+        /// <summary>
+        /// Gets the green_leaves.
+        /// </summary>
+        /// <value>
+        /// The green_leaves.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double green_leaves
         { get { return SumArray(g_leaf_no_zb, max_stage) - SumArray(g_node_no_dead_zb, max_stage); } }
 
-        
+
+        /// <summary>
+        /// Gets the dead_leaves.
+        /// </summary>
+        /// <value>
+        /// The dead_leaves.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double dead_leaves
@@ -8170,35 +10298,65 @@ namespace Models
         //!sv- END
 
 
-        
+
+        /// <summary>
+        /// Gets the leaf_area.
+        /// </summary>
+        /// <value>
+        /// The leaf_area.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double[] leaf_area
         { get { return g_leaf_area_zb; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the leaf_dm.
+        /// </summary>
+        /// <value>
+        /// The leaf_dm.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double[] leaf_dm
         { get { return g_leaf_dm_zb; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the height.
+        /// </summary>
+        /// <value>
+        /// The height.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double height
         { get { return g_canopy_height; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the root_depth.
+        /// </summary>
+        /// <value>
+        /// The root_depth.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double root_depth
         { get { return g_root_depth; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the cover_green.
+        /// </summary>
+        /// <value>
+        /// The cover_green.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double cover_green
@@ -8213,7 +10371,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the radn_int.
+        /// </summary>
+        /// <value>
+        /// The radn_int.
+        /// </value>
         [Units("(mj/m2)")]
         [XmlIgnore]
         public double radn_int
@@ -8227,7 +10391,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the cover_tot.
+        /// </summary>
+        /// <value>
+        /// The cover_tot.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double cover_tot
@@ -8247,7 +10417,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the lai_sum.
+        /// </summary>
+        /// <value>
+        /// The lai_sum.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double lai_sum
@@ -8260,14 +10436,26 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the tlai.
+        /// </summary>
+        /// <value>
+        /// The tlai.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double tlai
         { get { return g_lai + g_slai; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the tla.
+        /// </summary>
+        /// <value>
+        /// The tla.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double tla
@@ -8280,21 +10468,39 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the slai.
+        /// </summary>
+        /// <value>
+        /// The slai.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double slai
         { get { return g_slai; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the lai.
+        /// </summary>
+        /// <value>
+        /// The lai.
+        /// </value>
         [Units("(m^2/m^2)")]
         [XmlIgnore]
         public double lai
         { get { return g_lai; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the RLV.
+        /// </summary>
+        /// <value>
+        /// The RLV.
+        /// </value>
         [Units("(mm/mm3)")]
         [XmlIgnore]
         public double[] rlv
@@ -8312,7 +10518,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the rlv_tot.
+        /// </summary>
+        /// <value>
+        /// The rlv_tot.
+        /// </value>
         [Units("(mm/mm3)")]
         [XmlIgnore]
         public double[] rlv_tot
@@ -8330,7 +10542,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the ll_dep.
+        /// </summary>
+        /// <value>
+        /// The ll_dep.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double[] ll_dep
@@ -8358,7 +10576,13 @@ namespace Models
         //{ get { return g_N_graze; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the lai2.
+        /// </summary>
+        /// <value>
+        /// The lai2.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double lai2
@@ -8372,7 +10596,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the leaf_wt2.
+        /// </summary>
+        /// <value>
+        /// The leaf_wt2.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double leaf_wt2
@@ -8393,28 +10623,52 @@ namespace Models
         //***************
 
 
-        
+
+        /// <summary>
+        /// Gets the rootgreenwt.
+        /// </summary>
+        /// <value>
+        /// The rootgreenwt.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double rootgreenwt
         { get { return Math.Round(g_dm_green[root],2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the leafgreenwt.
+        /// </summary>
+        /// <value>
+        /// The leafgreenwt.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double leafgreenwt
         { get { return Math.Round(g_dm_green[leaf],2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the sstem_wt.
+        /// </summary>
+        /// <value>
+        /// The sstem_wt.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double sstem_wt
         { get { return Math.Round(g_dm_green[sstem] + g_dm_dead[sstem],2); } }  //! Add dead pool for lodged crops
 
 
-        
+
+        /// <summary>
+        /// Gets the cane_dmf.
+        /// </summary>
+        /// <value>
+        /// The cane_dmf.
+        /// </value>
         [Units("(0-1)")]
         [XmlIgnore]
         public double cane_dmf
@@ -8429,7 +10683,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the canefw.
+        /// </summary>
+        /// <value>
+        /// The canefw.
+        /// </value>
         [Units("(t/ha)")]
         [XmlIgnore]
         public double canefw
@@ -8445,7 +10705,13 @@ namespace Models
 
 
 
-        
+
+        /// <summary>
+        /// Gets the CCS.
+        /// </summary>
+        /// <value>
+        /// The CCS.
+        /// </value>
         [Units("(%)")]
         [XmlIgnore]
         public double ccs
@@ -8462,7 +10728,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the SCMSTF.
+        /// </summary>
+        /// <value>
+        /// The SCMSTF.
+        /// </value>
         [Units("(g/g)")]
         [XmlIgnore]
         public double scmstf
@@ -8476,7 +10748,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the SCMST.
+        /// </summary>
+        /// <value>
+        /// The SCMST.
+        /// </value>
         [Units("(g/g)")]
         [XmlIgnore]
         public double scmst
@@ -8490,21 +10768,39 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the sucrose_wt.
+        /// </summary>
+        /// <value>
+        /// The sucrose_wt.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double sucrose_wt
         { get { return Math.Round(g_dm_green[sucrose] + g_dm_dead[sucrose],2); } }  //! Add dead pool to allow for lodged stalks
 
 
-        
+
+        /// <summary>
+        /// Gets the cabbage_wt.
+        /// </summary>
+        /// <value>
+        /// The cabbage_wt.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double cabbage_wt
         { get { return Math.Round(g_dm_green[cabbage],2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the cane_wt.
+        /// </summary>
+        /// <value>
+        /// The cane_wt.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double cane_wt
@@ -8517,7 +10813,13 @@ namespace Models
                 }
             }
 
-        
+
+        /// <summary>
+        /// Gets the biomass.
+        /// </summary>
+        /// <value>
+        /// The biomass.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double biomass
@@ -8532,7 +10834,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the green_biomass.
+        /// </summary>
+        /// <value>
+        /// The green_biomass.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double green_biomass
@@ -8546,49 +10854,91 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the greenwt.
+        /// </summary>
+        /// <value>
+        /// The greenwt.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double greenwt
         { get { return Math.Round(SumArray(g_dm_green, max_part),2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the senescedwt.
+        /// </summary>
+        /// <value>
+        /// The senescedwt.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double senescedwt
         { get { return Math.Round(SumArray(g_dm_senesced, max_part),2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the dm_dead.
+        /// </summary>
+        /// <value>
+        /// The dm_dead.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double dm_dead
         { get { return Math.Round(SumArray(g_dm_dead, max_part),2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the DLT_DM.
+        /// </summary>
+        /// <value>
+        /// The DLT_DM.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double dlt_dm
         { get { return Math.Round(g_dlt_dm,2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the partition_xs.
+        /// </summary>
+        /// <value>
+        /// The partition_xs.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double partition_xs
         { get { return Math.Round(g_partition_xs,2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the dlt_dm_green.
+        /// </summary>
+        /// <value>
+        /// The dlt_dm_green.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double dlt_dm_green
         { get { return Math.Round(SumArray(g_dlt_dm_green, max_part),2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the dlt_dm_detached.
+        /// </summary>
+        /// <value>
+        /// The dlt_dm_detached.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double[] dlt_dm_detached
@@ -8601,20 +10951,38 @@ namespace Models
         //******************************
 
 
-        
+
+        /// <summary>
+        /// Gets the n_critical.
+        /// </summary>
+        /// <value>
+        /// The n_critical.
+        /// </value>
         [Units("(g/g)")]
         [XmlIgnore]
         public double[] n_critical
         { get { return g_n_conc_crit; } }
 
-        
+
+        /// <summary>
+        /// Gets the n_minimum.
+        /// </summary>
+        /// <value>
+        /// The n_minimum.
+        /// </value>
         [Units("(g/g)")]
         [XmlIgnore]
         public double[] n_minimum
         { get { return g_n_conc_min; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the n_conc_leaf.
+        /// </summary>
+        /// <value>
+        /// The n_conc_leaf.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double n_conc_leaf
@@ -8626,7 +10994,13 @@ namespace Models
                 }
             }
 
-        
+
+        /// <summary>
+        /// Gets the n_conc_cab.
+        /// </summary>
+        /// <value>
+        /// The n_conc_cab.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double n_conc_cab
@@ -8638,7 +11012,13 @@ namespace Models
                 }
             }
 
-        
+
+        /// <summary>
+        /// Gets the n_conc_cane.
+        /// </summary>
+        /// <value>
+        /// The n_conc_cane.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double n_conc_cane
@@ -8652,7 +11032,13 @@ namespace Models
 
         //Weights of N in plant
 
-        
+
+        /// <summary>
+        /// Gets the n_leaf_crit.
+        /// </summary>
+        /// <value>
+        /// The n_leaf_crit.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double n_leaf_crit
@@ -8664,7 +11050,13 @@ namespace Models
                 }
             }
 
-        
+
+        /// <summary>
+        /// Gets the n_leaf_min.
+        /// </summary>
+        /// <value>
+        /// The n_leaf_min.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double n_leaf_min
@@ -8677,7 +11069,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the biomass_n.
+        /// </summary>
+        /// <value>
+        /// The biomass_n.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double biomass_n
@@ -8692,7 +11090,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the plant_n_tot.
+        /// </summary>
+        /// <value>
+        /// The plant_n_tot.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double plant_n_tot
@@ -8707,7 +11111,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the green_biomass_n.
+        /// </summary>
+        /// <value>
+        /// The green_biomass_n.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double green_biomass_n
@@ -8720,21 +11130,39 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the n_green.
+        /// </summary>
+        /// <value>
+        /// The n_green.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double[] n_green
         { get { return mu.RoundArray(g_n_green,2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the greenn.
+        /// </summary>
+        /// <value>
+        /// The greenn.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double greenn
         { get { return Math.Round(SumArray(g_n_green, max_part),2); } }
 
 
-        
+
+        /// <summary>
+        /// Gets the senescedn.
+        /// </summary>
+        /// <value>
+        /// The senescedn.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double senescedn
@@ -8743,7 +11171,13 @@ namespace Models
 
         //Delta N in plant tops
 
-        
+
+        /// <summary>
+        /// Gets the dlt_n_green.
+        /// </summary>
+        /// <value>
+        /// The dlt_n_green.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double[] dlt_n_green
@@ -8756,42 +11190,78 @@ namespace Models
         //**************
 
 
-        
+
+        /// <summary>
+        /// Gets the swdef_pheno.
+        /// </summary>
+        /// <value>
+        /// The swdef_pheno.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double swdef_pheno
         { get { return g_swdef_pheno; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the swdef_photo.
+        /// </summary>
+        /// <value>
+        /// The swdef_photo.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double swdef_photo
         { get { return g_swdef_photo; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the swdef_expan.
+        /// </summary>
+        /// <value>
+        /// The swdef_expan.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double swdef_expan
         { get { return g_swdef_expansion; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the swdef_stalk.
+        /// </summary>
+        /// <value>
+        /// The swdef_stalk.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double swdef_stalk
         { get { return g_swdef_stalk; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the nfact_photo.
+        /// </summary>
+        /// <value>
+        /// The nfact_photo.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double nfact_photo
         { get { return g_nfact_photo; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the nfact_expan.
+        /// </summary>
+        /// <value>
+        /// The nfact_expan.
+        /// </value>
         [Units("()")]
         [XmlIgnore]
         public double nfact_expan
@@ -8811,7 +11281,13 @@ namespace Models
         //    { get { return g_lodge_redn_green_leaf; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the oxdef_photo.
+        /// </summary>
+        /// <value>
+        /// The oxdef_photo.
+        /// </value>
         [Units("(0-1)")]
         [XmlIgnore]
         public double oxdef_photo
@@ -8823,7 +11299,13 @@ namespace Models
         //*************
 
 
-        
+
+        /// <summary>
+        /// Gets the ep.
+        /// </summary>
+        /// <value>
+        /// The ep.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double ep
@@ -8837,14 +11319,26 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the cep.
+        /// </summary>
+        /// <value>
+        /// The cep.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double cep
         { get { return -g_transpiration_tot; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the sw_uptake.
+        /// </summary>
+        /// <value>
+        /// The sw_uptake.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double[] sw_uptake
@@ -8862,21 +11356,39 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the sw_demand.
+        /// </summary>
+        /// <value>
+        /// The sw_demand.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double sw_demand
         { get { return g_sw_demand; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the sw_demand_te.
+        /// </summary>
+        /// <value>
+        /// The sw_demand_te.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double sw_demand_te
         { get { return g_sw_demand_te; } }
 
 
-        
+
+        /// <summary>
+        /// Gets the fasw.
+        /// </summary>
+        /// <value>
+        /// The fasw.
+        /// </value>
         [Units("(0-1)")]
         [XmlIgnore]
         public double fasw
@@ -8888,7 +11400,13 @@ namespace Models
                 }
             }
 
-        
+
+        /// <summary>
+        /// Gets the esw_layr.
+        /// </summary>
+        /// <value>
+        /// The esw_layr.
+        /// </value>
         [Units("(mm)")]
         [XmlIgnore]
         public double[] esw_layr
@@ -8936,7 +11454,13 @@ namespace Models
         //    }
 
 
-        
+
+        /// <summary>
+        /// Gets the no3_tot.
+        /// </summary>
+        /// <value>
+        /// The no3_tot.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double no3_tot
@@ -8950,7 +11474,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the n_demand.
+        /// </summary>
+        /// <value>
+        /// The n_demand.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double n_demand
@@ -8963,7 +11493,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the no3_demand.
+        /// </summary>
+        /// <value>
+        /// The no3_demand.
+        /// </value>
         [Units("(kg/ha)")]
         [XmlIgnore]
         public double no3_demand
@@ -8976,7 +11512,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the n_supply.
+        /// </summary>
+        /// <value>
+        /// The n_supply.
+        /// </value>
         [Units("(g/m^2)")]
         [XmlIgnore]
         public double n_supply
@@ -8989,7 +11531,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the no3_uptake.
+        /// </summary>
+        /// <value>
+        /// The no3_uptake.
+        /// </value>
         [Units("(g/m2)")]
         [XmlIgnore]
         public double[] no3_uptake
@@ -9007,7 +11555,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the nh4_uptake.
+        /// </summary>
+        /// <value>
+        /// The nh4_uptake.
+        /// </value>
         [Units("(g/m2)")]
         [XmlIgnore]
         public double[] nh4_uptake
@@ -9026,7 +11580,13 @@ namespace Models
 
 
 
-        
+
+        /// <summary>
+        /// Gets the no3_uptake_pot.
+        /// </summary>
+        /// <value>
+        /// The no3_uptake_pot.
+        /// </value>
         [Units("(g/m2)")]
         [XmlIgnore]
         public double[] no3_uptake_pot
@@ -9041,7 +11601,13 @@ namespace Models
             }
 
 
-        
+
+        /// <summary>
+        /// Gets the nh4_uptake_pot.
+        /// </summary>
+        /// <value>
+        /// The nh4_uptake_pot.
+        /// </value>
         [Units("(g/m2)")]
         [XmlIgnore]
         public double[] nh4_uptake_pot
@@ -9069,6 +11635,9 @@ namespace Models
         /// <summary>
         /// Provides canopy data to SoilWater.
         /// </summary>
+        /// <value>
+        /// The canopy data.
+        /// </value>
         [XmlIgnore]
         public NewCanopyType CanopyData 
             {
@@ -9089,6 +11658,9 @@ namespace Models
         /// MicroClimate will get 'CropType' and use it to look up
         /// canopy properties for this crop.
         /// </summary>
+        /// <value>
+        /// The type of the crop.
+        /// </value>
         [XmlIgnore]
         public string CropType { get { return crop_type; } }
 
@@ -9126,16 +11698,22 @@ namespace Models
             }
 
 
-        /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <summary>
+        /// Placeholder for SoilArbitrator
+        /// </summary>
+        /// <param name="soilstate"></param>
         /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)  
             {
                 throw new NotImplementedException();
             }
-        /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <summary>
+        /// Placeholder for SoilArbitrator
+        /// </summary>
+        /// <param name="soilstate"></param>
         /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
             throw new NotImplementedException();
@@ -9145,16 +11723,20 @@ namespace Models
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
+        /// <param name="info"></param>
         public void SetSWUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
+        /// <param name="info"></param>
         public void SetNUptake(List<ZoneWaterAndN> info)
-        { }    
+        { }
 
 
-        /// <summary>Sows the plant</summary>
+        /// <summary>
+        /// Sows the plant
+        /// </summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
         /// <param name="depth">The depth.</param>
@@ -9185,6 +11767,14 @@ namespace Models
         #region Functions used in Clock Handlers
 
 
+        /// <summary>
+        /// Checks all n uptake optionals read in.
+        /// </summary>
+        /// <exception cref="ApsimXException">
+        /// Using n_uptake_option == 1 and missing either 'NO3_diffn_const' or 'n_supply_preference' from ini file
+        /// or
+        /// Using n_uptake_option == 2 and missing either 'kno3', 'no3ppm_min', 'knh4', 'nh4ppm_min' or 'total_n_uptake_max' from ini file
+        /// </exception>
         void CheckAllNUptakeOptionalsReadIn()
             {
             //sugar_read_constants () has an "if" statment in it. 
@@ -9209,6 +11799,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_get_soil_variableses the specified o_no3gsm.
+        /// </summary>
+        /// <param name="o_no3gsm">The o_no3gsm.</param>
+        /// <param name="o_no3gsm_min">The o_no3gsm_min.</param>
+        /// <param name="o_nh4gsm">The o_nh4gsm.</param>
+        /// <param name="o_nh4gsm_min">The o_nh4gsm_min.</param>
         void sugar_get_soil_variables(ref double[] o_no3gsm, ref double[] o_no3gsm_min, ref double[] o_nh4gsm, ref double[] o_nh4gsm_min)
             {
 
@@ -9345,6 +11942,11 @@ namespace Models
 
         //[EventHandler]
         //public void OnInitialised()
+        /// <summary>
+        /// Called when [start of simulation].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
          [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
             {
@@ -9378,6 +11980,11 @@ namespace Models
 
 
 
+         /// <summary>
+         /// Called when [new weather data available].
+         /// </summary>
+         /// <param name="sender">The sender.</param>
+         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("NewWeatherDataAvailable")]
         private void OnNewWeatherDataAvailable(object sender, EventArgs e)
             {
@@ -9396,6 +12003,11 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Called when [start of day].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
             {
@@ -9533,6 +12145,12 @@ namespace Models
 
         //[EventHandler]
         //public void OnProcess()
+        /// <summary>
+        /// Called when [do actual plant growth].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <exception cref="ApsimXException">Invalid detachment for leaf and cabbage ratio.</exception>
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
             {
@@ -10038,6 +12656,20 @@ namespace Models
 
 
         //void sugar_start_crop(SowType i_SowData)
+        /// <summary>
+        /// Sugar_start_crops the specified plants.
+        /// </summary>
+        /// <param name="plants">The plants.</param>
+        /// <param name="Ratoon">The ratoon.</param>
+        /// <param name="sowing_depth">The sowing_depth.</param>
+        /// <param name="Cultivar">The cultivar.</param>
+        /// <exception cref="ApsimXException">
+        /// \SugarCane\ was taken out today by \end_crop\ action -
+        ///                             + \n
+        ///                             +  Unable to accept sow action until the next day.
+        /// or
+        /// \SugarCane\  is still in the ground - unable to sow until it is taken out by \end_crop\ action.
+        /// </exception>
         void sugar_start_crop(double plants, int Ratoon, double sowing_depth, string Cultivar)
             {
 
@@ -10153,6 +12785,11 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Sugar_read_crop_constantses the specified crop type.
+        /// </summary>
+        /// <param name="CropType">Type of the crop.</param>
+        /// <returns></returns>
         CropConstants sugar_read_crop_constants(string CropType)
             {
             CropConstants l_crop;
@@ -10173,6 +12810,12 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_read_cultivar_paramses the specified name.
+        /// </summary>
+        /// <param name="Name">The name.</param>
+        /// <returns></returns>
+        /// <exception cref="ApsimXException">Could not find in the SugarCane ini file a cultivar called:  + Name</exception>
         CultivarConstants sugar_read_cultivar_params(string Name)
             {
             Summary.WriteMessage(this, "\n" + "    - Reading constants from " + Name);
@@ -10190,6 +12833,14 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_read_root_paramses this instance.
+        /// </summary>
+        /// <exception cref="ApsimXException">
+        /// No Crop Lower Limit found
+        /// or
+        /// Bad value for uptake_source
+        /// </exception>
         void sugar_read_root_params()
             {
 
@@ -10338,6 +12989,9 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_harvests this instance.
+        /// </summary>
         void sugar_harvest()
             {
 
@@ -10376,7 +13030,6 @@ namespace Models
             double[] l_dlt_dm_N = new double[max_part];   //! N content of dry matter change (kg/ha)
             double[] l_fraction_to_Residue = new double[max_part];   //! fraction sent to residue (0-1)
 
-            int l_layer;
             int l_hold_ratoon_no;
             double l_hold_dm_root;
             double l_hold_n_root;
@@ -10623,6 +13276,13 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_kill_crops the specified i_crop_status.
+        /// </summary>
+        /// <param name="i_crop_status">The i_crop_status.</param>
+        /// <param name="i_dm_dead">The i_dm_dead.</param>
+        /// <param name="i_dm_green">The i_dm_green.</param>
+        /// <param name="i_dm_senesced">The i_dm_senesced.</param>
         void sugar_kill_crop(ref string i_crop_status, double[] i_dm_dead, double[] i_dm_green, double[] i_dm_senesced)
             {
 
@@ -10668,6 +13328,9 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_end_crops this instance.
+        /// </summary>
         void sugar_end_crop()
             {
 
@@ -10786,7 +13449,7 @@ namespace Models
 
 
         /// <summary>
-        /// Sow a Newly Planted SugarCane Crop. (crop_status is set to "crop_alive") 
+        /// Sow a Newly Planted SugarCane Crop. (crop_status is set to "crop_alive")
         /// SugarCane will keep ratooning indefinitely until it is stopped by using an EndCrop or KillCrop.
         /// NB. All Ratoons are treated the same. No difference between first ratoon and second, third etc.
         /// </summary>
@@ -10798,7 +13461,7 @@ namespace Models
             sugar_start_crop(PlantingDensity, 0, Depth, CultivarName);
             }
 
-   
+
         /// <summary>
         /// Sow a SugarCane Crop. (crop_status is set to "crop_alive")
         /// Can either sow a Newly Planted Crop, or a Ratoon Crop.
@@ -10807,7 +13470,7 @@ namespace Models
         /// </summary>
         /// <param name="PlantingDensity">Plant density (plants/m^2)</param>
         /// <param name="Depth">Sowing Depth (mm)</param>
-        /// <param name="CultivarName">Name of the Cultivar. 
+        /// <param name="CultivarName">Name of the Cultivar.
         /// NB. When sowing a ratoon, you don't need to add "_ratoon" to the cultivar name. It will be added automatically.</param>
         /// <param name="StartingRatoonNo">0 is a Newly Planted Crop, 1 is First Ratoon, 2 is Second Ratoon, etc.</param>
         public void Sow(double PlantingDensity, double Depth, string CultivarName, int StartingRatoonNo)
@@ -10819,9 +13482,9 @@ namespace Models
 
 
         /// <summary>
-        /// HarvestCrop is the same as EndCrop (in that it gets rid of the biomass) 
+        /// HarvestCrop is the same as EndCrop (in that it gets rid of the biomass)
         /// only unlike EndCrop it can still ratoon again (crop_status is NOT set to "crop_out". It remains "crop_alive")
-        /// </summary>       
+        /// </summary>
         public void HarvestCrop()
             {
             sugar_harvest();
@@ -10829,8 +13492,8 @@ namespace Models
 
 
         /// <summary>
-        /// KillCrop kills just this plant or ratoon (crop_status is set to "crop_dead") but the biomass is left there standing. 
-        /// You need to do a Tillage to get rid of the above ground biomass. 
+        /// KillCrop kills just this plant or ratoon (crop_status is set to "crop_dead") but the biomass is left there standing.
+        /// You need to do a Tillage to get rid of the above ground biomass.
         /// It will not grow or ratoon again. It just sits there dead with an above ground biomass.
         /// </summary>
         public void KillCrop()
@@ -10851,7 +13514,7 @@ namespace Models
         //
 
         /// <summary>
-        ///  EndCrop gets rid of the biomass and requires a replant to start growing again.  (crop_status is set to "crop_out")
+        /// EndCrop gets rid of the biomass and requires a replant to start growing again.  (crop_status is set to "crop_out")
         /// </summary>
         public void EndCrop()
             {
@@ -10884,10 +13547,10 @@ namespace Models
 
 
         /// <summary>
-        ///  Mound soil around base of crop and bury some plant material.
-        ///  Burying the plant material incorporates it as fresh organic matter into the Soil.
-        ///  This applies no matter the state of the plant material: Green, Senesced and Dead 
-        ///  Can only do a HillUp during the Emergence phase (Sprouting to BeginCane).
+        /// Mound soil around base of crop and bury some plant material.
+        /// Burying the plant material incorporates it as fresh organic matter into the Soil.
+        /// This applies no matter the state of the plant material: Green, Senesced and Dead
+        /// Can only do a HillUp during the Emergence phase (Sprouting to BeginCane).
         /// </summary>
         /// <param name="CaneFr">Fraction of Structural Stem and Stem Sucrose that is buried</param>
         /// <param name="TopsFr">Fraction of Leaves and Cabbage that is buried</param>
@@ -11051,17 +13714,34 @@ namespace Models
 
         //these Delegates are declared in Models.PMF Namespace.
 
+        /// <summary>
+        /// Occurs when [nitrogen changed].
+        /// </summary>
         public event NitrogenChangedDelegate NitrogenChanged;
 
+        /// <summary>
+        /// Occurs when [water changed].
+        /// </summary>
         public event WaterChangedDelegate WaterChanged;
 
         //public event CropChoppedDelegate CropChopped;
+        /// <summary>
+        /// Occurs when [biomass removed].
+        /// </summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
+        /// <summary>
+        /// Occurs when [incorp fom].
+        /// </summary>
         public event FOMLayerDelegate IncorpFOM;
 
 
         //ToFloatArray is needed because some of these Events pass Float Arrays rather then Double Arrays as Parameters.
+        /// <summary>
+        /// To the float array.
+        /// </summary>
+        /// <param name="D">The d.</param>
+        /// <returns></returns>
         private float[] ToFloatArray(double[] D)
             {
             float[] f = new float[D.Length];
@@ -11080,6 +13760,12 @@ namespace Models
         #region Events sent to Change Other Modules
 
 
+        /// <summary>
+        /// Sugar_set_other_variableses the specified i_dlt_no3gsm.
+        /// </summary>
+        /// <param name="i_dlt_no3gsm">The i_dlt_no3gsm.</param>
+        /// <param name="i_dlt_nh4gsm">The i_dlt_nh4gsm.</param>
+        /// <param name="i_dlt_sw_dep">The i_dlt_sw_dep.</param>
         void sugar_set_other_variables(double[] i_dlt_no3gsm, double[] i_dlt_nh4gsm, double[] i_dlt_sw_dep)        //called at end of OnProcess() Event Handler.
             {
 
@@ -11163,6 +13849,15 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Sugar_update_other_variableses the specified i_dlt_dm_detached.
+        /// </summary>
+        /// <param name="i_dlt_dm_detached">The i_dlt_dm_detached.</param>
+        /// <param name="i_dlt_dm_dead_detached">The i_dlt_dm_dead_detached.</param>
+        /// <param name="i_dlt_n_detached">The i_dlt_n_detached.</param>
+        /// <param name="i_dlt_n_dead_detached">The i_dlt_n_dead_detached.</param>
+        /// <param name="i_root_length">The i_root_length.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
         void sugar_update_other_variables(double[] i_dlt_dm_detached, double[] i_dlt_dm_dead_detached,     //called in sugar_update()
                                             double[] i_dlt_n_detached, double[] i_dlt_n_dead_detached,
                                             double[] i_root_length, double i_root_depth)
@@ -11223,6 +13918,14 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Sugar_s the send_ crop_ chopped_ event.
+        /// </summary>
+        /// <param name="i_crop_type">The i_crop_type.</param>
+        /// <param name="i_dm_type">The i_dm_type.</param>
+        /// <param name="i_dlt_crop_dm">The i_dlt_crop_dm.</param>
+        /// <param name="i_dlt_dm_n">The i_dlt_dm_n.</param>
+        /// <param name="i_fraction_to_Residue">The i_fraction_to_ residue.</param>
         void sugar_Send_Crop_Chopped_Event(string i_crop_type, string[] i_dm_type, double[] i_dlt_crop_dm, double[] i_dlt_dm_n, double[] i_fraction_to_Residue)   //called above
             {
             //*+  Sub-Program Arguments
@@ -11253,6 +13956,17 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Crop_root_incorps the specified i_dlt_dm_root.
+        /// </summary>
+        /// <param name="i_dlt_dm_root">The i_dlt_dm_root.</param>
+        /// <param name="i_dlt_n_root">The i_dlt_n_root.</param>
+        /// <param name="i_dlayer">The i_dlayer.</param>
+        /// <param name="i_root_length">The i_root_length.</param>
+        /// <param name="i_root_depth">The i_root_depth.</param>
+        /// <param name="c_crop_type">The c_crop_type.</param>
+        /// <param name="i_max_layer">The i_max_layer.</param>
+        /// <exception cref="ApsimXException">Too many layers for crop routines</exception>
         void crop_root_incorp(double i_dlt_dm_root, double i_dlt_n_root, double[] i_dlayer, double[] i_root_length, double i_root_depth,
                                 string c_crop_type, int i_max_layer)     //called above
             {
@@ -11358,6 +14072,12 @@ namespace Models
 
 
 
+        /// <summary>
+        /// Sugar_hill_ups the specified canefr.
+        /// </summary>
+        /// <param name="canefr">The canefr.</param>
+        /// <param name="topsfr">The topsfr.</param>
+        /// <exception cref="ApsimXException">Can only hill up during emergence phase</exception>
         void sugar_hill_up(double canefr, double topsfr)
             {
 

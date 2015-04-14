@@ -27,6 +27,9 @@ namespace Models.Grazplan
         /// </summary>
         public const string PARAM_KEY = "Software\\CSIRO\\Common\\Parameters";
 
+        /// <summary>
+        /// The UI language
+        /// </summary>
         static private string UILang = "";
 
         /// <summary>
@@ -49,7 +52,9 @@ namespace Models.Grazplan
         /// <summary>
         /// Returns the 2-letter ISO 639 language code (e.g, 'en')
         /// </summary>
-        /// <returns>The 2-letter language code</returns>
+        /// <returns>
+        /// The 2-letter language code
+        /// </returns>
         public static string GetUILang()
         {
             if (string.IsNullOrEmpty(UILang))
@@ -71,11 +76,13 @@ namespace Models.Grazplan
         }
 
         /// <summary>
-        /// Common locale for use across models and programs 
+        /// Common locale for use across models and programs
         /// * The locale is a two-character country code that is stored in the registry.
         /// * If there is no entry in the registry, 'au' is returned.
         /// </summary>
-        /// <returns>A 2-character country code</returns>
+        /// <returns>
+        /// A 2-character country code
+        /// </returns>
         public static string DefaultLocale()
         {
             string loc = null;
@@ -88,42 +95,69 @@ namespace Models.Grazplan
         }
     }
 
+    /// <summary>
+    /// Supplement information
+    /// </summary>
     public class SuppInfo
     {
-        /// <summary>Gets or sets whether the supplement is a roughage.</summary>
+        /// <summary>
+        /// Gets or sets whether the supplement is a roughage.
+        /// </summary>
         /// <value>True if the supplement is a roughage</value>
         public bool IsRoughage;
-        /// <summary>Gets or sets the dry matter content of the supplement (kg/kg FW).</summary>
+        /// <summary>
+        /// Gets or sets the dry matter content of the supplement (kg/kg FW).
+        /// </summary>
         /// <value>Dry matter content of the supplement (kg/kg)</value>
         public double DMContent;
-        /// <summary>Gets or sets the dry matter digestibility of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the dry matter digestibility of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Dry matter digestibiility of the supplement (kg/kg)</value>
         public double DMD;
-        /// <summary>Gets or sets the metabolizable energy content of the supplement (MJ/kg).</summary>
+        /// <summary>
+        /// Gets or sets the metabolizable energy content of the supplement (MJ/kg).
+        /// </summary>
         /// <value>Metabolizable energy content of the supplement (MJ/kg)</value>
         public double MEContent;
-        /// <summary>Gets or sets the crude protein content of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the crude protein content of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Crude protein content of the supplement (kg/kg)</value>
         public double CPConc;
-        /// <summary>Gets or sets the degradability of the protein of the supplement (kg/kg CP).</summary>
+        /// <summary>
+        /// Gets or sets the degradability of the protein of the supplement (kg/kg CP).
+        /// </summary>
         /// <value>Degradability of the protein of the supplement (kg/kg)</value>
         public double ProtDg;
-        /// <summary>Gets or sets the phosphorus content of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the phosphorus content of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Phosphorus content of the supplement (kg/kg)</value>
         public double PConc;
-        /// <summary>Gets or sets the sulfur content of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the sulfur content of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Sulfur content of the supplement (kg/kg)</value>
         public double SConc;
-        /// <summary>Gets or sets the ether-extractable content of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the ether-extractable content of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Ether-extractable content of the supplement (kg/kg)</value>
         public double EEConc;
-        /// <summary>Gets or sets the ratio of acid detergent insoluble protein to CP for the supplement (kg/kg CP).</summary>
+        /// <summary>
+        /// Gets or sets the ratio of acid detergent insoluble protein to CP for the supplement (kg/kg CP).
+        /// </summary>
         /// <value>Ratio of acid detergent insoluble protein to CP for the supplement (kg/kg)</value>
         public double ADIP2CP;
-        /// <summary>Gets or sets the ash alkalinity of the supplement (mol/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the ash alkalinity of the supplement (mol/kg DM).
+        /// </summary>
         /// <value>Ash alkalinity of the supplement (mol/kg)</value>
         public double AshAlk;
-        /// <summary>Gets or sets the maximum passage rate of the supplement (0-1).</summary>
+        /// <summary>
+        /// Gets or sets the maximum passage rate of the supplement (0-1).
+        /// </summary>
         /// <value>Maximum passage rate of the supplement (kg/kg)</value>
         public double MaxPassage;
     }
@@ -140,100 +174,226 @@ namespace Models.Grazplan
         [Serializable]
         public enum TSuppAttribute
         {
+            /// <summary>
+            /// The spa DMP
+            /// </summary>
             spaDMP,
+            /// <summary>
+            /// The spa DMD
+            /// </summary>
             spaDMD,
+            /// <summary>
+            /// The spa medm
+            /// </summary>
             spaMEDM,
+            /// <summary>
+            /// The spa ee
+            /// </summary>
             spaEE,
+            /// <summary>
+            /// The spa cp
+            /// </summary>
             spaCP,
+            /// <summary>
+            /// The spa dg
+            /// </summary>
             spaDG,
+            /// <summary>
+            /// The spa adip
+            /// </summary>
             spaADIP,
+            /// <summary>
+            /// The spa ph
+            /// </summary>
             spaPH,
+            /// <summary>
+            /// The spa su
+            /// </summary>
             spaSU,
+            /// <summary>
+            /// The spa aa
+            /// </summary>
             spaAA,
+            /// <summary>
+            /// The spa maximum p
+            /// </summary>
             spaMaxP
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         internal struct TTranslation
         {
+            /// <summary>
+            /// The s language
+            /// </summary>
             internal string sLang;
+            /// <summary>
+            /// The s text
+            /// </summary>
             internal string sText;
         };
 
+        /// <summary>
+        /// The s name
+        /// </summary>
         public string sName;
+        /// <summary>
+        /// The f translations
+        /// </summary>
         internal TTranslation[] FTranslations = new TTranslation[0];
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is roughage.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is roughage; otherwise, <c>false</c>.
+        /// </value>
         public bool IsRoughage { get; set; }
 
         // The following are all on a 0-1 scale:
 
-        /// <summary>Proportion of dry matter by weight</summary>
+        /// <summary>
+        /// Proportion of dry matter by weight
+        /// </summary>
         internal double _DM_Propn;
+        /// <summary>
+        /// Gets or sets the d m_ propn.
+        /// </summary>
+        /// <value>
+        /// The d m_ propn.
+        /// </value>
         public double DM_Propn { get { return _DM_Propn; } set { _DM_Propn = value; } }
 
         /// <summary>
         /// Digestibility of dry matter
         /// </summary>
         internal double _DM_Digestibility;
+        /// <summary>
+        /// Gets or sets the d m_ digestibility.
+        /// </summary>
+        /// <value>
+        /// The d m_ digestibility.
+        /// </value>
         public double DM_Digestibility { get { return _DM_Digestibility; } set { _DM_Digestibility = value; } }
 
         /// <summary>
         /// Metabolizable energy:DM, MJ/kg
         /// </summary>
         internal double _ME_2_DM;
+        /// <summary>
+        /// Gets or sets the m e_2_ dm.
+        /// </summary>
+        /// <value>
+        /// The m e_2_ dm.
+        /// </value>
         public double ME_2_DM { get { return _ME_2_DM; } set { _ME_2_DM = value; } }
 
         /// <summary>
         /// Ether-extractable fraction
         /// </summary>
         internal double _EtherExtract;
+        /// <summary>
+        /// Gets or sets the ether extract.
+        /// </summary>
+        /// <value>
+        /// The ether extract.
+        /// </value>
         public double EtherExtract { get { return _EtherExtract; } set { _EtherExtract = value; } }
 
         /// <summary>
         /// Proportion which is crude protein
         /// </summary>
         internal double _CrudeProt;
+        /// <summary>
+        /// Gets or sets the crude prot.
+        /// </summary>
+        /// <value>
+        /// The crude prot.
+        /// </value>
         public double CrudeProt { get { return _CrudeProt; } set { _CrudeProt = value; } }
 
         /// <summary>
         /// Proportion of protein that is rumen-degradable
         /// </summary>
         internal double _DgProt;
+        /// <summary>
+        /// Gets or sets the dg prot.
+        /// </summary>
+        /// <value>
+        /// The dg prot.
+        /// </value>
         public double DgProt { get { return _DgProt; } set { _DgProt = value; } }
 
         /// <summary>
         /// Acid detergent insoluble protein:CP
         /// </summary>
-        internal double _ADIP_2_CP;  
+        internal double _ADIP_2_CP;
+        /// <summary>
+        /// Gets or sets the adi P_2_ cp.
+        /// </summary>
+        /// <value>
+        /// The adi P_2_ cp.
+        /// </value>
         public double ADIP_2_CP { get { return _ADIP_2_CP; } set { _ADIP_2_CP = value; } }
 
         /// <summary>
         /// Phosphorus content (P:DM)
         /// </summary>
         internal double _Phosphorus;
+        /// <summary>
+        /// Gets or sets the phosphorus.
+        /// </summary>
+        /// <value>
+        /// The phosphorus.
+        /// </value>
         public double Phosphorus { get { return _Phosphorus; } set { _Phosphorus = value; } }
 
         /// <summary>
         /// Sulphur content (S:DM)
         /// </summary>
         internal double _Sulphur;
+        /// <summary>
+        /// Gets or sets the sulphur.
+        /// </summary>
+        /// <value>
+        /// The sulphur.
+        /// </value>
         public double Sulphur { get { return _Sulphur; } set { _Sulphur = value; } }
 
         /// <summary>
         /// Ash alkalinity (mol/kg)
         /// </summary>
         internal double _AshAlkalinity;
+        /// <summary>
+        /// Gets or sets the ash alkalinity.
+        /// </summary>
+        /// <value>
+        /// The ash alkalinity.
+        /// </value>
         public double AshAlkalinity { get { return _AshAlkalinity; } set { _AshAlkalinity = value; } }
 
         /// <summary>
         /// Max. proportion passing through gut (used with whole grains)
         /// </summary>
         internal double _MaxPassage;
+        /// <summary>
+        /// Gets or sets the maximum passage.
+        /// </summary>
+        /// <value>
+        /// The maximum passage.
+        /// </value>
         public double MaxPassage { get { return _MaxPassage; } set { _MaxPassage = value; } }
 
         /// <summary>
         /// Indexer to allow easy access of attributes of a supplement
         /// </summary>
+        /// <value>
+        /// The <see cref="System.Double"/>.
+        /// </value>
         /// <param name="attr">attibute to be retrieved or set</param>
+        /// <returns></returns>
         public double this[TSuppAttribute attr]
         {
             get
@@ -274,11 +434,29 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// The RGHG_ med m_ intcpt
+        /// </summary>
         private const double Rghg_MEDM_Intcpt = -1.707;
+        /// <summary>
+        /// The RGHG_ med m_ DMD
+        /// </summary>
         private const double Rghg_MEDM_DMD = 17.2;
+        /// <summary>
+        /// The conc_ med m_ intcpt
+        /// </summary>
         private const double Conc_MEDM_Intcpt = 1.3;
+        /// <summary>
+        /// The conc_ med m_ DMD
+        /// </summary>
         private const double Conc_MEDM_DMD = 13.3;
+        /// <summary>
+        /// The conc_ med m_ ee
+        /// </summary>
         private const double Conc_MEDM_EE = 23.4;
+        /// <summary>
+        /// The n2 protein
+        /// </summary>
         public const double N2PROTEIN = 6.25;
 
         // ConvertDMD_To_ME2DM                                                          
@@ -294,7 +472,9 @@ namespace Models.Grazplan
         /// <param name="fDMD">Dry matter digestibility  (0-1)</param>
         /// <param name="isRoughage">True if the supplement is a roughage</param>
         /// <param name="fEE">Ether-extractable content (0-1)</param>
-        /// <returns>M/D ratio (MJ/kg)</returns>
+        /// <returns>
+        /// M/D ratio (MJ/kg)
+        /// </returns>
         public static double ConvertDMD_To_ME2DM(double fDMD, bool isRoughage, double fEE)
         {
             if (isRoughage)
@@ -309,7 +489,9 @@ namespace Models.Grazplan
         /// <param name="fME2DM">M/D ratio (MJ/kg)</param>
         /// <param name="isRoughage">True if the supplement is a roughage</param>
         /// <param name="fEE">Ether-extractable content (0-1)</param>
-        /// <returns>Dry matter digestibility  (0-1)</returns>
+        /// <returns>
+        /// Dry matter digestibility  (0-1)
+        /// </returns>
         public static double ConvertME2DM_To_DMD(double fME2DM, bool isRoughage, double fEE)
         {
             double result;
@@ -321,10 +503,13 @@ namespace Models.Grazplan
         }
 
         /// <summary>
-        /// Mix two supplements together and store in Self                               
+        /// Mix two supplements together and store in Self
         /// Will work if Supp1=this or Supp2=this
-        /// This method is only exact if the passage rates of the two supplements are equal                                                                      
+        /// This method is only exact if the passage rates of the two supplements are equal
         /// </summary>
+        /// <param name="Supp1">The supp1.</param>
+        /// <param name="Supp2">The supp2.</param>
+        /// <param name="propn1">The propn1.</param>
         public void Mix(TSupplement Supp1, TSupplement Supp2, double propn1)
         {
             if (propn1 >= 0.50)
@@ -357,6 +542,11 @@ namespace Models.Grazplan
             MaxPassage = DMpropn1 * Supp1.MaxPassage + DMpropn2 * Supp2.MaxPassage;
         }
 
+        /// <summary>
+        /// Mixes the many.
+        /// </summary>
+        /// <param name="supps">The supps.</param>
+        /// <param name="amounts">The amounts.</param>
         public void MixMany(TSupplement[] supps, double[] amounts)
         {
             double amountSum = 0.0;
@@ -370,6 +560,10 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Mixes the many.
+        /// </summary>
+        /// <param name="supps">The supps.</param>
         public void MixMany(TSupplementItem[] supps)
         {
             double amountSum = 0.0;
@@ -383,6 +577,10 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Assigns the specified source supp.
+        /// </summary>
+        /// <param name="srcSupp">The source supp.</param>
         public void Assign(TSupplement srcSupp)
         {
             if (srcSupp != null)
@@ -420,6 +618,7 @@ namespace Models.Grazplan
         /// <summary>
         /// constructor with text argument
         /// </summary>
+        /// <param name="suppSt">The supp st.</param>
         public TSupplement(string suppSt)
         {
             ParseText(suppSt, false);
@@ -428,6 +627,7 @@ namespace Models.Grazplan
         /// <summary>
         /// copy consructor
         /// </summary>
+        /// <param name="src">The source.</param>
         public TSupplement(TSupplement src)
         {
             Assign(src);
@@ -435,13 +635,14 @@ namespace Models.Grazplan
 
         /// <summary>
         /// This function looks for "token value units" at the head of SuppSt and
-        /// if it finds it, scales the value which has been read in      
+        /// if it finds it, scales the value which has been read in
         /// </summary>
         /// <param name="suppSt">String to parse</param>
         /// <param name="token">The expected token string</param>
         /// <param name="units">The expected units string</param>
         /// <param name="scalar">Multiplier for value field</param>
         /// <param name="value">Receives the value which was read</param>
+        /// <returns></returns>
         private bool ParseKeyword(ref string suppSt, string token, string units,
                                   double scalar, ref double value)
         {
@@ -456,7 +657,7 @@ namespace Models.Grazplan
 
         /// <summary>
         /// The CreateText method is fairly general. The layout of the string is:
-        /// (Name) [ (keyword) (value) (unit)[(keyword)...] ] 
+        /// (Name) [ (keyword) (value) (unit)[(keyword)...] ]
         /// If (Name) is found in SuppTokens, then the supplement is initialised to
         /// the corresponding supplement.  Otherwise it is initialised to supplement
         /// number 1 (the first concentrate).  Any keywords then modify the
@@ -465,8 +666,8 @@ namespace Models.Grazplan
         /// Finally, if only one of DMD and ME2DM was found, the regression equation
         /// on ether extract is used to estimate the other.
         /// </summary>
-        /// <param name="SuppSt">string to parse</param>
-        /// <param name="bNameOnly"></param>
+        /// <param name="suppSt">The supp st.</param>
+        /// <param name="bNameOnly">if set to <c>true</c> [b name only].</param>
         public void ParseText(string suppSt, bool bNameOnly)
         {
             suppSt = suppSt.Trim();
@@ -525,6 +726,11 @@ namespace Models.Grazplan
                 DM_Digestibility = DefaultDMD();
         }
 
+        /// <summary>
+        /// Adds the translation.
+        /// </summary>
+        /// <param name="lang">The language.</param>
+        /// <param name="text">The text.</param>
         public void AddTranslation(string lang, string text)
         {
             bool found = false;
@@ -548,14 +754,18 @@ namespace Models.Grazplan
                 sName = text;
         }
 
+        /// <summary>
+        /// Defaults from name.
+        /// </summary>
         public void DefaultFromName()
         {
             ParseText(sName, true);
         }
 
         /// <summary>
-        /// Computes a default value for DM digestibility from a (known) M/D ratio 
+        /// Computes a default value for DM digestibility from a (known) M/D ratio
         /// </summary>
+        /// <returns></returns>
         public double DefaultDMD()
         {
             return ConvertME2DM_To_DMD(ME_2_DM, IsRoughage, EtherExtract);
@@ -564,15 +774,18 @@ namespace Models.Grazplan
         /// <summary>
         /// Computes a default value for M/D from a (known) DM digestibility          }
         /// </summary>
+        /// <returns></returns>
         public double DefaultME2DM()
         {
             return ConvertDMD_To_ME2DM(DM_Digestibility, IsRoughage, EtherExtract);
         }
 
         /// <summary>
-        /// Calculates the default acid-detergent insoluble protein : crude protein 
-        /// ratio for user defined supplements.                                      
+        /// Calculates the default acid-detergent insoluble protein : crude protein
+        /// ratio for user defined supplements.
         /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public double DefaultADIP_2_CP()
         {
             double result;
@@ -589,7 +802,9 @@ namespace Models.Grazplan
 
         /// <summary>
         /// Calculates the default phosphorus content for user defined supplements.
-        /// </summary>                                                                       
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public double DefaultPhosphorus()
         {
             double result;
@@ -607,6 +822,8 @@ namespace Models.Grazplan
         /// <summary>
         /// Calculates the default sulphur content for user defined supplements.
         /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public double DefaultSulphur()
         {
             double result;
@@ -621,6 +838,11 @@ namespace Models.Grazplan
             return result;
         }
 
+        /// <summary>
+        /// Determines whether [is same as] [the specified other supp].
+        /// </summary>
+        /// <param name="otherSupp">The other supp.</param>
+        /// <returns></returns>
         public bool isSameAs(TSupplement otherSupp)
         {
             return (sName == otherSupp.sName)
@@ -648,7 +870,19 @@ namespace Models.Grazplan
     [Serializable]
     public class TSupplementItem : TSupplement
     {
+        /// <summary>
+        /// Gets or sets the amount.
+        /// </summary>
+        /// <value>
+        /// The amount.
+        /// </value>
         public double Amount { get; set; }
+        /// <summary>
+        /// Gets or sets the cost.
+        /// </summary>
+        /// <value>
+        /// The cost.
+        /// </value>
         public double Cost { get; set; }
 
         /// <summary>
@@ -662,12 +896,19 @@ namespace Models.Grazplan
         /// Constructor
         /// Note that it makes a copy of the TSupplement
         /// </summary>
+        /// <param name="src">The source.</param>
+        /// <param name="amt">The amt.</param>
+        /// <param name="cst">The CST.</param>
         public TSupplementItem(TSupplement src, double amt = 0.0, double cst = 0.0) : base(src)
         {
             Amount = amt;
             Cost = cst;
         }
 
+        /// <summary>
+        /// Assigns the specified source supp.
+        /// </summary>
+        /// <param name="srcSupp">The source supp.</param>
         public void Assign(TSupplementItem srcSupp)
         {
             if (srcSupp != null)
@@ -680,33 +921,56 @@ namespace Models.Grazplan
     }
 
     /// <summary>
-    ///  TSupplementRation encapsulates zero or more supplements mixed together.
-    ///  In essence, it is a list of TSupplementItem.
-    ///  This is the class used for specifying the supplement fed to a group of
-    ///  animals in AnimGrp.pas 
-    ///                                     
+    /// TSupplementRation encapsulates zero or more supplements mixed together.
+    /// In essence, it is a list of TSupplementItem.
+    /// This is the class used for specifying the supplement fed to a group of
+    /// animals in AnimGrp.pas
     /// Apart from the usual read/write properties and list-handling methods, the
     /// class has the following special methods:
     /// * AverageSuppt      computes the composition of a supplement mixture in
-    ///                     proportions given by the fAmount values.
+    /// proportions given by the fAmount values.
     /// * AverageCost       computes the cost of a supplement mixture in
-    ///                     proportions given by the fAmount values.
+    /// proportions given by the fAmount values.
     /// </summary>
     [Serializable]
     public class TSupplementRation
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         public enum TRationChoice
         {
+            /// <summary>
+            /// The rc standard
+            /// </summary>
             rcStandard,    //standard mix as specified
+            /// <summary>
+            /// The rc only stored
+            /// </summary>
             rcOnlyStored,  //use only stored fodder while it lasts
+            /// <summary>
+            /// The rc inc stored
+            /// </summary>
             rcIncStored    //use stored fodder as first ingredient
         };
 
+        /// <summary>
+        /// The f suppts
+        /// </summary>
         protected TSupplementItem[] fSuppts = new TSupplementItem[0];
 
+        /// <summary>
+        /// The ration choice
+        /// </summary>
         TRationChoice rationChoice = TRationChoice.rcStandard;
 
+        /// <summary>
+        /// Gets the count.
+        /// </summary>
+        /// <value>
+        /// The count.
+        /// </value>
         public int Count
         {
             get
@@ -715,6 +979,12 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Gets or sets the total amount.
+        /// </summary>
+        /// <value>
+        /// The total amount.
+        /// </value>
         public double TotalAmount
         {
             get
@@ -738,6 +1008,14 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="TSupplementItem"/> with the specified index.
+        /// </summary>
+        /// <value>
+        /// The <see cref="TSupplementItem"/>.
+        /// </value>
+        /// <param name="idx">The index.</param>
+        /// <returns></returns>
         public TSupplementItem this[int idx]
         {
             get
@@ -756,6 +1034,10 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Assigns the specified source ration.
+        /// </summary>
+        /// <param name="srcRation">The source ration.</param>
         public void Assign(TSupplementRation srcRation)
         {
             Array.Resize(ref fSuppts, srcRation.Count);
@@ -768,11 +1050,23 @@ namespace Models.Grazplan
             rationChoice = srcRation.rationChoice;
         }
 
+        /// <summary>
+        /// Gets the fw fract.
+        /// </summary>
+        /// <param name="idx">The index.</param>
+        /// <returns></returns>
         public double getFWFract(int idx)
         {
             return fSuppts[idx].Amount >= 1e-7 ? fSuppts[idx].Amount / TotalAmount : 0.0;
         }
 
+        /// <summary>
+        /// Adds the specified supp.
+        /// </summary>
+        /// <param name="supp">The supp.</param>
+        /// <param name="amt">The amt.</param>
+        /// <param name="cost">The cost.</param>
+        /// <returns></returns>
         public int Add(TSupplement supp, double amt = 0.0, double cost = 0.0)
         {
             int idx = fSuppts.Length;
@@ -780,11 +1074,23 @@ namespace Models.Grazplan
             return idx;
         }
 
+        /// <summary>
+        /// Adds the specified supp item.
+        /// </summary>
+        /// <param name="suppItem">The supp item.</param>
+        /// <returns></returns>
         public int Add(TSupplementItem suppItem)
         {
             return Add(suppItem, suppItem.Amount, suppItem.Cost);
         }
 
+        /// <summary>
+        /// Inserts the specified index.
+        /// </summary>
+        /// <param name="idx">The index.</param>
+        /// <param name="supp">The supp.</param>
+        /// <param name="amt">The amt.</param>
+        /// <param name="cost">The cost.</param>
         public void Insert(int idx, TSupplement supp, double amt = 0.0, double cost = 0.0)
         {
             Array.Resize(ref fSuppts, fSuppts.Length + 1);
@@ -793,6 +1099,10 @@ namespace Models.Grazplan
             fSuppts[idx] = new TSupplementItem(supp, amt, cost);
         }
 
+        /// <summary>
+        /// Deletes the specified index.
+        /// </summary>
+        /// <param name="idx">The index.</param>
         public void Delete(int idx)
         {
             for (int jdx = idx + 1; jdx < fSuppts.Length; jdx++)
@@ -800,11 +1110,20 @@ namespace Models.Grazplan
             Array.Resize(ref fSuppts, fSuppts.Length - 1);
         }
 
+        /// <summary>
+        /// Clears this instance.
+        /// </summary>
         public void Clear()
         {
             Array.Resize(ref fSuppts, 0);
         }
 
+        /// <summary>
+        /// Indexes the of.
+        /// </summary>
+        /// <param name="sName">Name of the s.</param>
+        /// <param name="checkTrans">if set to <c>true</c> [check trans].</param>
+        /// <returns></returns>
         public int IndexOf(string sName, bool checkTrans = false)
         {
             int result = -1;
@@ -843,7 +1162,9 @@ namespace Models.Grazplan
         /// <summary>
         /// Weighted average cost of a supplement
         /// </summary>
-        /// <returns>The weighted average cost in the same units as TSupplementItem.cost</returns>
+        /// <returns>
+        /// The weighted average cost in the same units as TSupplementItem.cost
+        /// </returns>
         public double AverageCost()
         {
             if (TotalAmount < 1e-7)
@@ -854,6 +1175,9 @@ namespace Models.Grazplan
             return totCost / TotalAmount;
         }
 
+        /// <summary>
+        /// The property n_ attrs
+        /// </summary>
         static TSupplement.TSuppAttribute[] PROPN_ATTRS = { TSupplement.TSuppAttribute.spaDMP, 
                                                             TSupplement.TSuppAttribute.spaDMD, 
                                                             TSupplement.TSuppAttribute.spaEE, 
@@ -869,8 +1193,8 @@ namespace Models.Grazplan
         /// remain within the range 0-1
         /// * Assumes that all values are non-negative
         /// </summary>
-        /// <param name="scaleToSupp"></param>
-        /// <param name="attrs"></param>
+        /// <param name="scaleToSupp">The scale to supp.</param>
+        /// <param name="attrs">The attrs.</param>
         public void RescaleRation(TSupplement scaleToSupp, IList<TSupplement.TSuppAttribute> attrs)
         {
             Array attribs = Enum.GetValues(typeof(TSupplement.TSuppAttribute));
@@ -928,32 +1252,44 @@ namespace Models.Grazplan
     /// TSupplementLibrary is a TSupplementRation descendant that is intended for
     /// use in manipulating lists of supplements within GUIs.
     /// For TSupplementLibrary, the "amounts" may be read in relative or absolute
-    /// terms, depending on the application. 
-    ///
+    /// terms, depending on the application.
     /// Apart from the usual read/write properties and list-handling methods, the
     /// class has the following special methods:
     /// * the Add and Insert methods have variants that allow the user to set up a
-    ///   supplement by using its name; other attributes are looked up from the
-    ///   DefaultSuppConsts library.
+    /// supplement by using its name; other attributes are looked up from the
+    /// DefaultSuppConsts library.
     /// * PopulateDefaults     sets the library up to contain the complete set of
-    ///                        default supplement compositions.
+    /// default supplement compositions.
     /// * CopyFrom             adds either the entire contents of another library,
-    ///                        or else a nominated subset of supplements from the
-    ///                        other library.
+    /// or else a nominated subset of supplements from the
+    /// other library.
     /// * ReadFromRegistry     Populates the library from a set of formatted strings
-    ///                        contained in a file pointed to by SUPP_LIB_KEY
+    /// contained in a file pointed to by SUPP_LIB_KEY
     /// * WriteToRegistry      Write a formatted set of strings that can be read by
-    ///                        ReadFromStrings to the file pointed to by
-    ///                        in a file pointed to by SUPP_LIB_KEY
+    /// ReadFromStrings to the file pointed to by
+    /// in a file pointed to by SUPP_LIB_KEY
     /// </summary>
     [Serializable]
     public class TSupplementLibrary : TSupplementRation
     {
+        /// <summary>
+        /// Adds the specified s name.
+        /// </summary>
+        /// <param name="sName">Name of the s.</param>
+        /// <param name="amount">The amount.</param>
+        /// <param name="cost">The cost.</param>
         public void Add(string sName, double amount = 0.0, double cost = 0.0)
         {
             Insert(Count, sName, amount, cost);
         }
 
+        /// <summary>
+        /// Inserts the specified index.
+        /// </summary>
+        /// <param name="idx">The index.</param>
+        /// <param name="sName">Name of the s.</param>
+        /// <param name="amount">The amount.</param>
+        /// <param name="cost">The cost.</param>
         public void Insert(int idx, string sName, double amount = 0.0, double cost = 0.0)
         {
             TSupplementItem defSupp = new TSupplementItem();
@@ -964,6 +1300,9 @@ namespace Models.Grazplan
         /// <summary>
         /// Locates a supplement by name in the DefaultSupptCosts array and returns it
         /// </summary>
+        /// <param name="sName">Name of the s.</param>
+        /// <param name="suppt">The suppt.</param>
+        /// <returns></returns>
         public bool GetDefaultSupp(string sName, ref TSupplementItem suppt)
         {
             int idx = DefaultSuppConsts.IndexOf(sName);
@@ -978,16 +1317,28 @@ namespace Models.Grazplan
             return result;
         }
 
+        /// <summary>
+        /// Populates the defaults.
+        /// </summary>
         public void PopulateDefaults()
         {
             Assign(DefaultSuppConsts);
         }
 
+        /// <summary>
+        /// Reverts to default.
+        /// </summary>
+        /// <param name="idx">The index.</param>
         public void RevertToDefault(int idx)
         {
             GetDefaultSupp(fSuppts[idx].sName, ref fSuppts[idx]);
         }
 
+        /// <summary>
+        /// Copies from.
+        /// </summary>
+        /// <param name="srcLibrary">The source library.</param>
+        /// <param name="copyNames">The copy names.</param>
         public void CopyFrom(TSupplementLibrary srcLibrary, string[] copyNames = null)
         {
             for (int idx = 0; idx < srcLibrary.Count; idx++)
@@ -997,8 +1348,23 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// The s att r_ header
+        /// </summary>
         private const string sATTR_HEADER = "R    DM    DMD    M/D     EE     CP     dg    ADIP     P        S       AA    MaxP Locales";
 
+        /// <summary>
+        /// Reads from strings.
+        /// </summary>
+        /// <param name="locale">The locale.</param>
+        /// <param name="strings">The strings.</param>
+        /// <exception cref="System.Exception">
+        /// Error reading supplement library - must contain a header line
+        /// or
+        /// Error reading supplement library - header line is invalid
+        /// or
+        /// Error reading supplement library - line for  + sNameStr +  is invalid
+        /// </exception>
         public void ReadFromStrings(string locale, string[] strings)
         {
             if (strings == null || strings.Length == 0)
@@ -1081,6 +1447,12 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Gets the default supp consts.
+        /// </summary>
+        /// <value>
+        /// The default supp consts.
+        /// </value>
         public static TSupplementLibrary DefaultSuppConsts
         {
             get
@@ -1094,12 +1466,20 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Setups the default supplements.
+        /// </summary>
         public static void SetupDefaultSupplements()
         {
             if (!DefaultSuppConsts.ReadFromRegistryFile(GrazParam.DefaultLocale()))
                 DefaultSuppConsts.ReadFromResource(GrazParam.DefaultLocale());
         }
 
+        /// <summary>
+        /// Reads from registry file.
+        /// </summary>
+        /// <param name="locale">The locale.</param>
+        /// <returns></returns>
         public bool ReadFromRegistryFile(string locale)
         {
             Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(GrazParam.PARAM_KEY);
@@ -1116,6 +1496,10 @@ namespace Models.Grazplan
             return false;
         }
 
+        /// <summary>
+        /// Reads from resource.
+        /// </summary>
+        /// <param name="locale">The locale.</param>
         public void ReadFromResource(string locale)
         {
             string suppData = Properties.Resources.ResourceManager.GetString("Supplement");
@@ -1123,6 +1507,9 @@ namespace Models.Grazplan
             ReadFromStrings(locale, suppStrings);
         }
 
+        /// <summary>
+        /// The g definition supp
+        /// </summary>
         internal static TSupplementLibrary GDefSupp = null;
 
     }

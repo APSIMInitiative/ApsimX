@@ -32,3 +32,4 @@ _ReSharper*/
 *MaizeTestModel*
 Documentation/html
 *.db
+packages/

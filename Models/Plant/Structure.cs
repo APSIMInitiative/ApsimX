@@ -293,6 +293,7 @@ namespace Models.PMF
         }
 
         /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">sender of the event.</param>
         /// <param name="Sow">Sowing data to initialise from.</param>
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type Sow)

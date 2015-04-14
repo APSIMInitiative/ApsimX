@@ -47,18 +47,12 @@ namespace Models.AgPasture1
 		/// <param name="Data">Data about crop type</param>
 		public delegate void NewCropDelegate(PMF.NewCropType Data);
 
-		/// <summary>Event to be invoked to tell other models about the existence of this plant</summary>
-		public event NewCropDelegate NewCrop;
-
 		/// <summary>Event to be invoked when sowing or at initialisation (tell models about existence of this plant).</summary>
 		public event EventHandler Sowing;
 
 		/// <summary>Reference to a NewCanopy event</summary>
 		/// <param name="Data">The data about this plant's canopy.</param>
 		public delegate void NewCanopyDelegate(NewCanopyType Data);
-
-		/// <summary>Event to be invoked at the beginning of everyday.</summary>
-		public event NewCanopyDelegate NewCanopy;
 
 		/// <summary>Reference to a FOM incorporation event</summary>
 		/// <param name="Data">The data with soil FOM to be added.</param>
@@ -2462,14 +2456,14 @@ namespace Models.AgPasture1
 		#region Functions  -------------------------------------------------------------------------------------------------
 
 		/// <summary>Placeholder for SoilArbitrator</summary>
-		/// <param name="info">some info</param>
+        /// <param name="soilstate">some info</param>
 		/// <returns>soil info</returns>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
 		{
             throw new NotImplementedException();
 		}
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <param name="soilstate">soilstate</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
@@ -2484,6 +2478,7 @@ namespace Models.AgPasture1
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
+        /// <param name="info">Some info</param>
         public void SetNUptake(List<ZoneWaterAndN> info)
         { }    
 

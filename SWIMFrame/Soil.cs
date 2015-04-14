@@ -37,7 +37,7 @@ namespace SWIMFrame
         public static SoilProps gensptbl(double dzmin, SoilParam sPar, bool Kgiven)
         {
             int nlimax = 220;
-            int i, j, ndry, nli, nli1, n, nc, nld;
+            int i, j, nli1, n, nc, nld;
             double[] h= new double[nlimax + 3];
             double[] lhr= new double[nlimax + 3];
             double[] K = new double[nlimax + 3];

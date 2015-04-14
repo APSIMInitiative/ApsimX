@@ -238,7 +238,7 @@ namespace Models.PMF
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
@@ -629,7 +629,8 @@ namespace Models.PMF
             DoPotentialNutrientUptake(Organs, ref N, soilstate);  //Work out how much N the uptaking organs (roots) would take up in the absence of competition
         }
         /// <summary>Allocates the NUptake that the soil arbitrator has returned</summary>
-        /// <param name="Organs">The organs.</param>
+        /// <param name="AllocatedNO3Nuptake">AllocatedNO3Nuptake</param>
+        /// <param name="AllocatedNH4Nuptake">AllocatedNH4Nuptake</param>
         public void DoNUptakeAllocations(double[] AllocatedNO3Nuptake, double[] AllocatedNH4Nuptake)  //Fixme Needs to take N allocation from soil arbitrator
         {
             //Calculation the proportion of potential N uptake from each organ
@@ -873,7 +874,7 @@ namespace Models.PMF
         /// <summary>Does the uptake.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
-        /// <param name="Option">The option.</param>
+        /// <param name="soilstate">The soilstate.</param>
         virtual public void DoPotentialNutrientUptake(IArbitration[] Organs, ref BiomassArbitrationType BAT, SoilState soilstate)
         {
             PotentialNO3NUptake = new double[soilstate.Zones[0].NO3N.Length];

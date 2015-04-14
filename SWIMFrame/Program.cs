@@ -17,10 +17,7 @@ namespace SWIMFrame
             soils[0] = new SoilParam(10, 103, 0.4, 2.0, -2.0, -10.0, 1.0 / 3.0, 1.0);
             soils[1] = new SoilParam(10, 109, 0.6, 0.2, -2.0, -40.0, 1.0 / 9.0, 1.0);
 
-            string id;
-            string mm;
             string[] ftname = new string[2];
-            string sfile;
             int[] sidx;
             int i, j;
             int[] ndz;

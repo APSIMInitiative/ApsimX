@@ -42,22 +42,6 @@ namespace Models
         /// 
         /// </summary>
         /// <param name="Data">The data.</param>
-        public delegate void NewCropDelegate(PMF.NewCropType Data);
-        /// <summary>Occurs when [new crop].</summary>
-        public event NewCropDelegate NewCrop;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void NewCanopyDelegate(NewCanopyType Data);
-        /// <summary>Occurs when [new canopy].</summary>
-        public event NewCanopyDelegate NewCanopy;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
         public delegate void FOMLayerDelegate(Soils.FOMLayerType Data);
         /// <summary>Occurs when [incorp fom].</summary>
         public event FOMLayerDelegate IncorpFOM;
@@ -5254,14 +5238,14 @@ namespace Models
         #region Functions
 
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <param name="soilstate">The soil state</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <param name="soilstate">The soil state</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {

@@ -27,12 +27,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The uptake</summary>
         private double Uptake = 0;
-        /// <summary>The current paddock name</summary>
-        private string CurrentPaddockName;
-        /// <summary>Our name</summary>
-        private string OurName;
-        /// <summary>The talk directly to root</summary>
-        private bool TalkDirectlyToRoot;
 
         /// <summary>Gets or sets the dm demand.</summary>
         /// <value>The dm demand.</value>
@@ -120,7 +114,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
@@ -180,12 +174,7 @@ namespace Models.PMF.Organs
         public override void DoWaterUptake(double[] Amount)
         {
             Uptake = MathUtilities.Sum(Amount);
-            if (TalkDirectlyToRoot)
-                //MyPaddock.Set(OurName + "Root.SWUptake", Amount);
-                throw new NotImplementedException();
-            else
-            {
-                throw new NotImplementedException();
+            throw new NotImplementedException();
 
                 //List<string> ModelNames = new List<string>();
                 //List<double> Supply = new List<double>();
@@ -206,8 +195,6 @@ namespace Models.PMF.Organs
                 //    throw new NotImplementedException();
                 //    //i++;
                 //}
-
-            }
 
         }
 

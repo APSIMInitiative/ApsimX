@@ -60,6 +60,9 @@ namespace Models.PMF
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
 
+        /// <summary>
+        /// Gets or sets the type of the crop.
+        /// </summary>
         public string CropType { get; set; }
 
         /// <summary>The soil</summary>
@@ -149,8 +152,8 @@ namespace Models.PMF
         }
 
         /// <summary>Calculate the potential sw uptake for today</summary>
-        /// <param name="info"></param>
-        /// <returns></returns>
+        /// <param name="soilstate"></param>
+        /// <returns>list of uptakes</returns>
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
@@ -185,7 +188,7 @@ namespace Models.PMF
 
         }
         /// <summary>Placeholder for SoilArbitrator</summary>
-        /// <param name="info"></param>
+        /// <param name="soilstate">soil state</param>
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {

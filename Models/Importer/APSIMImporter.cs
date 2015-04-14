@@ -13,9 +13,9 @@ namespace Importer
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml;
-    using ApsimFile;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using APSIM.Shared.OldAPSIM;
 
     /// <summary>
     /// This is a worker class for the import process that converts
@@ -30,6 +30,20 @@ namespace Importer
     /// </summary>
     public class APSIMImporter
     {
+        private string[] cropNames = {"AgPasture", "Bambatsi", "Banana2", "Barley", "BarleySWIM",
+                                      "Broccoli","ButterflyPea","Canola","CanolaSWIM","Centro",
+                                      "Chickpea","Chickpea2","Chicory","cloverseed","Cotton2",
+                                      "Cowpea","EGrandis","EMelliodora","EPopulnea","Fababean",
+                                      "Fieldpea","Fieldpea2","FrenchBean","Grassseed","Heliotrope",
+                                      "Horsegram","Itallianryegrass","Kale","Lablab","Lentil",
+                                      "Lettuce","Lolium_rigidum","Lucerne","Lucerne2","LucerneSWIM",
+                                      "Lupin","Maize","MaizeZ","Millet","Mucuna","Mungbean","Navybean",
+                                      "Oats","Oryza","Oryza2","Ozcot","Peanut","Pigeonpea","Potato",
+                                      "raphanus_raphanistrum","Root","Seedling","Slurp","Sorghum",
+                                      "Soybean","Stylo","Sugar","SugarCane","Sunflower","SweetCorn",
+                                      "SweetSorghum","Taro2","Triticale","vine","Weed","WF_Millet",
+                                      "Wheat","Wheat2","Wheat2X"};
+
         /// <summary>
         /// Used as flags during importation of a paddock
         /// </summary>
@@ -138,42 +152,11 @@ namespace Importer
 
             try
             {
-                ApsimFile infile;
-
-                // initialise the configuration for ApsimFile               
-                if (this.ApsimPath.Length > 0)
-                {
-                    Configuration.SetApsimDir(this.ApsimPath);
-                    PlugIns.LoadAll();  // loads the plugins from apsim.xml and types from other xml files
-                    // open and resolve all the links
-                    infile = new ApsimFile(filename);
-                }
-                else
-                {
-                    // Get the types.xml from built-in resources
-                    string xml = Properties.Resources.Types;
-
-                    // Create a temporary file.
-                    string tempFileName = Path.GetTempFileName();
-                    StreamWriter f = new StreamWriter(tempFileName);
-                    f.Write(xml);
-                    f.Close();
-
-                    PlugIns.Load(tempFileName);
-
-                    infile = new ApsimFile();
-                    XmlDocument filedoc = new XmlDocument();
-                    filedoc.Load(filename);
-                    infile.Open(filedoc.DocumentElement);
-                }
-                string concretexml = infile.RootComponent.FullXMLNoShortCuts();
-
                 // open the .apsim file
-                //// StreamReader xmlReader = new StreamReader(filename);
                 XmlDocument doc = new XmlDocument();
-                //// doc.LoadXml(xmlReader.ReadToEnd());
-                doc.LoadXml(concretexml);
-                //// xmlReader.Close();
+                doc.Load(filename);
+
+                Shortcuts.Remove(doc.DocumentElement);
 
                 // create new apsimx document
                 XmlNode newNode;
@@ -393,30 +376,13 @@ namespace Importer
                 {
                     newNode = this.ImportGraph(compNode, destParent, newNode);
                 }
+                else if (StringUtilities.IndexOfCaseInsensitive(cropNames, compNode.Name) != -1)
+                {
+                    this.ImportPlant(compNode, destParent, newNode);
+                }
                 else
                 {
-                    // all other components not listed above will be handled by this
-                    // code and some test used to try to determine what type of object it is
-                    string show = Types.Instance.MetaData(compNode.Name, "ShowInMainTree"); 
-                    if (string.Compare(show, "yes", true) == 0)
-                    {
-                        // make some guesses about the type of component to add
-                        string classname = compNode.Name[0].ToString().ToUpper() + compNode.Name.Substring(1, compNode.Name.Length - 1); // first char to uppercase
-                        string compClass = Types.Instance.MetaData(compNode.Name, "class");
-                        bool usePlantClass = (compClass.Length == 0) || ((compClass.Length > 4) && (string.Compare(compClass.Substring(0, 5), "plant", true) == 0));
-                        if (Types.Instance.IsCrop(compNode.Name) && usePlantClass)
-                        {
-                            this.ImportPlant(compNode, destParent, newNode);
-                        }
-                        else
-                        {
-                            // objects like root may have a name attribute
-                            string usename = XmlUtilities.NameAttr(compNode);
-                            if (usename.Length < 1)
-                                usename = compNode.Name;
-                            newNode = this.AddCompNode(destParent, classname, usename);    // found a model component that should be added to the simulation
-                        }
-                    }
+                    // Do nothing.
                 }
             }
             catch (Exception exp)

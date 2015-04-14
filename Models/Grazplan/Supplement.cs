@@ -21,38 +21,73 @@ namespace Models.Grazplan
     /// * Store[]       Supplement attributes for each store (zero-offset)
     /// * StoredKg[]    Amount in each supplement store (zero-offset)
     /// * AddToStore    Adds an amount of supplement to a store. Used in setting
-    ///                 up, in "buy" events, and in storing conserved fodder.
+    /// up, in "buy" events, and in storing conserved fodder.
     /// * FeedOut       Transfers feed from a store. Used in the "feed" event.
-    ///
     /// Notes:
     /// 1.  All TSupplementModels have a "fodder" store.  This is where material
-    ///     passed to the supplement component as a result of fodder conservation
-    ///     should go.
+    /// passed to the supplement component as a result of fodder conservation
+    /// should go.
     /// 2.  If the composition parameters in the AddToStore method (DMP, DMD, MEDM,
-    ///     CP, DG, EE and ADIP2CP) are set to zero, the class will use the default
-    ///     value for the supplement name from grazSUPP.  Using this feature with a
-    ///     supplement not named in grazSUPP will result in an wheat being used. 
+    /// CP, DG, EE and ADIP2CP) are set to zero, the class will use the default
+    /// value for the supplement name from grazSUPP.  Using this feature with a
+    /// supplement not named in grazSUPP will result in an wheat being used.
     /// </summary>
     [Serializable]
     public class TSupplementModel : TSupplementLibrary
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
         private class PaddockInfo
         {
+            /// <summary>
+            /// The name
+            /// </summary>
             public string Name;
+            /// <summary>
+            /// The padd identifier
+            /// </summary>
             public int PaddId;
+            /// <summary>
+            /// The suppt fed
+            /// </summary>
             public TSupplementRation SupptFed;   // Entry N is the supplement fed out N days ago
         }
 
+        /// <summary>
+        /// The paddocks
+        /// </summary>
         private PaddockInfo[] Paddocks = new PaddockInfo[0];
+        /// <summary>
+        /// The f curr padd supp
+        /// </summary>
         private TSupplement FCurrPaddSupp;
 
+        /// <summary>
+        /// The default
+        /// </summary>
         private const int DEFAULT = -1;
+        /// <summary>
+        /// The roughage
+        /// </summary>
         private const int ROUGHAGE = 0;
+        /// <summary>
+        /// The fodder
+        /// </summary>
         private const string FODDER = "fodder";
 
+        /// <summary>
+        /// Gets or sets the spoilage time.
+        /// </summary>
+        /// <value>
+        /// The spoilage time.
+        /// </value>
         public double SpoilageTime { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TSupplementModel"/> class.
+        /// </summary>
         public TSupplementModel()
             : base()
         {
@@ -61,6 +96,11 @@ namespace Models.Grazplan
             FCurrPaddSupp = new TSupplement();
         }
 
+        /// <summary>
+        /// Adds the paddock.
+        /// </summary>
+        /// <param name="paddId">The padd identifier.</param>
+        /// <param name="paddName">Name of the padd.</param>
         public void AddPaddock(int paddId, string paddName)
         {
             int idx = Paddocks.Length;
@@ -71,11 +111,20 @@ namespace Models.Grazplan
             Paddocks[idx].SupptFed = new TSupplementRation();
         }
 
+        /// <summary>
+        /// Clears the paddock list.
+        /// </summary>
         public void ClearPaddockList()
         {
             Paddocks = new PaddockInfo[0];
         }
 
+        /// <summary>
+        /// Gets the paddock count.
+        /// </summary>
+        /// <value>
+        /// The paddock count.
+        /// </value>
         public int PaddockCount
         {
             get
@@ -84,11 +133,22 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Paddocks the name.
+        /// </summary>
+        /// <param name="idx">The index.</param>
+        /// <returns></returns>
         public string PaddockName(int idx)
         {
             return Paddocks[idx].Name;
         }
 
+        /// <summary>
+        /// Finds the fed suppt.
+        /// </summary>
+        /// <param name="paddIdx">Index of the padd.</param>
+        /// <param name="amount">The amount.</param>
+        /// <returns></returns>
         private TSupplement FindFedSuppt(int paddIdx, ref double amount)
         {
             if (paddIdx >= 0 && paddIdx < Paddocks.Length)
@@ -101,16 +161,33 @@ namespace Models.Grazplan
             return FCurrPaddSupp;
         }
 
+        /// <summary>
+        /// Gets the fed suppt.
+        /// </summary>
+        /// <param name="paddName">Name of the padd.</param>
+        /// <param name="amount">The amount.</param>
+        /// <returns></returns>
         public TSupplement GetFedSuppt(string paddName, ref double amount)
         {
             return FindFedSuppt(PaddockIndexOf(paddName), ref amount);
         }
 
+        /// <summary>
+        /// Gets the fed suppt.
+        /// </summary>
+        /// <param name="paddId">The padd identifier.</param>
+        /// <param name="amount">The amount.</param>
+        /// <returns></returns>
         public TSupplement GetFedSuppt(int paddId, ref double amount)
         {
             return FindFedSuppt(PaddockIndexOf(paddId), ref amount);
         }
 
+        /// <summary>
+        /// Paddocks the index of.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         private int PaddockIndexOf(string name)
         {
             for (int i = 0; i < Paddocks.Length; i++)
@@ -119,6 +196,11 @@ namespace Models.Grazplan
             return -1;
         }
 
+        /// <summary>
+        /// Paddocks the index of.
+        /// </summary>
+        /// <param name="ID">The identifier.</param>
+        /// <returns></returns>
         private int PaddockIndexOf(int ID)
         {
             for (int i = 0; i < Paddocks.Length; i++)
@@ -130,16 +212,16 @@ namespace Models.Grazplan
         /// <summary>
         /// Adds an amount of a supplement to a store.
         /// * If the store name already exists in the FStores array, the method adds
-        ///   the supplement to that store.  Otherwise a new store is created.
+        /// the supplement to that store.  Otherwise a new store is created.
         /// * The DMP, DMD, MEDM, CP, DG, EE and ADIP2CP parameters may be set to zero,
-        ///   in which case the default values for the supplement name are used.
-        ///   Defaults are taken from the current store if the name is already defined,
-        ///   and from grazSUPP.PAS otherwise.  If defaults cannot be found for a name,
-        ///   wheat is used as the default composition.
+        /// in which case the default values for the supplement name are used.
+        /// Defaults are taken from the current store if the name is already defined,
+        /// and from grazSUPP.PAS otherwise.  If defaults cannot be found for a name,
+        /// wheat is used as the default composition.
         /// </summary>
         /// <param name="suppKg">Amount (kg fresh weight) of the supplement to be included in the store.</param>
         /// <param name="suppName">Name of the supplement.</param>
-        /// <param name="roughage"></param>
+        /// <param name="roughage">The roughage.</param>
         /// <param name="DMP">Proportion of the fresh weight which is dry matter   kg/kg FW</param>
         /// <param name="DMD">Dry matter digestibility of the supplement           kg/kg DM</param>
         /// <param name="MEDM">Metabolisable energy content of dry matter           MJ/kg DM</param>
@@ -151,7 +233,9 @@ namespace Models.Grazplan
         /// <param name="sulf">Sulphur content                                      kg/kg DM</param>
         /// <param name="ashAlk">Ash alkalinity                                       mol/kg DM</param>
         /// <param name="maxPass">Maximum passage rate                                 0-1</param>
-        /// <returns>Index of the supplement in the store</returns>
+        /// <returns>
+        /// Index of the supplement in the store
+        /// </returns>
         public int AddToStore(double suppKg, string suppName, int roughage = DEFAULT, double DMP = 0.0, double DMD = 0.0,
                    double MEDM = 0.0, double CP = 0.0, double DG = 0.0, double EE = 0.0, double ADIP2CP = 0.0,
                    double phos = 0.0, double sulf = 0.0, double ashAlk = 0.0, double maxPass = 0.0)
@@ -202,6 +286,13 @@ namespace Models.Grazplan
             return AddToStore(suppKg, addSupp);
         }
 
+        /// <summary>
+        /// Adds to store.
+        /// </summary>
+        /// <param name="suppKg">The supp kg.</param>
+        /// <param name="suppComp">The supp comp.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Supplement submodel: cannot combine roughage and concentrate, both named  + suppComp.sName</exception>
         public int AddToStore(double suppKg, TSupplement suppComp)
         {
             int suppIdx = IndexOf(suppComp.sName);
@@ -216,6 +307,17 @@ namespace Models.Grazplan
             return suppIdx;
         }
 
+        /// <summary>
+        /// Feeds the out.
+        /// </summary>
+        /// <param name="suppName">Name of the supp.</param>
+        /// <param name="fedKg">The fed kg.</param>
+        /// <param name="paddName">Name of the padd.</param>
+        /// <exception cref="System.Exception">
+        /// Supplement \ + suppName + \ not recognised
+        /// or
+        /// Paddock \ + paddName + \ not recognised
+        /// </exception>
         public void FeedOut(string suppName, double fedKg, string paddName)
         {
             int iSupp = IndexOf(suppName);
@@ -228,6 +330,17 @@ namespace Models.Grazplan
             Transfer(this, iSupp, Paddocks[iPadd].SupptFed, 0, fedKg);
         }
 
+        /// <summary>
+        /// Adds the fodder.
+        /// </summary>
+        /// <param name="destStore">The dest store.</param>
+        /// <param name="fodderFW">The fodder fw.</param>
+        /// <param name="DMP">The DMP.</param>
+        /// <param name="DMD">The DMD.</param>
+        /// <param name="NConc">The n conc.</param>
+        /// <param name="PConc">The p conc.</param>
+        /// <param name="SConc">The s conc.</param>
+        /// <param name="ashAlk">The ash alk.</param>
         public void AddFodder(string destStore, double fodderFW, double DMP, double DMD, double NConc,
                               double PConc, double SConc, double ashAlk)
         {
@@ -243,6 +356,13 @@ namespace Models.Grazplan
                 PConc, SConc, ashAlk, 0.0);
         }
 
+        /// <summary>
+        /// Blends the specified source store.
+        /// </summary>
+        /// <param name="srcStore">The source store.</param>
+        /// <param name="transferKg">The transfer kg.</param>
+        /// <param name="destStore">The dest store.</param>
+        /// <exception cref="System.Exception">Supplement \ + srcStore + \ not recognised</exception>
         public void Blend(string srcStore, double transferKg, string destStore)
         {
             int iSrc = IndexOf(srcStore);
@@ -264,6 +384,12 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Removes the suppt.
+        /// </summary>
+        /// <param name="paddIdx">Index of the padd.</param>
+        /// <param name="suppKg">The supp kg.</param>
+        /// <exception cref="System.Exception">Paddock not recognised</exception>
         private void RemoveSuppt(int paddIdx, double suppKg)
         {
             if (paddIdx < 0)
@@ -281,16 +407,29 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Removes the eaten.
+        /// </summary>
+        /// <param name="paddName">Name of the padd.</param>
+        /// <param name="suppKg">The supp kg.</param>
         public void RemoveEaten(string paddName, double suppKg)
         {
             RemoveSuppt(PaddockIndexOf(paddName), suppKg);
         }
 
+        /// <summary>
+        /// Removes the eaten.
+        /// </summary>
+        /// <param name="paddId">The padd identifier.</param>
+        /// <param name="suppKg">The supp kg.</param>
         public void RemoveEaten(int paddId, double suppKg)
         {
             RemoveSuppt(PaddockIndexOf(paddId), suppKg);
         }
 
+        /// <summary>
+        /// Completes the time step.
+        /// </summary>
         public void CompleteTimeStep()
         {
             int lastDay = (int)(SpoilageTime - 1.0e-6);
@@ -310,6 +449,13 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Supps the into ration.
+        /// </summary>
+        /// <param name="ration">The ration.</param>
+        /// <param name="idx">The index.</param>
+        /// <param name="supp">The supp.</param>
+        /// <param name="amount">The amount.</param>
         private void SuppIntoRation(TSupplementRation ration, int idx, TSupplement supp, double amount)
         {
             if (amount > 0.0)
@@ -320,6 +466,15 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Transfers the specified source.
+        /// </summary>
+        /// <param name="src">The source.</param>
+        /// <param name="srcIdx">Index of the source.</param>
+        /// <param name="dest">The dest.</param>
+        /// <param name="destIdx">Index of the dest.</param>
+        /// <param name="amount">The amount.</param>
+        /// <exception cref="System.Exception">Invalid transfer of feed</exception>
         private void Transfer(TSupplementRation src, int srcIdx, TSupplementRation dest, int destIdx, double amount)
         {
             if (srcIdx < 0 || srcIdx >= src.Count || destIdx < 0 || destIdx > dest.Count)
@@ -340,102 +495,193 @@ namespace Models.Grazplan
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class StoreType : SuppInfo
     {
-        /// <summary>Gets or sets the name.</summary>
-        /// <value>The name.</value>
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         public string Name { get; set; }
-        /// <summary>Gets or sets the description.</summary>
-        /// <value>The description.</value>
+        /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        /// <value>
+        /// The description.
+        /// </value>
         public double Stored { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class SuppToStockType : SuppInfo
     {
-        /// <summary>Gets or sets the paddock name.</summary>
-        /// <value>The paddock name.</value>
+        /// <summary>
+        /// Gets or sets the paddock name.
+        /// </summary>
+        /// <value>
+        /// The paddock name.
+        /// </value>
         public string Paddock { get; set; }
-        /// <summary>Gets or sets the amount of ration (kg).</summary>
-        /// <value>The amount of ration (kg).</value>
+        /// <summary>
+        /// Gets or sets the amount of ration (kg).
+        /// </summary>
+        /// <value>
+        /// The amount of ration (kg).
+        /// </value>
         public double Amount { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class SuppEatenType
     {
-        /// <summary>Gets or sets the paddock name.</summary>
-        /// <value>The paddock name.</value>
+        /// <summary>
+        /// Gets or sets the paddock name.
+        /// </summary>
+        /// <value>
+        /// The paddock name.
+        /// </value>
         public string Paddock { get; set; }
-        /// <summary>Gets or sets the amount of ration eaten (kg).</summary>
-        /// <value>The amount of ration eaten (kg).</value>
+        /// <summary>
+        /// Gets or sets the amount of ration eaten (kg).
+        /// </summary>
+        /// <value>
+        /// The amount of ration eaten (kg).
+        /// </value>
         public double Eaten { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class BuySuppType
     {
-        /// <summary>Gets or sets the supplement name.</summary>
-        /// <value>The supplement name.</value>
+        /// <summary>
+        /// Gets or sets the supplement name.
+        /// </summary>
+        /// <value>
+        /// The supplement name.
+        /// </value>
         public string Supplement { get; set; }
-        /// <summary>Gets or sets the amount of supplement eaten (kg).</summary>
-        /// <value>The amount of supplement eaten (kg).</value>
+        /// <summary>
+        /// Gets or sets the amount of supplement eaten (kg).
+        /// </summary>
+        /// <value>
+        /// The amount of supplement eaten (kg).
+        /// </value>
         public double Amount { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class FeedSuppType
     {
-        /// <summary>Gets or sets the supplement name.</summary>
-        /// <value>The supplement name.</value>
+        /// <summary>
+        /// Gets or sets the supplement name.
+        /// </summary>
+        /// <value>
+        /// The supplement name.
+        /// </value>
         public string Supplement { get; set; }
-        /// <summary>Gets or sets the amount of supplement offered (kg).</summary>
-        /// <value>The amount of supplement offered (kg).</value>
+        /// <summary>
+        /// Gets or sets the amount of supplement offered (kg).
+        /// </summary>
+        /// <value>
+        /// The amount of supplement offered (kg).
+        /// </value>
         public double Amount { get; set; }
-        /// <summary>Gets or sets the paddock name.</summary>
-        /// <value>The paddock name.</value>
+        /// <summary>
+        /// Gets or sets the paddock name.
+        /// </summary>
+        /// <value>
+        /// The paddock name.
+        /// </value>
         public string Paddock { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MixSuppType
     {
-        /// <summary>Gets or sets the source supplement name.</summary>
-        /// <value>The source supplement name.</value>
+        /// <summary>
+        /// Gets or sets the source supplement name.
+        /// </summary>
+        /// <value>
+        /// The source supplement name.
+        /// </value>
         public string Source { get; set; }
-        /// <summary>Gets or sets the amount of supplement transferred (kg).</summary>
-        /// <value>The amount of supplement transferred (kg).</value>
+        /// <summary>
+        /// Gets or sets the amount of supplement transferred (kg).
+        /// </summary>
+        /// <value>
+        /// The amount of supplement transferred (kg).
+        /// </value>
         public double Amount { get; set; }
-        /// <summary>Gets or sets the destination supplement name.</summary>
-        /// <value>The destination supplement name.</value>
+        /// <summary>
+        /// Gets or sets the destination supplement name.
+        /// </summary>
+        /// <value>
+        /// The destination supplement name.
+        /// </value>
         public string Destination { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ConserveType
     {
-        /// <summary>Gets or sets the name.</summary>
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
         /// <value>The name.</value>
         public string Name;
-        /// <summary>Gets or sets the fresh weight (kg)</summary>
+        /// <summary>
+        /// Gets or sets the fresh weight (kg)
+        /// </summary>
         /// <value>The fresh weight (kg)</value>
         public double FreshWt;
-        /// <summary>Gets or sets the dry matter content of the supplement (kg/kg FW).</summary>
+        /// <summary>
+        /// Gets or sets the dry matter content of the supplement (kg/kg FW).
+        /// </summary>
         /// <value>Dry matter content of the supplement (kg/kg)</value>
         public double DMContent;
-        /// <summary>Gets or sets the dry matter digestibility of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the dry matter digestibility of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Dry matter digestibiility of the supplement (kg/kg)</value>
         public double DMD;
-        /// <summary>Gets or sets the phosphorus content of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the phosphorus content of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Phosphorus content of the supplement (kg/kg)</value>
         public double NConc;
-        /// <summary>Gets or sets the nitrogen content of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the nitrogen content of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Nitrogen content of the supplement (kg/kg)</value>
         public double PConc;
-        /// <summary>Gets or sets the sulfur content of the supplement (kg/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the sulfur content of the supplement (kg/kg DM).
+        /// </summary>
         /// <value>Sulfur content of the supplement (kg/kg)</value>
         public double SConc;
-        /// <summary>Gets or sets the ash alkalinity of the supplement (mol/kg DM).</summary>
+        /// <summary>
+        /// Gets or sets the ash alkalinity of the supplement (mol/kg DM).
+        /// </summary>
         /// <value>Ash alkalinity of the supplement (mol/kg)</value>
         public double AshAlk;
-        /// <summary>Gets or sets the maximum passage rate of the supplement (0-1).</summary>
-        /// <value>Maximum passage rate of the supplement (kg/kg)</value>
     }
 
     /// <summary>
@@ -447,10 +693,14 @@ namespace Models.Grazplan
     public class Supplement : Model
     {
 
+        /// <summary>
+        /// The simulation
+        /// </summary>
         [Link]
         Simulation Simulation = null;
 
-        /// <summary>Initializes a new instance of the <see cref="Supplement"/> class.
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Supplement" /> class.
         /// </summary>
         public Supplement()
             : base()
@@ -458,14 +708,22 @@ namespace Models.Grazplan
             theModel = new TSupplementModel();
         }
 
+        /// <summary>
+        /// The model
+        /// </summary>
         private TSupplementModel theModel;
+        /// <summary>
+        /// The paddocks given
+        /// </summary>
         private bool paddocksGiven;
 
         /// <summary>
         /// Time over which an amount of supplement placed in a paddock will become inaccessible to grazing stock
         /// Default value is 0.0, i.e. supplement only persists for the time step that it is fed out
         /// </summary>
-        /// <value>The spoilage time in days</value>
+        /// <value>
+        /// The spoilage time in days
+        /// </value>
         [Description("Time over which an amount of supplement placed in a paddock will become inaccessible to grazing stock")]
         [Units("d")]
         public double SpoilageTime
@@ -483,7 +741,9 @@ namespace Models.Grazplan
         /// <summary>
         /// Attributes and initial amount in each supplement store
         /// </summary>
-        /// <value>List of stores</value>
+        /// <value>
+        /// List of stores
+        /// </value>
         [Description("Attributes and initial amount in each supplement store")]
         public StoreType[] stores
         {
@@ -534,10 +794,12 @@ namespace Models.Grazplan
 
         /// <summary>
         /// List of paddock names
-        /// If the variable is not given, or if it has zero length, the component will autodetect paddocks 
+        /// If the variable is not given, or if it has zero length, the component will autodetect paddocks
         /// by querying for modules that own the area variable
         /// </summary>
-        /// <value>The list of paddocks</value>
+        /// <value>
+        /// The list of paddocks
+        /// </value>
         [Description("List of paddock names")]
         public string[] PaddockList
         {
@@ -558,8 +820,12 @@ namespace Models.Grazplan
             }
         }
 
-        /// <summary>Number of stores</summary>
-        /// <value>The number of stores</value>
+        /// <summary>
+        /// Number of stores
+        /// </summary>
+        /// <value>
+        /// The number of stores
+        /// </value>
         [Description("Number of supplement stores")]
         public int NoStores
         {
@@ -569,8 +835,12 @@ namespace Models.Grazplan
             }
         }
 
-        /// <summary>Number of paddocks recognised by the component instance</summary>
-        /// <value>The number of paddocks</value>
+        /// <summary>
+        /// Number of paddocks recognised by the component instance
+        /// </summary>
+        /// <value>
+        /// The number of paddocks
+        /// </value>
         [Description("Number of paddocks recognised by the component instance")]
         public int NoPaddocks
         {
@@ -583,7 +853,9 @@ namespace Models.Grazplan
         /// <summary>
         /// Name of each paddock recognised by the component instance
         /// </summary>
-        /// <value>The list of paddock names</value>
+        /// <value>
+        /// The list of paddock names
+        /// </value>
         [Description("Name of each paddock recognised by the component instance")]
         public string[] PaddNames
         {
@@ -602,7 +874,9 @@ namespace Models.Grazplan
         /// <summary>
         /// Amount of supplement currently accessible to stock in each paddock recognised by the component instance
         /// </summary>
-        /// <value>The list of supplement amounts in each paddock</value>
+        /// <value>
+        /// The list of supplement amounts in each paddock
+        /// </value>
         [Description("Amount of supplement currently accessible to stock in each paddock recognised by the component instance")]
         public double[] PaddAmounts
         {
@@ -618,7 +892,9 @@ namespace Models.Grazplan
         /// <summary>
         /// Amount and attributes of supplementary feed present in each paddock
         /// </summary>
-        /// <value>The list of amount and attributes of supplementary feed present in each paddock</value>
+        /// <value>
+        /// The list of amount and attributes of supplementary feed present in each paddock
+        /// </value>
         [Description("Amount and attributes of supplementary feed present in each paddock")]
         public SuppToStockType[] SuppToStock
         {
@@ -649,6 +925,14 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Gets the <see cref="StoreType"/> with the specified supp name.
+        /// </summary>
+        /// <value>
+        /// The <see cref="StoreType"/>.
+        /// </value>
+        /// <param name="suppName">Name of the supp.</param>
+        /// <returns></returns>
         public StoreType this[string suppName]
         {
             get
@@ -675,6 +959,14 @@ namespace Models.Grazplan
             }
         }
 
+        /// <summary>
+        /// Gets the <see cref="TSupplementItem"/> with the specified index.
+        /// </summary>
+        /// <value>
+        /// The <see cref="TSupplementItem"/>.
+        /// </value>
+        /// <param name="idx">The index.</param>
+        /// <returns></returns>
         public TSupplementItem this[int idx]
         {
             get
@@ -687,6 +979,12 @@ namespace Models.Grazplan
         }
 
         // How should this be done in ApsimX? This probably isn't the best way to go about it...
+        /// <summary>
+        /// Sets the supp eaten.
+        /// </summary>
+        /// <value>
+        /// The supp eaten.
+        /// </value>
         public SuppEatenType[] SuppEaten
         {
             set
@@ -701,7 +999,7 @@ namespace Models.Grazplan
         /// Sets up the list of paddocks, if that hasn't been provided explicitly
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         /// <exception cref="System.Exception">Invalid AribtrationMethod selected</exception>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -720,6 +1018,8 @@ namespace Models.Grazplan
         /// Simulation has completed.
         /// Clear values from this run, so they don't carry over into the next
         /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
@@ -728,13 +1028,14 @@ namespace Models.Grazplan
             theModel.Clear();
         }
 
-        /// <summary>Performs every-day calculations - end of day processes
+        /// <summary>
+        /// Performs every-day calculations - end of day processes
         /// Determine the amount of supplementary feed eaten
-        /// This event determines the amount of supplementary feed eaten by livestock and removes 
+        /// This event determines the amount of supplementary feed eaten by livestock and removes
         /// it from the amount present in each paddock. It then computes ''spoilage'' of supplement
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         [EventSubscribe("DoUpdate")]
         private void OnDoUpdate(object sender, EventArgs e)
         {
@@ -754,13 +1055,26 @@ namespace Models.Grazplan
                 conserved.NConc, conserved.PConc, conserved.SConc, conserved.AshAlk);
         }
 
+        /// <summary>
+        /// Conserves the specified name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="freshWt">The fresh wt.</param>
+        /// <param name="DMContent">Content of the dm.</param>
+        /// <param name="DMD">The DMD.</param>
+        /// <param name="NConc">The n conc.</param>
+        /// <param name="PConc">The p conc.</param>
+        /// <param name="SConc">The s conc.</param>
+        /// <param name="AshAlk">The ash alk.</param>
         public void Conserve(string name, double freshWt, double DMContent, double DMD,
                 double NConc, double PConc, double SConc, double AshAlk)
         {
             theModel.AddFodder(name, freshWt, DMContent, DMD, NConc, PConc, SConc, AshAlk);
         }
 
-        /// <summary>Called to buy new supplements into the store</summary>
+        /// <summary>
+        /// Called to buy new supplements into the store
+        /// </summary>
         /// <param name="purchase">Specifies the supplement and amount being purchased.</param>
         [EventSubscribe("Buy")]
         private void OnBuy(BuySuppType purchase)
@@ -768,12 +1082,19 @@ namespace Models.Grazplan
             Buy(purchase.Amount, purchase.Supplement);
         }
 
+        /// <summary>
+        /// Buys the specified amount.
+        /// </summary>
+        /// <param name="amount">The amount.</param>
+        /// <param name="supplement">The supplement.</param>
         public void Buy(double amount, string supplement)
         {
             theModel.AddToStore(amount, supplement);
         }
 
-        /// <summary>Called to feed a supplement from the store</summary>
+        /// <summary>
+        /// Called to feed a supplement from the store
+        /// </summary>
         /// <param name="feed">Specifies the supplement and amount being offered.</param>
         [EventSubscribe("Feed")]
         private void OnFeed(FeedSuppType feed)
@@ -781,12 +1102,20 @@ namespace Models.Grazplan
             Feed(feed.Supplement, feed.Amount, feed.Paddock);
         }
 
+        /// <summary>
+        /// Feeds the specified supplement.
+        /// </summary>
+        /// <param name="supplement">The supplement.</param>
+        /// <param name="amount">The amount.</param>
+        /// <param name="paddock">The paddock.</param>
         public void Feed(string supplement, double amount, string paddock)
         {
             theModel.FeedOut(supplement, amount, paddock);
         }
 
-        /// <summary>Called to buy mix supplements in the store</summary>
+        /// <summary>
+        /// Called to buy mix supplements in the store
+        /// </summary>
         /// <param name="mix">Specifies the source and destination supplements, and the amount being mixed.</param>
         [EventSubscribe("Mix")]
         private void OnMix(MixSuppType mix)
@@ -794,17 +1123,32 @@ namespace Models.Grazplan
             Mix(mix.Source, mix.Amount, mix.Destination);
         }
 
+        /// <summary>
+        /// Mixes the specified source.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="amount">The amount.</param>
+        /// <param name="destination">The destination.</param>
         public void Mix(string source, double amount, string destination)
         {
             theModel.Blend(source, amount, destination);
         }
 
+        /// <summary>
+        /// Adds the specified supp name.
+        /// </summary>
+        /// <param name="suppName">Name of the supp.</param>
+        /// <returns></returns>
         public int Add(string suppName)
         {
             int iDefSuppNo = TSupplementLibrary.DefaultSuppConsts.IndexOf(suppName);
             return theModel.AddToStore(0.0, TSupplementLibrary.DefaultSuppConsts[iDefSuppNo]);
         }
 
+        /// <summary>
+        /// Deletes the specified index.
+        /// </summary>
+        /// <param name="idx">The index.</param>
         public void Delete(int idx)
         {
             theModel.Delete(idx);
