@@ -9,57 +9,54 @@ namespace Models.PMF.Phen
 {
     
     /*! <summary>
-    The vernalization and photoperiod effects from CERES wheat.
-    </summary>
-    \pre A \ref Models.PMF.Phen.Phenology "Phenology" function has to exist.
-    \pre A \ref Models.PMF.Functions.PhotoperiodFunction "PhotoperiodFunction" 
-    function has to exist to calculate the day length.
-    \pre A \ref Models.WeatherFile "WeatherFile" function has to exist to 
-    retrieve the daily minimum and maximum temperature.
-    \param VernSens The vernalization sensitivity
-    \param PhotopSens The photoperiod sensitivity
-    \param StartStageForEffects The start stage to calculate the vernalization and photoperiod effects
-    \param EndStageForEffects The end stage to calculate the vernalization and photoperiod effects
-    \param StartStageForCumulativeVD The start stage to calculate the cumulative vernalization
-    \param EndStageForCumulativeVD The end stage to calculate the cumulative vernalization
-    \retval VernEff The vernalization effects (from 0 to 1)
-    \retval PhotopEff The photoperiod effects (from 0 to 1)
-    <remarks>
-    Vernalization
-    ------------------------
-    In CERES-Wheat \cite jones_dssat_2003, vernalisation is simulated from daily average crown temperature (\f$T_{c}\f$), daily maximum (\f$T_{max}\f$) and 
-    minimum (\f$T_{min}\f$) temperatures using the original CERES approach.
-    \f[
-    \Delta V=\min(1.4-0.0778T_{c},\:0.5+13.44\frac{T_{c}}{(T_{max}-T_{min}+3)^{2}})\quad\text{when, }T_{max}<30\,{}^{\circ}\text{C}\:\text{and}\, T_{min}<15\,{}^{\circ}\text{C}
-    \f]
-    Devernalisation can occur if daily \f$T_{max}\f$ is above 30 \f$^{\circ}\text{C}\f$ and the total vernalisation (\f$V\f$) is less than 10 .
-    \f[
-    \Delta V_{d}=\min(0.5(T_{max}-30),\: V)\quad\text{when, }T_{max}>30\,{}^{\circ}\text{C}\;\text{and}\; V<10
-    \f]
-    The total vernalisation (\f$V\f$) is calculated by summing daily vernalisation and devernalisation from \p StartStageForEffects to \p EndStageForEffects. 
-    \f[
-    V=\sum(\Delta V-\Delta V_{d})
-    \f]
-    However, the vernalisation factor (\f$f_{v}\f$) is calculated just from \p StartStageForCumulativeVD to \p EndStageForCumulativeVD.
-    \f[
-    f_{V}=1-(0.0054545R_{V}+0.0003)\times(50-V)
-    \f]
+        The vernalization and photoperiod effects from CERES wheat.
+        </summary>
+        \pre A \ref Models.PMF.Phen.Phenology "Phenology" model has to exist.
+        \pre A \ref Models.PMF.Functions.PhotoperiodFunction "PhotoperiodFunction" 
+            model has to exist to calculate the day length.
+        \pre A \ref Models.WeatherFile "WeatherFile" model has to exist to 
+        retrieve the daily minimum and maximum temperature.
+        \param VernSens The vernalization sensitivity
+        \param PhotopSens The photoperiod sensitivity
+        \param StartStageForEffects The start stage to calculate the vernalization and photoperiod effects
+        \param EndStageForEffects The end stage to calculate the vernalization and photoperiod effects
+        \param StartStageForCumulativeVD The start stage to calculate the cumulative vernalization
+        \param EndStageForCumulativeVD The end stage to calculate the cumulative vernalization
+        \retval VernEff The vernalization effects (from 0 to 1)
+        \retval PhotopEff The photoperiod effects (from 0 to 1)
+        <remarks>
+        Vernalization
+        ------------------------
+        In CERES-Wheat \cite jones_dssat_2003, vernalisation is simulated from daily average crown temperature (\f$T_{c}\f$), daily maximum (\f$T_{max}\f$) and 
+        minimum (\f$T_{min}\f$) temperatures using the original CERES approach.
+        \f[
+        \Delta V=\min(1.4-0.0778T_{c},\:0.5+13.44\frac{T_{c}}{(T_{max}-T_{min}+3)^{2}})\quad\text{when, }T_{max}<30\,{}^{\circ}\text{C}\:\text{and}\, T_{min}<15\,{}^{\circ}\text{C}
+        \f]
+        Devernalisation can occur if daily \f$T_{max}\f$ is above 30 \f$^{\circ}\text{C}\f$ and the total vernalisation (\f$V\f$) is less than 10 .
+        \f[
+        \Delta V_{d}=\min(0.5(T_{max}-30),\: V)\quad\text{when, }T_{max}>30\,{}^{\circ}\text{C}\;\text{and}\; V<10
+        \f]
+        The total vernalisation (\f$V\f$) is calculated by summing daily vernalisation and devernalisation from \p StartStageForEffects to \p EndStageForEffects. 
+        \f[
+        V=\sum(\Delta V-\Delta V_{d})
+        \f]
+        However, the vernalisation factor (\f$f_{v}\f$) is calculated just from \p StartStageForCumulativeVD to \p EndStageForCumulativeVD.
+        \f[
+        f_{V}=1-(0.0054545R_{V}+0.0003)\times(50-V)
+        \f]
 
-    Photoperiod
-    ------------------------
-    Photoperiod is calculated from day of year and latitude using standard astronomical equations accounting for civil twilight 
-    using the parameter \p twilight in \ref Models.PMF.Functions.PhotoperiodFunction. In APSIM, 
-    the photoperiod affects phenology between \p StartStageForEffects and \p EndStageForEffects. During this period, thermal time 
-    is affected by a photoperiod factor (\f$f_{D}\f$) that is calculated by
-    \f[
-    f_{D}=1-0.002R_{p}(20-L_{P})^{2}
-    \f]
-    where \f$L_{P}\f$ is the day length (h) from \ref Models.PMF.Functions.PhotoperiodFunction.
-    </remarks>
+        Photoperiod
+        ------------------------
+        Photoperiod is calculated from day of year and latitude using standard astronomical equations accounting for civil twilight 
+        using the parameter \p twilight in \ref Models.PMF.Functions.PhotoperiodFunction. In APSIM, 
+        the photoperiod affects phenology between \p StartStageForEffects and \p EndStageForEffects. During this period, thermal time 
+        is affected by a photoperiod factor (\f$f_{D}\f$) that is calculated by
+        \f[
+        f_{D}=1-0.002R_{p}(20-L_{P})^{2}
+        \f]
+        where \f$L_{P}\f$ is the day length (h) from \ref Models.PMF.Functions.PhotoperiodFunction.
+        </remarks>
     */
-    /// <summary>
-    /// Vernalisation model
-    /// </summary>
     [Serializable]
     public class VernalisationCW : Model
     {

@@ -13,9 +13,67 @@ using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
-    /// <summary>
-    /// A leaf organ
-    /// </summary>
+    /*! <summary>
+        A generic leaf model
+        </summary>
+        \param KDead The extinction coefficient for dead leaf (\f$k_d\f$).
+        \param FrostFraction The fraction of leaf death caused by frost event.
+        \retval MaxCover The maximum coverage (\f$C_{max}\f$) with default value 1, 
+            which is set by manager sowing. 
+        \retval LAI Leaf area index for green leaf (\f$\text{LAI}_{g}\f$, \f$m^2 m^{-2}\f$)
+        \retval LAIDead Leaf area index for dead leaf  (\f$\text{LAI}_{d}\f$, \f$m^2 m^{-2}\f$)
+        \retval LAITotal Total LAI including live and dead parts (\f$m^2 m^{-2}\f$)
+            \f[
+                LAI = \text{LAI}_{g} + \text{LAI}_{d}
+            \f]
+        \retval CoverGreen Cover for green leaf (\f$C_g\f$, unitless). 
+            \f$C_g\f$ is calculated according to
+            extinction coefficient of green leaf (\f$k_{g}\f$).
+            \f[
+                C_{g}=C_{max}(1-\exp(-k_{g}\frac{\text{LAI}_{g}}{C_{max}}))
+            \f]
+            where, \f$k\f$ is the extinction coefficient which calculates 
+            by parameter "ExtinctionCoeff". 
+            As the default value of \f$C_{max}\f$ is 1, the function is reduced to
+            \f[
+                C_{g}=1-\exp(-k_{g}\text{LAI}_{g})
+            \f]
+        \retval CoverDead Cover for dead leaf (\f$C_d\f$, unitless).
+            \f$C_d\f$ is calculated according to
+            extinction coefficient of dead leaf (\f$k_{d}\f$).
+            \f[
+                C_{d}=1-\exp(-k_{d}\text{LAI}_{d})
+            \f]
+        \retval CoverTotal Total cover for green and dead leaves (\f$C_t\f$, unitless).
+            \f[
+                C_{t} = 1 - (1 - C_{g})(1 - C_{d})
+            \f]
+        
+        \retval Height Plant height (mm). 
+        \retval Depth Plant depth (mm). Equal to plant height (not sure its function?)
+        \retval FRGR Fractional relative growth rate (unitless, 0-1)
+            with 1.0 at full growth rate and 0.0 at no growth.
+        \retval PotentialEP Potential evapotranspiration. Set by MICROCLIMATE.
+        
+        <remarks>
+        The organ "Leaf" consists of a series of \ref LeafCohort "cohort leaves", which 
+        is identified by leaf rank (1 based ranking).
+        
+        
+        On commencing simulation
+        ------------------------
+        OnSimulationCommencing is called on commencing simulation. 
+        The leaves in the seed are initialized from all children with model 
+        \ref Models.PMF.Organs.LeafCohort "LeafCohort". 
+        
+        Frost impact on leaf death
+        ------------------------
+        Each cohort leaf is killed by a fraction if value of FrostFraction is more than 0. 
+        The frost fraction could be calculated through daily minimum temperature and
+        growth stages. See \ref Models.PMF.Organs.LeafCohort "LeafCohort" model for details.
+        See \subpage parameter "tutorial" about how to set up a parameter in APSIM. 
+        </remarks>
+    */
     [Serializable]
     [Description("Leaf Class")]
     public class Leaf : BaseOrgan, AboveGround, ICanopy

@@ -11,28 +11,29 @@ using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
-    /*! 
-    <summary>
-    Model of generic organ 
-    </summary>
-    \param SenescenceRateFunction Rate of organ senescence 
-        (Optional, default 0 if this parameter does not exist, i.e no senescence).
-    \param StructuralFraction Fraction of organ structural component 
-        (Optional, default 1 if this parameter does not exist, i.e all biomass is structural).
-    \param InitialWtFunction Initial weight of organ 
-        (Optional, default 0 if this parameter does not exist, i.e. no initial weight).
-    \param InitialStructuralFraction Fraction of initial weight of organ 
-        (Optional, default 1 if this parameter does not exist, i.e. all initial biomass is structural).
-    \param NReallocationFactor Factor of nitrogen reallocation  
-        (0-1; Optional, default 0 if this parameter does not exist, i.e. no nitrogen reallocation).
-    \param NRetranslocationFactor Factor of nitrogen retranslocation  
-        (0-1; Optional, default 0 if this parameter does not exist, i.e. no nitrogen retranslocation).
-    \param MinimumNConc Minimum nitrogen concentration
-    \param MaximumNConc Maximum nitrogen concentration.
-    \retval LiveFWt The live fresh weight (g m<sup>-2</sup>)
-    <remarks>
-    </remarks>
-     */
+     /*! 
+        <summary>
+        Model of generic organ 
+        </summary>
+        \param <b>(IFunction, Optional)</b> SenescenceRateFunction Rate of organ senescence 
+            (default 0 if this parameter does not exist, i.e no senescence).
+        \param <b>(IFunction, Optional)</b> StructuralFraction Fraction of organ structural component 
+            (default 1 if this parameter does not exist, i.e all biomass is structural).
+        \param <b>(IFunction, Optional)</b> InitialWtFunction Initial weight of organ 
+            (default 0 if this parameter does not exist, i.e. no initial weight).
+        \param <b>(IFunction, Optional)</b> InitialStructuralFraction Fraction of initial weight of organ 
+            (default 1 if this parameter does not exist, i.e. all initial biomass is structural).
+        \param <b>(IFunction, Optional)</b> NReallocationFactor Factor of nitrogen reallocation  
+            (0-1; default 0 if this parameter does not exist, i.e. no nitrogen reallocation).
+        \param <b>(IFunction, Optional)</b> NRetranslocationFactor Factor of nitrogen retranslocation  
+            (0-1; default 0 if this parameter does not exist, i.e. no nitrogen retranslocation).
+        \param MinimumNConc MinimumNConc Minimum nitrogen concentration
+        \param MinimumNConc MaximumNConc Maximum nitrogen concentration.
+        \retval LiveFWt The live fresh weight (g m<sup>-2</sup>)
+        <remarks>
+        </remarks>
+    */
+
 
     /// <summary>
     /// Model of generic organ
