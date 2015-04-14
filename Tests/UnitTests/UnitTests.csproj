@@ -63,7 +63,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Resources\Continuous Wheat.apsim" />
+    <None Include="Resources\Continuous Wheat.apsim">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\Continuous_Wheat.apsimx" />
     <None Include="Resources\Goondiwindi.met" />
     <None Include="Resources\Test3.apsimxForUnitTest" />
