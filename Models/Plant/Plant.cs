@@ -15,42 +15,43 @@ namespace Models.PMF
     using Models.PMF.Phen;
     using Models.Soils.Arbitrator;
 
-    /*! <summary>
-        The generic plant model
-        </summary>
-        \pre Summary A Summary model has to exist to write summary message.
-        \pre Phenology A \ref Models.PMF.Phen.Phenology Phenology model is 
-        optional to check whether plant has emerged.
-        \pre OrganArbitrator A OrganArbitrator model is optional (not used currently).
-        \pre Structure A Structure model is optional (not used currently).
-        \pre Leaf A \ref Models.PMF.Organs.Leaf Leaf model is optional 
-        to calculate water supply and demand ratio.
-        \pre Root A Models.PMF.Organs.Root Root model is optional 
-        to calculate water supply and demand ratio.
-        \param CropType Used by several organs to determine the type of crop.
-        \retval Population Number of plants per square meter. 
-        \retval IsAlive Return true if plant is alive and in the ground.
-        \retval IsEmerged Return true if plant has emerged.
-        
-        On commencing simulation
-        ------------------------
-        OnSimulationCommencing is called on commencing simulation. Organs contain 
-        all children which derive from model IOrgan. The model variables 
-        are reset.
-        
-        On sowing 
-        -------------------------
-        Plant is sown by a manager script in a APSIM model. For example,    
-        \code
-        2012-10-23 [Maize].Sow(population:11, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);
-        \endcode
-        
-        Sowing parameters should be specified, i.e. cultivar, population, depth, rowSpacing,
-        maxCover (optional), and budNumber (optional).
-        
-        Two events "Sowing" and "PlantSowing" are invoked to notify other models 
-        to execute sowing events.
-    */
+    ///<summary>
+    /// The generic plant model
+    /// </summary>
+    /// \pre Summary A Summary model has to exist to write summary message.
+    /// \pre Phenology A \ref Models.PMF.Phen.Phenology Phenology model is 
+    /// optional to check whether plant has emerged.
+    /// \pre OrganArbitrator A OrganArbitrator model is optional (not used currently).
+    /// \pre Structure A Structure model is optional (not used currently).
+    /// \pre Leaf A \ref Models.PMF.Organs.Leaf Leaf model is optional 
+    /// to calculate water supply and demand ratio.
+    /// \pre Root A Models.PMF.Organs.Root Root model is optional 
+    /// to calculate water supply and demand ratio.
+    /// \param CropType Used by several organs to determine the type of crop.
+    /// \retval Population Number of plants per square meter. 
+    /// \retval IsAlive Return true if plant is alive and in the ground.
+    /// \retval IsEmerged Return true if plant has emerged.
+    /// 
+    /// On commencing simulation
+    /// ------------------------
+    /// OnSimulationCommencing is called on commencing simulation. Organs contain 
+    /// all children which derive from model IOrgan. The model variables 
+    /// are reset.
+    /// 
+    /// On sowing 
+    /// -------------------------
+    /// Plant is sown by a manager script in a APSIM model. For example,    
+    /// \code
+    /// 2012-10-23 [Maize].Sow(population:11, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);
+    /// \endcode
+    /// 
+    /// Sowing parameters should be specified, i.e. cultivar, population, depth, rowSpacing,
+    /// maxCover (optional), and budNumber (optional).
+    /// 
+    /// Two events "Sowing" and "PlantSowing" are invoked to notify other models 
+    /// to execute sowing events.
+    /// <remarks>
+    /// </remarks>
     [Serializable]
     public class Plant : ModelCollectionFromResource, ICrop
     {

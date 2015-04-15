@@ -11,31 +11,30 @@ using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
-    /*! <summary>
-        A simple leaf organ
-        </summary>
-        \retval LAI Leaf area index for green leaf (\f$\text{LAI}_{g}\f$, \f$m^2 m^{-2}\f$)
-        \retval LAIDead Leaf area index for dead leaf  (\f$\text{LAI}_{d}\f$, \f$m^2 m^{-2}\f$)
-        \retval LAITotal Total LAI including live and dead parts (\f$m^2 m^{-2}\f$)
-            \f[
-                LAI = \text{LAI}_{g} + \text{LAI}_{d}
-            \f]
-        \retval CoverGreen Cover for green leaf (\f$C_g\f$, unitless). The value of CoverFunction is returned 
-            if "CoverFunction" exists in the model. \f$C_g\f$ is calculated according to
-            extinction coefficient of green leaf (\f$k_{g}\f$) 
-            if "ExtinctionCoefficientFunction" exists in the model.
-            \f[
-                C_g = 1-\exp(-k_{g} * \text{LAI}_{g})
-            \f]
-            where, \f$k\f$ is the extinction coefficient which calculates by "ExtinctionCoefficientFunction"
-        \retval CoverDead Cover for dead leaf (\f$C_d\f$, unitless). \f$C_d\f$ is calculated according to 
-            extinction coefficient of dead leaf (\f$k_{d}\f$). 
-            \f[
-                C_d = 1-\exp(-k_{d} * \text{LAI}_{d})
-            \f]
-        <remarks>
-        </remarks>
-    */
+    /// <summary>
+    /// A simple leaf organ
+    /// </summary>
+    /// \retval LAI Leaf area index for green leaf (\f$\text{LAI}_{g}\f$, \f$m^2 m^{-2}\f$)
+    /// \retval LAIDead Leaf area index for dead leaf  (\f$\text{LAI}_{d}\f$, \f$m^2 m^{-2}\f$)
+    /// \retval LAITotal Total LAI including live and dead parts (\f$m^2 m^{-2}\f$)
+    ///     \f[
+    /// /// LAI = \text{LAI}_{g} + \text{LAI}_{d}
+    ///     \f]
+    /// \retval CoverGreen Cover for green leaf (\f$C_g\f$, unitless). The value of CoverFunction is returned 
+    ///     if "CoverFunction" exists in the model. \f$C_g\f$ is calculated according to
+    ///     extinction coefficient of green leaf (\f$k_{g}\f$) 
+    ///     if "ExtinctionCoefficientFunction" exists in the model.
+    ///     \f[
+    /// /// C_g = 1-\exp(-k_{g} * \text{LAI}_{g})
+    ///     \f]
+    ///     where, \f$k\f$ is the extinction coefficient which calculates by "ExtinctionCoefficientFunction"
+    /// \retval CoverDead Cover for dead leaf (\f$C_d\f$, unitless). \f$C_d\f$ is calculated according to 
+    ///     extinction coefficient of dead leaf (\f$k_{d}\f$). 
+    ///     \f[
+    /// /// C_d = 1-\exp(-k_{d} * \text{LAI}_{d})
+    ///     \f]
+    /// <remarks>
+    /// </remarks>
     [Serializable]
     public class SimpleLeaf : BaseOrgan, AboveGround, ICanopy
     {
