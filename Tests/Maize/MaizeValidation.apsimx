@@ -183,11 +183,7 @@
           </Operation>
           <Operation>
             <Date>2013-01-31T00:00:00</Date>
-            <Action>[Irrigation].Apply(44.7);</Action>
-          </Operation>
-          <Operation>
-            <Date>2013-01-31T00:00:00</Date>
-            <Action>[Irrigation].Apply(4.3);</Action>
+            <Action>[Irrigation].Apply(49.0);</Action>
           </Operation>
           <Operation>
             <Date>2013-02-07T00:00:00</Date>
@@ -301,7 +297,7 @@
             <SoilCrop>
               <Name>MaizeSoil</Name>
               <LL>
-                <double>0.154</double>
+                <double>0.084</double>
                 <double>0.152</double>
                 <double>0.162</double>
                 <double>0.06</double>
@@ -352,7 +348,7 @@
               <double>1.68</double>
             </BD>
             <AirDry>
-              <double>0.03</double>
+              <double>0.06</double>
               <double>0.12</double>
               <double>0.1</double>
               <double>0.13</double>
@@ -425,6 +421,8 @@
               <double>0.5</double>
               <double>0.56</double>
               <double>0.31</double>
+              <double>0.7</double>
+              <double>0.7</double>
               <double>0.7</double>
               <double>0.7</double>
               <double>0.7</double>
@@ -4112,6 +4110,540 @@ namespace Models
           <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
+        <Manager>
+          <Name>ClimateControl</Name>
+          <Script>
+            <StartDate>2012-10-23</StartDate>
+            <EndDate>2013-04-10</EndDate>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+
+
+
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+
+namespace Models
+{
+[Serializable] 
+[System.Xml.Serialization.XmlInclude(typeof(Model))]
+public class Script : Model
+ {      
+   [Link] Weather Met;  
+   [Link] Clock Clock;
+    
+   [Description("Start Date")]
+        public DateTime StartDate { get; set; }
+        
+   [Description("End Date")]
+        public DateTime EndDate { get; set; }
+ 
+    
+   [EventSubscribe("PreparingNewWeatherData")]
+   private void OnPreparingNewWeatherData(object sender, EventArgs e)
+   {
+   if ((Clock.Today.Date >= StartDate)  && (Clock.Today.Date <= EndDate))
+	Met.Rain = 0;		
+   }
+ }
+}]]></Code>
+        </Manager>
+        <Folder>
+          <Name>SWCLayers</Name>
+          <Graph>
+            <Name>SWC20cm</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Leaf Tips (n)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Predicted</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Soil.SoilWater.SW(1)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Observed</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <X>
+                <TableName>SoilWater</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>SoilWater</TableName>
+                <FieldName>Soil.SoilWater.SW(1)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>SWC40cm</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Leaf Tips (n)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Predicted</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Soil.SoilWater.SW(2)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Observed</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <X>
+                <TableName>SoilWater</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>SoilWater</TableName>
+                <FieldName>Soil.SoilWater.SW(2)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>SWC60cm</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Leaf Tips (n)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Predicted</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Soil.SoilWater.SW(3)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Observed</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <X>
+                <TableName>SoilWater</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>SoilWater</TableName>
+                <FieldName>Soil.SoilWater.SW(3)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>SWC80cm</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Leaf Tips (n)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Predicted</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Soil.SoilWater.SW(4)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Observed</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <X>
+                <TableName>SoilWater</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>SoilWater</TableName>
+                <FieldName>Soil.SoilWater.SW(4)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>SWC100cm</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Leaf Tips (n)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Predicted</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Soil.SoilWater.SW(5)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Observed</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <X>
+                <TableName>SoilWater</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>SoilWater</TableName>
+                <FieldName>Soil.SoilWater.SW(5)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>SWC120cm</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Leaf Tips (n)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Predicted</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Soil.SoilWater.SW(6)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Observed</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <X>
+                <TableName>SoilWater</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>SoilWater</TableName>
+                <FieldName>Soil.SoilWater.SW(6)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>SWC140cm</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Leaf Tips (n)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Predicted</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Soil.SoilWater.SW(7)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Observed</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <X>
+                <TableName>SoilWater</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>SoilWater</TableName>
+                <FieldName>Soil.SoilWater.SW(7)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>SWC1600cm</Name>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Leaf Tips (n)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Series>
+              <Title>Predicted</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-8388608</ColourArgb>
+              <Marker>None</Marker>
+              <Line>Solid</Line>
+              <X>
+                <TableName>Report</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>Report</TableName>
+                <FieldName>Soil.SoilWater.SW(8)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <Series>
+              <Title>Observed</Title>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16776961</ColourArgb>
+              <Marker>FilledCircle</Marker>
+              <Line>None</Line>
+              <X>
+                <TableName>SoilWater</TableName>
+                <FieldName>Clock.Today</FieldName>
+              </X>
+              <Y>
+                <TableName>SoilWater</TableName>
+                <FieldName>Soil.SoilWater.SW(8)</FieldName>
+              </Y>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <ShowInLegend>true</ShowInLegend>
+              <Cumulative>false</Cumulative>
+            </Series>
+            <LegendPosition>TopLeft</LegendPosition>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <DisabledSeries />
+          </Graph>
+        </Folder>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -5068,10 +5600,10 @@ namespace Models
           <Name>SWC20cm</Name>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
@@ -5129,10 +5661,10 @@ namespace Models
           <Name>SWC40cm</Name>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
@@ -5190,10 +5722,10 @@ namespace Models
           <Name>SWC60cm</Name>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
@@ -5251,10 +5783,10 @@ namespace Models
           <Name>SWC80cm</Name>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
@@ -5312,10 +5844,10 @@ namespace Models
           <Name>SWC100cm</Name>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
@@ -5373,10 +5905,10 @@ namespace Models
           <Name>SWC120cm</Name>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
@@ -5434,10 +5966,10 @@ namespace Models
           <Name>SWC140cm</Name>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
@@ -5495,10 +6027,10 @@ namespace Models
           <Name>SWC1600cm</Name>
           <Axis>
             <Type>Left</Type>
-            <Title>Leaf Tips (n)</Title>
+            <Title>Volumetric water content soil (mm3/mm3)</Title>
             <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
+            <Minimum>0</Minimum>
+            <Maximum>0.4</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <Axis>
