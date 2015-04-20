@@ -11,17 +11,15 @@ using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
-    /*! <summary>
-        A leaf cohort model
-        </summary>
-        <remarks>
-        
-        Leaf death
-        ------------------------
-        The leaf area, structural biomass and structural nitrogen of 
-        green (live) parts is subtracted by a fraction.
-        </remarks>
-    */
+    ///<summary>
+    /// A leaf cohort model
+    /// </summary>
+    /// <remarks>
+    /// Leaf death
+    /// ------------------------
+    /// The leaf area, structural biomass and structural nitrogen of 
+    /// green (live) parts is subtracted by a fraction.
+    ///</remarks>
     [Serializable]
     public class LeafCohort : Model
     {

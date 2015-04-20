@@ -13,23 +13,22 @@ namespace Models
     using Models.Core;
     using APSIM.Shared.Utilities;
 
-    /*! <summary>
-        Reads in weather data and makes it available to other models.
-        </summary>
-        
-        <remarks>
-        Keywords in the weather file
-        - Maxt for maximum temperature
-        - Mint for minimum temperature
-        - Radn for radiation
-        - Rain for rainfall
-        - VP for vapour pressure
-        - Wind for wind speed
-        
-        VP is calculated using function Utility.Met.svp
-        Wind assign default value 3 if Wind is not resent.
-        </remarks>
-    */
+    ///<summary>
+    /// Reads in weather data and makes it available to other models.
+    ///</summary>
+    ///    
+    ///<remarks>
+    /// Keywords in the weather file
+    /// - Maxt for maximum temperature
+    /// - Mint for minimum temperature
+    /// - Radn for radiation
+    /// - Rain for rainfall
+    /// - VP for vapour pressure
+    /// - Wind for wind speed
+    ///     
+    /// VP is calculated using function Utility.Met.svp
+    /// Wind assign default value 3 if Wind is not resent.
+    ///</remarks>
     [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
