@@ -31,6 +31,8 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.htmlView1 = new HTMLView();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -58,10 +60,24 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.htmlView1);
             this.panel1.Location = new System.Drawing.Point(7, 39);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(622, 563);
             this.panel1.TabIndex = 2;
+            // 
+            // htmlView1
+            // 
+            this.htmlView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.htmlView1.Location = new System.Drawing.Point(4, 4);
+            this.htmlView1.Margin = new System.Windows.Forms.Padding(4);
+            this.htmlView1.MemoText = "\r\n<html><body>\r\n\r\n</body></html>";
+            this.htmlView1.Name = "htmlView1";
+            this.htmlView1.ReadOnly = false;
+            this.htmlView1.Size = new System.Drawing.Size(614, 555);
+            this.htmlView1.TabIndex = 0;
             // 
             // SummaryView
             // 
@@ -72,6 +88,7 @@
             this.Controls.Add(this.comboBox1);
             this.Name = "SummaryView";
             this.Size = new System.Drawing.Size(643, 617);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -82,5 +99,6 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel1;
+        private HTMLView htmlView1;
     }
 }
