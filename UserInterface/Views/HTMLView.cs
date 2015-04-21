@@ -30,6 +30,11 @@ namespace UserInterface.Views
         /// Get or set the readonly name of the richedit.
         /// </summary>
         bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// Tells view to use a mono spaced font.
+        /// </summary>
+        void UseMonoSpacedFont();
     }
 
     /// <summary>
@@ -73,7 +78,16 @@ namespace UserInterface.Views
             set 
             { 
                 richTextBox1.ReadOnly = value;
+                ToolStrip1.Visible = !richTextBox1.ReadOnly;
             }
+        }
+
+        /// <summary>
+        /// Tells view to use a mono spaced font.
+        /// </summary>
+        public void UseMonoSpacedFont() 
+        {
+            richTextBox1.Font = new Font("Consolas", 10F);   
         }
 
         /// <summary>

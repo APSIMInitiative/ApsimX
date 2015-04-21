@@ -61,9 +61,9 @@ namespace UserInterface.Classes
                 else if (section == "</h1>")
                     rtf += @"\fs20\par ";
                 else if (section == "</h2>")
-                    rtf += @"\fs20 ";
+                    rtf += @"\fs20\par ";
                 else if (section == "</h3>")
-                    rtf += @"\fs20 ";
+                    rtf += @"\fs20\par ";
                 else if (section == "<br/>")
                     rtf += @"\par ";
                 else
@@ -146,6 +146,8 @@ namespace UserInterface.Classes
                         }
                         nStart = nEnd + 1;
                     }
+                    else
+                        nStart = strHTML.Length;
                 }
             }
             return htmlParsed;
