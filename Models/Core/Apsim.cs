@@ -146,6 +146,7 @@ namespace Models.Core
         {
             // Get a list of all child models that we need to notify about the (de)serialisation.
             List<IModel> modelsToNotify = ChildrenRecursively(model);
+            modelsToNotify.Add(model);
 
             // Get rid of our parent temporarily as we don't want to serialise that.
             IModel parent = model.Parent;
