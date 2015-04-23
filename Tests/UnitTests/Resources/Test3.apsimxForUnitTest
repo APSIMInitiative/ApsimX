@@ -733,6 +733,85 @@
       <SurfaceOrganicMatter/>
     </Zone>
   </Simulation>
+  <Experiment>
+    <Name>APS14</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>Stubble</Name>
+        <Operations>
+          <Name>Bare</Name>
+          <Operation>
+            <Date>1993-06-03T00:00:00</Date>
+            <Action>[SurfaceOrganicMatter].Incorporate(fraction: 1.0, depth:100);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>Lucerne</Name>
+          <Operation>
+            <Date>1993-06-03T00:00:00</Date>
+            <Action>[SurfaceOrganicMatter].Add(mass: 3560, N: 108.8, P:0.0, type: "lucerne", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-06-03T00:00:00</Date>
+            <Action>[SurfaceOrganicMatter].Incorporate(fraction: 1.0, depth:100);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>Straw</Name>
+          <Operation>
+            <Date>1993-06-03T00:00:00</Date>
+            <Action>[SurfaceOrganicMatter].Add(mass: 3584, N: 28.8, P:0.0, type: "barley", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-06-03T00:00:00</Date>
+            <Action>[SurfaceOrganicMatter].Incorporate(fraction: 1.0, depth:100);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[OMSchedule]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>NRate</Name>
+        <Operations>
+          <Name>000</Name>
+          <Operation>
+            <Date>1993-06-18T00:00:00</Date>
+            <Action>[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>040</Name>
+          <Operation>
+            <Date>1993-06-18T00:00:00</Date>
+            <Action>[Fertiliser].Apply(Amount: 40, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>080</Name>
+          <Operation>
+            <Date>1993-06-18T00:00:00</Date>
+            <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>200</Name>
+          <Operation>
+            <Date>1993-06-18T00:00:00</Date>
+            <Action>[Fertiliser].Apply(Amount: 120, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-08-18T00:00:00</Date>
+            <Action>[Fertiliser].Apply(Amount: 80, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+        </Operations>
+        <Specifications>
+          <string>[FertiliserSchedule]</string>
+        </Specifications>
+      </Factor>
+    </Factors>
+  </Experiment>
   <DataStore>
     <Name>DataStore</Name>
   </DataStore>

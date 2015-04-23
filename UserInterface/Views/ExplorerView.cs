@@ -25,46 +25,38 @@ namespace UserInterface.Views
     /// <summary>
     /// An ExplorerView is a "Windows Explorer" like control that displays a virtual tree control on the left
     /// and a user interface on the right allowing the user to modify properties of whatever they
-    /// click on in the tree control. 
+    /// click on in the tree control.
     /// </summary>
     /// <remarks>
     /// This "view" class follows the Humble Dialog approach were
-    /// no business logic is embedded in this class. This object is told what to do by a 
+    /// no business logic is embedded in this class. This object is told what to do by a
     /// presenter object which is responsible for populating all controls. The theory is that this
     /// class can be reused for different types of data.
-    /// <para/>
+    /// <para />
     /// When populating nodes, it is given a list of NodeDescription objects that describes what the
     /// nodes look like.
-    /// <para/>
+    /// <para />
     /// NB: All node paths are compatible with Model node paths and includes the root node name:
-    ///     If tree is:
-    ///     Simulations
-    ///         |
-    ///         +-- Test
-    ///               |
-    ///               +--- Clock
+    /// If tree is:
+    /// Simulations
+    /// |
+    /// +-- Test
+    /// |
+    /// +--- Clock
     /// e.g.  .Simulations.Test.Clock
     /// </remarks>
     public partial class ExplorerView : UserControl, IExplorerView
     {
-        /// <summary>
-        /// The previously selected node path.
-        /// </summary>
+        /// <summary>The previously selected node path.</summary>
         private string previouslySelectedNodePath;
 
-        /// <summary>
-        /// The source path of item being dragged.
-        /// </summary>
+        /// <summary>The source path of item being dragged.</summary>
         private string sourcePathOfItemBeingDragged;
 
-        /// <summary>
-        /// The node path before rename.
-        /// </summary>
+        /// <summary>The node path before rename.</summary>
         private string nodePathBeforeRename;
 
-        /// <summary>
-        /// Default constructor for ExplorerView
-        /// </summary>
+        /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView()
         {
             this.InitializeComponent();
@@ -72,336 +64,228 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// ExplorerView will invoke this event when it wants the presenter to populate 
-        /// direct children of the specified node.
-        /// </summary>
-        public event EventHandler<NodeDescriptionArgs> PopulateChildNodes;
-
-        /// <summary>
-        /// This event will be invoked when the user selects a node.
-        /// </summary>
-        public event EventHandler<NodeSelectedArgs> NodeSelectedByUser;
-
-        /// <summary>
         /// This event will be invoked when a node is selected not by the user
         /// but by an Undo command.
         /// </summary>
-        public event EventHandler<NodeSelectedArgs> NodeSelected;
-
-        /// <summary>
-        /// ExplorerView will invoke this event when it wants the presenter to populate 
-        /// the main menu with items.
-        /// </summary>
-        public event EventHandler<MenuDescriptionArgs> PopulateMainMenu;
-
-        /// <summary>
-        /// ExplorerView will invoke this event when it wants the presenter to populate
-        /// the context (popup) menu for the specified node.
-        /// </summary>
-        public event EventHandler<MenuDescriptionArgs> PopulateContextMenu;
+        public event EventHandler<NodeSelectedArgs> SelectedNodeChanged;
 
         /// <summary>
         /// Invoked when a drag operation has commenced. Need to create a DragObject.
         /// </summary>
-        public event EventHandler<DragStartArgs> DragStart;
+        public event EventHandler<DragStartArgs> DragStarted;
 
         /// <summary>
         /// Invoked when the view wants to know if a drop is allowed on the specified Node.
         /// </summary>
         public new event EventHandler<AllowDropArgs> AllowDrop;
 
-        /// <summary>
-        /// Invoked when a drop has occurred.
-        /// </summary>
-        public event EventHandler<DropArgs> Drop;
+        /// <summary>Invoked when a drop has occurred.</summary>
+        public event EventHandler<DropArgs> Droped;
 
-        /// <summary>
-        /// Invoked then a node is renamed.
-        /// </summary>
-        public event EventHandler<NodeRenameArgs> Rename;
+        /// <summary>Invoked then a node is renamed.</summary>
+        public event EventHandler<NodeRenameArgs> Renamed;
 
-        /// <summary>
-        /// Invoked then a node is moved down
-        /// </summary>
-        public event EventHandler<EventArgs> OnMoveDown;
+        /// <summary>Invoked when a global key is pressed.</summary>
+        public event EventHandler<KeysArgs> ShortcutKeyPressed;
 
-        /// <summary>
-        /// Invoked then a node is moved up
-        /// </summary>
-        public event EventHandler<EventArgs> OnMoveUp;
-
-        /// <summary>
-        /// Invoked when a global key is pressed.
-        /// </summary>
-        public event EventHandler<KeysArgs> OnShortcutKeyPress;
-
-        /// <summary>
-        /// Gets or sets the shortcut keys.
-        /// </summary>
-        public Keys[] ShortcutKeys { get; set; }
-
-        /// <summary>
-        /// Raises the load event. Form has loaded.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Argument E.</param>
-        private void OnLoad(object sender, EventArgs e)
+        /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
+        /// <param name="nodeDescriptions">The nodes descriptions.</param>
+        public void Refresh(NodeDescriptionArgs nodeDescriptions)
         {
-            this.PopulateMainToolStrip();
-            this.PopulateNodes(null);
+            TreeView.Nodes.Clear();
+            TreeNode rootNode = new TreeNode();
+            TreeView.Nodes.Add(rootNode);
+            RefreshNode(rootNode, nodeDescriptions);
             TreeView.Nodes[0].Expand(); // expand the root tree node
         }
 
-        /// <summary>
-        /// Rename the current node.
-        /// </summary>
-        public void RenameCurrentNode()
+        /// <summary>Moves the specified node up 1 position.</summary>
+        /// <param name="nodePath">The path of the node to move.</param>
+        public void MoveUp(string nodePath)
         {
-            this.TreeView.SelectedNode.BeginEdit();
+            TreeNode node = FindNode(nodePath);
+            if (node.Index > 0)
+            {
+                TreeView.AfterSelect -= OnAfterSelect;
+                int pos = node.Index - 1;
+                TreeNode parent = node.Parent;
+                parent.Nodes.Remove(node);
+                parent.Nodes.Insert(pos, node);
+                TreeView.SelectedNode = node;
+
+                TreeView.AfterSelect += OnAfterSelect;
+            }
         }
 
-        #region Tree node
+        /// <summary>Moves the specified node down 1 position.</summary>
+        /// <param name="nodePath">The path of the node to move.</param>
+        public void MoveDown(string nodePath)
+        {
+            TreeNode node = FindNode(nodePath);
+            if (node.Index < node.Parent.Nodes.Count - 1)
+            {
+                TreeView.AfterSelect -= OnAfterSelect;
 
-        /// <summary>
-        /// Gets or sets the property providing access to the currently selected node.
-        /// </summary>
-        /// <value>The current node path.</value>
-        public string CurrentNodePath
+                int pos = node.Index + 1;
+                TreeNode parent = node.Parent;
+                parent.Nodes.Remove(node);
+                parent.Nodes.Insert(pos, node);
+                TreeView.SelectedNode = node;
+
+                TreeView.AfterSelect += OnAfterSelect;
+
+            }
+        }
+
+        /// <summary>Renames the specified node path.</summary>
+        /// <param name="nodePath">The node path.</param>
+        /// <param name="newName">The new name for the node.</param>
+        public void Rename(string nodePath, string newName)
+        {
+            TreeNode node = FindNode(nodePath);
+            node.Text = newName;
+            previouslySelectedNodePath = FullPath(node);
+        }
+
+        /// <summary>Puts the current node into edit mode so user can rename it.</summary>
+        public void BeginRenamingCurrentNode()
+        {
+            TreeView.SelectedNode.BeginEdit();
+        }
+
+        /// <summary>Deletes the specified node.</summary>
+        /// <param name="nodePath">The node path.</param>
+        public void Delete(string nodePath)
+        {
+            TreeNode node = FindNode(nodePath);
+            node.Remove();
+        }
+
+        /// <summary>Adds a child node.</summary>
+        /// <param name="parentNodePath">The node path.</param>
+        /// <param name="nodeDescription">The node description.</param>
+        /// <param name="position">The position.</param>
+        public void AddChild(string parentNodePath, NodeDescriptionArgs nodeDescription, int position = -1)
+        {
+            TreeNode node = FindNode(parentNodePath);
+
+            TreeNode childNode = new TreeNode();
+            if (position == -1)
+                node.Nodes.Add(childNode);
+            else
+                node.Nodes.Insert(position, childNode);
+            RefreshNode(childNode, nodeDescription);
+        }
+
+        /// <summary>Gets or sets the currently selected node.</summary>
+        /// <value>The selected node.</value>
+        public string SelectedNode
         {
             get
             {
-                if (TreeView.SelectedNode != null) 
-                {
-                    return this.FullPath (TreeView.SelectedNode);
-                } 
-                else 
-                {
+                if (TreeView.SelectedNode != null)
+                    return this.FullPath(TreeView.SelectedNode);
+                else
                     return string.Empty;
-                }
             }
 
             set
             {
-                // We want the BeforeSelect event to only fire when user clicks on a node
-                // in the tree.
-                TreeView.AfterSelect -= this.TreeView_AfterSelect;
+                if (SelectedNode != value && value != string.Empty)
+                {
+                    // We want the BeforeSelect event to only fire when user clicks on a node
+                    // in the tree.
+                    TreeView.AfterSelect -= this.OnAfterSelect;
 
-                TreeNode nodeToSelect;
-                if (value == string.Empty) 
-                {
-                    nodeToSelect = null;
-                } 
-                else
-                {
-                    nodeToSelect = FindNode (value);
+                    TreeNode nodeToSelect = FindNode(value);
+                    if (nodeToSelect != null)
+                    {
+                        previouslySelectedNodePath = SelectedNode;
+                        TreeView.SelectedNode = nodeToSelect;
+                    }
+
+                    TreeView.AfterSelect += OnAfterSelect;
                 }
-
-                if (nodeToSelect != null && TreeView.SelectedNode != nodeToSelect)
-                {
-                    TreeView.SelectedNode = nodeToSelect;
-                    if (NodeSelected != null)
-                        NodeSelected.Invoke(this, new NodeSelectedArgs()
-                        {
-                            OldNodePath = previouslySelectedNodePath,
-                            NewNodePath = value
-                        });
-                }
-
-                TreeView.AfterSelect += TreeView_AfterSelect;
-                PopulatePopupMenu();
             }
         }
 
-        /// <summary>
-        /// Configure the specified tree node using the fields in 'Description'
-        /// </summary>
-        private void ConfigureNode(TreeNode Node, NodeDescriptionArgs.Description Description)
+        /// <summary>Gets or sets the shortcut keys.</summary>
+        /// <value>The shortcut keys.</value>
+        public Keys[] ShortcutKeys { get; set; }
+
+        /// <summary>Populate the main menu tool strip.</summary>
+        /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
+        public void PopulateMainToolStrip(List<MenuDescriptionArgs> menuDescriptions)
         {
-            Node.Text = Description.Name;
-            int imageIndex = TreeImageList.Images.IndexOfKey(Description.ResourceNameForImage);
-            if (imageIndex == -1)
+            ToolStrip.Items.Clear();
+            ToolStrip.Font = this.Font;
+            foreach (MenuDescriptionArgs description in menuDescriptions)
+            {
+                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(description.ResourceNameForImage);
+                Bitmap icon = null;
+                if (s != null)
+                    icon = new Bitmap(s);
+                ToolStripItem button = ToolStrip.Items.Add(description.Name, icon, description.OnClick);
+                button.TextImageRelation = TextImageRelation.ImageAboveText;
+            }
+            ToolStrip.Visible = ToolStrip.Items.Count > 0;
+        }
+
+        /// <summary>Populate the context menu from the descriptions passed in.</summary>
+        /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
+        public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
+        {
+            PopupMenu.Font = this.Font;
+            PopupMenu.Items.Clear();
+            foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
                 Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
+                Bitmap Icon = null;
                 if (s != null)
-                {
-                    Bitmap Icon = new Bitmap(s);
+                    Icon = new Bitmap(s);
 
-                    if (Icon != null)
-                    {
-                        TreeImageList.Images.Add(Description.ResourceNameForImage, Icon);
-                        imageIndex = TreeImageList.Images.Count - 1;
-                    }
-                }
-                else
-                {
-
-                }
-            }
-            Node.ImageIndex = imageIndex;
-            Node.SelectedImageIndex = imageIndex;
-            if (Description.HasChildren)
-            {
-                if (Node.Nodes.Count == 0)
-                {
-                    Node.Nodes.Add("Loading...");
-                    Node.Collapse();
-                }
-            }
-            else
-            {
-                Node.Nodes.Clear();
+                ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
+                Button.TextImageRelation = TextImageRelation.ImageBeforeText;
+                Button.Checked = Description.Checked;
+                Button.ShortcutKeys = Description.ShortcutKey;
+                Button.Enabled = Description.Enabled;
             }
         }
 
-        /// <summary>
-        /// Return a full path for the specified node.
-        /// </summary>
-        private string FullPath(TreeNode Node)
+        /// <summary>Populates the static label on the toolbar.</summary>
+        /// <param name="labelText">The label text.</param>
+        /// <param name="labelToolTip">The label tool tip.</param>
+        public void PopulateLabel(string labelText, string labelToolTip)
         {
-            return "." + Node.FullPath.Replace("\\", ".");
+            // Add in version information as a label.
+            ToolStripLabel label = new ToolStripLabel();
+            label.ForeColor = Color.Gray;
+            label.Alignment = ToolStripItemAlignment.Right;
+            label.Text = labelText;
+            label.ToolTipText = labelToolTip;
+            ToolStrip.Items.Add(label);
         }
 
-        /// <summary>
-        /// Find a specific node with the node path.
-        /// NodePath format: .Parent.Child.SubChild
-        /// </summary>
-        private TreeNode FindNode(string NamePath)
-        {
-            if (!NamePath.StartsWith(".", StringComparison.CurrentCulture))
-                throw new Exception("Invalid name path '" + NamePath + "'");
-
-            NamePath = NamePath.Remove(0, 1); // Remove the leading '.'
-
-            TreeNode Node = null;
-
-            string[] NamePathBits = NamePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            foreach (string PathBit in NamePathBits)
-            {
-                if (Node == null)
-                    Node = FindNode(TreeView.Nodes, PathBit);
-                else
-                {
-                    if (!Node.IsExpanded)
-                        Node.Expand();
-                    Node = FindNode(Node.Nodes, PathBit);
-                }
-
-                if (Node == null)
-                    return null;
-            }
-            return Node;
-        }
-
-        /// <summary>
-        /// Find a child node with the specified name under the specified ParentNode.
-        /// </summary>
-        private static TreeNode FindNode(TreeNodeCollection Nodes, string name)
-        {
-            foreach (TreeNode ChildNode in Nodes)
-                if (ChildNode.Text.Equals(name, StringComparison.CurrentCultureIgnoreCase))
-                    return ChildNode;
-
-            return null;
-        }
-
-        #endregion
-
-        #region Right hand panel
         /// <summary>
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
-        public void AddRightHandView(UserControl Control)
+        /// <param name="control">The control to add.</param>
+        public void AddRightHandView(UserControl control)
         {
             RightHandPanel.Controls.Clear();
-            if (Control != null)
+            if (control != null)
             {
-                RightHandPanel.Controls.Add(Control);
-                Control.Dock = DockStyle.Fill;
-                //Control.BringToFront();
-
-                // In MONO OSX, if the right hand panel isn't given the focus then when the user clicks on 
-                // a GridView in the right hand window (e.g. clocks gridview) and starts using the cursor 
-                // keys to navigate the grid then the key presses seem to go to the StartPageView in the 
-                // other tab in the top level tab control. Then an exception is throw from StartPageView.
-                //if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
-                //    Environment.OSVersion.Platform != PlatformID.Win32Windows)
-                //    RightHandPanel.Focus();  // On Windows this causes a blicking event on the node focus.
-            }
-        }
-        #endregion
-
-        #region Main menu
-
-        /// <summary>
-        /// Populate the main menu tool strip.
-        /// </summary>
-        private void PopulateMainToolStrip()
-        {
-            if (PopulateMainMenu != null)
-            {
-                MenuDescriptionArgs Args = new MenuDescriptionArgs();
-                PopulateMainMenu(this, Args);
-
-                ToolStrip.Items.Clear();
-                ToolStrip.Font = this.Font;
-                foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
-                {
-                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
-                    Bitmap Icon = null;
-                    if (s != null)
-                        Icon = new Bitmap(s);
-                    ToolStripItem Button = ToolStrip.Items.Add(Description.Name, Icon, Description.OnClick);
-                    Button.TextImageRelation = TextImageRelation.ImageAboveText;
-                }
-                ToolStrip.Visible = ToolStrip.Items.Count > 0;
-
-
-                // Add in version information as a label.
-                Version version = new Version(Application.ProductVersion);
-                ToolStripLabel label = new ToolStripLabel();
-                label.ForeColor = Color.Gray;
-                label.Alignment = ToolStripItemAlignment.Right;
-                label.Text = "Custom Build";
-                
-                // Get assembly title.
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    AssemblyTitleAttribute titleAttribute = attributes[0] as AssemblyTitleAttribute;
-                    string[] titleBits = titleAttribute.Title.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (titleBits.Length == 2 && titleBits[1] != "0")
-                    {
-                        label.Text = "Official Build";
-                        label.ToolTipText = "Version: " + version.Major + "." + version.Minor + "." + version.Build;
-                        label.ToolTipText += "\nGIT hash: " + titleBits[1];
-                    }
-                }
-                   
-                ToolStrip.Items.Add(label);
+                RightHandPanel.Controls.Add(control);
+                control.Dock = DockStyle.Fill;
             }
         }
 
-
-        #endregion
-
-        /// <summary>
-        /// Change the name of the tab.
-        /// </summary>
-        public void ChangeTabText(string NewTabName)
-        {
-            TabPage Page = Parent as TabPage;
-            Page.Text = NewTabName;
-
-        }
-
-        /// <summary>
-        /// Ask the user if they wish to save the simulation.
-        /// </summary>
+        /// <summary>Ask the user if they wish to save the simulation.</summary>
         /// <returns>Choice for saving the simulation</returns>
         public Int32 AskToSave()
         {
-            TabPage Page = Parent as TabPage;
-            DialogResult result = MessageBox.Show("Do you want to save changes for " + Page.Text + " ?", "Save changes", MessageBoxButtons.YesNoCancel);
+            TabPage page = Parent as TabPage;
+            DialogResult result = MessageBox.Show("Do you want to save changes for " + page.Text + " ?", "Save changes", MessageBoxButtons.YesNoCancel);
             switch (result)
             {
                 case DialogResult.Cancel: return -1;
@@ -411,14 +295,27 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>
-        /// Add a status message to the explorer window
-        /// </summary>
-        /// <param name="Message"></param>
-        public void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel)
+        /// <summary>A helper function that asks user for a folder.</summary>
+        /// <param name="prompt"></param>
+        /// <returns>
+        /// Returns the selected folder or null if action cancelled by user.
+        /// </returns>
+        public string AskUserForFolder(string prompt)
         {
-            StatusWindow.Visible = Message != null;
-            
+            folderBrowserDialog1.Description = prompt;
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                return folderBrowserDialog1.SelectedPath;
+            else
+                return null;
+        }
+
+        /// <summary>Add a status message to the explorer window</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="errorLevel">The error level.</param>
+        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
+        {
+            StatusWindow.Visible = message != null;
+
             // Output the message
             if (errorLevel == Models.DataStore.ErrorLevel.Error)
             {
@@ -432,138 +329,188 @@ namespace UserInterface.Views
             {
                 StatusWindow.ForeColor = Color.Blue;
             }
-            Message = Message.TrimEnd("\n".ToCharArray());
-            Message = Message.Replace("\n", "\n                      ");
-            Message += "\n";
-            StatusWindow.Text = Message;
-            this.toolTip1.SetToolTip(this.StatusWindow, Message);
+            message = message.TrimEnd("\n".ToCharArray());
+            message = message.Replace("\n", "\n                      ");
+            message += "\n";
+            StatusWindow.Text = message;
+            this.toolTip1.SetToolTip(this.StatusWindow, message);
         }
 
         /// <summary>
         /// A helper function that asks user for a SaveAs name and returns their new choice.
         /// </summary>
-        /// <returns>Returns the new file name or null if action cancelled by user.</returns>
-        public string SaveAs(string OldFilename)
+        /// <param name="oldFilename">The old filename.</param>
+        /// <returns>
+        /// Returns the new file name or null if action cancelled by user.
+        /// </returns>
+        public string SaveAs(string oldFilename)
         {
             TabbedExplorerView parentView = this.Parent.Parent.Parent as TabbedExplorerView;
-            return parentView.AskUserForSaveFileName(OldFilename);
+            return parentView.AskUserForSaveFileName(oldFilename);
         }
 
-        /// <summary>
-        /// A helper function that asks user for a folder.
-        /// </summary>
-        /// <returns>Returns the selected folder or null if action cancelled by user.</returns>
-        public string AskUserForFolder(string prompt)
+        /// <summary>Change the name of the tab.</summary>
+        /// <param name="newTabName">New name of the tab.</param>
+        public void ChangeTabText(string newTabName)
         {
-            folderBrowserDialog1.Description = prompt;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-                return folderBrowserDialog1.SelectedPath;
-            else
-                return null;
+            TabPage page = Parent as TabPage;
+            page.Text = newTabName;
         }
 
-        /// <summary>
-        /// Invalidate (redraw) the specified node and its direct child nodes.
-        /// </summary>
-        public void InvalidateNode(string NodePath, NodeDescriptionArgs.Description Description)
-        {
-            AddRightHandView(null);
-            TreeNode Node = FindNode(NodePath);
-            ConfigureNode(Node, Description);
-            PopulateNodes(Node);
-        }
-
-        /// <summary>
-        /// Toggle the 2nd right hand side explorer view on/off
-        /// </summary>
+        /// <summary>Toggle the 2nd right hand side explorer view on/off</summary>
         public void ToggleSecondExplorerViewVisible()
         {
-            MainForm MainForm = Application.OpenForms[0] as MainForm;
-            MainForm.ToggleSecondExplorerViewVisible();
+            MainForm mainForm = Application.OpenForms[0] as MainForm;
+            mainForm.ToggleSecondExplorerViewVisible();
         }
 
-        public void DoRename()
+        /// <summary>Gets or sets the width of the tree view.</summary>
+        public Int32 TreeWidth
         {
-            TreeView.SelectedNode.BeginEdit();
+            get { return TreeView.Width; }
+            set { TreeView.Width = value; }
         }
+
+        #region Protected & Privates
+
+        /// <summary>
+        /// Configure the specified tree node using the fields in 'Description'.
+        /// Recursively descends through all child nodes as well.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="description">The description.</param>
+        private void RefreshNode(TreeNode node, NodeDescriptionArgs description)
+        {
+            node.Text = description.Name;
+
+            // Make sure the tree node image is right.
+            int imageIndex = TreeImageList.Images.IndexOfKey(description.ResourceNameForImage);
+            if (imageIndex == -1)
+            {
+                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(description.ResourceNameForImage);
+                if (s != null)
+                {
+                    Bitmap Icon = new Bitmap(s);
+
+                    if (Icon != null)
+                    {
+                        TreeImageList.Images.Add(description.ResourceNameForImage, Icon);
+                        imageIndex = TreeImageList.Images.Count - 1;
+                    }
+                }
+            }
+            node.ImageIndex = imageIndex;
+            node.SelectedImageIndex = imageIndex;
+
+            // Make sure we have the right number of child nodes.
+            // Add extra nodes if necessary
+            while (description.Children.Count > node.Nodes.Count)
+                node.Nodes.Add(new TreeNode());
+
+            // Remove unwanted nodes if necessary.
+            while (description.Children.Count < node.Nodes.Count)
+                node.Nodes.RemoveAt(node.Nodes.Count - 1);
+
+            for (int i = 0; i < description.Children.Count; i++)
+                RefreshNode(node.Nodes[i], description.Children[i]);
+        }
+
+        /// <summary>Return a full path for the specified node.</summary>
+        /// <param name="node">The node.</param>
+        /// <returns></returns>
+        private string FullPath(TreeNode node)
+        {
+            return "." + node.FullPath.Replace("\\", ".");
+        }
+
+        /// <summary>
+        /// Find a specific node with the node path.
+        /// NodePath format: .Parent.Child.SubChild
+        /// </summary>
+        /// <param name="namePath">The name path.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Invalid name path ' + namePath + '</exception>
+        private TreeNode FindNode(string namePath)
+        {
+            if (!namePath.StartsWith(".", StringComparison.CurrentCulture))
+                throw new Exception("Invalid name path '" + namePath + "'");
+
+            namePath = namePath.Remove(0, 1); // Remove the leading '.'
+
+            TreeNode node = null;
+
+            string[] NamePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            foreach (string PathBit in NamePathBits)
+            {
+                if (node == null)
+                    node = FindNode(TreeView.Nodes, PathBit);
+                else
+                {
+                    if (!node.IsExpanded)
+                        node.Expand();
+                    node = FindNode(node.Nodes, PathBit);
+                }
+
+                if (node == null)
+                    return null;
+            }
+            return node;
+        }
+
+        /// <summary>
+        /// Find a child node with the specified name under the specified ParentNode.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        private static TreeNode FindNode(TreeNodeCollection nodes, string name)
+        {
+            foreach (TreeNode childNode in nodes)
+                if (childNode.Text.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                    return childNode;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Override the process command key method so that we can implement global keyboard
+        /// shortcuts.
+        /// </summary>
+        /// <param name="msg">The windows message to process</param>
+        /// <param name="keyData">The key to process</param>
+        /// <returns>True if command key was processed.</returns>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (ShortcutKeyPressed != null && ShortcutKeys != null && ShortcutKeys.Contains(keyData))
+            {
+                ShortcutKeyPressed.Invoke(this, new KeysArgs() { Keys = keyData });
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        #endregion
 
         #region Events
 
-        /// <summary>
-        /// User is expanding a node. Populate the child nodes if necessary.
-        /// </summary>
-        private void OnBeforeExpand(object sender, TreeViewCancelEventArgs e)
+        /// <summary>User has selected a node. Raise event for presenter.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        private void OnAfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (PopulateChildNodes != null && e.Node.Nodes.Count == 1 && e.Node.Nodes[0].Text == "Loading...")
+            if (SelectedNodeChanged != null)
             {
-                PopulateNodes(e.Node);
+                NodeSelectedArgs selectionChangedData = new NodeSelectedArgs();
+                selectionChangedData.OldNodePath = previouslySelectedNodePath;
+                selectionChangedData.NewNodePath = FullPath(e.Node);
+                SelectedNodeChanged.Invoke(this, selectionChangedData);
+                previouslySelectedNodePath = selectionChangedData.NewNodePath;
             }
         }
 
-        /// <summary>
-        /// Populate all direct children under the specified Node. If Node = null then
-        /// populate all root nodes.
-        /// </summary>
-        private void PopulateNodes(TreeNode ParentNode)
-        {
-            NodeDescriptionArgs Args = new NodeDescriptionArgs();
-            if (ParentNode != null)
-            {
-                Args.NodePath = FullPath(ParentNode);
-            }
-            PopulateChildNodes.Invoke(this, Args);
-
-            TreeNodeCollection Nodes;
-            if (ParentNode == null)
-            {
-                Nodes = TreeView.Nodes;
-            }
-            else
-            {
-                Nodes = ParentNode.Nodes;
-            }
-            // Make sure we have the right number of child nodes.
-            // Add extra nodes if necessary
-            while (Args.Descriptions.Count > Nodes.Count)
-                Nodes.Add(new TreeNode());
-
-            // Remove unwanted nodes if necessary.
-            while (Args.Descriptions.Count < Nodes.Count)
-            {
-                Nodes.RemoveAt(Nodes.Count-1);
-            }
-
-            // Configure each child node.
-            for (int i = 0; i < Args.Descriptions.Count; i++)
-                ConfigureNode(Nodes[i], Args.Descriptions[i]);
-        }
-
-        /// <summary>
-        /// A node is about to be selected. Take note of the previous node path.
-        /// </summary>
-        private void OnTreeViewBeforeSelect(object sender, TreeViewCancelEventArgs e)
-        {
-            previouslySelectedNodePath = CurrentNodePath;
-        }
-
-        /// <summary>
-        /// A node has been selected. Let the presenter know.
-        /// </summary>
-        private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            if (NodeSelectedByUser != null)
-            {
-                NodeSelectedByUser.Invoke(this, new NodeSelectedArgs()
-                {
-                    OldNodePath = previouslySelectedNodePath,
-                    NewNodePath = FullPath(e.Node)
-                });
-            }
-        }
-
-        /// <summary>
-        /// User has moved the splitter.
-        /// </summary>
+        /// <summary>User has moved the splitter.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="SplitterEventArgs"/> instance containing the event data.</param>
         private void OnSplitterMoved(object sender, SplitterEventArgs e)
         {
             // There is a bug in mono when run on Mac - looks like the split position isn't working.
@@ -573,66 +520,32 @@ namespace UserInterface.Views
             splitter1.SplitterMoved += OnSplitterMoved;
         }
 
-        /// <summary>
-        /// User has right clicked on a node, opening the context popup menu. Go create that menu
-        /// by asking the presenter what to put on the menu.
-        /// </summary>
-        private void PopulatePopupMenu()
-        {
-            if (PopulateContextMenu != null)
-            {
-                MenuDescriptionArgs Args = new MenuDescriptionArgs();
-                PopulateContextMenu(this, Args);
-
-                PopupMenu.Font = this.Font;
-                PopupMenu.Items.Clear();
-                foreach (MenuDescriptionArgs.Description Description in Args.Descriptions)
-                {
-                    Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(Description.ResourceNameForImage);
-                    Bitmap Icon = null;
-                    if (s != null)
-                        Icon = new Bitmap(s);
-
-                    ToolStripMenuItem Button = PopupMenu.Items.Add(Description.Name, Icon, Description.OnClick) as ToolStripMenuItem;
-                    Button.TextImageRelation = TextImageRelation.ImageBeforeText;
-                    Button.Checked = Description.Checked;
-                    Button.ShortcutKeys = Description.ShortcutKey;
-                    Button.Enabled = Description.Enabled;
-                }
-            }
-        }
-
-
-        #endregion
-
-        #region Drag and drop
-
         // Looks like drag and drop is broken on Mono on Mac. The data being dragged needs to be
         // serializable which is ok but it still doesn work. Gives the error:
         //     System.Runtime.Serialization.SerializationException: Unexpected binary element: 46
         //     at System.Runtime.Serialization.Formatters.Binary.ObjectReader.ReadObject (BinaryElement element, System.IO.BinaryReader reader, System.Int64& objectId, System.Object& value, System.Runtime.Serialization.SerializationInfo& info) [0x00000] in <filename unknown>:0 
 
-        /// <summary>
-        /// Node has begun to be dragged.
-        /// </summary>
+        /// <summary>Node has begun to be dragged.</summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Event data.</param>
         private void OnNodeDrag(object sender, ItemDragEventArgs e)
         {
-            DragStartArgs Args = new DragStartArgs();
-            Args.NodePath = FullPath(e.Item as TreeNode);
-            if (DragStart != null)
+            DragStartArgs args = new DragStartArgs();
+            args.NodePath = FullPath(e.Item as TreeNode);
+            if (DragStarted != null)
             {
-                DragStart(this, Args);
-                if (Args.DragObject != null)
+                DragStarted(this, args);
+                if (args.DragObject != null)
                 {
-                    sourcePathOfItemBeingDragged = Args.NodePath;
-                    DoDragDrop(Args.DragObject, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
+                    sourcePathOfItemBeingDragged = args.NodePath;
+                    DoDragDrop(args.DragObject, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
                 }
             }
         }
 
-        /// <summary>
-        /// Node has been dragged over another node. Allow a drop here?
-        /// </summary>
+        /// <summary>Node has been dragged over another node. Allow a drop here?</summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Event data.</param>
         private void OnDragOver(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.None;
@@ -675,123 +588,78 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>
-        /// Node has been dropped. Send to presenter.
-        /// </summary>
+        /// <summary>Node has been dropped. Send to presenter.</summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Event data.</param>
         private void OnDragDrop(object sender, DragEventArgs e)
         {
-            TreeNode DestinationNode = TreeView.GetNodeAt(TreeView.PointToClient(new Point(e.X, e.Y)));
-            if (DestinationNode != null && Drop != null)
+            TreeNode destinationNode = TreeView.GetNodeAt(TreeView.PointToClient(new Point(e.X, e.Y)));
+            if (destinationNode != null && Droped != null)
             {
-                DropArgs Args = new DropArgs();
-                Args.NodePath = FullPath(DestinationNode);
+                DropArgs args = new DropArgs();
+                args.NodePath = FullPath(destinationNode);
 
-                string[] Formats = e.Data.GetFormats();
-                if (Formats.Length > 0)
+                string[] formats = e.Data.GetFormats();
+                if (formats.Length > 0)
                 {
-                    Args.DragObject = e.Data.GetData(Formats[0]) as ISerializable;
+                    args.DragObject = e.Data.GetData(formats[0]) as ISerializable;
                     if (e.Effect == DragDropEffects.Copy)
-                        Args.Copied = true;
+                        args.Copied = true;
                     else if (e.Effect == DragDropEffects.Move)
-                        Args.Moved = true;
+                        args.Moved = true;
                     else
-                        Args.Linked = true;
-                    Drop(this, Args);
+                        args.Linked = true;
+                    Droped(this, args);
 
                     // Under MONO / LINUX seem to need to deselect and reselect the node otherwise no
                     // node is selected after the drop and this causes problems later in OnTreeViewBeforeSelect
                     TreeView.SelectedNode = null;
-                    TreeView.SelectedNode = DestinationNode;
+                    TreeView.SelectedNode = destinationNode;
                 }
             }
 
             sourcePathOfItemBeingDragged = null;
         }
-        #endregion
 
-        /// <summary>
-        /// User is about to start renaming a node.
-        /// </summary>
+        /// <summary>User is about to start renaming a node.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
         private void OnBeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            nodePathBeforeRename = CurrentNodePath;
+            nodePathBeforeRename = SelectedNode;
             TreeView.ContextMenuStrip = null;
             e.CancelEdit = false;
         }
 
-        /// <summary>
-        /// User has finished renamed a node.
-        /// </summary>
+        /// <summary>User has finished renamed a node.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
         private void OnAfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             TreeView.ContextMenuStrip = this.PopupMenu;
-            if (Rename != null && e.Label != null)
+            if (Renamed != null && e.Label != null)
             {
                 NodeRenameArgs args = new NodeRenameArgs()
                 {
                     NodePath = this.nodePathBeforeRename,
                     NewName = e.Label
                 };
-                Rename(this, args);
+                Renamed(this, args);
                 e.CancelEdit = args.CancelEdit;
+                if (!e.CancelEdit)
+                    previouslySelectedNodePath = args.NodePath;
             }
         }
 
-        /// <summary>
-        /// Ensure that a right mouse click selects the node also
-        /// </summary>
-        void TreeViewNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-        	TreeView.SelectedNode = e.Node; 
-        }
-
+        /// <summary>User has closed the status window.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnCloseStatusWindowClick(object sender, EventArgs e)
         {
             StatusWindow.Visible = false;
         }
 
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //StatusWindow.Clear();
-        }
-
-        /// <summary>
-        /// The Simulation tree width
-        /// </summary>
-        public Int32 TreeWidth
-        {
-            get { return TreeView.Width; }
-            set { TreeView.Width = value; }
-        }
-
-        /// <summary>
-        /// User has pressed a key.
-        /// </summary>
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Control && e.KeyCode == Keys.Up && OnMoveUp != null)
-                OnMoveUp.Invoke(this, new EventArgs());
-            else if (e.Control && e.KeyCode == Keys.Down && OnMoveDown != null)
-                OnMoveDown.Invoke(this, new EventArgs());
-
-        }
-
-        /// <summary>
-        /// Override the process command key method so that we can implement global keyboard
-        /// shortcuts.
-        /// </summary>
-        /// <param name="msg">The windows message to process</param>
-        /// <param name="keyData">The key to process</param>
-        /// <returns></returns>
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (OnShortcutKeyPress != null && ShortcutKeys != null && ShortcutKeys.Contains(keyData))
-            {
-                OnShortcutKeyPress.Invoke(this, new KeysArgs() { Keys = keyData });
-                return true;
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
+        #endregion
     }
 }
 
