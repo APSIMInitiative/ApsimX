@@ -6,52 +6,57 @@
 namespace UserInterface.Commands
 {
     using Models.Core;
+    using Interfaces;
 
-    /// <summary>
-    /// This command deletes a model
-    /// </summary>
+    /// <summary>This command deletes a model</summary>
     public class DeleteModelCommand : ICommand
     {
-        /// <summary>
-        /// The model to delete
-        /// </summary>
+        /// <summary>The model to delete</summary>
         private IModel modelToDelete;
 
-        /// <summary>
-        /// Indicates whether the model was deleted successfully
-        /// </summary>
+        /// <summary>The node description</summary>
+        private NodeDescriptionArgs nodeDescription;
+
+        /// <summary>The parent model.</summary>
+        private IModel parent;
+
+        /// <summary>The explorer view</summary>
+        private IExplorerView explorerView;
+
+        /// <summary>Indicates whether the model was deleted successfully</summary>
         private bool modelWasRemoved;
 
-        /// <summary>
-        /// The constructor
-        /// </summary>
+        /// <summary>The position of the model in the list of child models.</summary>
+        private int pos;
+
+        /// <summary>The constructor</summary>
         /// <param name="modelToDelete">The model to delete</param>
-        public DeleteModelCommand(Model modelToDelete)
+        /// <param name="explorerView">The explorer view.</param>
+        public DeleteModelCommand(IModel modelToDelete, NodeDescriptionArgs nodeDescription, IExplorerView explorerView)
         {
             this.modelToDelete = modelToDelete;
+            this.nodeDescription = nodeDescription;
+            this.explorerView = explorerView;
+            this.parent = modelToDelete.Parent;
         }
 
-        /// <summary>
-        /// Perform the command
-        /// </summary>
+        /// <summary>Perform the command</summary>
         /// <param name="commandHistory">The command history instance</param>
         public void Do(CommandHistory commandHistory)
         {
-            modelWasRemoved = this.modelToDelete.Parent.Children.Remove(this.modelToDelete as Model);
-            commandHistory.InvokeModelStructureChanged(this.modelToDelete.Parent);
+            this.explorerView.Delete(Apsim.FullPath(this.modelToDelete));
+            pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
+            modelWasRemoved = this.parent.Children.Remove(this.modelToDelete as Model);
         }
 
-        /// <summary>
-        /// Undo the command
-        /// </summary>
+        /// <summary>Undo the command</summary>
         /// <param name="commandHistory">The command history instance</param>
         public void Undo(CommandHistory commandHistory)
         {
             if (this.modelWasRemoved)
             {
-                this.modelToDelete.Parent.Children.Add(this.modelToDelete as Model);
-                this.modelToDelete.Parent = this.modelToDelete.Parent;
-                commandHistory.InvokeModelStructureChanged(this.modelToDelete.Parent);
+                this.parent.Children.Add(this.modelToDelete as Model);
+                this.explorerView.AddChild(Apsim.FullPath(this.parent), nodeDescription, pos);
             }
         }
     }

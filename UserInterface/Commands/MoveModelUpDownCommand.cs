@@ -1,42 +1,54 @@
-﻿using UserInterface.Views;
-using Models.Core;
-using System.Xml;
-using System;
-using UserInterface.Interfaces;
-
+﻿// -----------------------------------------------------------------------
+// <copyright file="AddModelCommand.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 namespace UserInterface.Commands
 {
+    using Views;
+    using Models.Core;
+    using System.Xml;
+    using System;
+    using Interfaces;
+
     /// <summary>
     /// This command moves a model up or down one spot in the siblings
     /// </summary>
-    class MoveModelUpDownCommand : ICommand
+    public class MoveModelUpDownCommand : ICommand
     {
-        private IExplorerView ExplorerView;
-        private Model ModelToMove;
-        private bool MoveUp;
-        private bool ModelWasMoved;
+        /// <summary>The explorer view</summary>
+        private IExplorerView explorerView;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public MoveModelUpDownCommand(IExplorerView explorerView, Model modelToMove, bool up)
+        /// <summary>The model to move</summary>
+        private IModel modelToMove;
+
+        /// <summary>The move up</summary>
+        private bool moveUp;
+
+        /// <summary>The model was moved</summary>
+        private bool modelWasMoved;
+
+        /// <summary>Constructor.</summary>
+        /// <param name="explorerView">The explorer view.</param>
+        /// <param name="modelToMove">The model to move.</param>
+        /// <param name="up">if set to <c>true</c> [up].</param>
+        public MoveModelUpDownCommand(IModel modelToMove, bool up, IExplorerView explorerView)
         {
-            ExplorerView = explorerView;
-            ModelToMove = modelToMove;
-            MoveUp = up;
+            this.modelToMove = modelToMove;
+            this.moveUp = up;
+            this.explorerView = explorerView;            
         }
 
-        /// <summary>
-        /// Perform the command
-        /// </summary>
+        /// <summary>Perform the command</summary>
+        /// <param name="CommandHistory">The command history.</param>
         public void Do(CommandHistory CommandHistory)
         {
-            Model parent = ModelToMove.Parent as Model;
+            IModel parent = modelToMove.Parent as IModel;
 
-            int modelIndex = parent.Children.IndexOf(ModelToMove);
+            int modelIndex = parent.Children.IndexOf(modelToMove as Model);
 
-            ModelWasMoved = false;
-            if (MoveUp)
+            modelWasMoved = false;
+            if (moveUp)
             {
                 if (modelIndex != 0)
                     MoveModelUp(CommandHistory, parent, modelIndex);
@@ -48,16 +60,15 @@ namespace UserInterface.Commands
             }
         }
 
-        /// <summary>
-        /// Undo the command
-        /// </summary>
+        /// <summary>Undo the command</summary>
+        /// <param name="CommandHistory">The command history.</param>
         public void Undo(CommandHistory CommandHistory)
         {
-            if (ModelWasMoved)
+            if (modelWasMoved)
             {
-                Model parent = ModelToMove.Parent as Model;
-                int modelIndex = parent.Children.IndexOf(ModelToMove);
-                if (MoveUp)
+                Model parent = modelToMove.Parent as Model;
+                int modelIndex = parent.Children.IndexOf(modelToMove as Model);
+                if (moveUp)
                     MoveModelDown(CommandHistory, parent, modelIndex);
                 else
                     MoveModelUp(CommandHistory, parent, modelIndex);
@@ -65,22 +76,28 @@ namespace UserInterface.Commands
         }
 
 
-        private void MoveModelDown(CommandHistory CommandHistory, Model parent, int modelIndex)
+        /// <summary>Moves the model down.</summary>
+        /// <param name="CommandHistory">The command history.</param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="modelIndex">Index of the model.</param>
+        private void MoveModelDown(CommandHistory CommandHistory, IModel parent, int modelIndex)
         {
-            parent.Children.Remove(ModelToMove);
-            parent.Children.Insert(modelIndex + 1, ModelToMove);
-            CommandHistory.InvokeModelStructureChanged(parent);
-            ExplorerView.CurrentNodePath = Apsim.FullPath(ModelToMove);
-            ModelWasMoved = true;
+            explorerView.MoveDown(Apsim.FullPath(modelToMove));
+            parent.Children.Remove(modelToMove as Model);
+            parent.Children.Insert(modelIndex + 1, modelToMove as Model);
+            modelWasMoved = true;
         }
 
-        private void MoveModelUp(CommandHistory CommandHistory, Model parent, int modelIndex)
+        /// <summary>Moves the model up.</summary>
+        /// <param name="CommandHistory">The command history.</param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="modelIndex">Index of the model.</param>
+        private void MoveModelUp(CommandHistory CommandHistory, IModel parent, int modelIndex)
         {
-            parent.Children.Remove(ModelToMove);
-            parent.Children.Insert(modelIndex - 1, ModelToMove);
-            CommandHistory.InvokeModelStructureChanged(parent);
-            ExplorerView.CurrentNodePath = Apsim.FullPath(ModelToMove);
-            ModelWasMoved = true;
+            explorerView.MoveUp(Apsim.FullPath(modelToMove));
+            parent.Children.Remove(modelToMove as Model);
+            parent.Children.Insert(modelIndex - 1, modelToMove as Model);
+            modelWasMoved = true;
         }
 
     }
