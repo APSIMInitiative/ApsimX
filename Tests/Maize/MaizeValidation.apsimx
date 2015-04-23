@@ -47,6 +47,13 @@
       <Name>TimeSeriesStats</Name>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
+    <Model xsi:type="ExcelInput">
+      <Name>Phenology</Name>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <SheetNames>
+        <string>PhenologySimple</string>
+      </SheetNames>
+    </Model>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -714,7 +721,7 @@
               </VariableReference>
               <Start>Germination</Start>
               <End>Emergence</End>
-              <ShootLag>15</ShootLag>
+              <ShootLag>55</ShootLag>
               <ShootRate>0.6</ShootRate>
             </EmergingPhase>
             <GenericPhase>
@@ -887,7 +894,7 @@
                     <Y>
                       <double>30</double>
                       <double>30</double>
-                      <double>46</double>
+                      <double>42</double>
                     </Y>
                   </XYPairs>
                 </LinearInterpolationFunction>
@@ -5552,11 +5559,11 @@ public class Script : Model
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <TableName>observed</TableName>
+            <TableName>phenologySimple</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <TableName>observed</TableName>
+            <TableName>phenologySimple</TableName>
             <FieldName>Phenology.StageCode.Value</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
