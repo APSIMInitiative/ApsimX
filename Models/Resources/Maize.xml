@@ -48,7 +48,7 @@
                 <double>10</double>
                 <double>18</double>
                 <double>26</double>
-                <double>44</double>
+                <double>0</double>
               </Y>
             </XYPairs>
           </SoilTemperatureFunction>
@@ -73,7 +73,7 @@
                 <double>10</double>
                 <double>18</double>
                 <double>26</double>
-                <double>44</double>
+                <double>0</double>
               </Y>
             </XYPairs>
           </AirTemperatureFunction>
@@ -118,7 +118,7 @@
       <Name>Emerging</Name>
       <Start>Germination</Start>
       <End>Emergence</End>
-      <ShootLag>15.0</ShootLag>
+      <ShootLag>55.0</ShootLag>
       <ShootRate>0.6</ShootRate>
       <VariableReference>
         <Name>ThermalTime</Name>
@@ -299,7 +299,7 @@
             <Y>
               <double>30</double>
               <double>30</double>
-              <double>46</double>
+              <double>42</double>
             </Y>
           </XYPairs>
         </LinearInterpolationFunction>
