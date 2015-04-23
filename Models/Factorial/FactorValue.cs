@@ -116,6 +116,8 @@ namespace Models.Factorial
             modelToReplace.Parent.Children.Insert(index, newModel as Model);
             newModel.Name = modelToReplace.Name;
             newModel.Parent = modelToReplace.Parent;
+
+            Apsim.CallEventHandler(newModel, "Loaded", null);
         }
     }
 }
