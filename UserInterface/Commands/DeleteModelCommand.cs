@@ -46,7 +46,7 @@ namespace UserInterface.Commands
         {
             this.explorerView.Delete(Apsim.FullPath(this.modelToDelete));
             pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
-            modelWasRemoved = this.parent.Children.Remove(this.modelToDelete as Model);
+            modelWasRemoved = Apsim.Delete(this.modelToDelete as Model);
         }
 
         /// <summary>Undo the command</summary>
@@ -55,8 +55,9 @@ namespace UserInterface.Commands
         {
             if (this.modelWasRemoved)
             {
-                this.parent.Children.Add(this.modelToDelete as Model);
+                this.parent.Children.Insert(pos, this.modelToDelete as Model);
                 this.explorerView.AddChild(Apsim.FullPath(this.parent), nodeDescription, pos);
+                Apsim.ClearCache(this.modelToDelete);
             }
         }
     }
