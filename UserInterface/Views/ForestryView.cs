@@ -784,7 +784,94 @@ namespace UserInterface.Views
                 table.Rows.Add(row);
             }
             Grid.DataSource = table;
-            Grid.Columns[0].ReadOnly = true;
+            Grid.Columns[0].ReadOnly = true; //name column
+            Grid.Rows[2].ReadOnly = true; //Depth title row
+
+            SetupGraphs();
+        }
+
+        private void SetupGraphs()
+        {
+            pAboveGround.Model.Title = "Above Ground";
+            CategoryAxis agxAxes = new CategoryAxis();
+            Utility.LineSeriesWithTracker seriesWind = new Utility.LineSeriesWithTracker();
+            Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
+            List<DataPoint> pointsWind = new List<DataPoint>();
+            List<DataPoint> pointsShade = new List<DataPoint>();
+            DataRow rowWind = table.Rows[0];
+            DataRow rowShade = table.Rows[1];
+            DataColumn col = table.Columns[0];
+            double[] x = new double[table.Columns.Count - 1];
+            double[] yWind = new double[table.Columns.Count - 1];
+            double[] yShade = new double[table.Columns.Count - 1];
+
+            for (int i = 1; i < table.Columns.Count; i++)
+            {
+                agxAxes.Labels.Add(table.Columns[i].ColumnName);
+            }
+            agxAxes.Position = AxisPosition.Bottom;
+            pAboveGround.Model.Axes.Add(agxAxes);
+
+            for (int i = 1; i < table.Columns.Count; i++)
+            {
+                if (rowWind[i].ToString() == "" || rowShade[i].ToString() == "")
+                    return;
+                yWind[i - 1] = Convert.ToDouble(rowWind[i]);
+                yShade[i - 1] = Convert.ToDouble(rowShade[i]);
+                x[i - 1] = i - 1;
+            }
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                pointsWind.Add(new DataPoint(x[i], yWind[i]));
+                pointsShade.Add(new DataPoint(x[i], yShade[i]));
+            }
+            seriesWind.ItemsSource = pointsWind;
+            seriesShade.ItemsSource = pointsShade;
+            pAboveGround.Model.Series.Add(seriesWind);
+            pAboveGround.Model.Series.Add(seriesShade);
+
+            /////////////// Below Ground
+            pBelowGround.Model.Title = "Below Ground";
+            CategoryAxis catAxes = new CategoryAxis();
+            LinearAxis linAxes = new LinearAxis();
+            List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
+
+            catAxes.Position = AxisPosition.Left;
+            linAxes.Position = AxisPosition.Top;
+            catAxes.Title = "Depth";
+            linAxes.Title = "Root Length Density";
+            linAxes.Minimum = 0;
+            linAxes.Maximum = 1;
+            linAxes.StartPosition = 1;
+            linAxes.EndPosition = 0;
+            pBelowGround.Model.Axes.Add(linAxes);
+            for (int i = 3; i < table.Rows.Count; i++)
+            {
+                catAxes.Labels.Add(table.Rows[i].Field<string>(0));
+            }
+            catAxes.StartPosition = 1;
+            catAxes.EndPosition = 0;
+            pBelowGround.Model.Axes.Add(catAxes);
+
+            for (int i = 1; i < table.Columns.Count; i++)
+            {
+                Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
+                series.Title = table.Columns[i].ColumnName;
+                double[] data = new double[table.Rows.Count - 3];
+                for (int j = 3; j < table.Rows.Count; j++)
+                {
+                    data[j-3] = Convert.ToDouble(table.Rows[j].Field<string>(i));
+                }
+
+                List<DataPoint> points = new List<DataPoint>();
+                for (int j = 0; j < data.Length; j++)
+                {
+                    points.Add(new DataPoint(data[j], j));
+                }
+                series.ItemsSource = points;
+                pBelowGround.Model.Series.Add(series);
+            }
         }
 
         public DataTable GetTable()

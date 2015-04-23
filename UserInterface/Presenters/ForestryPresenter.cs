@@ -45,8 +45,8 @@
                 //setup rows
                 List<string> rowNames = new List<string>();
 
-                rowNames.Add("% Wind Reduction");
-                rowNames.Add("% Shade Reduction");
+                rowNames.Add("% Wind");
+                rowNames.Add("% Shade");
                 rowNames.Add("Depth");
 
                 foreach (string s in Soil.Depth)
