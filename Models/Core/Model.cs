@@ -56,6 +56,7 @@ namespace Models.Core
         [XmlElement(typeof(Clock))]
         [XmlElement(typeof(DataStore))]
         [XmlElement(typeof(Fertiliser))]
+        [XmlElement(typeof(Forestry))]
         [XmlElement(typeof(Models.PostSimulationTools.Input))]
         [XmlElement(typeof(Models.PostSimulationTools.PredictedObserved))]
         [XmlElement(typeof(Models.PostSimulationTools.TimeSeriesStats))]

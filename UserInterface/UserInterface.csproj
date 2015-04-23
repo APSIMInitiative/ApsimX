@@ -124,6 +124,7 @@
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Presenters\ForestryPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -204,6 +205,12 @@
     </Compile>
     <Compile Include="Views\CultivarView.Designer.cs">
       <DependentUpon>CultivarView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ForestryView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\ForestryView.Designer.cs">
+      <DependentUpon>ForestryView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\InitialWaterView.cs">
       <SubType>UserControl</SubType>
@@ -369,6 +376,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CultivarView.resx">
       <DependentUpon>CultivarView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ForestryView.resx">
+      <DependentUpon>ForestryView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InitialWaterView.resx">
       <DependentUpon>InitialWaterView.cs</DependentUpon>
