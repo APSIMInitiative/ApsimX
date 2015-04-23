@@ -40,6 +40,7 @@
           <string>[Weather].Rain/25.4 as RainInches</string>
           <string>[Soil].SoilWater.SW-[Soil].SoilWater.LL15 as ESW</string>
           <string>sum([Soil].SoilWater.SW-[Soil].SoilWater.LL15) as TotalESW</string>
+          <string>sum of [Weather].Rain from [Clock].StartOfMonth to [Clock].EndOfMonth as MonthlyRain</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
