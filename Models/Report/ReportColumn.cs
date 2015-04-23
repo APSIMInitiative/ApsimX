@@ -379,7 +379,18 @@ namespace Models.Report
             else
             {
                 if (value.GetType().IsArray || value.GetType().IsClass)
-                    value = ReflectionUtilities.Clone(value);
+                {
+                    try
+                    {
+                        value = ReflectionUtilities.Clone(value);
+                    }
+                    catch (Exception)
+                    {
+                        throw new ApsimXException(this.parentModel, "Cannot report variable " + this.variableName +
+                                                                    ". Variable is not of a reportable type. Perhaps " +
+                                                                    " it is a PMF Function that needs a .Value appended to the name.");
+                    }
+                }
 
                 this.values.Add(value);
             }
