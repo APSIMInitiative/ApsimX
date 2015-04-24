@@ -79,6 +79,7 @@
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
+    <Compile Include="Forestry.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />

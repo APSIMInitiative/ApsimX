@@ -75,10 +75,9 @@ namespace UserInterface.Views
             this.plot1.ContextMenuStrip = this.contextMenuStrip1;
             this.plot1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.plot1.Location = new System.Drawing.Point(0, 0);
-            this.plot1.Margin = new System.Windows.Forms.Padding(4);
             this.plot1.Name = "plot1";
             this.plot1.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.plot1.Size = new System.Drawing.Size(757, 361);
+            this.plot1.Size = new System.Drawing.Size(568, 294);
             this.plot1.TabIndex = 1;
             this.plot1.Text = "plot1";
             this.plot1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
@@ -95,20 +94,18 @@ namespace UserInterface.Views
             // 
             this.bottomPanel.Controls.Add(this.closeButton);
             this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bottomPanel.Location = new System.Drawing.Point(0, 378);
-            this.bottomPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.bottomPanel.Location = new System.Drawing.Point(0, 307);
             this.bottomPanel.Name = "bottomPanel";
-            this.bottomPanel.Size = new System.Drawing.Size(757, 239);
+            this.bottomPanel.Size = new System.Drawing.Size(568, 194);
             this.bottomPanel.TabIndex = 3;
             // 
             // closeButton
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.Image = global::UserInterface.Properties.Resources.Close;
-            this.closeButton.Location = new System.Drawing.Point(728, 1);
-            this.closeButton.Margin = new System.Windows.Forms.Padding(4);
+            this.closeButton.Location = new System.Drawing.Point(546, 1);
             this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(29, 28);
+            this.closeButton.Size = new System.Drawing.Size(22, 23);
             this.closeButton.TabIndex = 0;
             this.closeButton.UseVisualStyleBackColor = true;
             this.closeButton.Click += new System.EventHandler(this.OnCloseEditorPanel);
@@ -117,10 +114,11 @@ namespace UserInterface.Views
             // 
             this.captionLabel.AutoSize = true;
             this.captionLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.captionLabel.Location = new System.Drawing.Point(0, 361);
-            this.captionLabel.MaximumSize = new System.Drawing.Size(500, 50);
+            this.captionLabel.Location = new System.Drawing.Point(0, 294);
+            this.captionLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.captionLabel.MaximumSize = new System.Drawing.Size(375, 41);
             this.captionLabel.Name = "captionLabel";
-            this.captionLabel.Size = new System.Drawing.Size(0, 17);
+            this.captionLabel.Size = new System.Drawing.Size(0, 13);
             this.captionLabel.TabIndex = 4;
             this.captionLabel.DoubleClick += new System.EventHandler(this.OnCaptionLabelDoubleClick);
             // 
@@ -130,28 +128,31 @@ namespace UserInterface.Views
             this.panel1.Controls.Add(this.captionLabel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(757, 378);
+            this.panel1.Size = new System.Drawing.Size(568, 307);
             this.panel1.TabIndex = 5;
             // 
             // splitter
             // 
             this.splitter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter.Location = new System.Drawing.Point(0, 375);
+            this.splitter.Location = new System.Drawing.Point(0, 305);
+            this.splitter.Margin = new System.Windows.Forms.Padding(2);
             this.splitter.Name = "splitter";
-            this.splitter.Size = new System.Drawing.Size(757, 3);
+            this.splitter.Size = new System.Drawing.Size(568, 2);
             this.splitter.TabIndex = 6;
             this.splitter.TabStop = false;
             // 
             // GraphView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitter);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.bottomPanel);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "GraphView";
-            this.Size = new System.Drawing.Size(757, 617);
+            this.Size = new System.Drawing.Size(568, 501);
             this.bottomPanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
