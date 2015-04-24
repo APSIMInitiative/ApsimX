@@ -294,7 +294,7 @@ namespace Models
                 // Extract the path from the filespec. If non specified then assume
                 // current working directory.
                 string path = Path.GetDirectoryName(this.FileSpec);
-                if (path == null)
+                if (path == null | path == "")
                 {
                     path = Directory.GetCurrentDirectory();
                 }
