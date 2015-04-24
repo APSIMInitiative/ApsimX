@@ -74,7 +74,7 @@ namespace UnitTests
         [TearDown]
         public void Cleanup()
         {
-            this.simulation.CleanupRun();
+            this.simulation.CleanupRun(null);
             File.Delete("Test.apsimx");
             File.Delete("Goondiwindi.met");
         }
