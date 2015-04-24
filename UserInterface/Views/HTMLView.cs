@@ -4,51 +4,50 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using ModelText.ModelEditControl;
-using ModelText.ModelDom.Range;
-using ModelText.ModelDom.Nodes;
-using ModelText.ModelEditToolCommands;
 using UserInterface.Forms;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using UserInterface.Classes;
+using System.Diagnostics;
 namespace UserInterface.Views
 {
+    /// <summary>
+    /// An interface for a HTML view.
+    /// </summary>
     interface IHTMLView
     {
-        event EventHandler<EditorArgs> MemoUpdate;
-
         /// <summary>
         /// Add an action (on context menu) on the memo.
         /// </summary>
         void AddContextAction(string ButtonText, System.EventHandler OnClick);
 
+        /// <summary>
+        /// Set or get the text of the richedit
+        /// </summary>
         string MemoText { get; set; }
+
+        /// <summary>
+        /// Get or set the readonly name of the richedit.
+        /// </summary>
         bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// Tells view to use a mono spaced font.
+        /// </summary>
+        void UseMonoSpacedFont();
     }
 
     /// <summary>
     /// The Presenter for a HTML component.
-    /// This view uses the component developed here:
-    /// http://www.modeltext.com/html/
     /// </summary>
     public partial class HTMLView : UserControl, IHTMLView
     {
-        public event EventHandler<EditorArgs> MemoUpdate;
-        private string defaultHtml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                     "<!DOCTYPE html PUBLIC \" -//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">" +
-                                     "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">" +
-                                     "<head>" +
-                                     "<title />" +
-                                     "</head>" +
-                                     "<body />" +
-                                     "</html>";
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public HTMLView()
         {
             InitializeComponent();
-            //create the control's toolbar
-            tooledControl1.addTools();
-
-            //install an event handler, to help process some of the buttons on the edit toolbar
-            tooledControl1.modelEdit.toolContainer.onToolCommand = onToolCommand;
         }
 
         /// <summary>
@@ -58,25 +57,12 @@ namespace UserInterface.Views
         {
             get 
             {
-                StringWriter writer = new StringWriter();
-                tooledControl1.modelEdit.save(writer, XmlHeaderType.Xhtml);
-                return writer.ToString(); 
+                return RTFToHTML.Convert(richTextBox1.Rtf);
             }
             set 
             {
-                if (value == null)
-                {
-                    value = defaultHtml;
-                }
-
-                StringReader reader = new StringReader(value);
-                try
-                {
-                    tooledControl1.modelEdit.openDocument(reader);
-                }
-                catch (Exception)
-                {
-                }
+                if (value != null)
+                    richTextBox1.Rtf = HTMLToRTF.Convert(value);
             }
         }
 
@@ -85,27 +71,23 @@ namespace UserInterface.Views
         /// </summary>
         public bool ReadOnly 
         {
-            get { return !tooledControl1.editControl.Enabled; }
+            get 
+            { 
+                return richTextBox1.ReadOnly; 
+            }
             set 
             { 
-                //tooledControl1.editControl.Enabled = !value;
-                tooledControl1.modelEdit.toolContainer.visible = tooledControl1.editControl.Enabled;
+                richTextBox1.ReadOnly = value;
+                ToolStrip1.Visible = !richTextBox1.ReadOnly;
             }
         }
 
         /// <summary>
-        /// The memo has been updated and now send the changed text to the model.
+        /// Tells view to use a mono spaced font.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void richTextBox1_Leave(object sender, EventArgs e)
+        public void UseMonoSpacedFont() 
         {
-            if (MemoUpdate != null)
-            {
-                EditorArgs args = new EditorArgs();
-                args.TextString = MemoText;
-                MemoUpdate(this, args);
-            }
+            richTextBox1.Font = new Font("Consolas", 10F);   
         }
 
         /// <summary>
@@ -115,133 +97,140 @@ namespace UserInterface.Views
         {
             contextMenuStrip1.Items.Add(buttonText);
             contextMenuStrip1.Items[0].Click += onClick;
-            tooledControl1.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        #region Event Handlers
+        /// <summary>
+        /// User has clicked bold.
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnBoldClick(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont.Bold)
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
+            else
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Bold);
+        }
+       
+        /// <summary>
+        /// User has clicked italics.
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnItalicClick(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont.Italic)
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
+            else
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Italic);
+        }
+        /// <summary>
+        /// User has clicked underline
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnUnderlineClick(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont.Underline)
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
+            else
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Underline);
         }
 
         /// <summary>
-        /// This method is invoked when any command on the toolbar is pressed
+        /// User has clicked strikethrough
         /// </summary>
-        /// <param name="command"></param>
-        private void onToolCommand(Command command)
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnStrikeThroughClick(object sender, EventArgs e)
         {
-            //see what type of command it is
-            //the command-handler for most of the commands are implemented within the control
-            //but two of the commands (i.e. Save and InsertHyperlink) need help from the client application
-            if (object.ReferenceEquals(command, CommandInstance.commandInsertHyperlink))
+            if (richTextBox1.SelectionFont.Strikeout)
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
+            else
+                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Strikeout);
+        }
+
+        /// <summary>
+        /// User has clicked superscript
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSuperscriptClick(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionCharOffset == 0)
+                richTextBox1.SelectionCharOffset = 8;
+            else
+                richTextBox1.SelectionCharOffset = 0;
+        }
+
+        /// <summary>
+        /// User has clicked subscript.
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSubscriptClick(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionCharOffset == 0)
+                richTextBox1.SelectionCharOffset = -8;
+            else
+                richTextBox1.SelectionCharOffset = 0;
+        }
+
+        /// <summary>
+        /// User has changed the heading.
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnHeadingChanged(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionFont != null)
             {
-                //invoke a method to handle the Insert Hyperlink command being pressed
-                onInsertHyperlink();
+                if (headingComboBox.Text == "Heading 1")
+                    richTextBox1.SelectionFont = new Font(richTextBox1.Font.FontFamily, 16f);
+                else if (headingComboBox.Text == "Heading 2")
+                    richTextBox1.SelectionFont = new Font(richTextBox1.Font.FontFamily, 14f);
+                else if (headingComboBox.Text == "Heading 3")
+                    richTextBox1.SelectionFont = new Font(richTextBox1.Font.FontFamily, 12f);
+                else
+                    richTextBox1.SelectionFont = new Font(richTextBox1.Font.FontFamily, 10f, richTextBox1.SelectionFont.Style);
             }
         }
 
-        private void onInsertHyperlink()
+        /// <summary>
+        /// User has changed the selection.
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnSelectionChanged(object sender, EventArgs e)
         {
-            //get the document fragment which the user has currently selected using mouse and/or cursor
-            IWindowSelection windowSelection = tooledControl1.modelEdit.windowSelection;
-            //verify that there's only one selection
-            if (windowSelection.rangeCount != 1)
-            {
-                //this can happen when the user has selected several cell in a table,
-                //in which case each cell is a separate selection/range
-                MessageBox.Show("Can't insert a hyperlink when more than one range in the document is selected");
-                return;
-            }
-            using (IDomRange domRange = windowSelection.getRangeAt(0))
-            {
-                //verify that only one node is selected
-                if (!domRange.startContainer.isSameNode(domRange.endContainer))
-                {
-                    //this can happen for example when the selection spans multiple paragraphs
-                    MessageBox.Show("Can't insert a hyperlink when more than one node in the document is selected");
-                    return;
-                }
-                IDomNode container = domRange.startContainer; //already just checked that this is the same as domRange.endContainer
-                //read existing values from the current selection
-                string url;
-                string visibleText;
-                IDomElement existingHyperlink;
-                switch (container.nodeType)
-                {
-                    case DomNodeType.Text:
-                        //selection is a text fragment
-                        visibleText = container.nodeValue.Substring(domRange.startOffset, domRange.endOffset - domRange.startOffset);
-                        IDomNode parentNode = container.parentNode;
-                        if ((parentNode.nodeType == DomNodeType.Element) && (parentNode.nodeName == "a"))
-                        {
-                            //parent of this text node is a <a> element
-                            existingHyperlink = parentNode as IDomElement;
-                            url = existingHyperlink.getAttribute("href");
-                            visibleText = container.nodeValue;
-                            if ((existingHyperlink.childNodes.count != 1) || (existingHyperlink.childNodes.itemAt(0).nodeType != DomNodeType.Text))
-                            {
-                                //this can happen when an anchor tag wraps more than just a single, simple text node
-                                //for example when it contains inline elements like <strong>
-                                MessageBox.Show("Can't edit a complex hyperlink");
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            existingHyperlink = null;
-                            url = null;
-                        }
-                        break;
+            richTextBox1.TextChanged -= OnHeadingChanged;
+            if (richTextBox1.SelectionFont == null)
+                headingComboBox.Text = "Normal";
+            else if (richTextBox1.SelectionFont.Size == 16f)
+                headingComboBox.Text = "Heading 1";
+            else if (richTextBox1.SelectionFont.Size == 14f)
+                headingComboBox.Text = "Heading 2";
+            else if (richTextBox1.SelectionFont.Size == 12f)
+                headingComboBox.Text = "Heading 3";
+            else if (richTextBox1.SelectionFont.Size == 10f)
+                headingComboBox.Text = "Normal";
 
-                    default:
-                        //unexpected
-                        MessageBox.Show("Can't insert a hyperlink when more than one node in the document is selected");
-                        return;
-                }
-                //display the modal dialog box
-                using (FormInsertHyperlink formInsertHyperlink = new FormInsertHyperlink())
-                {
-                    formInsertHyperlink.url = url;
-                    formInsertHyperlink.visibleText = visibleText;
-                    DialogResult dialogResult = formInsertHyperlink.ShowDialog();
-                    if (dialogResult != DialogResult.OK)
-                    {
-                        //user cancelled
-                        return;
-                    }
-                    //get new values from the dialog box
-                    //the FormInsertHyperlink.onEditTextChanged method assures that both strings are non-empty
-                    url = formInsertHyperlink.url;
-                    visibleText = formInsertHyperlink.visibleText;
-                }
-                //need to change href, change text, and possibly delete existing text;
-                //do this within the scope of a single IEditorTransaction instance so
-                //that if the user does 'undo' then it will undo all these operations at once, instead of one at a time
-                using (IEditorTransaction editorTransaction = tooledControl1.modelEdit.createEditorTransaction())
-                {
-                    if (existingHyperlink != null)
-                    {
-                        //changing an existing hyperlink ...
-                        //... change the href attribute value
-                        existingHyperlink.setAttribute("href", url);
-                        //... change the text, by removing the old text node and inserting a new text node
-                        IDomText newDomText = tooledControl1.modelEdit.domDocument.createTextNode(visibleText);
-                        IDomNode oldDomText = existingHyperlink.childNodes.itemAt(0);
-                        existingHyperlink.removeChild(oldDomText);
-                        existingHyperlink.insertBefore(newDomText, null);
-                    }
-                    else
-                    {
-                        //creating a new hyperlink
-                        IDomElement newHyperlink = tooledControl1.modelEdit.domDocument.createElement("a");
-                        IDomText newDomText = tooledControl1.modelEdit.domDocument.createTextNode(visibleText);
-                        newHyperlink.insertBefore(newDomText, null);
-                        newHyperlink.setAttribute("href", url);
-                        //remove whatever was previously selected, if anything
-                        if (!domRange.collapsed)
-                        {
-                            domRange.deleteContents();
-                        }
-                        //insert the new hyperlink
-                        domRange.insertNode(newHyperlink);
-                    }
-                }
-            }
+            richTextBox1.TextChanged += OnHeadingChanged;
         }
+
+        /// <summary>
+        /// User has clicked a link.
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments</param>
+        private void OnLinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            Process.Start(e.LinkText);
+        }
+
+        #endregion
+
 
     }
 

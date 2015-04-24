@@ -62,60 +62,8 @@ namespace Models
             if (html)
             {
                 writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                writer.WriteLine("<!DOCTYPE html PUBLIC \" -//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
-                writer.WriteLine("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">");
-                writer.WriteLine("<head><title>Summary file</title>");
-
-                writer.WriteLine("<style type=\"text/css\">");
-                writer.WriteLine("table.ApsimTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;border-width: 1px;border-color: #729ea5;border-collapse: collapse;text-align:right;table-layout:auto;width: 50%;whitespace:nowrap}");
-                writer.WriteLine("table.ApsimTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:right}");
-                writer.WriteLine("table.ApsimTable tr {font-family:Arial,Helvetica,sans-serif;vertical-align:top;background-color:#d4e3e5;}");
-                writer.WriteLine("table.ApsimTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}");
-
-                writer.WriteLine("table.PropertyTable {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;table-layout:fixed;width: 50%}");
-                writer.WriteLine("table.PropertyTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-                writer.WriteLine("table.PropertyTable tr {\r\n" +
-                                 "   font-family:Arial,Helvetica,sans-serif;\r\n" +
-                                 "   vertical-align:middle;\r\n" +
-                                 "   padding: 0px 0px 0px 0px;\r\n" +
-                                 "}");
-                writer.WriteLine("table.PropertyTable td {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 0px;}");
-
-                writer.WriteLine("table.MessageTable {\r\n" +
-                                 "   font-family:Arial,Helvetica,sans-serif;\r\n" +
-                                 "   font-size:14px;\r\n" +
-                                 "   width: 100%;\r\n" +
-                                 "   table-layout: fixed;\r\n" +
-                                 "   border-width: 1px;}");
-                writer.WriteLine("table.MessageTable th {font-family:Arial,Helvetica,sans-serif;font-size:14px;border-width: 1px;}");
-                writer.WriteLine("table.MessageTable tr {\r\n" +
-                                 "   font-family:Arial,Helvetica,sans-serif;\r\n" +
-                                 "   vertical-align:middle;\r\n" +
-                                 "   padding: 0px 0px 0px 0px;\r\n" +
-                                 "}");
-                writer.WriteLine("table.MessageTable td {\r\n" +
-                                 "   font-family:Arial,Helvetica,sans-serif;font-size:14px;\r\n" +
-                                 "   border-width: 1px;\r\n" +
-                                 "}");
-
-                writer.WriteLine("td.col1 {\r\n" +
-                                 "   width: 30%;\r\n" +
-                                 "}");
-                writer.WriteLine("td.col2 {\r\n" +
-                                 "   width: 70%;\r\n" +
-                                 "}");
-                writer.WriteLine("p.Warning {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF6600;}");
-                writer.WriteLine("p.Error {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#FF0000;}");
-                writer.WriteLine("tr.TitleRow {font-family:Arial,Helvetica,sans-serif;font-size:14px;color:red;font-weight:bold;}");
-                
-                writer.WriteLine("</style>");
-                writer.WriteLine("</head>");
+                writer.WriteLine("<html>");
                 writer.WriteLine("<body>");
-
-                if (apsimSummaryImageFileName != null)
-                {
-                    writer.WriteLine("<p><img src=\"" + apsimSummaryImageFileName + "\" alt=\"logo\"></img></p>");
-                }
             }
 
             // Get the initial conditions table.            
@@ -155,6 +103,8 @@ namespace Models
                                 WriteTable(writer, tables[i + 1], html, includeHeadings: true, className: "ApsimTable");
                             }
                         }
+
+                        writer.WriteLine("<br/>");
                     }
                 }
             }
@@ -320,7 +270,6 @@ namespace Models
                 st = st.Replace("\r", string.Empty);
                 st = st.Replace("\n", "<br/>");
                 st = st.Replace("<br/>", "<br/>\r\n");
-                st = "<pre><code>" + st + "</code></pre>";
             }
 
             writer.WriteLine(st);
@@ -338,101 +287,16 @@ namespace Models
         {
             if (html)
             {
-                if (className == string.Empty)
-                {
-                    writer.WriteLine("<table>");
-                }
-                else
-                {
-                    writer.WriteLine("<table class=\"" + className + "\">");
-                }
-
-                if (includeHeadings)
-                {
-                    writer.Write("<tr>");
-                    foreach (DataColumn col in table.Columns)
-                    {
-                        writer.Write("<th>");
-                        writer.Write(col.ColumnName);
-                        writer.Write("</th>");
-                    }
-
-                    writer.WriteLine("</tr>");
-                }
-
-                foreach (DataRow row in table.Rows)
-                {
-                    bool titleRow = Convert.IsDBNull(row[0]);
-
-                    if (titleRow)
-                    {
-                        writer.Write("<tr class=\"TitleRow\">");
-                    }
-                    else
-                    {
-                        writer.Write("<tr>");
-                    }
-
-                    foreach (DataColumn col in table.Columns)
-                    {
-                        string st = row[col].ToString();
-                        if (titleRow && col.Ordinal == 0)
-                        {
-                            st = "Total";
-                        }
-                            
-                        if (className == "MessageTable")
-                        {
-                            if (col.Ordinal == 0)
-                            {
-                                writer.WriteLine("<td class=\"col1\">");
-                            }
-                            else
-                            {
-                                writer.WriteLine("<td class=\"col2\">");
-                            }
-                        }
-                        else
-                        {
-                            writer.Write("<td>");
-                        }
-
-                        if (st.Contains("\n"))
-                        {
-                            st = st.Replace("\n", "<br/>");
-                        }
-
-                        if (st.Contains("WARNING:"))
-                        {
-                            st = "<p class=\"Warning\">" + st + "</p>";
-                        }
-                        else if (st.Contains("ERROR:"))
-                        {
-                            st = "<p class=\"Error\">" + st + "</p>";
-                        }
-
-                        // For property table, bold the value field.
-                        if (className == "PropertyTable" && col.Ordinal == 1)
-                        {
-                            writer.Write("<b>" + st + "</b>");
-                        }
-                        else
-                        {
-                            writer.Write(st);
-                        }
-
-                        writer.Write("</td>");
-                    }
-
-                    writer.WriteLine("</tr>");
-                }
-
-                writer.WriteLine("</table>");
+                bool showHeadings = className != "PropertyTable";
+                string line = DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings);
+                line = line.Replace("\r\n", "<br/>");
+                writer.WriteLine(line);
             }
             else
             {
                 bool showHeadings = className != "PropertyTable";
-                writer.WriteLine(DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings));
+                string line = DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings);
+                writer.WriteLine(line);
             }
         }
 
@@ -466,7 +330,6 @@ namespace Models
                     st = st.Replace("\r", string.Empty);
                     st = st.Replace("\n", "<br/>");
                     st = st.Replace("<br/>", "<br/>\r\n");
-                    st = "<pre><code>" + st + "</code></pre>";
                 }
                 else
                 {

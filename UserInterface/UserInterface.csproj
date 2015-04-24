@@ -37,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -90,9 +91,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="ModelEditControl">
-      <HintPath>..\Bin\ModelEditControl.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Models\Properties\AssemblyVersion.cs">
@@ -105,7 +103,9 @@
     <Compile Include="Classes\GridCell.cs" />
     <Compile Include="Classes\GridColumn.cs" />
     <Compile Include="Classes\HtmlEditor.cs" />
+    <Compile Include="Classes\HTMLToRTF.cs" />
     <Compile Include="Classes\PMFDocumentation.cs" />
+    <Compile Include="Classes\RTFToHTML.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />

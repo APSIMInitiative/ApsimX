@@ -40,6 +40,7 @@
           <string>[Weather].Rain/25.4 as RainInches</string>
           <string>[Soil].SoilWater.SW-[Soil].SoilWater.LL15 as ESW</string>
           <string>sum([Soil].SoilWater.SW-[Soil].SoilWater.LL15) as TotalESW</string>
+          <string>sum of [Weather].Rain from [Clock].StartOfMonth to [Clock].EndOfMonth as MonthlyRain</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -782,7 +783,7 @@
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <Series>
       <Title>sw(1)</Title>
@@ -802,7 +803,7 @@
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
-      <SplitOn>Simulation</SplitOn>
+      <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>TopRight</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
@@ -810,16 +811,10 @@
   </Graph>
   <Memo>
     <Name>Memo</Name>
-    <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
- <head>
-  <title></title>
- </head>
- <body>
-  <p></p>
- </body>
-</html>]]></MemoText>
+    <MemoText><![CDATA[
+<html><body>
+
+</body></html>]]></MemoText>
   </Memo>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

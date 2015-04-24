@@ -40,7 +40,7 @@ namespace Models
                 water.Amount = amount * efficiency;
                 water.Depth = depth;
                 water.will_runoff = willRunoff;
-                IrrigationApplied = amount;
+                IrrigationApplied += amount;
                 Irrigated.Invoke(this, water);
                 Summary.WriteMessage(this, string.Format("{0:F1} mm of water added at depth {1}", amount * efficiency, depth));
             }
