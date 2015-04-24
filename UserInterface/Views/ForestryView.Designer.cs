@@ -38,6 +38,8 @@
             // 
             // panel1
             // 
+            this.panel1.AutoSize = true;
+            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.Controls.Add(this.Grid);
             this.panel1.Controls.Add(this.pBelowGround);
             this.panel1.Controls.Add(this.pAboveGround);
@@ -53,18 +55,20 @@
             this.Grid.AllowUserToDeleteRows = false;
             this.Grid.AllowUserToResizeColumns = false;
             this.Grid.AllowUserToResizeRows = false;
+            this.Grid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.Grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.Grid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Grid.Dock = System.Windows.Forms.DockStyle.Left;
             this.Grid.Location = new System.Drawing.Point(0, 294);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
             this.Grid.Size = new System.Drawing.Size(265, 269);
             this.Grid.TabIndex = 4;
+            this.Grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellEndEdit);
             // 
             // pBelowGround
             // 
+            this.pBelowGround.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.pBelowGround.Location = new System.Drawing.Point(271, 294);
             this.pBelowGround.Name = "pBelowGround";
             this.pBelowGround.PanCursor = System.Windows.Forms.Cursors.Hand;
@@ -95,9 +99,11 @@
             this.Controls.Add(this.panel1);
             this.Name = "ForestryView";
             this.Size = new System.Drawing.Size(527, 563);
+            this.Resize += new System.EventHandler(this.ForestryView_Resize);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

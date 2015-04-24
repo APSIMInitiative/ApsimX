@@ -42,7 +42,7 @@ namespace UserInterface.Views
         /// <summary>
         /// A table to hold tree data which is bound to the grid.
         /// </summary>
-        private DataTable table = new DataTable();
+        private DataTable table;
 
         /// <summary>
         /// Overall font to use.
@@ -77,27 +77,52 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)
         /// </summary>
-        public event EventHandler OnPlotClick;
+        public event EventHandler OnPlotClick
+        {
+            add { }
+            remove { }
+        }
 
         /// <summary>
         /// Invoked when the user clicks on an axis.
         /// </summary>
-        public event ClickAxisDelegate OnAxisClick;
+        public event ClickAxisDelegate OnAxisClick
+        {
+            add { }
+            remove { }
+        }
+
+        /// <summary>
+        /// Invoked when the user finishes editing a cell.
+        /// </summary>
+        public event EventHandler OnCellEndEdit;
 
         /// <summary>
         /// Invoked when the user clicks on a legend.
         /// </summary>
-        public event EventHandler<LegendClickArgs> OnLegendClick;
+        public event EventHandler<LegendClickArgs> OnLegendClick
+        {
+            add { }
+            remove { }
+        }
 
         /// <summary>
         /// Invoked when the user clicks on the graph title.
         /// </summary>
-        public event EventHandler OnTitleClick;
+        public event EventHandler OnTitleClick
+        {
+            add { }
+            remove { }
+        }
 
         /// <summary>
         /// Invoked when the user clicks on the graph caption.
         /// </summary>
-        public event EventHandler OnCaptionClick;
+        public event EventHandler OnCaptionClick
+        {
+            add { }
+            remove { }
+        }
 
         /// <summary>
         /// Invoked when the user hovers over a series point.
@@ -469,108 +494,7 @@ namespace UserInterface.Views
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType)
         {
-            List<DataPoint> points = new List<DataPoint>();
-            if (x != null && y != null && x != null && y != null)
-            {
-                // Create a new data point for each x.
-                IEnumerator xEnum = x.GetEnumerator();
-                double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
-                double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
-
-                // Create data points
-                for (int i = 0; i < xValues.Length; i++)
-                    if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
-                        points.Add(new DataPoint(xValues[i], yValues[i]));
-
-                return points;
-            }
-            else
                 return null;
-        }
-
-        /// <summary>Gets an array of values for the given enumerator</summary>
-        /// <param name="xEnum">The enumumerator</param>
-        /// <param name="axisType">Type of the axis.</param>
-        /// <returns></returns>
-        private double[] GetDataPointValues(IEnumerator enumerator, Models.Graph.Axis.AxisType axisType)
-        {
-            List<double> dataPointValues = new List<double>();
-
-            enumerator.MoveNext();
-
-            if (enumerator.Current.GetType() == typeof(DateTime))
-            {
-                this.EnsureAxisExists(axisType, typeof(DateTime));
-                do
-                {
-                    DateTime d = Convert.ToDateTime(enumerator.Current);
-                    dataPointValues.Add(DateTimeAxis.ToDouble(d));
-                    if (d < smallestDate)
-                        smallestDate = d;
-                    if (d > largestDate)
-                        largestDate = d;
-                }
-                while (enumerator.MoveNext());
-            }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float))
-            {
-                this.EnsureAxisExists(axisType, typeof(double));
-                do
-                    dataPointValues.Add(Convert.ToDouble(enumerator.Current));
-                while (enumerator.MoveNext());
-            }
-            else
-            {
-                this.EnsureAxisExists(axisType, typeof(string));
-                CategoryAxis axis = GetAxis(axisType) as CategoryAxis;
-                do
-                {
-                    int index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                    if (index == -1)
-                    {
-                        axis.Labels.Add(enumerator.Current.ToString());
-                        index = axis.Labels.IndexOf(enumerator.Current.ToString());
-                    }
-
-                    dataPointValues.Add(index);
-                }
-                while (enumerator.MoveNext());
-            }
-
-            return dataPointValues.ToArray();
-        }
-
-
-        /// <summary>
-        /// Ensure the specified X exists. Uses the 'DataType' property of the DataColumn
-        /// to determine the type of axis.
-        /// </summary>
-        /// <param name="axisType">The axis type to check</param>
-        /// <param name="dataType">The data type of the axis</param>
-        private void EnsureAxisExists(Models.Graph.Axis.AxisType axisType, Type dataType)
-        {
-            // Make sure we have an x axis at the correct position.
-         /*   if (this.GetAxis(axisType) == null)
-            {
-                AxisPosition position = this.AxisTypeToPosition(axisType);
-                OxyPlot.Axes.Axis axisToAdd;
-                if (dataType == typeof(DateTime))
-                {
-                    axisToAdd = new DateTimeAxis();
-                }
-                else if (dataType == typeof(double))
-                {
-                    axisToAdd = new LinearAxis();
-                }
-                else
-                {
-                    axisToAdd = new CategoryAxis();
-                }
-
-                axisToAdd.Position = position;
-                axisToAdd.Key = axisType.ToString();
-                this.plot1.Model.Axes.Add(axisToAdd);
-            }*/
         }
 
         /// <summary>
@@ -588,134 +512,7 @@ namespace UserInterface.Views
             return null;
         }
 
-        /// <summary>
-        /// Return an axis that has the specified AxisType. Returns null if not found.
-        /// </summary>
-        /// <param name="axisType">The axis type to retrieve </param>
-        /// <returns>The axis</returns>
-        private int GetAxisIndex(Models.Graph.Axis.AxisType axisType)
-        {
-          /*  AxisPosition position = this.AxisTypeToPosition(axisType);
-            for (int i = 0; i < this.plot1.Model.Axes.Count; i++)
-            {
-                if (this.plot1.Model.Axes[i].Position == position)
-                {
-                    return i;
-                }
-            }*/
 
-            return -1;
-        }
-
-        /// <summary>
-        /// Convert the Axis.AxisType into an OxyPlot.AxisPosition.
-        /// </summary>
-        /// <param name="type">The axis type</param>
-        /// <returns>The position of the axis.</returns>
-        private AxisPosition AxisTypeToPosition(Models.Graph.Axis.AxisType type)
-        {
-            if (type == Models.Graph.Axis.AxisType.Bottom)
-            {
-                return AxisPosition.Bottom;
-            }
-            else if (type == Models.Graph.Axis.AxisType.Left)
-            {
-                return AxisPosition.Left;
-            }
-            else if (type == Models.Graph.Axis.AxisType.Top)
-            {
-                return AxisPosition.Top;
-            }
-
-            return AxisPosition.Right;
-        }
-
-        /// <summary>
-        /// User has double clicked somewhere on a graph.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnMouseDoubleClick(object sender, MouseEventArgs e)
-        {
-         /*   Rectangle plotArea = this.plot1.Model.PlotArea.ToRect(false);
-            if (plotArea.Contains(e.Location))
-            {
-                if (this.plot1.Model.LegendArea.ToRect(true).Contains(e.Location))
-                {
-                    int margin = Convert.ToInt32(this.plot1.Model.LegendMargin);
-                    int y = Convert.ToInt32(e.Location.Y - this.plot1.Model.LegendArea.Top);
-                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height) / this.plot1.Model.Series.Count;
-                    int seriesIndex = y / itemHeight;
-                    if (this.OnLegendClick != null)
-                    {
-                        LegendClickArgs args = new LegendClickArgs();
-                        args.seriesIndex = seriesIndex;
-                        args.controlKeyPressed = ModifierKeys == Keys.Control;
-                        this.OnLegendClick.Invoke(sender, args);
-                    }
-                }
-                else
-                {
-                    if (this.OnPlotClick != null)
-                    {
-                        this.OnPlotClick.Invoke(sender, e);
-                    }
-                }
-            }
-            else
-            {
-                Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
-                Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
-                Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
-
-                if (this.GetAxis(Models.Graph.Axis.AxisType.Top) != null)
-                {
-                    titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
-                    topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
-                }
-
-                Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, this.Width - plotArea.Right, plotArea.Height);
-                Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, this.Height - plotArea.Bottom);
-                if (titleArea.Contains(e.Location))
-                {
-                    if (this.OnTitleClick != null)
-                    {
-                        this.OnTitleClick(sender, e);
-                    }
-                }
-
-                if (this.OnAxisClick != null)
-                {
-                    if (leftAxisArea.Contains(e.Location))
-                    {
-                        this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Left);
-                    }
-                    else if (topAxisArea.Contains(e.Location))
-                    {
-                        this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Top);
-                    }
-                    else if (rightAxisArea.Contains(e.Location))
-                    {
-                        this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Right);
-                    }
-                    else if (bottomAxisArea.Contains(e.Location))
-                    {
-                        this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Bottom);
-                    }
-                }
-            }*/
-        }
-
-        /// <summary>
-        /// User has clicked the caption
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnCaptionLabelDoubleClick(object sender, EventArgs e)
-        {
-            if (OnCaptionClick != null)
-                OnCaptionClick.Invoke(this, e);
-        }
 
 
         /// <summary>
@@ -756,7 +553,7 @@ namespace UserInterface.Views
             List<string> names = new List<string>();
             foreach (OxyPlot.Series.Series series in this.pAboveGround.Model.Series)
             {
-                names.Add("AG"+series.Title);
+                names.Add("AG" + series.Title);
             }
             foreach (OxyPlot.Series.Series series in this.pBelowGround.Model.Series)
             {
@@ -767,7 +564,7 @@ namespace UserInterface.Views
 
         public void SetupGrid(List<List<string>> data)
         {
-
+            table = new DataTable();
             // data[0] holds the column names
             foreach (string s in data[0])
             {
@@ -779,7 +576,7 @@ namespace UserInterface.Views
                 string[] row = new string[table.Columns.Count];
                 for (int j = 1; j < table.Columns.Count + 1; j++)
                 {
-                    row[j-1] = data[j][i];
+                    row[j - 1] = data[j][i];
                 }
                 table.Rows.Add(row);
             }
@@ -787,13 +584,40 @@ namespace UserInterface.Views
             Grid.Columns[0].ReadOnly = true; //name column
             Grid.Rows[2].ReadOnly = true; //Depth title row
 
+            ResizeControls();
+
             SetupGraphs();
+        }
+
+        private void ResizeControls()
+        {
+            //resize grid
+            int width = 0;
+            int height = 0;
+            foreach (DataGridViewColumn col in Grid.Columns)
+                width += col.Width;
+            foreach (DataGridViewRow row in Grid.Rows)
+                height += row.Height;
+            Grid.Width = width + 3;
+            Grid.Height = height + 25;
+
+            //resize below ground graph
+            pBelowGround.Width = pBelowGround.Parent.Width - Grid.Width;
+            pBelowGround.Height = pBelowGround.Parent.Height - pAboveGround.Height;
+            pBelowGround.Location = new Point(Grid.Width, pAboveGround.Height);
         }
 
         private void SetupGraphs()
         {
+            pAboveGround.Model.Axes.Clear();
+            pAboveGround.Model.Series.Clear();
+            pBelowGround.Model.Axes.Clear();
+            pBelowGround.Model.Series.Clear();
             pAboveGround.Model.Title = "Above Ground";
-            CategoryAxis agxAxes = new CategoryAxis();
+            CategoryAxis agxAxis = new CategoryAxis();
+            agxAxis.Title = "Zone";
+            LinearAxis agyAxis = new LinearAxis();
+            agyAxis.Title = "%";
             Utility.LineSeriesWithTracker seriesWind = new Utility.LineSeriesWithTracker();
             Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
             List<DataPoint> pointsWind = new List<DataPoint>();
@@ -807,10 +631,11 @@ namespace UserInterface.Views
 
             for (int i = 1; i < table.Columns.Count; i++)
             {
-                agxAxes.Labels.Add(table.Columns[i].ColumnName);
+                agxAxis.Labels.Add(table.Columns[i].ColumnName);
             }
-            agxAxes.Position = AxisPosition.Bottom;
-            pAboveGround.Model.Axes.Add(agxAxes);
+            agxAxis.Position = AxisPosition.Bottom;
+            pAboveGround.Model.Axes.Add(agxAxis);
+            pAboveGround.Model.Axes.Add(agyAxis);
 
             for (int i = 1; i < table.Columns.Count; i++)
             {
@@ -833,26 +658,26 @@ namespace UserInterface.Views
 
             /////////////// Below Ground
             pBelowGround.Model.Title = "Below Ground";
-            CategoryAxis catAxes = new CategoryAxis();
-            LinearAxis linAxes = new LinearAxis();
+            CategoryAxis bgxAxis = new CategoryAxis();
+            LinearAxis bgyAxis = new LinearAxis();
             List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
 
-            catAxes.Position = AxisPosition.Left;
-            linAxes.Position = AxisPosition.Top;
-            catAxes.Title = "Depth";
-            linAxes.Title = "Root Length Density";
-            linAxes.Minimum = 0;
-            linAxes.Maximum = 1;
-            linAxes.StartPosition = 1;
-            linAxes.EndPosition = 0;
-            pBelowGround.Model.Axes.Add(linAxes);
+            bgxAxis.Position = AxisPosition.Left;
+            bgyAxis.Position = AxisPosition.Top;
+            bgxAxis.Title = "Depth";
+            bgyAxis.Title = "Root Length Density";
+            bgyAxis.Minimum = 0;
+            bgyAxis.Maximum = 1;
+            bgyAxis.StartPosition = 1;
+            bgyAxis.EndPosition = 0;
+            pBelowGround.Model.Axes.Add(bgyAxis);
             for (int i = 3; i < table.Rows.Count; i++)
             {
-                catAxes.Labels.Add(table.Rows[i].Field<string>(0));
+                bgxAxis.Labels.Add(table.Rows[i].Field<string>(0));
             }
-            catAxes.StartPosition = 1;
-            catAxes.EndPosition = 0;
-            pBelowGround.Model.Axes.Add(catAxes);
+            bgxAxis.StartPosition = 1;
+            bgxAxis.EndPosition = 0;
+            pBelowGround.Model.Axes.Add(bgxAxis);
 
             for (int i = 1; i < table.Columns.Count; i++)
             {
@@ -861,7 +686,7 @@ namespace UserInterface.Views
                 double[] data = new double[table.Rows.Count - 3];
                 for (int j = 3; j < table.Rows.Count; j++)
                 {
-                    data[j-3] = Convert.ToDouble(table.Rows[j].Field<string>(i));
+                    data[j - 3] = Convert.ToDouble(table.Rows[j].Field<string>(i));
                 }
 
                 List<DataPoint> points = new List<DataPoint>();
@@ -872,12 +697,23 @@ namespace UserInterface.Views
                 series.ItemsSource = points;
                 pBelowGround.Model.Series.Add(series);
             }
+            pAboveGround.InvalidatePlot(true);
+            pBelowGround.InvalidatePlot(true);
         }
 
         public DataTable GetTable()
         {
             return table;
         }
+
+        private void ForestryView_Resize(object sender, EventArgs e)
+        {
+            ResizeControls();
+        }
+
+        private void Grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            Invoke(OnCellEndEdit);
+        }
     }
 }
-

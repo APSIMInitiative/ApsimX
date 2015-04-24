@@ -11,7 +11,7 @@
     using Models;
     using Views;
 
-    class ForestryPresenter : IPresenter, IExportable
+    public class ForestryPresenter : IPresenter, IExportable
     {
         private Forestry ForestryModel;
         private ForestryView ForestryViewer;
@@ -22,18 +22,57 @@
             ForestryModel = model as Forestry;
             ForestryViewer = view as ForestryView;
             Sim = (Simulation)ForestryModel.Parent;
+
+            AttachData();
+            ForestryViewer.OnCellEndEdit += OnCellEndEdit;         
+        }
+
+        public void Detach()
+        {
+            SaveTable();
+            ForestryViewer.OnCellEndEdit -= OnCellEndEdit;
+        }
+
+        private void SaveTable()
+        {
+            DataTable table = ForestryViewer.GetTable();
+            
+            for (int i = 0; i < ForestryModel.Table[1].Count; i++)
+                for (int j = 2; j < table.Columns.Count + 1; j++)
+                {
+                  //  if (i == 2 && j > 0)
+                  //      ForestryModel.Table[j][i] = string.Empty;
+                  //  else
+                    ForestryModel.Table[j][i] = table.Rows[i].Field<string>(j-1);
+                }
+        }
+
+        public string ConvertToHtml(string folder)
+        {
+            // TODO: Implement
+            return string.Empty;
+        }
+
+        private void OnCellEndEdit(object sender, EventArgs e)
+        {
+            SaveTable();
+            AttachData();
+        }
+
+        public void AttachData()
+        {
             List<IModel> Zones = Apsim.FindAll(Sim, typeof(Zone));
             Soil Soil = Apsim.Find(Sim, typeof(Soil)) as Soil;
-                //setup columns
-                List<string> colNames = new List<string>();
+            //setup columns
+            List<string> colNames = new List<string>();
 
-                colNames.Add("Parameter");
-                foreach (Zone z in Zones)
-                {
-                    if (z is Simulation)
-                        continue;
-                    colNames.Add(z.Name);
-                }
+            colNames.Add("Parameter");
+            foreach (Zone z in Zones)
+            {
+                if (z is Simulation)
+                    continue;
+                colNames.Add(z.Name);
+            }
 
             if (ForestryModel.Table.Count == 0)
             {
@@ -57,7 +96,7 @@
                 ForestryModel.Table.Add(rowNames);
                 for (int i = 2; i < colNames.Count + 1; i++)
                 {
-                    ForestryModel.Table.Add(Enumerable.Range(1, rowNames.Count).Select(x => string.Empty).ToList());
+                    ForestryModel.Table.Add(Enumerable.Range(1, rowNames.Count).Select(x => "0").ToList());
                 }
             }
             else
@@ -65,8 +104,10 @@
                 // add Zones not in the table
                 IEnumerable<string> except = colNames.Except(ForestryModel.Table[0]);
                 foreach (string s in except)
-                    ForestryModel.Table.Add(Enumerable.Range(1, ForestryModel.Table[1].Count).Select(x => string.Empty).ToList());
+                    ForestryModel.Table.Add(Enumerable.Range(1, ForestryModel.Table[1].Count).Select(x => "0").ToList());
                 ForestryModel.Table[0].AddRange(except);
+                for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth row to empty strings
+                      ForestryModel.Table[i][2] = string.Empty;
 
                 // remove Zones from table that don't exist in simulation
                 except = ForestryModel.Table[0].Except(colNames);
@@ -82,35 +123,13 @@
                 foreach (int i in indexes)
                 {
                     ForestryModel.Table[0].RemoveAt(i);
-                    ForestryModel.Table.RemoveAt(i - 1);
+                    ForestryModel.Table.RemoveAt(i + 1);
                 }
 
                 //check number of columns equals number of Zones, adjust if not. check column names match Zone names, remove columns that don't match a Zone name.
             }
 
             ForestryViewer.SetupGrid(ForestryModel.Table);
-        }
-
-        public void Detach()
-        {
-            SaveTable();
-        }
-
-        private void SaveTable()
-        {
-            DataTable table = ForestryViewer.GetTable();
-            
-            for (int i = 0; i < ForestryModel.Table[1].Count; i++)
-                for (int j = 2; j < table.Columns.Count + 1; j++)
-                {
-                    ForestryModel.Table[j][i] = table.Rows[i].Field<string>(j-1);
-                }
-        }
-
-        public string ConvertToHtml(string folder)
-        {
-            // TODO: Implement
-            return string.Empty;
         }
     }
 }
