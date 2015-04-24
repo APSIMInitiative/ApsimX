@@ -158,8 +158,10 @@ namespace Models.PMF
             {
                 if (Phenology != null)
                     return Phenology.Emerged;
+                    //If the crop model has phenology and the crop is emerged return true
                 else
-                    return true;
+                    return IsAlive;
+                    //Else if the crop is in the grown returen true
             }
         }
         

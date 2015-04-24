@@ -219,7 +219,23 @@ namespace Models.Core
             foreach (IModel child in modelsToNotify)
                 Apsim.CallEventHandler(child, "Loaded", null);
 
+            Locator(parent).Clear();
+
             return modelToAdd;
+        }
+
+        /// <summary>Deletes the specified model.</summary>
+        /// <param name="model">The model.</param>
+        public static bool Delete(IModel model)
+        {
+            Locator(model.Parent).Clear();
+            return model.Parent.Children.Remove(model as Model);
+        }
+
+        /// <summary>Clears the cache</summary>
+        public static void ClearCache(IModel model)
+        {
+            Locator(model as Model).Clear();
         }
 
         /// <summary>
@@ -356,6 +372,7 @@ namespace Models.Core
             }
 
             modelToCheck.Name = newName;
+            Locator(modelToCheck).Clear();
         }
 
         /// <summary>

@@ -81,35 +81,7 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Paste", ShortcutKey = Keys.Control | Keys.V)]
         public void OnPasteClick(object sender, EventArgs e)
         {
-            try
-            {
-                XmlDocument document = new XmlDocument();
-                document.LoadXml(System.Windows.Forms.Clipboard.GetText());
-                object newModel = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly());
-
-                // See if the presenter is happy with this model being added.
-                Model parentModel = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                AllowDropArgs allowDropArgs = new AllowDropArgs();
-                allowDropArgs.NodePath = this.explorerPresenter.CurrentNodePath;
-                allowDropArgs.DragObject = new DragObject()
-                {
-                    NodePath = null,
-                    ModelType = newModel.GetType(),
-                    Xml = System.Windows.Forms.Clipboard.GetText()
-                };
-                this.explorerPresenter.OnAllowDrop(null, allowDropArgs);
-
-                // If it is happy then issue an AddModelCommand.
-                if (allowDropArgs.Allow)
-                {
-                    AddModelCommand command = new AddModelCommand(System.Windows.Forms.Clipboard.GetText(), parentModel);
-                    this.explorerPresenter.CommandHistory.Add(command, true);
-                }
-            }
-            catch (Exception exception)
-            {
-                this.explorerPresenter.ShowMessage(exception.Message, DataStore.ErrorLevel.Error);
-            }
+            this.explorerPresenter.Add(System.Windows.Forms.Clipboard.GetText(), this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -120,12 +92,35 @@ namespace UserInterface.Presenters
         [ContextMenu(MenuName = "Delete", ShortcutKey = Keys.Delete)]
         public void OnDeleteClick(object sender, EventArgs e)
         {
-            Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+            IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
             if (model != null && model.GetType().Name != "Simulations")
-            {
-                DeleteModelCommand command = new DeleteModelCommand(model);
-                this.explorerPresenter.CommandHistory.Add(command, true);
-            }
+                this.explorerPresenter.Delete(model);
+        }
+
+        /// <summary>
+        /// Move up
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Move up", ShortcutKey = Keys.Control | Keys.Up)]
+        public void OnMoveUpClick(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
+            if (model != null && model.GetType().Name != "Simulations")
+                this.explorerPresenter.MoveUp(model);
+        }
+
+        /// <summary>
+        /// Move down
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Move down", ShortcutKey = Keys.Control | Keys.Down)]
+        public void OnMoveDownClick(object sender, EventArgs e)
+        {
+            IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
+            if (model != null && model.GetType().Name != "Simulations")
+                this.explorerPresenter.MoveDown(model);
         }
 
         /// <summary>
@@ -255,10 +250,7 @@ namespace UserInterface.Presenters
         {
             Model factors = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             if (factors != null)
-            {
-                AddModelCommand command = new AddModelCommand("<Factor/>", factors);
-                this.explorerPresenter.CommandHistory.Add(command, true);
-            }
+                this.explorerPresenter.Add("<Factor/>", this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>

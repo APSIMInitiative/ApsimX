@@ -10,20 +10,25 @@ namespace UserInterface.Commands
     using Importer;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Interfaces;
 
-    /// <summary>
-    /// This command changes the 'CurrentNode' in the ExplorerView.
-    /// </summary>
+    /// <summary>This command changes the 'CurrentNode' in the ExplorerView.</summary>
     public class AddModelCommand : ICommand
     {
-        /// <summary>The XML of the model we're to add</summary>
-        private string modelXmlToAdd;
+        /// <summary>The parent model to add the model to.</summary>
+        private IModel parent;
 
-        /// <summary>The parent model to add the model to</summary>
-        private Model toParent;
+        /// <summary>The child model to add.</summary>
+        private XmlNode child;
+
+        /// <summary>The node description</summary>
+        NodeDescriptionArgs nodeDescription;
+
+        /// <summary>The explorer view</summary>
+        IExplorerView explorerView;
 
         /// <summary>The model we're to add</summary>
-        private Model modelToAdd;
+        private IModel modelToAdd;
 
         /// <summary>True if model was added</summary>
         private bool modelAdded;
@@ -31,62 +36,27 @@ namespace UserInterface.Commands
         /// <summary>Initializes a new instance of the <see cref="AddModelCommand"/> class.</summary>
         /// <param name="xmlOfModelToAdd">The XML of the model to add</param>
         /// <param name="toParent">The parent model to add the child to</param>
-        public AddModelCommand(string xmlOfModelToAdd, Model toParent)
+        public AddModelCommand(IModel parent, XmlNode child, NodeDescriptionArgs nodeDescription, IExplorerView explorerView)
         {
-            this.modelXmlToAdd = xmlOfModelToAdd;
-            this.toParent = toParent;
+            this.parent = parent;
+            this.child = child;
+            this.nodeDescription = nodeDescription;
+            this.explorerView = explorerView;
         }
 
         /// <summary>Perform the command</summary>
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)
         {
-            try
-            {
-                // Load the model xml
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(this.modelXmlToAdd);
-                XmlNode soilNode = doc.DocumentElement;
+            this.modelToAdd = Apsim.Add(parent, child);
 
-                // If the model xml is a soil object then try and convert from old
-                // APSIM format to new.
-                if (doc.DocumentElement.Name == "Soil")
-                {
-                    XmlDocument newDoc = new XmlDocument();
-                    newDoc.AppendChild(newDoc.CreateElement("D"));
-                    APSIMImporter importer = new APSIMImporter();
-                    importer.ImportSoil(doc.DocumentElement, newDoc.DocumentElement, newDoc.DocumentElement);
-                    soilNode = XmlUtilities.FindByType(newDoc.DocumentElement, "Soil");
-                    if (XmlUtilities.FindByType(soilNode, "Sample") == null &&
-                        XmlUtilities.FindByType(soilNode, "InitialWater") == null)
-                    {
-                        // Add in an initial water and initial conditions models.
-                        XmlNode initialWater = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("InitialWater"));
-                        XmlUtilities.SetValue(initialWater, "Name", "Initial water");
-                        XmlUtilities.SetValue(initialWater, "PercentMethod", "FilledFromTop");
-                        XmlUtilities.SetValue(initialWater, "FractionFull", "1");
-                        XmlUtilities.SetValue(initialWater, "DepthWetSoil", "NaN");
-                        XmlNode initialConditions = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("Sample"));
-                        XmlUtilities.SetValue(initialConditions, "Name", "Initial conditions");
-                        XmlUtilities.SetValue(initialConditions, "Thickness/double", "1800");
-                        XmlUtilities.SetValue(initialConditions, "NO3/double", "10");
-                        XmlUtilities.SetValue(initialConditions, "NH4/double", "1");
-                        XmlUtilities.SetValue(initialConditions, "NO3Units", "kgha");
-                        XmlUtilities.SetValue(initialConditions, "NH4Units", "kgha");
-                        XmlUtilities.SetValue(initialConditions, "SWUnits", "Volumetric");
-                    }
-                }
+            // The add method above may have renamed the model to avoid a clash with the
+            // name of an existing model so just in case, reset the name for the tree.
+            nodeDescription.Name = this.modelToAdd.Name;
 
-                this.modelToAdd = Apsim.Add(this.toParent, soilNode) as Model;
+            this.explorerView.AddChild(Apsim.FullPath(parent), nodeDescription);
 
-                commandHistory.InvokeModelStructureChanged(this.toParent);
-
-                this.modelAdded = true;
-            }
-            catch (Exception)
-            {
-                this.modelAdded = false;
-            }
+            this.modelAdded = true;
         }
 
         /// <summary>Undoes the command</summary>
@@ -95,8 +65,8 @@ namespace UserInterface.Commands
         {
             if (this.modelAdded && this.modelToAdd != null)
             {
-                this.toParent.Children.Remove(this.modelToAdd);
-                commandHistory.InvokeModelStructureChanged(this.toParent);
+                parent.Children.Remove(this.modelToAdd as Model);
+                this.explorerView.Delete(Apsim.FullPath(this.modelToAdd));
             }
         }
     }
