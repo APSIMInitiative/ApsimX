@@ -97,8 +97,10 @@ namespace Models.Report
         {
             // Get rid of old data in .db
             DataStore dataStore = new DataStore(this);
-            dataStore.DeleteOldContentInTable(this.simulation.Name, this.Name);
-
+            if (this.simulation != null)
+            {
+                dataStore.DeleteOldContentInTable(this.simulation.Name, this.Name);
+            }
             // Write and store a table in the DataStore
             if (this.columns != null && this.columns.Count > 0)
             {
