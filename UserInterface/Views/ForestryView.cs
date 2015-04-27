@@ -504,16 +504,8 @@ namespace UserInterface.Views
         /// <returns>The axis</returns>
         private OxyPlot.Axes.Axis GetAxis(Models.Graph.Axis.AxisType axisType)
         {
-            /*int i = this.GetAxisIndex(axisType);
-            if (i == -1)
-                return null;
-            else
-                return this.plot1.Model.Axes[i];*/
             return null;
         }
-
-
-
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.
@@ -651,6 +643,8 @@ namespace UserInterface.Views
                 pointsWind.Add(new DataPoint(x[i], yWind[i]));
                 pointsShade.Add(new DataPoint(x[i], yShade[i]));
             }
+            seriesWind.Title = "Wind reduction";
+            seriesShade.Title = "Shade reduction";
             seriesWind.ItemsSource = pointsWind;
             seriesShade.ItemsSource = pointsShade;
             pAboveGround.Model.Series.Add(seriesWind);
