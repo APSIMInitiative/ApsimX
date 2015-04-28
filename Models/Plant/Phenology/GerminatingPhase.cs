@@ -19,7 +19,7 @@ namespace Models.PMF.Phen
     [Serializable]
     public class GerminatingPhase : Phase
     {
-        [Link]
+        [Link(IsOptional = true)]
         Soils.Soil Soil = null;
 
         /// <summary>
@@ -27,8 +27,11 @@ namespace Models.PMF.Phen
         /// </summary>
         public override double DoTimeStep(double PropOfDayToUse)
         {
-
-            bool CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.SoilWater.ESW > 0;
+            bool CanGerminate = true;
+            if (Soil != null)
+            {
+                CanGerminate = !Phenology.OnDayOf("Sowing") && Soil.SoilWater.ESW > 0;
+            }
 
             if (CanGerminate)
                 return 0.999;
