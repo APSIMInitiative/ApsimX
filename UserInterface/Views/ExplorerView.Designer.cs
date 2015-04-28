@@ -102,14 +102,10 @@
             this.TreeView.TabIndex = 8;
             this.TreeView.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnBeforeLabelEdit);
             this.TreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnAfterLabelEdit);
-            this.TreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.OnBeforeExpand);
             this.TreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.OnNodeDrag);
-            this.TreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.OnTreeViewBeforeSelect);
-            this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeView_AfterSelect);
-            this.TreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeViewNodeMouseClick);
+            this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnAfterSelect);
             this.TreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDragDrop);
             this.TreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.OnDragOver);
-            this.TreeView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             // 
             // PopupMenu
             // 
@@ -165,7 +161,6 @@
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
             this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // ToolStrip
             // 
@@ -192,7 +187,6 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ExplorerView";
             this.Size = new System.Drawing.Size(757, 697);
-            this.Load += new System.EventHandler(this.OnLoad);
             this.Panel.ResumeLayout(false);
             this.Panel.PerformLayout();
             this.StatusWindowPopup.ResumeLayout(false);

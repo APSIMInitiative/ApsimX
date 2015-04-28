@@ -15,6 +15,11 @@ namespace UnitTests
     using Models.Soils;
     using NUnit.Framework;
     using APSIM.Shared.Utilities;
+    using UserInterface.Interfaces;
+    using UserInterface.Views;
+    using UserInterface.Commands;
+    using UserInterface;
+    using UserInterface.Presenters;
 
     /// <summary> 
     /// This is a test class for SystemComponentTest and is intended
@@ -69,7 +74,7 @@ namespace UnitTests
         [TearDown]
         public void Cleanup()
         {
-            this.simulation.CleanupRun();
+            this.simulation.CleanupRun(null);
             File.Delete("Test.apsimx");
             File.Delete("Goondiwindi.met");
         }
@@ -95,7 +100,7 @@ namespace UnitTests
         [Test]
         public void ModelsTest()
         {
-            Assert.AreEqual(this.simulations.Children.Count, 3);
+            Assert.AreEqual(this.simulations.Children.Count, 4);
             Assert.AreEqual(this.simulations.Children[0].Name, "Test");
 
             Assert.AreEqual(this.simulation.Children.Count, 5);
@@ -304,6 +309,30 @@ namespace UnitTests
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilNitrogen"));
             Assert.IsNotNull(Apsim.Find(testrunSimulations, "SoilWater"));
         }
+
+        /// <summary>
+        /// Tests the move up down command
+        /// </summary>
+        [Test]
+        public void MoveUpDown()
+        {
+            IExplorerView explorerView = new ExplorerView();
+            ExplorerPresenter explorerPresenter = new ExplorerPresenter();
+            CommandHistory commandHistory = new CommandHistory();
+
+            explorerPresenter.Attach(simulations, explorerView, null);
+
+            Model modelToMove = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
+
+            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, explorerView);
+            moveCommand.Do(commandHistory);
+
+            Model modelToMove2 = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
+
+            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Name, "NRate");
+            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children.Count, 4);
+        }
+
 
         /// <summary>
         /// Find an return the database file name.

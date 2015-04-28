@@ -47,12 +47,12 @@ namespace Models
     <Name>PMFSlurpTestBase</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\lincoln.met</FileName>
+      <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>1998-10-14T00:00:00</StartDate>
-      <EndDate>1999-05-01T00:00:00</EndDate>
+      <StartDate>2010-11-15T00:00:00</StartDate>
+      <EndDate>2011-02-02T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -414,7 +414,7 @@ namespace Models
         <Script>
           <CultivarName>StaticCrop</CultivarName>
           <InitialRootDepth>600</InitialRootDepth>
-          <SowingDate>1998-10-14</SowingDate>
+          <SowingDate>2011-01-01</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;
@@ -852,168 +852,6 @@ namespace Models
         <ArbitrationMethod>Old</ArbitrationMethod>
         <NutrientUptakeMethod>2</NutrientUptakeMethod>
       </Arbitrator>
-      <Manager>
-        <Name>ReadExternalFile</Name>
-        <Script>
-          <CoverFile>C:\apsim_dev\Model\CoverInt\CoverInterpolatedApsimX.csv</CoverFile>
-          <Column>0</Column>
-          <Ext_coef>0.8</Ext_coef>
-          <OverRidePath>PMFSlurp.Leaf.LAIFunction.value</OverRidePath>
-          <CoverToday>0</CoverToday>
-          <leaflai>0</leaflai>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using System.IO;
-	  
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{     
-	
-   [Link] Clock Clock;
-   [Link] Zone zone;
-   
-  [Description("File of covers to load")]
-   public string CoverFile { get; set; }
-   [Description("Column to load, 0 based excluding date column")]
-   public  int Column { get; set; }
-   [Description("Extinction coefficient")]
-   public  double Ext_coef { get; set; }
-   
-   
-   [Description("Path for coefficient to be Overwritten")]
-	public string OverRidePath { get; set; }
-
-   
-   CoverIntcs CoverVals;
-   
-  public double CoverToday { get; private set; }
-  public double leaflai { get; private set; }
-     
-   int Col;
-   string CF;
-   
-   public class CDateValues
-   {
-      public   DateTime DT = new DateTime();
-      public   double[] Values = new double[8];
-      
-   }
-
- 
-   public class CoverIntcs
-   {
-      //string CoverDataFile = CoverFileg();
-     
-      public List<CDateValues> CLS = new List<CDateValues>(); 
-
-      public double GetCover(DateTime dt, int C)
-      {
-         
-         foreach(CDateValues CDV in CLS)
-         {
-            double k = CDV.Values[C];  
-            if (CDV.DT.DayOfYear == dt.DayOfYear)
-               return k;
-         }
-         return 0;
-      }
-      
-      public void LoadFile(string CF)
-      {
-
-
-         StreamReader infile = new StreamReader(CF);
-
-
-         string S = infile.ReadToEnd();
-
-         string[] elements = S.Split('\n');
-          
-
-         //
-         int L = 0;
-         foreach (string line in elements)
-         {
-            L++;
-            if (L < 2) continue; //skip first 1 lines
-
-            string [] StrVals = line.Split(',');
-            CDateValues CL = new CDateValues();
-            try
-            {
-               CL.DT = Convert.ToDateTime(StrVals[0]);
-            }
-            catch (Exception E)
-            {
-               //Probaly extra lines at end lets just 
-               break;
-            }
-
-            for (int l = 1; l < StrVals.Length; l++)
-            {
-               CL.Values[l - 1] = Convert.ToDouble(StrVals[l]);
-            }
-
-
-            CLS.Add(CL);
-
-
-         }
-
-      }
-
-
-   }
-   
-   
-   
-   // The following event handler will be called once at the beginning of the simulation
-   //[EventHandler] public void OnInitialised()
-   [EventSubscribe("StartOfSimulation")]
-     private void OnStartOfSimulation(object sender, EventArgs e)
-
-   {
-      CoverVals = new CoverIntcs();
-      CoverVals.LoadFile(CoverFile);
-   }
-      
-   // The following event handler will be called each day at the beginning of the day
- //  [EventHandler] public void OnPrepare()
-    [EventSubscribe("StartOfDay")]
-     private void OnStartOfDay(object sender, EventArgs e)
-
-   {
-      
-      CoverToday = CoverVals.GetCover(Clock.Today.Date,Column);
-      
-      if (CoverToday == 1)
-         leaflai = Math.Log(0.01)/-Ext_coef;
-      else
-      {
-         if (CoverToday > 0)
-            leaflai = Math.Log(1 - CoverToday) / -Ext_coef;
-         else
-            leaflai = 0;
-      }
-            object ResetValue = leaflai;
-			zone.Set(OverRidePath, ResetValue);  
-   }
-   
- }
-
-}
-       ]]></Code>
-      </Manager>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>

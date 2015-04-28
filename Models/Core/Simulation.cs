@@ -94,7 +94,7 @@ namespace Models.Core
             {
                 StartRun();
                 DoRun(sender);
-                CleanupRun();
+                CleanupRun(null);
             }
             catch (ApsimXException err)
             {
@@ -115,7 +115,7 @@ namespace Models.Core
                 }
                 store.WriteMessage(Name, Clock.Today, modelFullPath, err.Message, DataStore.ErrorLevel.Error);
                 store.Disconnect();
-                CleanupRun();
+                CleanupRun(Msg);
                 throw new Exception(Msg);
             }
             catch (Exception err)
@@ -133,7 +133,7 @@ namespace Models.Core
                 store.WriteMessage(Name, Clock.Today, "Unknown", err.Message, DataStore.ErrorLevel.Error);
                 store.Disconnect();
 
-                CleanupRun();
+                CleanupRun(Msg);
                 throw new Exception(Msg);
             }
             if (e != null)
@@ -174,7 +174,7 @@ namespace Models.Core
         }
 
         /// <summary>Cleanup after the run.</summary>
-        public void CleanupRun()
+        public void CleanupRun(string errorMessage)
         {
             _IsRunning = false;
 
@@ -190,7 +190,13 @@ namespace Models.Core
             }
 
             timer.Stop();
-            Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
+            if (errorMessage == null)
+                Console.WriteLine("Completed: " + Path.GetFileNameWithoutExtension(FileName) + " - " + Name + " [" + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]");
+            else
+            {
+                Console.WriteLine("Completed with errors: " + Path.GetFileNameWithoutExtension(FileName));
+                Console.WriteLine(errorMessage);
+            }
         }
 
     }

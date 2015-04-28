@@ -7,80 +7,59 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.IO;
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Windows.Forms;
+    using System.Xml;
+    using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
+    using Importer;
     using Interfaces;
     using Models;
     using Models.Core;
-    using Views;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
-    /// passed into the constructor and handling all user interaction of 
+    /// passed into the constructor and handling all user interaction of
     /// the view. Humble Dialog pattern.
     /// </summary>
     public class ExplorerPresenter : IPresenter
     {
-        /// <summary>
-        /// The visual instance
-        /// </summary>
+        /// <summary>The visual instance</summary>
         private IExplorerView view;
 
-        /// <summary>
-        /// The main menu
-        /// </summary>
+        /// <summary>The main menu</summary>
         private MainMenu mainMenu;
 
-        /// <summary>
-        /// The context menu
-        /// </summary>
+        /// <summary>The context menu</summary>
         private ContextMenu contextMenu;
 
-        /// <summary>
-        /// Presenter for the component
-        /// </summary>
+        /// <summary>Presenter for the component</summary>
         private IPresenter currentRightHandPresenter;
 
-        /// <summary>
-        /// Using advanced mode
-        /// </summary>
+        /// <summary>Using advanced mode</summary>
         private bool advancedMode = false;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExplorerPresenter" /> class.
-        /// </summary>
-        public ExplorerPresenter()
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets the command history for this presenter       
-        /// </summary>
+        /// <summary>Gets or sets the command history for this presenter</summary>
+        /// <value>The command history.</value>
         public CommandHistory CommandHistory { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the APSIMX simulations object
-        /// </summary>
+
+        /// <summary>Gets or sets the APSIMX simulations object</summary>
+        /// <value>The apsim x file.</value>
         public Simulations ApsimXFile { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the width of the explorer tree panel
-        /// </summary>
+
+        /// <summary>Gets or sets the width of the explorer tree panel</summary>
+        /// <value>The width of the tree.</value>
         public int TreeWidth
         {
             get { return this.view.TreeWidth; }
             set { this.view.TreeWidth = value; }
         }
 
-        /// <summary>
-        /// Gets the current right hand presenter.
-        /// </summary>
+        /// <summary>Gets the current right hand presenter.</summary>
+        /// <value>The current presenter.</value>
         public IPresenter CurrentPresenter
         {
             get
@@ -89,17 +68,16 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// Gets the path of the current selected node in the tree.
-        /// </summary>
+        /// <summary>Gets the path of the current selected node in the tree.</summary>
+        /// <value>The current node path.</value>
         public string CurrentNodePath
         {
             get
             {
-                return this.view.CurrentNodePath;
+                return this.view.SelectedNode;
             }
         }
-        
+
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
         /// </summary>
@@ -115,52 +93,34 @@ namespace UserInterface.Presenters
             this.contextMenu = new ContextMenu(this);
 
             this.view.ShortcutKeys = new Keys[] { Keys.F5 };
-            this.view.PopulateChildNodes += this.OnPopulateNodes;
-            this.view.PopulateContextMenu += this.OnPopulateContextMenu;
-            this.view.PopulateMainMenu += this.OnPopulateMainMenu;
-            this.view.NodeSelectedByUser += this.OnNodeSelectedByUser;
-            this.view.NodeSelected += this.OnNodeSelected;
-            this.view.DragStart += this.OnDragStart;
+            this.view.SelectedNodeChanged += this.OnNodeSelected;
+            this.view.DragStarted += this.OnDragStart;
             this.view.AllowDrop += this.OnAllowDrop;
-            this.view.Drop += this.OnDrop;
-            this.view.Rename += this.OnRename;
-            this.view.OnMoveDown += this.OnMoveDown;
-            this.view.OnMoveUp += this.OnMoveUp;
-            this.view.OnShortcutKeyPress += this.OnShortcutKeyPress;
+            this.view.Droped += this.OnDrop;
+            this.view.Renamed += this.OnRename;
+            this.view.ShortcutKeyPressed += this.OnShortcutKeyPress;
 
-            this.CommandHistory.ModelStructureChanged += this.OnModelStructureChanged;
-
+            this.view.Refresh(GetNodeDescription(this.ApsimXFile));
             this.WriteLoadErrors();
+            PopulateMainMenu();
         }
 
-        /// <summary>
-        /// Detach the model from the view.
-        /// </summary>
+        /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            this.view.PopulateChildNodes -= this.OnPopulateNodes;
-            this.view.PopulateContextMenu -= this.OnPopulateContextMenu;
-            this.view.PopulateMainMenu -= this.OnPopulateMainMenu;
-            this.view.NodeSelectedByUser -= this.OnNodeSelectedByUser;
-            this.view.NodeSelected -= this.OnNodeSelected;
-            this.view.DragStart -= this.OnDragStart;
+            this.view.SelectedNodeChanged -= this.OnNodeSelected;
+            this.view.DragStarted -= this.OnDragStart;
             this.view.AllowDrop -= this.OnAllowDrop;
-            this.view.Drop -= this.OnDrop;
-            this.view.Rename -= this.OnRename;
-            this.view.OnMoveDown -= this.OnMoveDown;
-            this.view.OnMoveUp -= this.OnMoveUp;
-            this.view.OnShortcutKeyPress -= this.OnShortcutKeyPress;
-
-            this.CommandHistory.ModelStructureChanged -= this.OnModelStructureChanged;
+            this.view.Droped -= this.OnDrop;
+            this.view.Renamed -= this.OnRename;
+            this.view.ShortcutKeyPressed -= this.OnShortcutKeyPress;
         }
 
-        /// <summary>
-        /// Toggle advanced mode.
-        /// </summary>
+        /// <summary>Toggle advanced mode.</summary>
         public void ToggleAdvancedMode()
         {
             this.advancedMode = !this.advancedMode;
-            this.view.InvalidateNode(".Simulations", this.GetNodeDescription(this.ApsimXFile));
+            this.view.Refresh(GetNodeDescription(this.ApsimXFile));
         }
 
         /// <summary>
@@ -215,9 +175,7 @@ namespace UserInterface.Presenters
             return result;
         }
 
-        /// <summary>
-        /// Save all changes.
-        /// </summary>
+        /// <summary>Save all changes.</summary>
         /// <returns>True if file was saved.</returns>
         public bool Save()
         {
@@ -244,9 +202,7 @@ namespace UserInterface.Presenters
             return false;
         }
 
-        /// <summary>
-        /// Save the current file under a different name.
-        /// </summary>
+        /// <summary>Save the current file under a different name.</summary>
         /// <returns>True if file was saved.</returns>
         public bool SaveAs()
         {
@@ -271,51 +227,43 @@ namespace UserInterface.Presenters
 
             return false;
         }
- 
-        /// <summary>
-        /// Toggle the second right hand side explorer view on/off
-        /// </summary>
+
+        /// <summary>Toggle the second right hand side explorer view on/off</summary>
         public void ToggleSecondExplorerViewVisible()
         {
             this.view.ToggleSecondExplorerViewVisible();
         }
 
-        /// <summary>
-        /// Do the actual write to the file
-        /// </summary>
+        /// <summary>Do the actual write to the file</summary>
         public void WriteSimulation()
         {
             this.ApsimXFile.ExplorerWidth = this.TreeWidth;
             this.ApsimXFile.Write(this.ApsimXFile.FileName);
         }
 
-        /// <summary>
-        /// Add a status message to the explorer window
-        /// </summary>
+        /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">Status message</param>
         /// <param name="errorLevel">Level for the error message</param>
         public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
         {
             this.view.ShowMessage(message, errorLevel);
         }
-                
-        /// <summary>
-        /// A helper function that asks user for a folder.
-        /// </summary>
+
+        /// <summary>A helper function that asks user for a folder.</summary>
         /// <param name="prompt">Prompt string</param>
-        /// <returns>Returns the selected folder or null if action cancelled by user.</returns>
+        /// <returns>
+        /// Returns the selected folder or null if action cancelled by user.
+        /// </returns>
         public string AskUserForFolder(string prompt)
         {
             return this.view.AskUserForFolder(prompt);
         }
 
-        /// <summary>
-        /// Select a node in the view.
-        /// </summary>
+        /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
         public void SelectNode(string nodePath)
         {
-            this.view.CurrentNodePath = nodePath;
+            this.view.SelectedNode = nodePath;
         }
 
         /// <summary>
@@ -325,6 +273,7 @@ namespace UserInterface.Presenters
         /// false if no more nodes to select.
         /// </summary>
         /// <returns>True when node is selected</returns>
+        /// <exception cref="System.Exception">Cannot find the current selected model in the .apsimx file</exception>
         public bool SelectNextNode()
         {
             this.HideRightHandPanel();
@@ -334,9 +283,9 @@ namespace UserInterface.Presenters
 
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
-            if (this.view.CurrentNodePath == ".Standard toolbox")
+            if (this.view.SelectedNode == ".Standard toolbox")
             {
-                this.view.CurrentNodePath = Apsim.FullPath(allModels[0]);
+                this.view.SelectedNode = Apsim.FullPath(allModels[0]);
                 return true;
             }
 
@@ -344,7 +293,7 @@ namespace UserInterface.Presenters
             int index = -1;
             for (int i = 0; i < allModels.Count; i++)
             {
-                if (Apsim.FullPath(allModels[i]) == this.view.CurrentNodePath)
+                if (Apsim.FullPath(allModels[i]) == this.view.SelectedNode)
                 {
                     index = i;
                     break;
@@ -363,15 +312,15 @@ namespace UserInterface.Presenters
             }
 
             // Select the next node.
-            this.view.CurrentNodePath = Apsim.FullPath(allModels[index + 1]);
+            this.view.SelectedNode = Apsim.FullPath(allModels[index + 1]);
             return true;
         }
 
-        /// <summary>
-        /// String must have all alpha numeric or '_' characters
-        /// </summary>
+        /// <summary>String must have all alpha numeric or '_' characters</summary>
         /// <param name="str">Name to be checked</param>
-        /// <returns>True if all chars are alphanumerics and <code>str</code> is not null</returns>
+        /// <returns>
+        /// True if all chars are alphanumerics and <code>str</code> is not null
+        /// </returns>
         public bool IsValidName(string str)
         {
             bool valid = true;
@@ -398,19 +347,215 @@ namespace UserInterface.Presenters
             return valid;
         }
 
-        /// <summary>
-        /// Rename the current node.
-        /// </summary>
+        /// <summary>Rename the current node.</summary>
         public void Rename()
         {
-            this.view.RenameCurrentNode();
+            this.view.BeginRenamingCurrentNode();
+        }
+
+        /// <summary>Pastes the contents of the clipboard.</summary>
+        public void Add(string xml, string parentPath)
+        {
+            try
+            {
+                XmlDocument document = new XmlDocument();
+                document.LoadXml(xml);
+                object newModel = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly());
+
+                // See if the presenter is happy with this model being added.
+                Model parentModel = Apsim.Get(this.ApsimXFile, parentPath) as Model;
+                AllowDropArgs allowDropArgs = new AllowDropArgs();
+                allowDropArgs.NodePath = parentPath;
+                allowDropArgs.DragObject = new DragObject()
+                {
+                    NodePath = null,
+                    ModelType = newModel.GetType(),
+                    Xml = System.Windows.Forms.Clipboard.GetText()
+                };
+                this.OnAllowDrop(null, allowDropArgs);
+
+                // If it is happy then issue an AddModelCommand.
+                if (allowDropArgs.Allow)
+                {
+                    // If the model xml is a soil object then try and convert from old
+                    // APSIM format to new.
+                    if (document.DocumentElement.Name == "Soil")
+                    {
+                        XmlDocument newDoc = new XmlDocument();
+                        newDoc.AppendChild(newDoc.CreateElement("D"));
+                        APSIMImporter importer = new APSIMImporter();
+                        importer.ImportSoil(document.DocumentElement, newDoc.DocumentElement, newDoc.DocumentElement);
+                        XmlNode soilNode = newDoc.DocumentElement;
+                        if (XmlUtilities.FindByType(soilNode, "Sample") == null &&
+                            XmlUtilities.FindByType(soilNode, "InitialWater") == null)
+                        {
+                            // Add in an initial water and initial conditions models.
+                            XmlNode initialWater = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("InitialWater"));
+                            XmlUtilities.SetValue(initialWater, "Name", "Initial water");
+                            XmlUtilities.SetValue(initialWater, "PercentMethod", "FilledFromTop");
+                            XmlUtilities.SetValue(initialWater, "FractionFull", "1");
+                            XmlUtilities.SetValue(initialWater, "DepthWetSoil", "NaN");
+                            XmlNode initialConditions = soilNode.AppendChild(soilNode.OwnerDocument.CreateElement("Sample"));
+                            XmlUtilities.SetValue(initialConditions, "Name", "Initial conditions");
+                            XmlUtilities.SetValue(initialConditions, "Thickness/double", "1800");
+                            XmlUtilities.SetValue(initialConditions, "NO3/double", "10");
+                            XmlUtilities.SetValue(initialConditions, "NH4/double", "1");
+                            XmlUtilities.SetValue(initialConditions, "NO3Units", "kgha");
+                            XmlUtilities.SetValue(initialConditions, "NH4Units", "kgha");
+                            XmlUtilities.SetValue(initialConditions, "SWUnits", "Volumetric");
+                        }
+                        document = newDoc;
+                    }
+
+                    IModel child = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly()) as IModel;
+
+                    AddModelCommand command = new AddModelCommand(parentModel, document.DocumentElement,
+                                                                  GetNodeDescription(child), view);
+                    this.CommandHistory.Add(command, true);
+                }
+            }
+            catch (Exception exception)
+            {
+                this.ShowMessage(exception.Message, DataStore.ErrorLevel.Error);
+            }
+        }
+
+        /// <summary>Deletes the specified model.</summary>
+        /// <param name="model">The model to delete.</param>
+        public void Delete(IModel model)
+        {
+            DeleteModelCommand command = new DeleteModelCommand(model, GetNodeDescription(model), this.view);
+            this.CommandHistory.Add(command, true);
+        }
+
+        /// <summary>Moves the specified model up.</summary>
+        /// <param name="model">The model to move.</param>
+        public void MoveUp(IModel model)
+        {
+            MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true, this.view);
+            this.CommandHistory.Add(command, true);
+        }
+
+        /// <summary>Moves the specified model down.</summary>
+        /// <param name="model">The model to move.</param>
+        public void MoveDown(IModel model)
+        {
+            MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false, this.view);
+            this.CommandHistory.Add(command, true);
+        }
+
+        /// <summary>
+        /// The view wants us to return a list of menu descriptions for the
+        /// main menu.
+        /// </summary>
+        private void PopulateMainMenu()
+        {
+            List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
+            // Go look for all [UserInterfaceAction]
+            foreach (MethodInfo method in typeof(MainMenu).GetMethods())
+            {
+                MainMenuAttribute mainMenuName = ReflectionUtilities.GetAttribute(method, typeof(MainMenuAttribute), false) as MainMenuAttribute;
+                if (mainMenuName != null)
+                {
+                    MenuDescriptionArgs desc = new MenuDescriptionArgs();
+                    desc.Name = mainMenuName.MenuName;
+                    desc.ResourceNameForImage = "UserInterface.Resources.MenuImages." + desc.Name + ".png";
+
+                    EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
+                    desc.OnClick = handler;
+
+                    descriptions.Add(desc);
+                }
+            }
+            this.view.PopulateMainToolStrip(descriptions);
+
+            string labelText = "Custom Build";
+            string labelToolTip = null;
+
+            // Get assembly title.
+            object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            if (attributes.Length > 0)
+            {
+                AssemblyTitleAttribute titleAttribute = attributes[0] as AssemblyTitleAttribute;
+                string[] titleBits = titleAttribute.Title.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (titleBits.Length == 2 && titleBits[1] != "0")
+                {
+                    Version version = new Version(Application.ProductVersion);
+                    labelText = "Official Build";
+                    labelToolTip = "Version: " + version.Major + "." + version.Minor + "." + version.Build;
+                    labelToolTip += "\nGIT hash: " + titleBits[1];
+                }
+            }
+
+            this.view.PopulateLabel(labelText, labelToolTip);
+        }
+
+        /// <summary>
+        /// The view wants us to return a list of menu descriptions for the
+        /// currently selected Node.
+        /// </summary>
+        private void PopulateContextMenu(string nodePath)
+        {
+            List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
+            // Get the selected model.
+            object selectedModel = Apsim.Get(this.ApsimXFile, nodePath);
+
+            // Go look for all [UserInterfaceAction]
+            foreach (MethodInfo method in typeof(ContextMenu).GetMethods())
+            {
+                ContextMenuAttribute contextMenuAttr = ReflectionUtilities.GetAttribute(method, typeof(ContextMenuAttribute), false) as ContextMenuAttribute;
+                if (contextMenuAttr != null)
+                {
+                    bool ok = true;
+                    if (contextMenuAttr.AppliesTo != null)
+                    {
+                        ok = false;
+                        foreach (Type t in contextMenuAttr.AppliesTo)
+                        {
+                            if (t.IsAssignableFrom(selectedModel.GetType()))
+                            {
+                                ok = true;
+                            }
+                        }
+                    }
+
+                    if (ok)
+                    {
+                        MenuDescriptionArgs desc = new MenuDescriptionArgs();
+                        desc.Name = contextMenuAttr.MenuName;
+                        desc.ResourceNameForImage = "UserInterface.Resources.MenuImages." + desc.Name + ".png";
+                        desc.ShortcutKey = contextMenuAttr.ShortcutKey;
+
+                        // Check for an enabled method.
+                        MethodInfo enabledMethod = typeof(ContextMenu).GetMethod(desc.ResourceNameForImage + "Enabled");
+                        if (enabledMethod != null)
+                        {
+                            desc.Enabled = (bool)enabledMethod.Invoke(this.contextMenu, null);
+                        }
+                        else
+                        {
+                            desc.Enabled = true;
+                        }
+
+                        EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.contextMenu, method);
+                        desc.OnClick = handler;
+
+                        if (desc.Name == "Advanced mode")
+                        {
+                            desc.Checked = this.advancedMode;
+                        }
+
+                        descriptions.Add(desc);
+                    }
+                }
+            }
+
+            this.view.PopulateContextMenu(descriptions);
         }
 
         #region Events from view
 
-        /// <summary>
-        /// A node has been dragged over another node. Allow drop?
-        /// </summary>
+        /// <summary>A node has been dragged over another node. Allow drop?</summary>
         /// <param name="sender">Sending node</param>
         /// <param name="e">Node arguments</param>
         public void OnAllowDrop(object sender, AllowDropArgs e)
@@ -439,148 +584,20 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// The view wants us to return a list of menu descriptions for the 
-        /// main menu. 
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">Event arguments</param>
-        private void OnPopulateMainMenu(object sender, MenuDescriptionArgs e)
-        {
-            // Go look for all [UserInterfaceAction]
-            foreach (MethodInfo method in typeof(MainMenu).GetMethods())
-            {
-                MainMenuAttribute mainMenuName = ReflectionUtilities.GetAttribute(method, typeof(MainMenuAttribute), false) as MainMenuAttribute;
-                if (mainMenuName != null)
-                {
-                    MenuDescriptionArgs.Description desc = new MenuDescriptionArgs.Description();
-                    desc.Name = mainMenuName.MenuName;
-                    desc.ResourceNameForImage = "UserInterface.Resources.MenuImages." + desc.Name + ".png";
-
-                    EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
-                    desc.OnClick = handler;
-
-                    e.Descriptions.Add(desc);
-                }
-            }
-        }
-
-        /// <summary>
-        /// The view wants us to return a list of menu descriptions for the 
-        /// currently selected Node.
-        /// </summary>
-        /// <param name="sender">Sending object</param>
-        /// <param name="e">Event menu arguments</param>
-        private void OnPopulateContextMenu(object sender, MenuDescriptionArgs e)
-        {
-            // Get the selected model.
-            object selectedModel = Apsim.Get(this.ApsimXFile, this.view.CurrentNodePath);
-
-            // Go look for all [UserInterfaceAction]
-            foreach (MethodInfo method in typeof(ContextMenu).GetMethods())
-            {
-                ContextMenuAttribute contextMenuAttr = ReflectionUtilities.GetAttribute(method, typeof(ContextMenuAttribute), false) as ContextMenuAttribute;
-                if (contextMenuAttr != null)
-                {
-                    bool ok = true;
-                    if (contextMenuAttr.AppliesTo != null)
-                    {
-                        ok = false;
-                        foreach (Type t in contextMenuAttr.AppliesTo)
-                        {
-                            if (t.IsAssignableFrom(selectedModel.GetType()))
-                            {
-                                ok = true;
-                            }
-                        }
-                    }
-
-                    if (ok)
-                    {
-                        MenuDescriptionArgs.Description desc = new MenuDescriptionArgs.Description();
-                        desc.Name = contextMenuAttr.MenuName;
-                        desc.ResourceNameForImage = "UserInterface.Resources.MenuImages." + desc.Name + ".png";
-                        desc.ShortcutKey = contextMenuAttr.ShortcutKey;
-
-                        // Check for an enabled method.
-                        MethodInfo enabledMethod = typeof(ContextMenu).GetMethod(desc.ResourceNameForImage + "Enabled");
-                        if (enabledMethod != null)
-                        {
-                            desc.Enabled = (bool)enabledMethod.Invoke(this.contextMenu, null);
-                        }
-                        else
-                        {
-                            desc.Enabled = true;
-                        }
-
-                        EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.contextMenu, method);
-                        desc.OnClick = handler;
-
-                        if (desc.Name == "Advanced mode")
-                        {
-                            desc.Checked = this.advancedMode;
-                        }
-
-                        e.Descriptions.Add(desc);
-                    }
-                }
-            }
-        }
-                
-        /// <summary>
-        /// The view wants us to populate the view with child nodes of the specified NodePath. 
-        /// </summary>
-        /// <param name="sender">Sending object</param>
-        /// <param name="e">Node arguments</param>
-        private void OnPopulateNodes(object sender, NodeDescriptionArgs e)
-        {
-            if (e.NodePath == null)
-            {
-                // Add in a root node.
-                e.Descriptions.Add(this.GetNodeDescription(this.ApsimXFile));
-            }
-            else
-            {
-                Model model = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
-                if (model != null)
-                {
-                    foreach (Model childModel in model.Children)
-                    {
-                        if (!childModel.IsHidden)
-                        {
-                            e.Descriptions.Add(this.GetNodeDescription(childModel));
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// User has selected a node - store and execute a SelectNodeCommand
-        /// </summary>
-        /// <param name="sender">Sending object</param>
-        /// <param name="e">Node arguments</param>
-        private void OnNodeSelectedByUser(object sender, NodeSelectedArgs e)
-        {
-            SelectNodeCommand cmd = new SelectNodeCommand(this.view, e.OldNodePath, e.NewNodePath);
-            CommandHistory.Add(cmd, true);
-            this.OnNodeSelected(sender, e);
-        }
-
-        /// <summary>
-        /// A node has been selected (whether by user or undo/redo) 
-        /// </summary>
+        /// <summary>A node has been selected (whether by user or undo/redo)</summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Node arguments</param>
         private void OnNodeSelected(object sender, NodeSelectedArgs e)
         {
             this.HideRightHandPanel();
             this.ShowRightHandPanel();
+            PopulateContextMenu(e.NewNodePath);
+
+            Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
+            CommandHistory.Add(selectCommand);
         }
 
-        /// <summary>
-        /// A node has begun to be dragged.
-        /// </summary>
+        /// <summary>A node has begun to be dragged.</summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Drag arguments</param>
         private void OnDragStart(object sender, DragStartArgs e)
@@ -598,10 +615,8 @@ namespace UserInterface.Presenters
                 e.DragObject = dragObject;
             }
         }
-        
-        /// <summary>
-        /// A node has been dropped. 
-        /// </summary>
+
+        /// <summary>A node has been dropped.</summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Drop arguments</param>
         private void OnDrop(object sender, DropArgs e)
@@ -617,9 +632,7 @@ namespace UserInterface.Presenters
 
                 ICommand cmd = null;
                 if (e.Copied)
-                {
-                    cmd = new AddModelCommand(fromModelXml, toParent);
-                }
+                    Add(fromModelXml, toParentPath);
                 else if (e.Moved)
                 {
                     if (fromParentPath != toParentPath)
@@ -639,9 +652,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// User has renamed a node.
-        /// </summary>
+        /// <summary>User has renamed a node.</summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Event node arguments</param>
         private void OnRename(object sender, NodeRenameArgs e)
@@ -652,15 +663,14 @@ namespace UserInterface.Presenters
                 if (this.IsValidName(e.NewName))
                 {
                     Model model = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
-                    if (model != null && model.GetType().Name != "Simulations" /*&& e.NewName != null*/ && e.NewName != string.Empty)
+                    if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                     {
                         this.HideRightHandPanel();
                         string parentModelPath = StringUtilities.ParentName(e.NodePath);
-                        RenameModelCommand cmd = new RenameModelCommand(model, parentModelPath, e.NewName);
+                        RenameModelCommand cmd = new RenameModelCommand(model,  e.NewName, view);
                         CommandHistory.Add(cmd);
-                        this.view.CurrentNodePath = parentModelPath + "." + e.NewName;
                         this.ShowRightHandPanel();
-                        e.CancelEdit = true;
+                        e.CancelEdit = (model.Name != e.NewName);
                     }
                 }
                 else
@@ -671,47 +681,41 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>
-        /// User has attempted to move the current node up.
-        /// </summary>
+        /// <summary>User has attempted to move the current node up.</summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">Event arguments</param>
         private void OnMoveUp(object sender, EventArgs e)
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.view.CurrentNodePath) as Model;
+            Model model = Apsim.Get(this.ApsimXFile, this.view.SelectedNode) as Model;
             
             if (model != null && model.Parent != null)
             {
                 IModel firstModel = model.Parent.Children[0];
                 if (model != firstModel)
                 {
-                    CommandHistory.Add(new Commands.MoveModelUpDownCommand(this.view, model, up: true));
+                    CommandHistory.Add(new Commands.MoveModelUpDownCommand(model, true, this.view));
                 }
             }
         }
 
-        /// <summary>
-        /// User has attempted to move the current node down.
-        /// </summary>
+        /// <summary>User has attempted to move the current node down.</summary>
         /// <param name="sender">The sender</param>
         /// <param name="e">The args</param>
         private void OnMoveDown(object sender, EventArgs e)
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.view.CurrentNodePath) as Model;
+            Model model = Apsim.Get(this.ApsimXFile, this.view.SelectedNode) as Model;
 
             if (model != null && model.Parent != null)
             {
                 IModel lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
                 if (model != lastModel)
                 {
-                    CommandHistory.Add(new Commands.MoveModelUpDownCommand(this.view, model, up: false));
+                    CommandHistory.Add(new Commands.MoveModelUpDownCommand(model, false, this.view));
                 }
             }
         }
 
-        /// <summary>
-        /// User has pressed one of our shortcut keys.
-        /// </summary>
+        /// <summary>User has pressed one of our shortcut keys.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         private void OnShortcutKeyPress(object sender, KeysArgs e)
@@ -753,15 +757,15 @@ namespace UserInterface.Presenters
                 }
             }
         }
-        
+
         /// <summary>
-        /// A helper function for creating a node description object for the specified model. 
+        /// A helper function for creating a node description object for the specified model.
         /// </summary>
         /// <param name="model">The model</param>
         /// <returns>The description</returns>
-        private NodeDescriptionArgs.Description GetNodeDescription(IModel model)
+        private NodeDescriptionArgs GetNodeDescription(IModel model)
         {
-            NodeDescriptionArgs.Description description = new NodeDescriptionArgs.Description();
+            NodeDescriptionArgs description = new NodeDescriptionArgs();
             description.Name = model.Name;
 
             string imageFileName;
@@ -773,31 +777,17 @@ namespace UserInterface.Presenters
                 imageFileName = model.GetType().Name;
 
             description.ResourceNameForImage = "UserInterface.Resources.TreeViewImages." + imageFileName + ".png";
-            description.HasChildren = this.SomeChildrenVisible(model);
-            return description;
-        }
-
-        /// <summary>
-        /// Returns true if some children of the specified model are visible (not hidden)
-        /// </summary>
-        /// <param name="model">Look at this models children</param>
-        /// <returns>True if some are visible</returns>
-        private bool SomeChildrenVisible(IModel model)
-        {
+            description.Children = new List<NodeDescriptionArgs>();
             foreach (Model child in model.Children)
             {
                 if (!child.IsHidden)
-                {
-                    return true;
-                }
+                    description.Children.Add(GetNodeDescription(child));
             }
 
-            return false;
+            return description;
         }
 
-        /// <summary>
-        /// Hide the right hand panel.
-        /// </summary>
+        /// <summary>Hide the right hand panel.</summary>
         private void HideRightHandPanel()
         {
             if (this.currentRightHandPresenter != null)
@@ -816,14 +806,12 @@ namespace UserInterface.Presenters
             this.view.AddRightHandView(null);
         }
 
-        /// <summary>
-        /// Display a view on the right hand panel in view.
-        /// </summary>
+        /// <summary>Display a view on the right hand panel in view.</summary>
         private void ShowRightHandPanel()
         {
-            if (this.view.CurrentNodePath != string.Empty)
+            if (this.view.SelectedNode != string.Empty)
             {
-                object model = Apsim.Get(this.ApsimXFile, this.view.CurrentNodePath);
+                object model = Apsim.Get(this.ApsimXFile, this.view.SelectedNode);
 
                 if (model != null)
                 {
@@ -860,20 +848,6 @@ namespace UserInterface.Presenters
         }
 
         #endregion
-
-        #region Events from model
-
-        /// <summary>
-        /// The model structure has changed. Tell the view about it. 
-        /// </summary>
-        /// <param name="modelPath">Path to the model file</param>
-        private void OnModelStructureChanged(IModel model)
-        {
-            string modelPath = Apsim.FullPath(model);
-            this.view.InvalidateNode(modelPath, this.GetNodeDescription(model));
-        }
-
-        #endregion
     }
 
     /// <summary>
@@ -882,51 +856,40 @@ namespace UserInterface.Presenters
     [Serializable]
     public class DragObject : ISerializable
     {
-        /// <summary>
-        /// Path to the node
-        /// </summary>
+        /// <summary>Path to the node</summary>
         private string nodePath;
 
-        /// <summary>
-        /// Xml string
-        /// </summary>
+        /// <summary>Xml string</summary>
         private string xml;
 
-        /// <summary>
-        /// Type of the model
-        /// </summary>
+        /// <summary>Type of the model</summary>
         private Type modelType;
 
-        /// <summary>
-        /// Gets or sets the path to the node
-        /// </summary>
+        /// <summary>Gets or sets the path to the node</summary>
+        /// <value>The node path.</value>
         public string NodePath
         {
             get { return this.nodePath; }
             set { this.nodePath = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the xml string
-        /// </summary>
+        /// <summary>Gets or sets the xml string</summary>
+        /// <value>The XML.</value>
         public string Xml
         {
             get { return this.xml; }
             set { this.xml = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the type of model
-        /// </summary>
+        /// <summary>Gets or sets the type of model</summary>
+        /// <value>The type of the model.</value>
         public Type ModelType
         {
             get { return this.modelType; }
             set { this.modelType = value; }
         }
 
-        /// <summary>
-        /// Get data for the specified object in the xml
-        /// </summary>
+        /// <summary>Get data for the specified object in the xml</summary>
         /// <param name="info">Serialized object</param>
         /// <param name="context">The context</param>
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)

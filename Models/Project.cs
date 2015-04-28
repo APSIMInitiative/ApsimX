@@ -92,13 +92,11 @@ namespace Models
                     JobManager jobManager = new JobManager();
                     jobManager.AddJob(runApsim);
                     jobManager.Start(waitUntilFinished: true);
-
-                    exitCode = 0;
-                    if (runApsim.ErrorMessage != null)
-                    {
-                        Console.WriteLine(runApsim.ErrorMessage);
+                    
+                    if (runApsim.JobsRanOK())
+                        exitCode = 0;
+                    else
                         exitCode = 1;
-                    }
                 }
 
                 timer.Stop();
@@ -284,6 +282,21 @@ namespace Models
             /// </summary>
             public bool DoRecurse { get; set; }
 
+            /// <summary>Gets or sets the jobs.</summary>
+            /// <value>The jobs.</value>
+            private List<Simulations> jobs = new List<Simulations>();
+
+            public bool JobsRanOK()
+            {
+                foreach (Simulations simulations in jobs)
+                {
+                    if (simulations.ErrorMessage != null)
+                        return false;
+                }
+
+                return true;
+            }
+
             /// <summary>
             /// Run this job.
             /// </summary>
@@ -294,7 +307,7 @@ namespace Models
                 // Extract the path from the filespec. If non specified then assume
                 // current working directory.
                 string path = Path.GetDirectoryName(this.FileSpec);
-                if (path == null)
+                if (path == null | path == "")
                 {
                     path = Directory.GetCurrentDirectory();
                 }
@@ -316,7 +329,10 @@ namespace Models
                 {
                     Simulations simulations = Simulations.Read(apsimxFileName);
                     if (simulations.LoadErrors.Count == 0)
+                    {
+                        jobs.Add(simulations);
                         jobManager.AddJob(simulations);
+                    }
                     else
                     {
                         foreach (Exception err in simulations.LoadErrors)
