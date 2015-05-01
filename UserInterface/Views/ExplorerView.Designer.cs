@@ -104,6 +104,7 @@
             this.TreeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.OnAfterLabelEdit);
             this.TreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.OnNodeDrag);
             this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnAfterSelect);
+            this.TreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseClick);
             this.TreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnDragDrop);
             this.TreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.OnDragOver);
             // 
