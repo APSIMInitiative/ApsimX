@@ -419,6 +419,7 @@ namespace Models
         /// <returns>The DataTable</returns>
         public DataTable GetAllData()
         {
+            this.reader = null;
             if (this.OpenDataFile())
             {
                 return this.reader.ToTable();
@@ -656,7 +657,6 @@ namespace Models
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
             this.reader.SeekToDate(start.AddDays(1)); // goto start of data set
-
         }
         
         /// <summary>
