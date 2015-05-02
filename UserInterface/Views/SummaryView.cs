@@ -59,6 +59,7 @@ namespace UserInterface.Views
             htmlView1.ReadOnly = true;
 
             content = content.Replace("&", "and");
+            content = content.Replace("\\", "\\\\");
             this.htmlView1.MemoText = content;
         }
 
