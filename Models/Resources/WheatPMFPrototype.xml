@@ -4,9 +4,9 @@
 	<Cultivar>
 		<Name>hartog</Name>
 		<Alias>hartog</Alias>
-        <Command>[Phenology].Vernalisation.VernSens = 3</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 3</Command>
-        <Command>[Phenology].FloralInitiationFloweringPhase.Target = 640</Command>
+        <Command>[Phenology].Vernalisation.VernSens = 1</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 1</Command>
+        <Command>[Phenology].FloralInitiationFloweringPhase.Target = 300</Command>
 	</Cultivar>
 	<Phenology>
 		<Name>Phenology</Name>
@@ -48,7 +48,7 @@
             <End>EndOfJuvenile</End>
             <Constant>
                 <Name>Target</Name>
-                <Value>401</Value>
+                <Value>1</Value>
             </Constant>
             <VariableReference>
 				<Name>ThermalTime</Name>
@@ -134,7 +134,7 @@
             </MultiplyFunction>
             <Constant>
                 <Name>Target</Name>
-                <Value>555</Value>
+                <Value>645</Value>
             </Constant>
         </GenericPhase>
         <GenericPhase>
@@ -208,8 +208,8 @@
 			<EndStageForEffects>Flowering</EndStageForEffects>
 			<StartStageForCumulativeVD>Germination</StartStageForCumulativeVD>
 			<EndStageForCumulativeVD>FloralInitiation</EndStageForCumulativeVD>
-			<VernSens>3</VernSens>
-			<PhotopSens>3</PhotopSens>
+			<VernSens>0.8</VernSens>
+			<PhotopSens>0.7</PhotopSens>
 		</VernalisationCW>
 	</Phenology>
 </Plant>
