@@ -4,9 +4,9 @@
 	<Cultivar>
 		<Name>hartog</Name>
 		<Alias>hartog</Alias>
-        <Command>[Phenology].Vernalisation.VernSens = 1</Command>
-        <Command>[Phenology].Vernalisation.PhotopSens = 1</Command>
-        <Command>[Phenology].FloralInitiationFloweringPhase.Target = 300</Command>
+        <Command>[Phenology].Vernalisation.VernSens = 0.9</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 0.9</Command>
+        <Command>[Phenology].FloralInitiationFloweringPhase.Target = 630</Command>
 	</Cultivar>
 	<Phenology>
 		<Name>Phenology</Name>
@@ -65,27 +65,10 @@
                     <Name>ThermalTime</Name>
                     <VariableName>[Phenology].ThermalTime.Value</VariableName>
                 </VariableReference>                
-                <PhaseLookup>
-                    <Name>VernEff</Name>
-                    <PhaseLookupValue>
-                        <Name>VernEff0</Name>
-                        <Start>Emergence</Start>
-                        <End>FloralInitiation</End>
-                        <VariableReference>
-                            <Name>VernEff1</Name>
-                            <VariableName>[Phenology].Vernalisation.VernEff</VariableName>
-                        </VariableReference>
-                    </PhaseLookupValue>
-                    <PhaseLookupValue>
-                        <Name>VernEff1</Name>
-                        <Start>FloralInitiation</Start>
-                        <End>Flowering</End>
-                        <Constant>
-                            <Name>VernEff1</Name>
-                            <Value>1</Value>
-                        </Constant>
-                    </PhaseLookupValue>
-                </PhaseLookup>
+                <VariableReference>
+                    <Name>VernEff1</Name>
+                    <VariableName>[Phenology].Vernalisation.VernEff</VariableName>
+                </VariableReference>
                 <VariableReference>
                     <Name>PhotopEff</Name>
                     <VariableName>[Phenology].Vernalisation.PhotopEff</VariableName>
@@ -106,27 +89,6 @@
                     <Name>ThermalTime</Name>
                     <VariableName>[Phenology].ThermalTime.Value</VariableName>
                 </VariableReference>                
-                <PhaseLookup>
-                    <Name>VernEff</Name>
-                    <PhaseLookupValue>
-                        <Name>VernEff0</Name>
-                        <Start>Emergence</Start>
-                        <End>FloralInitiation</End>
-                        <VariableReference>
-                            <Name>VernEff1</Name>
-                            <VariableName>[Phenology].Vernalisation.VernEff</VariableName>
-                        </VariableReference>
-                    </PhaseLookupValue>
-                    <PhaseLookupValue>
-                        <Name>VernEff1</Name>
-                        <Start>FloralInitiation</Start>
-                        <End>Flowering</End>
-                        <Constant>
-                            <Name>VernEff1</Name>
-                            <Value>1</Value>
-                        </Constant>
-                    </PhaseLookupValue>
-                </PhaseLookup>
                 <VariableReference>
                     <Name>PhotopEff</Name>
                     <VariableName>[Phenology].Vernalisation.PhotopEff</VariableName>
@@ -134,7 +96,7 @@
             </MultiplyFunction>
             <Constant>
                 <Name>Target</Name>
-                <Value>645</Value>
+                <Value>630</Value>
             </Constant>
         </GenericPhase>
         <GenericPhase>
