@@ -25,61 +25,61 @@ namespace UserInterface.Classes
             List<string> RTFParsed = ParseRTF(RTF);
 
             // Create HTML from our list of RTF bits.
-            string HTML = "\r\n<html><body>\r\n";
+            StringBuilder HTML = new StringBuilder("\r\n<html><body>\r\n");
 
             string style = string.Empty;
             bool superscript = false;
             foreach (string code in RTFParsed)
             {
-                if (code == "fs32") { HTML += "<h1>"; style = "h1"; }
-                else if (code == "fs28") { HTML += "<h2>"; style = "h2"; }
-                else if (code == "fs24") { HTML += "<h3>"; style = "h3"; }
+                if (code == "fs32") { HTML.Append("<h1>"); style = "h1"; }
+                else if (code == "fs28") { HTML.Append("<h2>"); style = "h2"; }
+                else if (code == "fs24") { HTML.Append("<h3>"); style = "h3"; }
                 else if (code == "fs20")
                 {
                     if (style != string.Empty)
                     {
-                        HTML += "</" + style + ">\r\n";
+                        HTML.Append("</" + style + ">\r\n");
                         style = string.Empty;
                     }
 
                 }
                 else if (code == "par")
                 {
-                    HTML += "<br/>\r\n";
+                    HTML.Append("<br/>\r\n");
                 }
-                else if (code == "b") HTML += "<b>";
-                else if (code == "b0") HTML += "</b>";
-                else if (code == "i") HTML += "<i>";
-                else if (code == "i0") HTML += "</i>";
-                else if (code == "ul") HTML += "<u>";
-                else if (code == "ulnone") HTML += "</u>";
-                else if (code == "strike") HTML += "<strike>";
-                else if (code == "strike0") HTML += "</strike>";
-                else if (code == "up9") { HTML += "<sup>"; superscript = true; }
-                else if (code == "dn9") { HTML += "<sub>"; }
+                else if (code == "b") HTML.Append("<b>");
+                else if (code == "b0") HTML.Append("</b>");
+                else if (code == "i") HTML.Append("<i>");
+                else if (code == "i0") HTML.Append("</i>");
+                else if (code == "ul") HTML.Append("<u>");
+                else if (code == "ulnone") HTML.Append("</u>");
+                else if (code == "strike") HTML.Append("<strike>");
+                else if (code == "strike0") HTML.Append("</strike>");
+                else if (code == "up9") { HTML.Append("<sup>"); superscript = true; }
+                else if (code == "dn9") { HTML.Append("<sub>"); }
                 else if (code == "up0")
                 {
                     if (superscript)
-                    { HTML += "</sup>"; superscript = false; }
+                    { HTML.Append("</sup>"); superscript = false; }
                     else
-                    { HTML += "</sub>"; }
+                    { HTML.Append("</sub>"); }
                 }
                 else if (code.StartsWith("http://"))
-                    HTML += "<a href=\"" + code + "\">" + code + "</a>";
+                    HTML.Append("<a href=\"" + code + "\">" + code + "</a>");
                 else
-                    HTML += code;
+                    HTML.Append(code);
             }
 
             // Make sure we close any outstanding styles.
             if (style != string.Empty)
             {
-                HTML += "</" + style + ">\r\n";
+                HTML.Append("</" + style + ">\r\n");
                 style = string.Empty;
             }
 
-            HTML += "\r\n</body></html>";
+            HTML.Append("\r\n</body></html>");
 
-            return HTML;
+            return HTML.ToString();
         }
 
         /// <summary>

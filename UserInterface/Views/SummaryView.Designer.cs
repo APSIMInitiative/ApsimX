@@ -40,18 +40,20 @@
             this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(87, 6);
+            this.comboBox1.Location = new System.Drawing.Point(65, 5);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(542, 24);
+            this.comboBox1.Size = new System.Drawing.Size(408, 21);
             this.comboBox1.TabIndex = 0;
             this.comboBox1.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 9);
+            this.label1.Location = new System.Drawing.Point(3, 7);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 17);
+            this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Simulation:";
             // 
@@ -61,9 +63,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.htmlView1);
-            this.panel1.Location = new System.Drawing.Point(7, 39);
+            this.panel1.Location = new System.Drawing.Point(5, 32);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(622, 563);
+            this.panel1.Size = new System.Drawing.Size(466, 457);
             this.panel1.TabIndex = 2;
             // 
             // htmlView1
@@ -71,23 +74,24 @@
             this.htmlView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.htmlView1.Location = new System.Drawing.Point(4, 4);
-            this.htmlView1.Margin = new System.Windows.Forms.Padding(4);
+            this.htmlView1.AutoScroll = true;
+            this.htmlView1.Location = new System.Drawing.Point(3, 3);
             this.htmlView1.MemoText = "\r\n<html><body>\r\n\r\n</body></html>";
             this.htmlView1.Name = "htmlView1";
             this.htmlView1.ReadOnly = false;
-            this.htmlView1.Size = new System.Drawing.Size(614, 555);
+            this.htmlView1.Size = new System.Drawing.Size(460, 451);
             this.htmlView1.TabIndex = 0;
             // 
             // SummaryView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "SummaryView";
-            this.Size = new System.Drawing.Size(643, 617);
+            this.Size = new System.Drawing.Size(482, 501);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -24,53 +24,53 @@ namespace UserInterface.Classes
         {
             List<string> htmlParsed = ParseHTML(HTML);
 
-            string rtf = @"{\rtf1\ansi ";
+            StringBuilder rtf = new StringBuilder(@"{\rtf1\ansi ");
 
             foreach (string section in htmlParsed)
             {
                 if (section == "<b>")
-                    rtf += @"\b ";
+                    rtf.Append(@"\b ");
                 else if (section == "<i>")
-                    rtf += @"\i ";
+                    rtf.Append(@"\i ");
                 else if (section == "<ul>")
-                    rtf += @"\ul ";
+                    rtf.Append( @"\ul ");
                 else if (section == "<strike>")
-                    rtf += @"\strike ";
+                    rtf.Append(@"\strike ");
                 else if (section == "<sup>")
-                    rtf += @"\up9 ";
+                    rtf.Append(@"\up9 ");
                 else if (section == "<sub>")
-                    rtf += @"\dn9 ";
+                    rtf.Append(@"\dn9 ");
                 else if (section == "<h1>")
-                    rtf += @"\fs32 ";
+                    rtf.Append(@"\fs32 ");
                 else if (section == "<h2>")
-                    rtf += @"\fs28 ";
+                    rtf.Append(@"\fs28 ");
                 else if (section == "<h3>")
-                    rtf += @"\fs24 ";
+                    rtf.Append(@"\fs24 ");
                 else if (section == "</b>")
-                    rtf += @"\b0";
+                    rtf.Append(@"\b0");
                 else if (section == "</i>")
-                    rtf += @"\i0";
+                    rtf.Append(@"\i0");
                 else if (section == "</ul>")
-                    rtf += @"\ulnone ";
+                    rtf.Append(@"\ulnone ");
                 else if (section == "</strike>")
-                    rtf += @"\strike0";
+                    rtf.Append(@"\strike0");
                 else if (section == "</sup>")
-                    rtf += @"\up0";
+                    rtf.Append(@"\up0");
                 else if (section == "</sub>")
-                    rtf += @"\up0";
+                    rtf.Append(@"\up0");
                 else if (section == "</h1>")
-                    rtf += @"\fs20\par ";
+                    rtf.Append(@"\fs20\par ");
                 else if (section == "</h2>")
-                    rtf += @"\fs20\par ";
+                    rtf.Append(@"\fs20\par ");
                 else if (section == "</h3>")
-                    rtf += @"\fs20\par ";
+                    rtf.Append(@"\fs20\par ");
                 else if (section == "<br/>")
-                    rtf += @"\par ";
+                    rtf.Append(@"\par ");
                 else
-                    rtf += section;
+                    rtf.Append(section);
             }
-            rtf += "}";
-            return rtf;
+            rtf.Append("}");
+            return rtf.ToString();
         }
 
         /// <summary>
