@@ -1742,6 +1742,66 @@ namespace Models
     </Zone>
     <Forestry>
       <Name>Forestry</Name>
+      <Table>
+        <ArrayOfString>
+          <string>Parameter</string>
+          <string>Field1</string>
+          <string>Field2</string>
+          <string>Field3</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>% Wind</string>
+          <string>% Shade</string>
+          <string>Root Length Density</string>
+          <string>Depth</string>
+          <string>0-15</string>
+          <string>15-30</string>
+          <string>30-60</string>
+          <string>60-90</string>
+          <string>90-120</string>
+          <string>120-150</string>
+          <string>150-180</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>80</string>
+          <string>10</string>
+          <string />
+          <string />
+          <string>1</string>
+          <string>0.9</string>
+          <string>0.8</string>
+          <string>0.7</string>
+          <string>0.6</string>
+          <string>0.5</string>
+          <string>0.4</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>60</string>
+          <string>20</string>
+          <string />
+          <string />
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>40</string>
+          <string>30</string>
+          <string />
+          <string />
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+        </ArrayOfString>
+      </Table>
     </Forestry>
     <Area>0</Area>
     <Slope>0</Slope>

@@ -61,6 +61,11 @@ namespace UserInterface.Views
         private DateTime largestDate = DateTime.MinValue;
 
         /// <summary>
+        /// Depth midpoints of the soil layers
+        /// </summary>
+        public double[] SoilMidpoints;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ForestryView" /> class.
         /// </summary>
         public ForestryView()
@@ -575,8 +580,9 @@ namespace UserInterface.Views
             Grid.DataSource = table;
             Grid.Columns[0].ReadOnly = true; //name column
             Grid.Rows[2].ReadOnly = true; //RLD title row
+            Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
             Grid.Rows[3].ReadOnly = true; //Depth title row
-
+            Grid.Rows[3].DefaultCellStyle.BackColor = Color.LightGray;
             ResizeControls();
 
             SetupGraphs();
@@ -620,11 +626,18 @@ namespace UserInterface.Views
                 pBelowGround.Model.Axes.Clear();
                 pBelowGround.Model.Series.Clear();
                 pAboveGround.Model.Title = "Above Ground";
+                pAboveGround.Model.PlotAreaBorderColor = OxyColors.White;
+                pAboveGround.Model.LegendBorder = OxyColors.Transparent;
                 CategoryAxis agxAxis = new CategoryAxis();
                 agxAxis.Title = "Zone";
+                agxAxis.AxislineStyle = LineStyle.Solid;
+                agxAxis.AxisDistance = 2;
                 agxAxis.Position = AxisPosition.Top;
+
                 LinearAxis agyAxis = new LinearAxis();
                 agyAxis.Title = "%";
+                agyAxis.AxislineStyle = LineStyle.Solid;
+                agyAxis.AxisDistance = 2;
                 Utility.LineSeriesWithTracker seriesWind = new Utility.LineSeriesWithTracker();
                 Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
                 List<DataPoint> pointsWind = new List<DataPoint>();
@@ -674,18 +687,27 @@ namespace UserInterface.Views
             try
             {
                 pBelowGround.Model.Title = "Below Ground";
+                pBelowGround.Model.PlotAreaBorderColor = OxyColors.White;
+                pBelowGround.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis bgxAxis = new LinearAxis();
                 LinearAxis bgyAxis = new LinearAxis();
                 List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
 
                 bgyAxis.Position = AxisPosition.Left;
                 bgxAxis.Position = AxisPosition.Top;
-                bgyAxis.Title = "Depth";
-                bgxAxis.Title = "Root Length Density";
+                bgyAxis.Title = "Depth (mm)";
+
+                bgxAxis.Title = "Root Length Density (cm/cm3)";
+                bgxAxis.Minimum = 0;
+                bgxAxis.MinorTickSize = 0;
+                bgxAxis.AxislineStyle = LineStyle.Solid;
+                bgxAxis.AxisDistance = 2;
                 pBelowGround.Model.Axes.Add(bgxAxis);
 
                 bgyAxis.StartPosition = 1;
                 bgyAxis.EndPosition = 0;
+                bgyAxis.MinorTickSize = 0;
+                bgyAxis.AxislineStyle = LineStyle.Solid;
                 pBelowGround.Model.Axes.Add(bgyAxis);
 
                 for (int i = 1; i < table.Columns.Count; i++)
@@ -699,9 +721,10 @@ namespace UserInterface.Views
                     }
 
                     List<DataPoint> points = new List<DataPoint>();
+                    
                     for (int j = 0; j < data.Length; j++)
                     {
-                        points.Add(new DataPoint(data[j], j));
+                        points.Add(new DataPoint(data[j], SoilMidpoints[j]));
                     }
                     series.ItemsSource = points;
                     pBelowGround.Model.Series.Add(series);
@@ -719,10 +742,6 @@ namespace UserInterface.Views
             }
         }
 
-        /*     private double[] GetDepthMidpoint()
-             {
-                 //int (int =)
-             }*/
 
         public DataTable GetTable()
         {

@@ -17,6 +17,8 @@
         private ForestryView ForestryViewer;
         private Simulation Sim;
 
+        public double[] SoilMidpoints;
+        
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             ForestryModel = model as Forestry;
@@ -60,6 +62,7 @@
         {
             List<IModel> Zones = Apsim.FindAll(Sim, typeof(Zone));
             Soil Soil = Apsim.Find(Sim, typeof(Soil)) as Soil;
+            ForestryViewer.SoilMidpoints = Soil.DepthMidPoints;
             //setup columns
             List<string> colNames = new List<string>();
 
@@ -83,8 +86,8 @@
 
                 rowNames.Add("% Wind");
                 rowNames.Add("% Shade");
-                rowNames.Add("Root Length Density");
-                rowNames.Add("Depth");
+                rowNames.Add("Root Length Density (cm/cm3)");
+                rowNames.Add("Depth (cm)");
 
                 foreach (string s in Soil.Depth)
                 {
@@ -95,6 +98,11 @@
                 for (int i = 2; i < colNames.Count + 1; i++)
                 {
                     ForestryModel.Table.Add(Enumerable.Range(1, rowNames.Count).Select(x => "0").ToList());
+                }
+                for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
+                {
+                    ForestryModel.Table[i][2] = string.Empty;
+                    ForestryModel.Table[i][3] = string.Empty;
                 }
             }
             else
