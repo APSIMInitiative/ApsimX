@@ -1968,12 +1968,16 @@ namespace Models
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
     </SoilArbitrator>
+    <DataStore>
+      <Name>DataStore</Name>
+      <Input>
+        <Name>Input</Name>
+        <ErrorMessage>Please select a file to use.</ErrorMessage>
+      </Input>
+      <AutoExport>false</AutoExport>
+    </DataStore>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <AutoExport>false</AutoExport>
-  </DataStore>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
