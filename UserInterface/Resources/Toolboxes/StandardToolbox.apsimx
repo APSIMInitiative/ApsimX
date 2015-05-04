@@ -578,6 +578,11 @@
     <Log />
   </Folder>
   <Folder>
+    <Name>Agroforestry</Name>
+    <StaticForestrySystem></StaticForestrySystem>
+    <RectangularZone></RectangularZone>
+  </Folder>
+  <Folder>
     <Name>Crops</Name>
     <Plant15>
       <Name>Wheat</Name>
@@ -611,8 +616,6 @@
       <localRootDepth>500</localRootDepth>
       <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
     </Slurp>
-    <StaticForestrySystem>
-    </StaticForestrySystem>
     <AgPasture>
       <Name>AgPasture</Name>
       <alt_N_uptake>no</alt_N_uptake>
