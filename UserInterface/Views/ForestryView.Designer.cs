@@ -55,11 +55,10 @@
             this.Grid.AllowUserToDeleteRows = false;
             this.Grid.AllowUserToResizeColumns = false;
             this.Grid.AllowUserToResizeRows = false;
-            this.Grid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.Grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.Grid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Grid.Location = new System.Drawing.Point(0, 294);
+            this.Grid.Location = new System.Drawing.Point(3, 0);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
             this.Grid.Size = new System.Drawing.Size(265, 269);
@@ -81,11 +80,11 @@
             // 
             // pAboveGround
             // 
-            this.pAboveGround.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pAboveGround.Location = new System.Drawing.Point(0, 0);
+            this.pAboveGround.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pAboveGround.Location = new System.Drawing.Point(0, 275);
             this.pAboveGround.Name = "pAboveGround";
             this.pAboveGround.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.pAboveGround.Size = new System.Drawing.Size(527, 294);
+            this.pAboveGround.Size = new System.Drawing.Size(265, 288);
             this.pAboveGround.TabIndex = 2;
             this.pAboveGround.Text = "plot1";
             this.pAboveGround.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;

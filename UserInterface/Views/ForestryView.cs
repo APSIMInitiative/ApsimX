@@ -574,7 +574,8 @@ namespace UserInterface.Views
             }
             Grid.DataSource = table;
             Grid.Columns[0].ReadOnly = true; //name column
-            Grid.Rows[2].ReadOnly = true; //Depth title row
+            Grid.Rows[2].ReadOnly = true; //RLD title row
+            Grid.Rows[3].ReadOnly = true; //Depth title row
 
             ResizeControls();
 
@@ -591,109 +592,137 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in Grid.Rows)
                 height += row.Height;
             Grid.Width = width + 3;
-            Grid.Height = height + 25;
+            if (Grid.Height + 25 > Grid.Parent.Height / 2)
+            {
+                Grid.Height = Grid.Parent.Height / 2;
+                Grid.Width += 20; //extra width for scrollbar
+            }
+            else
+                Grid.Height = height + 25;
+
+            //resize above ground graph
+            pAboveGround.Width = pAboveGround.Parent.Width / 2;
+            pAboveGround.Height = pAboveGround.Parent.Height - Grid.Height;
+            pAboveGround.Location = new Point(0, Grid.Height);
 
             //resize below ground graph
-            pBelowGround.Width = pBelowGround.Parent.Width - Grid.Width;
-            pBelowGround.Height = pBelowGround.Parent.Height - pAboveGround.Height;
-            pBelowGround.Location = new Point(Grid.Width, pAboveGround.Height);
+            pBelowGround.Width = pBelowGround.Parent.Width / 2;
+            pBelowGround.Height = pBelowGround.Parent.Height - Grid.Height;
+            pBelowGround.Location = new Point(pAboveGround.Width, Grid.Height);
         }
 
         private void SetupGraphs()
         {
-            pAboveGround.Model.Axes.Clear();
-            pAboveGround.Model.Series.Clear();
-            pBelowGround.Model.Axes.Clear();
-            pBelowGround.Model.Series.Clear();
-            pAboveGround.Model.Title = "Above Ground";
-            CategoryAxis agxAxis = new CategoryAxis();
-            agxAxis.Title = "Zone";
-            LinearAxis agyAxis = new LinearAxis();
-            agyAxis.Title = "%";
-            Utility.LineSeriesWithTracker seriesWind = new Utility.LineSeriesWithTracker();
-            Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
-            List<DataPoint> pointsWind = new List<DataPoint>();
-            List<DataPoint> pointsShade = new List<DataPoint>();
-            DataRow rowWind = table.Rows[0];
-            DataRow rowShade = table.Rows[1];
-            DataColumn col = table.Columns[0];
-            double[] x = new double[table.Columns.Count - 1];
-            double[] yWind = new double[table.Columns.Count - 1];
-            double[] yShade = new double[table.Columns.Count - 1];
-
-            for (int i = 1; i < table.Columns.Count; i++)
+            try
             {
-                agxAxis.Labels.Add(table.Columns[i].ColumnName);
-            }
-            agxAxis.Position = AxisPosition.Bottom;
-            pAboveGround.Model.Axes.Add(agxAxis);
-            pAboveGround.Model.Axes.Add(agyAxis);
+                pAboveGround.Model.Axes.Clear();
+                pAboveGround.Model.Series.Clear();
+                pBelowGround.Model.Axes.Clear();
+                pBelowGround.Model.Series.Clear();
+                pAboveGround.Model.Title = "Above Ground";
+                CategoryAxis agxAxis = new CategoryAxis();
+                agxAxis.Title = "Zone";
+                agxAxis.Position = AxisPosition.Top;
+                LinearAxis agyAxis = new LinearAxis();
+                agyAxis.Title = "%";
+                Utility.LineSeriesWithTracker seriesWind = new Utility.LineSeriesWithTracker();
+                Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
+                List<DataPoint> pointsWind = new List<DataPoint>();
+                List<DataPoint> pointsShade = new List<DataPoint>();
+                DataRow rowWind = table.Rows[0];
+                DataRow rowShade = table.Rows[1];
+                DataColumn col = table.Columns[0];
+                double[] x = new double[table.Columns.Count - 1];
+                double[] yWind = new double[table.Columns.Count - 1];
+                double[] yShade = new double[table.Columns.Count - 1];
 
-            for (int i = 1; i < table.Columns.Count; i++)
-            {
-                if (rowWind[i].ToString() == "" || rowShade[i].ToString() == "")
-                    return;
-                yWind[i - 1] = Convert.ToDouble(rowWind[i]);
-                yShade[i - 1] = Convert.ToDouble(rowShade[i]);
-                x[i - 1] = i - 1;
-            }
+                for (int i = 1; i < table.Columns.Count; i++)
+                {
+                    agxAxis.Labels.Add(table.Columns[i].ColumnName);
+                }
+                pAboveGround.Model.Axes.Add(agxAxis);
+                pAboveGround.Model.Axes.Add(agyAxis);
 
-            for (int i = 0; i < x.Length; i++)
-            {
-                pointsWind.Add(new DataPoint(x[i], yWind[i]));
-                pointsShade.Add(new DataPoint(x[i], yShade[i]));
+                for (int i = 1; i < table.Columns.Count; i++)
+                {
+                    if (rowWind[i].ToString() == "" || rowShade[i].ToString() == "")
+                        return;
+                    yWind[i - 1] = Convert.ToDouble(rowWind[i]);
+                    yShade[i - 1] = Convert.ToDouble(rowShade[i]);
+                    x[i - 1] = i - 1;
+                }
+
+                for (int i = 0; i < x.Length; i++)
+                {
+                    pointsWind.Add(new DataPoint(x[i], yWind[i]));
+                    pointsShade.Add(new DataPoint(x[i], yShade[i]));
+                }
+                seriesWind.Title = "Wind reduction";
+                seriesShade.Title = "Shade reduction";
+                seriesWind.ItemsSource = pointsWind;
+                seriesShade.ItemsSource = pointsShade;
+                pAboveGround.Model.Series.Add(seriesWind);
+                pAboveGround.Model.Series.Add(seriesShade);
             }
-            seriesWind.Title = "Wind reduction";
-            seriesShade.Title = "Shade reduction";
-            seriesWind.ItemsSource = pointsWind;
-            seriesShade.ItemsSource = pointsShade;
-            pAboveGround.Model.Series.Add(seriesWind);
-            pAboveGround.Model.Series.Add(seriesShade);
+            //don't draw the series if the format is wrong
+            catch (FormatException)
+            {
+                pBelowGround.Model.Series.Clear();
+            }
 
             /////////////// Below Ground
-            pBelowGround.Model.Title = "Below Ground";
-            CategoryAxis bgxAxis = new CategoryAxis();
-            LinearAxis bgyAxis = new LinearAxis();
-            List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
-
-            bgxAxis.Position = AxisPosition.Left;
-            bgyAxis.Position = AxisPosition.Top;
-            bgxAxis.Title = "Depth";
-            bgyAxis.Title = "Root Length Density";
-            bgyAxis.Minimum = 0;
-            bgyAxis.Maximum = 1;
-            bgyAxis.StartPosition = 1;
-            bgyAxis.EndPosition = 0;
-            pBelowGround.Model.Axes.Add(bgyAxis);
-            for (int i = 3; i < table.Rows.Count; i++)
+            try
             {
-                bgxAxis.Labels.Add(table.Rows[i].Field<string>(0));
-            }
-            bgxAxis.StartPosition = 1;
-            bgxAxis.EndPosition = 0;
-            pBelowGround.Model.Axes.Add(bgxAxis);
+                pBelowGround.Model.Title = "Below Ground";
+                LinearAxis bgxAxis = new LinearAxis();
+                LinearAxis bgyAxis = new LinearAxis();
+                List<Utility.LineSeriesWithTracker> seriesList = new List<Utility.LineSeriesWithTracker>();
 
-            for (int i = 1; i < table.Columns.Count; i++)
+                bgyAxis.Position = AxisPosition.Left;
+                bgxAxis.Position = AxisPosition.Top;
+                bgyAxis.Title = "Depth";
+                bgxAxis.Title = "Root Length Density";
+                pBelowGround.Model.Axes.Add(bgxAxis);
+
+                bgyAxis.StartPosition = 1;
+                bgyAxis.EndPosition = 0;
+                pBelowGround.Model.Axes.Add(bgyAxis);
+
+                for (int i = 1; i < table.Columns.Count; i++)
+                {
+                    Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
+                    series.Title = table.Columns[i].ColumnName;
+                    double[] data = new double[table.Rows.Count - 4];
+                    for (int j = 4; j < table.Rows.Count; j++)
+                    {
+                        data[j - 4] = Convert.ToDouble(table.Rows[j].Field<string>(i));
+                    }
+
+                    List<DataPoint> points = new List<DataPoint>();
+                    for (int j = 0; j < data.Length; j++)
+                    {
+                        points.Add(new DataPoint(data[j], j));
+                    }
+                    series.ItemsSource = points;
+                    pBelowGround.Model.Series.Add(series);
+                }
+            }
+            //don't draw the series if the format is wrong
+            catch (FormatException)
             {
-                Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
-                series.Title = table.Columns[i].ColumnName;
-                double[] data = new double[table.Rows.Count - 3];
-                for (int j = 3; j < table.Rows.Count; j++)
-                {
-                    data[j - 3] = Convert.ToDouble(table.Rows[j].Field<string>(i));
-                }
-
-                List<DataPoint> points = new List<DataPoint>();
-                for (int j = 0; j < data.Length; j++)
-                {
-                    points.Add(new DataPoint(data[j], j));
-                }
-                series.ItemsSource = points;
-                pBelowGround.Model.Series.Add(series);
+                pBelowGround.Model.Series.Clear();
             }
-            pAboveGround.InvalidatePlot(true);
-            pBelowGround.InvalidatePlot(true);
+            finally
+            {
+                pAboveGround.InvalidatePlot(true);
+                pBelowGround.InvalidatePlot(true);
+            }
         }
+
+        /*     private double[] GetDepthMidpoint()
+             {
+                 //int (int =)
+             }*/
 
         public DataTable GetTable()
         {

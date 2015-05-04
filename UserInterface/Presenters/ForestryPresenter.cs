@@ -40,9 +40,6 @@
             for (int i = 0; i < ForestryModel.Table[1].Count; i++)
                 for (int j = 2; j < table.Columns.Count + 1; j++)
                 {
-                  //  if (i == 2 && j > 0)
-                  //      ForestryModel.Table[j][i] = string.Empty;
-                  //  else
                     ForestryModel.Table[j][i] = table.Rows[i].Field<string>(j-1);
                 }
         }
@@ -86,6 +83,7 @@
 
                 rowNames.Add("% Wind");
                 rowNames.Add("% Shade");
+                rowNames.Add("Root Length Density");
                 rowNames.Add("Depth");
 
                 foreach (string s in Soil.Depth)
@@ -106,8 +104,11 @@
                 foreach (string s in except)
                     ForestryModel.Table.Add(Enumerable.Range(1, ForestryModel.Table[1].Count).Select(x => "0").ToList());
                 ForestryModel.Table[0].AddRange(except);
-                for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth row to empty strings
-                      ForestryModel.Table[i][2] = string.Empty;
+                for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
+                {
+                    ForestryModel.Table[i][2] = string.Empty;
+                    ForestryModel.Table[i][3] = string.Empty;
+                }
 
                 // remove Zones from table that don't exist in simulation
                 except = ForestryModel.Table[0].Except(colNames);
@@ -125,8 +126,6 @@
                     ForestryModel.Table[0].RemoveAt(i);
                     ForestryModel.Table.RemoveAt(i + 1);
                 }
-
-                //check number of columns equals number of Zones, adjust if not. check column names match Zone names, remove columns that don't match a Zone name.
             }
 
             ForestryViewer.SetupGrid(ForestryModel.Table);
