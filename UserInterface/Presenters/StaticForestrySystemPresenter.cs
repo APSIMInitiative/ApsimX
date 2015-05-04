@@ -11,18 +11,18 @@
     using Models;
     using Views;
 
-    public class ForestryPresenter : IPresenter, IExportable
+    public class StaticForestrySystemPresenter : IPresenter, IExportable
     {
-        private Forestry ForestryModel;
-        private ForestryView ForestryViewer;
+        private StaticForestrySystem ForestryModel;
+        private StaticForestrySystemView ForestryViewer;
         private Simulation Sim;
 
         public double[] SoilMidpoints;
         
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            ForestryModel = model as Forestry;
-            ForestryViewer = view as ForestryView;
+            ForestryModel = model as StaticForestrySystem;
+            ForestryViewer = view as StaticForestrySystemView;
             Sim = (Simulation)ForestryModel.Parent;
 
             AttachData();

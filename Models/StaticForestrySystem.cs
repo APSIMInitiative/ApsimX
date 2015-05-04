@@ -12,9 +12,9 @@ namespace Models
     /// A simple agroforestry model
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ForestryView")]
-    [PresenterName("UserInterface.Presenters.ForestryPresenter")]
-    public class Forestry : Model
+    [ViewName("UserInterface.Views.StaticForestrySystemView")]
+    [PresenterName("UserInterface.Presenters.StaticForestrySystemPresenter")]
+    public class StaticForestrySystem : Model
     {
         /// <summary>Gets or sets the table data.</summary>
         /// <value>The table.</value>

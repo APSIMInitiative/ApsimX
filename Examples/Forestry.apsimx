@@ -2,7 +2,7 @@
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Simulation>
-    <Name>Forestry</Name>
+    <Name>StaticForestrySystem</Name>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1900-01-01T00:00:00</StartDate>
@@ -1740,8 +1740,8 @@ namespace Models
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
-    <Forestry>
-      <Name>Forestry</Name>
+    <StaticForestrySystem>
+      <Name>StaticForestrySystem</Name>
       <Table>
         <ArrayOfString>
           <string>Parameter</string>
@@ -1802,7 +1802,7 @@ namespace Models
           <string>0</string>
         </ArrayOfString>
       </Table>
-    </Forestry>
+    </StaticForestrySystem>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>

@@ -611,8 +611,8 @@
       <localRootDepth>500</localRootDepth>
       <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
     </Slurp>
-    <Forestry>
-    </Forestry>
+    <StaticForestrySystem>
+    </StaticForestrySystem>
     <AgPasture>
       <Name>AgPasture</Name>
       <alt_N_uptake>no</alt_N_uptake>

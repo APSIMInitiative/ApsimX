@@ -1,6 +1,6 @@
 ﻿namespace UserInterface.Views
 {
-    partial class ForestryView
+    partial class StaticForestrySystemView
     {
         /// <summary> 
         /// Required designer variable.
@@ -91,12 +91,12 @@
             this.pAboveGround.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
             this.pAboveGround.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
             // 
-            // ForestryView
+            // StaticForestrySystemView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Name = "ForestryView";
+            this.Name = "StaticForestrySystemView";
             this.Size = new System.Drawing.Size(527, 563);
             this.Resize += new System.EventHandler(this.ForestryView_Resize);
             this.panel1.ResumeLayout(false);

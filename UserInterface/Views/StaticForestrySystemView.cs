@@ -27,7 +27,7 @@ namespace UserInterface.Views
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
-    public partial class ForestryView : UserControl, Interfaces.IGraphView
+    public partial class StaticForestrySystemView : UserControl, Interfaces.IGraphView
     {
         /// <summary>
         /// A list to hold all plots to make enumeration easier.
@@ -66,9 +66,9 @@ namespace UserInterface.Views
         public double[] SoilMidpoints;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ForestryView" /> class.
+        /// Initializes a new instance of the <see cref="StaticForestrySystemView" /> class.
         /// </summary>
-        public ForestryView()
+        public StaticForestrySystemView()
         {
             this.InitializeComponent();
             this.pAboveGround.Model = new PlotModel();
