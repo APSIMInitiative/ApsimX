@@ -605,25 +605,9 @@ namespace UserInterface.Views
 
         private void ResizeControls()
         {
-            //resize grid
+            //resize Scalars
             int width = 0;
             int height = 0;
-            foreach (DataGridViewColumn col in Grid.Columns)
-                width += col.Width;
-            foreach (DataGridViewRow row in Grid.Rows)
-                height += row.Height;
-            Grid.Width = width + 3;
-            if (height + 25 > Grid.Parent.Height / 2)
-            {
-                Grid.Height = Grid.Parent.Height / 2;
-                Grid.Width += 25; //extra width for scrollbar
-            }
-            else
-                Grid.Height = height+25;
-
-            //resize scalars
-            width = 0;
-            height = 0;
             foreach (DataGridViewColumn col in Scalars.Columns)
                 width += col.Width;
             foreach (DataGridViewRow row in Scalars.Rows)
@@ -636,6 +620,25 @@ namespace UserInterface.Views
             }
             else
                 Scalars.Height = height + 25;
+
+            //resize Grid
+            width = 0;
+            height = 0;
+
+            foreach (DataGridViewColumn col in Grid.Columns)
+                width += col.Width;
+            foreach (DataGridViewRow row in Grid.Rows)
+                height += row.Height;
+            Grid.Width = width + 3;
+            if (height + 25 > Grid.Parent.Height / 2)
+            {
+                Grid.Height = Grid.Parent.Height / 2;
+                Grid.Width += 25; //extra width for scrollbar
+            }
+            else
+                Grid.Height = height + 25;
+            Grid.Location = new Point(Scalars.Width + 10, 0);
+
             //resize above ground graph
             pAboveGround.Width = pAboveGround.Parent.Width / 2;
             pAboveGround.Height = pAboveGround.Parent.Height - Grid.Height;
