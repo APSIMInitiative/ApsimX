@@ -33,7 +33,6 @@ namespace Models.Core
             }
             set
             {
-                //throw new ApsimXException(this, "Cannot set RectZone Area, it is calculated.");
             }
         }
     }

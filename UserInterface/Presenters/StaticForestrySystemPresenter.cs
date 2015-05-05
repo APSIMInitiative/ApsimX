@@ -35,6 +35,9 @@
 
         private void SaveTable()
         {
+            ForestryModel.NDemand = ForestryViewer.NDemand;
+            ForestryModel.RootRadius = ForestryViewer.RootRadius;
+
             DataTable table = ForestryViewer.GetTable();
 
             if (table == null)
@@ -61,6 +64,9 @@
 
         public void AttachData()
         {
+            ForestryViewer.NDemand = ForestryModel.NDemand;
+            ForestryViewer.RootRadius = ForestryModel.RootRadius;
+
             Soil Soil;
             List<IModel> Zones = Apsim.ChildrenRecursively(ForestryModel, typeof(Zone));
             if (Zones.Count == 0)
@@ -88,8 +94,8 @@
                 //setup rows
                 List<string> rowNames = new List<string>();
 
-                rowNames.Add("% Wind");
-                rowNames.Add("% Shade");
+                rowNames.Add("Wind reduction (%)");
+                rowNames.Add("Shade (%)");
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 

@@ -1769,8 +1769,21 @@ namespace Models
           <string>150-180</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>0</string>
-          <string>0</string>
+          <string>80</string>
+          <string>10</string>
+          <string />
+          <string />
+          <string>50</string>
+          <string>30</string>
+          <string>20</string>
+          <string>10</string>
+          <string>5</string>
+          <string>3</string>
+          <string>2</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>50</string>
+          <string>15</string>
           <string />
           <string />
           <string>0</string>
@@ -1782,21 +1795,8 @@ namespace Models
           <string>0</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>0</string>
-          <string>0</string>
-          <string />
-          <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-        </ArrayOfString>
-        <ArrayOfString>
-          <string>0</string>
-          <string>0</string>
+          <string>30</string>
+          <string>30</string>
           <string />
           <string />
           <string>0</string>
@@ -1808,6 +1808,8 @@ namespace Models
           <string>0</string>
         </ArrayOfString>
       </Table>
+      <NDemand>100</NDemand>
+      <RootRadius>5</RootRadius>
     </StaticForestrySystem>
     <Area>0</Area>
     <Slope>0</Slope>

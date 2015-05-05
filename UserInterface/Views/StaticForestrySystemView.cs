@@ -66,6 +66,16 @@ namespace UserInterface.Views
         public double[] SoilMidpoints;
 
         /// <summary>
+        /// Nitrogen demand across all Zones
+        /// </summary>
+        public double NDemand;
+
+        /// <summary>
+        /// Root radius in cm
+        /// </summary>
+        public double RootRadius;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="StaticForestrySystemView" /> class.
         /// </summary>
         public StaticForestrySystemView()
@@ -561,6 +571,11 @@ namespace UserInterface.Views
 
         public void SetupGrid(List<List<string>> data)
         {
+            // setup scalar variables
+            Scalars.Rows.Clear();
+            Scalars.Rows.Add("Nitrogen demand (kg/ha)", NDemand);
+            Scalars.Rows.Add("Root radius (cm)", RootRadius);
+
             table = new DataTable();
             // data[0] holds the column names
             foreach (string s in data[0])
@@ -598,14 +613,29 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in Grid.Rows)
                 height += row.Height;
             Grid.Width = width + 3;
-            if (Grid.Height + 25 > Grid.Parent.Height / 2)
+            if (height + 25 > Grid.Parent.Height / 2)
             {
                 Grid.Height = Grid.Parent.Height / 2;
-                Grid.Width += 20; //extra width for scrollbar
+                Grid.Width += 25; //extra width for scrollbar
             }
             else
-                Grid.Height = height + 25;
+                Grid.Height = height+25;
 
+            //resize scalars
+            width = 0;
+            height = 0;
+            foreach (DataGridViewColumn col in Scalars.Columns)
+                width += col.Width;
+            foreach (DataGridViewRow row in Scalars.Rows)
+                height += row.Height;
+            Scalars.Width = width + 3;
+            if (height + 25 > Scalars.Parent.Height / 2)
+            {
+                Scalars.Height = Scalars.Parent.Height / 2;
+                Scalars.Width += 20; //extra width for scrollbar
+            }
+            else
+                Scalars.Height = height + 25;
             //resize above ground graph
             pAboveGround.Width = pAboveGround.Parent.Width / 2;
             pAboveGround.Height = pAboveGround.Parent.Height - Grid.Height;
@@ -670,8 +700,8 @@ namespace UserInterface.Views
                     pointsWind.Add(new DataPoint(x[i], yWind[i]));
                     pointsShade.Add(new DataPoint(x[i], yShade[i]));
                 }
-                seriesWind.Title = "Wind reduction";
-                seriesShade.Title = "Shade reduction";
+                seriesWind.Title = "Wind";
+                seriesShade.Title = "Shade";
                 seriesWind.ItemsSource = pointsWind;
                 seriesShade.ItemsSource = pointsShade;
                 pAboveGround.Model.Series.Add(seriesWind);
@@ -756,6 +786,16 @@ namespace UserInterface.Views
         private void Grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             Invoke(OnCellEndEdit);
+        }
+
+        private void Scalars_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            double val;
+            if (double.TryParse(Scalars.Rows[e.RowIndex].Cells[e.ColumnIndex].Value as string, out val))
+            {
+                NDemand = Convert.ToDouble(Scalars.Rows[0].Cells[1].Value);
+                RootRadius = Convert.ToDouble(Scalars.Rows[1].Cells[1].Value);
+            }
         }
     }
 }

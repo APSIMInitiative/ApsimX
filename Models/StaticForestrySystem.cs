@@ -21,6 +21,16 @@ namespace Models
         [Summary]
         public List<List<string>> Table { get; set; }
 
+        /// <summary>Allows the user to set a nitrogen demand for the tree.</summary>
+        /// <value>The nitrogen demand.</value>
+        [Summary]
+        public double NDemand { get; set; }
+
+        /// <summary>The root radius.</summary>
+        /// <value>The root radius.</value>
+        [Summary]
+        public double RootRadius { get; set; }
+
         /// <summary>
         /// A list containing forestry information for each zone.
         /// </summary>
