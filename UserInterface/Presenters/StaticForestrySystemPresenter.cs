@@ -15,7 +15,6 @@
     {
         private StaticForestrySystem ForestryModel;
         private StaticForestrySystemView ForestryViewer;
-        private Simulation Sim;
 
         public double[] SoilMidpoints;
         
@@ -23,14 +22,13 @@
         {
             ForestryModel = model as StaticForestrySystem;
             ForestryViewer = view as StaticForestrySystemView;
-            Sim = (Simulation)ForestryModel.Parent;
 
             AttachData();
             ForestryViewer.OnCellEndEdit += OnCellEndEdit;         
         }
 
         public void Detach()
-        {
+        { 
             SaveTable();
             ForestryViewer.OnCellEndEdit -= OnCellEndEdit;
         }
@@ -38,6 +36,9 @@
         private void SaveTable()
         {
             DataTable table = ForestryViewer.GetTable();
+
+            if (table == null)
+                return;
             
             for (int i = 0; i < ForestryModel.Table[1].Count; i++)
                 for (int j = 2; j < table.Columns.Count + 1; j++)
@@ -60,8 +61,13 @@
 
         public void AttachData()
         {
-            List<IModel> Zones = Apsim.FindAll(Sim, typeof(Zone));
-            Soil Soil = Apsim.Find(Sim, typeof(Soil)) as Soil;
+            Soil Soil;
+            List<IModel> Zones = Apsim.ChildrenRecursively(ForestryModel, typeof(Zone));
+            if (Zones.Count == 0)
+                return;
+            //get the first soil. For now we're assuming all soils have the same structure.
+            Soil = Apsim.Find(Zones[0], typeof(Soil)) as Soil;
+
             ForestryViewer.SoilMidpoints = Soil.DepthMidPoints;
             //setup columns
             List<string> colNames = new List<string>();
@@ -76,8 +82,6 @@
 
             if (ForestryModel.Table.Count == 0)
             {
-
-
                 ForestryModel.Table = new List<List<String>>();
                 ForestryModel.Table.Add(colNames);
 
