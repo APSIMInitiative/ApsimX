@@ -44,7 +44,7 @@
         /// Provides access to temperature and rainfall values.
         /// </summary>
         [Link]
-        private Weather weather = null;
+        private IWeather weather = null;
         #endregion
 
         // ====================================================================
@@ -144,7 +144,7 @@
         /// <summary>The surf om</summary>
         private List<SurfOrganicMatterType> SurfOM;
         /// <summary>The met data</summary>
-        private Models.Weather.NewMetType MetData;
+        private Weather.NewMetType MetData;
 
         /// <summary>The number surfom</summary>
         private int numSurfom = 0;
@@ -1539,6 +1539,12 @@
                 DailyInitialC = SumSurfOMStandingLying(SurfOM, x => x.C);
                 DailyInitialN = SumSurfOMStandingLying(SurfOM, x => x.N);
             }
+            MetData.Maxt = weather.MaxT;
+            MetData.Mint = weather.MinT;
+            MetData.Radn = weather.Radn;
+            MetData.Rain = weather.Rain;
+            MetData.VP = weather.VP;
+            MetData.Wind = weather.Wind;
         }
 
         /// <summary>The initialised</summary>
@@ -1621,15 +1627,6 @@
         private void OnRemove_surfaceOM(SurfaceOrganicMatterType SOM)
         {
             RemoveSurfom(SOM);
-        }
-
-        /// <summary>Called when [new weather data available].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
-        {
-            MetData = weather.MetData;
         }
 
         /// <summary>Get irrigation information from an Irrigated event.</summary>

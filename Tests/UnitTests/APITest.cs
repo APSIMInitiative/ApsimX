@@ -240,7 +240,6 @@ namespace UnitTests
         [Test]
         public void SetTest()
         {
-            Weather weather = this.simulation.Children[0] as Weather;
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 0.0);
             this.simulation.Set("[Weather].Rain", 111.0);
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 111.0);
