@@ -40,8 +40,8 @@ namespace UserInterface.Presenters
             this.weatherData = (model as Weather);
             this.weatherDataView = (view as IMetDataView);
 
-            this.WriteTableAndSummary(this.weatherData.FullFileName);
             this.weatherDataView.BrowseClicked += this.OnBrowse;
+            this.WriteTableAndSummary(this.weatherData.FullFileName);
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -66,12 +66,26 @@ namespace UserInterface.Presenters
         /// <param name="filename">The filename.</param>
         private void WriteTableAndSummary(string filename)
         {
+            // Clear any previous summary
+            this.weatherDataView.Summarylabel = string.Empty;
+            this.weatherDataView.Graph.Clear();
+            this.weatherDataView.Graph.Refresh();
             if (filename != null)
             {
-                this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
-                DataTable data = this.weatherData.GetAllData();
-                this.WriteTable(data);
-                this.WriteSummary(data);
+                try
+                {
+                    this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                    DataTable data = this.weatherData.GetAllData();
+                    this.WriteTable(data);
+                    this.WriteSummary(data);
+                }
+                catch (Exception err)
+                {
+                    string message = err.Message;
+                    message += "\r\n" + err.StackTrace;
+                    this.weatherDataView.Summarylabel = err.Message;
+                    this.explorerPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
+                }
             }
             this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
         }
