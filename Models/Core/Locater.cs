@@ -439,6 +439,15 @@ namespace Models.Core
                 {
                     modelsToReturn.Add(model);
                 }
+                else
+                {
+                    if (model is Manager)
+                    {
+                        Manager manager = model as Manager;
+                        if (type.IsAssignableFrom(manager.Script.GetType()))
+                            modelsToReturn.Add(manager.Script);
+                    }
+                }
             }
 
             AddToCache(cacheKey, relativeTo, modelsToReturn.ToArray());

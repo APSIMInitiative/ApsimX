@@ -8,6 +8,7 @@ using System.Text;
 using Models.Core;
 using Models;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models.Soils
 {
@@ -26,7 +27,7 @@ namespace Models.Soils
 
         /// <summary>Link to APSIM's metFile (weather data)</summary>
         [Link]
-        private Weather MetFile = null;
+        private IWeather MetFile = null;
 
         /// <summary>The soil</summary>
         [Link]

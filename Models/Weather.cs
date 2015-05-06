@@ -12,6 +12,7 @@ namespace Models
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Models.Interfaces;
 
     ///<summary>
     /// Reads in weather data and makes it available to other models.
@@ -32,7 +33,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
-    public class Weather : Model 
+    public class Weather : Model, IWeather
     {
         /// <summary>
         /// A link to the clock model.
@@ -87,16 +88,11 @@ namespace Models
         private bool doSeek;
 
         /// <summary>
-        /// This event will be invoked immediately before 'NewWeatherDataAvailable' giving
+        /// This event will be invoked immediately before models get their weather data.
         /// models and scripts an opportunity to change the weather data before other models
         /// reads it.
         /// </summary>
         public event EventHandler PreparingNewWeatherData;
-
-        /// <summary>
-        /// This event will be invoked when new weather data is available to models.
-        /// </summary>
-        public event EventHandler NewWeatherDataAvailable;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -127,7 +123,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Gets the start date of the simulation
+        /// Gets the start date of the weather file
         /// </summary>
         public DateTime StartDate
         {
@@ -145,7 +141,7 @@ namespace Models
         }
 
         /// <summary>
-        /// Gets the end date of the simulation
+        /// Gets the end date of the weather file
         /// </summary>
         public DateTime EndDate
         {
@@ -419,6 +415,7 @@ namespace Models
         /// <returns>The DataTable</returns>
         public DataTable GetAllData()
         {
+            this.reader = null;
             if (this.OpenDataFile())
             {
                 return this.reader.ToTable();
@@ -483,11 +480,6 @@ namespace Models
             if (this.PreparingNewWeatherData != null)
             {
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
-            }
-
-            if (this.NewWeatherDataAvailable != null)
-            {
-                this.NewWeatherDataAvailable.Invoke(this, new EventArgs());
             }
         }
 
@@ -656,7 +648,6 @@ namespace Models
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
             this.reader.SeekToDate(start.AddDays(1)); // goto start of data set
-
         }
         
         /// <summary>

@@ -4,6 +4,7 @@ using System.Text;
 
 using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
@@ -39,7 +40,7 @@ namespace Models.PMF.Functions.SupplyFunctions
 
         /// <summary>The met data</summary>
         [Link]
-        Weather MetData = null;
+        IWeather MetData = null;
 
 
         #region Class Data Members

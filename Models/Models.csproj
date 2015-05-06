@@ -84,6 +84,7 @@
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
+    <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
