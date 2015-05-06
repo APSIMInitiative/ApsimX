@@ -432,7 +432,7 @@ namespace Models.Core
                     }
                     else
                     {
-                        // more that one match so use name to match.
+                        // more that one match so use name to match
                         foreach (IModel matchingModel in allMatches)
                         {
                             if (matchingModel.Name == field.Name)

@@ -17,8 +17,8 @@ This test simulation has two 'Weather' models in it, one at the top level and on
     </Weather>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>1960-01-01T00:00:00</StartDate>
-      <EndDate>1960-01-01T00:00:00</EndDate>
+      <StartDate>1960-01-02T00:00:00</StartDate>
+      <EndDate>1960-01-02T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -31,7 +31,7 @@ This test simulation has two 'Weather' models in it, one at the top level and on
           <string>[Clock].Today</string>
           <string>[GetWeather].Script.LocalMaxT</string>
           <string>[GetWeather].Script.LocalMinT</string>
-          <string>[GetWeather].Script.LocalRadn</string>
+          <string>[GetWeather].Script.LocalRain</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -50,7 +50,7 @@ namespace Models
 	public class Script : Model, IWeather
 	{
 		[Link] Clock Clock;
-		[Link] Weather weather; // parent weather.
+		[Link] IWeather weather; // parent weather.
 		
 		/// <summary>Gets the start date of the weather file</summary>
         public DateTime StartDate { get { return weather.StartDate; } }
@@ -65,7 +65,7 @@ namespace Models
         public double MinT { get { return 2.0; } }
 
         /// <summary>Gets or sets the rainfall (mm)</summary>
-        public double Rain { get { return 3.0; } }
+        public double Rain { get { return weather.Rain; } }
 
         /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
         public double Radn { get { return weather.Radn; } }
@@ -111,18 +111,12 @@ namespace Models
 	[Serializable]
 	public class Script : Model
 	{
-		[Link] IWeather weather; // parent in this field.
+		[Link] IWeather localWeather; // parent in this field.
 		
-		public DateTime LocalStartDate { get { return weather.StartDate; } }
-		public double LocalMaxT { get {	return weather.MaxT; } }
-		public double LocalMinT { get {	return weather.MinT; } }
-		public double LocalRadn { get {	return weather.Radn; } }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			
-		}
+		public DateTime LocalStartDate { get { return localWeather.StartDate; } }
+		public double LocalMaxT { get {	return localWeather.MaxT; } }
+		public double LocalMinT { get {	return localWeather.MinT; } }
+		public double LocalRain { get {	return localWeather.Rain; } }
 	}
 	
 
@@ -159,8 +153,8 @@ namespace Models
       <SimulationName>Test</SimulationName>
       <TableName>Report</TableName>
       <Type>EqualTo</Type>
-      <ColumnNames>GetWeather.Script.LocalRadn</ColumnNames>
-      <Parameters>24.7</Parameters>
+      <ColumnNames>GetWeather.Script.LocalRain</ColumnNames>
+      <Parameters>100</Parameters>
     </Test>
   </Tests>
   <ExplorerWidth>250</ExplorerWidth>
