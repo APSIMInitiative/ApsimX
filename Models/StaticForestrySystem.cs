@@ -42,6 +42,30 @@ namespace Models
         public List<ZoneInfo> ZoneInfoList;
 
         /// <summary>
+        /// Return the %Shade for a given zone
+        /// </summary>
+        /// <param name="z">Zone</param>
+        /// <returns>%Shade</returns>
+        public double GetShade(Zone z)
+        {
+            foreach (ZoneInfo zi in ZoneInfoList)
+                if (zi.Name == z.Name)
+                    return zi.Shade;
+            throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
+        }
+        /// <summary>
+        /// Return the %Wind Reduction for a given zone
+        /// </summary>
+        /// <param name="z">Zone</param>
+        /// <returns>%Wind Reduction</returns>
+        public double GetWindReduction(Zone z)
+        {
+            foreach (ZoneInfo zi in ZoneInfoList)
+                if (zi.Name == z.Name)
+                    return zi.WindReduction;
+            throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
+        }
+        /// <summary>
         /// Return the area of the zone.
         /// </summary>
         [XmlIgnore]
@@ -70,7 +94,7 @@ namespace Models
             {
                 ZoneInfo newZone = new ZoneInfo();
                 newZone.Name = Table[0][i - 1];
-                newZone.Wind = Convert.ToDouble(Table[i][0]);
+                newZone.WindReduction = Convert.ToDouble(Table[i][0]);
                 newZone.Shade = Convert.ToDouble(Table[i][1]);
                 newZone.RLD = new double[Table[1].Count - 4];
                 for (int j = 4; j < Table[1].Count; j++)
@@ -219,7 +243,7 @@ namespace Models
         /// <summary>
         /// Wind value.
         /// </summary>
-        public double Wind;
+        public double WindReduction;
 
         /// <summary>
         /// Shade value.

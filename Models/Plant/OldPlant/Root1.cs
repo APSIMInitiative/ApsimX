@@ -1139,6 +1139,9 @@ namespace Models.PMF.OldPlant
             DisposeDetachedMaterial(Dead, RootLengthSenesced);
             Dead.Clear();
             Live.Clear();
+            MathUtilities.Zero(dlt_sw_dep);
+            MathUtilities.Zero(dlt_nh4gsm);
+            MathUtilities.Zero(dlt_no3gsm);
         }
 
         /// <summary>Called when [phase changed].</summary>

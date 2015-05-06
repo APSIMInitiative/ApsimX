@@ -108,9 +108,6 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public partial class MicroClimate : Model
     {
-        /// <summary>The zone</summary>
-        [Link]
-        Zone zone = null;
 
         /// <summary>The clock</summary>
         [Link]
@@ -118,7 +115,7 @@ namespace Models
 
         /// <summary>The weather</summary>
         [Link]
-        IWeather Weather = null;
+        LocalMicroClimate Weather = null;
 
         /// <summary>The _albedo</summary>
         private double _albedo = 0;
@@ -418,6 +415,13 @@ namespace Models
                 componentData.Height = Math.Round(canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m
                 componentData.Depth = Math.Round(canopy.Depth, 5) / 1000.0;   // Round off a bit and convert mm to m
                 componentData.Canopy = canopy;
+                //zero a few things
+                MathUtilities.Zero(componentData.Gc);
+                MathUtilities.Zero(componentData.PET);
+                MathUtilities.Zero(componentData.PETr);
+                MathUtilities.Zero(componentData.PETa);
+                MathUtilities.Zero(componentData.interception);
+
             }
         }
 
@@ -515,7 +519,6 @@ namespace Models
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             _albedo = albedo;
-            windspeed_checked = false;
             netLongWave = 0;
             sumRs = 0;
             averageT = 0;
@@ -814,11 +817,7 @@ namespace Models
         private double vp;
         /// <summary>The wind</summary>
         private double wind;
-        /// <summary>The use_external_windspeed</summary>
-        private bool use_external_windspeed;
 
-        /// <summary>The windspeed_checked</summary>
-        private bool windspeed_checked = false;
         /// <summary>The day</summary>
         private int day;
 
@@ -1151,15 +1150,6 @@ namespace Models
         /// <summary>Calculate the aerodynamic conductance for system compartments</summary>
         private void CalculateGa()
         {
-            double windspeed = windspeed_default;
-            if (!windspeed_checked)
-            {
-                object val = zone.Get("windspeed");
-                use_external_windspeed = val != null;
-                if (use_external_windspeed)
-                    windspeed = (double)val;
-                windspeed_checked = true;
-            }
 
             double sumDeltaZ = 0.0;
             double sumLAI = 0.0;
@@ -1171,7 +1161,7 @@ namespace Models
                 sumLAI += layerLAIsum[i];
             }
 
-            double totalGa = AerodynamicConductanceFAO(windspeed, refheight, sumDeltaZ, sumLAI);
+            double totalGa = AerodynamicConductanceFAO(wind, refheight, sumDeltaZ, sumLAI);
 
             for (int i = 0; i <= numLayers - 1; i++)
             {

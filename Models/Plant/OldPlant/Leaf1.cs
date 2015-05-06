@@ -60,7 +60,14 @@ namespace Models.PMF.OldPlant
         public double FRGR { get { return Plant.FRGR; } }
 
         /// <summary>Sets the potential evapotranspiration.</summary>
-        public double PotentialEP { set { Plant.PotentialEP = value; } }
+        public double PotentialEP { 
+            set 
+            { 
+                Plant.PotentialEP = value;
+                sw_demand = value;
+                ExternalSWDemand = true;
+            } 
+        }
 
         /// <summary>Sets the light profile.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set { Plant.LightProfile = value; } }
@@ -377,7 +384,6 @@ namespace Models.PMF.OldPlant
             if (ExternalSWDemand == true)
             {
                 transpEff = dlt_dm_pot_rue / sw_demand;
-                ExternalSWDemand = false;
             }
             else
             {
@@ -741,6 +747,9 @@ namespace Models.PMF.OldPlant
         /// <summary>Updates this instance.</summary>
         public override void Update()
         {
+            ExternalSWDemand = false;
+            sw_demand = 0.0;
+
             double TotalDltNSenescedRetrans = 0;
             foreach (Organ1 Organ in Plant.Organ1s)
                 TotalDltNSenescedRetrans += Organ.DltNSenescedRetrans;
@@ -1027,7 +1036,8 @@ namespace Models.PMF.OldPlant
             _SoilNDemand = 0.0;
             NMax = 0.0;
             sw_demand_te = 0.0;
-            sw_demand = 0.0;
+
+
             dltLAI = 0.0;
             dltSLAI = 0.0;
             dltLAI_pot = 0.0;
@@ -1079,6 +1089,7 @@ namespace Models.PMF.OldPlant
         /// <param name="BiomassRemoved">The biomass removed.</param>
         public override void OnEndCrop(BiomassRemovedType BiomassRemoved)
         {
+
             int i = Util.IncreaseSizeOfBiomassRemoved(BiomassRemoved);
             BiomassRemoved.dm_type[i] = Name;
             BiomassRemoved.fraction_to_residue[i] = 1.0F;
@@ -1088,6 +1099,17 @@ namespace Models.PMF.OldPlant
 
             Dead.Clear();
             Live.Clear();
+            ExternalSWDemand = false;
+            sw_demand = 0.0;
+            _LAI = 0.0;
+            _SLAI = 0.0;
+            CoverGreen = 0.0;
+            CoverSen = 0.0;
+            Util.ZeroArray(LeafNo);
+            Util.ZeroArray(LeafNoSen);
+            Util.ZeroArray(LeafArea);
+
+            
         }
 
         /// <summary>Called when [phase changed].</summary>

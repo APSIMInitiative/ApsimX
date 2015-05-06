@@ -955,6 +955,7 @@ namespace Models.PMF.OldPlant
 
             cultivarDefinition.Unapply();
             SowingData = null;
+            
         }
 
         /// <summary>Write a sowing report to summary file.</summary>
