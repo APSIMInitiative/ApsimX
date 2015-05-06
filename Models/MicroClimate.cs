@@ -115,7 +115,7 @@ namespace Models
 
         /// <summary>The weather</summary>
         [Link]
-        LocalMicroClimate Weather = null;
+        IWeather WeatherData = null;
 
         /// <summary>The _albedo</summary>
         private double _albedo = 0;
@@ -371,12 +371,12 @@ namespace Models
         {
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;
-            radn = Weather.Radn;
-            maxt = Weather.MaxT;
-            mint = Weather.MinT;
-            rain = Weather.Rain;
-            vp = Weather.VP;
-            wind = Weather.Wind;
+            radn = WeatherData.Radn;
+            maxt = WeatherData.MaxT;
+            mint = WeatherData.MinT;
+            rain = WeatherData.Rain;
+            vp = WeatherData.VP;
+            wind = WeatherData.Wind;
         }
 
         /// <summary>Called when [change gs maximum].</summary>
@@ -971,13 +971,13 @@ namespace Models
 
             // This is the length of time within the day during which
             //  Evaporation will take place
-            dayLength = CalcDayLength(Weather.Latitude, day, sun_angle);
+            dayLength = CalcDayLength(WeatherData.Latitude, day, sun_angle);
 
             // This is the length of time within the day during which
             // the sun is above the horizon
-            dayLengthLight = CalcDayLength(Weather.Latitude, day, SunSetAngle);
+            dayLengthLight = CalcDayLength(WeatherData.Latitude, day, SunSetAngle);
 
-            sunshineHours = CalcSunshineHours(radn, dayLengthLight, Weather.Latitude, day);
+            sunshineHours = CalcSunshineHours(radn, dayLengthLight, WeatherData.Latitude, day);
 
             fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
         }

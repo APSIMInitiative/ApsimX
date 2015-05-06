@@ -20,6 +20,9 @@ namespace Models
     [PresenterName("UserInterface.Presenters.StaticForestrySystemPresenter")]
     public class StaticForestrySystem : Zone,IUptake
     {
+        [Link]
+        IWeather weather = null;
+        
         /// <summary>Gets or sets the table data.</summary>
         /// <value>The table.</value>
         [Summary]
@@ -49,7 +52,7 @@ namespace Models
         public double GetShade(Zone z)
         {
             foreach (ZoneInfo zi in ZoneInfoList)
-                if (zi.Name == z.Name)
+                if (zi.zone == z)
                     return zi.Shade;
             throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
         }
@@ -61,7 +64,7 @@ namespace Models
         public double GetWindReduction(Zone z)
         {
             foreach (ZoneInfo zi in ZoneInfoList)
-                if (zi.Name == z.Name)
+                if (zi.zone == z)
                     return zi.WindReduction;
             throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
         }
@@ -83,6 +86,20 @@ namespace Models
             }
         }
 
+        /// <summary>
+        /// Calculate the total intercepted radiation by the tree canopy (MJ)
+        /// </summary>
+        public double InterceptedRadiation
+        {
+            get
+            {
+                double IR = 0;
+                foreach (ZoneInfo ZI in ZoneInfoList)
+                    IR += ZI.zone.Area * weather.Radn;
+                return IR;
+            }
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -93,7 +110,7 @@ namespace Models
             for (int i = 2; i < Table.Count; i++)
             {
                 ZoneInfo newZone = new ZoneInfo();
-                newZone.Name = Table[0][i - 1];
+                newZone.zone = Apsim.Child(this,Table[0][i - 1]) as Zone;
                 newZone.WindReduction = Convert.ToDouble(Table[i][0]);
                 newZone.Shade = Convert.ToDouble(Table[i][1]);
                 newZone.RLD = new double[Table[1].Count - 4];
@@ -115,7 +132,7 @@ namespace Models
             {
                 foreach (ZoneInfo ZI in ZoneInfoList)
                 {
-                    if (Z.Name == ZI.Name)
+                    if (Z.Name == ZI.zone.Name)
                     {
                         ZoneWaterAndN Uptake = new ZoneWaterAndN();
                         //Find the soil for this zone
@@ -157,7 +174,7 @@ namespace Models
             {
                 foreach (ZoneInfo ZI in ZoneInfoList)
                 {
-                    if (Z.Name == ZI.Name)
+                    if (Z.Name == ZI.zone.Name)
                     {
                         ZoneWaterAndN Uptake = new ZoneWaterAndN();
                         //Find the soil for this zone
@@ -238,7 +255,7 @@ namespace Models
         /// <summary>
         /// The name of the zone.
         /// </summary>
-        public string Name;
+        public Zone zone;
 
         /// <summary>
         /// Wind value.
