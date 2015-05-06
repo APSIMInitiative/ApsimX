@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
+using Models.Interfaces;
+using APSIM.Shared.Utilities;
+using Models.Soils.Arbitrator;
+
 
 namespace Models
 {
@@ -14,7 +18,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.StaticForestrySystemView")]
     [PresenterName("UserInterface.Presenters.StaticForestrySystemPresenter")]
-    public class StaticForestrySystem : Model
+    public class StaticForestrySystem : Zone,IUptake
     {
         /// <summary>Gets or sets the table data.</summary>
         /// <value>The table.</value>
@@ -37,6 +41,24 @@ namespace Models
         [XmlIgnore]
         public List<ZoneInfo> ZoneInfoList;
 
+        /// <summary>
+        /// Return the area of the zone.
+        /// </summary>
+        [XmlIgnore]
+        public new double Area
+        {
+            get
+            {
+                double A = 0;
+                foreach(Zone Z in Apsim.Children(this,typeof(Zone)))
+                    A=+Z.Area;
+                return A;
+            }
+            set
+            {
+            }
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -56,7 +78,133 @@ namespace Models
                 ZoneInfoList.Add(newZone);
             }
         }
+                /// <summary>
+        /// Returns soil water uptake from each zone by the static tree model
+        /// </summary>
+        /// <param name="soilstate"></param>
+        /// <returns></returns>
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(Soils.Arbitrator.SoilState soilstate)
+        {
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+            
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
+            {
+                foreach (ZoneInfo ZI in ZoneInfoList)
+                {
+                    if (Z.Name == ZI.Name)
+                    {
+                        ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                        //Find the soil for this zone
+                        Zone ThisZone = new Zone();
+                        Soils.Soil ThisSoil = new Soils.Soil();
+
+                        foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                            if (SearchZ.Name == Z.Name)
+                                ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+
+                        Uptake.Name = Z.Name;
+                        double[] SW = Z.Water;
+                        Uptake.NO3N = new double[SW.Length];
+                        Uptake.NH4N = new double[SW.Length];
+                        Uptake.Water = new double[SW.Length];
+                        for (int i = 0; i <= SW.Length - 1; i++)
+                        {
+                            double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15,ThisSoil.Thickness);
+                            Uptake.Water[i] = (SW[i] - LL15mm[i]) * ZI.RLD[i];
+                        }
+                        Uptakes.Add(Uptake);
+                    }
+                }
+            }
+            return Uptakes;
+
+
+        }
+        /// <summary>
+        /// Returns soil Nitrogen uptake from each zone by the static tree model
+        /// </summary>
+        /// <param name="soilstate"></param>
+        /// <returns></returns>
+        public List<Soils.Arbitrator.ZoneWaterAndN> GetNUptakes(Soils.Arbitrator.SoilState soilstate)
+        {
+            List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
+
+            foreach (ZoneWaterAndN Z in soilstate.Zones)
+            {
+                foreach (ZoneInfo ZI in ZoneInfoList)
+                {
+                    if (Z.Name == ZI.Name)
+                    {
+                        ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                        //Find the soil for this zone
+                        Zone ThisZone = new Zone();
+                        Soils.Soil ThisSoil = new Soils.Soil();
+
+                        foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                            if (SearchZ.Name == Z.Name)
+                                ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+
+                        Uptake.Name = Z.Name;
+                        double[] SW = Z.Water;
+                        Uptake.NO3N = new double[SW.Length];
+                        Uptake.NH4N = new double[SW.Length];
+                        Uptake.Water = new double[SW.Length];
+                        //for (int i = 0; i <= SW.Length-1; i++)
+                        //    Uptake.NO3N[i] = Z.NO3N[i] * ZI.RLD[i];
+
+                        Uptakes.Add(Uptake);
+                    }
+                }
+            }
+            return Uptakes;
+        }
+        double PotentialNO3Uptake(double thickness, double NO3N, double theta, double RLD, double RootRadius)
+        {
+
+            double L = RLD / 100 * 1000000;   // Root Length Density (m/m3)
+            double D0 = 0.05 /10000*24; // Diffusion Coefficient (m2/d)
+            double tau = theta;         //  Tortuosity (unitless)
+            double H = thickness / 1000;  // Layer thickness (m)
+            double R0 = RootRadius / 100;  // Root Radius (m)
+            double Nstock = NO3N / 10;  // Concentration in solution (g/m2)
+
+            //Potential Uptake (g/m2)
+            double U = (Math.PI * L * D0 * tau * theta * H * Nstock)/(theta*(-3/8 + 1/2*Math.Log(1/(R0*Math.Pow(Math.PI*L,0.5)))));
+            return U;
+        }
+
+        /// <summary>
+        ///  Accepts the actual soil water uptake from the soil arbitrator.
+        /// </summary>
+        /// <param name="info"></param>
+        public void SetSWUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
+        {
+            foreach (ZoneWaterAndN ZI in info)
+            {
+                foreach (Zone SearchZ in Apsim.ChildrenRecursively(Parent, typeof(Zone)))
+                {
+                    Soils.Soil ThisSoil = new Soils.Soil();
+                    if (SearchZ.Name == ZI.Name)
+                    {
+                        ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                        ThisSoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(ZI.Water, -1); ;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Accepts the actual soil Nitrogen uptake from the soil arbitrator.
+        /// </summary>
+        /// <param name="info"></param>
+        public void SetNUptake(List<Soils.Arbitrator.ZoneWaterAndN> info)
+        {
+            // Do nothing with uptakes
+            // throw new NotImplementedException();
+        }
     }
+
+    
 
     /// <summary>
     /// A structure holding forestry information for a single zone.
@@ -84,3 +232,4 @@ namespace Models
         public double[] RLD;
     }
 }
+
