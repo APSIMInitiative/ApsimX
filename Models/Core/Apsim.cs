@@ -432,7 +432,7 @@ namespace Models.Core
                     }
                     else
                     {
-                        // more that one match so use name to match.
+                        // more that one match so use name to match
                         foreach (IModel matchingModel in allMatches)
                         {
                             if (matchingModel.Name == field.Name)
@@ -446,8 +446,7 @@ namespace Models.Core
                         if (linkedObject == null && !link.IsOptional && allMatches.Count > 1)
                         {
                             // Return the first (closest) match.
-                            if (field.FieldType == typeof(Zone))
-                                linkedObject = allMatches[0];
+                            linkedObject = allMatches[0];
                         }
 
                         if ((linkedObject == null) && (!link.IsOptional))

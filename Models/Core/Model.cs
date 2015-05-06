@@ -73,6 +73,7 @@ namespace Models.Core
         [XmlElement(typeof(NullSummary))]
         [XmlElement(typeof(Tests))]
         [XmlElement(typeof(Weather))]
+        [XmlElement(typeof(LocalMicroClimate))]
         [XmlElement(typeof(Log))]
         [XmlElement(typeof(Models.Factorial.Experiment))]
         [XmlElement(typeof(Models.Factorial.Factors))]

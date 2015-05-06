@@ -45,11 +45,11 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>The thermal time today</summary>
         private double ThermalTimeToday = 0;
 
-        /// <summary>Called when [new weather data available].</summary>
+        /// <summary>Called when DoDailyInitialisation invoked</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if ((Phenology.Stage >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
             {

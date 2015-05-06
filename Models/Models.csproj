@@ -79,12 +79,14 @@
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
+    <Compile Include="LocalMicroClimate.cs" />
     <Compile Include="Core\RectangularZone.cs" />
     <Compile Include="StaticForestrySystem.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
+    <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using Models.Interfaces;
 
 namespace Models.PMF.Functions
 {
@@ -22,7 +23,7 @@ namespace Models.PMF.Functions
 
         /// <summary>The met data</summary>
         [Link]
-        protected Weather MetData = null;
+        protected IWeather MetData = null;
         
         #endregion
 

@@ -5,6 +5,7 @@ using Models.Core;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
+using Models.Interfaces;
 
 
 namespace Models.PMF.Organs
@@ -28,7 +29,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The met data</summary>
         [Link]
-        public Weather MetData = null;
+        public IWeather MetData = null;
 
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
