@@ -351,7 +351,7 @@ namespace Models.Soils
         /// The weather
         /// </summary>
         [Link]
-        private Weather Weather = null;
+        private IWeather Weather = null;
 
 
         ////needed for "interception"
@@ -2030,18 +2030,18 @@ namespace Models.Soils
 
 
         /// <summary>
-        /// Called when [new weather data available].
+        /// Called when DoDailyInitialisation invoked.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
 
-            met.radn = Weather.MetData.Radn;
-            met.maxt = Weather.MetData.Maxt;
-            met.mint = Weather.MetData.Mint;
-            met.rain = Weather.MetData.Rain;
+            met.radn = Weather.Radn;
+            met.maxt = Weather.MaxT;
+            met.mint = Weather.MinT;
+            met.rain = Weather.Rain;
 
             constants.bound_check_real_var(met.radn, 0.0, 60.0, "radn");
             constants.bound_check_real_var(met.maxt, -50.0, 60.0, "maxt");

@@ -142,17 +142,16 @@ namespace UnitTests
 
             // Test the models that are in scope of zone2.graph
             List<IModel> inScopeForGraph = Apsim.FindAll(graph);
-            Assert.AreEqual(inScopeForGraph.Count, 10);
-            Assert.AreEqual(inScopeForGraph[0].Name, "Graph1");
-            Assert.AreEqual(inScopeForGraph[1].Name, "Soil");
-            Assert.AreEqual(inScopeForGraph[2].Name, "SurfaceOrganicMatter");
-            Assert.AreEqual(inScopeForGraph[3].Name, "Field2SubZone");
-            Assert.AreEqual(inScopeForGraph[4].Name, "Field2");
-            Assert.AreEqual(inScopeForGraph[5].Name, "Weather");
-            Assert.AreEqual(inScopeForGraph[6].Name, "Clock");
-            Assert.AreEqual(inScopeForGraph[7].Name, "Summary");
-            Assert.AreEqual(inScopeForGraph[8].Name, "Field1");
-            Assert.AreEqual(inScopeForGraph[9].Name, "Test");
+            Assert.AreEqual(inScopeForGraph.Count, 9);
+            Assert.AreEqual(inScopeForGraph[0].Name, "Soil");
+            Assert.AreEqual(inScopeForGraph[1].Name, "SurfaceOrganicMatter");
+            Assert.AreEqual(inScopeForGraph[2].Name, "Field2SubZone");
+            Assert.AreEqual(inScopeForGraph[3].Name, "Field2");
+            Assert.AreEqual(inScopeForGraph[4].Name, "Weather");
+            Assert.AreEqual(inScopeForGraph[5].Name, "Clock");
+            Assert.AreEqual(inScopeForGraph[6].Name, "Summary");
+            Assert.AreEqual(inScopeForGraph[7].Name, "Field1");
+            Assert.AreEqual(inScopeForGraph[8].Name, "Test");
             
             List<IModel> zones = Apsim.FindAll(graph, typeof(Zone));
             Assert.AreEqual(zones.Count, 4);
@@ -240,7 +239,6 @@ namespace UnitTests
         [Test]
         public void SetTest()
         {
-            Weather weather = this.simulation.Children[0] as Weather;
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 0.0);
             this.simulation.Set("[Weather].Rain", 111.0);
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 111.0);
