@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Drawing;
     using System.Windows.Forms;
     using Classes;
     using DataGridViewAutoFilter;
@@ -50,6 +51,8 @@ namespace UserInterface.Views
         public GridView()
         {
             this.InitializeComponent();
+            pictureBox1.ImageLocation = @"C:\Users\Public\Pictures\Sample Pictures\Penguins.jpg";
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
         /// <summary>
@@ -430,6 +433,42 @@ namespace UserInterface.Views
             }
         }
 
+        public void ResizeControls()
+        {
+            if (Grid.ColumnCount == 0)
+                return;
+
+            //resize Grid
+            int width = 0;
+            int height = 0;
+
+            foreach (DataGridViewColumn col in Grid.Columns)
+                width += col.Width;
+            foreach (DataGridViewRow row in Grid.Rows)
+                height += row.Height;
+            height += Grid.ColumnHeadersHeight;
+            Grid.Width = width + 3;
+            if (height + 25 > Grid.Parent.Height / 2)
+            {
+                Grid.Height = Grid.Parent.Height / 2;
+                Grid.Width += 25; //extra width for scrollbar
+            }
+            else
+                Grid.Height = height + 25;
+            Grid.Location = new Point(0, 0);
+
+            if (Grid.RowCount == 0)
+            {
+                Grid.Width = 0;
+                Grid.Visible = false;
+            }
+
+            //resize PictureBox
+            pictureBox1.Location = new Point(Grid.Width, 0);
+            pictureBox1.Height = pictureBox1.Parent.Height;
+            pictureBox1.Width = pictureBox1.Parent.Width - pictureBox1.Location.X;
+        }
+
         /// <summary>
         /// Trap any grid data errors, usually as a result of cell values not being
         /// in combo boxes. We'll handle these elsewhere.
@@ -628,6 +667,11 @@ namespace UserInterface.Views
             {
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
+        }
+
+        private void GridView_Resize(object sender, EventArgs e)
+        {
+            ResizeControls();
         }
     }
 }
