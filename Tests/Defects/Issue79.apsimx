@@ -111,18 +111,12 @@ namespace Models
 	[Serializable]
 	public class Script : Model
 	{
-		[Link] IWeather weather; // parent in this field.
+		[Link] IWeather localWeather; // parent in this field.
 		
-		public DateTime LocalStartDate { get { return weather.StartDate; } }
-		public double LocalMaxT { get {	return weather.MaxT; } }
-		public double LocalMinT { get {	return weather.MinT; } }
-		public double LocalRain { get {	return weather.Rain; } }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			
-		}
+		public DateTime LocalStartDate { get { return localWeather.StartDate; } }
+		public double LocalMaxT { get {	return localWeather.MaxT; } }
+		public double LocalMinT { get {	return localWeather.MinT; } }
+		public double LocalRain { get {	return localWeather.Rain; } }
 	}
 	
 

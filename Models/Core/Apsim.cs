@@ -432,16 +432,13 @@ namespace Models.Core
                     }
                     else
                     {
-                        // more that one match so use name to match if we're looking for an IFunction.
-                        if (field.FieldType.Name == "IFunction")
+                        // more that one match so use name to match
+                        foreach (IModel matchingModel in allMatches)
                         {
-                            foreach (IModel matchingModel in allMatches)
+                            if (matchingModel.Name == field.Name)
                             {
-                                if (matchingModel.Name == field.Name)
-                                {
-                                    linkedObject = matchingModel;
-                                    break;
-                                }
+                                linkedObject = matchingModel;
+                                break;
                             }
                         }
 
