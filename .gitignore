@@ -33,3 +33,7 @@ _ReSharper*/
 Documentation/html
 *.db
 packages/
+Tests/Fathen/GrowthModel.apsim
+Tests/Fathen/FodderBeetTest2.apsimx
+Tests/Fathen/Fathen_plant2.sum
+Tests/Fathen/FathenTest2.apsimx

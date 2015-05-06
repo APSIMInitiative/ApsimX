@@ -509,6 +509,11 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <Plant>
+          <Name>Fathen</Name>
+          <ResourceName>Fathen</ResourceName>
+          <CropType>Fathen</CropType>
+        </Plant>
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
