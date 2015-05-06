@@ -129,6 +129,20 @@ namespace Models
             }
             return Uptakes;
         }
+        double PotentialNO3Uptake(double thickness, double NO3N, double theta, double RLD, double RootRadius)
+        {
+
+            double L = RLD / 100 * 1000000;   // Root Length Density (m/m3)
+            double D0 = 0.05 /10000*24; // Diffusion Coefficient (m2/d)
+            double tau = theta;         //  Tortuosity (unitless)
+            double H = thickness / 1000;  // Layer thickness (m)
+            double R0 = RootRadius / 100;  // Root Radius (m)
+            double Nstock = NO3N / 10;  // Concentration in solution (g/m2)
+
+            //Potential Uptake (g/m2)
+            double U = (Math.PI * L * D0 * tau * theta * H * Nstock)/(theta*(-3/8 + 1/2*Math.Log(1/(R0*Math.Pow(Math.PI*L,0.5)))));
+            return U;
+        }
 
         /// <summary>
         ///  Accepts the actual soil water uptake from the soil arbitrator.
