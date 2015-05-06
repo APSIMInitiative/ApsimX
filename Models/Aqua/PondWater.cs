@@ -25,7 +25,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Pond : Model
+    public class PondWater : Model
         {
 
         #region Links
@@ -77,7 +77,7 @@ namespace Models
         #region Constructor
 
 
-        public Pond()
+        public PondWater()
             {
             //Initialise the Optional Params in the XML
 
