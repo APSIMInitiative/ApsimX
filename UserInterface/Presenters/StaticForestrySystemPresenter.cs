@@ -144,8 +144,7 @@
                     ForestryModel.Table[0].RemoveAt(i);
                     ForestryModel.Table.RemoveAt(i + 1);
                 }
-            }
-
+            }           
             ForestryViewer.SetupGrid(ForestryModel.Table);
         }
     }

@@ -1786,26 +1786,26 @@ namespace Models
           <string>15</string>
           <string />
           <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
+          <string>60</string>
+          <string>40</string>
+          <string>25</string>
+          <string>15</string>
+          <string>14</string>
+          <string>10</string>
+          <string>5</string>
         </ArrayOfString>
         <ArrayOfString>
           <string>30</string>
-          <string>30</string>
+          <string>20</string>
           <string />
           <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
+          <string>20</string>
+          <string>15</string>
+          <string>10</string>
+          <string>8</string>
+          <string>3</string>
+          <string>2</string>
+          <string>1</string>
         </ArrayOfString>
       </Table>
       <NDemand>100</NDemand>
