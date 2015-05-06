@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 namespace Models.Core
 {
     /// <summary>A generic system that can have children</summary>
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class RectangularZone : Zone

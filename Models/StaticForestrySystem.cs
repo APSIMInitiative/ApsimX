@@ -50,9 +50,9 @@ namespace Models
                 newZone.Name = Table[0][i - 1];
                 newZone.Wind = Convert.ToDouble(Table[i][0]);
                 newZone.Shade = Convert.ToDouble(Table[i][1]);
-                newZone.RLD = new double[Table[1].Count - 3];
-                for (int j = 3; j < Table[1].Count; j++)
-                    newZone.RLD[j - 3] = Convert.ToDouble(Table[i][j]);
+                newZone.RLD = new double[Table[1].Count - 4];
+                for (int j = 4; j < Table[1].Count; j++)
+                    newZone.RLD[j - 4] = Convert.ToDouble(Table[i][j]);
                 ZoneInfoList.Add(newZone);
             }
         }

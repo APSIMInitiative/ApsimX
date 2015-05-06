@@ -6,7 +6,7 @@
     <Clock>
       <Name>Clock</Name>
       <StartDate>1900-01-01T00:00:00</StartDate>
-      <EndDate>2000-12-31T00:00:00</EndDate>
+      <EndDate>1900-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
