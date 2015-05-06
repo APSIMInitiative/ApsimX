@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
+using Models.Interfaces;
 
 namespace Models.PMF.OldPlant
 {
@@ -22,7 +23,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The met data</summary>
         [Link]
-        Weather MetData = null;
+        IWeather MetData = null;
 
         /// <summary>Does the radiation partition.</summary>
         public void DoRadiationPartition()

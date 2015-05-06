@@ -389,7 +389,7 @@ namespace Models.Core
                 modelsInScope.Add(child);
 
             // Add relativeTo.
-            modelsInScope.Add(relativeTo);
+            //modelsInScope.Add(relativeTo);
 
             // Get siblings and parents siblings and parents, parents siblings etc
             // until we reach a Simulations or Simulation model.
@@ -438,6 +438,18 @@ namespace Models.Core
                 if (type.IsAssignableFrom(model.GetType()))
                 {
                     modelsToReturn.Add(model);
+                }
+                else
+                {
+                    if (model is Manager)
+                    {
+                        Manager manager = model as Manager;
+                        if (type.IsAssignableFrom(manager.Script.GetType()))
+                        {
+                            if (manager.Script != relativeTo)
+                                modelsToReturn.Add(manager.Script);
+                        }
+                    }
                 }
             }
 
