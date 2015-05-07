@@ -606,7 +606,7 @@ namespace UserInterface.Views
             SetupGraphs();
         }
 
-        private void ResizeControls()
+        public void ResizeControls()
         {
             //resize Scalars
             int width = 0;
@@ -632,14 +632,22 @@ namespace UserInterface.Views
                 width += col.Width;
             foreach (DataGridViewRow row in Grid.Rows)
                 height += row.Height;
-            Grid.Width = width + 3;
             if (height + 25 > Grid.Parent.Height / 2)
             {
                 Grid.Height = Grid.Parent.Height / 2;
-                Grid.Width += 25; //extra width for scrollbar
+                if (width + Scalars.Width + 25 > Grid.Parent.Width)
+                    Grid.Width = Grid.Parent.Width - Scalars.Width - 25;
+                else
+                    Grid.Width += 25; //extra width for scrollbar
             }
             else
+            {
+                if (width + 3 + Scalars.Width> Grid.Parent.Width)
+                    Grid.Width = Grid.Parent.Width - Scalars.Width - 10;
+                else
+                    Grid.Width = width+3;
                 Grid.Height = height + 25;
+            }
             Grid.Location = new Point(Scalars.Width + 10, 0);
 
             //resize above ground graph
@@ -744,6 +752,7 @@ namespace UserInterface.Views
                 bgyAxis.EndPosition = 0;
                 bgyAxis.MinorTickSize = 0;
                 bgyAxis.AxislineStyle = LineStyle.Solid;
+                bgyAxis.AxisDistance = 2;
                 pBelowGround.Model.Axes.Add(bgyAxis);
 
                 for (int i = 1; i < table.Columns.Count; i++)

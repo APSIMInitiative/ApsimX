@@ -58,6 +58,7 @@ namespace Models.Core
         [XmlElement(typeof(Fertiliser))]
         [XmlElement(typeof(StaticForestrySystem))]
         [XmlElement(typeof(RectangularZone))]
+        [XmlElement(typeof(CircularZone))]
         [XmlElement(typeof(Models.PostSimulationTools.Input))]
         [XmlElement(typeof(Models.PostSimulationTools.PredictedObserved))]
         [XmlElement(typeof(Models.PostSimulationTools.TimeSeriesStats))]

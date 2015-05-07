@@ -79,9 +79,10 @@
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
-    <Compile Include="LocalMicroClimate.cs" />
-    <Compile Include="Core\RectangularZone.cs" />
-    <Compile Include="StaticForestrySystem.cs" />
+    <Compile Include="Agroforestry\LocalMicroClimate.cs" />
+    <Compile Include="Zones\CircularZone.cs" />
+    <Compile Include="Zones\RectangularZone.cs" />
+    <Compile Include="Agroforestry\StaticForestrySystem.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
@@ -395,6 +396,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

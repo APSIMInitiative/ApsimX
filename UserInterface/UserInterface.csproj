@@ -625,6 +625,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LocalMicroClimate.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StaticForestrySystem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />

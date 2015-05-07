@@ -6,16 +6,16 @@ using System.Xml.Serialization;
 
 namespace Models.Core
 {
-    /// <summary>A generic system that can have children</summary>
+    /// <summary>A circular zone.</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class RectangularZone : Zone
+    public class CircularZone : Zone
     {
-        /// <summary>Length of the zone.</summary>
-        /// <value>The length.</value>
+        /// <summary>Radius of the zone.</summary>
+        /// <value>The radius.</value>
         [Description("Length of zone (m)")]
-        public double Length { get; set; }
+        public double Radius { get; set; }
 
         /// <summary>Width of the zone.</summary>
         /// <value>The width.</value>
@@ -26,11 +26,11 @@ namespace Models.Core
         /// Return the area of the zone.
         /// </summary>
         [XmlIgnore]
-        public override double Area
+        public new double Area
         {
             get
             {
-                return Length * Width / 10000;
+                return (Math.PI * (Math.Pow(Radius,2) - Math.Pow(Radius-Width,2))) / 10000;
             }
             set
             {

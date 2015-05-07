@@ -11,7 +11,7 @@
     using Models;
     using Views;
 
-    public class StaticForestrySystemPresenter : IPresenter, IExportable
+    public class StaticForestrySystemPresenter : IPresenter
     {
         private StaticForestrySystem ForestryModel;
         private StaticForestrySystemView ForestryViewer;
@@ -48,12 +48,6 @@
                 {
                     ForestryModel.Table[j][i] = table.Rows[i].Field<string>(j-1);
                 }
-        }
-
-        public string ConvertToHtml(string folder)
-        {
-            // TODO: Implement
-            return string.Empty;
         }
 
         private void OnCellEndEdit(object sender, EventArgs e)
@@ -146,6 +140,7 @@
                 }
             }           
             ForestryViewer.SetupGrid(ForestryModel.Table);
+            ForestryViewer.ResizeControls();
         }
     }
 }
