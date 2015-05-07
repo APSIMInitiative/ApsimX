@@ -606,7 +606,7 @@ namespace UserInterface.Views
             SetupGraphs();
         }
 
-        private void ResizeControls()
+        public void ResizeControls()
         {
             //resize Scalars
             int width = 0;
@@ -642,8 +642,10 @@ namespace UserInterface.Views
             }
             else
             {
-                if (width + Scalars.Width + 3 > Grid.Parent.Width)
+                if (width + 3 + Scalars.Width> Grid.Parent.Width)
                     Grid.Width = Grid.Parent.Width - Scalars.Width - 10;
+                else
+                    Grid.Width = width+3;
                 Grid.Height = height + 25;
             }
             Grid.Location = new Point(Scalars.Width + 10, 0);
@@ -750,6 +752,7 @@ namespace UserInterface.Views
                 bgyAxis.EndPosition = 0;
                 bgyAxis.MinorTickSize = 0;
                 bgyAxis.AxislineStyle = LineStyle.Solid;
+                bgyAxis.AxisDistance = 2;
                 pBelowGround.Model.Axes.Add(bgyAxis);
 
                 for (int i = 1; i < table.Columns.Count; i++)

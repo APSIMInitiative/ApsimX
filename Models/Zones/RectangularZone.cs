@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Models.Core
 {
-    /// <summary>A generic system that can have children</summary>
+    /// <summary>A rectangular zone.</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

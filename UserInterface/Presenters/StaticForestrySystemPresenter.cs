@@ -140,6 +140,7 @@
                 }
             }           
             ForestryViewer.SetupGrid(ForestryModel.Table);
+            ForestryViewer.ResizeControls();
         }
     }
 }
