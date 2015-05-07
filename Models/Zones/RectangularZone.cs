@@ -23,6 +23,19 @@ namespace Models.Core
         public double Width { get; set; }
 
         /// <summary>
+        /// Returns the distance from edge of system
+        /// </summary>
+        public double Distance
+        {
+            get
+            {
+                if (Parent is StaticForestrySystem)
+                    return (Parent as StaticForestrySystem).GetDistanceFromTrees(this);
+                throw new ApsimXException(this, "Not implemented for this system");
+            }
+        }
+
+        /// <summary>
         /// Return the area of the zone.
         /// </summary>
         [XmlIgnore]

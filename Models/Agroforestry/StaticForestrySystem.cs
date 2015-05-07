@@ -44,6 +44,28 @@ namespace Models
         public List<ZoneInfo> ZoneInfoList;
 
         /// <summary>
+        /// Return the distance from the tree for a given zone
+        /// </summary>
+        /// <param name="z">Zone</param>
+        /// <returns>Distance from a static tree</returns>
+        public double GetDistanceFromTrees(Zone z)
+        {
+            double D = 0;
+            foreach (ZoneInfo zi in ZoneInfoList)
+            {
+                if (zi.zone is RectangularZone)
+                    D += (zi.zone as RectangularZone).Width;
+                else if (zi.zone is CircularZone)
+                    D += (zi.zone as CircularZone).Width;
+                else
+                    throw new ApsimXException(this, "Cannot calculate distance for trees for zone of given type.");
+                if (zi.zone == z)
+                    return D;
+            }
+        
+            throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
+        }
+        /// <summary>
         /// Return the %Shade for a given zone
         /// </summary>
         /// <param name="z">Zone</param>
