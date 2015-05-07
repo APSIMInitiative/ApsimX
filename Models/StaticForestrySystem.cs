@@ -118,7 +118,8 @@ namespace Models
                 ZoneInfoList.Add(newZone);
             }
         }
-                /// <summary>
+
+        /// <summary>
         /// Returns soil water uptake from each zone by the static tree model
         /// </summary>
         /// <param name="soilstate"></param>
@@ -131,7 +132,7 @@ namespace Models
             foreach (ZoneInfo ZI in ZoneInfoList)
             {
                 Soils.SoilWater S = Apsim.Find(ZI.zone, typeof(Soils.SoilWater)) as Soils.SoilWater;
-                SWDemand += S.Eo*(1/(1-ZI.Shade/100)-1)*ZI.zone.Area*10000;
+                SWDemand += S.Eo * (1 / (1 - ZI.Shade / 100) - 1) * ZI.zone.Area * 10000;
             }
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();

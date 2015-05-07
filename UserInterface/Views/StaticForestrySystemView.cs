@@ -632,14 +632,20 @@ namespace UserInterface.Views
                 width += col.Width;
             foreach (DataGridViewRow row in Grid.Rows)
                 height += row.Height;
-            Grid.Width = width + 3;
             if (height + 25 > Grid.Parent.Height / 2)
             {
                 Grid.Height = Grid.Parent.Height / 2;
-                Grid.Width += 25; //extra width for scrollbar
+                if (width + Scalars.Width + 25 > Grid.Parent.Width)
+                    Grid.Width = Grid.Parent.Width - Scalars.Width - 25;
+                else
+                    Grid.Width += 25; //extra width for scrollbar
             }
             else
+            {
+                if (width + Scalars.Width + 3 > Grid.Parent.Width)
+                    Grid.Width = Grid.Parent.Width - Scalars.Width - 10;
                 Grid.Height = height + 25;
+            }
             Grid.Location = new Point(Scalars.Width + 10, 0);
 
             //resize above ground graph
