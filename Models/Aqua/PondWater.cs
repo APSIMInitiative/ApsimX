@@ -38,7 +38,7 @@ namespace Models
 
         /// <summary>The weather</summary>
         [Link]
-        private Weather Weather;
+        private Weather Weather = null;
 
 
         //[Link]
@@ -66,6 +66,10 @@ namespace Models
         [Description("Maximum Pond Depth (m)")]
         [Units("(m)")]
         public double MaxPondDepth { get; set; }
+
+        [Description("Kpan - Coefficient applied to PanEvap to give PondEvap")]
+        [Units("()")]
+        public double Kpan { get; set; }
 
 
         #endregion
@@ -107,7 +111,7 @@ namespace Models
         [XmlIgnore]
         public double PondDepth 
             {
-            get { return currentVolume / SurfaceArea; } //TODO: watch out for a divide by zero exception. 
+            get { return pondVolume / SurfaceArea; } //TODO: watch out for a divide by zero exception. 
             }
 
 
@@ -176,14 +180,14 @@ namespace Models
 
         #region local variables
 
-        double mm2m = 0.001;  //convert mm to meters
-        double m2mm = 1000;    
+        private double mm2m = 0.001;  //convert mm to meters
+        private double m2mm = 1000;    
 
-        double currentVolume = 0;
+        private double pondVolume = 0;
 
-        WaterProperties pondProps = new WaterProperties(0, 0, 0, 0, 0, 0);
+        private WaterProperties pondProps = new WaterProperties(0, 0, 0, 0, 0, 0);
 
-        double pondEvap;
+        private double pondEvap;
 
         #endregion
 
@@ -210,9 +214,9 @@ namespace Models
 
             double maxPondVolume = SurfaceArea * MaxPondDepth;
 
-            if (currentVolume + Volume > maxPondVolume)
+            if (pondVolume + Volume > maxPondVolume)
                 {
-                Volume = maxPondVolume - currentVolume;
+                Volume = maxPondVolume - pondVolume;
                 Summary.WriteWarning(this, "You have overfilled the pond. Reduced the volume added to volume the pond could accept");
                 }
 
@@ -224,44 +228,44 @@ namespace Models
             AddWater_TSSChange(Volume, addedProps.TSS);
             //Add DOX
 
-            currentVolume = currentVolume + Volume;
+            pondVolume = pondVolume + Volume;
             }
 
 
         private void AddWater_TempChange(double Volume, double Temp)
             {
-            pondProps.Temperature = WeightedAverage(currentVolume, pondProps.Temperature, Volume, Temp);
+            pondProps.Temperature = WeightedAverage(pondVolume, pondProps.Temperature, Volume, Temp);
             //do some boundary checks and warn the user if too high or low.
             }
 
 
         private void AddWater_SalinityChange(double Volume, double Salinity)
             {
-            pondProps.Salinity = WeightedAverage(currentVolume, pondProps.Salinity, Volume, Salinity);
+            pondProps.Salinity = WeightedAverage(pondVolume, pondProps.Salinity, Volume, Salinity);
             //do some boundary checks and warn the user if too high or low.
             }
 
         private void AddWater_PHChange(double Volume, double PH)
             {
-            pondProps.PH = WeightedAverage(currentVolume, pondProps.PH, Volume, PH);
+            pondProps.PH = WeightedAverage(pondVolume, pondProps.PH, Volume, PH);
             //do some boundary checks and warn the user if too high or low.
             }
 
         private void AddWater_NChange(double Volume, double N)
             {
-            pondProps.N = WeightedAverage(currentVolume, pondProps.N, Volume, N);
+            pondProps.N = WeightedAverage(pondVolume, pondProps.N, Volume, N);
             //do some boundary checks and warn the user if too high or low.
             }
 
         private void AddWater_PChange(double Volume, double P)
             {
-            pondProps.P = WeightedAverage(currentVolume, pondProps.P, Volume, P);
+            pondProps.P = WeightedAverage(pondVolume, pondProps.P, Volume, P);
             //do some boundary checks and warn the user if too high or low.
             }
 
         private void AddWater_TSSChange(double Volume, double TSS)
             {
-            pondProps.TSS = WeightedAverage(currentVolume, pondProps.TSS, Volume, TSS);
+            pondProps.TSS = WeightedAverage(pondVolume, pondProps.TSS, Volume, TSS);
             //do some boundary checks and warn the user if too high or low.
             }
 
@@ -293,12 +297,14 @@ namespace Models
         /// <param name="Volume"></param>
         private void RemoveWater(double Volume)
             {
-            if (currentVolume - Volume < 0)
+            if (pondVolume - Volume < 0)
                 {
-                Volume = currentVolume;
+                Volume = pondVolume;
                 Summary.WriteWarning(this, "You have tried to remove more water than the pond contained. Reduced the volume removed to current volume of the pond. The pond is now empty.");
+                pondProps.ZeroProperties();   //when you empty the pond by removing water (eg. via pumping) the properties are removed with the water. (unlike emptying via evaporation)
                 }
-            currentVolume = currentVolume - Volume;
+
+            pondVolume = pondVolume - Volume;
             }
 
 
@@ -307,64 +313,75 @@ namespace Models
 
 
 
-
         #region Evaporate Water from Pond
 
 
-        private void EvaporateWater(double Amount_mm)
+        private void EvaporateWater(double EvapAmount_mm)
             {
-            double volume = SurfaceArea * (Amount_mm * mm2m);
-            if (currentVolume - volume < 0)
+
+            double evapVolume;
+            evapVolume = SurfaceArea * (EvapAmount_mm * mm2m);
+
+            if (pondVolume - evapVolume <= 0.001)
                 {
-                volume = currentVolume;
-                Summary.WriteWarning(this, "You have evaporated all the water left in the pond. The pond is now empty.");
+                Summary.WriteWarning(this, "You have evaporated all the water left in the pond. The pond is now empty."
+                + Environment.NewLine + "We left 0.001 of a cubic meter of water in entire pond to store concentrated Pond Properties in.");
+                evapVolume = (pondVolume - 0.001);  //don't evaporate all the water. Leave a small amount so you don't get divide by zero.
                 }
 
-            EvaporateWater_SalinityChange(volume);
-            EvaporateWater_NChange(volume);
-            EvaporateWater_PChange(volume);
-            EvaporateWater_TSSChange(volume);
+            if (evapVolume > 0.0)
+                {
+                //Change the Pond Properties to concentrate them.
+                Concentrate_Salinity(evapVolume);
+                Concentrate_N(evapVolume);
+                Concentrate_P(evapVolume);
+                Concentrate_TSS(evapVolume);
+                }
 
-            currentVolume = currentVolume - volume;
-            pondEvap = (volume / SurfaceArea) * m2mm; //TODO: watch out for divide by zero error.
+            pondVolume = pondVolume - evapVolume;
+            pondEvap = (evapVolume / SurfaceArea) * m2mm;
+
             }
 
         //No Temperature Change due to evaporation -> at least not yet.
-
-        private void EvaporateWater_SalinityChange(double Volume)
+        private void EvaporateWater_TempChange()
             {
-            pondProps.Salinity = NewPerVolumeDueToEvaporation(currentVolume, pondProps.Salinity, Volume);
+            }
+
+        private void Concentrate_Salinity(double EvapVolume)
+            {
+            pondProps.Salinity = Concentrate(pondVolume, pondProps.Salinity, EvapVolume);
             //do some boundary checks and warn the user if too high or low.
             }
 
         //No PH Change due to evaporation.
 
-        private void EvaporateWater_NChange(double Volume)
+        private void Concentrate_N(double EvapVolume)
             {
-            pondProps.N = NewPerVolumeDueToEvaporation(currentVolume, pondProps.N, Volume);
+            pondProps.N = Concentrate(pondVolume, pondProps.N, EvapVolume);
             //do some boundary checks and warn the user if too high or low.
             }
 
-        private void EvaporateWater_PChange(double Volume)
+        private void Concentrate_P(double EvapVolume)
             {
-            pondProps.P = NewPerVolumeDueToEvaporation(currentVolume, pondProps.P, Volume);
+            pondProps.P = Concentrate(pondVolume, pondProps.P, EvapVolume);
             //do some boundary checks and warn the user if too high or low.
             }
 
-        private void EvaporateWater_TSSChange(double Volume)
+        private void Concentrate_TSS(double EvapVolume)
             {
-            pondProps.TSS = NewPerVolumeDueToEvaporation(currentVolume, pondProps.TSS, Volume);
+            pondProps.TSS = Concentrate(pondVolume, pondProps.TSS, EvapVolume);
             //do some boundary checks and warn the user if too high or low.
             }
 
 
-        private double NewPerVolumeDueToEvaporation(double CurrentVolume, double CurrentPerVolume, double VolumeRemoved)
+        private double Concentrate(double CurrentVolume, double CurrentPerVolume, double EvapVolume)
             {
             double currentAmount;
             double newPerVolume;
 
-            currentAmount = currentVolume * CurrentPerVolume;
-            newPerVolume = currentAmount / (currentVolume - VolumeRemoved);  //TODO: if the user fully evaporates the pond then the newPerVolume goes to infinity because you have a divide by zero
+            currentAmount = pondVolume * CurrentPerVolume;
+            newPerVolume = currentAmount / (pondVolume - EvapVolume);
 
             return newPerVolume;
             }
@@ -375,6 +392,22 @@ namespace Models
 
 
         #region Calculate Evaporation
+
+
+        private double CalcEvap()
+            {
+
+            //Check if Pan Evaporation is in the Weather File.
+            if (double.IsNaN(Weather.PanEvap))
+                {
+                //SILO Apsim format comes with "evap" column by default. https://www.longpaddock.qld.gov.au/silo/data/samples/datadrill/sampleapsim.html
+                string errorMsg = "PondWater module requires 'evap' column in the weather file (Pan Evaporation).";
+                throw new ApsimXException(this, errorMsg);
+                }
+                
+            return (Kpan * Weather.PanEvap); //returns mm 
+            }
+
 
 
         //public void CalcEo_AtmosphericPotential(MetData Met, CanopyData Canopy)
@@ -435,10 +468,8 @@ namespace Models
         //    }
 
 
-
-
-
         #endregion
+
 
 
 
@@ -470,17 +501,22 @@ namespace Models
             {
 
 
-
             }
+
 
         [EventSubscribe("EndOfDay")]
         private void OnEndOfDay(object sender, EventArgs e)
             {
 
-            WaterProperties rainProps = new WaterProperties(Weather.Tav, 0, 7.0, 0, 0, 0);
-            AddWater(SurfaceArea * (Weather.Rain * mm2m), rainProps);
+            //Add Today's Rain
+            double rainVolume = SurfaceArea * (Weather.Rain * mm2m);
+            WaterProperties rainProps = new WaterProperties(Weather.Tav, 0, 7.0, 0, 0, 0);            
+            AddWater(rainVolume, rainProps);
 
-            EvaporateWater(2);    //Just evaporate 2mm per day since we have not implemented evaporation calculation or read in Eo from met file or Micromet.
+            //Remove Today's Evaporation
+            double evapAmount_mm;
+            evapAmount_mm = CalcEvap();
+            EvaporateWater(evapAmount_mm); 
             }
 
 
