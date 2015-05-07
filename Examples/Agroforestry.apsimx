@@ -1829,9 +1829,9 @@ namespace Models
         <Name>SystemReport</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[StaticForestrySystem].InterceptedRadiation</string>
-          <string>[StaticForestrySystem].Area</string>
-          <string>[Zone].Area</string>
+          <string>Area</string>
+          <string>NDemand</string>
+          <string>InterceptedRadiation</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1879,7 +1879,7 @@ namespace Models
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
       </Graph>
-      <Area>0</Area>
+      <Area>0.15000000000000002</Area>
       <Slope>0</Slope>
       <Table>
         <ArrayOfString>
@@ -1903,27 +1903,27 @@ namespace Models
         </ArrayOfString>
         <ArrayOfString>
           <string>60</string>
-          <string>50</string>
+          <string>20</string>
           <string />
           <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
+          <string>.06</string>
+          <string>.06</string>
+          <string>.06</string>
+          <string>.04</string>
+          <string>.04</string>
+          <string>.02</string>
+          <string>.02</string>
         </ArrayOfString>
         <ArrayOfString>
           <string>20</string>
           <string>10</string>
           <string />
           <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
+          <string>.06</string>
+          <string>.06</string>
+          <string>.04</string>
+          <string>.02</string>
+          <string>.01</string>
           <string>0</string>
           <string>0</string>
         </ArrayOfString>
@@ -1932,9 +1932,9 @@ namespace Models
           <string>0</string>
           <string />
           <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
+          <string>.04</string>
+          <string>.02</string>
+          <string>.01</string>
           <string>0</string>
           <string>0</string>
           <string>0</string>

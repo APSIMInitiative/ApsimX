@@ -71,13 +71,13 @@ namespace Models
         /// Return the area of the zone.
         /// </summary>
         [XmlIgnore]
-        public new double Area
+        public override double Area
         {
             get
             {
                 double A = 0;
                 foreach(Zone Z in Apsim.Children(this,typeof(Zone)))
-                    A=+Z.Area;
+                    A+=Z.Area;
                 return A;
             }
             set
@@ -168,10 +168,16 @@ namespace Models
             }
             // Now scale back uptakes if supply > demand
             double F = 0;  // Uptake scaling factor
-            if (SWDemand > 0)
-                F = PotSWSupply / SWDemand;
+            if (PotSWSupply > 0)
+            {
+                F = SWDemand / PotSWSupply;
+                if (F > 1)
+                    F = 1;
+            }
             else
                 F = 1;
+
+
             foreach (ZoneWaterAndN Z in Uptakes)
                 Z.Water = MathUtilities.Multiply_Value(Z.Water, F);
             return Uptakes;
@@ -267,6 +273,7 @@ namespace Models
     /// <summary>
     /// A structure holding forestry information for a single zone.
     /// </summary>
+    [Serializable]
     public struct ZoneInfo
     {
         /// <summary>

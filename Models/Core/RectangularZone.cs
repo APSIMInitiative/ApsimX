@@ -26,7 +26,7 @@ namespace Models.Core
         /// Return the area of the zone.
         /// </summary>
         [XmlIgnore]
-        public new double Area
+        public override double Area
         {
             get
             {
