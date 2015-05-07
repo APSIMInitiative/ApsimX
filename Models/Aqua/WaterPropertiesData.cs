@@ -31,6 +31,18 @@ namespace Models.Aqua
             this.TSS = TSS;
             }
 
+
+        public void ZeroProperties()
+            {
+            this.Temperature = 0;
+            this.Salinity = 0;
+            this.PH = 0;  
+            this.N = 0;
+            this.P = 0;
+            this.TSS = 0;
+            }
+
+
         }
 
 
