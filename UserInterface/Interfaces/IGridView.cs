@@ -87,5 +87,10 @@ namespace UserInterface.Interfaces
         /// <param name="rowIndex">The row index</param>
         /// <returns>True if the specified row is empty</returns>
         bool RowIsEmpty(int rowIndex);
+
+        /// <summary>
+        /// Resizes controls on the GridView.
+        /// </summary>
+        void ResizeControls();
     }
 }

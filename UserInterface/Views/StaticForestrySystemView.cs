@@ -60,18 +60,6 @@ namespace UserInterface.Views
         /// <summary>The largest date used on any axis</summary>
         private DateTime largestDate = DateTime.MinValue;
 
-        /// <summary>The used for drawing on the PictureBox.</summary>
-        private Pen pen = new Pen(Color.Black);
-
-        /// <summary>A graphics surface for the PictureBox.</summary>
-        private Graphics g;
-
-        /// <summary>Starting x of rectangle.</summary>
-        private int sx = -1;
-
-        /// <summary>Starting y of rectangle.</summary>
-        private int sy = -1;
-
         /// <summary>Current grid cell.</summary>
         private int[] currentCell = new int[2] {-1, -1};
 
@@ -654,11 +642,6 @@ namespace UserInterface.Views
                 Grid.Height = height + 25;
             Grid.Location = new Point(Scalars.Width + 10, 0);
 
-            //resize PictureBox
-            pictureBox1.Location = new Point(Scalars.Width + Grid.Width + 20, 0);
-            pictureBox1.Height = height;
-            pictureBox1.Width = (pictureBox1.Parent.Width + 20) - pictureBox1.Location.X;
-
             //resize above ground graph
             pAboveGround.Width = pAboveGround.Parent.Width / 2;
             pAboveGround.Height = pAboveGround.Parent.Height - Grid.Height;
@@ -821,23 +804,6 @@ namespace UserInterface.Views
                 NDemand = Convert.ToDouble(Scalars.Rows[0].Cells[1].Value);
                 RootRadius = Convert.ToDouble(Scalars.Rows[1].Cells[1].Value);
             }
-        }
-
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (sx == -1)
-                sx = e.X;
-            if (sy == -1)
-                sy = e.Y;
-            g = pictureBox1.CreateGraphics();
-            g.DrawRectangle(pen, sx, sy, e.X - sx, e.Y - sy);
-            pictureBox1.Refresh();
-        }
-
-        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
-        {
-            sx = -1;
-            sy = -1;
         }
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)

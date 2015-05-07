@@ -78,6 +78,7 @@ namespace UserInterface.Presenters
             this.FindAllProperties();
             this.PopulateGrid(this.model);
             this.grid.CellsChanged += this.OnCellValueChanged;
+            this.grid.ResizeControls();
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
