@@ -44,6 +44,28 @@ namespace Models
         public List<ZoneInfo> ZoneInfoList;
 
         /// <summary>
+        /// Return the distance from the tree for a given zone
+        /// </summary>
+        /// <param name="z">Zone</param>
+        /// <returns>Distance from a static tree</returns>
+        public double GetDistanceFromTrees(Zone z)
+        {
+            double D = 0;
+            foreach (ZoneInfo zi in ZoneInfoList)
+            {
+                if (zi.zone is RectangularZone)
+                    D += (zi.zone as RectangularZone).Width;
+                else if (zi.zone is CircularZone)
+                    D += (zi.zone as CircularZone).Width;
+                else
+                    throw new ApsimXException(this, "Cannot calculate distance for trees for zone of given type.");
+                if (zi.zone == z)
+                    return D;
+            }
+        
+            throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
+        }
+        /// <summary>
         /// Return the %Shade for a given zone
         /// </summary>
         /// <param name="z">Zone</param>
@@ -71,13 +93,13 @@ namespace Models
         /// Return the area of the zone.
         /// </summary>
         [XmlIgnore]
-        public new double Area
+        public override double Area
         {
             get
             {
                 double A = 0;
                 foreach(Zone Z in Apsim.Children(this,typeof(Zone)))
-                    A=+Z.Area;
+                    A+=Z.Area;
                 return A;
             }
             set
@@ -169,10 +191,16 @@ namespace Models
             }
             // Now scale back uptakes if supply > demand
             double F = 0;  // Uptake scaling factor
-            if (SWDemand > 0)
-                F = PotSWSupply / SWDemand;
+            if (PotSWSupply > 0)
+            {
+                F = SWDemand / PotSWSupply;
+                if (F > 1)
+                    F = 1;
+            }
             else
                 F = 1;
+
+
             foreach (ZoneWaterAndN Z in Uptakes)
                 Z.Water = MathUtilities.Multiply_Value(Z.Water, F);
             return Uptakes;
@@ -268,6 +296,7 @@ namespace Models
     /// <summary>
     /// A structure holding forestry information for a single zone.
     /// </summary>
+    [Serializable]
     public struct ZoneInfo
     {
         /// <summary>
