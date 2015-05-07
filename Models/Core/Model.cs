@@ -192,7 +192,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
-        [XmlElement(typeof(Models.PondWater))]  //sv- added this for AquaPond
+        [XmlElement(typeof(Models.PondWater))]  //sv- added this for Aquaculture
         public List<Model> Children { get; set; }
 
         /// <summary>
