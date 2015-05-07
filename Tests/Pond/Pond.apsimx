@@ -21,12 +21,14 @@
         <Name>PondWater</Name>
         <SurfaceArea>10000</SurfaceArea>
         <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
       </PondWater>
       <Report>
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Weather].Rain as Rain</string>
+          <string>[Weather].PanEvap as PanEvap</string>
           <string>[PondWater].PondEvap as PondEvap</string>
           <string>[PondWater].PondDepth as PondDepth</string>
         </VariableNames>
@@ -123,6 +125,26 @@
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
+      <Series>
+        <Title>Series4</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>PanEvap</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
@@ -150,6 +172,7 @@
         <Name>PondWater</Name>
         <SurfaceArea>10000</SurfaceArea>
         <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
       </PondWater>
       <Folder>
         <Name>Manager folder</Name>
@@ -346,6 +369,7 @@ namespace Models
         <Name>PondWater</Name>
         <SurfaceArea>10000</SurfaceArea>
         <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
       </PondWater>
       <Folder>
         <Name>Manager folder</Name>
@@ -455,6 +479,7 @@ namespace Models
         <Name>PondWater</Name>
         <SurfaceArea>10000</SurfaceArea>
         <MaxPondDepth>1</MaxPondDepth>
+        <Kpan>1</Kpan>
       </PondWater>
       <Folder>
         <Name>Manager folder</Name>
@@ -738,149 +763,6 @@ namespace Models
         <Y>
           <TableName>Report</TableName>
           <FieldName>S_Salinity</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>BottomRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
-  </Simulation>
-  <Simulation>
-    <Name>EvapTest</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>%root%\Tests\Pond\Ingham.met</FileName>
-    </Weather>
-    <Clock>
-      <Name>clock</Name>
-      <StartDate>1990-01-01T00:00:00</StartDate>
-      <EndDate>2000-12-31T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>summaryfile</Name>
-    </Summary>
-    <Zone>
-      <Name>AquaFarm</Name>
-      <MicroClimate>
-        <Name>MicroClimate</Name>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
-        <refheight>2</refheight>
-        <albedo>0.15</albedo>
-        <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.3</soil_albedo>
-      </MicroClimate>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Weather].Rain as Rain</string>
-          <string>[PondWater].PondEvap as PondEvap</string>
-          <string>[PondWater].PondDepth as PondDepth</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Graph>
-      <Name>Graph</Name>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Rain</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Series 0</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Rain</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Series2</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>PondEvap</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Series3</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-65281</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>PondDepth</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
