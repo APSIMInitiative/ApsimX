@@ -25,7 +25,6 @@ namespace Models
         
         /// <summary>Gets or sets the table data.</summary>
         /// <value>The table.</value>
-        [Summary]
         public List<List<string>> Table { get; set; }
 
         /// <summary>Allows the user to set a nitrogen demand for the tree.</summary>

@@ -51,15 +51,6 @@ namespace UserInterface.Views
         public GridView()
         {
             this.InitializeComponent();
-            System.Reflection.Assembly thisExe = System.Reflection.Assembly.GetExecutingAssembly();
-            System.IO.Stream file = thisExe.GetManifestResourceStream("UserInterface.Resources.PresenterPictures." + ModelName + ".png");
-            if (file == null)
-                pictureBox1.Visible = false;
-            else
-            {
-                pictureBox1.Image = Image.FromStream(file);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            }
         }
 
         /// <summary>
@@ -246,6 +237,19 @@ namespace UserInterface.Views
         {
             while (this.popupMenu.Items.Count > 3)
                 this.popupMenu.Items.RemoveAt(3);
+        }
+
+        public void LoadImage()
+        {
+            System.Reflection.Assembly thisExe = System.Reflection.Assembly.GetExecutingAssembly();
+            System.IO.Stream file = thisExe.GetManifestResourceStream("UserInterface.Resources.PresenterPictures." + ModelName + ".png");
+            if (file == null)
+                pictureBox1.Visible = false;
+            else
+            {
+                pictureBox1.Image = Image.FromStream(file);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
 
         /// <summary>
@@ -463,11 +467,18 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in Grid.Rows)
                 height += row.Height;
             height += Grid.ColumnHeadersHeight;
-            Grid.Width = width + 3;
+            if (width + 3 > Grid.Parent.Width)
+                Grid.Width = Grid.Parent.Width;
+            else
+                Grid.Width = width + 3;
+
             if (height + 25 > Grid.Parent.Height / 2)
             {
                 Grid.Height = Grid.Parent.Height / 2;
-                Grid.Width += 25; //extra width for scrollbar
+                if (width + 25 > Grid.Parent.Width)
+                    Grid.Width = Grid.Parent.Width;
+                else 
+                    Grid.Width += 25; //extra width for scrollbar
             }
             else
                 Grid.Height = height + 25;

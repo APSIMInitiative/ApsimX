@@ -1748,6 +1748,8 @@ namespace Models
         <Length>0</Length>
         <Width>0</Width>
       </RectangularZone>
+      <Area>0</Area>
+      <Slope>0</Slope>
       <Table>
         <ArrayOfString>
           <string>Parameter</string>
