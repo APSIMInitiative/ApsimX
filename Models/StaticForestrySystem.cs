@@ -126,6 +126,15 @@ namespace Models
         /// <returns></returns>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetSWUptakes(Soils.Arbitrator.SoilState soilstate)
         {
+            double SWDemand = 0;  // Tree water demand (L)
+            double PotSWSupply = 0; // Total water supply (L)
+
+            foreach (ZoneInfo ZI in ZoneInfoList)
+            {
+                Soils.SoilWater S = Apsim.Find(ZI.zone, typeof(Soils.SoilWater)) as Soils.SoilWater;
+                SWDemand += S.Eo*(1/(1-ZI.Shade/100)-1)*ZI.zone.Area*10000;
+            }
+
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             
             foreach (ZoneWaterAndN Z in soilstate.Zones)
@@ -152,11 +161,20 @@ namespace Models
                         {
                             double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15,ThisSoil.Thickness);
                             Uptake.Water[i] = (SW[i] - LL15mm[i]) * ZI.RLD[i];
+                            PotSWSupply += Uptake.Water[i] * ZI.zone.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
                     }
                 }
             }
+            // Now scale back uptakes if supply > demand
+            double F = 0;  // Uptake scaling factor
+            if (SWDemand > 0)
+                F = PotSWSupply / SWDemand;
+            else
+                F = 1;
+            foreach (ZoneWaterAndN Z in Uptakes)
+                Z.Water = MathUtilities.Multiply_Value(Z.Water, F);
             return Uptakes;
 
 
