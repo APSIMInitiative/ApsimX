@@ -80,6 +80,7 @@ namespace UserInterface.Presenters
             this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ResizeControls();
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            this.grid.ModelName = this.model.Name;
         }
 
         /// <summary>

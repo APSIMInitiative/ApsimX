@@ -17,7 +17,7 @@ namespace UserInterface.Views
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed.")]
         public System.Windows.Forms.DataGridView Grid;
-        
+      
         /// <summary> 
         /// Required designer variable.
         /// </summary>

@@ -51,8 +51,15 @@ namespace UserInterface.Views
         public GridView()
         {
             this.InitializeComponent();
-            pictureBox1.ImageLocation = @"C:\Users\Public\Pictures\Sample Pictures\Penguins.jpg";
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            System.Reflection.Assembly thisExe = System.Reflection.Assembly.GetExecutingAssembly();
+            System.IO.Stream file = thisExe.GetManifestResourceStream("UserInterface.Resources.PresenterPictures." + ModelName + ".png");
+            if (file == null)
+                pictureBox1.Visible = false;
+            else
+            {
+                pictureBox1.Image = Image.FromStream(file);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
 
         /// <summary>
@@ -80,6 +87,15 @@ namespace UserInterface.Views
                 this.table = value;
                 this.PopulateGrid();
             }
+        }
+
+        /// <summary>
+        /// The name of the associated model.
+        /// </summary>
+        public string ModelName
+        {
+            get;
+            set;
         }
 
         /// <summary>
