@@ -217,26 +217,67 @@ namespace UserInterface.Presenters
         /// <param name="series">Associated series</param>
         private void FillSeriesInfoFromSimulations(string[] simulationNames, Series series)
         {
+            int seriesIndex = 0;
             foreach (string simulationName in simulationNames)
             {
-                string filter = "Name = '" + simulationName + "'";
+                string[] zones = GetZones(series.X.TableName, simulationName);
 
-                int seriesIndex = Array.IndexOf(simulationNames, simulationName);
+                int numSeries;
+                if (zones.Length > 1)
+                    numSeries = zones.Length;
+                else
+                    numSeries = simulationNames.Length;
 
-                SeriesInfo info = new SeriesInfo(
-                    graph: Graph,
-                    dataStore: DataStore,
-                    series: series,
-                    title: simulationName,
-                    filter: filter,
-                    seriesIndex: seriesIndex,
-                    numSeries: simulationNames.Length);
+                foreach (string zoneName in zones)
+                {
+                    string filter = "Name = '" + simulationName + "'";
+                    if (zones.Length > 1)
+                        filter += " and ZoneName = '" + zoneName + "'";
 
-                if (!(this.Graph.Parent is Soil) && simulationNames.Length == 1)
-                    info.Title = series.Y.FieldName;
+                    string title;
+                    if (zones.Length > 1)
+                        title = zoneName;
+                    else
+                        title = simulationName;
 
-                seriesMetadata.Add(info);
+                    SeriesInfo info = new SeriesInfo(
+                        graph: Graph,
+                        dataStore: DataStore,
+                        series: series,
+                        title: title,
+                        filter: filter,
+                        seriesIndex: seriesIndex,
+                        numSeries: numSeries);
+
+                    if (!(this.Graph.Parent is Soil) && numSeries == 1)
+                        info.Title = series.Y.FieldName;
+
+                    seriesMetadata.Add(info);
+                    seriesIndex++;
+                }
             }
+        }
+
+        /// <summary>
+        /// Get a list of zone names for the specified simulation and table.
+        /// </summary>
+        /// <param name="tableName">The table name in the DataStore to search.</param>
+        /// <param name="simulationName">The simulation name.</param>
+        /// <returns>A list of zone names.</returns>
+        private string[] GetZones(string tableName, string simulationName)
+        {
+            // Get a list of zones in this simulation.
+            List<string> zones = null;
+            DataTable simulationData = DataStore.GetData(simulationName, tableName);
+            if (simulationData != null && simulationData.Columns.Contains("ZoneName"))
+            {
+                zones = DataTableUtilities.GetDistinctValues(simulationData, "ZoneName");
+            }
+
+            if (zones == null || zones.Count == 0)
+                return new string[] { "*" };
+            else
+                return zones.ToArray();
         }
 
         /// <summary>
