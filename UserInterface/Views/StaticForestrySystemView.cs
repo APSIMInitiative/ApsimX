@@ -677,6 +677,7 @@ namespace UserInterface.Views
                 agxAxis.AxislineStyle = LineStyle.Solid;
                 agxAxis.AxisDistance = 2;
                 agxAxis.Position = AxisPosition.Top;
+                agxAxis.Angle = -90;
 
                 LinearAxis agyAxis = new LinearAxis();
                 agyAxis.Title = "%";
@@ -684,6 +685,7 @@ namespace UserInterface.Views
                 agyAxis.AxisDistance = 2;
                 Utility.LineSeriesWithTracker seriesWind = new Utility.LineSeriesWithTracker();
                 Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
+                BarSeries invis = new BarSeries(); // used to set category widths on graph
                 List<DataPoint> pointsWind = new List<DataPoint>();
                 List<DataPoint> pointsShade = new List<DataPoint>();
                 DataRow rowWind = table.Rows[0];
