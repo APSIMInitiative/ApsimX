@@ -472,9 +472,9 @@ namespace UserInterface.Views
             else
                 Grid.Width = width + 3;
 
-            if (height + 25 > Grid.Parent.Height / 2)
+            if (height + 25 > (Grid.Parent.Parent == null ? Grid.Parent.Height / 2 : Grid.Parent.Height))
             {
-                Grid.Height = Grid.Parent.Height / 2;
+                Grid.Height = Grid.Parent.Parent == null ? Grid.Parent.Height / 2 : Grid.Parent.Height;
                 if (width + 25 > Grid.Parent.Width)
                     Grid.Width = Grid.Parent.Width;
                 else 
