@@ -71,6 +71,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            string[] split;
             this.grid = view as IGridView;
             this.model = model as Model;
             this.explorerPresenter = explorerPresenter;
@@ -80,6 +81,9 @@ namespace UserInterface.Presenters
             this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ResizeControls();
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            split = this.model.GetType().ToString().Split('.');
+            this.grid.ModelName = split[split.Length - 1];
+            this.grid.LoadImage();
         }
 
         /// <summary>

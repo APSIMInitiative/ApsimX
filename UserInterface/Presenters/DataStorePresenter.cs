@@ -53,6 +53,7 @@ namespace UserInterface.Presenters
 
             this.dataStoreView.Grid.NumericFormat = "N3";
             this.dataStoreView.TableNames = this.GetTableNames();
+            this.dataStoreView.Grid.ResizeControls();
         }
 
         /// <summary>

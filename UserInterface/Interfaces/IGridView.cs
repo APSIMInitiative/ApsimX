@@ -50,6 +50,11 @@ namespace UserInterface.Interfaces
         bool AutoFilterOn { get; set; }
 
         /// <summary>
+        /// The name of the associated model.
+        /// </summary>
+        string ModelName { get; set; }
+
+        /// <summary>
         /// Gets or sets the currently selected cell.
         /// </summary>
         IGridCell GetCurrentCell { get; set; }
@@ -80,6 +85,11 @@ namespace UserInterface.Interfaces
         /// Clear all presenter defined context items.
         /// </summary>
         void ClearContextActions();
+
+        /// <summary>
+        /// Load the image associated with the Model (if it exists).
+        /// </summary>
+        void LoadImage();
 
         /// <summary>
         /// Returns true if the grid row is empty.
