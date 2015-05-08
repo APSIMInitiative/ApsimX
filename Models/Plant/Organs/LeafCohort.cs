@@ -15,11 +15,32 @@ namespace Models.PMF.Organs
     /// A leaf cohort model
     /// </summary>
     /// <remarks>
+    /// 
+    /// @startuml
+    /// Initialized -> Appeared: Appearance 
+    /// Appeared -> Expanded: GrowthDuration
+    /// Expanded -> Senescing: LagDuration
+    /// Senescing -> Senesced: SenescenceDuration
+    /// Senesced -> Detaching: DetachmentLagDuration
+    /// Detaching -> Detached: DetachmentDuration
+    /// Initialized ->Expanded: IsGrowing
+    /// Initialized -> Senesced: IsAlive
+    /// Initialized -> Senesced: IsGreen
+    /// Initialized -> Senescing: IsNotSenescing
+    /// Senescing -> Senesced: IsSenescing
+    /// Expanded -> Detached: IsFullyExpanded
+    /// Senesced -> Detached: ShouldBeDead
+    /// Senesced -> Detached: Finished
+    /// Appeared -> Detached: IsAppeared
+    /// Initialized -> Detached: IsInitialised
+    /// @enduml
+    /// 
     /// Leaf death
     /// ------------------------
     /// The leaf area, structural biomass and structural nitrogen of 
     /// green (live) parts is subtracted by a fraction.
-    ///</remarks>
+    /// 
+    /// </remarks>
     [Serializable]
     public class LeafCohort : Model
     {

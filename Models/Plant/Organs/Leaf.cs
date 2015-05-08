@@ -18,6 +18,8 @@ namespace Models.PMF.Organs
     /// </summary>
     /// \param KDead The extinction coefficient for dead leaf (\f$k_d\f$).
     /// \param FrostFraction The fraction of leaf death caused by frost event.
+    /// \param GsMax The maximum stomatal conductance (m/s).
+    /// \param R50 SolRad at which stomatal conductance decreases to 50% (W/m2).
     /// \retval MaxCover The maximum coverage (\f$C_{max}\f$) with default value 1, 
     ///     which is set by manager sowing. 
     /// \retval LAI Leaf area index for green leaf (\f$\text{LAI}_{g}\f$, \f$m^2 m^{-2}\f$)
@@ -49,8 +51,8 @@ namespace Models.PMF.Organs
     /// /// C_{t} = 1 - (1 - C_{g})(1 - C_{d})
     ///     \f]
     /// 
-    /// \retval Height Plant height (mm). 
-    /// \retval Depth Plant depth (mm). Equal to plant height (not sure its function?)
+    /// \retval Height Plant height from Structure (mm). 
+    /// \retval Depth Plant height from Structure (mm). Equal to plant height (not sure its function?)
     /// \retval FRGR Fractional relative growth rate (unitless, 0-1)
     ///     with 1.0 at full growth rate and 0.0 at no growth.
     /// \retval PotentialEP Potential evapotranspiration. Set by MICROCLIMATE.
@@ -66,6 +68,11 @@ namespace Models.PMF.Organs
     /// The leaves in the seed are initialized from all children with model 
     /// \ref Models.PMF.Organs.LeafCohort "LeafCohort". 
     /// 
+    /// Potential growth 
+    /// ------------------------
+    /// 
+    /// Senescence
+    /// ------------------------
     /// Frost impact on leaf death
     /// ------------------------
     /// Each cohort leaf is killed by a fraction if value of FrostFraction is more than 0. 
