@@ -9,44 +9,40 @@ using System.IO;
 
 namespace Models.PMF.Phen
 {
-    /*! <summary>
-    A base model representing a phenological phase。
-    </summary>
-    \warning Do not use this model in \ref Models.PMF.Phen.Phenology "Phenology" model.
-    \pre All Phase models have to be the children of 
-        \ref Models.PMF.Phen.Phenology "Phenology" model.
-    \param End The stage name of phase ending, 
-        which should be the same as the Start name 
-        in previous phase except the first phase.
-    \param Start The stage name of phase starting, 
-        which should be the same as the End name.
-        in next phase except the last phase.
-    \param ThermalTime Optional. The daily thermal time.
-    \param Stress Optional. The environmental stress factors.
-    \retval TTinPhase The cumulated thermal time in current phase (&deg;Cd).
-    \retval TTForToday The thermal time for today in current phase (&deg;Cd).
-    \retval FractionComplete The complete fraction in current phase (from 0 to 1).
-    <remarks>
-    This is a base model in phenology. \ref Models.PMF.Phen.Phenology "Phenology" model
-    will call \a DoTimeStep to calculate phenology development.
-    
-    The actual daily thermal time (\f$\Delta TT_{pheno}\f$) is calculated 
-    the daily thermal time (\f$\Delta TT\f$) multiply by 
-    generic and/or environmental stresses (\f$f_{s,\, pheno}\f$) if child \a Stress exists. 
-    \f[
-        \Delta TT_{pheno}=\Delta TT\times f_{s,\, pheno}
-    \f]
-    if \a Stress no exist.
-    \f[
-        \Delta TT_{pheno}=\Delta TT
-    \f] 
-    The daily thermal time (\f$\Delta TT\f$) gets from the value of \a ThermalTime. 
-    The generic and/or environmental stresses (\f$f_{s,\, pheno}\f$) gets from the value of \a Stress. 
-    </remarks>
-    */
     /// <summary>
-    /// Base class for all phenological phases
+    /// A base model representing a phenological phase。
     /// </summary>
+    /// \warning Do not use this model in \ref Models.PMF.Phen.Phenology "Phenology" model.
+    /// \pre All Phase models have to be the children of 
+    ///     \ref Models.PMF.Phen.Phenology "Phenology" model.
+    /// \param End The stage name of phase ending, 
+    ///     which should be the same as the Start name 
+    ///     in previous phase except the first phase.
+    /// \param Start The stage name of phase starting, 
+    ///     which should be the same as the End name.
+    ///     in next phase except the last phase.
+    /// \param ThermalTime Optional. The daily thermal time.
+    /// \param Stress Optional. The environmental stress factors.
+    /// \retval TTinPhase The cumulated thermal time in current phase (&deg;Cd).
+    /// \retval TTForToday The thermal time for today in current phase (&deg;Cd).
+    /// \retval FractionComplete The complete fraction in current phase (from 0 to 1).
+    /// <remarks>
+    /// This is a base model in phenology. \ref Models.PMF.Phen.Phenology "Phenology" model
+    /// will call \a DoTimeStep to calculate phenology development.
+    /// 
+    /// The actual daily thermal time (\f$\Delta TT_{pheno}\f$) is calculated 
+    /// the daily thermal time (\f$\Delta TT\f$) multiply by 
+    /// generic and/or environmental stresses (\f$f_{s,\, pheno}\f$) if child \a Stress exists. 
+    /// \f[
+    ///     \Delta TT_{pheno}=\Delta TT\times f_{s,\, pheno}
+    /// \f]
+    /// if \a Stress no exist.
+    /// \f[
+    ///     \Delta TT_{pheno}=\Delta TT
+    /// \f] 
+    /// The daily thermal time (\f$\Delta TT\f$) gets from the value of \a ThermalTime. 
+    /// The generic and/or environmental stresses (\f$f_{s,\, pheno}\f$) gets from the value of \a Stress. 
+    /// </remarks>
     [Serializable]
     abstract public class Phase : Model
     {
