@@ -339,7 +339,10 @@ namespace UserInterface.Classes
             {
                 inject += s + "\n";
             }
-            return fullText.Insert(30 + fullText.IndexOf("<h2>Model Documentation</h2><br>"), inject); //21 length of index string
+
+            const string placeMarker = "<h2>Model Documentation</h2><br>";
+            int insertPoint = placeMarker.Length + fullText.IndexOf(placeMarker);
+            return fullText.Insert(insertPoint, inject); 
         }
 
         private static void ChillingPhaseFunction(StreamWriter OutputFile, XmlNode N, int Level)
