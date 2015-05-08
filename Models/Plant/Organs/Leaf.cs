@@ -26,29 +26,29 @@ namespace Models.PMF.Organs
     /// \retval LAIDead Leaf area index for dead leaf  (\f$\text{LAI}_{d}\f$, \f$m^2 m^{-2}\f$)
     /// \retval LAITotal Total LAI including live and dead parts (\f$m^2 m^{-2}\f$)
     ///     \f[
-    /// /// LAI = \text{LAI}_{g} + \text{LAI}_{d}
+    ///     LAI = \text{LAI}_{g} + \text{LAI}_{d}
     ///     \f]
     /// \retval CoverGreen Cover for green leaf (\f$C_g\f$, unitless). 
     ///     \f$C_g\f$ is calculated according to
     ///     extinction coefficient of green leaf (\f$k_{g}\f$).
     ///     \f[
-    /// /// C_{g}=C_{max}(1-\exp(-k_{g}\frac{\text{LAI}_{g}}{C_{max}}))
+    ///     C_{g}=C_{max}(1-\exp(-k_{g}\frac{\text{LAI}_{g}}{C_{max}}))
     ///     \f]
     ///     where, \f$k\f$ is the extinction coefficient which calculates 
     ///     by parameter "ExtinctionCoeff". 
     ///     As the default value of \f$C_{max}\f$ is 1, the function is reduced to
     ///     \f[
-    /// /// C_{g}=1-\exp(-k_{g}\text{LAI}_{g})
+    ///      C_{g}=1-\exp(-k_{g}\text{LAI}_{g})
     ///     \f]
     /// \retval CoverDead Cover for dead leaf (\f$C_d\f$, unitless).
     ///     \f$C_d\f$ is calculated according to
     ///     extinction coefficient of dead leaf (\f$k_{d}\f$).
     ///     \f[
-    /// /// C_{d}=1-\exp(-k_{d}\text{LAI}_{d})
+    ///     C_{d}=1-\exp(-k_{d}\text{LAI}_{d})
     ///     \f]
     /// \retval CoverTotal Total cover for green and dead leaves (\f$C_t\f$, unitless).
     ///     \f[
-    /// /// C_{t} = 1 - (1 - C_{g})(1 - C_{d})
+    ///     C_{t} = 1 - (1 - C_{g})(1 - C_{d})
     ///     \f]
     /// 
     /// \retval Height Plant height from Structure (mm). 
