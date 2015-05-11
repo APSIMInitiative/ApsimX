@@ -8,14 +8,14 @@
   </Cultivar>
   <Cultivar>
     <Name>Katumani</Name>
-    <Command>[Phenology].Juvenile.Target = 150</Command>
+    <Command>[Phenology].Juvenile.Target.Value = 150</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 0, 115</Command>
-    <Command>[Phenology].FlagLeafToFlowering.Target = 10</Command>
+    <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
     <Command>[Phenology].FloweringToGrainFilling.Target = 120</Command>
-    <Command>[Phenology].GrainFilling.Target = 530</Command>
-    <Command>[Phenology].Maturing.Target = 1</Command>
-    <Command>[Phenology].MaturityToHarvestRipe.Target = 1</Command>
+    <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
+    <Command>[Phenology].Maturing.Target.Value = 1</Command>
+    <Command>[Phenology].MaturityToHarvestRipe.Target.Value = 1</Command>
     <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 14</Command>
   </Cultivar>
   <OrganArbitrator>
@@ -48,7 +48,7 @@
                 <double>10</double>
                 <double>18</double>
                 <double>26</double>
-                <double>44</double>
+                <double>0</double>
               </Y>
             </XYPairs>
           </SoilTemperatureFunction>
@@ -73,7 +73,7 @@
                 <double>10</double>
                 <double>18</double>
                 <double>26</double>
-                <double>44</double>
+                <double>0</double>
               </Y>
             </XYPairs>
           </AirTemperatureFunction>
@@ -118,7 +118,7 @@
       <Name>Emerging</Name>
       <Start>Germination</Start>
       <End>Emergence</End>
-      <ShootLag>15.0</ShootLag>
+      <ShootLag>55.0</ShootLag>
       <ShootRate>0.6</ShootRate>
       <VariableReference>
         <Name>ThermalTime</Name>
@@ -206,7 +206,7 @@
       <End>EndGrainFill</End>
       <Constant>
         <Name>Target</Name>
-        <Value>900</Value>
+        <Value>400</Value>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
@@ -299,7 +299,7 @@
             <Y>
               <double>30</double>
               <double>30</double>
-              <double>46</double>
+              <double>42</double>
             </Y>
           </XYPairs>
         </LinearInterpolationFunction>

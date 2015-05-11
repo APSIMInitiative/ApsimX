@@ -795,31 +795,31 @@
 	<Cultivar>
 		<Name>Barley_Spring</Name>
 		<Alias>Barley_Spring</Alias>
-    <Command>[Root].MaximumRootDepth.value = 1000</Command>
-    <Command>[Root].RootFrontVelocity.RootFrontVelocity.Criteria.value = 2010</Command>
-    <Command>[Root].RootFrontVelocity.RootFrontVelocity.IfTrue.value = 0.5</Command>
+    <Command>[Root].MaximumRootDepth.Value = 1000</Command>
+    <Command>[Root].RootFrontVelocity.RootFrontVelocity.Criteria.Value = 2010</Command>
+    <Command>[Root].RootFrontVelocity.RootFrontVelocity.IfTrue.Value = 0.5</Command>
     <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo = 540</Command>
     <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b = 120</Command>
-    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.value = 0.97</Command>
+    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
     <Command>[Leaf].PotentialBiomass.Integral.Xo = 1080</Command>
     <Command>[Leaf].PotentialBiomass.Integral.b = 216</Command>
     <Command>[TotalBiomassAtStartReproductive].Xo = 1080</Command>
     <Command>[TotalBiomassAtStartReproductive].b = 216</Command>
     <Command>[TotalBiomassAtStartSenescence].Xo = 1080</Command>
     <Command>[TotalBiomassAtStartSenescence].b = 216</Command>
-    <Command>[ExpectedYield].value = 800</Command>
-    <Command>[RootProportion].value = 0.1</Command>
+    <Command>[ExpectedYield].Value = 800</Command>
+    <Command>[RootProportion].Value = 0.1</Command>
     <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
     <Command>[HarvestIndex].XYPairs.Y = 0.14,0.6</Command>
-    <Command>[ProductDMProportion].value = 0.87</Command>
-    <Command>[Phenology].CanopyExpanding.Target.value = 1021</Command>
-    <Command>[Phenology].YieldIncreasing.Target.value= 479</Command>
-    <Command>[Phenology].Senescing.Target.value = 300</Command>
-    <Command>[Phenology].Maturing.Target.value = 300</Command>
-    <Command>[leaf].NConc.value = 0.005</Command>
-    <Command>[Product].MinimumNConc.value = 0.005</Command>
-    <Command>[Product].MaximumNConc.value = 0.012</Command>
-    <Command>[Root].MinimumNConc.value = 0.009</Command>
-    <Command>[Root].MaximumNConc.value = 0.009</Command>
+    <Command>[ProductDMProportion].Value = 0.87</Command>
+    <Command>[Phenology].CanopyExpanding.Target.Value = 1021</Command>
+    <Command>[Phenology].YieldIncreasing.Target.Value= 479</Command>
+    <Command>[Phenology].Senescing.Target.Value = 300</Command>
+    <Command>[Phenology].Maturing.Target.Value = 300</Command>
+    <Command>[leaf].NConc.Value = 0.005</Command>
+    <Command>[Product].MinimumNConc.Value = 0.005</Command>
+    <Command>[Product].MaximumNConc.Value = 0.012</Command>
+    <Command>[Root].MinimumNConc.Value = 0.009</Command>
+    <Command>[Root].MaximumNConc.Value = 0.009</Command>
 	</Cultivar>
 </Plant>
