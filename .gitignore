@@ -33,3 +33,4 @@ _ReSharper*/
 Documentation/html
 *.db
 packages/
+Tests/Maize/MaizeValidation.apsimx.orig

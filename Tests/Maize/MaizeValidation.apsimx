@@ -54,6 +54,20 @@
         <string>PhenologySimple</string>
       </SheetNames>
     </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>GrainNumber</Name>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <SheetNames>
+        <string>GrainsData_RainS</string>
+      </SheetNames>
+    </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>RachisHusk</Name>
+      <FileName>%root%\Tests\Maize\Observations\obsDataMaize_DB.xlsx</FileName>
+      <SheetNames>
+        <string>RachisHusk_RainS</string>
+      </SheetNames>
+    </Model>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -277,8 +291,10 @@
       <Name>Lincoln2012</Name>
       <Memo>
         <Name>memo</Name>
-        <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">]]></MemoText>
+        <MemoText><![CDATA[
+<html><body>
+
+</body></html>]]></MemoText>
       </Memo>
       <Weather>
         <Name>Weather</Name>
@@ -599,8 +615,11 @@
         <Plant>
           <Name>Maize</Name>
           <Cultivar>
+            <Name>Pioneer_39G12</Name>
+            <Command>[Phenology].GrainFilling.Target = 550</Command>
+          </Cultivar>
+          <Cultivar>
             <Name>Pioneer_3153</Name>
-            <Alias>Pie</Alias>
           </Cultivar>
           <Cultivar>
             <Name>Katumani</Name>
@@ -789,7 +808,7 @@
               <Name>FloweringToGrainFilling</Name>
               <Constant>
                 <Name>Target</Name>
-                <Value>80</Value>
+                <Value>120</Value>
               </Constant>
               <VariableReference>
                 <Name>ThermalTime</Name>
@@ -802,7 +821,7 @@
               <Name>GrainFilling</Name>
               <Constant>
                 <Name>Target</Name>
-                <Value>900</Value>
+                <Value>550</Value>
               </Constant>
               <VariableReference>
                 <Name>ThermalTime</Name>
@@ -1132,7 +1151,7 @@
                   </X>
                   <Y>
                     <double>0</double>
-                    <double>800</double>
+                    <double>550</double>
                   </Y>
                 </XYPairs>
               </LinearInterpolationFunction>
@@ -1159,8 +1178,9 @@
                 </Y>
               </XYPairs>
             </AirTemperatureFunction>
-            <MaximumSize>0.45</MaximumSize>
-            <RipeStage>Ripe</RipeStage>
+            <MaximumSize>0.3</MaximumSize>
+            <RipeStage>EndGrainFill</RipeStage>
+            <StartFillStage>StartGrainFill</StartFillStage>
             <Number>0</Number>
           </ReproductiveOrgan>
           <Root>
@@ -1375,9 +1395,9 @@
                       <double>32530</double>
                       <double>39259</double>
                       <double>49659</double>
-                      <double>62814</double>
-                      <double>80000</double>
-                      <double>100501</double>
+                      <double>60000</double>
+                      <double>75000</double>
+                      <double>90000</double>
                     </Y>
                   </XYPairs>
                 </LinearInterpolationFunction>
@@ -1619,7 +1639,7 @@
               <Name>Photosynthesis</Name>
               <Constant>
                 <Name>RUE</Name>
-                <Value>2</Value>
+                <Value>1.75</Value>
               </Constant>
               <WeightedTemperatureFunction>
                 <Name>FT</Name>
@@ -2339,7 +2359,7 @@
           <Name>Sow</Name>
           <Operation>
             <Date>2012-10-23T00:00:00</Date>
-            <Action>[Maize].Sow(population:11, cultivar:"Pioneer_3153", depth:50, rowSpacing:710);</Action>
+            <Action>[Maize].Sow(population:11, cultivar:"Pioneer_39G12", depth:50, rowSpacing:710);</Action>
           </Operation>
         </Operations>
         <Manager>
@@ -2617,6 +2637,7 @@ namespace Models
             <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
             <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
             <string>[Maize].Structure.MainStemPrimordiaNo</string>
+            <string>[Maize].Grain.NumberFunction.Value</string>
             <string>[ExtraVariables].Script.LeafAppearedPosition</string>
             <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
             <string>[ExtraVariables].Script.LeafExpandedPosition</string>
@@ -6214,6 +6235,128 @@ public class Script : Model
           <DisabledSeries />
         </Graph>
       </Folder>
+      <Graph>
+        <Name>GrainNumber</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Tips (n)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Maize.Grain.NumberFunction.Value</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>GrainsData_RainS</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>GrainsData_RainS</TableName>
+            <FieldName>Maize.Grain.NumberFunction.Value</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>RachisWeight</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Tips (n)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-8388608</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Maize.Rachis.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>RachisHusk_RainS</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>RachisHusk_RainS</TableName>
+            <FieldName>Maize.Rachis.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
     </Folder>
   </Experiment>
   <Experiment>

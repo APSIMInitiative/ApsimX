@@ -206,7 +206,7 @@
       <End>EndGrainFill</End>
       <Constant>
         <Name>Target</Name>
-        <Value>900</Value>
+        <Value>400</Value>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>

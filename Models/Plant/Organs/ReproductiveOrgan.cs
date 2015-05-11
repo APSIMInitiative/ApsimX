@@ -57,6 +57,8 @@ namespace Models.PMF.Organs
         public double MaximumSize = 0;
         /// <summary>The ripe stage</summary>
         public string RipeStage = "";
+        /// <summary>The stage at which biomass accumulation begins in grains</summary>
+        public string StartFillStage = "";
         /// <summary>The _ ready for harvest</summary>
         protected bool _ReadyForHarvest = false;
         /// <summary>The daily growth</summary>
@@ -231,7 +233,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     Number = NumberFunction.Value;
-                    if (Number > 0)
+                    if ((Number > 0) && (Phenology.Between(StartFillStage, RipeStage)))
                     {
                         double demand = Number * FillingRate.Value;
                         // Ensure filling does not exceed a maximum size
