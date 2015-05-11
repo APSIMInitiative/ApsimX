@@ -1,4 +1,4 @@
-    <Plant>
+<Plant>
 	<Name>WheatPMFPrototype</Name>
 	<CropType>Wheat</CropType>
 	<Cultivar>
@@ -7,6 +7,7 @@
         <Command>[Phenology].Vernalisation.VernSens = 0.9</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 0.9</Command>
         <Command>[Phenology].FloralInitiationFloweringPhase.Target = 630</Command>
+        <Command>[Phenology].GerminationEmergence.ShootRate = 2</Command>
 	</Cultivar>
 	<Phenology>
 		<Name>Phenology</Name>
@@ -43,7 +44,7 @@
 			</VariableReference>
         </EmergingPhase>
         <GenericPhase>
-            <Name>EmergenceEndOfJuvenilePhasePhase</Name>
+            <Name>EmergenceEndOfJuvenilePhase</Name>
             <Start>Emergence</Start>
             <End>EndOfJuvenile</End>
             <Constant>
