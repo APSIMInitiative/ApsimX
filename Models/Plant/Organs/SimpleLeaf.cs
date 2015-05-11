@@ -412,6 +412,10 @@ namespace Models.PMF.Organs
             if (Plant.IsEmerged)
             {
                 FRGR = FRGRFunction.Value;
+                if (CoverFunction == null & ExtinctionCoefficientFunction == null)
+                {
+                    throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
+                }
                 if (CoverFunction != null)
                     LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
                 if (LAIFunction != null)
