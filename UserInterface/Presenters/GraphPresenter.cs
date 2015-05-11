@@ -200,8 +200,16 @@ namespace UserInterface.Presenters
                 return;
             }
 
-            // If we get this far then simply graph every simulation we can find.
-            IModel[] simulations = Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
+            // Top level graph - find all simulations.
+            IModel[] simulations = null;
+            if (this.Graph.Parent is Simulations)
+                simulations = Apsim.ChildrenRecursively(this.Graph.Parent, typeof(Simulation)).ToArray();
+            else
+            {
+                // If we get this far then simply graph every simulation we can find.
+                simulations = Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
+            }
+
             if (simulations != null)
             {
                 IEnumerable<string> simulationNames = simulations.Select(s => s.Name);
