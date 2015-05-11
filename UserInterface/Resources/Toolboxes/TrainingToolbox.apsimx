@@ -4158,32 +4158,32 @@ using Models.Core;
 using Models.PMF;
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set;}
-		
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set;}
-		
-		
-		
+  [Serializable]
+  public class Script : Model
+  {
+    [Link] Clock Clock;
+    [Link] Fertiliser Fertiliser;
+    [Link] Summary Summary;
+    
+    
+    [Description("Amount of fertiliser to be applied (kg/ha)")]
+    public double Amount { get; set;}
+    
+    [Description("Crop to be fertilised")]
+    public string CropName { get; set;}
+    
+    
+    
 
-		[EventSubscribe("Sowing")]
-		private void OnSowing(object sender, EventArgs e)
-		{
-			Model crop = sender as Model;
-			if (crop.Name.ToLower()==CropName.ToLower())
-				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-		}
-		
-	}
+    [EventSubscribe("Sowing")]
+    private void OnSowing(object sender, EventArgs e)
+    {
+      Model crop = sender as Model;
+      if (crop.Name.ToLower()==CropName.ToLower())
+        Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+    }
+    
+  }
 }
 ]]></Code>
           </Manager>
@@ -4200,66 +4200,68 @@ namespace Models
               <RowSpacing>250</RowSpacing>
               <Population>120</Population>
             </Script>
-            <Code><![CDATA[using System;
+            <Code>
+  <![CDATA[using System;
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
 using Models.Utilities;
+using APSIM.Shared.Utilities;
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		[Link] Plant15 Wheat;
-		[Link] Soil Soil; 
-		Accumulator accumulatedRain;
-		
-		[Description("Start of sowing window (d-mmm)")]
-		public string StartDate { get; set;}
-		[Description("End of sowing window (d-mmm)")]
-		public string EndDate { get; set;}
-		[Description("Minimum extractable soil water for sowing (mm)")]
-		public double MinESW { get; set;}
-		[Description("Accumulated rainfall required for sowing (mm)")]
-		public double MinRain { get; set;}
-		[Description("Duration of rainfall accumulation (d)")]
-		public int RainDays { get; set;}
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set;}
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set;}		
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set;}	
-		[Description("Plant population (/m2)")]
-		public double Population { get; set;}	
-		
-		
-		[EventSubscribe("Commencing")]
+  [Serializable]
+  public class Script : Model
+  {
+    [Link] Clock Clock;
+    [Link] Fertiliser Fertiliser;
+    [Link] Summary Summary;
+    [Link] Plant15 Wheat;
+    [Link] Soil Soil; 
+    Accumulator accumulatedRain;
+    
+    [Description("Start of sowing window (d-mmm)")]
+    public string StartDate { get; set;}
+    [Description("End of sowing window (d-mmm)")]
+    public string EndDate { get; set;}
+    [Description("Minimum extractable soil water for sowing (mm)")]
+    public double MinESW { get; set;}
+    [Description("Accumulated rainfall required for sowing (mm)")]
+    public double MinRain { get; set;}
+    [Description("Duration of rainfall accumulation (d)")]
+    public int RainDays { get; set;}
+    [Description("Cultivar to be sown")]
+    public string CultivarName { get; set;}
+    [Description("Sowing depth (mm)")]
+    public double SowingDepth { get; set;}		
+    [Description("Row spacing (mm)")]
+    public double RowSpacing { get; set;}	
+    [Description("Plant population (/m2)")]
+    public double Population { get; set;}	
+    
+    
+    [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+          accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
-		
+    
 
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			accumulatedRain.Update();
-			
-			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
-			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
-			    accumulatedRain.Sum > MinRain)
-			{
-			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
-			}
-		
-		}
-		
-	}
+    [EventSubscribe("DoManagement")]
+    private void OnDoManagement(object sender, EventArgs e)
+    {
+      accumulatedRain.Update();
+      
+      if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+          Wheat.plant_status=="out" &&
+          Soil.SoilWater.ESW > MinESW &&
+          accumulatedRain.Sum > MinRain)
+      {
+         Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
+      }
+    
+    }
+    
+  }
 }
 ]]></Code>
           </Manager>
@@ -4796,32 +4798,29 @@ using Models.Core;
 using Models.PMF;
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set;}
-		
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set;}
-		
-		
-		
-
-		[EventSubscribe("Sowing")]
-		private void OnSowing(object sender, EventArgs e)
-		{
-			Model crop = sender as Model;
-			if (crop.Name.ToLower()==CropName.ToLower())
-				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-		}
-		
-	}
+  [Serializable]
+  public class Script : Model
+  {
+    [Link] Clock Clock;
+    [Link] Fertiliser Fertiliser;
+    [Link] Summary Summary;
+    
+    
+    [Description("Amount of fertiliser to be applied (kg/ha)")]
+    public double Amount { get; set;}
+    
+    [Description("Crop to be fertilised")]
+    public string CropName { get; set;}
+    
+    [EventSubscribe("Sowing")]
+    private void OnSowing(object sender, EventArgs e)
+    {
+      Model crop = sender as Model;
+      if (crop.Name.ToLower()==CropName.ToLower())
+        Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+    }
+    
+  }
 }
 ]]></Code>
           </Manager>
@@ -4838,67 +4837,69 @@ namespace Models
               <RowSpacing>250</RowSpacing>
               <Population>120</Population>
             </Script>
-            <Code><![CDATA[using System;
+            <Code>
+  <![CDATA[using System;
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
 using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		[Link] Plant15 Wheat;
-		[Link] Soil Soil; 
-		Accumulator accumulatedRain;
-		
-		[Description("Start of sowing window (d-mmm)")]
-		public string StartDate { get; set;}
-		[Description("End of sowing window (d-mmm)")]
-		public string EndDate { get; set;}
-		[Description("Minimum extractable soil water for sowing (mm)")]
-		public double MinESW { get; set;}
-		[Description("Accumulated rainfall required for sowing (mm)")]
-		public double MinRain { get; set;}
-		[Description("Duration of rainfall accumulation (d)")]
-		public int RainDays { get; set;}
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set;}
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set;}		
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set;}	
-		[Description("Plant population (/m2)")]
-		public double Population { get; set;}	
-		
-		
-		[EventSubscribe("Commencing")]
+  [Serializable]
+  public class Script : Model
+  {
+    [Link] Clock Clock;
+    [Link] Fertiliser Fertiliser;
+    [Link] Summary Summary;
+    [Link] Plant15 Wheat;
+    [Link] Soil Soil; 
+    Accumulator accumulatedRain;
+    
+    [Description("Start of sowing window (d-mmm)")]
+    public string StartDate { get; set;}
+    [Description("End of sowing window (d-mmm)")]
+    public string EndDate { get; set;}
+    [Description("Minimum extractable soil water for sowing (mm)")]
+    public double MinESW { get; set;}
+    [Description("Accumulated rainfall required for sowing (mm)")]
+    public double MinRain { get; set;}
+    [Description("Duration of rainfall accumulation (d)")]
+    public int RainDays { get; set;}
+    [Description("Cultivar to be sown")]
+    public string CultivarName { get; set;}
+    [Description("Sowing depth (mm)")]
+    public double SowingDepth { get; set;}		
+    [Description("Row spacing (mm)")]
+    public double RowSpacing { get; set;}	
+    [Description("Plant population (/m2)")]
+    public double Population { get; set;}	
+    
+    
+    [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+          accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
-		
+    
 
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			accumulatedRain.Update();
-			
-			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
-			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
-			    accumulatedRain.Sum > MinRain)
-			{
-			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
-			}
-		
-		}
-		
-	}
+    [EventSubscribe("DoManagement")]
+    private void OnDoManagement(object sender, EventArgs e)
+    {
+      accumulatedRain.Update();
+      
+      if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+          Wheat.plant_status=="out" &&
+          Soil.SoilWater.ESW > MinESW &&
+          accumulatedRain.Sum > MinRain)
+      {
+         Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
+      }
+    
+    }
+    
+  }
 }
 ]]></Code>
           </Manager>
@@ -5431,32 +5432,29 @@ using Models.Core;
 using Models.PMF;
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set;}
-		
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set;}
-		
-		
-		
+  [Serializable]
+  public class Script : Model
+  {
+    [Link] Clock Clock;
+    [Link] Fertiliser Fertiliser;
+    [Link] Summary Summary;
+    
+    
+    [Description("Amount of fertiliser to be applied (kg/ha)")]
+    public double Amount { get; set;}
+    
+    [Description("Crop to be fertilised")]
+    public string CropName { get; set;}
 
-		[EventSubscribe("Sowing")]
-		private void OnSowing(object sender, EventArgs e)
-		{
-			Model crop = sender as Model;
-			if (crop.Name.ToLower()==CropName.ToLower())
-				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-		}
-		
-	}
+    [EventSubscribe("Sowing")]
+    private void OnSowing(object sender, EventArgs e)
+    {
+      Model crop = sender as Model;
+      if (crop.Name.ToLower()==CropName.ToLower())
+        Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+    }
+    
+  }
 }
 ]]></Code>
           </Manager>
@@ -5473,67 +5471,69 @@ namespace Models
               <RowSpacing>250</RowSpacing>
               <Population>120</Population>
             </Script>
-            <Code><![CDATA[using System;
+            <Code>
+  <![CDATA[using System;
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
 using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		[Link] Plant15 Wheat;
-		[Link] Soil Soil; 
-		Accumulator accumulatedRain;
-		
-		[Description("Start of sowing window (d-mmm)")]
-		public string StartDate { get; set;}
-		[Description("End of sowing window (d-mmm)")]
-		public string EndDate { get; set;}
-		[Description("Minimum extractable soil water for sowing (mm)")]
-		public double MinESW { get; set;}
-		[Description("Accumulated rainfall required for sowing (mm)")]
-		public double MinRain { get; set;}
-		[Description("Duration of rainfall accumulation (d)")]
-		public int RainDays { get; set;}
-		[Description("Cultivar to be sown")]
-		public string CultivarName { get; set;}
-		[Description("Sowing depth (mm)")]
-		public double SowingDepth { get; set;}		
-		[Description("Row spacing (mm)")]
-		public double RowSpacing { get; set;}	
-		[Description("Plant population (/m2)")]
-		public double Population { get; set;}	
-		
-		
-		[EventSubscribe("Commencing")]
+  [Serializable]
+  public class Script : Model
+  {
+    [Link] Clock Clock;
+    [Link] Fertiliser Fertiliser;
+    [Link] Summary Summary;
+    [Link] Plant15 Wheat;
+    [Link] Soil Soil; 
+    Accumulator accumulatedRain;
+    
+    [Description("Start of sowing window (d-mmm)")]
+    public string StartDate { get; set;}
+    [Description("End of sowing window (d-mmm)")]
+    public string EndDate { get; set;}
+    [Description("Minimum extractable soil water for sowing (mm)")]
+    public double MinESW { get; set;}
+    [Description("Accumulated rainfall required for sowing (mm)")]
+    public double MinRain { get; set;}
+    [Description("Duration of rainfall accumulation (d)")]
+    public int RainDays { get; set;}
+    [Description("Cultivar to be sown")]
+    public string CultivarName { get; set;}
+    [Description("Sowing depth (mm)")]
+    public double SowingDepth { get; set;}		
+    [Description("Row spacing (mm)")]
+    public double RowSpacing { get; set;}	
+    [Description("Plant population (/m2)")]
+    public double Population { get; set;}	
+    
+    
+    [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+          accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
         }
-		
+    
 
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			accumulatedRain.Update();
-			
-			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
-			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
-			    accumulatedRain.Sum > MinRain)
-			{
-			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
-			}
-		
-		}
-		
-	}
+    [EventSubscribe("DoManagement")]
+    private void OnDoManagement(object sender, EventArgs e)
+    {
+      accumulatedRain.Update();
+      
+      if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+          Wheat.plant_status=="out" &&
+          Soil.SoilWater.ESW > MinESW &&
+          accumulatedRain.Sum > MinRain)
+      {
+         Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
+      }
+    
+    }
+    
+  }
 }
 ]]></Code>
           </Manager>
