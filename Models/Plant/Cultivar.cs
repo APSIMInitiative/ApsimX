@@ -92,7 +92,7 @@ namespace Models.PMF
                         if (property.GetType() != null)
                         {
                             object oldValue = property.Value;
-                            if (oldValue is string || !oldValue.GetType().IsClass)
+                            if (oldValue is string || oldValue.GetType().IsArray || !oldValue.GetType().IsClass)
                             {
                                 this.oldPropertyValues.Add(oldValue);
                                 property.Value = propertyValue;
