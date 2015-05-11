@@ -7038,7 +7038,7 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.Value</OverRidePath>
             <OverRideInterger>34</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;
@@ -14909,7 +14909,7 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.Value</OverRidePath>
             <OverRideInterger>10</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;
@@ -18872,7 +18872,7 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.Value</OverRidePath>
             <OverRideInterger>28</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;
@@ -23563,7 +23563,7 @@ namespace Models
         <Manager>
           <Name>SetIntergerCropParameter</Name>
           <Script>
-            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.value</OverRidePath>
+            <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.Value</OverRidePath>
             <OverRideInterger>28</OverRideInterger>
           </Script>
           <Code><![CDATA[using System;

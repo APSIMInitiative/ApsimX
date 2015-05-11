@@ -4,16 +4,16 @@
 	<Cultivar>
 		<Name>JerseyBenny</Name>
 		<Alias>JerseyBenny</Alias>
-		<Command>[Structure].MainStemFinalNodeNumber.value = 19</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 19</Command>
 		<Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11</Command>
 		<Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
-		<Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.value = 3</Command>
+		<Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.Value = 3</Command>
 		<Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
 	</Cultivar>
 	<Cultivar>
 		<Name>IlamHardy</Name>
 		<Alias>IlamHardy</Alias>
-		<Command>[Structure].MainStemFinalNodeNumber.value = 26</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 26</Command>
 		<Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
 		<Command />
 	</Cultivar>
@@ -21,31 +21,31 @@
 		<Name>MarisPiper</Name>
 		<Alias>MarisPiper</Alias>
 		<Alias />
-		<Command>[Structure].MainStemFinalNodeNumber.value = 50</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 50</Command>
 		<Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,7,8,9</Command>
 		<Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,1,0</Command>
-		<Command>[Stem].DMDemandFunction.InternodeWt.value = 0.4</Command>
+		<Command>[Stem].DMDemandFunction.InternodeWt.Value = 0.4</Command>
 		<Command>[Leaf].LagDuration.XYPairs.X = 0,0.15,0.3,0.4,0.73,1.0</Command>
 		<Command>[Leaf].LagDuration.XYPairs.Y = 0,500,500,500,500,20</Command>
-		<Command>[Leaf].Photosynthesis.RUE.value = 2</Command>
+		<Command>[Leaf].Photosynthesis.RUE.Value = 2</Command>
 	</Cultivar>
 	<Cultivar>
 		<Name>Horizon</Name>
 		<Alias>Horizon</Alias>
-		<Command>[Structure].MainStemFinalNodeNumber.value = 28</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 28</Command>
 		<Command>[Tuber].DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
 	</Cultivar>
 	<Cultivar>
 		<Name>Karaka</Name>
 		<Alias>Karaka</Alias>
-		<Command>[Structure].MainStemFinalNodeNumber.value = 29</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
 		<Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
 		<Command />
 	</Cultivar>
 	<Cultivar>
 		<Name>Nooksac</Name>
 		<Alias>Nooksac</Alias>
-		<Command>[Structure].MainStemFinalNodeNumber.value = 36</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 36</Command>
 		<Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
 		<Command />
 	</Cultivar>
@@ -58,21 +58,21 @@
 	<Cultivar>
 		<Name>Rua</Name>
 		<Alias>Rua</Alias>
-		<Command>[Structure].MainStemFinalNodeNumber.value = 29</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
 		<Command>[Tuber].DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
 		<Command />
 	</Cultivar>
 	<Cultivar>
 		<Name>Nadine</Name>
 		<Alias>Nadine</Alias>
-		<Command>[Structure].MainStemFinalNodeNumber.value = 29</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
 		<Command>[Tuber].DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
 		<Command />
 	</Cultivar>
 	<Cultivar>
 		<Name>RussetBurbank</Name>
 		<Alias>RussetBurbank</Alias>
-		<Command>[Structure].MainStemFinalNodeNumber.value = 46</Command>
+		<Command>[Structure].MainStemFinalNodeNumber.Value = 46</Command>
 		<Command />
 	</Cultivar>
     <Cultivar>
