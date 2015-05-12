@@ -6,6 +6,9 @@ using System.Reflection;
 using System;
 using Models.Factorial;
 using APSIM.Shared.Utilities;
+using Models;
+using System.Collections.Generic;
+using System.Text;
 
 namespace UserInterface.Commands
 {
@@ -41,6 +44,7 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
+            
             // Get the model we are to export.
             Model modelToExport = Apsim.Get(ExplorerPresenter.ApsimXFile, NodePath) as Model;
             if (modelToExport != null)
@@ -64,6 +68,9 @@ namespace UserInterface.Commands
             // write to it.
             Directory.CreateDirectory(folderPath);
 
+            string savedWorkingDirectory = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(folderPath);
+
             //Load CSS resource
             Assembly assembly = Assembly.GetExecutingAssembly();
             StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("UserInterface.Resources.Export.css"));
@@ -86,7 +93,47 @@ namespace UserInterface.Commands
                 assembly.GetManifestResourceStream("UserInterface.Resources.hd_bg.png").CopyTo(file);
             }
 
-            DoExportInternal(modelToExport, folderPath, string.Empty);
+            // Create HTML file.
+            StringWriter index = new StringWriter();
+
+            // Find a MEMO and assume it is a top level introduction.
+            Model memo = Apsim.Child(ExplorerPresenter.ApsimXFile, typeof(Memo)) as Model;
+            if (memo != null)
+                DoExportModel(memo, folderPath, index);
+            
+            // Look for a crop and export it.
+            List<IModel> crop = Apsim.ChildrenRecursively(ExplorerPresenter.ApsimXFile, typeof(ICrop));
+            if (crop.Count > 0)
+            {
+                index.WriteLine("<H1>Model Description</H1>");
+                Classes.PMFDocumentation doc = new Classes.PMFDocumentation();
+                doc.Go(index, crop[0] as Model);
+            }
+
+            // Export the validation.
+            index.WriteLine("<H1>Validation</H1>");
+            DoExportInternal(index, modelToExport, "", string.Empty, 2);
+
+            // Update html for table of contents.
+            string newHTML = CreateTOC(index.ToString());
+  
+            // Write file.
+            StreamWriter index2 = new StreamWriter(Path.Combine(folderPath, "Index.html"));
+            index2.WriteLine("<!DOCTYPE html><html lang=\"en-AU\">");
+            index2.WriteLine("<head>");
+            index2.WriteLine("   <link rel=\"stylesheet\" type=\"text/css\" href=\"export.css\">");
+            index2.WriteLine("</head>");
+            index2.WriteLine("<body>");
+            index2.WriteLine("<div id=\"content\"><div id=\"left\"><img src=\"apsim_logo.png\" /></div>");
+            index2.WriteLine("<div id=\"right\"><img src=\"hd_bg.png\" /></div>");
+
+            index2.WriteLine(newHTML);
+
+            index2.WriteLine("</body>");
+            index2.WriteLine("</html>");
+            index2.Close();
+
+            Directory.SetCurrentDirectory(savedWorkingDirectory);
         }
 
         /// <summary>
@@ -95,25 +142,17 @@ namespace UserInterface.Commands
         /// <param name="modelToExport">The model to export.</param>
         /// <param name="folderPath">The folder path.</param>
         /// <param name="url">The URL.</param>
-        private void DoExportInternal(Model modelToExport, string folderPath, string url)
+        private void DoExportInternal(TextWriter index, Model modelToExport, string folderPath, string url, int level)
         {
             // Make sure the specified folderPath exists because we're going to 
             // write to it.
-            Directory.CreateDirectory(folderPath);
+            if (folderPath != string.Empty)
+                Directory.CreateDirectory(folderPath);
 
-            // Create index.html
-            StreamWriter index = new StreamWriter(Path.Combine(folderPath, "Index.html"));
-            index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\">");
-            index.WriteLine("<head>");
-            index.WriteLine("   <link rel=\"stylesheet\" type=\"text/css\" href=\"" + url + "export.css\">");
-            index.WriteLine("</head>");
-            index.WriteLine("<body>");
-            index.WriteLine("<div id=\"content\"><div id=\"left\"><img src=\"" + url + "apsim_logo.png\" /></div>");
-            index.WriteLine("<div id=\"right\"><img src=\"" + url + "hd_bg.png\" /></div>");
             if (modelToExport.Name == "Simulations")
-                index.WriteLine("<h2>" + Path.GetFileNameWithoutExtension((modelToExport as Simulations).FileName) + "</h2>");
+                index.WriteLine("<H" + level.ToString() + ">" + Path.GetFileNameWithoutExtension((modelToExport as Simulations).FileName) + "</H" + level.ToString() + ">");
             else
-                index.WriteLine("<h2>" + modelToExport.Name + "</h2>");
+                index.WriteLine("<H" + level.ToString() + ">" + modelToExport.Name + "</H" + level.ToString() + ">");
 
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
@@ -128,25 +167,16 @@ namespace UserInterface.Commands
                     if (child is Experiment && !experimentFound)
                     {
                         experimentFound = true;
-                        index.WriteLine("<h1>Experiments</h1>");
                     }
                     if (child is Models.Graph.Graph && !validationGraphs)
                     {
                         validationGraphs = true;
-                        index.WriteLine("<h1>Validation graphs<h1>");
                     }
 
                     if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
                         string childFolderPath = Path.Combine(folderPath, child.Name);
-
-                        string childFileName = Path.Combine(childFolderPath, "Index.html");
-                        childFileName = childFileName.Replace(folderPath + "\\", "");
-                        index.WriteLine("<p><a href={0}>{1}</a></p>",
-                                        new object[] {StringUtilities.DQuote(childFileName),
-                                            child.Name});
-
-                        DoExportInternal(child, childFolderPath, url + "../");
+                        DoExportInternal(index, child, childFolderPath, url + "../", level+1);
                     }
                     else
                     {
@@ -155,42 +185,8 @@ namespace UserInterface.Commands
                 }
             }
 
-
-            index.WriteLine("</div>");
-            index.WriteLine("</body>");
-            index.WriteLine("</html>");
-            index.Close();
             
         }
-
-        /// <summary>
-        /// Main export code.
-        /// </summary>
-        //public void DoExportSimulation(Model modelToExport, string folderPath)
-        //{
-        //    //Load CSS resource
-
-        //    // Make sure the specified folderPath exists because we're going to 
-        //    // write to it.
-        //    Directory.CreateDirectory(folderPath);
-
-        //    //Load CSS resource
-        //    Assembly assembly = Assembly.GetExecutingAssembly();
-        //    StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("UserInterface.Resources.Export.css"));
-        //    string css = reader.ReadToEnd();
-
-        //    // Create index.html
-        //    StreamWriter index = new StreamWriter(Path.Combine(folderPath, "Index.html"));
-        //    index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\"><head><style type=text/css>" + css + "</style></head>");
-        //    index.WriteLine("<body>");
-
-        //    DoExportZone(modelToExport, folderPath, index);
-
-        //    index.WriteLine("</body>");
-        //    index.WriteLine("</html>");
-        //    index.Close();
-
-        //}
 
         /// <summary>
         /// Export the specified zone.
@@ -198,7 +194,7 @@ namespace UserInterface.Commands
         /// <param name="modelToExport"></param>
         /// <param name="folderPath"></param>
         /// <param name="index"></param>
-        private void DoExportModel(Model modelToExport, string folderPath, StreamWriter index)
+        private void DoExportModel(Model modelToExport, string folderPath,TextWriter index)
         {
             // Select the node in the tree.
             ExplorerPresenter.SelectNode(Apsim.FullPath(modelToExport));
@@ -213,6 +209,73 @@ namespace UserInterface.Commands
             }
         }
 
+        /// <summary>Creates the table of contents, returning HTML.</summary>
+        /// <param name="html">The HTML to parse for heading tags and change for TOC</param>
+        /// <returns>The modified HTML.</returns>
+        private string CreateTOC(string html)
+        {
+            int[] levels = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            int posLastHeading = 0;
+            int posHeading = html.IndexOf("<H");
 
+            StringBuilder toc = new StringBuilder();
+            StringBuilder htmlModified = new StringBuilder();
+
+            toc.Append("<dl>");
+
+            while (posHeading != -1)
+            {
+                // write everything up to the old heading;
+                htmlModified.Append(html.Substring(posLastHeading, posHeading - posLastHeading));
+
+                int posEndHeading = html.IndexOf("</H", posHeading);
+
+                // extract the heading and heading number (1 to 10)
+                string heading = html.Substring(posHeading + 4, posEndHeading - posHeading - 4);
+                int headingNumber = Convert.ToInt32(Char.GetNumericValue(html[posHeading+2]));
+
+                if (headingNumber < 4)
+                {
+                    // Update levels based on heading number.
+                    levels[headingNumber - 1]++;
+                    for (int i = headingNumber; i < levels.Length; i++)
+                        if (levels[i] > 0)
+                            levels[i] = 0;
+
+                    // Insert the levels into the heading e.g. "1.3.2"
+                    string levelString = string.Empty;
+                    for (int i = 0; i < levels.Length; i++)
+                        if (levels[i] > 0)
+                        {
+                            if (levelString != string.Empty)
+                                levelString += ".";
+                            levelString += levels[i].ToString();
+                        }
+                    heading = levelString + " " + heading;
+
+                    // Write the heading back to the html.
+
+                    htmlModified.Append("<a name=\"" + heading + "\"></a>");
+                    htmlModified.Append("<H" + headingNumber + ">" + heading + "</H" + headingNumber + ">");
+
+                    // Add heading to our list of headings.
+                    toc.Append("<dt>");
+                    for (int i = 0; i < headingNumber; i++)
+                        toc.Append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                    toc.Append("<a href=\"#" + heading + "\">" + heading + "</a><br></dt>\r\n");
+                }
+
+                // Find next heading.
+                posLastHeading = posEndHeading + 5;
+                posHeading = html.IndexOf("<H", posHeading + 1);
+            }
+
+            // write remainder of file.
+            htmlModified.Append(html.Substring(posLastHeading));
+
+            toc.Append("</dl>");
+
+            return toc.ToString() + htmlModified.ToString();
+        }
     }
 }
