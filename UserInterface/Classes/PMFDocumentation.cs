@@ -17,6 +17,7 @@ namespace UserInterface.Classes
     using Views;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Models.PMF.Functions;
 
     /// <summary>
     /// Document a PMF model.
@@ -62,80 +63,82 @@ namespace UserInterface.Classes
             return Code;
         }
 
-        private void DocumentNodeAndChildren(TextWriter OutputFile, XmlNode N, int Level)
+        /// <summary>
+        /// Document the specified node and all children.
+        /// </summary>
+        /// <param name="writer">The text writer to write to.</param>
+        /// <param name="node">The XML node to write.</param>
+        /// <param name="level">The HTML level e.g. 2 for H2</param>
+        private void DocumentNodeAndChildren(TextWriter writer, XmlNode node, int level)
         {
             string paramTable = "";
-            if (Level > 1)
-                OutputFile.WriteLine(Header(XmlUtilities.Value(N, "Name"), Level, XmlUtilities.Value(N.ParentNode, "Name")));
+            if (level > 1)
+                writer.WriteLine(Header(XmlUtilities.Value(node, "Name"), level, XmlUtilities.Value(node.ParentNode, "Name")));
 
-            WriteDescriptionForTypeName(OutputFile, N);
+            WriteDescriptionForTypeName(writer, node);
 
-            OutputFile.WriteLine(ClassDescription(N));
-            OutputFile.WriteLine(paramTable);
+            writer.WriteLine(ClassDescription(node));
+            writer.WriteLine(paramTable);
 
             // Document all constants.
-            foreach (XmlNode constant in XmlUtilities.ChildNodes(N, "Constant"))
-                DocumentConstant(OutputFile, constant);
+            foreach (XmlNode constant in XmlUtilities.ChildNodes(node, "Constant"))
+                DocumentConstant(writer, constant);
             
             // Document all other child nodes.
-            foreach (XmlNode CN in XmlUtilities.ChildNodes(N, ""))
+            foreach (XmlNode CN in XmlUtilities.ChildNodes(node, ""))
             {
                 if (CN.Name != "Constant")
-                    DocumentNode(OutputFile, CN, Level + 1);
+                    DocumentNode(writer, CN, level + 1);
             }
 
         }
 
-        private void DocumentNode(TextWriter OutputFile, XmlNode N, int NextLevel)
+        private void DocumentNode(TextWriter writer, XmlNode node, int NextLevel)
         {
+            IModel ourModel = GetModelForNode(node);
 
-            if (N.Name == "Name" || N.Name == "Live" || N.Name == "Dead")
+            if (node.Name == "Name" || node.Name == "Live" || node.Name == "Dead")
                 return;
 
-            if (XmlUtilities.Attribute(N, "shortcut") != "")
+            if (node.Name == "Constant")
+                DocumentConstant(writer, node);
+            else if (XmlUtilities.ChildNodes(node, "").Count == 0)
             {
-                OutputFile.WriteLine("<p>" + XmlUtilities.Value(N, "Name") + " uses the same value as " + XmlUtilities.Attribute(N, "shortcut"));
-            }
-            else if (N.Name == "Constant")
-                DocumentConstant(OutputFile, N);
-            else if (XmlUtilities.ChildNodes(N, "").Count == 0)
-            {
-                WriteDescriptionForTypeName(OutputFile, N);
+                WriteDescriptionForTypeName(writer, node);
 
-                DocumentProperty(OutputFile, N, NextLevel);
+                DocumentProperty(writer, node, NextLevel);
             }
-            else if (XmlUtilities.ChildNodes(N, "XYPairs").Count > 0)
+            else if (XmlUtilities.ChildNodes(node, "XYPairs").Count > 0)
             {
-                CreateGraph(OutputFile, XmlUtilities.ChildNodes(N, "XYPairs")[0], NextLevel);
+                CreateGraph(writer, XmlUtilities.ChildNodes(node, "XYPairs")[0], NextLevel);
             }
-            else if (XmlUtilities.Type(N) == "TemperatureFunction")
-                DocumentTemperatureFunction(OutputFile, N, NextLevel);
+            else if (XmlUtilities.Type(node) == "TemperatureFunction")
+                DocumentTemperatureFunction(writer, node, NextLevel);
             //else if (XmlUtilities.Type(N) == "GenericPhase")
             //   DocumentFixedPhase(OutputFile, N, NextLevel);
-            else if (XmlUtilities.Type(N) == "PhaseLookupValue")
+            else if (XmlUtilities.Type(node) == "PhaseLookupValue")
+                DocumentPhaseLookupValue(writer, node, NextLevel);
+            else if (XmlUtilities.Type(node) == "ChillingPhase")
+                ChillingPhaseFunction(writer, node, NextLevel);
+            else if (node.Name == "Memo")
             {
-                OutputFile.WriteLine(XmlUtilities.Value(N, "Name") + " = ");
-                DocumentPhaseLookupValue(OutputFile, N, NextLevel);
+                writer.WriteLine(MemoToHTML(node, NextLevel));
             }
-            else if (XmlUtilities.Type(N) == "ChillingPhase")
-                ChillingPhaseFunction(OutputFile, N, NextLevel);
-            else if (N.Name == "Memo")
+            else if (node.Name == "MultiplyFunction")
+                DocumentFunction(writer, node, NextLevel, "x");
+            else if (node.Name == "AddFunction")
+                DocumentFunction(writer, node, NextLevel, "+");
+            else if (node.Name == "DivideFunction")
+                DocumentFunction(writer, node, NextLevel, "/");
+            else if (node.Name == "SubtractFunction")
+                DocumentFunction(writer, node, NextLevel, "-");
+            else if (ourModel is IFunction)
             {
-                OutputFile.WriteLine(MemoToHTML(N, NextLevel));
+                writer.WriteLine(XmlUtilities.Value(node, "Name") + " is calculated as followed:");
+                DocumentNodeAndChildren(writer, node, NextLevel);
             }
-            else if (N.Name == "MultiplyFunction")
-                DocumentFunction(OutputFile, N, NextLevel, "x");
-            else if (N.Name == "AddFunction")
-                DocumentFunction(OutputFile, N, NextLevel, "+");
-            else if (N.Name == "DivideFunction")
-                DocumentFunction(OutputFile, N, NextLevel, "/");
-            else if (N.Name == "SubtractFunction")
-                DocumentFunction(OutputFile, N, NextLevel, "-");
             else
-            {
-                OutputFile.WriteLine(XmlUtilities.Value(N, "Name") + " is calculated as followed:");
-                DocumentNodeAndChildren(OutputFile, N, NextLevel);
-            }
+                DocumentNodeAndChildren(writer, node, NextLevel);
         }
 
 
@@ -536,7 +539,8 @@ namespace UserInterface.Classes
         }
         private void CreateGraph(TextWriter OutputFile, XmlNode node, int NextLevel)
         {
-
+            string name = XmlUtilities.Value(node.ParentNode, "Name");
+            OutputFile.WriteLine(name + " is calculated as follows:");
             string InstanceName = XmlUtilities.Value(node.OwnerDocument.DocumentElement, "Name");
             string GraphName;
             if (node.Name == "XYPairs")
