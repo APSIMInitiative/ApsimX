@@ -845,7 +845,7 @@ namespace Models
 
             for (int i = 0; i < names.Length; i++)
             {
-                if (!columnNames.Contains(names[i]))
+                if (!columnNames.Contains(names[i], StringComparer.OrdinalIgnoreCase))
                 {
                     string sql = "ALTER TABLE " + tableName + " ADD COLUMN [";
                     sql += names[i] + "] " + GetSQLColumnType(types[i]);

@@ -63,10 +63,11 @@ namespace Models.Core
         /// </summary>
         /// <param name="namePath">The name of the object to return</param>
         /// <param name="relativeTo">The model calling this method</param>
+        /// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
         /// <returns>The found object or null if not found</returns>
-        public object Get(string namePath, Model relativeTo)
+        public object Get(string namePath, Model relativeTo, bool ignoreCase = false)
         {
-            IVariable variable = this.GetInternal(namePath, relativeTo);
+            IVariable variable = this.GetInternal(namePath, relativeTo, ignoreCase);
             if (variable == null)
             {
                 return variable;
@@ -101,11 +102,13 @@ namespace Models.Core
         /// </summary>
         /// <param name="namePath">The name of the object to return</param>
         /// <param name="relativeTo">The model calling this method</param>
+        /// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
         /// <returns>The found object or null if not found</returns>
-        public IVariable GetInternal(string namePath, Model relativeTo)
+        public IVariable GetInternal(string namePath, Model relativeTo, bool ignoreCase = false)
         {
             Model relativeToModel = relativeTo;
             string cacheKey = namePath;
+            StringComparison compareType = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
             // Look in cache first.
             object value = GetFromCache(cacheKey, relativeToModel);
@@ -181,7 +184,7 @@ namespace Models.Core
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    IModel localModel = relativeToModel.Children.FirstOrDefault(m => m.Name == namePathBits[i]);
+                    IModel localModel = relativeToModel.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
                     if (localModel == null)
                     {
                         break;
@@ -213,10 +216,12 @@ namespace Models.Core
                     // Look for either a property or a child model.
                     IModel localModel = null;
                     PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
+                    if (propertyInfo == null && ignoreCase) // If not found, try using a case-insensitive search
+                        propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
                     if (propertyInfo == null && relativeToObject is Model)
                     {
                         // Not a property, may be a child model.
-                        localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name == namePathBits[i]);
+                        localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
                         if (localModel == null)
                         {
                             return null;
