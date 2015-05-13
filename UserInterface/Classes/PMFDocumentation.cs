@@ -111,8 +111,7 @@ namespace UserInterface.Classes
             IModel ourModel = GetModelForNode(node);
 
             if (node.Name != "Name" && 
-                ourModel != null && 
-                ShouldDocument(ourModel.Parent, ourModel.Name))
+                (ourModel == null || ShouldDocument(ourModel.Parent, ourModel.Name)))
             {
                 if (node.Name == "Constant")
                     DocumentConstant(writer, node);
