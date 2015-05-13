@@ -29,6 +29,11 @@ namespace UserInterface.Classes
         /// </summary>
         private IModel model;
 
+        /// <summary>
+        /// Have we written the cultivar heading.
+        /// </summary>
+        private bool writtenCultivarHeading = false;
+
         public class NameDescUnitsValue
         {
             public string Name = "";
@@ -87,60 +92,89 @@ namespace UserInterface.Classes
             // Document all other child nodes.
             foreach (XmlNode CN in XmlUtilities.ChildNodes(node, ""))
             {
-                if (CN.Name != "Constant")
+                if (CN.Name == "Cultivar")
+                {
+                    if (!writtenCultivarHeading)
+                    {
+                        writtenCultivarHeading = true;
+                        writer.WriteLine("<h2>Cultivars</h2>");
+                    }
+                    DocumentNode(writer, CN, 3);
+                }
+                else if (CN.Name != "Constant")
                     DocumentNode(writer, CN, level + 1);
             }
-
         }
 
         private void DocumentNode(TextWriter writer, XmlNode node, int NextLevel)
         {
             IModel ourModel = GetModelForNode(node);
 
-            if (node.Name == "Name" || node.Name == "Live" || node.Name == "Dead")
-                return;
+            if (node.Name != "Name" && 
+                ourModel != null && 
+                ShouldDocument(ourModel.Parent, ourModel.Name))
+            {
+                if (node.Name == "Constant")
+                    DocumentConstant(writer, node);
+                else if (XmlUtilities.ChildNodes(node, "").Count == 0)
+                {
+                    WriteDescriptionForTypeName(writer, node);
 
-            if (node.Name == "Constant")
-                DocumentConstant(writer, node);
-            else if (XmlUtilities.ChildNodes(node, "").Count == 0)
-            {
-                WriteDescriptionForTypeName(writer, node);
-
-                DocumentProperty(writer, node, NextLevel);
+                    DocumentProperty(writer, node, NextLevel);
+                }
+                else if (XmlUtilities.ChildNodes(node, "XYPairs").Count > 0)
+                    CreateGraph(writer, XmlUtilities.ChildNodes(node, "XYPairs")[0], NextLevel);
+                else if (XmlUtilities.Type(node) == "TemperatureFunction")
+                    DocumentTemperatureFunction(writer, node, NextLevel);
+                //else if (XmlUtilities.Type(N) == "GenericPhase")
+                //   DocumentFixedPhase(OutputFile, N, NextLevel);
+                else if (XmlUtilities.Type(node) == "PhaseLookupValue")
+                    DocumentPhaseLookupValue(writer, node, NextLevel);
+                else if (XmlUtilities.Type(node) == "ChillingPhase")
+                    ChillingPhaseFunction(writer, node, NextLevel);
+                else if (node.Name == "Memo")
+                {
+                    writer.WriteLine(MemoToHTML(node, NextLevel));
+                }
+                else if (node.Name == "MultiplyFunction")
+                    DocumentFunction(writer, node, NextLevel, "x");
+                else if (node.Name == "AddFunction")
+                    DocumentFunction(writer, node, NextLevel, "+");
+                else if (node.Name == "DivideFunction")
+                    DocumentFunction(writer, node, NextLevel, "/");
+                else if (node.Name == "SubtractFunction")
+                    DocumentFunction(writer, node, NextLevel, "-");
+                else if (ourModel is IFunction)
+                {
+                    writer.WriteLine(XmlUtilities.Value(node, "Name") + " is calculated as followed:");
+                    DocumentNodeAndChildren(writer, node, NextLevel);
+                }
+                else
+                    DocumentNodeAndChildren(writer, node, NextLevel);
             }
-            else if (XmlUtilities.ChildNodes(node, "XYPairs").Count > 0)
-            {
-                CreateGraph(writer, XmlUtilities.ChildNodes(node, "XYPairs")[0], NextLevel);
-            }
-            else if (XmlUtilities.Type(node) == "TemperatureFunction")
-                DocumentTemperatureFunction(writer, node, NextLevel);
-            //else if (XmlUtilities.Type(N) == "GenericPhase")
-            //   DocumentFixedPhase(OutputFile, N, NextLevel);
-            else if (XmlUtilities.Type(node) == "PhaseLookupValue")
-                DocumentPhaseLookupValue(writer, node, NextLevel);
-            else if (XmlUtilities.Type(node) == "ChillingPhase")
-                ChillingPhaseFunction(writer, node, NextLevel);
-            else if (node.Name == "Memo")
-            {
-                writer.WriteLine(MemoToHTML(node, NextLevel));
-            }
-            else if (node.Name == "MultiplyFunction")
-                DocumentFunction(writer, node, NextLevel, "x");
-            else if (node.Name == "AddFunction")
-                DocumentFunction(writer, node, NextLevel, "+");
-            else if (node.Name == "DivideFunction")
-                DocumentFunction(writer, node, NextLevel, "/");
-            else if (node.Name == "SubtractFunction")
-                DocumentFunction(writer, node, NextLevel, "-");
-            else if (ourModel is IFunction)
-            {
-                writer.WriteLine(XmlUtilities.Value(node, "Name") + " is calculated as followed:");
-                DocumentNodeAndChildren(writer, node, NextLevel);
-            }
-            else
-                DocumentNodeAndChildren(writer, node, NextLevel);
         }
 
+        /// <summary>Should the specified field in the specified model be documented?</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="fieldName">Name of the field or property.</param>
+        /// <returns></returns>
+        private bool ShouldDocument(IModel model, string fieldName)
+        {
+            if (model != null)
+            {
+                MemberInfo field = model.GetType().GetField(fieldName);
+                if (field == null)
+                    field = model.GetType().GetProperty(fieldName);
+
+                if (field != null)
+                {
+                    object[] attributes = field.GetCustomAttributes(typeof(DoNotDocumentAttribute), true);
+                    if (attributes.Length >= 1)
+                        return false;
+                }
+            }
+            return true;
+        }
 
         /// <summary>
         /// Document a add, multiply, divide, subtract function.
@@ -246,7 +280,7 @@ namespace UserInterface.Classes
             if (contents.Contains('<'))
             {
                 XmlDocument doc = new XmlDocument();
-                doc.LoadXml(contents);
+                doc.LoadXml(contents.Replace("/", ""));
                 html = XmlUtilities.Value(doc.DocumentElement, "/html/body");
             }
             else
@@ -614,7 +648,6 @@ namespace UserInterface.Classes
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(350, 350);
             graph.Export(image);
-            image.Save(@"C:\Users\hol353\Desktop\temp\temp.gif");
 
             image.Save(GifFileName, System.Drawing.Imaging.ImageFormat.Gif);
         }
