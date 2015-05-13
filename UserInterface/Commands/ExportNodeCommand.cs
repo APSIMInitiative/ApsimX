@@ -106,7 +106,7 @@ namespace UserInterface.Commands
             }
 
             // Export the validation.
-            index.WriteLine("<H1>Validation</H1>");
+            index.WriteLine("<H1>Model testing</H1>");
             DoExportInternal(index, modelToExport, "", string.Empty, 2);
 
             // Update html for table of contents.
