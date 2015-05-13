@@ -96,11 +96,6 @@ namespace UserInterface.Commands
             // Create HTML file.
             StringWriter index = new StringWriter();
 
-            // Find a MEMO and assume it is a top level introduction.
-            Model memo = Apsim.Child(ExplorerPresenter.ApsimXFile, typeof(Memo)) as Model;
-            if (memo != null)
-                DoExportModel(memo, folderPath, index);
-            
             // Look for a crop and export it.
             List<IModel> crop = Apsim.ChildrenRecursively(ExplorerPresenter.ApsimXFile, typeof(ICrop));
             if (crop.Count > 0)
@@ -149,9 +144,7 @@ namespace UserInterface.Commands
             if (folderPath != string.Empty)
                 Directory.CreateDirectory(folderPath);
 
-            if (modelToExport.Name == "Simulations")
-                index.WriteLine("<H" + level.ToString() + ">" + Path.GetFileNameWithoutExtension((modelToExport as Simulations).FileName) + "</H" + level.ToString() + ">");
-            else
+            if (modelToExport.Name != "Simulations")
                 index.WriteLine("<H" + level.ToString() + ">" + modelToExport.Name + "</H" + level.ToString() + ">");
 
             // Look for child models that are a folder or simulation etc
@@ -216,7 +209,7 @@ namespace UserInterface.Commands
         {
             int[] levels = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             int posLastHeading = 0;
-            int posHeading = html.IndexOf("<H");
+            int posHeading = html.IndexOf("<H", StringComparison.CurrentCultureIgnoreCase);
 
             StringBuilder toc = new StringBuilder();
             StringBuilder htmlModified = new StringBuilder();
@@ -228,7 +221,7 @@ namespace UserInterface.Commands
                 // write everything up to the old heading;
                 htmlModified.Append(html.Substring(posLastHeading, posHeading - posLastHeading));
 
-                int posEndHeading = html.IndexOf("</H", posHeading);
+                int posEndHeading = html.IndexOf("</H", posHeading, StringComparison.CurrentCultureIgnoreCase);
 
                 // extract the heading and heading number (1 to 10)
                 string heading = html.Substring(posHeading + 4, posEndHeading - posHeading - 4);
@@ -267,7 +260,7 @@ namespace UserInterface.Commands
 
                 // Find next heading.
                 posLastHeading = posEndHeading + 5;
-                posHeading = html.IndexOf("<H", posHeading + 1);
+                posHeading = html.IndexOf("<H", posHeading + 1, StringComparison.CurrentCultureIgnoreCase);
             }
 
             // write remainder of file.
