@@ -18,6 +18,7 @@ namespace UserInterface.Classes
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Models.PMF.Functions;
+    using Models.PMF.Phen;
 
     /// <summary>
     /// Document a PMF model.
@@ -86,8 +87,8 @@ namespace UserInterface.Classes
             writer.WriteLine(paramTable);
 
             // Document all constants.
-            foreach (XmlNode constant in XmlUtilities.ChildNodes(node, "Constant"))
-                DocumentConstant(writer, constant);
+            //foreach (XmlNode constant in XmlUtilities.ChildNodes(node, "Constant"))
+            //    DocumentConstant(writer, constant,level+1);
             
             // Document all other child nodes.
             foreach (XmlNode CN in XmlUtilities.ChildNodes(node, ""))
@@ -101,7 +102,7 @@ namespace UserInterface.Classes
                     }
                     DocumentNode(writer, CN, 3);
                 }
-                else if (CN.Name != "Constant")
+                else 
                     DocumentNode(writer, CN, level + 1);
             }
         }
@@ -114,7 +115,7 @@ namespace UserInterface.Classes
                 (ourModel == null || ShouldDocument(ourModel.Parent, ourModel.Name)))
             {
                 if (node.Name == "Constant")
-                    DocumentConstant(writer, node);
+                    DocumentConstant(writer, node, NextLevel);
                 else if (XmlUtilities.ChildNodes(node, "").Count == 0)
                 {
                     WriteDescriptionForTypeName(writer, node);
@@ -143,14 +144,57 @@ namespace UserInterface.Classes
                     DocumentFunction(writer, node, NextLevel, "/");
                 else if (node.Name == "SubtractFunction")
                     DocumentFunction(writer, node, NextLevel, "-");
+                else if (node.Name == "VariableReference")
+                    DocumentVariableReference(writer, node, NextLevel);
+                else if (node.Name == "OnEventFunction")
+                    DocumentOnEventFunction(writer, node, NextLevel);
+                else if (ourModel is Phase)
+                    DocumentPhase(writer, node, NextLevel);
+
                 else if (ourModel is IFunction)
                 {
-                    writer.WriteLine(XmlUtilities.Value(node, "Name") + " is calculated as followed:");
+                    //writer.WriteLine(XmlUtilities.Value(node, "Name") + " is calculated as follows:</br>");
                     DocumentNodeAndChildren(writer, node, NextLevel);
                 }
                 else
                     DocumentNodeAndChildren(writer, node, NextLevel);
             }
+        }
+
+        private void DocumentPhase(TextWriter writer, XmlNode node, int NextLevel)
+        {
+            string name = XmlUtilities.Value(node, "Name");
+            string start = XmlUtilities.Value(node, "Start");
+            string end = XmlUtilities.Value(node, "End");
+
+            // Look for memo
+            string memo = string.Empty;
+            XmlNode memoNode = XmlUtilities.Find(node, "memo");
+            if (memoNode != null)
+                memo = MemoToHTML(memoNode, 0);
+
+            // Get the corresponding model.
+            string desc = string.Empty;
+            IModel modelForNode = GetModelForNode(node);
+            DescriptionAttribute Description = ReflectionUtilities.GetAttribute(modelForNode.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+            if (Description != null)
+                desc = Description.ToString();
+
+            writer.Write(Header(name + " Phase", NextLevel, null));
+            writer.Write("<p>");
+            writer.Write("The "+ name + " phase extends between the " + start + " and " + end+" stages.  ");
+            writer.Write(memo);
+            writer.Write(desc);
+            
+            writer.WriteLine("</p>");
+            foreach (XmlNode child in XmlUtilities.ChildNodes(node, ""))
+            {
+                if (child.Name != "Start" && child.Name!= "End")
+                {
+                    DocumentNode(writer, child, NextLevel + 1);
+                }
+            }
+
         }
 
         /// <summary>Should the specified field in the specified model be documented?</summary>
@@ -178,12 +222,12 @@ namespace UserInterface.Classes
         /// <summary>
         /// Document a add, multiply, divide, subtract function.
         /// </summary>
-        /// <param name="OutputFile"></param>
+        /// <param name="writer"></param>
         /// <param name="N"></param>
         /// <param name="NextLevel"></param>
         /// <param name="parentModel"></param>
         /// <param name="oper"></param>
-        private void DocumentFunction(TextWriter OutputFile, XmlNode N, int NextLevel, string oper)
+        private void DocumentFunction(TextWriter writer, XmlNode N, int NextLevel, string oper)
         {
             string msg = string.Empty;
             foreach (XmlNode child in XmlUtilities.ChildNodes(N, ""))
@@ -194,14 +238,16 @@ namespace UserInterface.Classes
             }
 
             string name = XmlUtilities.Value(N, "Name");
-            OutputFile.WriteLine("<p>" + name + " = " + msg + "</p>");
-            OutputFile.WriteLine("<p>Where: </p>");
+
+            writer.Write(Header(name, NextLevel, null));
+            writer.WriteLine("<p><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + name + " = " + msg + "</i></p>");
+            
             foreach (XmlNode child in XmlUtilities.ChildNodes(N, ""))
             {
                 string childName = XmlUtilities.Value(child, "Name");
                 if (childName != string.Empty)
                 {
-                    DocumentNode(OutputFile, child, NextLevel + 1);
+                    DocumentNode(writer, child, NextLevel + 1);
                 }
             }
         }
@@ -211,10 +257,51 @@ namespace UserInterface.Classes
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="constantNode"></param>
-        private void DocumentConstant(TextWriter writer, XmlNode constantNode)
+        private void DocumentConstant(TextWriter writer, XmlNode constantNode, int NextLevel)
         {
             string name = XmlUtilities.Value(constantNode, "Name");
             string value = XmlUtilities.Value(constantNode, "Value");
+
+            // Get the corresponding model.
+            IModel modelForNode = GetModelForNode(constantNode);
+
+            // Look for units.
+            string units = string.Empty;
+            FieldInfo property = modelForNode.Parent.GetType().GetField(name, BindingFlags.NonPublic| BindingFlags.Instance);
+            if (property != null)
+            {
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (unitsAttribute != null)
+                    units = "(" + unitsAttribute.ToString() + ")";
+            }
+            else
+            {
+                units = XmlUtilities.Value(constantNode, "Units");
+            }
+
+            // Look for memo
+            string memo = string.Empty;
+            XmlNode memoNode = XmlUtilities.Find(constantNode, "memo");
+            if (memoNode != null)
+                memo = MemoToHTML(memoNode, 0);
+
+            
+            writer.Write(Header(name,NextLevel,null));
+            writer.Write("<p>");
+            writer.Write(memo);
+            writer.Write(name + " is given a constant value of " + value + " "+ units);
+            writer.WriteLine("</p>");
+        }
+        /// <summary>
+        /// Document a variable reference.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="constantNode"></param>
+        /// <param name="NextLevel""></param>
+        private void DocumentVariableReference(TextWriter writer, XmlNode constantNode, int NextLevel)
+        {
+            string name = XmlUtilities.Value(constantNode, "Name");
+            string variablename = XmlUtilities.Value(constantNode, "VariableName");
 
             // Get the corresponding model.
             IModel modelForNode = GetModelForNode(constantNode);
@@ -233,11 +320,65 @@ namespace UserInterface.Classes
             string memo = string.Empty;
             XmlNode memoNode = XmlUtilities.Find(constantNode, "memo");
             if (memoNode != null)
-                memo = "&nbsp;&nbsp;&nbsp;[" + MemoToHTML(memoNode, 0) + "]";
+                memo = MemoToHTML(memoNode, 0);
 
+
+            writer.Write(Header(name, NextLevel, null));
             writer.Write("<p>");
-            writer.Write(name + " = " + value + units + memo);
+            writer.Write(memo);
+            writer.Write(name + units + " in this function uses the value given by " + variablename);
             writer.WriteLine("</p>");
+        }
+        /// <summary>
+        /// Document an OnEvent Function.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="constantNode"></param>
+        /// <param name="NextLevel""></param>
+        private void DocumentOnEventFunction(TextWriter writer, XmlNode Node, int NextLevel)
+        {
+            string name = XmlUtilities.Value(Node, "Name");
+            string setevent = XmlUtilities.Value(Node, "SetEvent");
+            string resetevent = XmlUtilities.Value(Node, "ResetEvent");
+
+            // Get the corresponding model.
+            IModel modelForNode = GetModelForNode(Node);
+
+            // Look for units.
+            string units = string.Empty;
+            PropertyInfo property = modelForNode.GetType().GetProperty(XmlUtilities.Value(Node, "Name"));
+            if (property != null)
+            {
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (unitsAttribute != null)
+                    units = "(" + unitsAttribute.ToString() + ")";
+            }
+
+            // Look for memo
+            string memo = string.Empty;
+            XmlNode memoNode = XmlUtilities.Find(Node, "memo");
+            if (memoNode != null)
+                memo = MemoToHTML(memoNode, 0);
+
+
+            writer.Write(Header(name, NextLevel, null));
+            writer.Write("<p>");
+            writer.Write(memo);
+            writer.Write(name + units + " is set to <i>PostEventValue</i> in response to a "+setevent+" event.  ");
+            writer.Write("Prior to this it is set to a <i>PreEventValue</i>.");
+            if (resetevent!="never")
+                writer.Write("The value is reset in response to a " + resetevent + " event.</br>");
+            
+            writer.WriteLine("</p>");
+            foreach (XmlNode child in XmlUtilities.ChildNodes(Node, ""))
+            {
+                string childName = XmlUtilities.Value(child, "Name");
+                if (childName != string.Empty)
+                {
+                    DocumentNode(writer, child, NextLevel + 1);
+                }
+            }
+
         }
 
         /// <summary>
@@ -278,9 +419,8 @@ namespace UserInterface.Classes
             string contents = XmlUtilities.Value(N, "MemoText");
             if (contents.Contains('<'))
             {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(contents.Replace("/", ""));
-                html = XmlUtilities.Value(doc.DocumentElement, "/html/body");
+                html = contents.Replace("<html><body>", "");
+                html = html.Replace("</body></html>", "");
             }
             else
             {
@@ -288,7 +428,8 @@ namespace UserInterface.Classes
                 html = contents;
             }
 
-            html = html.Replace("\r\n", "<br/><br/>");
+            //html = html.Replace("\r\n", "");
+            
             return html;
         }
 
@@ -459,7 +600,7 @@ namespace UserInterface.Classes
             string start = XmlUtilities.FindByType(N, "Start").InnerText;
             string end = XmlUtilities.FindByType(N, "End").InnerText;
 
-            string text = "The value of " + XmlUtilities.Value(N, "Name") + " during the period from " + start + " to " + end + " is calculated as follows:";
+            string text = "The value for "+ XmlUtilities.Value(N, "Name") + " (<i>i.e.</i> from " + start + " to " + end + ") is calculated as follows:";
             OutputFile.WriteLine(text);
             foreach (XmlNode child in XmlUtilities.ChildNodes(N, ""))
             {
@@ -574,6 +715,7 @@ namespace UserInterface.Classes
         {
             string name = XmlUtilities.Value(node.ParentNode, "Name");
             OutputFile.WriteLine(name + " is calculated as follows:");
+            OutputFile.Write("</br>");
             string InstanceName = XmlUtilities.Value(node.OwnerDocument.DocumentElement, "Name");
             string GraphName;
             if (node.Name == "XYPairs")
