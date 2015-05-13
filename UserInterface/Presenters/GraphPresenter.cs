@@ -192,30 +192,41 @@ namespace UserInterface.Presenters
                 return;
             }
 
-            // Must be at top level so look for experiments first.
-            IModel[] experiments = Apsim.FindAll(this.Graph, typeof(Experiment)).ToArray();
-            if (experiments.Length > 0)
-            {
-                FillSeriesInfoFromExperiments(experiments, series);
-                return;
-            }
+            // Must be in a folder or at top level.
+            IModel[] experiments;
+            IModel[] simulations;
 
-            // Top level graph - find all simulations.
-            IModel[] simulations = null;
             if (this.Graph.Parent is Simulations)
+            {
                 simulations = Apsim.ChildrenRecursively(this.Graph.Parent, typeof(Simulation)).ToArray();
+                experiments = Apsim.ChildrenRecursively(this.Graph.Parent, typeof(Experiment)).ToArray();
+            }
             else
             {
-                // If we get this far then simply graph every simulation we can find.
+                experiments = Apsim.FindAll(this.Graph, typeof(Experiment)).ToArray();
                 simulations = Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
             }
 
-            if (simulations != null)
+            if (experiments.Length > 0)
             {
+                FillSeriesInfoFromExperiments(experiments, series);
+                for (int i = 0; i < this.seriesMetadata.Count; i++)
+                    this.seriesMetadata[i].Title = experiments[i].Name;
+            }
+
+            if (simulations.Length > 0)
+            {
+                int i = this.seriesMetadata.Count;
                 IEnumerable<string> simulationNames = simulations.Select(s => s.Name);
                 FillSeriesInfoFromSimulations(simulationNames.ToArray(), series);
-                return;
+                int j = i;
+                while (i < this.seriesMetadata.Count)
+                {
+                    seriesMetadata[i].Title = simulations[i - j].Name;
+                    i++;
+                }
             }
+
         }
 
         /// <summary>
