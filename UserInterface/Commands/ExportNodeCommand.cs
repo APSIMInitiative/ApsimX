@@ -190,16 +190,16 @@ namespace UserInterface.Commands
         /// <param name="index"></param>
         private void DoExportModel(Model modelToExport, string folderPath,TextWriter index)
         {
-            // Select the node in the tree.
-            ExplorerPresenter.SelectNode(Apsim.FullPath(modelToExport));
-
-            // If this is a graph then only included it if it has been flagged as 'to be included'
+            // If this is a graph then only include it if it has been flagged as 'to be included'
             if (modelToExport is Graph)
             {
                 Graph graph = modelToExport as Graph;
                 if (!graph.IncludeInDocumentation)
                     return;
             }
+
+            // Select the node in the tree.
+            ExplorerPresenter.SelectNode(Apsim.FullPath(modelToExport));
 
             // If the presenter is exportable then simply export this child.
             // Otherwise, if it is one of a folder, simulation, experiment or zone then
@@ -236,7 +236,7 @@ namespace UserInterface.Commands
                 string heading = html.Substring(posHeading + 4, posEndHeading - posHeading - 4);
                 int headingNumber = Convert.ToInt32(Char.GetNumericValue(html[posHeading+2]));
 
-                if (headingNumber < 4)
+                if (headingNumber > 0 && headingNumber < 4)
                 {
                     // Update levels based on heading number.
                     levels[headingNumber - 1]++;
@@ -269,7 +269,7 @@ namespace UserInterface.Commands
 
                 // Find next heading.
                 posLastHeading = posEndHeading + 5;
-                posHeading = html.IndexOf("<H", posHeading + 1, StringComparison.CurrentCultureIgnoreCase);
+                posHeading = html.IndexOf("<H", posLastHeading, StringComparison.CurrentCultureIgnoreCase);
             }
 
             // write remainder of file.

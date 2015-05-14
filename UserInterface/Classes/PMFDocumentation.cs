@@ -56,8 +56,6 @@ namespace UserInterface.Classes
             try
             {
                 DocumentNodeAndChildren(OutputFile, XML.DocumentElement, 1);
-                DocumentVariables(OutputFile);
-
                 Code = 0;
             }
             catch (Exception E)
@@ -85,10 +83,6 @@ namespace UserInterface.Classes
 
             writer.WriteLine(ClassDescription(node));
             writer.WriteLine(paramTable);
-
-            // Document all constants.
-            //foreach (XmlNode constant in XmlUtilities.ChildNodes(node, "Constant"))
-            //    DocumentConstant(writer, constant,level+1);
             
             // Document all other child nodes.
             foreach (XmlNode CN in XmlUtilities.ChildNodes(node, ""))
@@ -558,7 +552,7 @@ namespace UserInterface.Classes
                 }
                 else if (!N.ParentNode.Name.Contains("Leaf") && !N.ParentNode.Name.Contains("Root"))
                 {
-                    OutputFile.WriteLine("<p>" + N.Name + " = " + N.InnerText);
+                    OutputFile.WriteLine("<p>" + N.Name + " = " + N.InnerText + "</p>");
                 }
             }
 
@@ -600,7 +594,7 @@ namespace UserInterface.Classes
             string start = XmlUtilities.FindByType(N, "Start").InnerText;
             string end = XmlUtilities.FindByType(N, "End").InnerText;
 
-            string text = "The value for "+ XmlUtilities.Value(N, "Name") + " (<i>i.e.</i> from " + start + " to " + end + ") is calculated as follows:";
+            string text = "<p>The value for " + XmlUtilities.Value(N, "Name") + " (<i>i.e.</i> from " + start + " to " + end + ") is calculated as follows:</p>";
             OutputFile.WriteLine(text);
             foreach (XmlNode child in XmlUtilities.ChildNodes(N, ""))
             {
@@ -714,7 +708,7 @@ namespace UserInterface.Classes
         private void CreateGraph(TextWriter OutputFile, XmlNode node, int NextLevel)
         {
             string name = XmlUtilities.Value(node.ParentNode, "Name");
-            OutputFile.WriteLine(name + " is calculated as follows:");
+            OutputFile.WriteLine("<p>" + name + " is calculated as follows:</p>");
             OutputFile.Write("</br>");
             string InstanceName = XmlUtilities.Value(node.OwnerDocument.DocumentElement, "Name");
             string GraphName;
@@ -745,13 +739,12 @@ namespace UserInterface.Classes
             if (YName == "Function")
                 YName = XmlUtilities.Value(node.ParentNode.ParentNode, "Name");
 
-            // Set up to write a table.
-            OutputFile.WriteLine("<table border=\"0\">");
-
-            // output xy table as a nested table.
-            OutputFile.WriteLine("<td>");
-            OutputFile.WriteLine("<table width=\"250\">");
-            OutputFile.WriteLine("<td><b>" + XName + "</b></td><td><b>" + YName + "</b></td>");
+            // output chart as a column to the outer table.
+            OutputFile.WriteLine("<img src=\"" + GifFileName + "\">");
+           
+            // output xy table as a table.
+            OutputFile.WriteLine("<table width=\"250\" border=\"1\">");
+            OutputFile.WriteLine("<td>" + XName + "</td><td>" + YName + "</td>");
             double[] x = MathUtilities.StringsToDoubles(XmlUtilities.Values(node, "X/double"));
             double[] y = MathUtilities.StringsToDoubles(XmlUtilities.Values(node, "Y/double"));
             for (int i = 0; i < x.Length; i++)
@@ -759,16 +752,8 @@ namespace UserInterface.Classes
                 OutputFile.WriteLine("<tr><td>" + x[i] + "</td><td>" + y[i] + "</td></tr>");
             }
 
-            OutputFile.WriteLine("</table>");
-            OutputFile.WriteLine("</td>");
-
-            // output chart as a column to the outer table.
-            OutputFile.WriteLine("<td>");
-            OutputFile.WriteLine("<img src=\"" + GifFileName + "\">");
-            OutputFile.WriteLine("</td>");
-            OutputFile.WriteLine("</tr>");
-            OutputFile.WriteLine("</table>");
-
+            OutputFile.WriteLine("</table><br/><br/><br/><br/>");
+ 
             // Setup cleanish graph.
             GraphView graph = new GraphView();
             graph.Clear();
