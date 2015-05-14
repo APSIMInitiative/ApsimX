@@ -114,6 +114,7 @@ namespace Models.PMF.Phen
     /// A phenology model
     /// </summary>
     [Serializable]
+    [Description("This model simulates the development of the crop through successive growth <i>phases</i>.  Each phase is bound by distinct growth <i>stages</i>.  Phases often require a target to be reached to signal movement to the next phase.  Differences between cultivars are specified by changing the values of the default parameters shown below.")]
     public class Phenology : Model
     {
         #region Links
