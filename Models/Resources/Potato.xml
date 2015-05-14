@@ -747,8 +747,8 @@
 		<InitialDM>5</InitialDM>
 		<SpecificRootLength>40000</SpecificRootLength>
       <KNO3_yProperty>
-        <double>0.03</double>
-        <double>0.03</double>
+        <double>0.02</double>
+        <double>0.02</double>
       </KNO3_yProperty>
       <KNO3_xRootLength>
         <double>0</double>
