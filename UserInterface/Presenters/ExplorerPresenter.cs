@@ -776,6 +776,11 @@ namespace UserInterface.Presenters
             else
                 imageFileName = model.GetType().Name;
 
+            if(model.GetType().Namespace.Contains("Models"))
+            {
+                description.ToolTip = model.GetType().Name;
+            }
+
             description.ResourceNameForImage = "UserInterface.Resources.TreeViewImages." + imageFileName + ".png";
             description.Children = new List<NodeDescriptionArgs>();
             foreach (Model child in model.Children)
