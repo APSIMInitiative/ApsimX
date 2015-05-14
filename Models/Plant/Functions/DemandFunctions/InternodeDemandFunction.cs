@@ -6,10 +6,10 @@ using Models.Core;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
-    /// This must be renamed DMDemandFunction for the source code to recoginise it!!!!.  This function returns the product of stem population (/m2), Delta leaf number (assuming internodes are expanding at the same rate that leaves are appearing) and the weight internode weight parameter specified
+    /// Calculate internode demand
     /// </summary>
     [Serializable]
-    [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!.  This function returns the product of stem population (/m2), Delta leaf number (assuming internodes are expanding at the same rate that leaves are appearing) and the weight internode weight parameter specified")]
+    [Description("Internode demand is calculated fromm the product of change in node number, stem population and internode weight.")]
     public class InternodeDemandFunction : Model, IFunction
     {
         /// <summary>The inter node wt</summary>

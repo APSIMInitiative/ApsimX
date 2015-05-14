@@ -19,6 +19,8 @@ namespace Models.PMF.Phen
     /// function if the phase target is met today.
     /// </remarks>
     [Serializable]
+    [Description("This generic phase uses a thermal time target to determine the duration between growth stages. "+
+                 "Thermal time is accumulated until the target is met and remaining thermal time is forwarded to the next phase.")]
     public class GenericPhase : Phase
     {
         [Link(IsOptional=true)]
