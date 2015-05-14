@@ -86,6 +86,7 @@
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
+    <Compile Include="Plant\Functions\DemandFunctions\FillingRateFunction.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
@@ -374,9 +375,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Maize.xml">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Resources\MCSP.xml">
       <SubType>Designer</SubType>
     </None>

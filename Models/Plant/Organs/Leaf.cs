@@ -126,6 +126,7 @@ namespace Models.PMF.Organs
         public double FRGR { get { return Photosynthesis.FRGR; } }
         
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
+        [Units("mm")]
         public double PotentialEP { get;  set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
@@ -158,10 +159,11 @@ namespace Models.PMF.Organs
         /// 
         /// </summary>
         [Serializable]
-        public class InitialLeafValues : Model
+        public class LeafCohortParameters : Model
         {
             /// <summary>The maximum area</summary>
             [Link]
+            [Units("mm2")]
             public IFunction MaxArea = null;
             /// <summary>The growth duration</summary>
             [Link]
@@ -240,9 +242,10 @@ namespace Models.PMF.Organs
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
         /// <summary>The initial leaves</summary>
+        [DoNotDocument]
         private LeafCohort[] InitialLeaves;
         /// <summary>The leaf cohort parameters</summary>
-        [Link] InitialLeafValues LeafCohortParameters = null;
+        [Link] LeafCohortParameters CohortParameters = null;
         /// <summary>The photosynthesis</summary>
         [Link] RUEModel Photosynthesis = null;
         /// <summary>The thermal time</summary>
@@ -800,7 +803,7 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 1;
-                double FunctionalNConc = (LeafCohortParameters.CriticalNConc.Value - (LeafCohortParameters.MinimumNConc.Value * LeafCohortParameters.StructuralFraction.Value)) * (1 / (1 - LeafCohortParameters.StructuralFraction.Value));
+                double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
                 if (FunctionalNConc == 0)
                     F = 1;
                 else
@@ -909,7 +912,7 @@ namespace Models.PMF.Organs
                     Leaves[i].Rank = AppearingNode;
                     Leaves[i].CohortPopulation = Structure.TotalStemPopn;
                     Leaves[i].Age = CohortAge;
-                    Leaves[i].DoAppearance(FinalFraction, LeafCohortParameters);
+                    Leaves[i].DoAppearance(FinalFraction, CohortParameters);
                     if (NewLeaf != null)
                         NewLeaf.Invoke();
                 }
@@ -918,7 +921,7 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                 {
                     CurrentRank = L.Rank;
-                    L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
+                    L.DoPotentialGrowth(ThermalTime.Value, CohortParameters);
                     if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
                     {
                         NextExpandingLeaf = true;
@@ -953,7 +956,7 @@ namespace Models.PMF.Organs
 
                     Leaf.DoInitialisation();
                     Structure.MainStemNodeNo += 1.0;
-                    Leaf.DoAppearance(1.0, LeafCohortParameters);
+                    Leaf.DoAppearance(1.0, CohortParameters);
                 }
                 else //Leaves are primordia and have not yet emerged, initialise but do not set appeared values yet
                     Leaf.DoInitialisation();
@@ -969,7 +972,7 @@ namespace Models.PMF.Organs
            // WaterAllocation = 0;
             
             foreach (LeafCohort L in Leaves)
-                L.DoActualGrowth(ThermalTime.Value, LeafCohortParameters);
+                L.DoActualGrowth(ThermalTime.Value, CohortParameters);
 
             Structure.UpdateHeight();
 
@@ -1546,7 +1549,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafCohortParameters.MaximumNConc.Value;
+                return CohortParameters.MaximumNConc.Value;
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
@@ -1555,7 +1558,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafCohortParameters.CriticalNConc.Value;
+                return CohortParameters.CriticalNConc.Value;
             }
         }
         #endregion

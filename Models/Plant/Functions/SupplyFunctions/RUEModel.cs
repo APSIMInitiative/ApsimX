@@ -76,7 +76,7 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// </summary>
         /// <value>The rue act.</value>
         [Units("gDM/MJ")]
-        private double RueAct
+        public double RueAct
         {
             get
             {

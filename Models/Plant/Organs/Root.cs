@@ -80,40 +80,51 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the length of the specific root.</summary>
         /// <value>The length of the specific root.</value>
         public double SpecificRootLength { get; set; }
-        /// <summary>Gets or sets the kn o3.</summary>
-        /// <value>The kn o3.</value>
-        public double KNO3 { get; set; }
-        /// <summary>Gets or sets the kn h4.</summary>
-        /// <value>The kn h4.</value>
-        public double KNH4 { get; set; }
-
+        /// <summary>The KNO3 for each root layer at a given root lenght density (KNO3_xRootLength).  Actual KNO3 us calculated each day for each layer with current root length density of each layer </summary>
+        public double[] KNO3_yProperty { get; set; }
+        /// <summary>Rootlength density that KNO3 is related to </summary>
+        public double[] KNO3_xRootLength { get; set; }
+        /// <summary>The KNH4 for each root layer at a given root lenght density (KNH4_xRootLength).  Actual KNH4 us calculated each day for each layer with current root length density of each layer </summary>
+        public double[] KNH4_yProperty { get; set; }
+        /// <summary>Rootlength density that KNH4 is related to </summary>
+        public double[] KNH4_xRootLength { get; set; }
+        
         /// <summary>The nitrogen demand switch</summary>
         [Link]
         IFunction NitrogenDemandSwitch = null;
         /// <summary>The senescence rate</summary>
         [Link(IsOptional = true)]
+        [Units("/d")]
         IFunction SenescenceRate = null;
         /// <summary>The temperature effect</summary>
         [Link]
+        [Units("0-1")]
         IFunction TemperatureEffect = null;
         /// <summary>The root front velocity</summary>
         [Link]
+        [Units("mm/d")]
         IFunction RootFrontVelocity = null;
         /// <summary>The partition fraction</summary>
         [Link]
+        [Units("0-1")]
         IFunction PartitionFraction = null;
         /// <summary>The maximum n conc</summary>
         [Link]
+        [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The maximum daily n uptake</summary>
         [Link]
+        [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
         /// <summary>The minimum n conc</summary>
         [Link]
+        [Units("g/g")]
         IFunction MinimumNConc = null;
         /// <summary>The kl modifier</summary>
         [Link]
+        [Units("0-1")]
         IFunction KLModifier = null;
+
         #endregion
 
         #region States
@@ -213,7 +224,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the length density.</summary>
         /// <value>The length density.</value>
         [Units("??mm/mm3")]
-        double[] LengthDensity
+        public double[] LengthDensity
         {
             get
             {
@@ -409,13 +420,16 @@ namespace Models.PMF.Organs
             {
                 if (LayerLive[layer].Wt > 0)
                 {
+                    bool DidInterpolate = false;
+                    double kno3 = MathUtilities.LinearInterpReal(LengthDensity[layer], KNO3_xRootLength, KNO3_yProperty, out DidInterpolate);
+                    double knh4 = MathUtilities.LinearInterpReal(LengthDensity[layer], KNH4_xRootLength, KNH4_yProperty, out DidInterpolate); 
                     double swaf = 0;
                     swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                     no3ppm[layer] = Soil.NO3N[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NO3Supply[layer] = Soil.NO3N[layer] * KNO3 * no3ppm[layer] * swaf;
+                    NO3Supply[layer] = Soil.NO3N[layer] * kno3 * no3ppm[layer] * swaf;
                     nh4ppm[layer] = Soil.NH4N[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NH4Supply[layer] = Soil.NH4N[layer] * KNH4 * nh4ppm[layer] * swaf;
+                    NH4Supply[layer] = Soil.NH4N[layer] * knh4 * nh4ppm[layer] * swaf;
                 }
                 else
                 {
@@ -708,10 +722,12 @@ namespace Models.PMF.Organs
                 if (LayerLive[layer].Wt > 0)
                 {
                     double swaf = 0;
-                    swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
+					swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
-                    no3ppm[layer] = NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NO3Supply[layer] = Math.Min(NO3[layer] * KNO3 * no3ppm[layer] * swaf, (MaxDailyNUptake.Value - NO3uptake));
+                    bool DidInterpolate = false;
+                    double kno3 = MathUtilities.LinearInterpReal(LengthDensity[layer], KNO3_xRootLength, KNO3_yProperty, out DidInterpolate);
+					no3ppm[layer] = NO3[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
+                    NO3Supply[layer] = Math.Min(NO3[layer] * kno3 * no3ppm[layer] * swaf, (MaxDailyNUptake.Value - NO3uptake));
                     NO3uptake += NO3Supply[layer];
                 }
                 else
@@ -744,8 +760,10 @@ namespace Models.PMF.Organs
                     double swaf = 0;
                     swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
                     swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
+                    bool DidInterpolate = false;
+                    double knh4 = MathUtilities.LinearInterpReal(LengthDensity[layer], KNH4_xRootLength, KNH4_yProperty, out DidInterpolate); swaf = (Soil.Water[layer] - Soil.SoilWater.LL15mm[layer]) / (Soil.SoilWater.DULmm[layer] - Soil.SoilWater.LL15mm[layer]);
                     NH4ppm[layer] = NH4Supply[layer] * (100.0 / (Soil.BD[layer] * Soil.Thickness[layer]));
-                    NH4Supply[layer] = Math.Min(NH4[layer] * KNH4 * NH4ppm[layer] * swaf, (MaxDailyNUptake.Value - NH4uptake));
+                    NH4Supply[layer] = Math.Min(NH4[layer] * knh4 * NH4ppm[layer] * swaf, (MaxDailyNUptake.Value - NH4uptake));
                     NH4uptake += NH4Supply[layer]; 
                 }
                 else

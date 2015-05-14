@@ -746,8 +746,23 @@
 		</LinearInterpolationFunction>
 		<InitialDM>5</InitialDM>
 		<SpecificRootLength>40000</SpecificRootLength>
-		<KNO3>0.02</KNO3>
-		<KNH4>0</KNH4>
+      <KNO3_yProperty>
+        <double>0.02</double>
+        <double>0.02</double>
+      </KNO3_yProperty>
+      <KNO3_xRootLength>
+        <double>0</double>
+        <double>0.003</double>
+      </KNO3_xRootLength>
+      <KNH4_yProperty>
+        <double>0.0</double>
+        <double>0.0</double>
+      </KNH4_yProperty>
+      <KNH4_xRootLength>
+        <double>0</double>
+        <double>0.003</double>
+      </KNH4_xRootLength>
+
 	</Root>
 	<Leaf>
 		<Name>Leaf</Name>
@@ -763,8 +778,8 @@
 				<string>[Leaf].CohortDead</string>
 			</Propertys>
 		</CompositeBiomass>
-		<InitialLeafValues>
-			<Name>LeafCohortParameters</Name>
+		<LeafCohortParameters>
+			<Name>CohortParameters</Name>
 			<LinearInterpolationFunction>
 				<Name>MaxArea</Name>
 				<XProperty>[Structure].RelativeNodeApperance</XProperty>
@@ -950,7 +965,7 @@
 				<Name>NonStructuralFraction</Name>
 				<Value>0.2</Value>
 			</Constant>
-		</InitialLeafValues>
+		</LeafCohortParameters>
 		<RUEModel>
 			<Name>Photosynthesis</Name>
 			<Constant>
