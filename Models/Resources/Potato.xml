@@ -763,8 +763,8 @@
 				<string>[Leaf].CohortDead</string>
 			</Propertys>
 		</CompositeBiomass>
-		<InitialLeafValues>
-			<Name>LeafCohortParameters</Name>
+		<LeafCohortParameters>
+			<Name>CohortParameters</Name>
 			<LinearInterpolationFunction>
 				<Name>MaxArea</Name>
 				<XProperty>[Structure].RelativeNodeApperance</XProperty>
@@ -950,7 +950,7 @@
 				<Name>NonStructuralFraction</Name>
 				<Value>0.2</Value>
 			</Constant>
-		</InitialLeafValues>
+		</LeafCohortParameters>
 		<RUEModel>
 			<Name>Photosynthesis</Name>
 			<Constant>

@@ -440,7 +440,8 @@
 				</XYPairs>
 			</LinearInterpolationFunction>
 		</MultiplyFunction>
-		<InitialLeafValues>
+		<LeafCohortParameters>
+      <Name>CohortParameters</Name>
 			<PhaseLookup>
 				<Name>GrowthDuration</Name>
 				<PhaseLookupValue>
@@ -604,7 +605,7 @@
 				<Name>InitialNConc</Name>
 				<Value>0</Value>
 			</Constant>
-		</InitialLeafValues>
+		</LeafCohortParameters>
 	</Leaf>
 	<Root>
 		<InitialDM>5</InitialDM>

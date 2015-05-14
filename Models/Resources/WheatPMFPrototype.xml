@@ -776,7 +776,8 @@
 			</Propertys>
 			<ArraySize>[Leaf].MaxNodeNo</ArraySize>
 		</ArrayBiomass>
-		<InitialLeafValues>
+		<LeafCohortParameters>
+      <Name>CohortParameters</Name>
 			<Constant>
 				<Name>NReallocationFactor</Name>
 				<Value>.05</Value>
@@ -1010,7 +1011,7 @@
 					<Value>0.61</Value>
 				</Constant>
 			</MultiplyFunction>
-		</InitialLeafValues>
+		</LeafCohortParameters>
 		<RUEModel>
 			<Name>Photosynthesis</Name>
 			<Constant>
