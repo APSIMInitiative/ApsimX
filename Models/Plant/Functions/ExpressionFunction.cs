@@ -71,7 +71,7 @@ namespace Models.PMF.Functions
                 object sometypeofobject = Apsim.Get(RelativeTo, sym.m_name.Trim());
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " in function: " + RelativeTo.Name);
-                symFilled.m_value = (double)sometypeofobject;
+                symFilled.m_value = Convert.ToDouble(sometypeofobject);
                 varFilled.Add(symFilled);
             }
             fn.Variables = varFilled;

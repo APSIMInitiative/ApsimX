@@ -16,14 +16,11 @@ namespace Models.PMF.Organs
         [Link]
         ISummary Summary = null;
 
-        /// <summary>Called when crop is being harvested.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
+        /// <summary>
+        /// Execute Harvesting logic for below ground organ
+        /// </summary>
+        public override void DoHarvest()
         {
-            if (sender == Plant)
-            {
                 DateTime Today = new DateTime(Clock.Today.Year, 1, 1);
                 Today = Today.AddDays(Clock.Today.Day - 1);
                 double YieldDW = (Live.Wt + Dead.Wt);
@@ -34,7 +31,6 @@ namespace Models.PMF.Organs
 
                 Live.Clear();
                 Dead.Clear();
-            }
         }
     }
 }

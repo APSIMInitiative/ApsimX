@@ -408,7 +408,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public string ConvertToHtml(string folder)
         {
-            Rectangle r = new Rectangle(0, 0, 800, 800);
+            Rectangle r = new Rectangle(0, 0, 800, 500);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
             GraphView.Export(img);
@@ -416,7 +416,7 @@ namespace UserInterface.Presenters
             string fileName = Path.Combine(folder, Graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-            string html = "<img class=\"graph\" src=\"" + Graph.Name + ".png" + "\"/>";
+            string html = "<img class=\"graph\" src=\"" + fileName + "\"/>";
             if (this.Graph.Caption != null)
                 html += "<p>" + this.Graph.Caption + "</p>";
             return html;

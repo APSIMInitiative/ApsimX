@@ -101,6 +101,7 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.Y2Changed += OnY2Changed;
             this.seriesView.SeriesEditor.ShowInLegendChanged += OnShowInLegendChanged;
             this.seriesView.SeriesEditor.CumulativeChanged += OnCumulativeChanged;
+            this.seriesView.SeriesEditor.IncludeInDocumentationChanged += OnIncludeInDocumentationChanged;
         }
 
         /// <summary>
@@ -129,6 +130,7 @@ namespace UserInterface.Presenters
             this.seriesView.SeriesEditor.Y2Changed -= OnY2Changed;
             this.seriesView.SeriesEditor.ShowInLegendChanged -= OnShowInLegendChanged;
             this.seriesView.SeriesEditor.CumulativeChanged -= OnCumulativeChanged;
+            this.seriesView.SeriesEditor.IncludeInDocumentationChanged -= OnIncludeInDocumentationChanged;
         }
 
         /// <summary>
@@ -460,6 +462,18 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// User has changed the show in legend
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnIncludeInDocumentationChanged(object sender, EventArgs e)
+        {
+            Commands.ChangeProperty command = new Commands.ChangeProperty(graph, "IncludeInDocumentation", this.seriesView.SeriesEditor.IncludeInDocumentation);
+            this.explorerPresenter.CommandHistory.Add(command);
+        }
+        
+
         #endregion
 
         /// <summary>
@@ -509,6 +523,7 @@ namespace UserInterface.Presenters
                     this.seriesView.SeriesEditor.YOnRight = series.YAxis == Axis.AxisType.Right;
                     this.seriesView.SeriesEditor.ShowInLegend = series.ShowInLegend;
                     this.seriesView.SeriesEditor.Cumulative = series.Cumulative;
+                    this.seriesView.SeriesEditor.IncludeInDocumentation = graph.IncludeInDocumentation;
 
                     // Populate the editor with a list of data sources.
                     List<string> dataSources = new List<string>();

@@ -12,6 +12,8 @@ namespace UserInterface.Presenters
     using System.Text;
     using Models;
     using Views;
+    using APSIM.Shared.Utilities;
+    using System.Xml;
 
     /// <summary>
     /// Presents the text from a memo component.
@@ -83,7 +85,10 @@ namespace UserInterface.Presenters
         /// <returns>The text from the memo</returns>
         public string ConvertToHtml(string folder)
         {
-            return this.memoViewer.MemoText;
+            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+            doc.LoadXml(memoViewer.MemoText);
+            XmlNode bodyNode = XmlUtilities.Find(doc.DocumentElement, "body");
+            return bodyNode.InnerXml;
         }
     }
 }

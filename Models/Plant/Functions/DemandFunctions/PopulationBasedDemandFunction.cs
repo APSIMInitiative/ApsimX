@@ -9,7 +9,7 @@ namespace Models.PMF.Functions.DemandFunctions
     /// Population based demand function
     /// </summary>
     [Serializable]
-    [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!.  This function calculates DM demand from the start stage over the growth duration as the product of potential growth rate (MaximumOrganWt/GrowthDuration) and daily thermal time. It returns the product of this potential rate and any children so if other stress multipliers are required they can be constructed with generic functions.  Stress factors are optional")]
+    [Description("Demand is calculated from the product of growth rate, thermal time and population.")]
     public class PopulationBasedDemandFunction : Model, IFunction
     {
         /// <summary>The thermal time</summary>

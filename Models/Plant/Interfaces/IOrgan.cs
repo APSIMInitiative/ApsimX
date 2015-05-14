@@ -10,8 +10,10 @@ namespace Models.PMF.Interfaces
     /// </summary>
     public interface IOrgan
     {
-        /// <summary>Does the potential nutrient.</summary>
-        void DoPotentialNutrient();
+        /// <summary>
+        /// Do Harvest logic for this organ.
+        /// </summary>
+        void DoHarvest();
     }
 
     /// <summary>An above ground interface</summary>

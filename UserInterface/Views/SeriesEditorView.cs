@@ -109,6 +109,11 @@ namespace UserInterface.Views
         public event EventHandler ShowInLegendChanged;
 
         /// <summary>
+        /// Invoked when the user changes the 'include in documentation' 
+        /// </summary>
+        public event EventHandler IncludeInDocumentationChanged;
+
+        /// <summary>
         /// Gets or sets the series type
         /// </summary>
         public string SeriesType
@@ -349,6 +354,22 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the graph should be included in documentation.
+        /// </summary>
+        public bool IncludeInDocumentation
+        {
+            get
+            {
+                return checkBox6.Checked;
+            }
+
+            set
+            {
+                checkBox6.Checked = value;
+            }
+        }
+
+        /// <summary>
         /// Sets the list of available data sources.
         /// </summary>
         /// <param name="data">The available data sources</param>
@@ -568,6 +589,17 @@ namespace UserInterface.Views
         {
             if (this.CumulativeChanged != null)
                 this.CumulativeChanged(this, e);
+        }
+
+        /// <summary>
+        /// Called when include in documentation changed by the user.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnIncludeInDocumentationChanged(object sender, EventArgs e)
+        {
+            if (this.IncludeInDocumentationChanged != null)
+                this.IncludeInDocumentationChanged.Invoke(this, e);
         }
     }
 }

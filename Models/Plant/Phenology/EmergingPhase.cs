@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {
@@ -29,6 +30,7 @@ namespace Models.PMF.Phen
     /// \f]
     /// </remarks>
     [Serializable]
+    [Description("This phase simulates time to emergence as a function of sowing depth.  Thermal time to emergence = Sowing Depth x Shoot Rate + Shoot Lag.")]
     public class EmergingPhase : GenericPhase
     {
         /// <summary>The plant</summary>
@@ -37,9 +39,13 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets or sets the shoot lag.</summary>
         /// <value>The shoot lag.</value>
+        [Units("oCd")]
+       // [XmlIgnore]
         public double ShootLag { get; set; }
         /// <summary>Gets or sets the shoot rate.</summary>
-        /// <value>The shoot rate.</value>
+        /// <value>The shoot rate</value>
+        [Units("oCd/mm")]
+       // [XmlIgnore]
         public double ShootRate { get; set; }
 
         /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>

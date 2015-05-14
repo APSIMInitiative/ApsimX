@@ -264,6 +264,8 @@ namespace UserInterface.Presenters
         public void SelectNode(string nodePath)
         {
             this.view.SelectedNode = nodePath;
+            this.HideRightHandPanel();
+            this.ShowRightHandPanel();
         }
 
         /// <summary>

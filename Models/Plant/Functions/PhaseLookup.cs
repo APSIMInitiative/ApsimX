@@ -6,10 +6,10 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// Determines which PhaseLookupValue child functions start and end stages bracket the current phenological stage and returns the value of the grand child function decending from the applicable PhaseLookupValue function.
+    /// Look up a value based upon the current growth phase.
     /// </summary>
     [Serializable]
-    [Description("Determines which PhaseLookupValue child functions start and end stages bracket the current phenological stage and returns the value of the grand child function decending from the applicable PhaseLookupValue function.")]
+    [Description("A value is chosen according to the current growth phase.")]
     public class PhaseLookup : Model, IFunction
     {
         /// <summary>The child functions</summary>

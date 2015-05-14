@@ -17,6 +17,7 @@ namespace Models.PMF.Phen
     /// is more than zero.
     /// </remarks>
     [Serializable]
+    [Description("This model assumes that germination will be complete if the extractable soil water is greater than zero on any day after sowing.")]
     public class GerminatingPhase : Phase
     {
         [Link(IsOptional = true)]

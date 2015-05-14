@@ -238,6 +238,9 @@ namespace Models.PMF
                 Harvesting.Invoke(this, new EventArgs());
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today."));
+
+            foreach (IOrgan O in Organs)
+                O.DoHarvest();
         }
         
         /// <summary>End the crop.</summary>

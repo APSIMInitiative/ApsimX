@@ -5,6 +5,8 @@ using Models.Core;
 using Models.PMF.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Interfaces;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Organs
 {
@@ -27,40 +29,42 @@ namespace Models.PMF.Organs
         protected Phenology Phenology = null;
         /// <summary>The water content</summary>
         [Link]
+        [Units("g/g")]
+        [Description("Water content used to calculate a fresh weight.")]
         IFunction WaterContent = null;
-        /// <summary>The filling rate</summary>
+        
+        /// <summary>The Maximum potential size of individual grains</summary>
         [Link]
-        IFunction FillingRate = null;
+        [Units("g/grain")]
+        IFunction MaximumPotentialGrainSize = null;
+        
         /// <summary>The number function</summary>
         [Link]
+        [Units("/m2")]
         IFunction NumberFunction = null;
         /// <summary>The n filling rate</summary>
         [Link]
+        [Units("g/m2/d")]
         IFunction NFillingRate = null;
-        //[Link] Function MaxNConcDailyGrowth = null;
-        /// <summary>The nitrogen demand switch</summary>
-        [Link]
-        IFunction NitrogenDemandSwitch = null;
         /// <summary>The maximum n conc</summary>
         [Link]
+        [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Link]
+        [Units("g/g")]
         IFunction MinimumNConc = null;
         /// <summary>The dm demand function</summary>
-        [Link(IsOptional=true)]
+        [Link]
+        [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
         #endregion
 
         #region Class Fields
-        /// <summary>The maximum size</summary>
-        public double MaximumSize = 0;
         /// <summary>The ripe stage</summary>
         public string RipeStage = "";
         /// <summary>The _ ready for harvest</summary>
         protected bool _ReadyForHarvest = false;
-        /// <summary>The daily growth</summary>
-        protected double DailyGrowth = 0;
         /// <summary>The potential dm allocation</summary>
         private double PotentialDMAllocation = 0;
         #endregion
@@ -68,8 +72,14 @@ namespace Models.PMF.Organs
         #region Class Properties
 
         /// <summary>The number</summary>
+        [XmlIgnore]
         [Units("/m^2")]
         public double Number = 0;
+
+        /// <summary>The Maximum potential size of grains</summary>
+        [XmlIgnore]
+        [Units("/m^2")]
+        public double MaximumSize = 0;
 
         /// <summary>Gets the live f wt.</summary>
         /// <value>The live f wt.</value>
@@ -88,7 +98,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the size.</summary>
         /// <value>The size.</value>
         [Units("g")]
-        private double Size
+        public double Size
         {
             get
             {
@@ -134,6 +144,16 @@ namespace Models.PMF.Organs
 
         #region Functions
 
+                /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            Number = NumberFunction.Value;
+            MaximumSize = MaximumPotentialGrainSize.Value;
+        }
+
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -144,14 +164,11 @@ namespace Models.PMF.Organs
                 Clear();
         }
 
-        /// <summary>Called when crop is being harvested.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
+        /// <summary>
+        /// Execute harvest logic for reproductive organ
+        /// </summary>
+        public override void DoHarvest()
         {
-            if (sender == Plant)
-            {
                 double YieldDW = (Live.Wt + Dead.Wt);
 
                 Summary.WriteMessage(this, "Harvesting " + Name + " from " + Plant.Name);
@@ -163,7 +180,6 @@ namespace Models.PMF.Organs
                 Dead.Clear();
                 Number = 0;
                 _ReadyForHarvest = false;
-            }
         }
         #endregion
 
@@ -222,25 +238,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-
-                double Demand = 0;
-                if (DMDemandFunction != null)
-                {
-                    Demand = DMDemandFunction.Value;
-                }
-                else
-                {
-                    Number = NumberFunction.Value;
-                    if (Number > 0)
-                    {
-                        double demand = Number * FillingRate.Value;
-                        // Ensure filling does not exceed a maximum size
-                        Demand = Math.Min(demand, (MaximumSize - Live.Wt / Number) * Number);
-                    }
-                    else
-                        Demand = 0;
-                }
-                return new BiomassPoolType { Structural = Demand };
+                return new BiomassPoolType { Structural = DMDemandFunction.Value };
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
@@ -255,26 +253,23 @@ namespace Models.PMF.Organs
                     else
                         throw new Exception("Invalid allocation of potential DM in" + Name);
                 PotentialDMAllocation = value.Structural;
+                // PotentialDailyGrowth = value.Structural;
             }
         }
         /// <summary>Sets the dm allocation.</summary>
         /// <value>The dm allocation.</value>
         public override BiomassAllocationType DMAllocation
-        { set { Live.StructuralWt += value.Structural; DailyGrowth = value.Structural; } }
+        { set { Live.StructuralWt += value.Structural; } }
         /// <summary>Gets or sets the n demand.</summary>
         /// <value>The n demand.</value>
         public override BiomassPoolType NDemand
         {
             get
             {
-                double _NitrogenDemandSwitch = 1;
-                if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
-                    _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
-                double demand = Number * NFillingRate.Value;
-                demand = Math.Min(demand, MaximumNConc.Value * DailyGrowth) * _NitrogenDemandSwitch;
+                double demand = NFillingRate.Value;
+                demand = Math.Min(demand, MaximumNConc.Value * PotentialDMAllocation);
                 return new BiomassPoolType { Structural = demand };
             }
-
         }
         /// <summary>Sets the n allocation.</summary>
         /// <value>The n allocation.</value>
