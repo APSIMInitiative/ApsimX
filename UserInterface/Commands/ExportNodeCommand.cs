@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using Models;
 using System.Collections.Generic;
 using System.Text;
+using Models.Graph;
 
 namespace UserInterface.Commands
 {
@@ -191,6 +192,14 @@ namespace UserInterface.Commands
         {
             // Select the node in the tree.
             ExplorerPresenter.SelectNode(Apsim.FullPath(modelToExport));
+
+            // If this is a graph then only included it if it has been flagged as 'to be included'
+            if (modelToExport is Graph)
+            {
+                Graph graph = modelToExport as Graph;
+                if (!graph.IncludeInDocumentation)
+                    return;
+            }
 
             // If the presenter is exportable then simply export this child.
             // Otherwise, if it is one of a folder, simulation, experiment or zone then

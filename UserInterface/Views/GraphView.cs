@@ -783,7 +783,13 @@ namespace UserInterface.Views
         /// </summary>
         public double AxisMinimum(Models.Graph.Axis.AxisType axisType)
         {
-            plot1.Refresh();
+            try
+            {
+                plot1.Refresh();
+            }
+            catch (Exception)
+            { }
+
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
             if (axis != null)
