@@ -98,12 +98,14 @@ namespace UserInterface.Commands
             StringWriter index = new StringWriter();
 
             // Look for a crop and export it.
+            string titlePageHTML = string.Empty;
             List<IModel> crop = Apsim.ChildrenRecursively(ExplorerPresenter.ApsimXFile, typeof(ICrop));
             if (crop.Count > 0)
             {
                 index.WriteLine("<H1>Model Description</H1>");
                 Classes.PMFDocumentation doc = new Classes.PMFDocumentation();
                 doc.Go(index, crop[0] as Model);
+                titlePageHTML = doc.TitlePageHTML(crop[0] as Model);
             }
 
             // Export the validation.
@@ -123,6 +125,7 @@ namespace UserInterface.Commands
             index2.WriteLine("<div id=\"content\"><div id=\"left\"><img src=\"apsim_logo.png\" /></div>");
             index2.WriteLine("<div id=\"right\"><img src=\"hd_bg.png\" /></div>");
 
+            index2.WriteLine(titlePageHTML);
             index2.WriteLine(newHTML);
 
             index2.WriteLine("</body>");

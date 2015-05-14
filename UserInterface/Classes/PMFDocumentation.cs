@@ -55,6 +55,8 @@ namespace UserInterface.Classes
             
             try
             {
+                
+
                 DocumentNodeAndChildren(OutputFile, XML.DocumentElement, 1);
                 Code = 0;
             }
@@ -65,6 +67,23 @@ namespace UserInterface.Classes
             }
 
             return Code;
+        }
+
+        /// <summary>Returns the title page HTML.</summary>
+        /// <param name="parentModel">The parent model.</param>
+        /// <returns></returns>
+        public string TitlePageHTML(Model parentModel)
+        {
+            model = parentModel;
+            string xml = XmlUtilities.Serialise(parentModel, true);
+            XmlDocument XML = new XmlDocument();
+            XML.LoadXml(xml);
+            foreach (XmlNode titlePage in XmlUtilities.ChildNodes(XML.DocumentElement, "Memo"))
+            {
+                if (XmlUtilities.Value(titlePage, "Name") == "TitlePage")
+                    return MemoToHTML(titlePage, 1);
+            }
+            return string.Empty;
         }
 
         /// <summary>
@@ -724,7 +743,7 @@ namespace UserInterface.Classes
 
 
             Directory.CreateDirectory(InstanceName + "Graphs");
-            string GifFileName = InstanceName + "Graphs\\" + GraphName + ".gif";
+            string PNGFileName = InstanceName + "Graphs\\" + GraphName + ".png";
 
             // work out x and y variable names.
             string XName = XmlUtilities.Value(node.ParentNode, "XProperty");
@@ -740,7 +759,7 @@ namespace UserInterface.Classes
                 YName = XmlUtilities.Value(node.ParentNode.ParentNode, "Name");
 
             // output chart as a column to the outer table.
-            OutputFile.WriteLine("<img src=\"" + GifFileName + "\">");
+            OutputFile.WriteLine("<img src=\"" + PNGFileName + "\">");
            
             // output xy table as a table.
             OutputFile.WriteLine("<table width=\"250\" border=\"1\">");
@@ -775,7 +794,7 @@ namespace UserInterface.Classes
             Bitmap image = new Bitmap(350, 350);
             graph.Export(image);
 
-            image.Save(GifFileName, System.Drawing.Imaging.ImageFormat.Gif);
+            image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
         }
 
 
