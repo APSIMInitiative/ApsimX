@@ -978,6 +978,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -1199,6 +1200,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -1440,6 +1442,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -1701,6 +1704,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -1802,6 +1806,7 @@ namespace Models
             <LegendPosition>BottomRight</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -1971,6 +1976,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -2100,6 +2106,7 @@ namespace Models
             <LegendPosition>BottomRight</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -2281,6 +2288,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -2409,6 +2417,7 @@ namespace Models
             <LegendPosition>BottomRight</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -2537,6 +2546,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -2665,6 +2675,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -2766,6 +2777,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Leafappearance</Name>
@@ -2907,6 +2919,7 @@ namespace Models
             <LegendPosition>BottomRight</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>DM Allocation</Name>
@@ -3028,6 +3041,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
         <Report>
@@ -3316,6 +3330,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -3378,6 +3393,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -3440,6 +3456,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -3502,6 +3519,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -3564,6 +3582,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -3626,6 +3645,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -3688,6 +3708,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -3750,6 +3771,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -3812,6 +3834,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -3874,6 +3897,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -3936,6 +3960,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -3998,6 +4023,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -4058,6 +4084,7 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -4120,6 +4147,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -4182,6 +4210,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -4224,6 +4253,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
   </Experiment>
@@ -5037,6 +5067,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -5258,6 +5289,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -5499,6 +5531,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -5760,6 +5793,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -5861,6 +5895,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -6030,6 +6065,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -6159,6 +6195,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -6340,6 +6377,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -6468,6 +6506,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -6596,6 +6635,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -6724,6 +6764,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -6825,6 +6866,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
         <Report>
@@ -7206,6 +7248,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -7268,6 +7311,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -7330,6 +7374,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -7392,6 +7437,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -7454,6 +7500,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -7516,6 +7563,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -7578,6 +7626,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -7640,6 +7689,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -7702,6 +7752,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -7764,6 +7815,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -7826,6 +7878,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -7888,6 +7941,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -7948,6 +8002,7 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -8010,6 +8065,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -8072,6 +8128,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -8114,6 +8171,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
   </Experiment>
@@ -8988,6 +9046,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -9209,6 +9268,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -9450,6 +9510,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -9711,6 +9772,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -9812,6 +9874,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -9981,6 +10044,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -10110,6 +10174,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -10291,6 +10356,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -10419,6 +10485,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -10547,6 +10614,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -10675,6 +10743,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -10776,6 +10845,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
         <Report>
@@ -11082,6 +11152,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -11144,6 +11215,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -11206,6 +11278,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -11268,6 +11341,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -11330,6 +11404,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -11392,6 +11467,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -11454,6 +11530,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -11516,6 +11593,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -11578,6 +11656,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -11640,6 +11719,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -11702,6 +11782,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -11764,6 +11845,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -11824,6 +11906,7 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -11886,6 +11969,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -11948,6 +12032,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -11990,6 +12075,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
   </Experiment>
@@ -13116,6 +13202,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -13337,6 +13424,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -13578,6 +13666,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -13839,6 +13928,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -13940,6 +14030,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -14109,6 +14200,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -14238,6 +14330,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -14419,6 +14512,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -14547,6 +14641,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -14675,6 +14770,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -14803,6 +14899,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -14904,6 +15001,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
         <Manager>
@@ -15012,6 +15110,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -15074,6 +15173,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -15136,6 +15236,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -15198,6 +15299,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -15260,6 +15362,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -15322,6 +15425,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -15384,6 +15488,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -15446,6 +15551,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -15508,6 +15614,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -15570,6 +15677,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -15632,6 +15740,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -15694,6 +15803,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -15754,6 +15864,7 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -15816,6 +15927,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -15878,6 +15990,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -15920,6 +16033,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
   </Experiment>
@@ -17079,6 +17193,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -17300,6 +17415,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -17541,6 +17657,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -17802,6 +17919,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -17903,6 +18021,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -18072,6 +18191,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -18201,6 +18321,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -18382,6 +18503,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -18510,6 +18632,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -18638,6 +18761,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -18766,6 +18890,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -18867,6 +18992,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
         <Manager>
@@ -19041,6 +19167,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -19103,6 +19230,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -19165,6 +19293,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -19227,6 +19356,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -19289,6 +19419,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -19351,6 +19482,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -19413,6 +19545,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -19475,6 +19608,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -19537,6 +19671,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -19599,6 +19734,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -19661,6 +19797,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -19723,6 +19860,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -19783,6 +19921,7 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -19845,6 +19984,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -19907,6 +20047,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -19949,6 +20090,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
   </Experiment>
@@ -21770,6 +21912,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>WaterBalanceComponents</Name>
@@ -21991,6 +22134,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Biomass components</Name>
@@ -22232,6 +22376,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Plant Nitrogen components</Name>
@@ -22493,6 +22638,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stress factors</Name>
@@ -22594,6 +22740,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Water supply and demand</Name>
@@ -22763,6 +22910,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Canopy structure</Name>
@@ -22892,6 +23040,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>LeafCohorts</Name>
@@ -23073,6 +23222,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Leaf Nitrogen %</Name>
@@ -23201,6 +23351,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Stem Nitrogen %</Name>
@@ -23329,6 +23480,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Tuber Nitrogen %</Name>
@@ -23457,6 +23609,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>Root Nitrogen %</Name>
@@ -23558,6 +23711,7 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <ShowRegressionLine>false</ShowRegressionLine>
             <DisabledSeries />
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
         </Folder>
         <Manager>
@@ -23667,6 +23821,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -23729,6 +23884,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafWt</Name>
@@ -23791,6 +23947,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemWt</Name>
@@ -23853,6 +24010,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TotalWt</Name>
@@ -23915,6 +24073,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN</Name>
@@ -23977,6 +24136,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN</Name>
@@ -24039,6 +24199,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN</Name>
@@ -24101,6 +24262,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Cover</Name>
@@ -24163,6 +24325,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberN%</Name>
@@ -24225,6 +24388,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LeafN%</Name>
@@ -24287,6 +24451,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemN%</Name>
@@ -24349,6 +24514,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Leafnumber</Name>
@@ -24409,6 +24575,7 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>TuberFreshWeight</Name>
@@ -24471,6 +24638,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DryMatterContent</Name>
@@ -24533,6 +24701,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Tuber Yield Comparison</Name>
@@ -24575,6 +24744,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
   </Experiment>
@@ -24619,6 +24789,7 @@ namespace Models
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>Tuber Biomass Comparison</Name>
@@ -24661,6 +24832,7 @@ namespace Models
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>LeafAreaIndex</Name>
@@ -24703,6 +24875,7 @@ namespace Models
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>Tuber Nitrogen</Name>
@@ -24745,6 +24918,7 @@ namespace Models
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <ExplorerWidth>331</ExplorerWidth>
 </Simulations>

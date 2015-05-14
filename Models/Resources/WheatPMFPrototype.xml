@@ -633,8 +633,22 @@
 	<Root>
 		<InitialDM>0.2</InitialDM>
 		<SpecificRootLength>40000</SpecificRootLength>
-		<KNO3>0.03</KNO3>
-		<KNH4>0.0</KNH4>
+        <KNO3_yProperty>
+			<double>0.03</double>
+			<double>0.03</double>
+		</KNO3_yProperty>
+		<KNO3_xRootLength>
+			<double>0</double>
+			<double>0.003</double>
+		</KNO3_xRootLength>
+		<KNH4_yProperty>
+			<double>0</double>
+			<double>0</double>
+		</KNH4_yProperty>
+		<KNH4_xRootLength>
+			<double>0</double>
+			<double>0.003</double>
+		</KNH4_xRootLength>	 
 		<CompositeBiomass>
 			<Name>Live</Name>
 			<Propertys>
