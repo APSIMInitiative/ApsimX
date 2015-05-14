@@ -386,6 +386,8 @@ namespace UserInterface.Views
 
             node.ToolTipText = description.ToolTip;
 
+            
+
             // Make sure the tree node image is right.
             int imageIndex = TreeImageList.Images.IndexOfKey(description.ResourceNameForImage);
             if (imageIndex == -1)
