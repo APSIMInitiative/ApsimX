@@ -102,7 +102,17 @@ namespace UserInterface.Classes
 
             writer.WriteLine(ClassDescription(node));
             writer.WriteLine(paramTable);
-            
+
+            // Get the corresponding model.
+            string desc = string.Empty;
+            IModel modelForNode = GetModelForNode(node);
+            if (modelForNode != null)
+            {
+                DescriptionAttribute Description = ReflectionUtilities.GetAttribute(modelForNode.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (Description != null)
+                    desc = Description.ToString();
+                writer.Write(desc + "<br/>");
+            }
             // Document all other child nodes.
             foreach (XmlNode CN in XmlUtilities.ChildNodes(node, ""))
             {
@@ -145,6 +155,8 @@ namespace UserInterface.Classes
                     DocumentPhaseLookupValue(writer, node, NextLevel);
                 else if (XmlUtilities.Type(node) == "ChillingPhase")
                     ChillingPhaseFunction(writer, node, NextLevel);
+                else if (node.Name == "Memo" && XmlUtilities.Value(node,"Name")=="TitlePage")
+                    return;
                 else if (node.Name == "Memo")
                 {
                     writer.WriteLine(MemoToHTML(node, NextLevel));
@@ -161,6 +173,9 @@ namespace UserInterface.Classes
                     DocumentVariableReference(writer, node, NextLevel);
                 else if (node.Name == "OnEventFunction")
                     DocumentOnEventFunction(writer, node, NextLevel);
+                else if (node.Name == "CompositeBiomass")
+                    DocumentCompositeBiomass(writer, node, NextLevel);
+
                 else if (ourModel is Phase)
                     DocumentPhase(writer, node, NextLevel);
 
@@ -173,6 +188,38 @@ namespace UserInterface.Classes
                     DocumentNodeAndChildren(writer, node, NextLevel);
             }
         }
+
+        private void DocumentCompositeBiomass(TextWriter writer, XmlNode node, int NextLevel)
+        {
+            string name = XmlUtilities.Value(node, "Name");
+
+            // Look for memo
+            string memo = string.Empty;
+            XmlNode memoNode = XmlUtilities.Find(node, "memo");
+            if (memoNode != null)
+                memo = MemoToHTML(memoNode, 0);
+
+            // Get the corresponding model.
+            string desc = string.Empty;
+            IModel modelForNode = GetModelForNode(node);
+            DescriptionAttribute Description = ReflectionUtilities.GetAttribute(modelForNode.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+            if (Description != null)
+                desc = Description.ToString();
+
+            writer.Write(Header(name + " Biomass Object", NextLevel, null));
+            writer.Write("<p>");
+            writer.Write(memo);
+            writer.Write(desc);
+            writer.Write("<br/>");
+            writer.Write("The " + name + " composite biomass object includes the following components:");
+
+            writer.WriteLine("</p>");
+            foreach (string s in XmlUtilities.Values(node,"Propertys/string"))
+                    writer.WriteLine(s+"<br/>");
+            
+        }
+
+        
 
         private void DocumentPhase(TextWriter writer, XmlNode node, int NextLevel)
         {
@@ -218,9 +265,15 @@ namespace UserInterface.Classes
         {
             if (model != null)
             {
-                MemberInfo field = model.GetType().GetField(fieldName);
+                string name = "";
+                if (fieldName.Contains("["))
+                    name = fieldName.Substring(0, fieldName.IndexOf("["));
+                else
+                    name = fieldName;
+
+                MemberInfo field = model.GetType().GetField(name, BindingFlags.Instance| BindingFlags.NonPublic|BindingFlags.Public);
                 if (field == null)
-                    field = model.GetType().GetProperty(fieldName);
+                    field = model.GetType().GetProperty(name);
 
                 if (field != null)
                 {
@@ -727,8 +780,8 @@ namespace UserInterface.Classes
         private void CreateGraph(TextWriter OutputFile, XmlNode node, int NextLevel)
         {
             string name = XmlUtilities.Value(node.ParentNode, "Name");
-            OutputFile.WriteLine("<p>" + name + " is calculated as follows:</p>");
-            OutputFile.Write("</br>");
+            //OutputFile.WriteLine(name + " is calculated as follows:");
+            //OutputFile.Write("</br>");
             string InstanceName = XmlUtilities.Value(node.OwnerDocument.DocumentElement, "Name");
             string GraphName;
             if (node.Name == "XYPairs")
