@@ -58,8 +58,16 @@ namespace UserInterface
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            Utility.Configuration.Settings.MainFormLocation = RestoreBounds.Location; 
-            Utility.Configuration.Settings.MainFormSize = RestoreBounds.Size;
+            if (WindowState == FormWindowState.Normal)
+            {
+                Utility.Configuration.Settings.MainFormLocation = this.Location;
+                Utility.Configuration.Settings.MainFormSize = this.Size;
+            }
+            else
+            {
+                Utility.Configuration.Settings.MainFormLocation = RestoreBounds.Location;
+                Utility.Configuration.Settings.MainFormSize = RestoreBounds.Size;
+            }
             Utility.Configuration.Settings.MainFormWindowState = WindowState;
             if (disposing && (components != null))
             {
