@@ -104,12 +104,15 @@ namespace UserInterface.Classes
                         // looking for tags at the begining of the text
 
                         string strData = strHTML.Substring(nStart, pos - nStart);
-                        strData = strData.Replace("&amp;", "&");
                         strData = strData.Replace("&lt;", "<");
                         strData = strData.Replace("&gt;", ">");
                         strData = strData.Replace("&apos;", "'");
                         strData = strData.Replace("&quot;", "\"");
+                        strData = strData.Replace("&amp;", "&");
                         strData = strData.Replace("\r\n", "");
+                        strData = strData.Replace(@"\", @"\\");
+                        strData = strData.Replace("{", @"\{");
+                        strData = strData.Replace("}", @"\}");
                         if (strData != string.Empty)
                             htmlParsed.Add(strData);
                         nStart = pos;
