@@ -70,6 +70,11 @@ namespace UserInterface.Interfaces
         void Clear();
 
         /// <summary>
+        /// Update the graph data sources; this causes the axes minima and maxima to be calculated
+        /// </summary>
+        void UpdateView();
+
+        /// <summary>
         /// Refresh the graph.
         /// </summary>
         void Refresh();
