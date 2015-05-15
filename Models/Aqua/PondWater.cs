@@ -8,32 +8,30 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
-using Models.Aqua;
-
-//nb. when adding a NEW model you need to add it as a child model in Models.cs (under "Core" folder) (otherwise it just ignores the xml)
-
-namespace Models
+namespace Models.Aqua
     {
 
     ///<summary>
-    /// Aquaculture Pond 
-    /// Maintains a balance in the Pond for Water Quantity, Salinity, Temperature, PH, Total Nitrogen (TN), Total Phosphorus (TP), Total Suspended Solutes (TSS).
-    /// See "Simulation of temperature and salinity in a fully mixed pond" by Jiacai Gao & Nooel P. Merrick, 2007
-    /// Created by Shaun Verrall 15 Jan 2015
+    /// Aquaculture Pond Water. 
+    /// Maintains a water balance in the Pond.
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PondWater : Model
         {
+        //nb. when adding a NEW model you need to add it as a child model in Models.cs (under "Core" folder) (otherwise it just ignores the xml)
+
+        //See "Simulation of temperature and salinity in a fully mixed pond" by Jiacai Gao and Nooel P. Merrick, 2007
 
         #region Links
 
 
-        /// <summary>The clock</summary>
-        [Link]
-        private Clock Clock = null;
+        ///// <summary>The clock</summary>
+        //[Link]
+        //private Clock Clock = null;
 
 
         /// <summary>The weather</summary>
@@ -58,15 +56,23 @@ namespace Models
 
         #region Constants
 
-
+        /// <summary>
+        /// Suface Area of the Pond (m^2)
+        /// </summary>
         [Description("Pond Surface Area (m^2)")]
         [Units("(m^2)")]
         public double SurfaceArea { get; set; }
 
+        /// <summary>
+        /// Maximum Pond Depth (m)
+        /// </summary>
         [Description("Maximum Pond Depth (m)")]
         [Units("(m)")]
         public double MaxPondDepth { get; set; }
 
+        /// <summary>
+        /// Kpan - Coefficient applied to PanEvap to give PondEvap
+        /// </summary>
         [Description("Kpan - Coefficient applied to PanEvap to give PondEvap")]
         [Units("()")]
         public double Kpan { get; set; }
@@ -80,7 +86,9 @@ namespace Models
 
         #region Constructor
 
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public PondWater()
             {
             //Initialise the Optional Params in the XML
@@ -99,7 +107,9 @@ namespace Models
         #region Outputs
 
 
-
+        /// <summary>
+        /// Evaporation from the Pond (mm)
+        /// </summary>
         [Units("(mm)")]
         [XmlIgnore]
         public double PondEvap
@@ -107,6 +117,9 @@ namespace Models
             get { return pondEvap; }
             }
 
+        /// <summary>
+        /// Current Depth Water in the Pond (m)
+        /// </summary>
         [Units("(m)")]
         [XmlIgnore]
         public double PondDepth 
@@ -115,6 +128,10 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Current Properties of any given volume/amount of water in the Pond.
+        /// Used when mixing water together or evaporating water.
+        /// </summary>
         [XmlIgnore]
         public WaterProperties PondProps
             {
@@ -127,6 +144,9 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Temperature of the water in the Pond (oC)
+        /// </summary>
         [Units("(oC)")]
         [XmlIgnore]
         public double PondTemp 
@@ -134,6 +154,9 @@ namespace Models
             get { return pondProps.Temperature; } 
             }
 
+        /// <summary>
+        /// Salinity of the water in the Pond (kg/m^3)
+        /// </summary>
         [Units("(kg/m^3)")]
         [XmlIgnore]
         public double Salinity
@@ -142,13 +165,20 @@ namespace Models
             }
 
 
-        [Units("(kg/m^3)")]
+        /// <summary>
+        /// PH of the water in the Pond 
+        /// </summary>
+        [Units("()")]
         [XmlIgnore]
         public double PH
             {
             get { return pondProps.PH; }
             }
 
+
+        /// <summary>
+        /// Nitrogen in the water in the Pond (kg/m^3)
+        /// </summary>
         [Units("(kg/m^3)")]
         [XmlIgnore]
         public double N
@@ -156,6 +186,9 @@ namespace Models
             get { return pondProps.N; }
             }
 
+        /// <summary>
+        /// Phosphorus in the water in the Pond (kg/m^3)
+        /// </summary>
         [Units("(kg/m^3)")]
         [XmlIgnore]
         public double P
@@ -163,6 +196,9 @@ namespace Models
             get { return pondProps.P; }
             }
 
+        /// <summary>
+        /// Total Suspended Soild in the water in the Pond (kg/m^3)
+        /// </summary>
         [Units("(kg/m^3)")]
         [XmlIgnore]
         public double TSS
@@ -531,13 +567,28 @@ namespace Models
 
         #region Manager Commands
 
-
+        /// <summary>
+        /// Fill the Pond with a given volume of water.
+        /// Must specifiy the properties of the water you are adding as well.
+        /// </summary>
+        /// <param name="Volume">Volume of water to add (m^3)</param>
+        /// <param name="WaterProperties">Properties of the water you are adding</param>
         public void Fill(double Volume, WaterProperties WaterProperties)
             {
             AddWater(Volume, WaterProperties);
             }
 
-
+        /// <summary>
+        /// Fill the Pond with a given volume of water.
+        /// Must specifiy the properties of the water you are adding as well.
+        /// </summary>
+        /// <param name="Volume">Volume of water to add (m^3)</param>
+        /// <param name="WaterTemp">Temperature of the water (oC)</param>
+        /// <param name="Salinity">Salinity (kg/m^3)</param>
+        /// <param name="PH">PH</param>
+        /// <param name="N">Nitrogen (kg/m^3)</param>
+        /// <param name="P">Phosporus (kg/m^3)</param>
+        /// <param name="TSS">Total Suspended Solids (kg/m^3)</param>
         public void Fill(double Volume, double WaterTemp, double Salinity, double PH, double N, double P, double TSS)
             {
             WaterProperties addedProps = new WaterProperties(WaterTemp, Salinity, PH, N, P, TSS);
@@ -545,6 +596,10 @@ namespace Models
             }
 
 
+        /// <summary>
+        /// Remove a given volume of water from the Pond.
+        /// </summary>
+        /// <param name="Volume">Volume of water to remove from the pond (m^3)</param>
         public void Empty(double Volume)
             {
             RemoveWater(Volume);
