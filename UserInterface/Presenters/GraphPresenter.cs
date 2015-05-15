@@ -86,6 +86,9 @@ namespace UserInterface.Presenters
                 foreach (Models.Graph.Axis A in Graph.Axes)
                     FormatAxis(A);
 
+                // Update axis maxima and minima
+                GraphView.UpdateView();
+
                 // Add any regression lines if necessary.
                 AddRegressionLines();
 

@@ -108,6 +108,16 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Update the graph data sources; this causes the axes minima and maxima to be calculated
+        /// </summary>
+        public void UpdateView()
+        {
+            IPlotModel theModel = this.plot1.Model as IPlotModel;
+            if (theModel != null)
+              theModel.Update(true);
+        }
+
+        /// <summary>
         /// Refresh the graph.
         /// </summary>
         public override void Refresh()
@@ -783,13 +793,6 @@ namespace UserInterface.Views
         /// </summary>
         public double AxisMinimum(Models.Graph.Axis.AxisType axisType)
         {
-            try
-            {
-                plot1.Refresh();
-            }
-            catch (Exception)
-            { }
-
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
             if (axis != null)
