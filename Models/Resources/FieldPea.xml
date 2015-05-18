@@ -270,111 +270,167 @@ For Potato the potential branching rate is the branching pattern that would be o
 	</Structure>
 	<ReproductiveOrgan>
 		<Name>Grain</Name>
-		<MaximumSize type="text" description="MaximumSize">0.4</MaximumSize>
-		<RipeStage type="text" description="RipeStage">Ripe</RipeStage>
-			<Biomass>
+		<Constant>
+			<Name>InitialGrainProportion</Name>
+			<Value>0.05</Value>
+		</Constant>
+		<Constant>
+			<Name>MaximumPotentialGrainSize</Name>
+			<Value>0.4</Value>
+		</Constant>
+		<PhaseLookup>
+			<Name>DMDemandFunction</Name>
+			<PhaseLookupValue>
+				<Name>InitialPhase</Name>
+				<FillingRateFunction>
+					<Name>FillingRateFunction</Name>
+					<VariableReference>
+						<Name>NumberFunction</Name>
+						<VariableName>[Grain].NumberFunction.Value</VariableName>
+					</VariableReference>
+					<VariableReference>
+						<Name>FillingDuration</Name>
+						<VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
+					</VariableReference>
+					<VariableReference>
+						<Name>ThermalTime</Name>
+						<VariableName>[Phenology].ThermalTime.Value</VariableName>
+					</VariableReference>
+					<MultiplyFunction>
+						<Name>PotentialSizeIncrement</Name>
+						<VariableReference>
+							<Name>InitialProportion</Name>
+							<VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+						</VariableReference>
+						<VariableReference>
+							<Name>MaximumSize</Name>
+							<VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+						</VariableReference>
+					</MultiplyFunction>
+				</FillingRateFunction>
+				<Start>Flowering</Start>
+				<End>StartGrainFill</End>
+			</PhaseLookupValue>
+			<PhaseLookupValue>
+				<Name>LinearPhase</Name>
+				<FillingRateFunction>
+					<Name>FillingRateFunction</Name>
+					<VariableReference>
+						<Name>NumberFunction</Name>
+						<VariableName>[Grain].NumberFunction.Value</VariableName>
+					</VariableReference>
+					<VariableReference>
+						<Name>FillingDuration</Name>
+						<VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+					</VariableReference>
+					<VariableReference>
+						<Name>ThermalTime</Name>
+						<VariableName>[Phenology].ThermalTime.Value</VariableName>
+					</VariableReference>
+					<MultiplyFunction>
+						<Name>PotentialSizeIncrement</Name>
+						<SubtractFunction>
+							<Name>ProportionLinearPhase</Name>
+							<Constant>
+								<Name>One</Name>
+								<Value>1</Value>
+							</Constant>
+							<VariableReference>
+								<Name>InitialProportion</Name>
+								<VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+							</VariableReference>
+						</SubtractFunction>
+						<VariableReference>
+							<Name>MaximumSize</Name>
+							<VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+						</VariableReference>
+					</MultiplyFunction>
+				</FillingRateFunction>
+				<Start>StartGrainFill</Start>
+				<End>EndGrainFill</End>
+			</PhaseLookupValue>
+		</PhaseLookup>
+		<Biomass>
 			<Name>Live</Name>
 		</Biomass>
 		<Biomass>
 			<Name>Dead</Name>
 		</Biomass>
-	  <Constant>
-			<Name>NConc</Name>
-			<Value>0.003</Value>
-		</Constant>
-		<StageBasedInterpolation>
-			<Name>WaterContent</Name>
-			<Stages type="text" description="Stages"> StartPodGrowth      EndGrainFill      Maturity       HarvestRipe</Stages>
-			<Values type="text" description="Values">  0.93                       0.93                 0.93             0.93     </Values>
-		</StageBasedInterpolation>
 		<Constant>
-			<Name>MaxNConcDailyGrowth</Name>
-			<Value type="text" description="Value">0.06</Value>
-		</Constant>
-		<StageBasedInterpolation>
 			<Name>MinimumNConc</Name>
-			<Stages type="text" description="Stages">Flowering StartPodGrowth Maturity</Stages>
-			<Values type="text" description="Values">0.039           0.039          0.039       </Values>
-		</StageBasedInterpolation>
-		<StageBasedInterpolation>
+			<Value>0.039</Value>
+		</Constant>
+		<Constant>
 			<Name>MaximumNConc</Name>
-			<Stages type="text" description="Stages"> Flowering StartPodGrowth Maturity</Stages>
-			<Values type="text" description="Values">   0.04         0.04                   0.04       </Values>
-		</StageBasedInterpolation>
-		<PhaseLookup>
-			<Name>FillingRate</Name>
-			<PhaseLookupValue>
-				<Name>EarlyGrainGrowth</Name>
-				<Start>Flowering</Start>
-				<End>StartPodGrowth</End>
-				<AirTemperatureFunction>
-					<Name>Function</Name>
-					<XYPairs>
-						<XY>0 0</XY>
-						<XY>26 0.01</XY>
-						<XY>30 0.01</XY>
-						<XY>35 0.01</XY>
-					</XYPairs>
-				</AirTemperatureFunction>
-			</PhaseLookupValue>
-			<PhaseLookupValue>
-				<Name>LateGrainGrowth</Name>
-				<Start>StartPodGrowth</Start>
-				<End>Maturity</End>
-				<AirTemperatureFunction>
-					<Name>Function</Name>
-					<XYPairs>
-						<XY>0 0</XY>
-						<XY>26 0.02</XY>
-						<XY>30 0.02</XY>
-						<XY>35 0.02</XY>
-					</XYPairs>
-				</AirTemperatureFunction>
-			</PhaseLookupValue>
-		</PhaseLookup>
+			<Value>0.04</Value>
+		</Constant>
+		<Constant>
+			<Name>WaterContent</Name>
+			<Value>0.12</Value>
+		</Constant>
 		<PhaseLookup>
 			<Name>NFillingRate</Name>
 			<PhaseLookupValue>
-				<Name>EarlyGrainGrowth</Name>
-				<Start>Flowering</Start>
-				<End>Maturity</End>
-				<AirTemperatureFunction>
-					<Name>Function</Name>
-					<XYPairs>
-						<XY>0 0</XY>
-						<XY>25 0.1</XY>
-						<XY>30 0.1</XY>
-						<XY>35 0.1</XY>
-					</XYPairs>
-				</AirTemperatureFunction>
+				<Name>GrainFilling</Name>
+				<FillingRateFunction>
+					<Name>FillingRateFunction</Name>
+					<VariableReference>
+						<Name>NumberFunction</Name>
+						<VariableName>[Grain].NumberFunction.Value</VariableName>
+					</VariableReference>
+					<VariableReference>
+							<Name>FillingDuration</Name>
+							<VariableName>[Phenology].PodFilling.Target.Value</VariableName>
+					</VariableReference>
+					<VariableReference>
+						<Name>ThermalTime</Name>
+						<VariableName>[Phenology].ThermalTime.Value</VariableName>
+					</VariableReference>
+					<MultiplyFunction>
+						<Name>PotentialSizeIncrement</Name>
+						<Constant>
+							<Name>MaximumFinalNConc</Name>
+                            <Units>g/g</Units>
+							<Value>0.04</Value>
+						</Constant>
+						<VariableReference>
+							<Name>MaximumSize</Name>
+							<VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+						</VariableReference>
+					</MultiplyFunction>
+				</FillingRateFunction>
+				<Start>StartPodGrowth</Start>
+				<End>EndPodGrowth</End>
 			</PhaseLookupValue>
 		</PhaseLookup>
-		<PhaseBasedSwitch>
-			<Name>NitrogenDemandSwitch</Name>
-			<Start type="text" description="Start">Germination</Start>
-			<End type="text" description="End">Maturity</End>
-			<Memo>Returns a value of 1 if crop is between start and finish stages and zero if not.  
-		Applied in model code but can not be nested with other functions.
-			</Memo>
-		</PhaseBasedSwitch>
 		<OnEventFunction>
 			<Name>NumberFunction</Name>
-			<SetEvent type="text" description="SetEvent">Flowering</SetEvent>
-			<ReSetEvent type="text" description="ReSetEvent">never</ReSetEvent>
+			<SetEvent>Flowering</SetEvent>
+			<ReSetEvent>never</ReSetEvent>
 			<Constant>
 				<Name>PreEventValue</Name>
-				<Value type="text" description="Value">0</Value>
+				<Value>0</Value>
 			</Constant>
 			<LinearInterpolationFunction>
 				<Name>PostEventValue</Name>
-				<XProperty>Stem.Live.Wt</XProperty>
+				<XProperty>[Stem].Live.Wt</XProperty>
 				<XYPairs>
 					<XY>0 0</XY>
 					<XY>1000 25000</XY>
+					<X>
+						<double>0</double>
+						<double>1000</double>
+					</X>
+					<Y>
+						<double>0</double>
+						<double>25000</double>
+					</Y>
 				</XYPairs>
 			</LinearInterpolationFunction>
 		</OnEventFunction>
+		<RipeStage />
 	</ReproductiveOrgan>
+	
 	<Root>
 		<ll type="text" description="ll">   0.29  0.29  0.29  0.29  0.3   0.31  0.32  0.33  0.34  0.35  0.36 </ll>
 		<kl type="text" description="kl">   0.07  0.07  0.07  0.07  0.05  0.05  0.04  0.04  0.04  0.04  0.04 </kl>
