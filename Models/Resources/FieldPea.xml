@@ -1025,6 +1025,10 @@ For Potato the potential branching rate is the branching pattern that would be o
 				<Name>InitialNConc</Name>
 				<Value>0</Value>
 			</Constant>
+			<Constant>
+				<Name>NonStructuralFraction</Name>
+				<Value>0</Value>
+			</Constant>
 		</LeafCohortParameters>
 		<LinearInterpolationFunction>
 			<Name>ExtinctionCoeff</Name>
