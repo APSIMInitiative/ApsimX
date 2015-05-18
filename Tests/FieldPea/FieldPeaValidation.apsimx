@@ -688,7 +688,7 @@ namespace Models
             <string>[FieldPea].Leaf.CohortArea[14]</string>
             <string>[FieldPea].Leaf.CohortArea[15]</string>
             <string>[FieldPea].Leaf.AppearedCohortNo</string>
-            <string>[FieldPea].Leaf.SenescingCohortNo</string>
+            <string>[FieldPea].Leaf.DeadCohortNo</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2545,7 +2545,7 @@ namespace Models
     <Folder>
       <Name>Graphs</Name>
       <Graph>
-        <Name>Leafnumber</Name>
+        <Name>Appeared leaves</Name>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -2563,7 +2563,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Series 0</Title>
+          <Title>Appeared Nodes</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2583,7 +2583,7 @@ namespace Models
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
-          <Title>Series 1</Title>
+          <Title>Appeared Nodes Observed</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2597,6 +2597,69 @@ namespace Models
           <Y>
             <TableName>ObservedNodes</TableName>
             <FieldName>FieldPea.Leaf.AppearedCohortNo</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>BottomRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Dead leaves</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Appeared leaves</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Appeared Nodes</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Leaf.DeadCohortNo</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Dead Nodes Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedNodes</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedNodes</TableName>
+            <FieldName>FieldPea.Leaf.DeadCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -3534,5 +3597,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>250</ExplorerWidth>
+  <ExplorerWidth>272</ExplorerWidth>
 </Simulations>
