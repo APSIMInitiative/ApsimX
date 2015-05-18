@@ -17,6 +17,7 @@ namespace UserInterface.Views
     {
 
         IGridView gridView { get; }
+        IGraphView graphView { get; }
     }
 
     public partial class FunctionView : UserControl, IFunctionView
@@ -29,24 +30,31 @@ namespace UserInterface.Views
             }
         }
 
+        public IGraphView graphView
+        {
+            get
+            {
+                return graph;
+            }
+        }
+
         public FunctionView()
         {
             InitializeComponent();
 
-            gridView.CellsChanged += new EventHandler<GridCellsChangedArgs>(gridViewCellsChanged);
+            grid.CellsChanged += new EventHandler<GridCellsChangedArgs>(gridViewCellsChanged);
         }
 
         void gridViewCellsChanged(object sender, GridCellsChangedArgs e)
         {
-            UpdateChart();
+            //UpdateChart();
         }
 
-        void UpdateChart()
-        {
-           // graph.
+        //void UpdateChart()
+        //{
+           
 
-
-        }
+        //}
 
         
     }
