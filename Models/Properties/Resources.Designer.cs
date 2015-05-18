@@ -61,6 +61,34 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;Plant&gt;
+        ///	&lt;Name&gt;FieldPea&lt;/Name&gt;
+        ///	&lt;CropType&gt;FieldPea&lt;/CropType&gt;
+        ///	&lt;OrganArbitrator&gt;
+        ///		&lt;Name&gt;Arbitrator&lt;/Name&gt;
+        ///		&lt;NArbitrationOption&gt;PriorityThenRelativeAllocation&lt;/NArbitrationOption&gt;
+        ///		&lt;DMArbitrationOption&gt;RelativeAllocation&lt;/DMArbitrationOption&gt;
+        ///	&lt;/OrganArbitrator&gt;
+        ///	&lt;Phenology&gt;
+        ///		&lt;Name&gt;Phenology&lt;/Name&gt;
+        ///		&lt;AirTemperatureFunction&gt;
+        ///			&lt;Name&gt;ThermalTime&lt;/Name&gt;
+        ///			&lt;XYPairs&gt;
+        ///				&lt;X&gt;
+        ///					&lt;double&gt;4.5&lt;/double&gt;
+        ///					&lt;double&gt;30&lt;/double&gt;
+        ///					&lt;double&gt;40&lt;/double&gt;
+        ///				&lt;/X&gt;
+        ///				&lt;Y&gt;
+        ///					&lt;double&gt;0&lt;/doubl [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string FieldPea {
+            get {
+                return ResourceManager.GetString("FieldPea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///&lt;Plant&gt;
         ///	&lt;Name&gt;FodderBeet&lt;/Name&gt;

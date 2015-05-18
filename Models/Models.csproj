@@ -379,6 +379,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Resources\FodderBeet.xml" />
+    <None Include="Resources\FieldPea.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>
