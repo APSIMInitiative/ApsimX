@@ -278,6 +278,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 			<Name>DroughtInducedBranchMortality</Name>
 			<Value>0</Value>
 		</Constant>
+	<InitialiseStage>Emergence</InitialiseStage>
 	</Structure>
 	<ReproductiveOrgan>
 		<Name>Grain</Name>
@@ -301,7 +302,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 					</VariableReference>
 					<VariableReference>
 						<Name>FillingDuration</Name>
-						<VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
+						<VariableName>[Phenology].FloweringToStartGrainFilling.Target.Value</VariableName>
 					</VariableReference>
 					<VariableReference>
 						<Name>ThermalTime</Name>
@@ -320,7 +321,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 					</MultiplyFunction>
 				</FillingRateFunction>
 				<Start>Flowering</Start>
-				<End>StartGrainFill</End>
+				<End>StartPodGrowth</End>
 			</PhaseLookupValue>
 			<PhaseLookupValue>
 				<Name>LinearPhase</Name>
@@ -332,7 +333,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 					</VariableReference>
 					<VariableReference>
 						<Name>FillingDuration</Name>
-						<VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+						<VariableName>[Phenology].PodFilling.Target.Value</VariableName>
 					</VariableReference>
 					<VariableReference>
 						<Name>ThermalTime</Name>
@@ -357,7 +358,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 						</VariableReference>
 					</MultiplyFunction>
 				</FillingRateFunction>
-				<Start>StartGrainFill</Start>
+				<Start>StartPodGrowth</Start>
 				<End>EndGrainFill</End>
 			</PhaseLookupValue>
 		</PhaseLookup>
@@ -389,10 +390,16 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<Name>NumberFunction</Name>
 						<VariableName>[Grain].NumberFunction.Value</VariableName>
 					</VariableReference>
+					<AddFunction>
 					<VariableReference>
+						<Name>FillingDuration</Name>
+						<VariableName>[Phenology].FloweringToStartGrainFilling.Target.Value</VariableName>
+					</VariableReference>
+										<VariableReference>
 						<Name>FillingDuration</Name>
 						<VariableName>[Phenology].PodFilling.Target.Value</VariableName>
 					</VariableReference>
+					</AddFunction>
 					<VariableReference>
 						<Name>ThermalTime</Name>
 						<VariableName>[Phenology].ThermalTime.Value</VariableName>
@@ -411,7 +418,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 					</MultiplyFunction>
 				</FillingRateFunction>
 				<Start>StartPodGrowth</Start>
-				<End>EndPodGrowth</End>
+				<End>EndGrainFill</End>
 			</PhaseLookupValue>
 		</PhaseLookup>
 		<OnEventFunction>
@@ -615,7 +622,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</AirTemperatureFunction>
 		<LinearInterpolationFunction>
 			<Name>FW</Name>
-			<XProperty>[FieldPea].Fw</XProperty>
+			<XProperty>[Leaf].Fw</XProperty>
 			<XYPairs>
 				<X>
 					<double>0</double>
@@ -1293,7 +1300,6 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 			</Propertys>
 		</CompositeBiomass>
 	</Summariser>
-
 	<Cultivar>
 		<Name>Primo</Name>
 	</Cultivar>
