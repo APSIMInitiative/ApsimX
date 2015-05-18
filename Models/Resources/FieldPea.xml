@@ -166,10 +166,10 @@
 	</Phenology>
 	<Structure>
 		<Name>Structure</Name>
-			<VariableReference>
-				<Name>ThermalTime</Name>
-				<VariableName>[Phenology].ThermalTime.Value</VariableName>
-			</VariableReference>
+		<VariableReference>
+			<Name>ThermalTime</Name>
+			<VariableName>[Phenology].ThermalTime.Value</VariableName>
+		</VariableReference>
 		<PhaseLookupValue>
 			<Name>MainStemPrimordiaInitiationRate</Name>
 			<Start>Emergence</Start>
@@ -178,15 +178,16 @@
 				<Name>Function</Name>
 				<Value>20</Value>
 			</Constant>
+			<Memo>Determines how quickly Nodes are initiatted on the Apex of the mainstem</Memo>
 		</PhaseLookupValue>
 		<PhaseLookupValue>
 			<Name>MainStemNodeAppearanceRate</Name>
-			<Start type="text" description="Start">Emergence</Start>
-			<End type="text" description="End">EndGrainFill</End>
+			<Start>Emergence</Start>
+			<End>EndGrainFill</End>
 			<Memo>Determines how quickly nodes appear</Memo>
 			<LinearInterpolationFunction>
 				<Name>Phyllochron</Name>
-				<XProperty type="text" description="XProperty">StageCode.Value</XProperty>
+				<XProperty>[Phenology].Stage</XProperty>
 				<XYPairs>
 					<XY>2 50</XY>
 					<XY>3 40</XY>
@@ -196,43 +197,62 @@
 					<XY>6 100</XY>
 					<XY>7 1000</XY>
 				</XYPairs>
-				<Memo>Determines how quickly nodes appear</Memo>
 			</LinearInterpolationFunction>
 		</PhaseLookupValue>
 		<Constant>
 			<Name>MainStemFinalNodeNumber</Name>
-			<Value type="text" description="Value">40</Value>
+			<Value>40</Value>
 		</Constant>
 		<LinearInterpolationFunction>
 			<Name>Height</Name>
-			<XProperty>Stem.Live.Wt</XProperty>
+			<XProperty>[Stem].Live.Wt</XProperty>
 			<XYPairs>
-				<XY>0 10</XY>
-				<XY>300 750</XY>
+				<X>
+					<double>0</double>
+					<double>300</double>
+				</X>
+				<Y>
+					<double>10</double>
+					<double>750</double>
+				</Y>
 			</XYPairs>
 		</LinearInterpolationFunction>
 		<MultiplyFunction>
 			<Name>BranchingRate</Name>
-			<Memo>Multiplies the values of the children of this node</Memo>
 			<LinearInterpolationFunction>
 				<Name>Potential_Branching_Rate</Name>
-				<XProperty>Structure.MainStemNodeNo</XProperty>
+				<XProperty>[Structure].MainStemNodeNo</XProperty>
 				<XYPairs>
-					<XY>0 0</XY>
-					<XY>4 0</XY>
-					<XY>5 1</XY>
-					<XY>6 0.5</XY>
-					<XY>7 0</XY>
-					<XY>34 0</XY>
+					<X>
+						<double>0</double>
+						<double>4</double>
+						<double>5</double>
+						<double>6</double>
+						<double>7</double>
+					</X>
+					<Y>
+						<double>0</double>
+						<double>0</double>
+						<double>1</double>
+						<double>0.5</double>
+						<double>0</double>
+					</Y>
 				</XYPairs>
 			</LinearInterpolationFunction>
 			<LinearInterpolationFunction>
 				<Name>Cover_response</Name>
-				<XProperty type="text" description="XProperty">leaf.CoverGreen</XProperty>
+				<XProperty>[leaf].CoverGreen</XProperty>
 				<XYPairs>
-					<XY>0 1</XY>
-					<XY>0.17 1</XY>
-					<XY>0.25 0</XY>
+					<X>
+						<double>0</double>
+						<double>0.17</double>
+						<double>0.25</double>
+					</X>
+					<Y>
+						<double>1</double>
+						<double>1</double>
+						<double>0</double>
+					</Y>
 				</XYPairs>
 			</LinearInterpolationFunction>
 			<Memo>The branching rates sets the number of new branches initiated.  If we have a plant with one stem and branching rate is set as zero this plant will continue to have only one stem.  If this value increases to 1 for the appearance of 1 mainstem node and then reduces to zero again the plant will produce one branch on its mainstem that has the same properties as the mainstem.  The higher this number is and the longer is remains above 0 the more branches the plant will produce.
@@ -241,26 +261,26 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</MultiplyFunction>
 		<Constant>
 			<Name>ShadeInducedBranchMortality</Name>
-			<Value type="text" description="Value">0</Value>
+			<Value>0</Value>
 		</Constant>
 		<Constant>
 			<Name>DroughtInducedBranchMortality</Name>
-			<Value type="text" description="Value">0</Value>
+			<Value>0</Value>
 		</Constant>
 	</Structure>
 	<ReproductiveOrgan>
 		<Name>Grain</Name>
 		<MaximumSize type="text" description="MaximumSize">0.4</MaximumSize>
 		<RipeStage type="text" description="RipeStage">Ripe</RipeStage>
-		<Biomass>
+			<Biomass>
 			<Name>Live</Name>
 		</Biomass>
 		<Biomass>
 			<Name>Dead</Name>
 		</Biomass>
-		<Constant>
+	  <Constant>
 			<Name>NConc</Name>
-			<Value type="text" description="Value">0.003</Value>
+			<Value>0.003</Value>
 		</Constant>
 		<StageBasedInterpolation>
 			<Name>WaterContent</Name>
