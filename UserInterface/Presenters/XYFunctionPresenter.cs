@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The function model.
         /// </summary>
-        private XYPairs function;
+        private LinearInterpolationFunction function;
 
         /// <summary>
         /// The function view;
@@ -37,19 +37,25 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>
-        /// A reference to the 'graphPresenter' responsible for our graph.
+        /// Our grid.
         /// </summary>
-        //private GraphPresenter graphPresenter;
+        private IGridView gridView;
 
-        /// <summary>
-        /// Our graph.
-        /// </summary>
-       // private Graph graph;
 
         /// <summary>
         /// Our grid.
         /// </summary>
-        private IGridView grid;
+        private Graph graph;
+
+        /// <summary>
+        /// Our grid.
+        /// </summary>
+        private IGraphView graphView;
+
+        /// <summary>
+        /// Our grid.
+        /// </summary>
+        private GraphPresenter graphPresenter;
 
         /// <summary>
         /// Attach the view to the model.
@@ -59,22 +65,29 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.function = model as XYPairs;
+            this.function = model as LinearInterpolationFunction;
             this.functionView = view as IFunctionView;
             this.explorerPresenter = explorerPresenter as ExplorerPresenter;
 
-            this.ConnectViewEvents();
+            //this.ConnectViewEvents();
+            gridView = functionView.gridView;
 
-            this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            graphView = functionView.graphView;
 
-            grid = functionView.gridView;
+            graphPresenter = new GraphPresenter();
 
-           // graphPresenter = new GraphPresenter();
- 
+            graph = new Graph();
+
+            graphPresenter.Attach(graph, graphView, explorerPresenter);
+
+            PopulateGrid(); 
+
+            this.gridView.CellsChanged += this.OnCellValueChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+
+            graphPresenter.DrawGraph();
+
             
-
-
-            PopulateGrid();  
         }
 
         /// <summary>
@@ -83,7 +96,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            this.DisconnectViewEvents();
+           // this.DisconnectViewEvents();
         }
         
         /// <summary>
@@ -92,36 +105,52 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to examine for properties</param>
         public void PopulateGrid()
         {
-            IGridCell selectedCell = this.grid.GetCurrentCell;
+            IGridCell selectedCell = this.gridView.GetCurrentCell;
 
             DataTable table = new DataTable();
   
             table.Columns.Add("X", typeof(object));
             table.Columns.Add("Y", typeof(object));
 
-            for (int i = 0; i < function.X.Length; i++)
+            for (int i = 0; i < function.XYPairs.X.Length; i++)
             {
-                table.Rows.Add(new object[] { function.X[i], function.Y[i] });
+                table.Rows.Add(new object[] { function.XYPairs.X[i], function.XYPairs.Y[i] });
             }
             
-            this.grid.DataSource = table;
-        }
+            this.gridView.DataSource = table;
 
-        /// <summary>
-        /// Connect all events from the view.
-        /// </summary>
-        private void ConnectViewEvents()
-        {
-           // this.functionView.OnCellValueChanged += this.OnCellValueChanged;
-        }
+            graph.DataStore.Children.Add(function.XYPairs);
 
-        /// <summary>
-        /// Disconnect all view events.
-        /// </summary>
-        private void DisconnectViewEvents()
-        {
-           // this.functionView.OnCellValueChanged -= this.OnCellValueChanged;
+            graphPresenter.DrawGraph();
+            
+
+
         }
+        private void setupChart()
+        {
+            this.graph.Series.Clear();
+            this.graph.Series.Add(new Series());
+
+            this.graph.Series[0].X = new GraphValues();
+            this.graph.Series[0].Y = new GraphValues();
+         
+
+        }
+        ///// <summary>
+        ///// Connect all events from the view.
+        ///// </summary>
+        //private void ConnectViewEvents()
+        //{
+        //   // this.functionView.OnCellValueChanged += this.OnCellValueChanged;
+        //}
+
+        ///// <summary>
+        ///// Disconnect all view events.
+        ///// </summary>
+        //private void DisconnectViewEvents()
+        //{
+        //   // this.functionView.OnCellValueChanged -= this.OnCellValueChanged;
+        //}
 
         /// <summary>
         /// User has changed the value of a cell.

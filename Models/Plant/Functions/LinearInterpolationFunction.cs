@@ -15,6 +15,8 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
+    [ViewName("UserInterface.Views.FunctionView")]
+    [PresenterName("UserInterface.Presenters.XYFunctionPresenter")]
     public class LinearInterpolationFunction : Model, IFunction, IFunctionArray
     {
         /// <summary>The ys are all the same</summary>
