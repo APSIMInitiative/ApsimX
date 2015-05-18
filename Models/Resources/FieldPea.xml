@@ -379,8 +379,8 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<VariableName>[Grain].NumberFunction.Value</VariableName>
 					</VariableReference>
 					<VariableReference>
-							<Name>FillingDuration</Name>
-							<VariableName>[Phenology].PodFilling.Target.Value</VariableName>
+						<Name>FillingDuration</Name>
+						<VariableName>[Phenology].PodFilling.Target.Value</VariableName>
 					</VariableReference>
 					<VariableReference>
 						<Name>ThermalTime</Name>
@@ -390,7 +390,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<Name>PotentialSizeIncrement</Name>
 						<Constant>
 							<Name>MaximumFinalNConc</Name>
-                            <Units>g/g</Units>
+							<Units>g/g</Units>
 							<Value>0.04</Value>
 						</Constant>
 						<VariableReference>
@@ -430,31 +430,40 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</OnEventFunction>
 		<RipeStage />
 	</ReproductiveOrgan>
-	
 	<Root>
-		<ll type="text" description="ll">   0.29  0.29  0.29  0.29  0.3   0.31  0.32  0.33  0.34  0.35  0.36 </ll>
-		<kl type="text" description="kl">   0.07  0.07  0.07  0.07  0.05  0.05  0.04  0.04  0.04  0.04  0.04 </kl>
-		<xf type="text" description="xf">   1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00 </xf>
-		<InitialDM type="text" description="InitialDM">0.02</InitialDM>
-		<SpecificRootLength type="text" description="SpecificRootLength">40000</SpecificRootLength>
-		<KNO3 type="text" description="KNO3">0.02</KNO3>
-		<KNH4 type="text" description="KNH4">0.0</KNH4>
+		<InitialDM>0.2</InitialDM>
+		<SpecificRootLength>40000</SpecificRootLength>
+		<KNO3_yProperty>
+			<double>0.02</double>
+			<double>0.02</double>
+		</KNO3_yProperty>
+		<KNO3_xRootLength>
+			<double>0</double>
+			<double>0.003</double>
+		</KNO3_xRootLength>
+		<KNH4_yProperty>
+			<double>0</double>
+			<double>0.0</double>
+		</KNH4_yProperty>
+		<KNH4_xRootLength>
+			<double>0</double>
+			<double>0.003</double>
+		</KNH4_xRootLength>		
 		<CompositeBiomass>
 			<Name>Live</Name>
-			<Property>Root.LayerLive[]</Property>
+			<Propertys>
+				<string>[Root].LayerLive</string>
+			</Propertys>
 		</CompositeBiomass>
 		<CompositeBiomass>
 			<Name>Dead</Name>
-			<Property>Root.LayerDead[]</Property>
+			<Propertys>
+				<string>[Root].LayerDead</string>
+			</Propertys>
 		</CompositeBiomass>
-		<Memo>Optional paramaters
-
-1. SenescenceRate.  Default value is 0 which means the organ will not seness.  If senesence is required place a function on the organ named SenescenceRate.  It needs to be a number for 0 - 1 that represents the proportion of total biomass that is senessed each day.
-2.  NitrogenDemandSwitch.  Default value is 1 which means the organ always has a N demand if its N content is below maximum N conc.  If N demand needs to be switched off place a function on the organ named NitrogenDemandSwitch which returns a value of 1 when no demand is expressed.
-		</Memo>
 		<LinearInterpolationFunction>
 			<Name>KLModifier</Name>
-			<XProperty>Leaf.LAI</XProperty>
+			<XProperty>[Leaf].LAI</XProperty>
 			<XYPairs>
 				<XY>0 1</XY>
 				<XY>3 1</XY>
@@ -485,25 +494,25 @@ For Potato the potential branching rate is the branching pattern that would be o
 				<End>Emergence</End>
 				<Constant>
 					<Name>Function</Name>
-					<Value type="text" description="Value">3</Value>
+					<Value>3</Value>
 				</Constant>
 			</PhaseLookupValue>
 			<PhaseLookupValue>
 				<Name>early</Name>
-				<Start type="text" description="Start">Emergence</Start>
-				<End type="text" description="End">FloralInitiation</End>
+				<Start>Emergence</Start>
+				<End>FloralInitiation</End>
 				<Constant>
 					<Name>Function</Name>
-					<Value type="text" description="Value">15</Value>
+					<Value>15</Value>
 				</Constant>
 			</PhaseLookupValue>
 			<PhaseLookupValue>
 				<Name>late</Name>
-				<Start type="text" description="Start">FloralInitiation</Start>
-				<End type="text" description="End">Maturity</End>
+				<Start>FloralInitiation</Start>
+				<End>Maturity</End>
 				<Constant>
 					<Name>Function</Name>
-					<Value type="text" description="Value">17</Value>
+					<Value>17</Value>
 				</Constant>
 			</PhaseLookupValue>
 		</PhaseLookup>
