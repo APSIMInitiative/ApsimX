@@ -6,7 +6,6 @@
 namespace Models
 {
     using System;
-    using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -419,13 +418,7 @@ namespace Models
             this.reader = null;
             if (this.OpenDataFile())
             {
-                List<string> metProps = new List<string>();
-                metProps.Add("mint");
-                metProps.Add("maxt");
-                metProps.Add("radn");
-                metProps.Add("rain");
-                metProps.Add("wind");
-                return this.reader.ToTable(metProps);
+                return this.reader.ToTable();
             }
             else
             {
