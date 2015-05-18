@@ -21,7 +21,7 @@
         <Factor>
           <Name>23Dec</Name>
           <Specifications>
-            <string>[FieldPeaSowingRule].Script.SowingDate=1997-12-27</string>
+            <string>[FieldPeaSowingRule].Script.SowingDate=1997-12-23</string>
             <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
           </Specifications>
         </Factor>
@@ -86,7 +86,7 @@
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Tests\FieldPea\lincoln.met</FileName>
+        <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
       </Weather>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
@@ -687,6 +687,8 @@ namespace Models
             <string>[FieldPea].Leaf.CohortArea[13]</string>
             <string>[FieldPea].Leaf.CohortArea[14]</string>
             <string>[FieldPea].Leaf.CohortArea[15]</string>
+            <string>[FieldPea].Leaf.AppearedCohortNo</string>
+            <string>[FieldPea].Leaf.SenescingCohortNo</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2574,13 +2576,14 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>FieldPea.Structure.MainStemNodeNo</FieldName>
+            <FieldName>FieldPea.Leaf.AppearedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
+          <Title>Series 1</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2588,15 +2591,15 @@ namespace Models
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <TableName>InputNodeNo</TableName>
+            <TableName>ObservedNodes</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <TableName>InputNodeNo</TableName>
+            <TableName>ObservedNodes</TableName>
             <FieldName>FieldPea.Leaf.AppearedCohortNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>BottomRight</LegendPosition>
