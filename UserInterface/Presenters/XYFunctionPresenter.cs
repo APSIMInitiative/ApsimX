@@ -41,21 +41,20 @@ namespace UserInterface.Presenters
         /// </summary>
         private IGridView gridView;
 
+        /// <summary>
+        /// Our grid.
+        /// </summary>
+        //private Graph graph;
 
         /// <summary>
         /// Our grid.
         /// </summary>
-        private Graph graph;
+        //private IGraphView graphView;
 
         /// <summary>
         /// Our grid.
         /// </summary>
-        private IGraphView graphView;
-
-        /// <summary>
-        /// Our grid.
-        /// </summary>
-        private GraphPresenter graphPresenter;
+        //private GraphPresenter graphPresenter;
 
         /// <summary>
         /// Attach the view to the model.
@@ -72,22 +71,20 @@ namespace UserInterface.Presenters
             //this.ConnectViewEvents();
             gridView = functionView.gridView;
 
-            graphView = functionView.graphView;
+            //graphView = functionView.graphView;
 
-            graphPresenter = new GraphPresenter();
+            //graphPresenter = new GraphPresenter();
 
-            graph = new Graph();
+            //graph = new Graph();
 
-            graphPresenter.Attach(graph, graphView, explorerPresenter);
+            //graphPresenter.Attach(graph, graphView, explorerPresenter);
 
             PopulateGrid(); 
 
             this.gridView.CellsChanged += this.OnCellValueChanged;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
-            graphPresenter.DrawGraph();
-
-            
+            //graphPresenter.DrawGraph();
         }
 
         /// <summary>
@@ -119,21 +116,14 @@ namespace UserInterface.Presenters
             
             this.gridView.DataSource = table;
 
-            graph.DataStore.Children.Add(function.XYPairs);
+            //graph.DataStore.Children.Add(function.XYPairs);
 
-            graphPresenter.DrawGraph();
-            
-
-
+            //graphPresenter.DrawGraph();
         }
         private void setupChart()
         {
-            this.graph.Series.Clear();
-            this.graph.Series.Add(new Series());
-
-            this.graph.Series[0].X = new GraphValues();
-            this.graph.Series[0].Y = new GraphValues();
-         
+            //this.graph.Series.Clear();
+            //this.graph.Series.Add(new Series());        
 
         }
         ///// <summary>
@@ -159,6 +149,8 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
+
+
         }
 
         /// <summary>
