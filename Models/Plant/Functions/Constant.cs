@@ -12,11 +12,10 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.ConstantPresenter")]
     public class Constant : Model, IFunction
     {
         /// <summary>Gets the value.</summary>
-        [Description("The value of the constant")]
         public double Value { get; set; }
     }
 }

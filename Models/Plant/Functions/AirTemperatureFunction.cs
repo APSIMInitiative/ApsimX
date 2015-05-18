@@ -115,7 +115,5 @@ namespace Models.PMF.Functions
 
             return tmin + t_deviation;
         }
-
     }
-
 }
