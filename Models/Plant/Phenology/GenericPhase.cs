@@ -23,6 +23,8 @@ namespace Models.PMF.Phen
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This generic phase uses a thermal time target to determine the duration between growth stages. " +
                  "Thermal time is accumulated until the target is met and remaining thermal time is forwarded to the next phase.")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PhasePresenter")]
     public class GenericPhase : Phase
     {
         [Link(IsOptional=true)]

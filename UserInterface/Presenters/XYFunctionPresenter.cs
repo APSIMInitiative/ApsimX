@@ -44,15 +44,20 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Our grid.
         /// </summary>
+        private IGridView gridViewXProp;
+
+        /// <summary>
+        /// 
+        /// </summary>
         //private Graph graph;
 
         /// <summary>
-        /// Our grid.
+        /// 
         /// </summary>
         //private IGraphView graphView;
 
         /// <summary>
-        /// Our grid.
+        /// 
         /// </summary>
         //private GraphPresenter graphPresenter;
 
@@ -69,7 +74,9 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter as ExplorerPresenter;
 
             //this.ConnectViewEvents();
+            gridViewXProp = functionView.gridViewXProp;
             gridView = functionView.gridView;
+
 
             //graphView = functionView.graphView;
 
@@ -78,9 +85,11 @@ namespace UserInterface.Presenters
             //graph = new Graph();
 
             //graphPresenter.Attach(graph, graphView, explorerPresenter);
+            PopulateGridXProp();
+            PopulateGrid();
 
-            PopulateGrid(); 
 
+            this.gridViewXProp.CellsChanged += this.OnCellValueChangedXProp;
             this.gridView.CellsChanged += this.OnCellValueChanged;
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
@@ -93,9 +102,24 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-           // this.DisconnectViewEvents();
+            // this.DisconnectViewEvents();
         }
-        
+        /// <summary>
+        /// Populate the grid
+        /// </summary>
+        /// <param name="model">The model to examine for properties</param>
+        public void PopulateGridXProp()
+        {
+            IGridCell selectedCell = this.gridViewXProp.GetCurrentCell;
+
+            DataTable table = new DataTable();
+
+            table.Columns.Add("X Property", typeof(object));
+
+            table.Rows.Add(new object[] { function.XProperty });
+
+            this.gridViewXProp.DataSource = table;
+        }
         /// <summary>
         /// Populate the grid
         /// </summary>
@@ -105,7 +129,7 @@ namespace UserInterface.Presenters
             IGridCell selectedCell = this.gridView.GetCurrentCell;
 
             DataTable table = new DataTable();
-  
+
             table.Columns.Add("X", typeof(object));
             table.Columns.Add("Y", typeof(object));
 
@@ -113,13 +137,13 @@ namespace UserInterface.Presenters
             {
                 table.Rows.Add(new object[] { function.XYPairs.X[i], function.XYPairs.Y[i] });
             }
-            
+
             this.gridView.DataSource = table;
-
-            //graph.DataStore.Children.Add(function.XYPairs);
-
-            //graphPresenter.DrawGraph();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private void setupChart()
         {
             //this.graph.Series.Clear();
@@ -147,10 +171,43 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
+        private void OnCellValueChangedXProp(object sender, GridCellsChangedArgs e)
+        {
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+
+            IGridCell cell = e.ChangedCells[0];
+
+            function.XProperty = cell.Value.ToString();
+
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+        }
+
+        /// <summary>
+        /// User has changed the value of a cell.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
         private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
         {
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
+            foreach (IGridCell cell in e.ChangedCells)
+            {
+                double val;
+                if (double.TryParse(cell.Value.ToString(), out val))
+                {
+                    if (cell.ColumnIndex == 0)
+                    {
+                        function.XYPairs.X[cell.RowIndex] = val;
+                    }
+                    else
+                    {
+                        function.XYPairs.Y[cell.RowIndex] = val;
+                    }
+                }
+            }
 
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
