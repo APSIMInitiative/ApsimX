@@ -1716,7 +1716,7 @@
               <Name>DMDemandFunction</Name>
               <Constant>
                 <Name>InterNodeWt</Name>
-                <Value>0.05</Value>
+                <Value>0.1</Value>
               </Constant>
             </InternodeDemandFunction>
             <Constant>
@@ -2193,6 +2193,63 @@ namespace Models
                 //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
                 //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
                 //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
+			   }
+            }
+        }
+				]]></Code>
+        </Manager>
+        <Manager>
+          <Name>FieldPeaHarvestRule</Name>
+          <Script />
+          <Code><![CDATA[
+        using System;
+        using Models.Core;
+        using Models.PMF;
+        using System.Xml.Serialization;
+        using APSIM.Shared.Utilities;
+        
+        namespace Models
+        {
+           [Serializable] 
+           [System.Xml.Serialization.XmlInclude(typeof(Model))]
+            public class Script : Model
+            {      
+               [Link] Plant FieldPea;
+               [Link] Clock Clock;
+               [Link] Summary Summary;
+               [XmlIgnore] public string FinalTag { get; set;}
+		       [XmlIgnore] public bool Harvested {get; set;}
+               [XmlIgnore] public bool ReadyForHarvest {get; set;}
+               
+               [EventSubscribe("Commencing")]
+               private void OnSimulationCommencing(object sender, EventArgs e)
+		       {
+		       FinalTag = "";
+               Harvested = false;
+               ReadyForHarvest = false;
+               }
+               
+               [EventSubscribe("DoManagement")]
+               private void OnDoManagement(object sender, EventArgs e)
+               {
+               if (ReadyForHarvest == true)
+                   {
+                   FieldPea.Harvest();
+                   FieldPea.EndCrop();
+                   ReadyForHarvest = false;
+                   Harvested = true;
+                   }
+               FinalTag = "";    
+               }
+               
+               [EventSubscribe("DoManagementCalculations")]
+               private void OnDoManagementCalculations(object sender, EventArgs e)
+               {
+				if ((FieldPea.Phenology.Stage >= 10)&&(Harvested == false))
+				{
+                    FinalTag = "yield";
+					ReadyForHarvest = true;
+                }
 			   }
             }
         }
@@ -4138,6 +4195,13 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
         <Series>
           <Title>Prediceted</Title>
           <Type>Scatter</Type>
@@ -4173,6 +4237,26 @@ namespace Models
           <Y>
             <TableName>ObservedBiomass</TableName>
             <FieldName>FieldPea.Grain.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series3</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Phenology.Stage</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -4795,5 +4879,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>380</ExplorerWidth>
+  <ExplorerWidth>453</ExplorerWidth>
 </Simulations>
