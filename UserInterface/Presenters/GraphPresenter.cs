@@ -242,7 +242,7 @@ namespace UserInterface.Presenters
             int seriesIndex = 0;
             foreach (string simulationName in simulationNames)
             {
-                string[] zones = GetZones(series.X.TableName, simulationName);
+                string[] zones = new string[] { "Field" }; // GetZones(series.X.TableName, simulationName);
 
                 int numSeries;
                 if (zones.Length > 1)
@@ -290,7 +290,8 @@ namespace UserInterface.Presenters
         {
             // Get a list of zones in this simulation.
             List<string> zones = null;
-            DataTable simulationData = DataStore.GetData(simulationName, tableName);
+
+            DataTable simulationData = DataStore.GetFilteredData(tableName, new string[] { "ZoneName" }, "SimulationName = \"" + simulationName + "\"");
             if (simulationData != null && simulationData.Columns.Contains("ZoneName"))
             {
                 zones = DataTableUtilities.GetDistinctValues(simulationData, "ZoneName");
@@ -833,7 +834,15 @@ namespace UserInterface.Presenters
                     // Create the data if we haven't already
                     if (this.data == null && this.dataStore.TableExists(graphValues.TableName))
                     {
-                        this.data = this.dataStore.GetFilteredData(graphValues.TableName, filter);
+                        List<string> fieldNames = new List<string>();
+                        fieldNames.Add(series.X.FieldName);
+                        fieldNames.Add(series.Y.FieldName);
+                        if (series.X2 != null)
+                            fieldNames.Add(series.X2.FieldName);
+                        if (series.Y2 != null)
+                            fieldNames.Add(series.Y2.FieldName);
+
+                        this.data = this.dataStore.GetFilteredData(graphValues.TableName, fieldNames.ToArray(), filter);
                     }
                     
                     // If the field exists in our data table then return it.
