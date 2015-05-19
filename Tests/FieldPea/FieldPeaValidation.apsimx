@@ -4,10 +4,17 @@
   <DataStore>
     <Name>DataStore</Name>
     <Model xsi:type="ExcelInput">
-      <Name>Observed</Name>
+      <Name>Nodes</Name>
       <FileName>%root%\Tests\FieldPea\Observations\FieldPeaObservations.xlsx</FileName>
       <SheetNames>
         <string>ObservedNodes</string>
+      </SheetNames>
+    </Model>
+    <Model xsi:type="ExcelInput">
+      <Name>Biomass</Name>
+      <FileName>%root%\Tests\FieldPea\Observations\FieldPeaObservations.xlsx</FileName>
+      <SheetNames>
+        <string>ObservedBiomass</string>
       </SheetNames>
     </Model>
     <AutoExport>false</AutoExport>
@@ -398,7 +405,1482 @@
         </Soil>
         <Plant>
           <Name>FieldPea</Name>
-          <ResourceName>FieldPea</ResourceName>
+          <OrganArbitrator>
+            <Name>Arbitrator</Name>
+            <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+          </OrganArbitrator>
+          <Phenology>
+            <Name>Phenology</Name>
+            <AirTemperatureFunction>
+              <Name>ThermalTime</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>4.5</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>25.5</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <PhotoperiodFunction>
+              <Name>Photoperiod</Name>
+              <Twilight>-6</Twilight>
+            </PhotoperiodFunction>
+            <GerminatingPhase>
+              <Name>Germinating</Name>
+              <Start>Sowing</Start>
+              <End>Germination</End>
+            </GerminatingPhase>
+            <EmergingPhase>
+              <Name>Emerging</Name>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>Germination</Start>
+              <End>Emergence</End>
+              <ShootLag>15</ShootLag>
+              <ShootRate>5</ShootRate>
+            </EmergingPhase>
+            <GenericPhase>
+              <Name>EmergenceToEndJuvenile</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>200</Value>
+              </Constant>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>Emergence</Start>
+              <End>EndJuvenile</End>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>EndJuvenileToInitiation</Name>
+              <LinearInterpolationFunction>
+                <Name>Target</Name>
+                <XProperty>[Phenology].Photoperiod.Value</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>12</double>
+                    <double>20</double>
+                  </X>
+                  <Y>
+                    <double>530</double>
+                    <double>300</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>EndJuvenile</Start>
+              <End>FloralInitiation</End>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>InitiationToFlowering</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>33</Value>
+              </Constant>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>FloralInitiation</Start>
+              <End>Flowering</End>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>FloweringToStartGrainFilling</Name>
+              <LinearInterpolationFunction>
+                <Name>Target</Name>
+                <XProperty>[Phenology].Photoperiod.Value</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>1</double>
+                    <double>24</double>
+                  </X>
+                  <Y>
+                    <double>330</double>
+                    <double>450</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>Flowering</Start>
+              <End>StartPodGrowth</End>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>PodFilling</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>690</Value>
+              </Constant>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>StartPodGrowth</Start>
+              <End>EndGrainFill</End>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>Maturing</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>60</Value>
+              </Constant>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>EndGrainFill</Start>
+              <End>Maturity</End>
+            </GenericPhase>
+            <GenericPhase>
+              <Name>MaturityToHarvestRipe</Name>
+              <Constant>
+                <Name>Target</Name>
+                <Value>1</Value>
+              </Constant>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>Maturity</Start>
+              <End>HarvestRipe</End>
+            </GenericPhase>
+            <EndPhase>
+              <Name>ReadyForHarvesting</Name>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Start>HarvestRipe</Start>
+              <End>Unused</End>
+            </EndPhase>
+            <Emerged>false</Emerged>
+          </Phenology>
+          <Structure>
+            <Name>Structure</Name>
+            <VariableReference>
+              <Name>ThermalTime</Name>
+              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            </VariableReference>
+            <PhaseLookupValue>
+              <Name>MainStemPrimordiaInitiationRate</Name>
+              <Constant>
+                <Name>Function</Name>
+                <Value>20</Value>
+              </Constant>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Start>Emergence</Start>
+              <End>StartPodGrowth</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>MainStemNodeAppearanceRate</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <LinearInterpolationFunction>
+                <Name>Phyllochron</Name>
+                <XProperty>[Phenology].Stage</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>2</double>
+                    <double>3</double>
+                    <double>4</double>
+                    <double>5</double>
+                    <double>5.5</double>
+                    <double>6</double>
+                    <double>7</double>
+                  </X>
+                  <Y>
+                    <double>50</double>
+                    <double>40</double>
+                    <double>30</double>
+                    <double>30</double>
+                    <double>25</double>
+                    <double>100</double>
+                    <double>1000</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <Start>Emergence</Start>
+              <End>EndGrainFill</End>
+            </PhaseLookupValue>
+            <Constant>
+              <Name>MainStemFinalNodeNumber</Name>
+              <Value>40</Value>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>Height</Name>
+              <XProperty>[Stem].Live.Wt</XProperty>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>300</double>
+                </X>
+                <Y>
+                  <double>10</double>
+                  <double>750</double>
+                </Y>
+              </XYPairs>
+            </LinearInterpolationFunction>
+            <MultiplyFunction>
+              <Name>BranchingRate</Name>
+              <LinearInterpolationFunction>
+                <Name>Potential_Branching_Rate</Name>
+                <XProperty>[Structure].MainStemNodeNo</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>4</double>
+                    <double>5</double>
+                    <double>6</double>
+                    <double>7</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>0.5</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>Cover_response</Name>
+                <XProperty>[leaf].CoverGreen</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.17</double>
+                    <double>0.25</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <Memo>
+                <Name>Memo1</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+            </MultiplyFunction>
+            <Constant>
+              <Name>ShadeInducedBranchMortality</Name>
+              <Value>0</Value>
+            </Constant>
+            <Constant>
+              <Name>DroughtInducedBranchMortality</Name>
+              <Value>0</Value>
+            </Constant>
+            <InitialiseStage>Emergence</InitialiseStage>
+            <PrimaryBudNo>0</PrimaryBudNo>
+          </Structure>
+          <ReproductiveOrgan>
+            <Name>Grain</Name>
+            <Constant>
+              <Name>InitialGrainProportion</Name>
+              <Value>0.05</Value>
+            </Constant>
+            <Constant>
+              <Name>MaximumPotentialGrainSize</Name>
+              <Value>0.4</Value>
+            </Constant>
+            <PhaseLookup>
+              <Name>DMDemandFunction</Name>
+              <PhaseLookupValue>
+                <Name>InitialPhase</Name>
+                <FillingRateFunction>
+                  <Name>FillingRateFunction</Name>
+                  <VariableReference>
+                    <Name>NumberFunction</Name>
+                    <VariableName>[Grain].NumberFunction.Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>FillingDuration</Name>
+                    <VariableName>[Phenology].FloweringToStartGrainFilling.Target.Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>ThermalTime</Name>
+                    <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                  </VariableReference>
+                  <MultiplyFunction>
+                    <Name>PotentialSizeIncrement</Name>
+                    <VariableReference>
+                      <Name>InitialProportion</Name>
+                      <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>MaximumSize</Name>
+                      <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                    </VariableReference>
+                  </MultiplyFunction>
+                </FillingRateFunction>
+                <Start>Flowering</Start>
+                <End>StartPodGrowth</End>
+              </PhaseLookupValue>
+              <PhaseLookupValue>
+                <Name>LinearPhase</Name>
+                <FillingRateFunction>
+                  <Name>FillingRateFunction</Name>
+                  <VariableReference>
+                    <Name>NumberFunction</Name>
+                    <VariableName>[Grain].NumberFunction.Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>FillingDuration</Name>
+                    <VariableName>[Phenology].PodFilling.Target.Value</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>ThermalTime</Name>
+                    <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                  </VariableReference>
+                  <MultiplyFunction>
+                    <Name>PotentialSizeIncrement</Name>
+                    <SubtractFunction>
+                      <Name>ProportionLinearPhase</Name>
+                      <Constant>
+                        <Name>One</Name>
+                        <Value>1</Value>
+                      </Constant>
+                      <VariableReference>
+                        <Name>InitialProportion</Name>
+                        <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+                      </VariableReference>
+                    </SubtractFunction>
+                    <VariableReference>
+                      <Name>MaximumSize</Name>
+                      <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                    </VariableReference>
+                  </MultiplyFunction>
+                </FillingRateFunction>
+                <Start>StartPodGrowth</Start>
+                <End>EndGrainFill</End>
+              </PhaseLookupValue>
+            </PhaseLookup>
+            <Biomass>
+              <Name>Live</Name>
+            </Biomass>
+            <Biomass>
+              <Name>Dead</Name>
+            </Biomass>
+            <Constant>
+              <Name>MinimumNConc</Name>
+              <Value>0.039</Value>
+            </Constant>
+            <Constant>
+              <Name>MaximumNConc</Name>
+              <Value>0.04</Value>
+            </Constant>
+            <Constant>
+              <Name>WaterContent</Name>
+              <Value>0.12</Value>
+            </Constant>
+            <PhaseLookup>
+              <Name>NFillingRate</Name>
+              <PhaseLookupValue>
+                <Name>GrainFilling</Name>
+                <FillingRateFunction>
+                  <Name>FillingRateFunction</Name>
+                  <VariableReference>
+                    <Name>NumberFunction</Name>
+                    <VariableName>[Grain].NumberFunction.Value</VariableName>
+                  </VariableReference>
+                  <AddFunction>
+                    <Name>AddFunction</Name>
+                    <VariableReference>
+                      <Name>FillingDuration</Name>
+                      <VariableName>[Phenology].FloweringToStartGrainFilling.Target.Value</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>FillingDuration</Name>
+                      <VariableName>[Phenology].PodFilling.Target.Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
+                  <VariableReference>
+                    <Name>ThermalTime</Name>
+                    <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                  </VariableReference>
+                  <MultiplyFunction>
+                    <Name>PotentialSizeIncrement</Name>
+                    <Constant>
+                      <Name>MaximumFinalNConc</Name>
+                      <Value>0.04</Value>
+                    </Constant>
+                    <VariableReference>
+                      <Name>MaximumSize</Name>
+                      <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                    </VariableReference>
+                  </MultiplyFunction>
+                </FillingRateFunction>
+                <Start>StartPodGrowth</Start>
+                <End>EndGrainFill</End>
+              </PhaseLookupValue>
+            </PhaseLookup>
+            <OnEventFunction>
+              <Name>NumberFunction</Name>
+              <Constant>
+                <Name>PreEventValue</Name>
+                <Value>0</Value>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>PostEventValue</Name>
+                <XProperty>[Stem].Live.Wt</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1000</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>25000</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <SetEvent>Flowering</SetEvent>
+              <ReSetEvent>never</ReSetEvent>
+            </OnEventFunction>
+            <RipeStage />
+          </ReproductiveOrgan>
+          <Root>
+            <Name>Root</Name>
+            <CompositeBiomass>
+              <Name>Live</Name>
+              <Propertys>
+                <string>[Root].LayerLive</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Dead</Name>
+              <Propertys>
+                <string>[Root].LayerDead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <LinearInterpolationFunction>
+              <Name>KLModifier</Name>
+              <XProperty>[Leaf].LAI</XProperty>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>3</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </LinearInterpolationFunction>
+            <AirTemperatureFunction>
+              <Name>TemperatureEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>26</double>
+                  <double>35</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <Constant>
+              <Name>MaxDailyNUptake</Name>
+              <Value>6</Value>
+            </Constant>
+            <Constant>
+              <Name>SenescenceRate</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0</Value>
+            </Constant>
+            <PhaseLookup>
+              <Name>RootFrontVelocity</Name>
+              <PhaseLookupValue>
+                <Name>PreEmergence</Name>
+                <Constant>
+                  <Name>Function</Name>
+                  <Value>3</Value>
+                </Constant>
+                <Start>Germination</Start>
+                <End>Emergence</End>
+              </PhaseLookupValue>
+              <PhaseLookupValue>
+                <Name>early</Name>
+                <Constant>
+                  <Name>Function</Name>
+                  <Value>15</Value>
+                </Constant>
+                <Start>Emergence</Start>
+                <End>FloralInitiation</End>
+              </PhaseLookupValue>
+              <PhaseLookupValue>
+                <Name>late</Name>
+                <Constant>
+                  <Name>Function</Name>
+                  <Value>17</Value>
+                </Constant>
+                <Start>FloralInitiation</Start>
+                <End>Maturity</End>
+              </PhaseLookupValue>
+            </PhaseLookup>
+            <PhaseLookup>
+              <Name>PartitionFraction</Name>
+              <PhaseLookupValue>
+                <Name>Early</Name>
+                <Constant>
+                  <Name>Function</Name>
+                  <Value>0.25</Value>
+                </Constant>
+                <Start>Emergence</Start>
+                <End>FloralInitiation</End>
+              </PhaseLookupValue>
+              <PhaseLookupValue>
+                <Name>Middle</Name>
+                <Constant>
+                  <Name>Function</Name>
+                  <Value>0.25</Value>
+                </Constant>
+                <Start>FloralInitiation</Start>
+                <End>StartPodGrowth</End>
+              </PhaseLookupValue>
+              <PhaseLookupValue>
+                <Name>Late</Name>
+                <Constant>
+                  <Name>Function</Name>
+                  <Value>0</Value>
+                </Constant>
+                <Start>StartPodGrowth</Start>
+                <End>Maturity</End>
+              </PhaseLookupValue>
+            </PhaseLookup>
+            <Constant>
+              <Name>MaximumNConc</Name>
+              <Value>0.01</Value>
+            </Constant>
+            <Constant>
+              <Name>MinimumNConc</Name>
+              <Value>0.01</Value>
+            </Constant>
+            <InitialDM>0.2</InitialDM>
+            <SpecificRootLength>40000</SpecificRootLength>
+            <KNO3_yProperty>
+              <double>0.02</double>
+              <double>0.02</double>
+            </KNO3_yProperty>
+            <KNO3_xRootLength>
+              <double>0</double>
+              <double>0.003</double>
+            </KNO3_xRootLength>
+            <KNH4_yProperty>
+              <double>0</double>
+              <double>0</double>
+            </KNH4_yProperty>
+            <KNH4_xRootLength>
+              <double>0</double>
+              <double>0.003</double>
+            </KNH4_xRootLength>
+            <NuptakeSupply>0</NuptakeSupply>
+          </Root>
+          <Nodule>
+            <Name>Nodule</Name>
+            <Biomass>
+              <Name>Live</Name>
+            </Biomass>
+            <Biomass>
+              <Name>Dead</Name>
+            </Biomass>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <Constant>
+              <Name>SpecificNitrogenaseActivity</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>45</Value>
+            </Constant>
+            <Constant>
+              <Name>FixationMetabolicCost</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>7</Value>
+            </Constant>
+            <AirTemperatureFunction>
+              <Name>FT</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>20</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <LinearInterpolationFunction>
+              <Name>FW</Name>
+              <XProperty>[Leaf].Fw</XProperty>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>FWlog</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <XProperty>[Leaf].Fw</XProperty>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+            </LinearInterpolationFunction>
+            <PartitionFractionDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <PhaseLookup>
+                <Name>PartitionFraction</Name>
+                <PhaseLookupValue>
+                  <Name>Early</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0.03</Value>
+                  </Constant>
+                  <Start>Emergence</Start>
+                  <End>FloralInitiation</End>
+                </PhaseLookupValue>
+                <PhaseLookupValue>
+                  <Name>Middle</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0.02</Value>
+                  </Constant>
+                  <Start>FloralInitiation</Start>
+                  <End>StartPodGrowth</End>
+                </PhaseLookupValue>
+                <PhaseLookupValue>
+                  <Name>Late</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0</Value>
+                  </Constant>
+                  <Start>StartPodGrowth</Start>
+                  <End>Maturity</End>
+                </PhaseLookupValue>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+              </PhaseLookup>
+            </PartitionFractionDemandFunction>
+            <Constant>
+              <Name>MaximumNConc</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.01</Value>
+            </Constant>
+            <Constant>
+              <Name>MinimumNConc</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.01</Value>
+            </Constant>
+            <Constant>
+              <Name>SenescenceRate</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0</Value>
+            </Constant>
+            <RespiredWt>0</RespiredWt>
+            <PropFixationDemand>0</PropFixationDemand>
+            <_NFixed>0</_NFixed>
+          </Nodule>
+          <GenericAboveGroundOrgan>
+            <Name>Shell</Name>
+            <Biomass>
+              <Name>Live</Name>
+            </Biomass>
+            <Biomass>
+              <Name>Dead</Name>
+            </Biomass>
+            <Constant>
+              <Name>NReallocationFactor</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0</Value>
+            </Constant>
+            <Constant>
+              <Name>NRetranslocationFactor</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.1</Value>
+            </Constant>
+            <PartitionFractionDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <PhaseLookup>
+                <Name>PartitionFraction</Name>
+                <PhaseLookupValue>
+                  <Name>Early</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0.1</Value>
+                  </Constant>
+                  <Start>Flowering</Start>
+                  <End>StartPodGrowth</End>
+                </PhaseLookupValue>
+                <PhaseLookupValue>
+                  <Name>Late</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0.2</Value>
+                  </Constant>
+                  <Start>StartPodGrowth</Start>
+                  <End>Maturity</End>
+                </PhaseLookupValue>
+              </PhaseLookup>
+            </PartitionFractionDemandFunction>
+            <Constant>
+              <Name>StructuralFraction</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.7</Value>
+            </Constant>
+            <Constant>
+              <Name>MaximumNConc</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.01</Value>
+            </Constant>
+            <Constant>
+              <Name>MinimumNConc</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.01</Value>
+            </Constant>
+            <PhaseBasedSwitch>
+              <Name>NitrogenDemandSwitch</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Start>Germination</Start>
+              <End>Maturity</End>
+            </PhaseBasedSwitch>
+          </GenericAboveGroundOrgan>
+          <Leaf>
+            <Name>Leaf</Name>
+            <CompositeBiomass>
+              <Name>Live</Name>
+              <Propertys>
+                <string>[Leaf].CohortLive</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Dead</Name>
+              <Propertys>
+                <string>[Leaf].CohortDead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <ArrayBiomass>
+              <Name>CohortArrayLive</Name>
+              <Propertys>
+                <string>[Leaf].Live</string>
+              </Propertys>
+              <ArraySize>[Leaf].MaxNodeNo</ArraySize>
+            </ArrayBiomass>
+            <ArrayBiomass>
+              <Name>CohortArrayDead</Name>
+              <Propertys>
+                <string>[Leaf].Dead</string>
+              </Propertys>
+              <ArraySize>[Leaf].MaxNodeNo</ArraySize>
+            </ArrayBiomass>
+            <LeafCohort>
+              <Name>InitialLeaf1</Name>
+              <Rank>1</Rank>
+              <Area>100</Area>
+            </LeafCohort>
+            <LeafCohort>
+              <Name>InitialLeaf2</Name>
+              <Rank>2</Rank>
+              <Area>0</Area>
+            </LeafCohort>
+            <LeafCohort>
+              <Name>InitialLeaf3</Name>
+              <Rank>3</Rank>
+              <Area>0</Area>
+            </LeafCohort>
+            <VariableReference>
+              <Name>ThermalTime</Name>
+              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            </VariableReference>
+            <LeafCohortParameters>
+              <Name>LeafCohortParameters</Name>
+              <LinearInterpolationFunction>
+                <Name>GrowthDuration</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <XProperty>[Phenology].Stage</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>1</double>
+                    <double>5.5</double>
+                    <double>7</double>
+                  </X>
+                  <Y>
+                    <double>90</double>
+                    <double>90</double>
+                    <double>40</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>MaxArea</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <XProperty>[Phenology].Stage</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>1</double>
+                    <double>2</double>
+                    <double>3</double>
+                    <double>4</double>
+                    <double>5</double>
+                    <double>6</double>
+                    <double>7</double>
+                    <double>8</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1000</double>
+                    <double>2000</double>
+                    <double>3000</double>
+                    <double>4000</double>
+                    <double>2000</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>LagDuration</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <XProperty>[Phenology].Stage</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>1</double>
+                    <double>5.5</double>
+                    <double>5.75</double>
+                    <double>6</double>
+                    <double>7</double>
+                  </X>
+                  <Y>
+                    <double>400</double>
+                    <double>400</double>
+                    <double>200</double>
+                    <double>100</double>
+                    <double>50</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>SenescenceDuration</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <XProperty>[Phenology].Stage</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>1</double>
+                    <double>6</double>
+                    <double>6.5</double>
+                    <double>7</double>
+                  </X>
+                  <Y>
+                    <double>80</double>
+                    <double>80</double>
+                    <double>40</double>
+                    <double>10</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>DetachmentLagDuration</Name>
+                <Value>1000000</Value>
+              </Constant>
+              <Constant>
+                <Name>DetachmentDuration</Name>
+                <Value>1000000</Value>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>SpecificLeafAreaMax</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <XProperty>[Leaf].LAI</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>4</double>
+                    <double>6</double>
+                    <double>8</double>
+                  </X>
+                  <Y>
+                    <double>90000</double>
+                    <double>40000</double>
+                    <double>40000</double>
+                    <double>40000</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>StructuralFraction</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <Value>0.5</Value>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>SpecificLeafAreaMin</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <XProperty>[Leaf].LAI</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>4</double>
+                    <double>6</double>
+                    <double>8</double>
+                  </X>
+                  <Y>
+                    <double>45000</double>
+                    <double>20000</double>
+                    <double>20000</double>
+                    <double>20000</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>ExpansionStress</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <XProperty>[FieldPea].WaterSupplyDemandRatio</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>MinimumNConc</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <Value>0.03</Value>
+              </Constant>
+              <Constant>
+                <Name>CriticalNConc</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <Value>0.05</Value>
+              </Constant>
+              <Constant>
+                <Name>MaximumNConc</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <Value>0.08</Value>
+              </Constant>
+              <Constant>
+                <Name>NReallocationFactor</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <Value>1</Value>
+              </Constant>
+              <Constant>
+                <Name>NRetranslocationFactor</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <Value>0</Value>
+              </Constant>
+              <Constant>
+                <Name>DMRetranslocationFactor</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[]]></MemoText>
+                </Memo>
+                <Value>0.5</Value>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>ShadeInducedSenescenceRate</Name>
+                <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.9</double>
+                    <double>0.90001</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0.2</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <Constant>
+                <Name>InitialNConc</Name>
+                <Value>0</Value>
+              </Constant>
+              <Constant>
+                <Name>NonStructuralFraction</Name>
+                <Value>0</Value>
+              </Constant>
+            </LeafCohortParameters>
+            <LinearInterpolationFunction>
+              <Name>ExtinctionCoeff</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <XProperty>[Leaf].LAI</XProperty>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>0.5</double>
+                </X>
+                <Y>
+                  <double>0.7</double>
+                  <double>0.7</double>
+                </Y>
+              </XYPairs>
+            </LinearInterpolationFunction>
+            <RUEModel>
+              <Name>Photosynthesis</Name>
+              <Constant>
+                <Name>RUE</Name>
+                <Value>1.4</Value>
+              </Constant>
+              <WeightedTemperatureFunction>
+                <Name>FT</Name>
+                <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>15</double>
+                    <double>30</double>
+                    <double>40</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+              </WeightedTemperatureFunction>
+              <LinearInterpolationFunction>
+                <Name>FVPD</Name>
+                <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>10</double>
+                    <double>50</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>FN</Name>
+                <XProperty>[Leaf].Fn</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1.5</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>FW</Name>
+                <XProperty>[Leaf].Fw</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1.5</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <RUECO2Function>
+                <Name>Fco2</Name>
+                <PhotosyntheticPathway>C3</PhotosyntheticPathway>
+              </RUECO2Function>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+            </RUEModel>
+            <LinearInterpolationFunction>
+              <Name>FrostFraction</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <XProperty>[Weather].MinT</XProperty>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>-1</double>
+                  <double>0</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </LinearInterpolationFunction>
+            <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
+            <StartFractionExpanded>0</StartFractionExpanded>
+            <FractionNextleafExpanded>0</FractionNextleafExpanded>
+            <_ExpandedNodeNo>0</_ExpandedNodeNo>
+            <DeadNodesYesterday>0</DeadNodesYesterday>
+            <MaxCover>1</MaxCover>
+            <PotentialEP>0</PotentialEP>
+            <KDead>0.3</KDead>
+            <GsMax>0.03</GsMax>
+            <R50>200</R50>
+            <Emissivity>0.96</Emissivity>
+            <Albido>0.26</Albido>
+            <FractionDied>0</FractionDied>
+          </Leaf>
+          <GenericAboveGroundOrgan>
+            <Name>Stem</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <Biomass>
+              <Name>Live</Name>
+            </Biomass>
+            <Biomass>
+              <Name>Dead</Name>
+            </Biomass>
+            <Constant>
+              <Name>NReallocationFactor</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0</Value>
+            </Constant>
+            <Constant>
+              <Name>NRetranslocationFactor</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.1</Value>
+            </Constant>
+            <PartitionFractionDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <PhaseLookup>
+                <Name>PartitionFraction</Name>
+                <PhaseLookupValue>
+                  <Name>Early</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0.39</Value>
+                  </Constant>
+                  <Start>Emergence</Start>
+                  <End>Flowering</End>
+                </PhaseLookupValue>
+                <PhaseLookupValue>
+                  <Name>middle</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0.45</Value>
+                  </Constant>
+                  <Start>Flowering</Start>
+                  <End>StartPodGrowth</End>
+                </PhaseLookupValue>
+                <PhaseLookupValue>
+                  <Name>Late</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0</Value>
+                  </Constant>
+                  <Start>StartPodGrowth</Start>
+                  <End>Maturity</End>
+                </PhaseLookupValue>
+                <PhaseLookupValue>
+                  <Name>PostMaturity</Name>
+                  <Constant>
+                    <Name>Function</Name>
+                    <Value>0.3</Value>
+                  </Constant>
+                  <Start>Maturity</Start>
+                  <End>Unused</End>
+                </PhaseLookupValue>
+              </PhaseLookup>
+            </PartitionFractionDemandFunction>
+            <Constant>
+              <Name>MaximumNConc</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.01</Value>
+            </Constant>
+            <Constant>
+              <Name>MinimumNConc</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.003</Value>
+            </Constant>
+            <PhaseBasedSwitch>
+              <Name>NitrogenDemandSwitch</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Start>Germination</Start>
+              <End>Maturity</End>
+            </PhaseBasedSwitch>
+            <Constant>
+              <Name>StructuralFraction</Name>
+              <Value>0.7</Value>
+            </Constant>
+          </GenericAboveGroundOrgan>
+          <Summariser>
+            <Name>Summariser</Name>
+            <CompositeBiomass>
+              <Name>AboveGround</Name>
+              <Propertys>
+                <string>[Leaf].Live</string>
+                <string>[Leaf].Dead</string>
+                <string>[Stem].Live</string>
+                <string>[Stem].Dead</string>
+                <string>[Grain].Live</string>
+                <string>[Grain].Dead</string>
+                <string>[Shell].Live</string>
+                <string>[Shell].Dead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>BelowGround</Name>
+              <Propertys>
+                <string>[Root].Live</string>
+                <string>[Root].Dead</string>
+                <string>[Nodule].Live</string>
+                <string>[Nodule].Dead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Total</Name>
+              <Propertys>
+                <string>[Leaf].Live</string>
+                <string>[Leaf].Dead</string>
+                <string>[Stem].Live</string>
+                <string>[Stem].Dead</string>
+                <string>[Grain].Live</string>
+                <string>[Grain].Dead</string>
+                <string>[Shell].Live</string>
+                <string>[Shell].Dead</string>
+                <string>[Root].Live</string>
+                <string>[Root].Dead</string>
+                <string>[Nodule].Live</string>
+                <string>[Nodule].Dead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>TotalLive</Name>
+              <Propertys>
+                <string>[Leaf].Live</string>
+                <string>[Stem].Live</string>
+                <string>[Grain].Live</string>
+                <string>[Shell].Live</string>
+                <string>[Root].Live</string>
+                <string>[Nodule].Live</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>TotalDead</Name>
+              <Propertys>
+                <string>[Leaf].Dead</string>
+                <string>[Stem].Dead</string>
+                <string>[Grain].Dead</string>
+                <string>[Shell].Dead</string>
+                <string>[Root].Dead</string>
+                <string>[Nodule].Dead</string>
+              </Propertys>
+            </CompositeBiomass>
+            <CompositeBiomass>
+              <Name>Pod</Name>
+              <Propertys>
+                <string>[Shell].Live</string>
+                <string>[Shell].Dead</string>
+                <string>[Grain].Live</string>
+                <string>[Grain].Dead</string>
+              </Propertys>
+            </CompositeBiomass>
+          </Summariser>
+          <Cultivar>
+            <Name>Primo</Name>
+          </Cultivar>
+          <Cultivar>
+            <Name>Rex</Name>
+          </Cultivar>
+          <Cultivar>
+            <Name>Excel</Name>
+          </Cultivar>
+          <Cultivar>
+            <Name>Kaspa</Name>
+          </Cultivar>
+          <Cultivar>
+            <Name>Mutka</Name>
+          </Cultivar>
+          <Cultivar>
+            <Name>Parafield</Name>
+          </Cultivar>
+          <Cultivar>
+            <Name>Parv</Name>
+          </Cultivar>
+          <Cultivar>
+            <Name>Crusader</Name>
+          </Cultivar>
           <CropType>FieldPea</CropType>
         </Plant>
         <MicroClimate>
@@ -631,11 +2113,11 @@ namespace Models
             <string>[ExtraVariables].Script.AccumOutflowLat</string>
             <string>[ExtraVariables].Script.SoilWaterDeficit</string>
             <string>[FieldPea].Grain.Live.Wt</string>
-            <string>[FieldPea].PodWall.Live.Wt</string>
+            <string>[FieldPea].Shell.Live.Wt</string>
             <string>[FieldPea].Stem.Live.Wt</string>
             <string>[FieldPea].Stem.Live.Wt</string>
             <string>[FieldPea].Grain.Live.N</string>
-            <string>[FieldPea].PodWall.Live.N</string>
+            <string>[FieldPea].Shell.Live.N</string>
             <string>[FieldPea].Leaf.Live.Wt</string>
             <string>[FieldPea].Root.Live.Wt</string>
             <string>[FieldPea].Leaf.Live.N</string>
@@ -689,6 +2171,9 @@ namespace Models
             <string>[FieldPea].Leaf.CohortArea[15]</string>
             <string>[FieldPea].Leaf.AppearedCohortNo</string>
             <string>[FieldPea].Leaf.DeadCohortNo</string>
+            <string>[FieldPea].Summariser.AboveGround.Wt</string>
+            <string>[FieldPea].Phenology.Stage</string>
+            <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -989,7 +2474,7 @@ namespace Models
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
-          <Title>PodWall</Title>
+          <Title>Shell</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1002,7 +2487,7 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>FieldPea.PodWall.Live.Wt</FieldName>
+            <FieldName>FieldPea.Shell.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
@@ -2602,6 +4087,26 @@ namespace Models
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
+        <Series>
+          <Title>Series3</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Phenology.Stage</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
@@ -2671,7 +4176,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>TuberWt</Name>
+        <Name>GrainWt</Name>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -2705,7 +4210,7 @@ namespace Models
             <FieldName>FieldPea.Grain.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -2717,15 +4222,15 @@ namespace Models
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <TableName>Input</TableName>
+            <TableName>ObservedBiomass</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Tuber.Live.Wt</FieldName>
+            <TableName>ObservedBiomass</TableName>
+            <FieldName>FieldPea.Grain.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2768,7 +4273,7 @@ namespace Models
             <FieldName>FieldPea.Leaf.LAI</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -2816,7 +4321,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -2831,27 +4336,27 @@ namespace Models
             <FieldName>FieldPea.Leaf.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <TableName>Input</TableName>
+            <TableName>ObservedBiomass</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <TableName>Input</TableName>
+            <TableName>ObservedBiomass</TableName>
             <FieldName>FieldPea.Leaf.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopRight</LegendPosition>
@@ -2879,7 +4384,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -2894,27 +4399,27 @@ namespace Models
             <FieldName>FieldPea.Stem.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <TableName>Input</TableName>
+            <TableName>ObservedBiomass</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <TableName>Input</TableName>
+            <TableName>ObservedBiomass</TableName>
             <FieldName>FieldPea.Stem.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2923,7 +4428,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>TotalWt</Name>
+        <Name>AboveGroundWt</Name>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -2934,7 +4439,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Total  live weight (g DM/m2)</Title>
+          <Title>Aboveground live weight (g DM/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -2942,7 +4447,27 @@ namespace Models
         </Axis>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedBiomass</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedBiomass</TableName>
+            <FieldName>FieldPea.Summariser.AboveGround.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -2954,30 +4479,10 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>FieldPea.Summariser.TotalLive.Wt</FieldName>
+            <FieldName>FieldPea.Summariser.AboveGround.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Summariser.Total.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -2986,7 +4491,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>TuberN</Name>
+        <Name>ShellWt</Name>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -2997,7 +4502,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Tuber live nitrogen (g N/m2)</Title>
+          <Title>Shell wt (g/m2)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -3005,7 +4510,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3017,156 +4522,30 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>FieldPea.Tuber.Live.N</FieldName>
+            <FieldName>FieldPea.Shell.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <TableName>Input</TableName>
+            <TableName>ObservedBiomass</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Tuber.Live.N</FieldName>
+            <TableName>ObservedBiomass</TableName>
+            <FieldName>FieldPea.Shell.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>LeafN</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Leaf live nitrogen (g N/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Leaf.Live.N</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.leaf.LiveN</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>StemN</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Stem live nitrogen (g N/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Stem.Live.N</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Stem.Live.N</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
@@ -3194,7 +4573,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Predicted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3214,7 +4593,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3227,195 +4606,6 @@ namespace Models
           <Y>
             <TableName>InputRadInd</TableName>
             <FieldName>FieldPea.Leaf.CoverGreen</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>TuberN%</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Tuber nitrogen content (g N/g DM)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Tuber.Live.NConc</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Tuber.Live.Nconc</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>LeafN%</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Leaf  nitrogen content (g N/g DM)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Leaf.Live.NConc</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Leaf.Live.Nconc</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>StemN%</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title> Stem nitrogen content (g N/g DM)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Stem.Live.NConc</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Line</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Stem.Live.Nconc</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
@@ -3446,7 +4636,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Prediceted</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3466,7 +4656,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Observed</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -3597,5 +4787,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>272</ExplorerWidth>
+  <ExplorerWidth>338</ExplorerWidth>
 </Simulations>

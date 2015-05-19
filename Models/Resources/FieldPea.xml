@@ -704,7 +704,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</Constant>
 	</Nodule>
 	<GenericAboveGroundOrgan>
-		<Name>PodWall</Name>
+		<Name>Shell</Name>
 		<Biomass>
 			<Name>Live</Name>
 		</Biomass>
@@ -1242,8 +1242,8 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 				<string>[Stem].Dead</string>
 				<string>[Grain].Live</string>
 				<string>[Grain].Dead</string>
-				<string>[PodWall].Live</string>
-				<string>[PodWall].Dead</string>
+				<string>[Shell].Live</string>
+				<string>[Shell].Dead</string>
 			</Propertys>
 		</CompositeBiomass>
 		<CompositeBiomass>
@@ -1264,8 +1264,8 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 				<string>[Stem].Dead</string>
 				<string>[Grain].Live</string>
 				<string>[Grain].Dead</string>
-				<string>[PodWall].Live</string>
-				<string>[PodWall].Dead</string>
+				<string>[Shell].Live</string>
+				<string>[Shell].Dead</string>
 				<string>[Root].Live</string>
 				<string>[Root].Dead</string>
 				<string>[Nodule].Live</string>
@@ -1278,7 +1278,7 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 				<string>[Leaf].Live</string>
 				<string>[Stem].Live</string>
 				<string>[Grain].Live</string>
-				<string>[PodWall].Live</string>
+				<string>[Shell].Live</string>
 				<string>[Root].Live</string>
 				<string>[Nodule].Live</string>
 			</Propertys>
@@ -1289,7 +1289,7 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 				<string>[Leaf].Dead</string>
 				<string>[Stem].Dead</string>
 				<string>[Grain].Dead</string>
-				<string>[PodWall].Dead</string>
+				<string>[Shell].Dead</string>
 				<string>[Root].Dead</string>
 				<string>[Nodule].Dead</string>
 			</Propertys>
@@ -1297,8 +1297,8 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 		<CompositeBiomass>
 			<Name>Pod</Name>
 			<Propertys>
-				<string>[PodWall].Live</string>
-				<string>[PodWall].Dead</string>
+				<string>[Shell].Live</string>
+				<string>[Shell].Dead</string>
 				<string>[Grain].Live</string>
 				<string>[Grain].Dead</string>
 			</Propertys>
