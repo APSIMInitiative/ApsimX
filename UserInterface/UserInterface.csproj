@@ -126,6 +126,7 @@
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Presenters\ConstantPresenter.cs" />
+    <Compile Include="Presenters\PhaseLookupValuePresenter.cs" />
     <Compile Include="Presenters\VariableReferencePresenter.cs" />
     <Compile Include="Presenters\PhasePresenter.cs" />
     <Compile Include="Presenters\XYFunctionPresenter.cs" />
