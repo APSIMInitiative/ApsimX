@@ -1712,48 +1712,13 @@
               </Memo>
               <Value>0.1</Value>
             </Constant>
-            <PartitionFractionDemandFunction>
+            <InternodeDemandFunction>
               <Name>DMDemandFunction</Name>
-              <PhaseLookup>
-                <Name>PartitionFraction</Name>
-                <PhaseLookupValue>
-                  <Name>Early</Name>
-                  <Constant>
-                    <Name>Function</Name>
-                    <Value>0.39</Value>
-                  </Constant>
-                  <Start>Emergence</Start>
-                  <End>Flowering</End>
-                </PhaseLookupValue>
-                <PhaseLookupValue>
-                  <Name>middle</Name>
-                  <Constant>
-                    <Name>Function</Name>
-                    <Value>0.45</Value>
-                  </Constant>
-                  <Start>Flowering</Start>
-                  <End>StartPodGrowth</End>
-                </PhaseLookupValue>
-                <PhaseLookupValue>
-                  <Name>Late</Name>
-                  <Constant>
-                    <Name>Function</Name>
-                    <Value>0</Value>
-                  </Constant>
-                  <Start>StartPodGrowth</Start>
-                  <End>Maturity</End>
-                </PhaseLookupValue>
-                <PhaseLookupValue>
-                  <Name>PostMaturity</Name>
-                  <Constant>
-                    <Name>Function</Name>
-                    <Value>0.3</Value>
-                  </Constant>
-                  <Start>Maturity</Start>
-                  <End>Unused</End>
-                </PhaseLookupValue>
-              </PhaseLookup>
-            </PartitionFractionDemandFunction>
+              <Constant>
+                <Name>InterNodeWt</Name>
+                <Value>0.05</Value>
+              </Constant>
+            </InternodeDemandFunction>
             <Constant>
               <Name>MaximumNConc</Name>
               <Memo>
@@ -4087,26 +4052,6 @@ namespace Models
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
-        <Series>
-          <Title>Series3</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Phenology.Stage</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
         <LegendPosition>BottomRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
@@ -4585,10 +4530,10 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>FieldPea.Leaf.CoverGreen</FieldName>
+            <FieldName>FieldPea.Leaf.CoverTotal</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
@@ -4785,7 +4730,70 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>GrainNumber</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Grain number (/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Prediceted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Grain.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Observed</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedBiomass</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedBiomass</TableName>
+            <FieldName>FieldPea.Grain.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>338</ExplorerWidth>
+  <ExplorerWidth>380</ExplorerWidth>
 </Simulations>
