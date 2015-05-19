@@ -91,6 +91,7 @@
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
+    <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />

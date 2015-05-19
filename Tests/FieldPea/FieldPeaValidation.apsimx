@@ -449,7 +449,7 @@
               <ShootRate>5</ShootRate>
             </EmergingPhase>
             <GenericPhase>
-              <Name>EmergenceToEndJuvenile</Name>
+              <Name>Juvenile</Name>
               <Constant>
                 <Name>Target</Name>
                 <Value>200</Value>
@@ -461,10 +461,10 @@
               <Start>Emergence</Start>
               <End>EndJuvenile</End>
             </GenericPhase>
-            <GenericPhase>
-              <Name>EndJuvenileToInitiation</Name>
+            <NodeNumberPhase>
+              <Name>Inductive</Name>
               <LinearInterpolationFunction>
-                <Name>Target</Name>
+                <Name>CompletionNodeNumber</Name>
                 <XProperty>[Phenology].Photoperiod.Value</XProperty>
                 <XYPairs>
                   <Name>XYPairs</Name>
@@ -473,20 +473,16 @@
                     <double>20</double>
                   </X>
                   <Y>
-                    <double>530</double>
-                    <double>300</double>
+                    <double>20</double>
+                    <double>12</double>
                   </Y>
                 </XYPairs>
               </LinearInterpolationFunction>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
               <Start>EndJuvenile</Start>
               <End>FloralInitiation</End>
-            </GenericPhase>
+            </NodeNumberPhase>
             <GenericPhase>
-              <Name>InitiationToFlowering</Name>
+              <Name>Reproductive</Name>
               <Constant>
                 <Name>Target</Name>
                 <Value>33</Value>
@@ -496,10 +492,10 @@
                 <VariableName>[Phenology].ThermalTime.Value</VariableName>
               </VariableReference>
               <Start>FloralInitiation</Start>
-              <End>Flowering</End>
+              <End>StartFlowering</End>
             </GenericPhase>
             <GenericPhase>
-              <Name>FloweringToStartGrainFilling</Name>
+              <Name>Flowering</Name>
               <LinearInterpolationFunction>
                 <Name>Target</Name>
                 <XProperty>[Phenology].Photoperiod.Value</XProperty>
@@ -519,11 +515,11 @@
                 <Name>ThermalTime</Name>
                 <VariableName>[Phenology].ThermalTime.Value</VariableName>
               </VariableReference>
-              <Start>Flowering</Start>
-              <End>StartPodGrowth</End>
+              <Start>StartFlowering</Start>
+              <End>EndFlowering</End>
             </GenericPhase>
             <GenericPhase>
-              <Name>PodFilling</Name>
+              <Name>GrainFilling</Name>
               <Constant>
                 <Name>Target</Name>
                 <Value>690</Value>
@@ -532,7 +528,7 @@
                 <Name>ThermalTime</Name>
                 <VariableName>[Phenology].ThermalTime.Value</VariableName>
               </VariableReference>
-              <Start>StartPodGrowth</Start>
+              <Start>EndFlowering</Start>
               <End>EndGrainFill</End>
             </GenericPhase>
             <GenericPhase>
@@ -549,7 +545,7 @@
               <End>Maturity</End>
             </GenericPhase>
             <GenericPhase>
-              <Name>MaturityToHarvestRipe</Name>
+              <Name>Ripening</Name>
               <Constant>
                 <Name>Target</Name>
                 <Value>1</Value>
@@ -589,7 +585,7 @@
                 <MemoText><![CDATA[]]></MemoText>
               </Memo>
               <Start>Emergence</Start>
-              <End>StartPodGrowth</End>
+              <End>EndFlowering</End>
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>MainStemNodeAppearanceRate</Name>
@@ -722,7 +718,7 @@
                   </VariableReference>
                   <VariableReference>
                     <Name>FillingDuration</Name>
-                    <VariableName>[Phenology].FloweringToStartGrainFilling.Target.Value</VariableName>
+                    <VariableName>[Phenology].Flowering.Target.Value</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>ThermalTime</Name>
@@ -740,8 +736,8 @@
                     </VariableReference>
                   </MultiplyFunction>
                 </FillingRateFunction>
-                <Start>Flowering</Start>
-                <End>StartPodGrowth</End>
+                <Start>StartFlowering</Start>
+                <End>EndFlowering</End>
               </PhaseLookupValue>
               <PhaseLookupValue>
                 <Name>LinearPhase</Name>
@@ -753,7 +749,7 @@
                   </VariableReference>
                   <VariableReference>
                     <Name>FillingDuration</Name>
-                    <VariableName>[Phenology].PodFilling.Target.Value</VariableName>
+                    <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>ThermalTime</Name>
@@ -778,7 +774,7 @@
                     </VariableReference>
                   </MultiplyFunction>
                 </FillingRateFunction>
-                <Start>StartPodGrowth</Start>
+                <Start>EndFlowering</Start>
                 <End>EndGrainFill</End>
               </PhaseLookupValue>
             </PhaseLookup>
@@ -814,11 +810,11 @@
                     <Name>AddFunction</Name>
                     <VariableReference>
                       <Name>FillingDuration</Name>
-                      <VariableName>[Phenology].FloweringToStartGrainFilling.Target.Value</VariableName>
+                      <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
                     </VariableReference>
                     <VariableReference>
                       <Name>FillingDuration</Name>
-                      <VariableName>[Phenology].PodFilling.Target.Value</VariableName>
+                      <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
                     </VariableReference>
                   </AddFunction>
                   <VariableReference>
@@ -837,7 +833,7 @@
                     </VariableReference>
                   </MultiplyFunction>
                 </FillingRateFunction>
-                <Start>StartPodGrowth</Start>
+                <Start>EndFlowering</Start>
                 <End>EndGrainFill</End>
               </PhaseLookupValue>
             </PhaseLookup>
@@ -862,7 +858,7 @@
                   </Y>
                 </XYPairs>
               </LinearInterpolationFunction>
-              <SetEvent>Flowering</SetEvent>
+              <SetEvent>StartFlowering</SetEvent>
               <ReSetEvent>never</ReSetEvent>
             </OnEventFunction>
             <RipeStage />
@@ -972,7 +968,7 @@
                   <Value>0.25</Value>
                 </Constant>
                 <Start>FloralInitiation</Start>
-                <End>StartPodGrowth</End>
+                <End>EndFlowering</End>
               </PhaseLookupValue>
               <PhaseLookupValue>
                 <Name>Late</Name>
@@ -980,7 +976,7 @@
                   <Name>Function</Name>
                   <Value>0</Value>
                 </Constant>
-                <Start>StartPodGrowth</Start>
+                <Start>EndFlowering</Start>
                 <End>Maturity</End>
               </PhaseLookupValue>
             </PhaseLookup>
@@ -1116,7 +1112,7 @@
                     <Value>0.02</Value>
                   </Constant>
                   <Start>FloralInitiation</Start>
-                  <End>StartPodGrowth</End>
+                  <End>EndFlowering</End>
                 </PhaseLookupValue>
                 <PhaseLookupValue>
                   <Name>Late</Name>
@@ -1124,7 +1120,7 @@
                     <Name>Function</Name>
                     <Value>0</Value>
                   </Constant>
-                  <Start>StartPodGrowth</Start>
+                  <Start>EndFlowering</Start>
                   <End>Maturity</End>
                 </PhaseLookupValue>
                 <Memo>
@@ -1195,8 +1191,8 @@
                     <Name>Function</Name>
                     <Value>0.1</Value>
                   </Constant>
-                  <Start>Flowering</Start>
-                  <End>StartPodGrowth</End>
+                  <Start>StartFlowering</Start>
+                  <End>EndFlowering</End>
                 </PhaseLookupValue>
                 <PhaseLookupValue>
                   <Name>Late</Name>
@@ -1204,7 +1200,7 @@
                     <Name>Function</Name>
                     <Value>0.2</Value>
                   </Constant>
-                  <Start>StartPodGrowth</Start>
+                  <Start>EndFlowering</Start>
                   <End>Maturity</End>
                 </PhaseLookupValue>
               </PhaseLookup>
