@@ -13,6 +13,8 @@ namespace Models.PMF.Functions
     /// For example,  <b>[Phenology].ThermalTime.Value</b> refers to value of ThermalTime under phenology function.
     [Serializable]
     [Description("Returns the value of a nominated internal Plant numerical variable")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.VariableReferencePresenter")]
     public class VariableReference : Model, IFunction
     {
         /// <summary>The variable name</summary>
