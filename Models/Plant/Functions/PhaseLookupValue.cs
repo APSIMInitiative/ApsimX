@@ -13,6 +13,8 @@ namespace Models.PMF.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PhaseLookupValuePresenter")]
     public class PhaseLookupValue : Model, IFunction
     {
         /// <summary>The phenology</summary>
