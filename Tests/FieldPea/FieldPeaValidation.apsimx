@@ -448,21 +448,8 @@
               <ShootLag>15</ShootLag>
               <ShootRate>5</ShootRate>
             </EmergingPhase>
-            <GenericPhase>
-              <Name>Juvenile</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>200</Value>
-              </Constant>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
-              <Start>Emergence</Start>
-              <End>EndJuvenile</End>
-            </GenericPhase>
             <NodeNumberPhase>
-              <Name>Inductive</Name>
+              <Name>Vegetative</Name>
               <LinearInterpolationFunction>
                 <Name>CompletionNodeNumber</Name>
                 <XProperty>[Phenology].Photoperiod.Value</XProperty>
@@ -478,13 +465,17 @@
                   </Y>
                 </XYPairs>
               </LinearInterpolationFunction>
-              <Start>EndJuvenile</Start>
+              <Start>Emergence</Start>
               <End>StartFlowering</End>
             </NodeNumberPhase>
             <NodeNumberPhase>
               <Name>Flowering</Name>
               <AddFunction>
                 <Name>CompletionNodeNumber</Name>
+                <VariableReference>
+                  <Name>VegetativeNodes</Name>
+                  <VariableName>[Phenology].NFF.Value</VariableName>
+                </VariableReference>
                 <LinearInterpolationFunction>
                   <Name>FloweringNodes</Name>
                   <XProperty>[Phenology].Photoperiod.Value</XProperty>
@@ -500,19 +491,6 @@
                     </Y>
                   </XYPairs>
                 </LinearInterpolationFunction>
-                <OnEventFunction>
-                  <Name>VegetativeNodes</Name>
-                  <Constant>
-                    <Name>PreEventValue</Name>
-                    <Value>0</Value>
-                  </Constant>
-                  <VariableReference>
-                    <Name>PostEventValue</Name>
-                    <VariableName>[Structure].MainStemNodeNo</VariableName>
-                  </VariableReference>
-                  <SetEvent>StartFlowering</SetEvent>
-                  <ReSetEvent>never</ReSetEvent>
-                </OnEventFunction>
               </AddFunction>
               <MultiplyFunction>
                 <Name>Target</Name>
@@ -584,7 +562,7 @@
               </Constant>
               <VariableReference>
                 <Name>PostEventValue</Name>
-                <VariableName>[Phenology].Inductive.CompletionNodeNumber.Value</VariableName>
+                <VariableName>[Phenology].Vegetative.CompletionNodeNumber.Value</VariableName>
               </VariableReference>
               <SetEvent>StartFlowering</SetEvent>
               <ReSetEvent>never</ReSetEvent>
@@ -722,82 +700,40 @@
           <ReproductiveOrgan>
             <Name>Grain</Name>
             <Constant>
-              <Name>InitialGrainProportion</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <Constant>
               <Name>MaximumPotentialGrainSize</Name>
-              <Value>0.4</Value>
+              <Value>1.5</Value>
             </Constant>
             <PhaseLookup>
               <Name>DMDemandFunction</Name>
               <PhaseLookupValue>
-                <Name>InitialPhase</Name>
+                <Name>GrainFilling</Name>
                 <FillingRateFunction>
                   <Name>FillingRateFunction</Name>
                   <VariableReference>
                     <Name>NumberFunction</Name>
                     <VariableName>[Grain].NumberFunction.Value</VariableName>
                   </VariableReference>
-                  <VariableReference>
+                  <AddFunction>
                     <Name>FillingDuration</Name>
-                    <VariableName>[Phenology].Flowering.Target.Value</VariableName>
-                  </VariableReference>
+                    <VariableReference>
+                      <Name>FillingDuration</Name>
+                      <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>FillingDuration</Name>
+                      <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                    </VariableReference>
+                  </AddFunction>
                   <VariableReference>
                     <Name>ThermalTime</Name>
                     <VariableName>[Phenology].ThermalTime.Value</VariableName>
                   </VariableReference>
-                  <MultiplyFunction>
+                  <VariableReference>
                     <Name>PotentialSizeIncrement</Name>
-                    <VariableReference>
-                      <Name>InitialProportion</Name>
-                      <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-                    </VariableReference>
-                    <VariableReference>
-                      <Name>MaximumSize</Name>
-                      <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                    </VariableReference>
-                  </MultiplyFunction>
+                    <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  </VariableReference>
                 </FillingRateFunction>
                 <Start>StartFlowering</Start>
-                <End>EndFlowering</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>LinearPhase</Name>
-                <FillingRateFunction>
-                  <Name>FillingRateFunction</Name>
-                  <VariableReference>
-                    <Name>NumberFunction</Name>
-                    <VariableName>[Grain].NumberFunction.Value</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>FillingDuration</Name>
-                    <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-                  </VariableReference>
-                  <VariableReference>
-                    <Name>ThermalTime</Name>
-                    <VariableName>[Phenology].ThermalTime.Value</VariableName>
-                  </VariableReference>
-                  <MultiplyFunction>
-                    <Name>PotentialSizeIncrement</Name>
-                    <SubtractFunction>
-                      <Name>ProportionLinearPhase</Name>
-                      <Constant>
-                        <Name>One</Name>
-                        <Value>1</Value>
-                      </Constant>
-                      <VariableReference>
-                        <Name>InitialProportion</Name>
-                        <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-                      </VariableReference>
-                    </SubtractFunction>
-                    <VariableReference>
-                      <Name>MaximumSize</Name>
-                      <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                    </VariableReference>
-                  </MultiplyFunction>
-                </FillingRateFunction>
-                <Start>EndFlowering</Start>
                 <End>EndGrainFill</End>
               </PhaseLookupValue>
             </PhaseLookup>
@@ -830,7 +766,7 @@
                     <VariableName>[Grain].NumberFunction.Value</VariableName>
                   </VariableReference>
                   <AddFunction>
-                    <Name>AddFunction</Name>
+                    <Name>FillingDuration</Name>
                     <VariableReference>
                       <Name>FillingDuration</Name>
                       <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
@@ -856,34 +792,59 @@
                     </VariableReference>
                   </MultiplyFunction>
                 </FillingRateFunction>
-                <Start>EndFlowering</Start>
+                <PhaseLookupValue>
+                  <Name>GrainFilling</Name>
+                  <FillingRateFunction>
+                    <Name>FillingRateFunction</Name>
+                    <VariableReference>
+                      <Name>NumberFunction</Name>
+                      <VariableName>[Grain].NumberFunction.Value</VariableName>
+                    </VariableReference>
+                    <AddFunction>
+                      <Name>FillingDuration</Name>
+                      <VariableReference>
+                        <Name>FillingDuration</Name>
+                        <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                      </VariableReference>
+                      <VariableReference>
+                        <Name>FillingDuration</Name>
+                        <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                      </VariableReference>
+                    </AddFunction>
+                    <VariableReference>
+                      <Name>ThermalTime</Name>
+                      <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                    </VariableReference>
+                    <MultiplyFunction>
+                      <Name>PotentialSizeIncrement</Name>
+                      <Constant>
+                        <Name>MaximumFinalNConc</Name>
+                        <Value>0.04</Value>
+                      </Constant>
+                      <VariableReference>
+                        <Name>MaximumSize</Name>
+                        <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                      </VariableReference>
+                    </MultiplyFunction>
+                  </FillingRateFunction>
+                  <Start>EndFlowering</Start>
+                  <End>EndGrainFill</End>
+                </PhaseLookupValue>
+                <Start>StartFlowering</Start>
                 <End>EndGrainFill</End>
               </PhaseLookupValue>
             </PhaseLookup>
-            <OnEventFunction>
+            <MultiplyFunction>
               <Name>NumberFunction</Name>
               <Constant>
-                <Name>PreEventValue</Name>
-                <Value>0</Value>
+                <Name>PeasPerPod</Name>
+                <Value>8</Value>
               </Constant>
-              <LinearInterpolationFunction>
-                <Name>PostEventValue</Name>
-                <XProperty>[Stem].Live.Wt</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1000</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>25000</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <SetEvent>StartFlowering</SetEvent>
-              <ReSetEvent>never</ReSetEvent>
-            </OnEventFunction>
+              <VariableReference>
+                <Name>PodNumber</Name>
+                <VariableName>[Structure].TotalStemPopn</VariableName>
+              </VariableReference>
+            </MultiplyFunction>
             <RipeStage />
           </ReproductiveOrgan>
           <Root>
@@ -1243,14 +1204,50 @@
                 <Name>ThermalTime</Name>
                 <VariableName>[Phenology].ThermalTime.Value</VariableName>
               </VariableReference>
+              <VariableReference>
+                <Name>OrganPopulation</Name>
+                <VariableName>[Shell].PodNumber.Value</VariableName>
+              </VariableReference>
               <Constant>
                 <Name>ExpansionStress</Name>
                 <Value>1</Value>
               </Constant>
-              <StartStage>5.5</StartStage>
-              <GrowthDuration>300</GrowthDuration>
-              <MaximumOrganWt>25</MaximumOrganWt>
+              <AddFunction>
+                <Name>GrowthDuration</Name>
+                <VariableReference>
+                  <Name>FloweringGrowthPeriod</Name>
+                  <VariableName>[Phenology].Flowering.Target.Value</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>PostFloweringGrowthPeriod</Name>
+                  <Value>60</Value>
+                </Constant>
+              </AddFunction>
+              <StartStage>4</StartStage>
+              <MaximumOrganWt>0.5</MaximumOrganWt>
             </PopulationBasedDemandFunction>
+            <MultiplyFunction>
+              <Name>PodNumber</Name>
+              <Constant>
+                <Name>PodsPerNode</Name>
+                <Value>0.7</Value>
+              </Constant>
+              <VariableReference>
+                <Name>StemPopulation</Name>
+                <VariableName>[Structure].TotalStemPopn</VariableName>
+              </VariableReference>
+              <SubtractFunction>
+                <Name>FloweringNodes</Name>
+                <VariableReference>
+                  <Name>TotalNodes</Name>
+                  <VariableName>[Structure].MainStemNodeNo</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>VegetativeNodes</Name>
+                  <VariableName>[Phenology].NFF.Value</VariableName>
+                </VariableReference>
+              </SubtractFunction>
+            </MultiplyFunction>
           </GenericAboveGroundOrgan>
           <Leaf>
             <Name>Leaf</Name>
@@ -1312,8 +1309,8 @@
                   <Name>XYPairs</Name>
                   <X>
                     <double>1</double>
-                    <double>5.5</double>
-                    <double>7</double>
+                    <double>4.5</double>
+                    <double>6</double>
                   </X>
                   <Y>
                     <double>90</double>
@@ -1364,10 +1361,10 @@
                   <Name>XYPairs</Name>
                   <X>
                     <double>1</double>
-                    <double>5.5</double>
-                    <double>5.75</double>
+                    <double>4.5</double>
+                    <double>4.75</double>
+                    <double>5</double>
                     <double>6</double>
-                    <double>7</double>
                   </X>
                   <Y>
                     <double>400</double>
@@ -1389,9 +1386,9 @@
                   <Name>XYPairs</Name>
                   <X>
                     <double>1</double>
+                    <double>5</double>
+                    <double>5.5</double>
                     <double>6</double>
-                    <double>6.5</double>
-                    <double>7</double>
                   </X>
                   <Y>
                     <double>80</double>
@@ -4265,26 +4262,6 @@ namespace Models
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
-        <Series>
-          <Title>Series3</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Phenology.Stage</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
@@ -4945,5 +4922,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>335</ExplorerWidth>
+  <ExplorerWidth>365</ExplorerWidth>
 </Simulations>
