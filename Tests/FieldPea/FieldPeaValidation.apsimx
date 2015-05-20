@@ -481,19 +481,42 @@
               <Start>EndJuvenile</Start>
               <End>FloralInitiation</End>
             </NodeNumberPhase>
-            <GenericPhase>
+            <NodeNumberPhase>
               <Name>Reproductive</Name>
-              <Constant>
-                <Name>Target</Name>
-                <Value>33</Value>
-              </Constant>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
+              <AddFunction>
+                <Name>CompletionNodeNumber</Name>
+                <LinearInterpolationFunction>
+                  <Name>FloweringNodes</Name>
+                  <XProperty>[Phenology].Photoperiod.Value</XProperty>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>12</double>
+                      <double>16</double>
+                    </X>
+                    <Y>
+                      <double>10</double>
+                      <double>4</double>
+                    </Y>
+                  </XYPairs>
+                </LinearInterpolationFunction>
+                <OnEventFunction>
+                  <Name>VegetativeNodes</Name>
+                  <Constant>
+                    <Name>PreEventValue</Name>
+                    <Value>0</Value>
+                  </Constant>
+                  <VariableReference>
+                    <Name>PostEventValue</Name>
+                    <VariableName>[Structure].MainStemNodeNo</VariableName>
+                  </VariableReference>
+                  <SetEvent>FloralInitiation</SetEvent>
+                  <ReSetEvent>never</ReSetEvent>
+                </OnEventFunction>
+              </AddFunction>
               <Start>FloralInitiation</Start>
               <End>StartFlowering</End>
-            </GenericPhase>
+            </NodeNumberPhase>
             <GenericPhase>
               <Name>Flowering</Name>
               <LinearInterpolationFunction>
