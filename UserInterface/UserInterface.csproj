@@ -636,6 +636,8 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\FieldPea.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NodeNumberPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plant.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Maize.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HeightFunction.png" />
