@@ -10,6 +10,8 @@ namespace Models.PMF.Organs
     /// A generic above ground organ
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GenericPMFView")]
+    [PresenterName("UserInterface.Presenters.GenericPMFPresenter")]
     public class GenericAboveGroundOrgan : GenericOrgan, AboveGround
     {
         /// <summary>The summary</summary>
