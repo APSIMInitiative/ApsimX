@@ -589,6 +589,19 @@
               <Start>HarvestRipe</Start>
               <End>Unused</End>
             </EndPhase>
+            <OnEventFunction>
+              <Name>NFF</Name>
+              <Constant>
+                <Name>PreEventValue</Name>
+                <Value>0</Value>
+              </Constant>
+              <VariableReference>
+                <Name>PostEventValue</Name>
+                <VariableName>[Phenology].Inductive.CompletionNodeNumber.Value</VariableName>
+              </VariableReference>
+              <SetEvent>FloralInitiation</SetEvent>
+              <ReSetEvent>never</ReSetEvent>
+            </OnEventFunction>
             <Emerged>false</Emerged>
           </Phenology>
           <Structure>
@@ -2158,6 +2171,8 @@ namespace Models
             <string>[FieldPea].Summariser.AboveGround.Wt</string>
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
+            <string>[FieldPea].Phenology.NFF.Value</string>
+            <string>[FieldPeaHarvestRule].Script.FinalTag</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2274,6 +2289,18 @@ namespace Models
         }
 				]]></Code>
         </Manager>
+        <Report>
+          <Name>Harvest</Name>
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
+            <string>[FieldPea].Phenology.NFF.Value</string>
+            <string>[FieldPeaHarvestRule].Script.FinalTag</string>
+          </VariableNames>
+          <EventNames>
+            <string />
+          </EventNames>
+        </Report>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -4898,5 +4925,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>453</ExplorerWidth>
+  <ExplorerWidth>294</ExplorerWidth>
 </Simulations>
