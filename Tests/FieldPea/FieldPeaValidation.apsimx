@@ -86,7 +86,7 @@
       <Clock>
         <Name>clock</Name>
         <StartDate>1997-12-01T00:00:00</StartDate>
-        <EndDate>1999-03-01T00:00:00</EndDate>
+        <EndDate>1999-07-01T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
@@ -469,20 +469,20 @@
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
-                    <double>12</double>
-                    <double>20</double>
+                    <double>13</double>
+                    <double>16</double>
                   </X>
                   <Y>
-                    <double>20</double>
-                    <double>12</double>
+                    <double>18</double>
+                    <double>15</double>
                   </Y>
                 </XYPairs>
               </LinearInterpolationFunction>
               <Start>EndJuvenile</Start>
-              <End>FloralInitiation</End>
+              <End>StartFlowering</End>
             </NodeNumberPhase>
             <NodeNumberPhase>
-              <Name>Reproductive</Name>
+              <Name>Flowering</Name>
               <AddFunction>
                 <Name>CompletionNodeNumber</Name>
                 <LinearInterpolationFunction>
@@ -491,12 +491,12 @@
                   <XYPairs>
                     <Name>XYPairs</Name>
                     <X>
-                      <double>12</double>
+                      <double>13</double>
                       <double>16</double>
                     </X>
                     <Y>
                       <double>10</double>
-                      <double>4</double>
+                      <double>7</double>
                     </Y>
                   </XYPairs>
                 </LinearInterpolationFunction>
@@ -510,37 +510,24 @@
                     <Name>PostEventValue</Name>
                     <VariableName>[Structure].MainStemNodeNo</VariableName>
                   </VariableReference>
-                  <SetEvent>FloralInitiation</SetEvent>
+                  <SetEvent>StartFlowering</SetEvent>
                   <ReSetEvent>never</ReSetEvent>
                 </OnEventFunction>
               </AddFunction>
-              <Start>FloralInitiation</Start>
-              <End>StartFlowering</End>
-            </NodeNumberPhase>
-            <GenericPhase>
-              <Name>Flowering</Name>
-              <LinearInterpolationFunction>
+              <MultiplyFunction>
                 <Name>Target</Name>
-                <XProperty>[Phenology].Photoperiod.Value</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>1</double>
-                    <double>24</double>
-                  </X>
-                  <Y>
-                    <double>330</double>
-                    <double>450</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <VariableReference>
-                <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
-              </VariableReference>
+                <VariableReference>
+                  <Name>NodeNumberDuration</Name>
+                  <VariableName>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.Value</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>Phyllochron</Name>
+                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                </VariableReference>
+              </MultiplyFunction>
               <Start>StartFlowering</Start>
               <End>EndFlowering</End>
-            </GenericPhase>
+            </NodeNumberPhase>
             <GenericPhase>
               <Name>GrainFilling</Name>
               <Constant>
@@ -599,7 +586,7 @@
                 <Name>PostEventValue</Name>
                 <VariableName>[Phenology].Inductive.CompletionNodeNumber.Value</VariableName>
               </VariableReference>
-              <SetEvent>FloralInitiation</SetEvent>
+              <SetEvent>StartFlowering</SetEvent>
               <ReSetEvent>never</ReSetEvent>
             </OnEventFunction>
             <Emerged>false</Emerged>
@@ -655,7 +642,7 @@
                 </XYPairs>
               </LinearInterpolationFunction>
               <Start>Emergence</Start>
-              <End>EndGrainFill</End>
+              <End>EndFlowering</End>
             </PhaseLookupValue>
             <Constant>
               <Name>MainStemFinalNodeNumber</Name>
@@ -974,7 +961,7 @@
                   <Value>15</Value>
                 </Constant>
                 <Start>Emergence</Start>
-                <End>FloralInitiation</End>
+                <End>StartFlowering</End>
               </PhaseLookupValue>
               <PhaseLookupValue>
                 <Name>late</Name>
@@ -982,7 +969,7 @@
                   <Name>Function</Name>
                   <Value>17</Value>
                 </Constant>
-                <Start>FloralInitiation</Start>
+                <Start>StartFlowering</Start>
                 <End>Maturity</End>
               </PhaseLookupValue>
             </PhaseLookup>
@@ -995,7 +982,7 @@
                   <Value>0.25</Value>
                 </Constant>
                 <Start>Emergence</Start>
-                <End>FloralInitiation</End>
+                <End>StartFlowering</End>
               </PhaseLookupValue>
               <PhaseLookupValue>
                 <Name>Middle</Name>
@@ -1003,7 +990,7 @@
                   <Name>Function</Name>
                   <Value>0.25</Value>
                 </Constant>
-                <Start>FloralInitiation</Start>
+                <Start>StartFlowering</Start>
                 <End>EndFlowering</End>
               </PhaseLookupValue>
               <PhaseLookupValue>
@@ -1139,7 +1126,7 @@
                     <Value>0.03</Value>
                   </Constant>
                   <Start>Emergence</Start>
-                  <End>FloralInitiation</End>
+                  <End>StartFlowering</End>
                 </PhaseLookupValue>
                 <PhaseLookupValue>
                   <Name>Middle</Name>
@@ -1147,7 +1134,7 @@
                     <Name>Function</Name>
                     <Value>0.02</Value>
                   </Constant>
-                  <Start>FloralInitiation</Start>
+                  <Start>StartFlowering</Start>
                   <End>EndFlowering</End>
                 </PhaseLookupValue>
                 <PhaseLookupValue>
@@ -1217,30 +1204,6 @@
               </Memo>
               <Value>0.1</Value>
             </Constant>
-            <PartitionFractionDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <PhaseLookup>
-                <Name>PartitionFraction</Name>
-                <PhaseLookupValue>
-                  <Name>Early</Name>
-                  <Constant>
-                    <Name>Function</Name>
-                    <Value>0.1</Value>
-                  </Constant>
-                  <Start>StartFlowering</Start>
-                  <End>EndFlowering</End>
-                </PhaseLookupValue>
-                <PhaseLookupValue>
-                  <Name>Late</Name>
-                  <Constant>
-                    <Name>Function</Name>
-                    <Value>0.2</Value>
-                  </Constant>
-                  <Start>EndFlowering</Start>
-                  <End>Maturity</End>
-                </PhaseLookupValue>
-              </PhaseLookup>
-            </PartitionFractionDemandFunction>
             <Constant>
               <Name>StructuralFraction</Name>
               <Memo>
@@ -1274,6 +1237,20 @@
               <Start>Germination</Start>
               <End>Maturity</End>
             </PhaseBasedSwitch>
+            <PopulationBasedDemandFunction>
+              <Name>DMDemandFunction</Name>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              </VariableReference>
+              <Constant>
+                <Name>ExpansionStress</Name>
+                <Value>1</Value>
+              </Constant>
+              <StartStage>5.5</StartStage>
+              <GrowthDuration>300</GrowthDuration>
+              <MaximumOrganWt>25</MaximumOrganWt>
+            </PopulationBasedDemandFunction>
           </GenericAboveGroundOrgan>
           <Leaf>
             <Name>Leaf</Name>
@@ -2298,7 +2275,7 @@ namespace Models
             <string>[FieldPeaHarvestRule].Script.FinalTag</string>
           </VariableNames>
           <EventNames>
-            <string />
+            <string>[FieldPea].Harvesting</string>
           </EventNames>
         </Report>
         <Area>1</Area>
@@ -4923,7 +4900,50 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>NFF</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Grain number (/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Prediceted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Harvest</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Harvest</TableName>
+            <FieldName>FieldPea.Phenology.NFF.Value</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>294</ExplorerWidth>
+  <ExplorerWidth>335</ExplorerWidth>
 </Simulations>
