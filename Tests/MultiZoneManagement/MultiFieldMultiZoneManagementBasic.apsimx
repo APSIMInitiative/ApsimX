@@ -3,7 +3,7 @@
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
-    <AutoExport>false</AutoExport>
+    <AutoExport>true</AutoExport>
   </DataStore>
   <Tests>
     <Name>TestsBinary</Name>
@@ -19,7 +19,7 @@
     <Name>TwoZone_GodLevelManagement</Name>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>1998-01-01T00:00:00</StartDate>
+      <StartDate>1998-07-01T00:00:00</StartDate>
       <EndDate>1999-06-01T00:00:00</EndDate>
     </Clock>
     <Summary>
@@ -27,18 +27,60 @@
     </Summary>
     <Weather>
       <Name>Weather</Name>
-      <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
+      <FileName>C:\apsim_dev\Data\MetFiles\lincoln.met</FileName>
     </Weather>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
     </SoilArbitrator>
     <Manager>
+      <Name>CatchRain</Name>
+      <Script>
+        <Today_Rain>0</Today_Rain>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+
+
+
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+
+namespace Models
+{
+[Serializable] 
+[System.Xml.Serialization.XmlInclude(typeof(Model))]
+public class Script : Model
+{      
+   [Link] Weather Met;  
+   [Link] Clock Clock;
+
+	public double Today_Rain {get; set; }
+    
+   [EventSubscribe("PreparingNewWeatherData")]
+   private void OnPreparingNewWeatherData(object sender, EventArgs e)
+   {
+
+      Today_Rain = Met.Rain;
+      Met.Rain = 0;
+}
+}
+}
+
+]]></Code>
+    </Manager>
+    <Manager>
       <Name>MultiZoneIrrigator</Name>
       <Script>
+        <Today_PatchIrrigation>
+        </Today_PatchIrrigation>
         <On_off>True</On_off>
         <Crop_in>True</Crop_in>
         <No_fields>4</No_fields>
-        <Start_irrig>1998-11-01</Start_irrig>
+        <Start_irrig>1998-10-01</Start_irrig>
         <Finish_irrig>1999-04-01</Finish_irrig>
         <Application>0</Application>
         <Irrig_eff>0</Irrig_eff>
@@ -48,6 +90,7 @@
         <Soil_depth>0</Soil_depth>
         <Irrig_paw>0</Irrig_paw>
         <Irrig_method>Mean</Irrig_method>
+        <Nozzle_diameter>0</Nozzle_diameter>
       </Script>
       <Code><![CDATA[using System;
 using Models.Core;
@@ -64,7 +107,10 @@ namespace Models
 		[Link] Summary Summary;
 		[Link] Clock Clock; 
 		[Link] Weather Weather;
+		[Link] Simulation Simulation;
 		//private float Rain;
+		
+		public double[] Today_PatchIrrigation {get; set;}
 		
 		[Description("Irrigation on? (True/False)")]
 	public bool On_off {get; set;}
@@ -92,12 +138,15 @@ namespace Models
 	public float Irrig_paw {get; set;}
 	[Description("Method by which PAW is calculated on a field basis (Mean, Driest, Wettest)")]
 	public string Irrig_method {get; set;}
+	[Description("Wetting diameter of nozzle (m)")]
+	public double Nozzle_diameter {get; set;}
+
         
         private Zone[] Zones {get; set; }
         
+        
         private int Irrigator_position;
 		private int Counter;
-		private int PatchCounter;
 		
 		private double Rain3;
 		private double[] Rain_3;
@@ -105,7 +154,7 @@ namespace Models
 		public double Current_TodayDeficit;
 		public double Current_IrrigDeficit;
 		
-		
+		//setting things to zero
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
 		{
@@ -118,12 +167,13 @@ namespace Models
 			Rain_3[2] = 0;
 			
 			//THESE ARE HERE BECAUSE INTERFACE BROKEN - TO BE REMOVED
-			Application = 20;
+			Application = 10;
 			Irrig_eff = 80;
 			Rain_pause = 30;
 			Days_pause = 3;
 			Soil_depth = 550;
 			Irrig_paw = 30;
+			Nozzle_diameter = 20;
 		}
         
         [EventSubscribe("StartOfSimulation")]
@@ -143,6 +193,7 @@ namespace Models
                   }
                }
                Zones = zones.ToArray();
+               Today_PatchIrrigation = new double[Zones.Length];
          }
 		
 		
@@ -153,15 +204,20 @@ namespace Models
 		if (DateUtilities.WithinDates(Start_irrig, Clock.Today.Date, Finish_irrig) && (On_off)) {
 
 			//calculates rain in last 3 days and whether irrigator is paused 
-			Rain_3[2] = Rain_3[1];
+			Rain_3[2] = Rain_3[1]; //passes the days backwards
 			Rain_3[1] = Rain_3[0];
-			Rain_3[0] = Weather.Rain;
+			Rain_3[0] = (double) Apsim.Get(Simulation, "CatchRain.Script.Today_Rain");
 			Rain3 = Rain_3[0] + Rain_3[1] + Rain_3[2];
 			if (Rain3 >= Rain_pause) {
 				Days2Pause = Days_pause;
 			} else {
 				Days2Pause = Days2Pause - 1;
 			}
+			
+			//sets todays irrigation for each patch to 0
+			for (int i = 0; i < Zones.Length; i++) {
+				Today_PatchIrrigation[i] = 0;
+				}
 
 			//Moves the irrigator around the fields every day unless paused
 			if (Counter < No_fields && Days2Pause < 0.5) {
@@ -184,8 +240,7 @@ namespace Models
 				TodayDeficit = new double[Zones.Length + 1];
 				IrrigDeficit = new double[Zones.Length + 1];
 
-				PatchCounter = 1;
-
+				
 				for (int i = 0; i < Zones.Length; i++) {
 					Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;
 					double[] sw_dul = soil.SoilWater.DULmm;
@@ -195,18 +250,15 @@ namespace Models
 					for (int z = 0; z <= soil.SoilWater.dlayer.Length - 1; z++) {
 						MySoilDepth = MySoilDepth + soil.SoilWater.dlayer[z];
 						if (MySoilDepth <= Soil_depth) {
-							SoilPAW[PatchCounter] = SoilPAW [PatchCounter] + sw_dul[z] - sw_15[z];
-							TodayDeficit[PatchCounter] = TodayDeficit[PatchCounter] + sw_dul[z] - Math.Min(sw_dul[z], sw_sw[z]);
+							SoilPAW[i] = SoilPAW [i] + sw_dul[z] - sw_15[z];
+							TodayDeficit[i] = TodayDeficit[i] + sw_dul[z] - Math.Min(sw_dul[z], sw_sw[z]);
 						}
 					}
-					IrrigDeficit[PatchCounter] = (Irrig_paw / 100 * SoilPAW[PatchCounter]);
-					//Console.WriteLine(PatchCounter.ToString + " " + SoilPAW(PatchCounter).ToString +" " + TodayDeficit(PatchCounter).ToString)
-					PatchCounter = PatchCounter + 1;
-
+					IrrigDeficit[i] = (Irrig_paw / 100 * SoilPAW[i]);
+					
 				}
 
 				//Determines the current fields deficit and threshold depending on how it's calculated 
-				PatchCounter = 1;
 				double Sum_Area = 0;
 
 				if (Irrig_method == "Wettest") {
@@ -228,18 +280,18 @@ namespace Models
 				
 					//cycles through each patch that that is within the paddock where the irrigator is
 					if (Current_Paddock == Irrigator_position) {
-						if (Irrig_method == "Wettest" & (TodayDeficit[PatchCounter] / IrrigDeficit[PatchCounter]) > (Current_TodayDeficit / Current_IrrigDeficit)) {
-							Current_TodayDeficit = TodayDeficit[PatchCounter];
+						if (Irrig_method == "Wettest" & (TodayDeficit[i] / IrrigDeficit[i]) > (Current_TodayDeficit / Current_IrrigDeficit)) {
+							Current_TodayDeficit = TodayDeficit[i];
 							//Driest todays deficit
-							Current_IrrigDeficit = IrrigDeficit[PatchCounter];
+							Current_IrrigDeficit = IrrigDeficit[i];
 							//Selected irrig deficit threshold
-						} else if (Irrig_method == "Driest" & (TodayDeficit[PatchCounter] / IrrigDeficit[PatchCounter]) < (Current_TodayDeficit / Current_IrrigDeficit)) {
-							Current_TodayDeficit = TodayDeficit[PatchCounter];
-							Current_IrrigDeficit = IrrigDeficit[PatchCounter];
+						} else if (Irrig_method == "Driest" & (TodayDeficit[i] / IrrigDeficit[i]) < (Current_TodayDeficit / Current_IrrigDeficit)) {
+							Current_TodayDeficit = TodayDeficit[i];
+							Current_IrrigDeficit = IrrigDeficit[i];
 							//Selected irrig deficit threshold
 						} else if (Irrig_method == "Mean") {
-							Current_TodayDeficit = Current_TodayDeficit + (TodayDeficit[PatchCounter] * Current_Area);
-							Current_IrrigDeficit = Current_IrrigDeficit + (IrrigDeficit[PatchCounter] * Current_Area);
+							Current_TodayDeficit = Current_TodayDeficit + (TodayDeficit[i] * Current_Area);
+							Current_IrrigDeficit = Current_IrrigDeficit + (IrrigDeficit[i] * Current_Area);
 							Sum_Area = Sum_Area + Current_Area;
 						}
 					}
@@ -249,7 +301,6 @@ namespace Models
 						Current_IrrigDeficit = Current_IrrigDeficit / Sum_Area;
 					}
 
-					PatchCounter = PatchCounter + 1;
 				}
 
 				//Is irrigation responsive?   
@@ -263,22 +314,20 @@ namespace Models
 			for (int i = 0; i < Zones.Length; i++) {
 				double Current_Paddock = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
 				string Status = "Dead";
-				//double Current_Paddock = 1;
+				Today_PatchIrrigation[i] = 0;
 					
 				//If option selected then irrigates only alive crops 
-				if (Crop_in){// && ((bool)Zones[i].Get("wheat.IsAlive"))){
+				if (Crop_in){
 					Status = "alive";
 					} else {
 					Status = "Dead";
 				}
-				//Summary.WriteMessage(this, "Here it is " + Current_TodayDeficit.ToString() + "    " + Current_IrrigDeficit.ToString() );
+				
 				//Irrigates in relevant paddocks if the irrigator is in that paddock, the crops are in, the irrigator isn't paused by rain and if the paddock 'needs' water
 				if (Current_Paddock == Irrigator_position && Status == "alive" && Days2Pause < 0.5 && Current_TodayDeficit >= Current_IrrigDeficit) {
 				
-					Irrigation irrigation = Apsim.Find(Zones[i], typeof(Irrigation)) as Irrigation;
-					//irrig.will_runoff = 1 ' This should make irrigation run off but it doesn't seem to work
-					irrigation.Apply(Application * (Irrig_eff / 100));
-					//Console.WriteLine(Today + " - " + Application.ToString + " mm irrigation applied to " + SubPaddock.FullName);
+					Today_PatchIrrigation[i] = (Application * (Irrig_eff / 100));
+
 				}
 
 			}
@@ -286,25 +335,6 @@ namespace Models
 		}
 
 	}
-		
-		/*{
-			DaysSinceIrrig += 1;
-			//Calculate soil water deficit in each zone
-			if (DaysSinceIrrig > 10)
-			{
-			  for (int i = 0; i < Zones.Length; i++)
-              {
-              Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;
-              SoilWaterDeficit[i] = Utility.Math.Sum(soil.SoilWater.DULmm) - Utility.Math.Sum(soil.SoilWater.SWmm);
-              Irrigation irrigation = Apsim.Find(Zones[i], typeof(Irrigation)) as Irrigation;
-              irrigation.Apply(SoilWaterDeficit[i]);
-              Summary.WriteMessage(Zones[i], string.Format("Irrigated Today :-)"));
-              }
-              DaysSinceIrrig = 0;
-            }
-            
-            
-		}*/
 		
 	}
 }
@@ -795,9 +825,23 @@ namespace Models
 }]]></Code>
     </Manager>
     <Manager>
-      <Name>Runoff</Name>
+      <Name>ApplyWater</Name>
       <Script>
-        <Runoff>0</Runoff>
+        <TotWaterApp>
+        </TotWaterApp>
+        <Runoff>
+        </Runoff>
+        <TargetHourlyApp>
+        </TargetHourlyApp>
+        <ActualHourlyApp>
+        </ActualHourlyApp>
+        <TopKS>0</TopKS>
+        <RunoffArea>
+        </RunoffArea>
+        <TotArea>
+        </TotArea>
+        <IrrApp>
+        </IrrApp>
       </Script>
       <Code><![CDATA[using System;
 using Models.Core;
@@ -811,9 +855,17 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Summary Summary;
+		[Link] Simulation Simulation;
 		
 		private Zone[] Zones {get; set; }
+		public double[] IrrApp { get; set;}
+		public double[] TotWaterApp { get; set;}
 		public double[] Runoff { get; set;}
+		public double[] RunoffArea { get; set;}
+		public double[] TargetHourlyApp { get; set;}
+		public double[] ActualHourlyApp { get; set;}
+		public double[] TotArea {get; set;}
+		public double TopKS {get; set;}
 		
 		[EventSubscribe("StartOfSimulation")]
 		private void DoStartOfSimulation(object sender, EventArgs e)
@@ -838,16 +890,104 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void DoManagement(object sender, EventArgs e)
 		{
-
-			Runoff = new double[Zones.Length + 1];
+			//create the variables we need
+			IrrApp = new double[Zones.Length];
+			TotWaterApp = new double[Zones.Length];
+			Runoff = new double[Zones.Length];
 			
-			//Calculate soil water deficit in each zone
+			//get all the info we need
+            IrrApp = (double[]) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.Today_PatchIrrigation");
+            double TotFields = (double) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.No_fields");
+            double NozDiam = (double) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.Nozzle_diameter");
+            double RainApp = (double) Apsim.Get(Simulation, "CatchRain.Script.Today_Rain");
+            
+            RunoffArea = new double[(int)TotFields];
+            TotArea = new double[(int)TotFields];
+            
+			//Calculate how much water (irrigation and rainfall to apply to each zone and apply it
 		    for (int i = 0; i < Zones.Length; i++)
             {
-               Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;
-			   Runoff[i] = soil.SoilWater.Runoff;
+               		//create the variables we need
+					TargetHourlyApp = new double[24];
+					ActualHourlyApp = new double[24];
+					double Current_IrrPos = (double) Apsim.Get(Zones[i], "Manager_P.Script.Irrigator_position");
+					double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area");
+					double Current_Field = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
+										
+              		//create the links we need
+               		Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;
+               		
+               		//calculate application rate               		               		
+					double Length = (2 * Math.PI * ((Current_IrrPos * 100) - 50))/ TotFields;
+					double WetEvent = 24 / (Length / NozDiam); //24 hours in one day
+					double IrrAppRate = IrrApp[i] / WetEvent;
+					double RainAppRate = RainApp / 24; //without further information assume rain is equal throughout the day
+					double IrrToApply = IrrApp[i];
+					
+					//get soil characteristics - KS infiltration rate
+					double[] KSArray = soil.KS;
+					TopKS = KSArray[0]; //double TopKS = KSArray[0];
+					TopKS = TopKS / 24; //Need hourly infiltration rate
+					
+					TotArea[(int)Current_Field-1] = TotArea[(int)Current_Field-1] + Current_Area;
+					
+					//populate hourly water application array
+					for (int j = 0; j < TargetHourlyApp.Length; j++) //for each hour
+					{
+						TargetHourlyApp[j] = RainAppRate; //add the rain
+						
+						if (IrrToApply >= IrrAppRate) // then if how much irrigation left to apply is greater or equal to the hourly application rate then
+						{
+							TargetHourlyApp[j] = TargetHourlyApp[j] + IrrAppRate; // add the amount that will be applied in one hour then
+							IrrToApply = IrrToApply - IrrAppRate; // minus it from the total amount for that day
+						}
+						else if (IrrToApply > 0) // else if the amount of irrigation left is greater than zero (but less than the hourly application rate) then
+						{
+							TargetHourlyApp[j] = TargetHourlyApp[j] + IrrToApply; //add what's left 
+							IrrToApply = 0; //and set to zero
+						}
+					}
+					
+					//calculate how much water is going in 
+
+					for (int j = 0; j < TargetHourlyApp.Length; j++) //for each hour
+					{
+						if (TargetHourlyApp[j] > TopKS) // if the amount of water to appply is greater than the surface infiltration rate then
+						{
+							Runoff[i] = Runoff[i] + (TargetHourlyApp[j] - TopKS); //runoff anything above the maximum infiltration rate
+							RunoffArea[(int)Current_Field-1] = RunoffArea[(int)Current_Field-1] + ((TargetHourlyApp[j] - TopKS) / Current_Area);
+							ActualHourlyApp[j] = TopKS; // and only apply what can infiltrate
+						}
+						else if (TargetHourlyApp[j] <= TopKS)
+						{
+							ActualHourlyApp[j] = TargetHourlyApp[j];
+						}
+					}
+					
+					//sum up the hourly array to create a daily water application
+					for (int j = 0; j < ActualHourlyApp.Length; j++) //for each hour
+					{
+						TotWaterApp[i] = TotWaterApp[i] + ActualHourlyApp[j]; // how much water is being applied per patch
+					}
+		
             }
             
+            //then for each zone find out if runoff to be applied and apply it value in RunoffArea[i] * Carurrent_Area
+            for (int i = 0; i < Zones.Length; i++)
+            {
+            	double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area");
+            	string Current_LandPos = (string) Apsim.Get(Zones[i], "Manager_P.Script.Landscape_position");
+            	double Current_Field = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
+            	Irrigation irrigation = Apsim.Find(Zones[i], typeof(Irrigation)) as Irrigation;
+            	
+            	if (Current_LandPos == "Gain")
+            	{
+            		TotWaterApp[i] = TotWaterApp[i] + ((RunoffArea[(int)Current_Field-1] / TotArea[(int)Current_Field-1]) * Current_Area);
+	           	}
+                //apply the water
+               	irrigation.Apply(TotWaterApp[i]);        
+            
+            }
 		}
 		
 	}
@@ -857,12 +997,14 @@ namespace Models
     <Manager>
       <Name>Field_Reporting</Name>
       <Script>
-        <Yield_Array>
-        </Yield_Array>
-        <Area_Array>
-        </Area_Array>
-        <YieldArea_Array>
-        </YieldArea_Array>
+        <RYieldArea_Array>
+        </RYieldArea_Array>
+        <RIrrigationArea_Array>
+        </RIrrigationArea_Array>
+        <RFertiliserArea_Array>
+        </RFertiliserArea_Array>
+        <RArea_Array>
+        </RArea_Array>
       </Script>
       <Code><![CDATA[using System;
 using Models.Core;
@@ -876,11 +1018,19 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Summary Summary;
+		[Link] Simulation Simulation;
 		
 		private Zone[] Zones {get; set; }
-		public double[] Yield_Array { get; set; }
-		public double[] Area_Array { get; set; }
-		public double[] YieldArea_Array { get; set; }
+		private double[] Yield_Array { get; set; }
+		public double[] RArea_Array { get; set; }
+		public double[] RYieldArea_Array { get; set; }
+		private double[] Irrigation_Array { get; set; }
+		public double[] RIrrigationArea_Array { get; set; }
+		private double[] Fertiliser_Array { get; set; }
+		public double[] RFertiliserArea_Array { get; set; }
+		private double[] Current_Irrigation { get; set; }
+		private double[] Current_Rain { get; set; }
+		
 		
 		[EventSubscribe("StartOfSimulation")]
 		private void DoStartOfSimulation(object sender, EventArgs e)
@@ -909,23 +1059,133 @@ namespace Models
 			//****FIX THIS****//double No_Fields = (double) Apsim.Get(this, "MultiZoneIrrigator.Script.No_fields");
 			double No_Fields = 4;
 			Yield_Array = new double[(int)No_Fields];
-			Area_Array = new double[(int)No_Fields];
-			YieldArea_Array = new double[(int)No_Fields];
-
+			RArea_Array = new double[(int)No_Fields];
+			RYieldArea_Array = new double[(int)No_Fields];
+			Irrigation_Array = new double[(int)No_Fields];
+			RIrrigationArea_Array = new double[(int)No_Fields];
+			Fertiliser_Array = new double[(int)No_Fields];
+			RFertiliserArea_Array = new double[(int)No_Fields];
 			
+			Current_Irrigation = new double[Zones.Length];			
+			Current_Irrigation = (double[]) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.Today_PatchIrrigation");
+
 			//Calculate soil water deficit in each zone
 		    for (int i = 0; i < Zones.Length; i++)
             {
                double Current_Paddock = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
                double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area"); 
                double Current_Yield = (double) Apsim.Get(Zones[i], "Wheat.AboveGround.Wt");
+               double Current_Fertiliser = (double) Apsim.Get(Zones[i], "Fertiliser.NitrogenApplied");
                Yield_Array[(int)Current_Paddock-1] += Current_Yield * Current_Area;
-               Area_Array[(int)Current_Paddock-1] += Current_Area;
+               Irrigation_Array[(int)Current_Paddock-1] += Current_Irrigation[i] * Current_Area;
+               Fertiliser_Array[(int)Current_Paddock-1] += Current_Fertiliser * Current_Area;
+               RArea_Array[(int)Current_Paddock-1] += Current_Area;
             }
             
-            for (int i = 0; i < YieldArea_Array.Length; i++)
+            for (int i = 0; i < RYieldArea_Array.Length; i++)
             {
-            YieldArea_Array[i] = Yield_Array[i] / Area_Array[i];
+            	RYieldArea_Array[i] = Yield_Array[i] / RArea_Array[i];
+            	RIrrigationArea_Array[i] = Irrigation_Array[i] / RArea_Array[i];
+            	RFertiliserArea_Array[i] = Fertiliser_Array[i] / RArea_Array[i];
+            }
+		}
+		
+	}
+}
+]]></Code>
+    </Manager>
+    <Manager>
+      <Name>Runoff_Reporting</Name>
+      <Script>
+        <RArea_Array>
+        </RArea_Array>
+        <RYieldArea_Array>
+        </RYieldArea_Array>
+        <RIrrigationArea_Array>
+        </RIrrigationArea_Array>
+        <RFertiliserArea_Array>
+        </RFertiliserArea_Array>
+      </Script>
+      <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using System.Collections.Generic;
+using Models.Soils;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Summary Summary;
+		[Link] Simulation Simulation;
+		
+		private Zone[] Zones {get; set; }
+		private double[] Yield_Array { get; set; }
+		public double[] RArea_Array { get; set; }
+		public double[] RYieldArea_Array { get; set; }
+		private double[] Irrigation_Array { get; set; }
+		public double[] RIrrigationArea_Array { get; set; }
+		private double[] Fertiliser_Array { get; set; }
+		public double[] RFertiliserArea_Array { get; set; }
+		private double[] Current_Irrigation { get; set; }
+		private double[] Current_Rain { get; set; }
+		
+		[EventSubscribe("StartOfSimulation")]
+		private void DoStartOfSimulation(object sender, EventArgs e)
+		{
+		       // Set up our list on zones in the simulation
+		       List<Zone> zones = new List<Zone>();
+               foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
+               {
+               	  if (zone is Simulation)
+               	  {
+               	     // top level simulation - we don't want this.
+               	  }
+               	  else
+               	  {
+                     zones.Add(zone as Zone);
+                  }
+               }
+               Zones = zones.ToArray();
+               
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void DoManagement(object sender, EventArgs e)
+		{
+
+			//****FIX THIS****//double No_Fields = (double) Apsim.Get(this, "MultiZoneIrrigator.Script.No_fields");
+			double No_Fields = 4;
+			Yield_Array = new double[(int)No_Fields];
+			RArea_Array = new double[(int)No_Fields];
+			RYieldArea_Array = new double[(int)No_Fields];
+			Irrigation_Array = new double[(int)No_Fields];
+			RIrrigationArea_Array = new double[(int)No_Fields];
+			Fertiliser_Array = new double[(int)No_Fields];
+			RFertiliserArea_Array = new double[(int)No_Fields];
+			
+			Current_Irrigation = new double[Zones.Length];			
+			Current_Irrigation = (double[]) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.Today_PatchIrrigation");
+
+			//Calculate soil water deficit in each zone
+		    for (int i = 0; i < Zones.Length; i++)
+            {
+               double Current_Paddock = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
+               double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area"); 
+               double Current_Yield = (double) Apsim.Get(Zones[i], "Wheat.AboveGround.Wt");
+               double Current_Fertiliser = (double) Apsim.Get(Zones[i], "Fertiliser.NitrogenApplied");
+               Yield_Array[(int)Current_Paddock-1] += Current_Yield * Current_Area;
+               Irrigation_Array[(int)Current_Paddock-1] += Current_Irrigation[i] * Current_Area;
+               Fertiliser_Array[(int)Current_Paddock-1] += Current_Fertiliser * Current_Area;
+               RArea_Array[(int)Current_Paddock-1] += Current_Area;
+            }
+            
+            for (int i = 0; i < RYieldArea_Array.Length; i++)
+            {
+            	RYieldArea_Array[i] = Yield_Array[i] / RArea_Array[i];
+            	RIrrigationArea_Array[i] = Irrigation_Array[i] / RArea_Array[i];
+            	RFertiliserArea_Array[i] = Fertiliser_Array[i] / RArea_Array[i];
             }
 		}
 		
@@ -1052,102 +1312,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -1753,7 +1917,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -2218,102 +2382,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -2919,7 +2987,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -3384,102 +3452,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -4085,7 +4057,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -4550,102 +4522,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -5251,7 +5127,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -5801,7 +5677,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -6351,7 +6227,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -6901,7 +6777,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -7451,7 +7327,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -8001,7 +7877,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -8551,7 +8427,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -9101,7 +8977,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -9651,7 +9527,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -10201,7 +10077,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -10751,7 +10627,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -11216,102 +11092,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -11832,102 +11612,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -12448,102 +12132,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -13064,102 +12652,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -13765,7 +13257,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -14230,102 +13722,6 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>WheatSoil</Name>
-              <LL>
-                <double>0.261</double>
-                <double>0.248</double>
-                <double>0.28</double>
-                <double>0.306</double>
-                <double>0.36</double>
-                <double>0.392</double>
-                <double>0.446</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.04</double>
-                <double>0.04</double>
-                <double>0.02</double>
-                <double>0.01</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>150</double>
-              <double>150</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.01056473311131</double>
-              <double>1.07145631083388</double>
-              <double>1.09393858528057</double>
-              <double>1.15861335018721</double>
-              <double>1.17301160318016</double>
-              <double>1.16287303586874</double>
-              <double>1.18749547755906</double>
-            </BD>
-            <AirDry>
-              <double>0.130250054518252</double>
-              <double>0.198689390775399</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </AirDry>
-            <LL15>
-              <double>0.260500109036505</double>
-              <double>0.248361738469248</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-              <double>0.28</double>
-            </LL15>
-            <DUL>
-              <double>0.52100021807301</double>
-              <double>0.496723476938497</double>
-              <double>0.488437607673005</double>
-              <double>0.480296969355493</double>
-              <double>0.471583596524955</double>
-              <double>0.457070570557793</double>
-              <double>0.452331759845006</double>
-            </DUL>
-            <SAT>
-              <double>0.588654817693846</double>
-              <double>0.565676863836273</double>
-              <double>0.557192986686577</double>
-              <double>0.532787415023694</double>
-              <double>0.527354112007486</double>
-              <double>0.531179986464627</double>
-              <double>0.521888499034317</double>
-            </SAT>
-            <KS>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-              <double>20</double>
-            </KS>
-          </Water>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -14931,7 +14327,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -15481,7 +14877,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -16031,7 +15427,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -16581,7 +15977,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -17131,7 +16527,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -17681,7 +17077,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -18231,7 +17627,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -18781,7 +18177,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -19331,7 +18727,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -19881,7 +19277,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>100</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -20431,7 +19827,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -20981,7 +20377,7 @@ namespace Models
             <double>0.521888499034317</double>
           </SAT>
           <KS>
-            <double>20</double>
+            <double>50</double>
             <double>20</double>
             <double>20</double>
             <double>20</double>
@@ -21331,10 +20727,20 @@ namespace Models
       <Name>ReportMaster</Name>
       <VariableNames>
         <string>[Clock].Today</string>
-        <string>[Field_Reporting].Script.YieldArea_Array</string>
-        <string>[Field_Reporting].Script.Runoff</string>
-        <string>[Runoff].Script.Runoff</string>
+        <string>[Field_Reporting].Script.RYieldArea_Array</string>
+        <string>[Field_Reporting].Script.RIrrigationArea_Array</string>
+        <string>[Field_Reporting].Script.RFertiliserArea_Array</string>
+        <string>[Field_Reporting].Script.RArea_Array</string>
         <string>[Weather].Rain</string>
+        <string>[CatchRain].Script.Today_Rain</string>
+        <string>[ApplyWater].Script.TotWaterApp</string>
+        <string>[ApplyWater].Script.Runoff</string>
+        <string>[MultiZoneIrrigator].Script.Today_PatchIrrigation</string>
+        <string>[ApplyWater].Script.TargetHourlyApp</string>
+        <string>[ApplyWater].Script.ActualHourlyApp</string>
+        <string>[ApplyWater].Script.TopKS</string>
+        <string>[ApplyWater].Script.RunoffArea</string>
+        <string>[ApplyWater].Script.TotArea</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -21372,7 +20778,7 @@ namespace Models
         </X>
         <Y>
           <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.YieldArea_Array(1)</FieldName>
+          <FieldName>Field_Reporting.Script.RYieldArea_Array(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -21392,7 +20798,7 @@ namespace Models
         </X>
         <Y>
           <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.YieldArea_Array(2)</FieldName>
+          <FieldName>Field_Reporting.Script.RYieldArea_Array(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -21412,7 +20818,7 @@ namespace Models
         </X>
         <Y>
           <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.YieldArea_Array(3)</FieldName>
+          <FieldName>Field_Reporting.Script.RYieldArea_Array(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -21432,7 +20838,7 @@ namespace Models
         </X>
         <Y>
           <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.YieldArea_Array(4)</FieldName>
+          <FieldName>Field_Reporting.Script.RYieldArea_Array(4)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -21443,7 +20849,136 @@ namespace Models
       <DisabledSeries />
     </Graph>
     <Graph>
-      <Name>Biomass Patch</Name>
+      <Name>Irrigation Field</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Field_01</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(1)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_02</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(2)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_03</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(3)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_04</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(4)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Rain</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>CatchRain.Script.Today_Rain</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>Fertiliser Field</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title>Date</Title>
@@ -21461,613 +20996,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Patch_001</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_002</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_003</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dot</Line>
-        <X>
-          <TableName>Report3</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report3</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_004</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report4</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report4</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_005</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report5</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report5</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_006</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report6</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report6</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_007</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report7</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report7</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_008</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report8</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report8</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_009</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report9</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report9</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Irrigation</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Biomass</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Patch_001</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_002</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_003</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dot</Line>
-        <X>
-          <TableName>Report3</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report3</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_004</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report4</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report4</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_005</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report5</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report5</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_006</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report6</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report6</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_007</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report7</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report7</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_008</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report8</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report8</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_009</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report9</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report9</TableName>
-          <FieldName>Irrigation.IrrigationApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Fertiliser</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Biomass</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Patch_001</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_002</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_003</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dot</Line>
-        <X>
-          <TableName>Report3</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report3</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_004</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report4</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report4</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_005</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report5</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report5</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_006</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report6</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report6</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_007</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report7</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report7</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_008</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report8</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report8</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_009</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>Report9</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report9</TableName>
-          <FieldName>Fertiliser.NitrogenApplied</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Runoff Patch</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Biomass</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Patch_001</Title>
+        <Title>Field_01</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -22080,54 +21009,14 @@ namespace Models
         </X>
         <Y>
           <TableName>ReportMaster</TableName>
-          <FieldName>Runoff.Script.Runoff(1)</FieldName>
+          <FieldName>Field_Reporting.Script.RFertiliserArea_Array(1)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <Cumulative>true</Cumulative>
       </Series>
       <Series>
-        <Title>Patch_002</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Runoff.Script.Runoff(2)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_003</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dot</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.Runoff(3)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_004</Title>
+        <Title>Field_02</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -22140,34 +21029,14 @@ namespace Models
         </X>
         <Y>
           <TableName>ReportMaster</TableName>
-          <FieldName>Runoff.Script.Runoff(4)</FieldName>
+          <FieldName>Field_Reporting.Script.RFertiliserArea_Array(2)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <Cumulative>true</Cumulative>
       </Series>
       <Series>
-        <Title>Patch_005</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Runoff.Script.Runoff(5)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_006</Title>
+        <Title>Field_03</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -22180,34 +21049,14 @@ namespace Models
         </X>
         <Y>
           <TableName>ReportMaster</TableName>
-          <FieldName>Runoff.Script.Runoff(6)</FieldName>
+          <FieldName>Field_Reporting.Script.RFertiliserArea_Array(3)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <Cumulative>true</Cumulative>
       </Series>
       <Series>
-        <Title>Patch_007</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Runoff.Script.Runoff(7)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_008</Title>
+        <Title>Field_04</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -22220,31 +21069,11 @@ namespace Models
         </X>
         <Y>
           <TableName>ReportMaster</TableName>
-          <FieldName>Runoff.Script.Runoff(8)</FieldName>
+          <FieldName>Field_Reporting.Script.RFertiliserArea_Array(4)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Patch_009</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Runoff.Script.Runoff(9)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
+        <Cumulative>true</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -22253,9 +21082,5 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <Simulations>
-    <Name>Simulations</Name>
-    <ExplorerWidth>303</ExplorerWidth>
-  </Simulations>
   <ExplorerWidth>277</ExplorerWidth>
 </Simulations>
