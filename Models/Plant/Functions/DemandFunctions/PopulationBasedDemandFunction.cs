@@ -16,9 +16,9 @@ namespace Models.PMF.Functions.DemandFunctions
         [Link]
         IFunction ThermalTime = null;
 
-        /// <summary>The structure</summary>
+        /// <summary>The number of growing organs</summary>
         [Link]
-        Structure Structure = null;
+        IFunction OrganPopulation = null;
 
         /// <summary>The phenology</summary>
         [Link(IsOptional = true)]
@@ -38,7 +38,8 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>The growth duration</summary>
         [Description("ThermalTime duration of organ growth ")]
-        public double GrowthDuration = 0;
+        [Link]
+        IFunction GrowthDuration = null;
 
         /// <summary>The accumulated thermal time</summary>
         private double AccumulatedThermalTime = 0;
@@ -51,9 +52,9 @@ namespace Models.PMF.Functions.DemandFunctions
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if ((Phenology.Stage >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+            if ((Phenology.Stage >= StartStage) && (AccumulatedThermalTime < GrowthDuration.Value))
             {
-                ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration - AccumulatedThermalTime);
+                ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration.Value - AccumulatedThermalTime);
                 AccumulatedThermalTime += ThermalTimeToday;
             }
         }
@@ -66,10 +67,10 @@ namespace Models.PMF.Functions.DemandFunctions
             get
             {
                 double Value = 0.0;
-                if ((Phenology.Stage >= StartStage) && (AccumulatedThermalTime < GrowthDuration))
+                if ((Phenology.Stage >= StartStage) && (AccumulatedThermalTime < GrowthDuration.Value))
                 {
-                    double Rate = MaximumOrganWt / GrowthDuration;
-                    Value = Rate * ThermalTimeToday * Structure.TotalStemPopn;
+                    double Rate = MaximumOrganWt / GrowthDuration.Value;
+                    Value = Rate * ThermalTimeToday * OrganPopulation.Value;
                 }
 
                 return Value * ExpansionStress.Value;
