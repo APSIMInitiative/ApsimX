@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Phen;
-
+using System.Reflection;
 namespace Models.PMF.Functions
 {
     /// <summary>
@@ -11,8 +11,8 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of PreEventValue child function from Initialisation to SetEvent, PostEventValue from ReSetEvent and PreEventValue again from ReSetEvent to the next SetEvent")]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.GenericPMFView")]
+    [PresenterName("UserInterface.Presenters.GenericPMFPresenter")]
     public class OnEventFunction : Model, IFunction
     {
         /// <summary>The _ value</summary>
