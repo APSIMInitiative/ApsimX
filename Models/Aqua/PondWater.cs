@@ -416,8 +416,8 @@ namespace Models.Aqua
             double currentAmount;
             double newPerVolume;
 
-            currentAmount = pondVolume * CurrentPerVolume;
-            newPerVolume = currentAmount / (pondVolume - EvapVolume);
+            currentAmount = CurrentVolume * CurrentPerVolume;
+            newPerVolume = currentAmount / (CurrentVolume - EvapVolume);
 
             return newPerVolume;
             }
