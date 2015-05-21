@@ -130,7 +130,7 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    table.Rows.Add(new object[] { properties[i].Name, properties[i].GetValue(model, null) });
+                    table.Rows.Add(new object[] { properties[i].Name, properties[i].PropertyType.ToString() });
                 }
                 catch (Exception e)
                 {
