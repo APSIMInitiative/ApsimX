@@ -5019,35 +5019,35 @@ namespace Models
         <Factor>
           <Name>Massey</Name>
           <Specifications>
-            <string>[FieldPeaSowingRule].Script.CultivarName="Massey"</string>
+            <string>[FieldPeaSowingRule].Script.CultivarName=Massey</string>
             <string>[FieldPeaSowingRule].Script.RowSpacing=150</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Patea</Name>
           <Specifications>
-            <string>[FieldPeaSowingRule].Script.CultivarName="Patea"</string>
+            <string>[FieldPeaSowingRule].Script.CultivarName=Patea</string>
             <string>[FieldPeaSowingRule].Script.RowSpacing=150</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Trounce</Name>
           <Specifications>
-            <string>[FieldPeaSowingRule].Script.CultivarName="Trounce"</string>
+            <string>[FieldPeaSowingRule].Script.CultivarName=Trounce</string>
             <string>[FieldPeaSowingRule].Script.RowSpacing=150</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Rovar</Name>
           <Specifications>
-            <string>[FieldPeaSowingRule].Script.CultivarName="Rovar"</string>
+            <string>[FieldPeaSowingRule].Script.CultivarName=Rovar</string>
             <string>[FieldPeaSowingRule].Script.RowSpacing=150</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>Whero</Name>
           <Specifications>
-            <string>[FieldPeaSowingRule].Script.CultivarName="Whero"</string>
+            <string>[FieldPeaSowingRule].Script.CultivarName=Whero</string>
             <string>[FieldPeaSowingRule].Script.RowSpacing=150</string>
           </Specifications>
         </Factor>
