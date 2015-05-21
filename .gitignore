@@ -34,4 +34,3 @@ Documentation/html
 *.db
 packages/
 Documents/
-Tests/Sorghum/HERems.ldb
