@@ -76,6 +76,7 @@
     <Compile Include="AgPasture.cs" />
     <Compile Include="AgPasture\AgPasture1.Sward.cs" />
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
+    <Compile Include="Aqua\FoodInPond.cs" />
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
