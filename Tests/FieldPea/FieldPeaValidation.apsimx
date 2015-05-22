@@ -17,6 +17,24 @@
         <string>ObservedBiomass</string>
       </SheetNames>
     </Model>
+    <Input>
+      <Name>Input</Name>
+      <ErrorMessage>Invalid number of values on line: Lincoln1993Sowing12Oct1994CultivarPatea  Patea  12Oct1994  12 October  1994-11-14  4.1
+in file: C:\ApsimX\Tests\FieldPea\Observations\SowingDateNodes.txt</ErrorMessage>
+      <FileName>%root%\Tests\FieldPea\Observations\SowingDateNodes.txt</FileName>
+    </Input>
+    <Input>
+      <Name>Pheno</Name>
+      <ErrorMessage>Invalid number of values on line: Lincoln1993Sowing12Oct1994CultivarPatea  Patea  12Oct1994  12 October  1994-11-14  4.1
+in file: C:\ApsimX\Tests\FieldPea\Observations\SowingDateNodes.txt</ErrorMessage>
+      <FileName>%root%\Tests\FieldPea\Observations\SowingDatePhenology.txt</FileName>
+    </Input>
+    <PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>Pheno</ObservedTableName>
+      <FieldNameUsedForMatch>FieldPeaHarvestRule.Script.FinalLeafTag</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Experiment>
@@ -4929,87 +4947,99 @@ namespace Models
       <Factor>
         <Name>Sowing</Name>
         <Factor>
-          <Name>19Oct93</Name>
+          <Name>19Oct1993</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1993-10-19</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1993-10-19</string>
+            <string>[Clock].EndDate=1994-04-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>23Nov93</Name>
+          <Name>23Nov1993</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1993-11-23</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1993-11-23</string>
+            <string>[Clock].EndDate=1994-04-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>21Dec93</Name>
+          <Name>21Dec1993</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1993-12-21</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1993-12-21</string>
+            <string>[Clock].EndDate=1994-04-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>19Jan94</Name>
+          <Name>19Jan1994</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1994-01-19</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1994-01-19</string>
+            <string>[Clock].EndDate=1994-05-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>22Feb94</Name>
+          <Name>22Feb1994</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1994-02-22</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1994-02-22</string>
+            <string>[Clock].EndDate=1994-08-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>23Mar94</Name>
+          <Name>23Mar1994</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1994-03-23</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1994-03-23</string>
+            <string>[Clock].EndDate=1994-09-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>20Apr94</Name>
+          <Name>20Apr1994</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1994-04-20</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1994-04-20</string>
+            <string>[Clock].EndDate=1994-12-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>24May94</Name>
+          <Name>24May1994</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1994-05-24</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1994-05-24</string>
+            <string>[Clock].EndDate=1994-12-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>17Jul94</Name>
+          <Name>17Jul1994</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1994-07-17</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1994-07-17</string>
+            <string>[Clock].EndDate=1995-01-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>15Aug94</Name>
+          <Name>15Aug1994</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1994-08-15</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1994-08-15</string>
+            <string>[Clock].EndDate=1995-01-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>15Sep94</Name>
+          <Name>15Sep1994</Name>
           <Specifications>
             <string>[FieldPeaSowingRule].Script.SowingDate=1994-09-15</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[Clock].StartDate=1994-09-15</string>
+            <string>[Clock].EndDate=1995-01-19</string>
           </Specifications>
         </Factor>
         <Factor>
-          <Name>12Oct94</Name>
+          <Name>12Oct1994</Name>
           <Specifications>
-            <string>[FieldPeaSowingRule].Script.SowingDate=1994-11-12</string>
-            <string>[FieldPeaSowingRule].Script.SowingDepth=20</string>
+            <string>[FieldPeaSowingRule].Script.SowingDate=1994-10-12</string>
+            <string>[Clock].StartDate=1994-10-12</string>
+            <string>[Clock].EndDate=1995-01-19</string>
           </Specifications>
         </Factor>
         <Specifications />
@@ -5540,6 +5570,26 @@ namespace Models
               <SetEvent>StartFlowering</SetEvent>
               <ReSetEvent>never</ReSetEvent>
             </OnEventFunction>
+            <OnEventFunction>
+              <Name>FN</Name>
+              <Constant>
+                <Name>PreEventValue</Name>
+                <Value>0</Value>
+              </Constant>
+              <SubtractFunction>
+                <Name>PostEventValue</Name>
+                <VariableReference>
+                  <Name>PostEventValue</Name>
+                  <VariableName>[Structure].MainStemNodeNo</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>PostEventValue1</Name>
+                  <VariableName>[Phenology].NFF.Value</VariableName>
+                </VariableReference>
+              </SubtractFunction>
+              <SetEvent>EndFlowering</SetEvent>
+              <ReSetEvent>never</ReSetEvent>
+            </OnEventFunction>
             <Emerged>false</Emerged>
           </Phenology>
           <Structure>
@@ -5573,22 +5623,14 @@ namespace Models
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
-                    <double>2</double>
                     <double>3</double>
                     <double>4</double>
                     <double>5</double>
-                    <double>5.5</double>
-                    <double>6</double>
-                    <double>7</double>
                   </X>
                   <Y>
-                    <double>50</double>
+                    <double>30</double>
                     <double>40</double>
-                    <double>30</double>
-                    <double>30</double>
-                    <double>25</double>
-                    <double>100</double>
-                    <double>1000</double>
+                    <double>50</double>
                   </Y>
                 </XYPairs>
               </LinearInterpolationFunction>
@@ -5765,44 +5807,6 @@ namespace Models
                     </VariableReference>
                   </MultiplyFunction>
                 </FillingRateFunction>
-                <PhaseLookupValue>
-                  <Name>GrainFilling</Name>
-                  <FillingRateFunction>
-                    <Name>FillingRateFunction</Name>
-                    <VariableReference>
-                      <Name>NumberFunction</Name>
-                      <VariableName>[Grain].NumberFunction.Value</VariableName>
-                    </VariableReference>
-                    <AddFunction>
-                      <Name>FillingDuration</Name>
-                      <VariableReference>
-                        <Name>FillingDuration</Name>
-                        <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-                      </VariableReference>
-                      <VariableReference>
-                        <Name>FillingDuration</Name>
-                        <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
-                      </VariableReference>
-                    </AddFunction>
-                    <VariableReference>
-                      <Name>ThermalTime</Name>
-                      <VariableName>[Phenology].ThermalTime.Value</VariableName>
-                    </VariableReference>
-                    <MultiplyFunction>
-                      <Name>PotentialSizeIncrement</Name>
-                      <Constant>
-                        <Name>MaximumFinalNConc</Name>
-                        <Value>0.04</Value>
-                      </Constant>
-                      <VariableReference>
-                        <Name>MaximumSize</Name>
-                        <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-                      </VariableReference>
-                    </MultiplyFunction>
-                  </FillingRateFunction>
-                  <Start>EndFlowering</Start>
-                  <End>EndGrainFill</End>
-                </PhaseLookupValue>
                 <Start>StartFlowering</Start>
                 <End>EndGrainFill</End>
               </PhaseLookupValue>
@@ -6827,18 +6831,48 @@ namespace Models
           </Cultivar>
           <Cultivar>
             <Name>Massey</Name>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 7.5,8.2</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 3,7.6</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 3,4,5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 30,40,50</Command>
           </Cultivar>
           <Cultivar>
             <Name>Patea</Name>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 10.9,12</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 3,7.1</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 3,4,5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 30,40,50</Command>
           </Cultivar>
           <Cultivar>
             <Name>Trounce</Name>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 12,13.7</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 3,6.8</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 3,4,5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 30,40,50</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rovar</Name>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 11.8,14.5</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 3,5.9</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 3,4,5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 30,40,50</Command>
           </Cultivar>
           <Cultivar>
             <Name>Whero</Name>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 14.7,19.7</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 13,16</Command>
+            <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 3,6.2</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 3,4,5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 30,40,50</Command>
           </Cultivar>
           <CropType>FieldPea</CropType>
         </Plant>
@@ -6867,144 +6901,6 @@ namespace Models
         <Fertiliser>
           <Name>fertiliser</Name>
         </Fertiliser>
-        <Manager>
-          <Name>ExtraVariables</Name>
-          <Script />
-          <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant FieldPea;          
-		[Link] Zone zone;			
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
-
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-			InitialDay = true;
-		}	   
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("FieldPea.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-
-			AccumIrrigation += Irrig.IrrigationApplied;
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[FieldPea].Leaf.Transpiration");
-            AccumEP -= (double)zone.Get("FieldPea.Root.WaterUptake");
-			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage -= Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
-		}
-	}
-}
-	   ]]></Code>
-        </Manager>
         <SurfaceOrganicMatter>
           <Name>surface organic matter</Name>
           <ResidueTypes>
@@ -7044,12 +6940,14 @@ namespace Models
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[FieldPea].Structure.MainStemNodeNo</string>
+            <string>[FieldPea].Structure.MainStemNodeNo </string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-            <string>ldPea].Leaf.AppearedCohortNo</string>
+            <string>[FieldPea].Structure.MainStemNodeNo as FNN</string>
             <string>[FieldPea].Leaf.DeadCohortNo</string>
             <string>[FieldPea].Phenology.Stage</string>
-            <string>[FieldPea].Phenology.NFF.Value</string>
+            <string>[FieldPea].Phenology.NFF.Value as NFF</string>
+            <string>[FieldPea].Phenology.FN.Value as FN</string>
+            <string>[FieldPeaHarvestRule].Script.FinalLeafTag</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -7129,15 +7027,19 @@ namespace Models
                [Link] Clock Clock;
                [Link] Summary Summary;
                [XmlIgnore] public string FinalTag { get; set;}
+		       [XmlIgnore] public string FinalLeafTag { get; set;}
 		       [XmlIgnore] public bool Harvested {get; set;}
                [XmlIgnore] public bool ReadyForHarvest {get; set;}
+               [XmlIgnore] public bool LeavesFinished {get; set;}
                
                [EventSubscribe("Commencing")]
                private void OnSimulationCommencing(object sender, EventArgs e)
 		       {
 		       FinalTag = "";
+		       FinalLeafTag = "";
                Harvested = false;
                ReadyForHarvest = false;
+               LeavesFinished = false;
                }
                
                [EventSubscribe("DoManagement")]
@@ -7161,23 +7063,16 @@ namespace Models
                     FinalTag = "yield";
 					ReadyForHarvest = true;
                 }
+                if ((FieldPea.Phenology.Stage >= 5)&&(LeavesFinished == false))
+                {
+                	FinalLeafTag = "FinalLeaf";
+                	LeavesFinished = true;
+                }
 			   }
             }
         }
 				]]></Code>
         </Manager>
-        <Report>
-          <Name>Harvest</Name>
-          <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-            <string>[FieldPea].Phenology.NFF.Value</string>
-            <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-          </VariableNames>
-          <EventNames>
-            <string>[FieldPea].Harvesting</string>
-          </EventNames>
-        </Report>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -9006,70 +8901,27 @@ namespace Models
           </X>
           <Y>
             <TableName>Report</TableName>
-            <FieldName>FieldPea.Leaf.AppearedCohortNo</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>BottomRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Dead leaves</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Appeared leaves</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Appeared Nodes</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Leaf.DeadCohortNo</FieldName>
+            <FieldName>FieldPea.Structure.MainStemNodeNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <Series>
-          <Title>Dead Nodes Observed</Title>
+          <Title>Series2</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
+          <ColourArgb>-16776961</ColourArgb>
           <Marker>FilledCircle</Marker>
           <Line>None</Line>
           <X>
-            <TableName>ObservedNodes</TableName>
+            <TableName>Input</TableName>
             <FieldName>Clock.Today</FieldName>
           </X>
           <Y>
-            <TableName>ObservedNodes</TableName>
-            <FieldName>FieldPea.Leaf.DeadCohortNo</FieldName>
+            <TableName>Input</TableName>
+            <FieldName>Structure.MainStemNodeNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
@@ -9081,18 +8933,17 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>GrainWt</Name>
+        <Name>FNN</Name>
         <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
+          <Type>Left</Type>
+          <Title>Water (mm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
-          <Type>Left</Type>
-          <Title>Tuber live weight (g DM/m2)</Title>
+          <Type>Bottom</Type>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -9100,710 +8951,138 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Right</Type>
+          <Title>Length (mm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Prediceted</Title>
+          <Title>Series 0</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
           <Line>Solid</Line>
           <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
+            <TableName>PredictedObserved</TableName>
+            <FieldName>Observed.FNN</FieldName>
           </X>
           <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Grain.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>FieldPea.Grain.Live.Wt</FieldName>
+            <TableName>PredictedObserved</TableName>
+            <FieldName>Predicted.FNN</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>LAI</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Leaf Area Index (m2/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Leaf.LAI</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Leaf.LAI</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>LeafWt</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Leaf live weight (g DM/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Leaf.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>FieldPea.Leaf.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>StemWt</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Stem  live weight (g DM/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Stem.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>FieldPea.Stem.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>AboveGroundWt</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Aboveground live weight (g DM/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>FieldPea.Summariser.AboveGround.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Summariser.AboveGround.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>ShellWt</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Shell wt (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Shell.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>FieldPea.Shell.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Cover</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Canopy Cover (0-1)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Predicted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Leaf.CoverTotal</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>InputRadInd</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>InputRadInd</TableName>
-            <FieldName>FieldPea.Leaf.CoverGreen</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>TuberFreshWeight</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Tuber fresh live weight (g DM/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Prediceted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Tuber.LiveFWt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Tuber.LiveFWt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>DryMatterContent</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Tuber fresh live weight (g DM/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Prediceted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Tuber.DryMatterContent.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>Input</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Input</TableName>
-            <FieldName>FieldPea.Tuber.DMconc</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Tuber Yield Comparison</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Observed Fresh Tuber Yield (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Predicted Fresh Tuber Yieldt (g /m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>FinalYieldData</TableName>
-            <FieldName>Observed.FieldPea.Tuber.LiveFWt</FieldName>
-          </X>
-          <Y>
-            <TableName>FinalYieldData</TableName>
-            <FieldName>Predicted.FieldPea.Tuber.LiveFWt</FieldName>
-          </Y>
-          <ShowRegressionLine>true</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>GrainNumber</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Grain number (/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Prediceted</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>FieldPea.Grain.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Observed</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>FilledCircle</Marker>
-          <Line>None</Line>
-          <X>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>ObservedBiomass</TableName>
-            <FieldName>FieldPea.Grain.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowRegressionLine>true</ShowRegressionLine>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>NFF</Name>
         <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
+          <Type>Left</Type>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
-          <Type>Left</Type>
-          <Title>Grain number (/m2)</Title>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Title>Length (mm)</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Series>
-          <Title>Prediceted</Title>
+          <Title>Series 0</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
+          <ColourArgb>-16776961</ColourArgb>
           <Marker>FilledCircle</Marker>
           <Line>Solid</Line>
           <X>
-            <TableName>Harvest</TableName>
-            <FieldName>Clock.Today</FieldName>
+            <TableName>PredictedObserved</TableName>
+            <FieldName>Observed.NFF</FieldName>
           </X>
           <Y>
-            <TableName>Harvest</TableName>
-            <FieldName>FieldPea.Phenology.NFF.Value</FieldName>
+            <TableName>PredictedObserved</TableName>
+            <FieldName>Predicted.NFF</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
         <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>FN</Name>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Water (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Right</Type>
+          <Title>Length (mm)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Series 0</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>PredictedObserved</TableName>
+            <FieldName>Observed.FN</FieldName>
+          </X>
+          <Y>
+            <TableName>PredictedObserved</TableName>
+            <FieldName>Predicted.FN</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>true</ShowRegressionLine>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>365</ExplorerWidth>
+  <ExplorerWidth>279</ExplorerWidth>
 </Simulations>
