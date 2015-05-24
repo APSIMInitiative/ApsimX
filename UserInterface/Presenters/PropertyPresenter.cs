@@ -81,9 +81,12 @@ namespace UserInterface.Presenters
             this.grid.CellsChanged += this.OnCellValueChanged;
             this.grid.ResizeControls();
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
-            split = this.model.GetType().ToString().Split('.');
-            this.grid.ModelName = split[split.Length - 1];
-            this.grid.LoadImage();
+            if (model != null)
+            {
+                split = this.model.GetType().ToString().Split('.');
+                this.grid.ModelName = split[split.Length - 1];
+                this.grid.LoadImage();
+            }
         }
 
         /// <summary>

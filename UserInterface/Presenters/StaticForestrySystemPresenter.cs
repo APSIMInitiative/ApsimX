@@ -69,77 +69,84 @@
             Soil = Apsim.Find(Zones[0], typeof(Soil)) as Soil;
 
             ForestryViewer.SoilMidpoints = Soil.DepthMidPoints;
-            //setup columns
+            //setup columns and get Zone distances.
             List<string> colNames = new List<string>();
+            List<double> distance = new List<double>();
 
             colNames.Add("Parameter");
             foreach (Zone z in Zones)
             {
                 if (z is Simulation)
                     continue;
+                if (z is RectangularZone)
+                    distance.Add(((RectangularZone)z).Width);
+                if (z is CircularZone)
+                    distance.Add(((CircularZone)z).Width);
                 colNames.Add(z.Name);
             }
 
-            if (ForestryModel.Table.Count == 0)
-            {
-                ForestryModel.Table = new List<List<String>>();
-                ForestryModel.Table.Add(colNames);
+            distance = APSIM.Shared.Utilities.MathUtilities.Cumulative(distance).ToList();
 
-                //setup rows
-                List<string> rowNames = new List<string>();
-
-                rowNames.Add("Wind reduction (%)");
-                rowNames.Add("Shade (%)");
-                rowNames.Add("Root Length Density (cm/cm3)");
-                rowNames.Add("Depth (cm)");
-
-                foreach (string s in Soil.Depth)
+                if (ForestryModel.Table.Count == 0)
                 {
-                    rowNames.Add(s);
-                }
+                    ForestryModel.Table = new List<List<String>>();
+                    ForestryModel.Table.Add(colNames);
 
-                ForestryModel.Table.Add(rowNames);
-                for (int i = 2; i < colNames.Count + 1; i++)
-                {
-                    ForestryModel.Table.Add(Enumerable.Range(1, rowNames.Count).Select(x => "0").ToList());
-                }
-                for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
-                {
-                    ForestryModel.Table[i][2] = string.Empty;
-                    ForestryModel.Table[i][3] = string.Empty;
-                }
-            }
-            else
-            {
-                // add Zones not in the table
-                IEnumerable<string> except = colNames.Except(ForestryModel.Table[0]);
-                foreach (string s in except)
-                    ForestryModel.Table.Add(Enumerable.Range(1, ForestryModel.Table[1].Count).Select(x => "0").ToList());
-                ForestryModel.Table[0].AddRange(except);
-                for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
-                {
-                    ForestryModel.Table[i][2] = string.Empty;
-                    ForestryModel.Table[i][3] = string.Empty;
-                }
+                    //setup rows
+                    List<string> rowNames = new List<string>();
 
-                // remove Zones from table that don't exist in simulation
-                except = ForestryModel.Table[0].Except(colNames);
-                List<int> indexes = new List<int>();
-                foreach (string s in except.ToArray())
-                {
-                    indexes.Add(ForestryModel.Table[0].FindIndex(x => s == x));
-                }
+                    rowNames.Add("Wind reduction (%)");
+                    rowNames.Add("Shade (%)");
+                    rowNames.Add("Root Length Density (cm/cm3)");
+                    rowNames.Add("Depth (cm)");
 
-                indexes.Sort();
-                indexes.Reverse();
+                    foreach (string s in Soil.Depth)
+                    {
+                        rowNames.Add(s);
+                    }
 
-                foreach (int i in indexes)
-                {
-                    ForestryModel.Table[0].RemoveAt(i);
-                    ForestryModel.Table.RemoveAt(i + 1);
+                    ForestryModel.Table.Add(rowNames);
+                    for (int i = 2; i < colNames.Count + 1; i++)
+                    {
+                        ForestryModel.Table.Add(Enumerable.Range(1, rowNames.Count).Select(x => "0").ToList());
+                    }
+                    for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
+                    {
+                        ForestryModel.Table[i][2] = string.Empty;
+                        ForestryModel.Table[i][3] = string.Empty;
+                    }
                 }
-            }           
-            ForestryViewer.SetupGrid(ForestryModel.Table);
+                else
+                {
+                    // add Zones not in the table
+                    IEnumerable<string> except = colNames.Except(ForestryModel.Table[0]);
+                    foreach (string s in except)
+                        ForestryModel.Table.Add(Enumerable.Range(1, ForestryModel.Table[1].Count).Select(x => "0").ToList());
+                    ForestryModel.Table[0].AddRange(except);
+                    for (int i = 2; i < ForestryModel.Table.Count; i++) //set Depth and RLD rows to empty strings
+                    {
+                        ForestryModel.Table[i][2] = string.Empty;
+                        ForestryModel.Table[i][3] = string.Empty;
+                    }
+
+                    // remove Zones from table that don't exist in simulation
+                    except = ForestryModel.Table[0].Except(colNames);
+                    List<int> indexes = new List<int>();
+                    foreach (string s in except.ToArray())
+                    {
+                        indexes.Add(ForestryModel.Table[0].FindIndex(x => s == x));
+                    }
+
+                    indexes.Sort();
+                    indexes.Reverse();
+
+                    foreach (int i in indexes)
+                    {
+                        ForestryModel.Table[0].RemoveAt(i);
+                        ForestryModel.Table.RemoveAt(i + 1);
+                    }
+                }           
+            ForestryViewer.SetupGrid(ForestryModel.Table, distance);
             ForestryViewer.ResizeControls();
         }
     }

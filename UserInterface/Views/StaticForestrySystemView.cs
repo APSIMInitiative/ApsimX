@@ -572,7 +572,7 @@ namespace UserInterface.Views
             return names.ToArray();
         }
 
-        public void SetupGrid(List<List<string>> data)
+        public void SetupGrid(List<List<string>> data, List<double> distance)
         {
             // setup scalar variables
             Scalars.Rows.Clear();
@@ -603,7 +603,7 @@ namespace UserInterface.Views
             Grid.Rows[3].DefaultCellStyle.BackColor = Color.LightGray;
             ResizeControls();
 
-            SetupGraphs();
+            SetupGraphs(distance);
         }
 
         public void ResizeControls()
@@ -661,7 +661,7 @@ namespace UserInterface.Views
             pBelowGround.Location = new Point(pAboveGround.Width, Grid.Height);
         }
 
-        private void SetupGraphs()
+        private void SetupGraphs(List<double> distance)
         {
             try
             {
@@ -672,12 +672,11 @@ namespace UserInterface.Views
                 pAboveGround.Model.Title = "Above Ground";
                 pAboveGround.Model.PlotAreaBorderColor = OxyColors.White;
                 pAboveGround.Model.LegendBorder = OxyColors.Transparent;
-                CategoryAxis agxAxis = new CategoryAxis();
-                agxAxis.Title = "Zone";
+                LinearAxis agxAxis = new LinearAxis();
+                agxAxis.Title = "Distance From Edge of First Zone (m)";
                 agxAxis.AxislineStyle = LineStyle.Solid;
                 agxAxis.AxisDistance = 2;
                 agxAxis.Position = AxisPosition.Top;
-                agxAxis.Angle = -90;
 
                 LinearAxis agyAxis = new LinearAxis();
                 agyAxis.Title = "%";
@@ -695,10 +694,6 @@ namespace UserInterface.Views
                 double[] yWind = new double[table.Columns.Count - 1];
                 double[] yShade = new double[table.Columns.Count - 1];
 
-                for (int i = 1; i < table.Columns.Count; i++)
-                {
-                    agxAxis.Labels.Add(table.Columns[i].ColumnName);
-                }
                 pAboveGround.Model.Axes.Add(agxAxis);
                 pAboveGround.Model.Axes.Add(agyAxis);
 
@@ -713,8 +708,8 @@ namespace UserInterface.Views
 
                 for (int i = 0; i < x.Length; i++)
                 {
-                    pointsWind.Add(new DataPoint(x[i], yWind[i]));
-                    pointsShade.Add(new DataPoint(x[i], yShade[i]));
+                    pointsWind.Add(new DataPoint(distance[i], yWind[i]));
+                    pointsShade.Add(new DataPoint(distance[i], yShade[i]));
                 }
                 seriesWind.Title = "Wind";
                 seriesShade.Title = "Shade";
