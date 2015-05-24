@@ -85,28 +85,6 @@ namespace Models.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
         ///&lt;Plant&gt;
-        ///  &lt;Name&gt;Maize&lt;/Name&gt;
-        ///  &lt;CropType&gt;Maize&lt;/CropType&gt;
-        ///  &lt;Cultivar&gt;
-        ///    &lt;Name&gt;Pioneer_3153&lt;/Name&gt;
-        ///    &lt;Alias&gt;Pie&lt;/Alias&gt;
-        ///  &lt;/Cultivar&gt;
-        ///  &lt;Cultivar&gt;
-        ///    &lt;Name&gt;Katumani&lt;/Name&gt;
-        ///    &lt;Command&gt;[Phenology].Juvenile.Target = 150&lt;/Command&gt;
-        ///    &lt;Command&gt;[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24&lt;/Command&gt;
-        ///    &lt;Command&gt;[Phenology].Photosensitive.Target.XYPairs.X = 0, 0, 115&lt;/Command&gt;
-        ///    &lt;Command&gt;[Phenology].FlagLeafToFlowering.Target = 10&lt;/Command&gt; [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Maize {
-            get {
-                return ResourceManager.GetString("Maize", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-        ///&lt;Plant&gt;
         ///	&lt;Name&gt;MCSP&lt;/Name&gt;
         ///	&lt;CropType&gt;MCSP&lt;/CropType&gt;
         ///	&lt;OrganArbitrator&gt;
@@ -160,10 +138,10 @@ namespace Models.Properties {
         ///	&lt;Cultivar&gt;
         ///		&lt;Name&gt;JerseyBenny&lt;/Name&gt;
         ///		&lt;Alias&gt;JerseyBenny&lt;/Alias&gt;
-        ///		&lt;Command&gt;[Structure].MainStemFinalNodeNumber.value = 19&lt;/Command&gt;
+        ///		&lt;Command&gt;[Structure].MainStemFinalNodeNumber.Value = 19&lt;/Command&gt;
         ///		&lt;Command&gt;[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11&lt;/Command&gt;
         ///		&lt;Command&gt;[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0&lt;/Command&gt;
-        ///		&lt;Command&gt;[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.value = 3&lt;/Command&gt;
+        ///		&lt;Command&gt;[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.Value = 3&lt;/Command&gt;
         ///		&lt;Command&gt;[Tuber].DryMatt [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Potato {

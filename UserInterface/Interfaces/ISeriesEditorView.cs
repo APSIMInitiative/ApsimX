@@ -90,6 +90,11 @@ namespace UserInterface.Interfaces
         event EventHandler ShowInLegendChanged;
 
         /// <summary>
+        /// Invoked when the user changes the 'include in documentation' 
+        /// </summary>
+        event EventHandler IncludeInDocumentationChanged;
+
+        /// <summary>
         /// Gets or sets the series type
         /// </summary>
         string SeriesType { get; set; }
@@ -182,5 +187,10 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="show">Indicates whether the fields should be shown</param>
         void ShowX2Y2(bool show);
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the graph should be included in documentation.
+        /// </summary>
+        bool IncludeInDocumentation { get; set; }
     }
 }

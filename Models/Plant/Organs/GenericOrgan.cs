@@ -58,42 +58,54 @@ namespace Models.PMF.Organs
         #region Class Parameter Function Links
         /// <summary>The senescence rate function</summary>
         [Link(IsOptional = true)]
+        [Units("/d")]
         IFunction SenescenceRateFunction = null;
         /// <summary>The detachment rate function</summary>
         [Link(IsOptional = true)]
+        [Units("/d")]
         IFunction DetachmentRateFunction = null;
 
         /// <summary>The n reallocation factor</summary>
         [Link(IsOptional = true)]
+        [Units("/d")]
         IFunction NReallocationFactor = null;
         /// <summary>The n retranslocation factor</summary>
         [Link(IsOptional = true)]
+        [Units("/d")]
         IFunction NRetranslocationFactor = null;
         /// <summary>The nitrogen demand switch</summary>
         [Link(IsOptional = true)]
         IFunction NitrogenDemandSwitch = null;
         /// <summary>The dm retranslocation factor</summary>
         [Link(IsOptional = true)]
+        [Units("/d")]
         IFunction DMRetranslocationFactor = null;
         /// <summary>The structural fraction</summary>
         [Link(IsOptional = true)]
+        [Units("g/g")]
         IFunction StructuralFraction = null;
         /// <summary>The dm demand Function</summary>
         [Link(IsOptional = true)]
+        [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
         /// <summary>The initial wt function</summary>
         [Link(IsOptional = true)]
+        [Units("g/m2")]
         IFunction InitialWtFunction = null;
         /// <summary>The initial structural fraction</summary>
+        [Units("g/g")]
         [Link(IsOptional = true)]
         IFunction InitialStructuralFraction = null;
         /// <summary>The dry matter content</summary>
         [Link(IsOptional = true)]
+        [Units("g/g")]
         IFunction DryMatterContent = null;
         /// <summary>The maximum n conc</summary>
         [Link(IsOptional = true)]
+        [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
+        [Units("g/g")]
         [Link(IsOptional = true)]
         IFunction MinimumNConc = null;
         #endregion

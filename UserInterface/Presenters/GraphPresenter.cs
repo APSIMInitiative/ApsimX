@@ -86,6 +86,9 @@ namespace UserInterface.Presenters
                 foreach (Models.Graph.Axis A in Graph.Axes)
                     FormatAxis(A);
 
+                // Update axis maxima and minima
+                GraphView.UpdateView();
+
                 // Add any regression lines if necessary.
                 AddRegressionLines();
 
@@ -192,22 +195,41 @@ namespace UserInterface.Presenters
                 return;
             }
 
-            // Must be at top level so look for experiments first.
-            IModel[] experiments = Apsim.FindAll(this.Graph, typeof(Experiment)).ToArray();
+            // Must be in a folder or at top level.
+            IModel[] experiments;
+            IModel[] simulations;
+
+            if (this.Graph.Parent is Simulations)
+            {
+                simulations = Apsim.ChildrenRecursively(this.Graph.Parent, typeof(Simulation)).ToArray();
+                experiments = Apsim.ChildrenRecursively(this.Graph.Parent, typeof(Experiment)).ToArray();
+            }
+            else
+            {
+                experiments = Apsim.FindAll(this.Graph, typeof(Experiment)).ToArray();
+                simulations = Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
+            }
+
             if (experiments.Length > 0)
             {
                 FillSeriesInfoFromExperiments(experiments, series);
-                return;
+                for (int i = 0; i < this.seriesMetadata.Count; i++)
+                    this.seriesMetadata[i].Title = experiments[i].Name;
             }
 
-            // If we get this far then simply graph every simulation we can find.
-            IModel[] simulations = Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
-            if (simulations != null)
+            if (simulations.Length > 0)
             {
+                int i = this.seriesMetadata.Count;
                 IEnumerable<string> simulationNames = simulations.Select(s => s.Name);
                 FillSeriesInfoFromSimulations(simulationNames.ToArray(), series);
-                return;
+                int j = i;
+                while (i < this.seriesMetadata.Count)
+                {
+                    seriesMetadata[i].Title = simulations[i - j].Name;
+                    i++;
+                }
             }
+
         }
 
         /// <summary>
@@ -220,7 +242,7 @@ namespace UserInterface.Presenters
             int seriesIndex = 0;
             foreach (string simulationName in simulationNames)
             {
-                string[] zones = GetZones(series.X.TableName, simulationName);
+                string[] zones = new string[] { "Field" }; // GetZones(series.X.TableName, simulationName);
 
                 int numSeries;
                 if (zones.Length > 1)
@@ -268,7 +290,8 @@ namespace UserInterface.Presenters
         {
             // Get a list of zones in this simulation.
             List<string> zones = null;
-            DataTable simulationData = DataStore.GetData(simulationName, tableName);
+
+            DataTable simulationData = DataStore.GetFilteredData(tableName, new string[] { "ZoneName" }, "SimulationName = \"" + simulationName + "\"");
             if (simulationData != null && simulationData.Columns.Contains("ZoneName"))
             {
                 zones = DataTableUtilities.GetDistinctValues(simulationData, "ZoneName");
@@ -389,7 +412,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public string ConvertToHtml(string folder)
         {
-            Rectangle r = new Rectangle(0, 0, 800, 800);
+            Rectangle r = new Rectangle(0, 0, 800, 500);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
             GraphView.Export(img);
@@ -397,7 +420,7 @@ namespace UserInterface.Presenters
             string fileName = Path.Combine(folder, Graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-            string html = "<img class=\"graph\" src=\"" + Graph.Name + ".png" + "\"/>";
+            string html = "<img class=\"graph\" src=\"" + fileName + "\"/>";
             if (this.Graph.Caption != null)
                 html += "<p>" + this.Graph.Caption + "</p>";
             return html;
@@ -811,7 +834,15 @@ namespace UserInterface.Presenters
                     // Create the data if we haven't already
                     if (this.data == null && this.dataStore.TableExists(graphValues.TableName))
                     {
-                        this.data = this.dataStore.GetFilteredData(graphValues.TableName, filter);
+                        List<string> fieldNames = new List<string>();
+                        fieldNames.Add(series.X.FieldName);
+                        fieldNames.Add(series.Y.FieldName);
+                        if (series.X2 != null)
+                            fieldNames.Add(series.X2.FieldName);
+                        if (series.Y2 != null)
+                            fieldNames.Add(series.Y2.FieldName);
+
+                        this.data = this.dataStore.GetFilteredData(graphValues.TableName, fieldNames.ToArray(), filter);
                     }
                     
                     // If the field exists in our data table then return it.

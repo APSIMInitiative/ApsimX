@@ -108,6 +108,16 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Update the graph data sources; this causes the axes minima and maxima to be calculated
+        /// </summary>
+        public void UpdateView()
+        {
+            IPlotModel theModel = this.plot1.Model as IPlotModel;
+            if (theModel != null)
+              theModel.Update(true);
+        }
+
+        /// <summary>
         /// Refresh the graph.
         /// </summary>
         public override void Refresh()
@@ -116,7 +126,6 @@ namespace UserInterface.Views
             this.plot1.Model.DefaultFontSize = FontSize;
 
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
-            //this.plot1.Model.PlotMargins = new OxyThickness(100, TopMargin, 100, TopMargin);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
             this.plot1.Model.LegendBackground = OxyColors.White;
             this.plot1.Model.InvalidatePlot(true);
@@ -424,7 +433,15 @@ namespace UserInterface.Views
             this.plot1.Dock = DockStyle.None;
             this.plot1.Width = bitmap.Width;
             this.plot1.Height = bitmap.Height;
+
+            LegendPosition savedLegendPosition = this.plot1.Model.LegendPosition;
+            this.plot1.Model.LegendPlacement = LegendPlacement.Outside;
+
+            this.plot1.Model.LegendPosition = LegendPosition.RightTop;
             this.plot1.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+
+            this.plot1.Model.LegendPlacement = LegendPlacement.Inside;
+            this.plot1.Model.LegendPosition = savedLegendPosition;
             this.plot1.Dock = DockStyle.Fill;
         }
 
@@ -776,7 +793,6 @@ namespace UserInterface.Views
         /// </summary>
         public double AxisMinimum(Models.Graph.Axis.AxisType axisType)
         {
-            plot1.Refresh();
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
             if (axis != null)
@@ -797,6 +813,12 @@ namespace UserInterface.Views
                 names.Add(series.Title);
             }
             return names.ToArray();
+        }
+
+        /// <summary>Sets the margins.</summary>
+        public void SetMargins(int margin)
+        {
+            this.plot1.Model.Padding = new OxyThickness(margin, margin, margin, margin);
         }
     }
 }
