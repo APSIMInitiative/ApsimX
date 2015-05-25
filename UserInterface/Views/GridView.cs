@@ -239,6 +239,19 @@ namespace UserInterface.Views
                 this.popupMenu.Items.RemoveAt(3);
         }
 
+        /// <summary>
+        /// Loads an image from a supplied bitmap.
+        /// </summary>
+        /// <param name="bitmap">The image to display.</param>
+        public void LoadImage(Bitmap bitmap)
+        {
+            pictureBox1.Image = bitmap;
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+        }
+
+        /// <summary>
+        /// Loads an image from a manifest resource.
+        /// </summary>
         public void LoadImage()
         {
             System.Reflection.Assembly thisExe = System.Reflection.Assembly.GetExecutingAssembly();
