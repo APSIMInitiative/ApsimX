@@ -35,7 +35,7 @@ namespace Models
 
         /// <summary>The met data</summary>
         [Link]
-        private Weather MetData = null;
+        private IWeather MetData = null;
 
         //Events
         /// <summary>

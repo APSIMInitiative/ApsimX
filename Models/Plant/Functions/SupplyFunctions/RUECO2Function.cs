@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using Models.Interfaces;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
@@ -19,7 +20,7 @@ namespace Models.PMF.Functions.SupplyFunctions
 
         /// <summary>The met data</summary>
         [Link]
-        protected Weather MetData = null;
+        protected IWeather MetData = null;
 
         /// <summary>The c o2</summary>
         double CO2 = 350;  // If CO2 is not supplied we default to 350 ppm

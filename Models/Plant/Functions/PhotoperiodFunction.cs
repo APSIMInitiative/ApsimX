@@ -4,6 +4,7 @@ using System.Text;
 
 using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models.PMF.Functions
 {
@@ -20,7 +21,7 @@ namespace Models.PMF.Functions
 
         /// <summary>The met data</summary>
         [Link]
-        protected Weather MetData = null;
+        protected IWeather MetData = null;
 
         /// <summary>The clock</summary>
         [Link]

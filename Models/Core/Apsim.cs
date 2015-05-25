@@ -26,10 +26,11 @@ namespace Models.Core
         /// </summary>
         /// <param name="model">The reference model</param>
         /// <param name="namePath">The name of the object to return</param>
+        /// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
         /// <returns>The found object or null if not found</returns>
-        public static object Get(IModel model, string namePath)
+        public static object Get(IModel model, string namePath, bool ignoreCase = false)
         {
-            return Locator(model).Get(namePath, model as Model);
+            return Locator(model).Get(namePath, model as Model, ignoreCase);
         }
 
         /// <summary>
@@ -432,7 +433,7 @@ namespace Models.Core
                     }
                     else
                     {
-                        // more that one match so use name to match.
+                        // more that one match so use name to match
                         foreach (IModel matchingModel in allMatches)
                         {
                             if (matchingModel.Name == field.Name)
@@ -446,8 +447,7 @@ namespace Models.Core
                         if (linkedObject == null && !link.IsOptional && allMatches.Count > 1)
                         {
                             // Return the first (closest) match.
-                            if (field.FieldType == typeof(Zone))
-                                linkedObject = allMatches[0];
+                            linkedObject = allMatches[0];
                         }
 
                         if ((linkedObject == null) && (!link.IsOptional))

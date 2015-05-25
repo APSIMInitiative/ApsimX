@@ -5,6 +5,7 @@ using Models.Core;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
+using Models.Interfaces;
 
 
 namespace Models.PMF.Organs
@@ -17,9 +18,9 @@ namespace Models.PMF.Organs
     {
         #region Links to other models or compontnets
         /// <summary>The live</summary>
-        [Link] public Biomass Live = null;
+        [Link] [DoNotDocument] public Biomass Live = null;
         /// <summary>The dead</summary>
-        [Link] public Biomass Dead = null;
+        [Link] [DoNotDocument] public Biomass Dead = null;
         #endregion
 
         /// <summary>The clock</summary>
@@ -28,7 +29,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The met data</summary>
         [Link]
-        public Weather MetData = null;
+        public IWeather MetData = null;
 
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
@@ -160,5 +161,11 @@ namespace Models.PMF.Organs
             Live.Clear();
             Dead.Clear();
         }
+
+        /// <summary>
+        /// Do harvest logic for this organ
+        /// </summary>
+        virtual public void DoHarvest() { }
+
     }
 }

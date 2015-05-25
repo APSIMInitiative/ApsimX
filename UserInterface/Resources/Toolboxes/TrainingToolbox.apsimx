@@ -4205,6 +4205,8 @@ using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
 using Models.Utilities;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable]
@@ -4842,6 +4844,7 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -5477,6 +5480,7 @@ namespace Models
 using Models.Core;
 using Models.PMF.OldPlant;
 using Models.Soils;
+using Models.Utilities;
 using APSIM.Shared.Utilities;
 
 namespace Models

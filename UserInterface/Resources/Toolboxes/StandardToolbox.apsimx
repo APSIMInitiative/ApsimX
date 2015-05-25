@@ -792,7 +792,7 @@
           <Alias>wedgetail</Alias>
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.value = 380</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 380</Command>
           <Command />
         </Cultivar>
         <Cultivar>
@@ -808,7 +808,7 @@
           <Alias>l</Alias>
           <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.value = 550</Command>
+          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 550</Command>
         </Cultivar>
         <Cultivar>
           <Name>Lincoln</Name>
@@ -829,10 +829,10 @@
           <Alias>eaglehawk</Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
-          <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.value = 500</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.value = 655</Command>
-          <Command>[Phenology].FloweringToStartGrainFill.Target.value = 250</Command>
-          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.value = 500</Command>
+          <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 500</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 655</Command>
+          <Command>[Phenology].FloweringToStartGrainFill.Target.Value = 250</Command>
+          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 500</Command>
         </Cultivar>
         <Cultivar>
           <Name>Marombi</Name>
@@ -840,7 +840,7 @@
           <Alias />
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.value = 455</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 455</Command>
           <Command />
         </Cultivar>
       </Folder>

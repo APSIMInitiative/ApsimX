@@ -186,15 +186,19 @@ namespace Models.PMF
         public IFunction MainStemFinalNodeNumber = null;
         /// <summary>The height model</summary>
         [Link]
+        [Units("mm")]
         IFunction HeightModel = null;
         /// <summary>The branching rate</summary>
         [Link]
+        [Units("/node")]
         IFunction BranchingRate = null;
         /// <summary>The shade induced branch mortality</summary>
         [Link]
+        [Units("0-1")]
         IFunction ShadeInducedBranchMortality = null;
         /// <summary>The drought induced branch mortality</summary>
         [Link]
+        [Units("0-1")]
         IFunction DroughtInducedBranchMortality = null;
         /// <summary>The plant mortality</summary>
         [Link(IsOptional = true)]

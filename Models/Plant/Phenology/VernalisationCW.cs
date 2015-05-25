@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using System.Xml.Serialization;
+using Models.Interfaces;
 
 namespace Models.PMF.Phen
 {
@@ -68,7 +69,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The weather</summary>
         [Link]
-        Weather Weather = null;
+        IWeather Weather = null;
 
         /// <summary>Gets or sets the photop eff.</summary>
         /// <value>The photop eff.</value>
@@ -102,15 +103,15 @@ namespace Models.PMF.Phen
         /// <summary>The cumulative vd</summary>
         private double CumulativeVD = 0;
 
-        /// <summary>Trap the NewWeatherDataAvailable event.</summary>
+        /// <summary>Trap the DoDailyInitialisation event.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            Maxt = Weather.MetData.Maxt;
-            Mint = Weather.MetData.Mint;
-            Vernalisation(Weather.MetData.Maxt, Weather.MetData.Mint);
+            Maxt = Weather.MaxT;
+            Mint = Weather.MinT;
+            Vernalisation(Weather.MaxT, Weather.MinT);
         }
 
         /// <summary>Initialise everything</summary>
