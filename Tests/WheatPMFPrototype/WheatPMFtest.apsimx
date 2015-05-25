@@ -596,28 +596,9 @@
           </PhaseLookup>
           <MultiplyFunction>
             <Name>MainStemNodeAppearanceRate</Name>
-            <LinearInterpolationFunction>
-              <Name>LeafStageFactor</Name>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>2</double>
-                  <double>7</double>
-                  <double>14</double>
-                </X>
-                <Y>
-                  <double>0.6</double>
-                  <double>0.8</double>
-                  <double>1.3</double>
-                  <double>1.4</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
             <Constant>
               <Name>BasePhyllochron</Name>
-              <Value>120</Value>
+              <Value>95</Value>
             </Constant>
           </MultiplyFunction>
           <HeightFunction>
@@ -643,93 +624,43 @@
                 </Y>
               </XYPairs>
             </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>WaterStress</Name>
-              <XProperty>[WheatPMFPrototype].WaterSupplyDemandRatio</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0.3</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
           </HeightFunction>
-          <MultiplyFunction>
+          <PhaseLookup>
             <Name>BranchingRate</Name>
-            <PhaseLookup>
-              <Name>PotentialBranchingRate</Name>
-              <PhaseLookupValue>
-                <Name>Vegetative</Name>
-                <LinearInterpolationFunction>
-                  <Name>PotentialBranchingRate</Name>
-                  <XProperty>[Leaf].AppearedCohortNo</XProperty>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <X>
-                      <double>1</double>
-                      <double>2</double>
-                      <double>5</double>
-                      <double>14</double>
-                    </X>
-                    <Y>
-                      <double>0</double>
-                      <double>1</double>
-                      <double>2</double>
-                      <double>2</double>
-                    </Y>
-                  </XYPairs>
-                </LinearInterpolationFunction>
-                <Start>Emergence</Start>
-                <End>TerminalSpikelet</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>Reproductive</Name>
-                <Constant>
-                  <Name>Zero</Name>
-                  <Value>0</Value>
-                </Constant>
-                <Start>TerminalSpikelet</Start>
-                <End>HarvestRipe</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <LinearInterpolationFunction>
-              <Name>WaterStress</Name>
-              <XProperty>[WheatPMFPrototype].WaterSupplyDemandRatio</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>1</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-            <LinearInterpolationFunction>
-              <Name>Shading</Name>
-              <XProperty>[Leaf].CoverGreen</XProperty>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>0.6</double>
-                  <double>0.7</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-            </LinearInterpolationFunction>
-          </MultiplyFunction>
+            <PhaseLookupValue>
+              <Name>Vegetative</Name>
+              <LinearInterpolationFunction>
+                <Name>PotentialBranchingRate</Name>
+                <XProperty>[Leaf].AppearedCohortNo</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>1</double>
+                    <double>2</double>
+                    <double>5</double>
+                    <double>14</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>2</double>
+                    <double>2</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <Start>Emergence</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Reproductive</Name>
+              <Constant>
+                <Name>Zero</Name>
+                <Value>0</Value>
+              </Constant>
+              <Start>TerminalSpikelet</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
+          </PhaseLookup>
           <PhaseLookup>
             <Name>ShadeInducedBranchMortality</Name>
             <PhaseLookupValue>
@@ -757,29 +688,10 @@
               <End>StartGrainFill</End>
             </PhaseLookupValue>
           </PhaseLookup>
-          <PhaseLookup>
-            <Name>DroughtInducedBranchMortality</Name>
-            <PhaseLookupValue>
-              <Name>Vegetative</Name>
-              <LinearInterpolationFunction>
-                <Name>DroughtInducedBranchMortality</Name>
-                <XProperty>[WheatPMFPrototype].WaterSupplyDemandRatio</XProperty>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0.1</double>
-                    <double>0.6</double>
-                  </X>
-                  <Y>
-                    <double>0.1</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-              </LinearInterpolationFunction>
-              <Start>Emergence</Start>
-              <End>StartGrainFill</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
+          <Constant>
+              <Name>DroughtInducedBranchMortality</Name>
+              <Value>0</Value>
+          </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
