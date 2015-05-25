@@ -856,5 +856,12 @@ namespace UserInterface.Views
                 currentCell = new int[2] {-1,-1};
             }
         }
+
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        public void UpdateView()
+        {
+        }
     }
 }

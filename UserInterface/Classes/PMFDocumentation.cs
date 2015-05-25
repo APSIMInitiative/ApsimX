@@ -594,40 +594,6 @@ namespace UserInterface.Classes
             return table;
         }
 
-<<<<<<< HEAD
-=======
-        private static string CreateTOC(StreamReader fileText, string fullText)
-        {
-            string inject;
-            List<string> headers = new List<string>();
-            string curLine;
-            string topLevel = "";
-            headers.Add("<dl>");
-
-            while ((curLine = fileText.ReadLine()) != null)
-            {
-                if (curLine.Contains("<H3>"))
-                {
-                    headers.Add("<dt><A HREF=\"#" + curLine.Substring(4, curLine.IndexOf("</H3>") - 4) + "\">" + curLine.Substring(4, curLine.IndexOf("</H3>")) + "</A><BR></dt>");
-                    topLevel = curLine.Substring(4, curLine.IndexOf("</H3>") - 4);
-                }
-                else if (curLine.Contains("<H4>"))
-                    headers.Add("<dd><A HREF=\"#" + topLevel + "_" + curLine.Substring(4, curLine.IndexOf("</H4>") - 4) + "\">    " + curLine.Substring(4, curLine.IndexOf("</H4>")) + "</A><BR></dd>");
-            }
-            headers.Add("</dl>");
-
-            fileText.Close();
-            inject = "";
-            foreach (String s in headers)
-            {
-                inject += s + "\n";
-            }
-
-            const string placeMarker = "<h2>Model Documentation</h2><br>";
-            int insertPoint = placeMarker.Length + fullText.IndexOf(placeMarker);
-            return fullText.Insert(insertPoint, inject); 
-        }
->>>>>>> 214d8d490a1abee1113720350b950421d66a1976
 
         private void ChillingPhaseFunction(TextWriter OutputFile, XmlNode N, int Level)
         {
