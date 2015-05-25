@@ -545,6 +545,7 @@ namespace Models.PMF.OldPlant
 
             Dead.Clear();
             Live.Clear();
+            Height = 0.0;
         }
 
         /// <summary>Called when [phase changed].</summary>

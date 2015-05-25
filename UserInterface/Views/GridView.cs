@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Drawing;
     using System.Windows.Forms;
     using Classes;
     using DataGridViewAutoFilter;
@@ -77,6 +78,15 @@ namespace UserInterface.Views
                 this.table = value;
                 this.PopulateGrid();
             }
+        }
+
+        /// <summary>
+        /// The name of the associated model.
+        /// </summary>
+        public string ModelName
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -227,6 +237,19 @@ namespace UserInterface.Views
         {
             while (this.popupMenu.Items.Count > 3)
                 this.popupMenu.Items.RemoveAt(3);
+        }
+
+        public void LoadImage()
+        {
+            System.Reflection.Assembly thisExe = System.Reflection.Assembly.GetExecutingAssembly();
+            System.IO.Stream file = thisExe.GetManifestResourceStream("UserInterface.Resources.PresenterPictures." + ModelName + ".png");
+            if (file == null)
+                pictureBox1.Visible = false;
+            else
+            {
+                pictureBox1.Image = Image.FromStream(file);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
 
         /// <summary>
@@ -430,6 +453,49 @@ namespace UserInterface.Views
             }
         }
 
+        public void ResizeControls()
+        {
+            if (Grid.ColumnCount == 0)
+                return;
+
+            //resize Grid
+            int width = 0;
+            int height = 0;
+
+            foreach (DataGridViewColumn col in Grid.Columns)
+                width += col.Width;
+            foreach (DataGridViewRow row in Grid.Rows)
+                height += row.Height;
+            height += Grid.ColumnHeadersHeight;
+            if (width + 3 > Grid.Parent.Width)
+                Grid.Width = Grid.Parent.Width;
+            else
+                Grid.Width = width + 3;
+
+            if (height + 25 > (Grid.Parent.Parent == null ? Grid.Parent.Height / 2 : Grid.Parent.Height))
+            {
+                Grid.Height = Grid.Parent.Parent == null ? Grid.Parent.Height / 2 : Grid.Parent.Height;
+                if (width + 25 > Grid.Parent.Width)
+                    Grid.Width = Grid.Parent.Width;
+                else 
+                    Grid.Width += 25; //extra width for scrollbar
+            }
+            else
+                Grid.Height = height + 25;
+            Grid.Location = new Point(0, 0);
+
+            if (Grid.RowCount == 0)
+            {
+                Grid.Width = 0;
+                Grid.Visible = false;
+            }
+
+            //resize PictureBox
+            pictureBox1.Location = new Point(Grid.Width, 0);
+            pictureBox1.Height = pictureBox1.Parent.Height;
+            pictureBox1.Width = pictureBox1.Parent.Width - pictureBox1.Location.X;
+        }
+
         /// <summary>
         /// Trap any grid data errors, usually as a result of cell values not being
         /// in combo boxes. We'll handle these elsewhere.
@@ -628,6 +694,11 @@ namespace UserInterface.Views
             {
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
+        }
+
+        private void GridView_Resize(object sender, EventArgs e)
+        {
+            ResizeControls();
         }
     }
 }

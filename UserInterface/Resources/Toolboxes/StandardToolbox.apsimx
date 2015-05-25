@@ -71,12 +71,12 @@
           <FractionUrea>0</FractionUrea>
         </FertiliserType>
         <FertiliserType>
-		  <Name>NH4N</Name>
+      <Name>NH4N</Name>
           <FractionNO3>0</FractionNO3>
           <FractionNH4>1</FractionNH4>
           <FractionUrea>0</FractionUrea>
         </FertiliserType>
-		<FertiliserType>
+    <FertiliserType>
           <Name>NH4NO3N</Name>
           <FractionNO3>0.5</FractionNO3>
           <FractionNH4>0.5</FractionNH4>

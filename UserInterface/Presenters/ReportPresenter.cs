@@ -45,6 +45,7 @@ namespace UserInterface.Presenters
             this.View.VariableList.SetSyntaxHighlighter("Report");
 
             PopulateDataGrid();
+            this.View.DataGrid.ResizeControls();
         }
 
         /// <summary>
