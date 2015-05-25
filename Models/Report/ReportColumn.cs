@@ -372,7 +372,7 @@ namespace Models.Report
         /// </summary>
         private void StoreValue()
         {
-            object value = Apsim.Get(this.parentModel.Parent, this.variableName);
+            object value = Apsim.Get(this.parentModel.Parent, this.variableName, true);
 
             if (value == null)
                 this.values.Add(null);
@@ -403,7 +403,7 @@ namespace Models.Report
         {
             if (this.clock.Today != this.lastStoreDate)
             {
-                object value = Apsim.Get(this.parentModel.Parent, this.variableName);
+                object value = Apsim.Get(this.parentModel.Parent, this.variableName, true);
 
                 if (value == null)
                     this.valuesToAggregate.Add(null);

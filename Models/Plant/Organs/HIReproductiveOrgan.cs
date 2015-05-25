@@ -63,14 +63,11 @@ namespace Models.PMF.Organs
                 Clear();
         }
 
-        /// <summary>Called when crop is being harvested.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
+        /// <summary>
+        /// Execute harvest logic for HI reproductive organ
+        /// </summary>
+        public override void DoHarvest()
         {
-            if (sender == Plant)
-            {
                 double YieldDW = (Live.Wt + Dead.Wt);
 
                 string message = "Harvesting " + Name + " from " + Plant.Name + "\r\n" +
@@ -79,7 +76,6 @@ namespace Models.PMF.Organs
 
                 Live.Clear();
                 Dead.Clear();
-            }
         }
 
         /// <summary>Gets the hi.</summary>

@@ -293,6 +293,8 @@ namespace Models.Core
         /// <param name="e"></param>
         public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
+            this.ErrorMessage = null;
+
             // Get a reference to the JobManager so that we can add jobs to it.
             JobManager jobManager = e.Argument as JobManager;
 

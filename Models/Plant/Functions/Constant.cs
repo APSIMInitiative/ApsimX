@@ -13,13 +13,7 @@ namespace Models.PMF.Functions
     [Serializable]
     public class Constant : Model, IFunction
     {
-        /// <summary>Gets or sets the value.</summary>
-        /// <value>The value.</value>
-        [XmlElement("Value")]
-        public double value { get; set; }
-
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value { get { return value; } }
+        public double Value { get; set; }
     }
 }

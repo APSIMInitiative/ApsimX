@@ -63,6 +63,7 @@ namespace Models.Report
 
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
+            variableNames.Add("Name as ZoneName");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;

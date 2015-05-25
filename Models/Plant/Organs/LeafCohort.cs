@@ -316,7 +316,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return IsGreen && (Age > (GrowthDuration + LagDuration)); }
+            get { return (Age > (GrowthDuration + LagDuration)); }
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
         /// <value>
@@ -790,7 +790,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the appearance.</summary>
         /// <param name="LeafFraction">The leaf fraction.</param>
         /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        public void DoAppearance(double LeafFraction, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
+        public void DoAppearance(double LeafFraction, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
         {
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
@@ -835,7 +835,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the potential growth.</summary>
         /// <param name="TT">The tt.</param>
         /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        virtual public void DoPotentialGrowth(double TT, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
+        virtual public void DoPotentialGrowth(double TT, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double StartPopulation = CohortPopulation;
@@ -939,7 +939,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the actual growth.</summary>
         /// <param name="TT">The tt.</param>
         /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        virtual public void DoActualGrowth(double TT, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
+        virtual public void DoActualGrowth(double TT, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
         {
             if (IsAppeared)
             {

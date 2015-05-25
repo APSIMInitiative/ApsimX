@@ -101,7 +101,7 @@ namespace Models
         /// The weather
         /// </summary>
         [Link]
-        private Weather Weather = null;
+        private IWeather Weather = null;
 
         
         //[Link]
@@ -3502,7 +3502,7 @@ namespace Models
             double l_vpd;
 
             //! get vapour pressure deficit when net radiation is positive.
-            l_vpd = c_svp_fract * (svp(Weather.MetData.Maxt) - svp(Weather.MetData.Mint));
+            l_vpd = c_svp_fract * (svp(Weather.MaxT) - svp(Weather.MinT));
 
             l_vpd = l_bound(l_vpd, 0.01);
 
@@ -10385,7 +10385,7 @@ namespace Models
             get
                 {
                 //double l_cover = 1.0 - Math.Exp(-crop.extinction_coef * g_lai);
-                double l_radn_int = cover_green * Weather.MetData.Radn;
+                double l_radn_int = cover_green * Weather.Radn;
                 return l_radn_int;
                 }
             }
@@ -11981,12 +11981,12 @@ namespace Models
 
 
          /// <summary>
-         /// Called when [new weather data available].
+         /// Called when DoDailyInitialisation invoked.
          /// </summary>
          /// <param name="sender">The sender.</param>
          /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
+         [EventSubscribe("DoDailyInitialisation")]
+         private void OnDoDailyInitialisation(object sender, EventArgs e)
             {
 
             //met.radn = Weather.MetData.Radn;
@@ -12057,9 +12057,9 @@ namespace Models
                 //TEMPERATURE STRESS FACTOR CALCULATIONS   ( Get current temperature stress factors (0-1) )
 
                 //sugar_temp_stress_photo(1);          //*     temperature stress factors for photosynthesis
-                sugar_temperature_stress(crop.num_ave_temp, crop.x_ave_temp, crop.y_stress_photo, Weather.MetData.Maxt, Weather.MetData.Mint, ref g_temp_stress_photo);
+                sugar_temperature_stress(crop.num_ave_temp, crop.x_ave_temp, crop.y_stress_photo, Weather.MaxT, Weather.MinT, ref g_temp_stress_photo);
                 //sugar_temp_stress_stalk(1);          //*     temperature stress factors for stalk
-                sugar_temperature_stress(crop.num_ave_temp_stalk, crop.x_ave_temp_stalk, crop.y_stress_stalk, Weather.MetData.Maxt, Weather.MetData.Mint, ref g_temp_stress_stalk);
+                sugar_temperature_stress(crop.num_ave_temp_stalk, crop.x_ave_temp_stalk, crop.y_stress_stalk, Weather.MaxT, Weather.MinT, ref g_temp_stress_stalk);
 
 
 
@@ -12090,7 +12090,7 @@ namespace Models
                 //RADIATION INTERCEPTION BY LEAVES
 
                 //sugar_light_supply(1);
-                g_radn_int = sugar_radn_int(crop.extinction_coef, fr_intc_radn_, g_lai, Weather.MetData.Radn);
+                g_radn_int = sugar_radn_int(crop.extinction_coef, fr_intc_radn_, g_lai, Weather.Radn);
 
 
 
@@ -12112,7 +12112,7 @@ namespace Models
                 //TRANSPIRATION EFFICENCY (based on today's weather)
 
                 //sugar_transpiration_eff(1);
-                g_transp_eff = cproc_transp_eff1(crop.svp_fract, crop.transp_eff_cf, g_current_stage, Weather.MetData.Maxt, Weather.MetData.Mint);
+                g_transp_eff = cproc_transp_eff1(crop.svp_fract, crop.transp_eff_cf, g_current_stage, Weather.MaxT, Weather.MinT);
 
 
 
@@ -12264,7 +12264,7 @@ namespace Models
                     //! get thermal times
 
 
-                    g_dlt_tt = crop_thermal_time(crop.x_temp, crop.y_tt, g_current_stage, Weather.MetData.Maxt, Weather.MetData.Mint, emerg, flowering, g_nfact_pheno, g_swdef_pheno);
+                    g_dlt_tt = crop_thermal_time(crop.x_temp, crop.y_tt, g_current_stage, Weather.MaxT, Weather.MinT, emerg, flowering, g_nfact_pheno, g_swdef_pheno);
 
 
                     g_phase_devel = crop_phase_devel(sowing, sprouting, flowering,
@@ -12456,7 +12456,7 @@ namespace Models
 
                     g_dlt_slai_light = crop_leaf_area_sen_light1(crop.lai_sen_light, crop.sen_light_slope, g_lai, g_plants, 0.0);
 
-                    g_dlt_slai_frost = crop_leaf_area_sen_frost1(crop.frost_temp, crop.frost_fraction, g_lai, Weather.MetData.Mint, g_plants, 0.0);
+                    g_dlt_slai_frost = crop_leaf_area_sen_frost1(crop.frost_temp, crop.frost_fraction, g_lai, Weather.MinT, g_plants, 0.0);
 
                     //! now take largest of deltas
                     g_dlt_slai = max(g_dlt_slai_age, g_dlt_slai_light, g_dlt_slai_water, g_dlt_slai_frost);

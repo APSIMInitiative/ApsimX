@@ -264,9 +264,9 @@ namespace Models
             st = st.Replace("\t", "    ");
             if (html)
             {
-                st = st.Replace("<", "LE");
-                st = st.Replace(">", "GE");
-                st = st.Replace("&&", "and");
+                st = st.Replace("&", "&amp;");
+                st = st.Replace("<", "&lt;");
+                st = st.Replace(">", "&gt;");
                 st = st.Replace("\r", string.Empty);
                 st = st.Replace("\n", "<br/>");
                 st = st.Replace("<br/>", "<br/>\r\n");

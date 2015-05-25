@@ -261,9 +261,20 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         public void OnTrainingToolboxClick(object sender, EventArgs e)
         {
-            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.TrainingToolbox.apsimx");
-            StreamReader streamReader = new StreamReader(s);
-            this.OpenApsimXFromMemoryInTab("Training toolbox", streamReader.ReadToEnd());
+            try
+            {
+                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("UserInterface.Resources.Toolboxes.TrainingToolbox.apsimx");
+                StreamReader streamReader = new StreamReader(s);
+                this.OpenApsimXFromMemoryInTab("Training toolbox", streamReader.ReadToEnd());
+            }
+            catch (Exception err)
+            {
+                string message = err.Message;
+                if (err.InnerException != null)
+                    message += "\r\n" + err.InnerException.Message;
+
+                this.view.ShowError(message);
+            }
         }
 
         /// <summary>

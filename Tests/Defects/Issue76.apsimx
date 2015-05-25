@@ -1,0 +1,1208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Wheat</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[
+<html><body>
+Shows different colour graph series from outputs in 2 fields. Issue 76:<br/>
+<br/>
+https://github.com/APSIMInitiative/ApsimX/issues/76
+</body></html>]]></MemoText>
+    </Memo>
+    <Clock>
+      <Name>Clock</Name>
+      <StartDate>1900-01-01T00:00:00</StartDate>
+      <EndDate>1900-12-31T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>SummaryFile</Name>
+    </Summary>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
+    </Weather>
+    <Zone>
+      <Name>Field</Name>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>Wheat.AboveGround.Wt</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+      </Fertiliser>
+      <Soil>
+        <Name>Soil</Name>
+        <Water>
+          <Name>Water</Name>
+          <SoilCrop>
+            <Name>WheatSoil</Name>
+            <LL>
+              <double>0.261</double>
+              <double>0.248</double>
+              <double>0.28</double>
+              <double>0.306</double>
+              <double>0.36</double>
+              <double>0.392</double>
+              <double>0.446</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.01</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.01056473311131</double>
+            <double>1.07145631083388</double>
+            <double>1.09393858528057</double>
+            <double>1.15861335018721</double>
+            <double>1.17301160318016</double>
+            <double>1.16287303586874</double>
+            <double>1.18749547755906</double>
+          </BD>
+          <AirDry>
+            <double>0.130250054518252</double>
+            <double>0.198689390775399</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+          </AirDry>
+          <LL15>
+            <double>0.260500109036505</double>
+            <double>0.248361738469248</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+          </LL15>
+          <DUL>
+            <double>0.52100021807301</double>
+            <double>0.496723476938497</double>
+            <double>0.488437607673005</double>
+            <double>0.480296969355493</double>
+            <double>0.471583596524955</double>
+            <double>0.457070570557793</double>
+            <double>0.452331759845006</double>
+          </DUL>
+          <SAT>
+            <double>0.588654817693846</double>
+            <double>0.565676863836273</double>
+            <double>0.557192986686577</double>
+            <double>0.532787415023694</double>
+            <double>0.527354112007486</double>
+            <double>0.531179986464627</double>
+            <double>0.521888499034317</double>
+          </SAT>
+          <KS>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+          </KS>
+        </Water>
+        <SoilWater>
+          <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
+          <SummerDate>1-Nov</SummerDate>
+          <SummerU>5</SummerU>
+          <SummerCona>5</SummerCona>
+          <WinterDate>1-Apr</WinterDate>
+          <WinterU>5</WinterU>
+          <WinterCona>5</WinterCona>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.12</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <slope>NaN</slope>
+          <discharge_width>NaN</discharge_width>
+          <catchment_area>NaN</catchment_area>
+          <max_pond>0</max_pond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </SWCON>
+        </SoilWater>
+        <SoilNitrogen>
+          <Name>SoilNitrogen</Name>
+          <fom_type>
+            <string>default</string>
+            <string>manure</string>
+            <string>mucuna</string>
+            <string>lablab</string>
+            <string>shemp</string>
+            <string>stable</string>
+          </fom_type>
+          <fract_carb>
+            <double>0.2</double>
+            <double>0.3</double>
+            <double>0.54</double>
+            <double>0.57</double>
+            <double>0.45</double>
+            <double>0</double>
+          </fract_carb>
+          <fract_cell>
+            <double>0.7</double>
+            <double>0.3</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.47</double>
+            <double>0.1</double>
+          </fract_cell>
+          <fract_lign>
+            <double>0.1</double>
+            <double>0.4</double>
+            <double>0.09</double>
+            <double>0.06</double>
+            <double>0.08</double>
+            <double>0.9</double>
+          </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
+        </SoilNitrogen>
+        <SoilOrganicMatter>
+          <Name>SoilOrganicMatter</Name>
+          <RootCN>40</RootCN>
+          <RootWt>1000</RootWt>
+          <SoilCN>12</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+          </Depth>
+          <OC>
+            <double>1.2</double>
+            <double>0.96</double>
+            <double>0.6</double>
+            <double>0.3</double>
+            <double>0.18</double>
+            <double>0.12</double>
+            <double>0.12</double>
+          </OC>
+          <FBiom>
+            <double>0.04</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.4</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </FInert>
+          <OCUnits>Total</OCUnits>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Name>Analysis</Name>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <PH>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+          </PH>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <InitialWater>
+          <Name>InitialWater</Name>
+          <PercentMethod>EvenlyDistributed</PercentMethod>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+        </InitialWater>
+        <Sample>
+          <Name>InitialN</Name>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </NO3>
+          <NH4>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </NH4>
+          <SW>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </SW>
+          <OC>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </OC>
+          <EC>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </EC>
+          <CL>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </CL>
+          <ESP>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </ESP>
+          <PH>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </PH>
+          <NO3Units>ppm</NO3Units>
+          <NH4Units>ppm</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <RecordNumber>0</RecordNumber>
+        <ASCOrder>Vertosol</ASCOrder>
+        <ASCSubOrder>Black</ASCSubOrder>
+        <SoilType>Clay</SoilType>
+        <LocalName />
+        <Site>Norwin</Site>
+        <NearestTown>Norwin</NearestTown>
+        <Region>Darling Downs and Granite Belt</Region>
+        <State>Queensland</State>
+        <Country>Australia</Country>
+        <NaturalVegetation>Qld. Bluegrass, possible Qld. Blue gum</NaturalVegetation>
+        <ApsoilNumber>900</ApsoilNumber>
+        <Latitude>-27.581836</Latitude>
+        <Longitude>151.320206</Longitude>
+        <LocationAccuracy> +/- 20m</LocationAccuracy>
+        <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
+        <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+      </Soil>
+      <SurfaceOrganicMatter>
+        <Name>SurfaceOrganicMatter</Name>
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
+        <Pools>
+          <Pool>
+            <PoolName>wheat_stubble</PoolName>
+            <ResidueType>wheat</ResidueType>
+            <Mass>500</Mass>
+            <CNRatio>100</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
+        <PoolName>wheat_stubble</PoolName>
+        <type>wheat</type>
+        <mass>500</mass>
+        <standing_fraction>0</standing_fraction>
+        <cpr />
+        <cnr>100</cnr>
+        <CriticalResidueWeight>2000</CriticalResidueWeight>
+        <OptimumDecompTemp>20</OptimumDecompTemp>
+        <MaxCumulativeEOS>20</MaxCumulativeEOS>
+        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+        <TotalLeachRain>25</TotalLeachRain>
+        <MinRainToLeach>10</MinRainToLeach>
+        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+        <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
+        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+      </SurfaceOrganicMatter>
+      <Plant15>
+        <Name>Wheat</Name>
+        <ResourceName>Wheat</ResourceName>
+        <AutoHarvest>true</AutoHarvest>
+        <CropType>Wheat</CropType>
+      </Plant15>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <air_pressure>1010</air_pressure>
+        <soil_emissivity>0.96</soil_emissivity>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <windspeed_default>3</windspeed_default>
+        <refheight>2</refheight>
+        <albedo>0.15</albedo>
+        <emissivity>0.96</emissivity>
+        <gsmax>0.01</gsmax>
+        <r50>200</r50>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
+      </MicroClimate>
+      <Manager>
+        <Name>SowingFertiliser</Name>
+        <Script>
+          <Amount>160</Amount>
+          <CropName>wheat</CropName>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		
+		
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount { get; set;}
+		
+		[Description("Crop to be fertilised")]
+		public string CropName { get; set;}
+		
+		
+		
+
+		[EventSubscribe("Sowing")]
+		private void OnSowing(object sender, EventArgs e)
+		{
+			Model crop = sender as Model;
+			if (crop.Name.ToLower()==CropName.ToLower())
+				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+		}
+		
+	}
+}
+]]></Code>
+      </Manager>
+      <Manager>
+        <Name>SowingRule</Name>
+        <Script>
+          <StartDate>1-may</StartDate>
+          <EndDate>10-jul</EndDate>
+          <MinESW>100</MinESW>
+          <MinRain>25</MinRain>
+          <RainDays>7</RainDays>
+          <CultivarName>Hartog</CultivarName>
+          <SowingDepth>30</SowingDepth>
+          <RowSpacing>250</RowSpacing>
+          <Population>120</Population>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF.OldPlant;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant15 Wheat;
+		[Link] Soil Soil; 
+		Accumulator accumulatedRain;
+		
+		[Description("Start of sowing window (d-mmm)")]
+		public string StartDate { get; set;}
+		[Description("End of sowing window (d-mmm)")]
+		public string EndDate { get; set;}
+		[Description("Minimum extractable soil water for sowing (mm)")]
+		public double MinESW { get; set;}
+		[Description("Accumulated rainfall required for sowing (mm)")]
+		public double MinRain { get; set;}
+		[Description("Duration of rainfall accumulation (d)")]
+		public int RainDays { get; set;}
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set;}
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set;}		
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set;}	
+		[Description("Plant population (/m2)")]
+		public double Population { get; set;}	
+		
+		
+		[EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+        }
+		
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			accumulatedRain.Update();
+			
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+			    Wheat.plant_status=="out" &&
+			    Soil.SoilWater.ESW > MinESW &&
+			    accumulatedRain.Sum > MinRain)
+			{
+			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+      </Manager>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Zone>
+      <Name>Field1</Name>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>Wheat.AboveGround.Wt</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Fertiliser>
+        <Name>Fertiliser</Name>
+      </Fertiliser>
+      <Soil>
+        <Name>Soil</Name>
+        <Water>
+          <Name>Water</Name>
+          <SoilCrop>
+            <Name>WheatSoil</Name>
+            <LL>
+              <double>0.261</double>
+              <double>0.248</double>
+              <double>0.28</double>
+              <double>0.306</double>
+              <double>0.36</double>
+              <double>0.392</double>
+              <double>0.446</double>
+            </LL>
+            <KL>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.04</double>
+              <double>0.02</double>
+              <double>0.01</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <BD>
+            <double>1.01056473311131</double>
+            <double>1.07145631083388</double>
+            <double>1.09393858528057</double>
+            <double>1.15861335018721</double>
+            <double>1.17301160318016</double>
+            <double>1.16287303586874</double>
+            <double>1.18749547755906</double>
+          </BD>
+          <AirDry>
+            <double>0.130250054518252</double>
+            <double>0.198689390775399</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+          </AirDry>
+          <LL15>
+            <double>0.260500109036505</double>
+            <double>0.248361738469248</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+            <double>0.28</double>
+          </LL15>
+          <DUL>
+            <double>0.52100021807301</double>
+            <double>0.496723476938497</double>
+            <double>0.488437607673005</double>
+            <double>0.480296969355493</double>
+            <double>0.471583596524955</double>
+            <double>0.457070570557793</double>
+            <double>0.452331759845006</double>
+          </DUL>
+          <SAT>
+            <double>0.588654817693846</double>
+            <double>0.565676863836273</double>
+            <double>0.557192986686577</double>
+            <double>0.532787415023694</double>
+            <double>0.527354112007486</double>
+            <double>0.531179986464627</double>
+            <double>0.521888499034317</double>
+          </SAT>
+          <KS>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+            <double>20</double>
+          </KS>
+        </Water>
+        <SoilWater>
+          <Name>SoilWater</Name>
+          <residueinterception>0</residueinterception>
+          <SummerDate>1-Nov</SummerDate>
+          <SummerU>5</SummerU>
+          <SummerCona>5</SummerCona>
+          <WinterDate>1-Apr</WinterDate>
+          <WinterU>5</WinterU>
+          <WinterCona>5</WinterCona>
+          <DiffusConst>40</DiffusConst>
+          <DiffusSlope>16</DiffusSlope>
+          <Salb>0.12</Salb>
+          <CN2Bare>73</CN2Bare>
+          <CNRed>20</CNRed>
+          <CNCov>0.8</CNCov>
+          <slope>NaN</slope>
+          <discharge_width>NaN</discharge_width>
+          <catchment_area>NaN</catchment_area>
+          <max_pond>0</max_pond>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <SWCON>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
+          </SWCON>
+        </SoilWater>
+        <SoilNitrogen>
+          <Name>SoilNitrogen</Name>
+          <fom_type>
+            <string>default</string>
+            <string>manure</string>
+            <string>mucuna</string>
+            <string>lablab</string>
+            <string>shemp</string>
+            <string>stable</string>
+          </fom_type>
+          <fract_carb>
+            <double>0.2</double>
+            <double>0.3</double>
+            <double>0.54</double>
+            <double>0.57</double>
+            <double>0.45</double>
+            <double>0</double>
+          </fract_carb>
+          <fract_cell>
+            <double>0.7</double>
+            <double>0.3</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.47</double>
+            <double>0.1</double>
+          </fract_cell>
+          <fract_lign>
+            <double>0.1</double>
+            <double>0.4</double>
+            <double>0.09</double>
+            <double>0.06</double>
+            <double>0.08</double>
+            <double>0.9</double>
+          </fract_lign>
+          <wfpsN2N2O_x>
+            <double>22</double>
+            <double>88</double>
+          </wfpsN2N2O_x>
+          <wfpsN2N2O_y>
+            <double>0.1</double>
+            <double>1</double>
+          </wfpsN2N2O_y>
+        </SoilNitrogen>
+        <SoilOrganicMatter>
+          <Name>SoilOrganicMatter</Name>
+          <RootCN>40</RootCN>
+          <RootWt>1000</RootWt>
+          <SoilCN>12</SoilCN>
+          <EnrACoeff>7.4</EnrACoeff>
+          <EnrBCoeff>0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <Depth>
+            <string>0-15</string>
+            <string>15-30</string>
+            <string>30-60</string>
+            <string>60-90</string>
+            <string>90-120</string>
+            <string>120-150</string>
+            <string>150-180</string>
+          </Depth>
+          <OC>
+            <double>1.2</double>
+            <double>0.96</double>
+            <double>0.6</double>
+            <double>0.3</double>
+            <double>0.18</double>
+            <double>0.12</double>
+            <double>0.12</double>
+          </OC>
+          <FBiom>
+            <double>0.04</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.4</double>
+            <double>0.6</double>
+            <double>0.8</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </FInert>
+          <OCUnits>Total</OCUnits>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Name>Analysis</Name>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <PH>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+            <double>8</double>
+          </PH>
+          <PHUnits>Water</PHUnits>
+          <BoronUnits>HotWater</BoronUnits>
+        </Analysis>
+        <InitialWater>
+          <Name>InitialWater</Name>
+          <PercentMethod>EvenlyDistributed</PercentMethod>
+          <FractionFull>1</FractionFull>
+          <DepthWetSoil>NaN</DepthWetSoil>
+        </InitialWater>
+        <Sample>
+          <Name>InitialN</Name>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+            <double>300</double>
+          </Thickness>
+          <NO3>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </NO3>
+          <NH4>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+          </NH4>
+          <SW>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </SW>
+          <OC>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </OC>
+          <EC>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </EC>
+          <CL>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </CL>
+          <ESP>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </ESP>
+          <PH>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+            <double>NaN</double>
+          </PH>
+          <NO3Units>ppm</NO3Units>
+          <NH4Units>ppm</NH4Units>
+          <SWUnits>Volumetric</SWUnits>
+          <OCUnits>Total</OCUnits>
+          <PHUnits>Water</PHUnits>
+        </Sample>
+        <RecordNumber>0</RecordNumber>
+        <ASCOrder>Vertosol</ASCOrder>
+        <ASCSubOrder>Black</ASCSubOrder>
+        <SoilType>Clay</SoilType>
+        <LocalName />
+        <Site>Norwin</Site>
+        <NearestTown>Norwin</NearestTown>
+        <Region>Darling Downs and Granite Belt</Region>
+        <State>Queensland</State>
+        <Country>Australia</Country>
+        <NaturalVegetation>Qld. Bluegrass, possible Qld. Blue gum</NaturalVegetation>
+        <ApsoilNumber>900</ApsoilNumber>
+        <Latitude>-27.581836</Latitude>
+        <Longitude>151.320206</Longitude>
+        <LocationAccuracy> +/- 20m</LocationAccuracy>
+        <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
+        <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+      </Soil>
+      <SurfaceOrganicMatter>
+        <Name>SurfaceOrganicMatter</Name>
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
+        <Pools>
+          <Pool>
+            <PoolName>wheat_stubble</PoolName>
+            <ResidueType>wheat</ResidueType>
+            <Mass>500</Mass>
+            <CNRatio>100</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
+        <PoolName>wheat_stubble</PoolName>
+        <type>wheat</type>
+        <mass>500</mass>
+        <standing_fraction>0</standing_fraction>
+        <cpr />
+        <cnr>100</cnr>
+        <CriticalResidueWeight>2000</CriticalResidueWeight>
+        <OptimumDecompTemp>20</OptimumDecompTemp>
+        <MaxCumulativeEOS>20</MaxCumulativeEOS>
+        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+        <TotalLeachRain>25</TotalLeachRain>
+        <MinRainToLeach>10</MinRainToLeach>
+        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+        <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
+        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+      </SurfaceOrganicMatter>
+      <Plant15>
+        <Name>Wheat</Name>
+        <ResourceName>Wheat</ResourceName>
+        <AutoHarvest>true</AutoHarvest>
+        <CropType>Wheat</CropType>
+      </Plant15>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <air_pressure>1010</air_pressure>
+        <soil_emissivity>0.96</soil_emissivity>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <windspeed_default>3</windspeed_default>
+        <refheight>2</refheight>
+        <albedo>0.15</albedo>
+        <emissivity>0.96</emissivity>
+        <gsmax>0.01</gsmax>
+        <r50>200</r50>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.3</soil_albedo>
+      </MicroClimate>
+      <Manager>
+        <Name>SowingFertiliser</Name>
+        <Script>
+          <Amount>0</Amount>
+          <CropName>wheat</CropName>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		
+		
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount { get; set;}
+		
+		[Description("Crop to be fertilised")]
+		public string CropName { get; set;}
+		
+		
+		
+
+		[EventSubscribe("Sowing")]
+		private void OnSowing(object sender, EventArgs e)
+		{
+			Model crop = sender as Model;
+			if (crop.Name.ToLower()==CropName.ToLower())
+				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+		}
+		
+	}
+}
+]]></Code>
+      </Manager>
+      <Manager>
+        <Name>SowingRule</Name>
+        <Script>
+          <StartDate>1-may</StartDate>
+          <EndDate>10-jul</EndDate>
+          <MinESW>100</MinESW>
+          <MinRain>25</MinRain>
+          <RainDays>7</RainDays>
+          <CultivarName>Hartog</CultivarName>
+          <SowingDepth>30</SowingDepth>
+          <RowSpacing>250</RowSpacing>
+          <Population>120</Population>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF.OldPlant;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		[Link] Summary Summary;
+		[Link] Plant15 Wheat;
+		[Link] Soil Soil; 
+		Accumulator accumulatedRain;
+		
+		[Description("Start of sowing window (d-mmm)")]
+		public string StartDate { get; set;}
+		[Description("End of sowing window (d-mmm)")]
+		public string EndDate { get; set;}
+		[Description("Minimum extractable soil water for sowing (mm)")]
+		public double MinESW { get; set;}
+		[Description("Accumulated rainfall required for sowing (mm)")]
+		public double MinRain { get; set;}
+		[Description("Duration of rainfall accumulation (d)")]
+		public int RainDays { get; set;}
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set;}
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set;}		
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set;}	
+		[Description("Plant population (/m2)")]
+		public double Population { get; set;}	
+		
+		
+		[EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+        	accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+        }
+		
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			accumulatedRain.Update();
+			
+			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+			    Wheat.plant_status=="out" &&
+			    Soil.SoilWater.ESW > MinESW &&
+			    accumulatedRain.Sum > MinRain)
+			{
+			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+      </Manager>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Graph>
+      <Name>Wheat Yield Time Series</Name>
+      <Title>Time Series of Wheat Yield from 1900 to 2000</Title>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Yield (kg/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Wheat Yield</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Wheat.AboveGround.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Area>0</Area>
+    <Slope>0</Slope>
+  </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+  </DataStore>
+  <ExplorerWidth>296</ExplorerWidth>
+</Simulations>

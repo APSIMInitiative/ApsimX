@@ -52,6 +52,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.cumulativeCheckBox = new System.Windows.Forms.CheckBox();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label2
@@ -222,7 +223,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(335, 183);
+            this.checkBox3.Location = new System.Drawing.Point(335, 175);
             this.checkBox3.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(154, 21);
@@ -234,7 +235,7 @@
             // checkBox5
             // 
             this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(335, 234);
+            this.checkBox5.Location = new System.Drawing.Point(335, 217);
             this.checkBox5.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(126, 21);
@@ -306,7 +307,7 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(335, 208);
+            this.checkBox4.Location = new System.Drawing.Point(335, 196);
             this.checkBox4.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(208, 21);
@@ -327,10 +328,23 @@
             this.cumulativeCheckBox.UseVisualStyleBackColor = true;
             this.cumulativeCheckBox.CheckedChanged += new System.EventHandler(this.OnCheckedChanged);
             // 
+            // checkBox6
+            // 
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.Location = new System.Drawing.Point(335, 238);
+            this.checkBox6.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.Size = new System.Drawing.Size(187, 21);
+            this.checkBox6.TabIndex = 37;
+            this.checkBox6.Text = "Include in documentation";
+            this.checkBox6.UseVisualStyleBackColor = true;
+            this.checkBox6.CheckedChanged += new System.EventHandler(this.OnIncludeInDocumentationChanged);
+            // 
             // SeriesEditorView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox6);
             this.Controls.Add(this.cumulativeCheckBox);
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.label1);
@@ -388,5 +402,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.CheckBox cumulativeCheckBox;
+        private System.Windows.Forms.CheckBox checkBox6;
     }
 }
