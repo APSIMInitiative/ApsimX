@@ -124,6 +124,8 @@
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Presenters\ConstantPresenter.cs" />
+    <Compile Include="Presenters\XYFunctionPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -205,6 +207,12 @@
     <Compile Include="Views\CultivarView.Designer.cs">
       <DependentUpon>CultivarView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FunctionView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\FunctionView.Designer.cs">
+      <DependentUpon>FunctionView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\InitialWaterView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -218,6 +226,12 @@
       <DependentUpon>HTMLView.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ISummaryView.cs" />
+    <Compile Include="Views\PhaseView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\PhaseView.Designer.cs">
+      <DependentUpon>PhaseView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\PredictedObservedView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -369,6 +383,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CultivarView.resx">
       <DependentUpon>CultivarView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FunctionView.resx">
+      <DependentUpon>FunctionView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InitialWaterView.resx">
       <DependentUpon>InitialWaterView.cs</DependentUpon>
