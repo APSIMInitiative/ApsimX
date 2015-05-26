@@ -30,6 +30,8 @@ namespace Models.PMF.Phen
     /// \f]
     /// </remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This phase simulates time to emergence as a function of sowing depth.  Thermal time to emergence = Sowing Depth x Shoot Rate + Shoot Lag.")]
     public class EmergingPhase : GenericPhase
     {
@@ -41,11 +43,13 @@ namespace Models.PMF.Phen
         /// <value>The shoot lag.</value>
         [Units("oCd")]
        // [XmlIgnore]
+        [Description("ShootLag")]
         public double ShootLag { get; set; }
         /// <summary>Gets or sets the shoot rate.</summary>
         /// <value>The shoot rate</value>
         [Units("oCd/mm")]
        // [XmlIgnore]
+        [Description("ShootRate")]
         public double ShootRate { get; set; }
 
         /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
