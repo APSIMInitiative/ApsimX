@@ -23,8 +23,8 @@ namespace Models.PMF.Phen
     ///     in next phase except the last phase.
     /// \param ThermalTime Optional. The daily thermal time.
     /// \param Stress Optional. The environmental stress factors.
-    /// \retval TTinPhase The cumulated thermal time in current phase (&deg;Cd).
-    /// \retval TTForToday The thermal time for today in current phase (&deg;Cd).
+    /// \retval TTinPhase The cumulated thermal time in current phase (<sup>o</sup>Cd).
+    /// \retval TTForToday The thermal time for today in current phase (<sup>o</sup>Cd).
     /// \retval FractionComplete The complete fraction in current phase (from 0 to 1).
     /// <remarks>
     /// This is a base model in phenology. \ref Models.PMF.Phen.Phenology "Phenology" model
