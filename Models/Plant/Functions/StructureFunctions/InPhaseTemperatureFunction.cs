@@ -7,10 +7,10 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions.StructureFunctions
 {
     /// <summary>
-    /// Returns the curreent InPhase tempature accumulation
+    /// Returns the current InPhase temperature accumulation
     /// </summary>
     [Serializable]
-    [Description("Returns the curreent InPhase tempature accumulation")]
+    [Description("Returns the current InPhase temperature accumulation")]
     public class InPhaseTemperatureFunction : Model, IFunction
     {
         /// <summary>The phenology</summary>
