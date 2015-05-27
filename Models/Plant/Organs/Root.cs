@@ -136,6 +136,24 @@ namespace Models.PMF.Organs
         private double[] DeltaNH4;
         /// <summary>The delta n o3</summary>
         private double[] DeltaNO3;
+        /// <summary>
+        /// Holds actual DM allocations to use in allocating N to structural and Non-Structural pools
+        /// </summary>
+        [XmlIgnore]
+        [Units("g/2")]
+        public double[] DMAllocated { get; set; }
+        /// <summary>
+        /// Demand for structural N, set when Ndemand is called and used again in N allocation
+        /// </summary>
+        [XmlIgnore]
+        [Units("g/2")]
+        public double[] StructuralNDemand { get; set; }
+        /// <summary>
+        /// Demand for Non-structural N, set when Ndemand is called and used again in N allocation
+        /// </summary>
+        [XmlIgnore]
+        [Units("g/m2")]
+        public double[] NonStructuralNDemand { get; set; }
         /// <summary>The _ senescence rate</summary>
         private double _SenescenceRate = 0;
         /// <summary>The Nuptake</summary>
@@ -234,6 +252,7 @@ namespace Models.PMF.Organs
                 return value;
             }
         }
+
         /// <summary>Gets the RLV.</summary>
         /// <value>The RLV.</value>
         [Units("??km/mm3")]
@@ -244,6 +263,36 @@ namespace Models.PMF.Organs
                 return LengthDensity;
             }
         }
+
+        ///<Summary>Sum Non-Structural N demand for all layers</Summary>
+        [Units("g/m2")]
+        [XmlIgnore]
+        public double TotalNonStructuralNDemand { get; set; }
+        ///<Summary>Sum Structural N demand for all layers</Summary>
+        [Units("g/m2")]
+        [XmlIgnore]
+        public double TotalStructuralNDemand { get; set; }
+        ///<Summary>Sum N demand for all layers</Summary>
+        [Units("g/m2")]
+        [XmlIgnore]
+        public double TotalNDemand { get; set; }
+        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        [Units("g/m2")]
+        [XmlIgnore]
+        public double TotalNAllocated { get; set; }
+        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        [Units("g/m2")]
+        [XmlIgnore]
+        public double TotalDMDemand { get; set; }
+        ///<Summary>Superfloruis docummentation added to get solution compilling</Summary>
+        [Units("g/m2")]
+        [XmlIgnore]
+        public double TotalDMAllocated { get; set; }
+        ///<Summary>The amount of N taken up after arbitration</Summary>
+        [Units("g/m2")]
+        [XmlIgnore]
+        public double NTakenUp { get; set; }
+
         #endregion
 
         #region Functions
@@ -529,6 +578,7 @@ namespace Models.PMF.Organs
                 double Demand = 0;
                 if (isGrowing)
                     Demand = Arbitrator.DMSupply * PartitionFraction.Value;
+                TotalDMDemand = Demand;//  The is not really necessary as total demand is always not calculated on a layer basis so doesn't need summing.  However it may some day
                 return new BiomassPoolType { Structural = Demand };
             }
         }
@@ -607,6 +657,9 @@ namespace Models.PMF.Organs
         {
             set
             {
+                TotalDMAllocated = value.Structural;
+                DMAllocated = new double[Soil.Thickness.Length];
+            
                 // Calculate Root Activity Values for water and nitrogen
                 double[] RAw = new double[Soil.Thickness.Length];
                 double[] RAn = new double[Soil.Thickness.Length];
@@ -644,13 +697,12 @@ namespace Models.PMF.Organs
                     TotalRAw += RAw[layer];
                     TotalRAn += RAn[layer];
                 }
-                double allocated = 0;
                 for (int layer = 0; layer < Soil.Thickness.Length; layer++)
                 {
                     if (TotalRAw > 0)
                     {
                         LayerLive[layer].StructuralWt += value.Structural * RAw[layer] / TotalRAw;
-                        allocated += value.Structural * RAw[layer] / TotalRAw;
+                        DMAllocated[layer] += value.Structural * RAw[layer] / TotalRAw;
                     }
                     else if (value.Structural > 0)
                         throw new Exception("Error trying to partition root biomass");
@@ -666,18 +718,25 @@ namespace Models.PMF.Organs
         {
             get
             {
+                StructuralNDemand = new double[Soil.Thickness.Length];
+                NonStructuralNDemand = new double[Soil.Thickness.Length];
+            
                 //Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum
-                double TotalDeficit = 0.0;
                 double _NitrogenDemandSwitch = 1;
                 if (NitrogenDemandSwitch != null) //Default of 1 means demand is always truned on!!!!
                     _NitrogenDemandSwitch = NitrogenDemandSwitch.Value;
+                int i = -1;
                 foreach (Biomass Layer in LayerLive)
                 {
+                    i += 1;
+                    StructuralNDemand[i] = Layer.PotentialDMAllocation * MinimumNConc.Value *  _NitrogenDemandSwitch;
                     double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Layer.Wt + Layer.PotentialDMAllocation) - Layer.N);
-                    TotalDeficit += NDeficit;
+                    NonStructuralNDemand[i] = Math.Max(0, NDeficit - StructuralNDemand[i]) * _NitrogenDemandSwitch;
                 }
-                TotalDeficit *= _NitrogenDemandSwitch;
-                return new BiomassPoolType { Structural = TotalDeficit };
+                TotalNonStructuralNDemand = MathUtilities.Sum(NonStructuralNDemand);
+                TotalStructuralNDemand = MathUtilities.Sum(StructuralNDemand);
+                TotalNDemand = TotalNonStructuralNDemand + TotalStructuralNDemand;
+                return new BiomassPoolType { Structural = TotalStructuralNDemand, NonStructural = TotalNonStructuralNDemand };
             }
         }
 
@@ -787,70 +846,34 @@ namespace Models.PMF.Organs
         {
             set
             {
-                // Recalculate N defict following DM allocation for checking N allocation and partitioning N between layers   
-                double Demand = 0.0;
+                NTakenUp = value.Uptake;
+                TotalNAllocated = value.Structural + value.NonStructural;
+                double surpluss = TotalNAllocated - TotalNDemand;
+                if (surpluss > 0.000000001)
+                     { throw new Exception("N Allocation to roots exceeds Demand"); }
+                
+                double NAllocated = 0;
+                int i = -1;
                 foreach (Biomass Layer in LayerLive)
                 {
-                    double NDeficit = Math.Max(0.0, MaximumNConc.Value * Layer.Wt - Layer.N);
-                    Demand += NDeficit;
-                }
-                double Supply = value.Structural;
-                double NAllocated = 0;
-                if ((Demand == 0) && (Supply > 0.0000000001))
-                { throw new Exception("Cannot Allocate N to roots in layers when demand is zero"); }
-
-                // Allocate N to each layer
-                if (Demand > 0)
-                {
-                    foreach (Biomass Layer in LayerLive)
+                    i += 1;
+                    if (TotalStructuralNDemand > 0)
                     {
-                        double NDeficit = Math.Max(0.0, MaximumNConc.Value * Layer.Wt - Layer.N);
-                        double fraction = NDeficit / Demand;
-                        double Allocation = fraction * Supply;
-                        Layer.StructuralN += Allocation;
-                        NAllocated += Allocation;
+                        double StructFrac = StructuralNDemand[i] / TotalStructuralNDemand;
+                        Layer.StructuralN += value.Structural * StructFrac;
+                        NAllocated += value.Structural * StructFrac;
+                    }
+                    if (TotalNonStructuralNDemand > 0)
+                    {
+                        double NonStructFrac = NonStructuralNDemand[i] / TotalNonStructuralNDemand;
+                        Layer.NonStructuralN += value.NonStructural * NonStructFrac;
+                        NAllocated += value.NonStructural * NonStructFrac;
                     }
                 }
-                if (!MathUtilities.FloatsAreEqual(NAllocated - Supply, 0.0))
+                if (!MathUtilities.FloatsAreEqual(NAllocated - TotalNAllocated, 0.0))
                 {
                     throw new Exception("Error in N Allocation: " + Name);
                 }
-
-
-                //letting arbitrator do uptake now
-                /*
-                // uptake_gsm
-                _Nuptake = value.Uptake;
-                double Uptake = value.Uptake / kgha2gsm;
-                NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-                NitrogenUptake.Sender = "Plant2";
-                NitrogenUptake.SenderType = "Plant";
-                NitrogenUptake.DeltaNO3 = new double[Soil.Thickness.Length];
-                NitrogenUptake.DeltaNH4 = new double[Soil.Thickness.Length];
-
-                double[] no3supply = new double[Soil.Thickness.Length];
-                double[] nh4supply = new double[Soil.Thickness.Length];
-                SoilNSupply(no3supply, nh4supply);
-                double NSupply = MathUtilities.Sum(no3supply) + MathUtilities.Sum(nh4supply);
-                if (Uptake > 0)
-                {
-                    if (Uptake > NSupply + 0.001)
-                        throw new Exception("Request for N uptake exceeds soil N supply");
-                    double fraction = 0;
-                    if (NSupply > 0) fraction = Uptake / NSupply;
-
-                    for (int layer = 0; layer <= Soil.Thickness.Length - 1; layer++)
-                    {
-                        DeltaNO3[layer] = -no3supply[layer] * fraction;
-                        DeltaNH4[layer] = -nh4supply[layer] * fraction;
-                        NitrogenUptake.DeltaNO3[layer] = DeltaNO3[layer];
-                        NitrogenUptake.DeltaNH4[layer] = DeltaNH4[layer];
-                    }
-                    if (NitrogenChanged != null)
-                      NitrogenChanged.Invoke(NitrogenUptake); 
-
-                }*/
-
             }
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
