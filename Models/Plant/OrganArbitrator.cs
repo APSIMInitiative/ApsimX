@@ -255,9 +255,9 @@ namespace Models.PMF
         }
 
         /// <summary>The dm</summary>
-        private BiomassArbitrationType DM = null;
+        public BiomassArbitrationType DM = null;
         /// <summary>The n</summary>
-        private BiomassArbitrationType N = null;
+        public BiomassArbitrationType N = null;
         //private BiomassArbitrationType P = null;
         //private BiomassArbitrationType K = null;
 
@@ -437,6 +437,20 @@ namespace Models.PMF
         /// <value>NO3 supplies from each soil layer</value>
         [XmlIgnore]
         public double[] PotentialNO3NUptake { get; set; }
+
+        /// <summary>Gets and Sets NO3 Supply</summary>
+        /// <value>NO3 supplies from each soil layer</value>
+        [XmlIgnore]
+        public double TotalPotentialNO3Uptake
+        {
+            get
+            {
+                if (PotentialNO3NUptake != null)
+                    return MathUtilities.Sum(PotentialNO3NUptake);
+                else
+                    return 0;
+            }
+        }
 
         /// <summary>Gets and Sets NH4 Supply</summary>
         /// <value>NH4 supplies from each soil layer</value>
