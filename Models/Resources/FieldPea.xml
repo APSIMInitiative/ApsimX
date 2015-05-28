@@ -1,9 +1,22 @@
 <Plant>
 	<Name>FieldPea</Name>
-	<CropType>FieldPea</CropType>
+	<Memo>
+		<Name>Memo1</Name>
+		<MemoText><![CDATA[
+<html><body>
+<h2>References<br/>
+<b><h3>Ayaz S, McKenzie BA, McNeil DL, Hill GD.2004</b>. Light interception and utilization of four grain legumes sown at different plant populations and depths. <i>Journal of Agricultural Science,<b></i>142</b>: 297-308.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004</b>. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. <i>Journal of Agricultural Science,<b></i>142</b>: 21-28.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004</b>. Nitrogen distribution in four grain legumes. <i>Journal of Agricultural Science,<b></i>142</b>: 309-317.<br/>
+<b>Wilson DR, Robertson MJ.1996.</b>Pea phenology responses to temperature and photoperiod.  <i>Australian Agronomy Society</i>.<br/>
+<br/>
+</h3>
+
+</body></html>]]></MemoText>
+	</Memo>
 	<OrganArbitrator>
 		<Name>Arbitrator</Name>
-		<NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+		<NArbitrationOption>RelativeAllocation</NArbitrationOption>
 		<DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
 	</OrganArbitrator>
 	<Phenology>
@@ -11,6 +24,7 @@
 		<AirTemperatureFunction>
 			<Name>ThermalTime</Name>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>4.5</double>
 					<double>30</double>
@@ -34,104 +48,88 @@
 		</GerminatingPhase>
 		<EmergingPhase>
 			<Name>Emerging</Name>
+			<VariableReference>
+				<Name>ThermalTime</Name>
+				<VariableName>[Phenology].ThermalTime.Value</VariableName>
+			</VariableReference>
 			<Start>Germination</Start>
 			<End>Emergence</End>
 			<ShootLag>15</ShootLag>
 			<ShootRate>5</ShootRate>
-			<VariableReference>
-				<Name>ThermalTime</Name>
-				<VariableName>[Phenology].ThermalTime.Value</VariableName>
-			</VariableReference>
 		</EmergingPhase>
-		<GenericPhase>
-			<Name>EmergenceToEndJuvenile</Name>
+		<NodeNumberPhase>
+			<Name>Vegetative</Name>
+			<LinearInterpolationFunction>
+				<Name>CompletionNodeNumber</Name>
+				<XProperty>[Phenology].Photoperiod.Value</XProperty>
+				<XYPairs>
+					<Name>XYPairs</Name>
+					<X>
+						<double>13</double>
+						<double>16</double>
+					</X>
+					<Y>
+						<double>18</double>
+						<double>15</double>
+					</Y>
+				</XYPairs>
+			</LinearInterpolationFunction>
 			<Start>Emergence</Start>
-			<End>EndJuvenile</End>
+			<End>StartFlowering</End>
+		</NodeNumberPhase>
+		<NodeNumberPhase>
+			<Name>Flowering</Name>
+			<AddFunction>
+				<Name>CompletionNodeNumber</Name>
+				<VariableReference>
+					<Name>VegetativeNodes</Name>
+					<VariableName>[Phenology].NFF.Value</VariableName>
+				</VariableReference>
+				<LinearInterpolationFunction>
+					<Name>FloweringNodes</Name>
+					<XProperty>[Phenology].Photoperiod.Value</XProperty>
+					<XYPairs>
+						<Name>XYPairs</Name>
+						<X>
+							<double>13</double>
+							<double>16</double>
+						</X>
+						<Y>
+							<double>10</double>
+							<double>7</double>
+						</Y>
+					</XYPairs>
+				</LinearInterpolationFunction>
+			</AddFunction>
+			<MultiplyFunction>
+				<Name>Target</Name>
+				<VariableReference>
+					<Name>NodeNumberDuration</Name>
+					<VariableName>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.Value</VariableName>
+				</VariableReference>
+				<VariableReference>
+					<Name>Phyllochron</Name>
+					<VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+				</VariableReference>
+			</MultiplyFunction>
+			<Start>StartFlowering</Start>
+			<End>EndFlowering</End>
+		</NodeNumberPhase>
+		<GenericPhase>
+			<Name>GrainFilling</Name>
 			<Constant>
 				<Name>Target</Name>
-				<Value>200</Value>
+				<Value>500</Value>
 			</Constant>
 			<VariableReference>
 				<Name>ThermalTime</Name>
 				<VariableName>[Phenology].ThermalTime.Value</VariableName>
 			</VariableReference>
-		</GenericPhase>
-		<GenericPhase>
-			<Name>EndJuvenileToInitiation</Name>
-			<Start>EndJuvenile</Start>
-			<End>FloralInitiation</End>
-			<LinearInterpolationFunction>
-				<Name>Target</Name>
-				<XProperty>[Phenology].Photoperiod.Value</XProperty>
-				<XYPairs>
-					<X>
-						<double>10.7</double>
-						<double>17</double>
-					</X>
-					<Y>
-						<double>530</double>
-						<double>0</double>
-					</Y>
-				</XYPairs>
-			</LinearInterpolationFunction>
-			<VariableReference>
-				<Name>ThermalTime</Name>
-				<VariableName>[Phenology].ThermalTime.Value</VariableName>
-			</VariableReference>
-		</GenericPhase>
-		<GenericPhase>
-			<Name>InitiationToFlowering</Name>
-			<Start>FloralInitiation</Start>
-			<End>Flowering</End>
-			<Constant>
-				<Name>Target</Name>
-				<Value>33</Value>
-			</Constant>
-			<VariableReference>
-				<Name>ThermalTime</Name>
-				<VariableName>[Phenology].ThermalTime.Value</VariableName>
-			</VariableReference>
-		</GenericPhase>
-		<GenericPhase>
-			<Name>FloweringToStartGrainFilling</Name>
-			<Start>Flowering</Start>
-			<End>StartPodGrowth</End>
-			<LinearInterpolationFunction>
-				<Name>Target</Name>
-				<XProperty>[Phenology].Photoperiod.Value</XProperty>
-				<XYPairs>
-					<X>
-						<double>1</double>
-						<double>24</double>
-					</X>
-					<Y>
-						<double>330</double>
-						<double>450</double>
-					</Y>
-				</XYPairs>
-			</LinearInterpolationFunction>
-			<VariableReference>
-				<Name>ThermalTime</Name>
-				<VariableName>[Phenology].ThermalTime.Value</VariableName>
-			</VariableReference>
-		</GenericPhase>
-		<GenericPhase>
-			<Name>PodFilling</Name>
-			<Start>StartPodGrowth</Start>
+			<Start>EndFlowering</Start>
 			<End>EndGrainFill</End>
-			<Constant>
-				<Name>Target</Name>
-				<Value>690</Value>
-			</Constant>
-			<VariableReference>
-				<Name>ThermalTime</Name>
-				<VariableName>[Phenology].ThermalTime.Value</VariableName>
-			</VariableReference>
 		</GenericPhase>
 		<GenericPhase>
 			<Name>Maturing</Name>
-			<Start>EndGrainFill</Start>
-			<End>Maturity</End>
 			<Constant>
 				<Name>Target</Name>
 				<Value>60</Value>
@@ -140,11 +138,11 @@
 				<Name>ThermalTime</Name>
 				<VariableName>[Phenology].ThermalTime.Value</VariableName>
 			</VariableReference>
+			<Start>EndGrainFill</Start>
+			<End>Maturity</End>
 		</GenericPhase>
 		<GenericPhase>
-			<Name>MaturityToHarvestRipe</Name>
-			<Start>Maturity</Start>
-			<End>HarvestRipe</End>
+			<Name>Ripening</Name>
 			<Constant>
 				<Name>Target</Name>
 				<Value>1</Value>
@@ -153,16 +151,52 @@
 				<Name>ThermalTime</Name>
 				<VariableName>[Phenology].ThermalTime.Value</VariableName>
 			</VariableReference>
+			<Start>Maturity</Start>
+			<End>HarvestRipe</End>
 		</GenericPhase>
 		<EndPhase>
 			<Name>ReadyForHarvesting</Name>
-			<Start>HarvestRipe</Start>
-			<End>Unused</End>
 			<VariableReference>
 				<Name>ThermalTime</Name>
 				<VariableName>[Phenology].ThermalTime.Value</VariableName>
 			</VariableReference>
+			<Start>HarvestRipe</Start>
+			<End>Unused</End>
 		</EndPhase>
+		<OnEventFunction>
+			<Name>NFF</Name>
+			<Constant>
+				<Name>PreEventValue</Name>
+				<Value>0</Value>
+			</Constant>
+			<VariableReference>
+				<Name>PostEventValue</Name>
+				<VariableName>[Phenology].Vegetative.CompletionNodeNumber.Value</VariableName>
+			</VariableReference>
+			<SetEvent>StartFlowering</SetEvent>
+			<ReSetEvent>never</ReSetEvent>
+		</OnEventFunction>
+		<OnEventFunction>
+			<Name>FN</Name>
+			<Constant>
+				<Name>PreEventValue</Name>
+				<Value>0</Value>
+			</Constant>
+			<SubtractFunction>
+				<Name>PostEventValue</Name>
+				<VariableReference>
+					<Name>PostEventValue</Name>
+					<VariableName>[Structure].MainStemNodeNo</VariableName>
+				</VariableReference>
+				<VariableReference>
+					<Name>PostEventValue1</Name>
+					<VariableName>[Phenology].NFF.Value</VariableName>
+				</VariableReference>
+			</SubtractFunction>
+			<SetEvent>EndFlowering</SetEvent>
+			<ReSetEvent>never</ReSetEvent>
+		</OnEventFunction>
+		<Emerged>false</Emerged>
 	</Phenology>
 	<Structure>
 		<Name>Structure</Name>
@@ -172,44 +206,21 @@
 		</VariableReference>
 		<PhaseLookupValue>
 			<Name>MainStemPrimordiaInitiationRate</Name>
-			<Start>Emergence</Start>
-			<End>StartPodGrowth</End>
 			<Constant>
 				<Name>Function</Name>
 				<Value>20</Value>
 			</Constant>
-			<Memo>Determines how quickly Nodes are initiatted on the Apex of the mainstem</Memo>
-		</PhaseLookupValue>
-		<PhaseLookupValue>
-			<Name>MainStemNodeAppearanceRate</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Start>Emergence</Start>
-			<End>EndGrainFill</End>
-			<Memo>Determines how quickly nodes appear</Memo>
-			<LinearInterpolationFunction>
-				<Name>Phyllochron</Name>
-				<XProperty>[Phenology].Stage</XProperty>
-				<XYPairs>
-					<X>
-						<double>2</double>
-						<double>3</double>
-						<double>4</double>
-						<double>5</double>
-						<double>5.5</double>
-						<double>6</double>
-						<double>7</double>
-					</X>
-					<Y>
-						<double>50</double>
-						<double>40</double>
-						<double>30</double>
-						<double>30</double>
-						<double>25</double>
-						<double>100</double>
-						<double>1000</double>
-					</Y>
-				</XYPairs>
-			</LinearInterpolationFunction>
+			<End>EndFlowering</End>
 		</PhaseLookupValue>
+		<Constant>
+			<Name>DroughtInducedBranchMortality</Name>
+			<Value>0</Value>
+		</Constant>
 		<Constant>
 			<Name>MainStemFinalNodeNumber</Name>
 			<Value>40</Value>
@@ -218,6 +229,7 @@
 			<Name>Height</Name>
 			<XProperty>[Stem].Live.Wt</XProperty>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>0</double>
 					<double>300</double>
@@ -234,18 +246,19 @@
 				<Name>Potential_Branching_Rate</Name>
 				<XProperty>[Structure].MainStemNodeNo</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>4</double>
 						<double>5</double>
-						<double>6</double>
 						<double>7</double>
+						<double>8</double>
 					</X>
 					<Y>
 						<double>0</double>
 						<double>0</double>
 						<double>1</double>
-						<double>0.5</double>
+						<double>1</double>
 						<double>0</double>
 					</Y>
 				</XYPairs>
@@ -254,6 +267,7 @@
 				<Name>Cover_response</Name>
 				<XProperty>[leaf].CoverGreen</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>0.17</double>
@@ -266,26 +280,58 @@
 					</Y>
 				</XYPairs>
 			</LinearInterpolationFunction>
-			<Memo>The branching rates sets the number of new branches initiated.  If we have a plant with one stem and branching rate is set as zero this plant will continue to have only one stem.  If this value increases to 1 for the appearance of 1 mainstem node and then reduces to zero again the plant will produce one branch on its mainstem that has the same properties as the mainstem.  The higher this number is and the longer is remains above 0 the more branches the plant will produce.
+			<LinearInterpolationFunction>
+				<Name>CHO_response</Name>
+				<XProperty>[Stem].Live.NonStructuralWt</XProperty>
+				<XYPairs>
+					<Name>XYPairs</Name>
+					<X>
+						<double>0</double>
+						<double>1</double>
+						<double>10</double>
+					</X>
+					<Y>
+						<double>1</double>
+						<double>1</double>
+						<double>1</double>
+					</Y>
+				</XYPairs>
+			</LinearInterpolationFunction>
+			<Memo>
 				<Name>Memo1</Name>
-For Potato the potential branching rate is the branching pattern that would be observed in wide spaced plantings.  There is a cover response factor to reduce branching rates in closer spacings.</Memo>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 		</MultiplyFunction>
 		<Constant>
 			<Name>ShadeInducedBranchMortality</Name>
 			<Value>0</Value>
 		</Constant>
-		<Constant>
-			<Name>DroughtInducedBranchMortality</Name>
-			<Value>0</Value>
-		</Constant>
-	<InitialiseStage>Emergence</InitialiseStage>
+		<PhaseLookup>
+			<Name>MainStemNodeAppearanceRate</Name>
+			<PhaseLookupValue>
+				<Name>Vegetative</Name>
+				<Constant>
+					<Name>Function</Name>
+					<Value>30</Value>
+				</Constant>
+				<Start>Emergence</Start>
+				<End>StartFlowering</End>
+			</PhaseLookupValue>
+			<PhaseLookupValue>
+				<Name>Flowering</Name>
+				<Constant>
+					<Name>Function</Name>
+					<Value>40</Value>
+				</Constant>
+				<Start>StartFlowering</Start>
+				<End>EndFlowering</End>
+			</PhaseLookupValue>
+		</PhaseLookup>
+		<InitialiseStage>Emergence</InitialiseStage>
+		<PrimaryBudNo>0</PrimaryBudNo>
 	</Structure>
 	<ReproductiveOrgan>
 		<Name>Grain</Name>
-		<Constant>
-			<Name>InitialGrainProportion</Name>
-			<Value>0.05</Value>
-		</Constant>
 		<Constant>
 			<Name>MaximumPotentialGrainSize</Name>
 			<Value>0.4</Value>
@@ -293,72 +339,34 @@ For Potato the potential branching rate is the branching pattern that would be o
 		<PhaseLookup>
 			<Name>DMDemandFunction</Name>
 			<PhaseLookupValue>
-				<Name>InitialPhase</Name>
+				<Name>GrainFilling</Name>
 				<FillingRateFunction>
 					<Name>FillingRateFunction</Name>
 					<VariableReference>
 						<Name>NumberFunction</Name>
 						<VariableName>[Grain].NumberFunction.Value</VariableName>
 					</VariableReference>
-					<VariableReference>
+					<AddFunction>
 						<Name>FillingDuration</Name>
-						<VariableName>[Phenology].FloweringToStartGrainFilling.Target.Value</VariableName>
-					</VariableReference>
+						<VariableReference>
+							<Name>FillingDuration</Name>
+							<VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+						</VariableReference>
+						<VariableReference>
+							<Name>FillingDuration</Name>
+							<VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+						</VariableReference>
+					</AddFunction>
 					<VariableReference>
 						<Name>ThermalTime</Name>
 						<VariableName>[Phenology].ThermalTime.Value</VariableName>
 					</VariableReference>
-					<MultiplyFunction>
+					<VariableReference>
 						<Name>PotentialSizeIncrement</Name>
-						<VariableReference>
-							<Name>InitialProportion</Name>
-							<VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-						</VariableReference>
-						<VariableReference>
-							<Name>MaximumSize</Name>
-							<VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-						</VariableReference>
-					</MultiplyFunction>
+						<VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+					</VariableReference>
 				</FillingRateFunction>
-				<Start>Flowering</Start>
-				<End>StartPodGrowth</End>
-			</PhaseLookupValue>
-			<PhaseLookupValue>
-				<Name>LinearPhase</Name>
-				<FillingRateFunction>
-					<Name>FillingRateFunction</Name>
-					<VariableReference>
-						<Name>NumberFunction</Name>
-						<VariableName>[Grain].NumberFunction.Value</VariableName>
-					</VariableReference>
-					<VariableReference>
-						<Name>FillingDuration</Name>
-						<VariableName>[Phenology].PodFilling.Target.Value</VariableName>
-					</VariableReference>
-					<VariableReference>
-						<Name>ThermalTime</Name>
-						<VariableName>[Phenology].ThermalTime.Value</VariableName>
-					</VariableReference>
-					<MultiplyFunction>
-						<Name>PotentialSizeIncrement</Name>
-						<SubtractFunction>
-							<Name>ProportionLinearPhase</Name>
-							<Constant>
-								<Name>One</Name>
-								<Value>1</Value>
-							</Constant>
-							<VariableReference>
-								<Name>InitialProportion</Name>
-								<VariableName>[Grain].InitialGrainProportion.Value</VariableName>
-							</VariableReference>
-						</SubtractFunction>
-						<VariableReference>
-							<Name>MaximumSize</Name>
-							<VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
-						</VariableReference>
-					</MultiplyFunction>
-				</FillingRateFunction>
-				<Start>StartPodGrowth</Start>
+				<Start>StartFlowering</Start>
 				<End>EndGrainFill</End>
 			</PhaseLookupValue>
 		</PhaseLookup>
@@ -370,11 +378,11 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</Biomass>
 		<Constant>
 			<Name>MinimumNConc</Name>
-			<Value>0.039</Value>
+			<Value>0.02</Value>
 		</Constant>
 		<Constant>
 			<Name>MaximumNConc</Name>
-			<Value>0.04</Value>
+			<Value>0.03</Value>
 		</Constant>
 		<Constant>
 			<Name>WaterContent</Name>
@@ -391,14 +399,15 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<VariableName>[Grain].NumberFunction.Value</VariableName>
 					</VariableReference>
 					<AddFunction>
-					<VariableReference>
 						<Name>FillingDuration</Name>
-						<VariableName>[Phenology].FloweringToStartGrainFilling.Target.Value</VariableName>
-					</VariableReference>
-										<VariableReference>
-						<Name>FillingDuration</Name>
-						<VariableName>[Phenology].PodFilling.Target.Value</VariableName>
-					</VariableReference>
+						<VariableReference>
+							<Name>FillingDuration</Name>
+							<VariableName>[Phenology].Flowering.Target.Value</VariableName>
+						</VariableReference>
+						<VariableReference>
+							<Name>FillingDuration</Name>
+							<VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+						</VariableReference>
 					</AddFunction>
 					<VariableReference>
 						<Name>ThermalTime</Name>
@@ -408,7 +417,6 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<Name>PotentialSizeIncrement</Name>
 						<Constant>
 							<Name>MaximumFinalNConc</Name>
-							<Units>g/g</Units>
 							<Value>0.04</Value>
 						</Constant>
 						<VariableReference>
@@ -417,54 +425,25 @@ For Potato the potential branching rate is the branching pattern that would be o
 						</VariableReference>
 					</MultiplyFunction>
 				</FillingRateFunction>
-				<Start>StartPodGrowth</Start>
+				<Start>StartFlowering</Start>
 				<End>EndGrainFill</End>
 			</PhaseLookupValue>
 		</PhaseLookup>
-		<OnEventFunction>
+		<MultiplyFunction>
 			<Name>NumberFunction</Name>
-			<SetEvent>Flowering</SetEvent>
-			<ReSetEvent>never</ReSetEvent>
 			<Constant>
-				<Name>PreEventValue</Name>
-				<Value>0</Value>
+				<Name>PeasPerPod</Name>
+				<Value>3</Value>
 			</Constant>
-			<LinearInterpolationFunction>
-				<Name>PostEventValue</Name>
-				<XProperty>[Stem].Live.Wt</XProperty>
-				<XYPairs>
-					<X>
-						<double>0</double>
-						<double>1000</double>
-					</X>
-					<Y>
-						<double>0</double>
-						<double>25000</double>
-					</Y>
-				</XYPairs>
-			</LinearInterpolationFunction>
-		</OnEventFunction>
+			<VariableReference>
+				<Name>PodNumber</Name>
+				<VariableName>[Shell].PodNumber.Value</VariableName>
+			</VariableReference>
+		</MultiplyFunction>
 		<RipeStage />
 	</ReproductiveOrgan>
 	<Root>
-		<InitialDM>0.2</InitialDM>
-		<SpecificRootLength>40000</SpecificRootLength>
-		<KNO3_yProperty>
-			<double>0.02</double>
-			<double>0.02</double>
-		</KNO3_yProperty>
-		<KNO3_xRootLength>
-			<double>0</double>
-			<double>0.003</double>
-		</KNO3_xRootLength>
-		<KNH4_yProperty>
-			<double>0</double>
-			<double>0.0</double>
-		</KNH4_yProperty>
-		<KNH4_xRootLength>
-			<double>0</double>
-			<double>0.003</double>
-		</KNH4_xRootLength>		
+		<Name>Root</Name>
 		<CompositeBiomass>
 			<Name>Live</Name>
 			<Propertys>
@@ -481,6 +460,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 			<Name>KLModifier</Name>
 			<XProperty>[Leaf].LAI</XProperty>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>0</double>
 					<double>3</double>
@@ -489,12 +469,12 @@ For Potato the potential branching rate is the branching pattern that would be o
 					<double>1</double>
 					<double>1</double>
 				</Y>
-
 			</XYPairs>
 		</LinearInterpolationFunction>
 		<AirTemperatureFunction>
 			<Name>TemperatureEffect</Name>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>0</double>
 					<double>26</double>
@@ -509,71 +489,74 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</AirTemperatureFunction>
 		<Constant>
 			<Name>MaxDailyNUptake</Name>
-			<Value>6.0</Value>
+			<Value>6</Value>
 		</Constant>
 		<Constant>
 			<Name>SenescenceRate</Name>
-			<Value>0.0</Value>
-			<Memo>is the proportion of LiveWt that is passed to Dead.Wt each day due to senesence</Memo>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>0</Value>
 		</Constant>
 		<PhaseLookup>
 			<Name>RootFrontVelocity</Name>
 			<PhaseLookupValue>
 				<Name>PreEmergence</Name>
-				<Start>Germination</Start>
-				<End>Emergence</End>
 				<Constant>
 					<Name>Function</Name>
 					<Value>3</Value>
 				</Constant>
+				<Start>Germination</Start>
+				<End>Emergence</End>
 			</PhaseLookupValue>
 			<PhaseLookupValue>
 				<Name>early</Name>
-				<Start>Emergence</Start>
-				<End>FloralInitiation</End>
 				<Constant>
 					<Name>Function</Name>
 					<Value>15</Value>
 				</Constant>
+				<Start>Emergence</Start>
+				<End>StartFlowering</End>
 			</PhaseLookupValue>
 			<PhaseLookupValue>
 				<Name>late</Name>
-				<Start>FloralInitiation</Start>
-				<End>Maturity</End>
 				<Constant>
 					<Name>Function</Name>
 					<Value>17</Value>
 				</Constant>
+				<Start>StartFlowering</Start>
+				<End>Maturity</End>
 			</PhaseLookupValue>
 		</PhaseLookup>
 		<PhaseLookup>
 			<Name>PartitionFraction</Name>
 			<PhaseLookupValue>
 				<Name>Early</Name>
-				<Start>Emergence</Start>
-				<End>FloralInitiation</End>
 				<Constant>
 					<Name>Function</Name>
-					<Value>0.25</Value>
+					<Value>0.1</Value>
 				</Constant>
+				<Start>Emergence</Start>
+				<End>StartFlowering</End>
 			</PhaseLookupValue>
 			<PhaseLookupValue>
 				<Name>Middle</Name>
-				<Start>FloralInitiation</Start>
-				<End>StartPodGrowth</End>
 				<Constant>
 					<Name>Function</Name>
-					<Value>0.25</Value>
+					<Value>0.08</Value>
 				</Constant>
+				<Start>StartFlowering</Start>
+				<End>EndFlowering</End>
 			</PhaseLookupValue>
 			<PhaseLookupValue>
 				<Name>Late</Name>
-				<Start>StartPodGrowth</Start>
-				<End>Maturity</End>
 				<Constant>
 					<Name>Function</Name>
 					<Value>0</Value>
 				</Constant>
+				<Start>EndFlowering</Start>
+				<End>Maturity</End>
 			</PhaseLookupValue>
 		</PhaseLookup>
 		<Constant>
@@ -582,30 +565,69 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</Constant>
 		<Constant>
 			<Name>MinimumNConc</Name>
-			<Value>0.01</Value>
+			<Value>0.005</Value>
 		</Constant>
+		<PhaseBasedSwitch>
+			<Name>NitrogenDemandSwitch</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Start>Emergence</Start>
+			<End>EndGrainFill</End>
+		</PhaseBasedSwitch>
+		<InitialDM>0.2</InitialDM>
+		<SpecificRootLength>40000</SpecificRootLength>
+		<KNO3_yProperty>
+			<double>0.02</double>
+			<double>0.02</double>
+		</KNO3_yProperty>
+		<KNO3_xRootLength>
+			<double>0</double>
+			<double>0.003</double>
+		</KNO3_xRootLength>
+		<KNH4_yProperty>
+			<double>0</double>
+			<double>0</double>
+		</KNH4_yProperty>
+		<KNH4_xRootLength>
+			<double>0</double>
+			<double>0.003</double>
+		</KNH4_xRootLength>
+		<NuptakeSupply>0</NuptakeSupply>
 	</Root>
 	<Nodule>
+		<Name>Nodule</Name>
 		<Biomass>
 			<Name>Live</Name>
 		</Biomass>
 		<Biomass>
 			<Name>Dead</Name>
 		</Biomass>
-		<Memo>This organ give the arbitrator an N fixation potential depending on the SpecificNitrogenaseActivity of nodule and a number of stress multipliers.  It also deliveres teh metabolic cost of fixation to the arbitrator.</Memo>
+		<Memo>
+			<Name>Memo</Name>
+			<MemoText><![CDATA[]]></MemoText>
+		</Memo>
 		<Constant>
 			<Name>SpecificNitrogenaseActivity</Name>
-			<Value>45</Value>
-			<Memo>Maximum potential N fixation defined as g of N fixed per g of root node in the absence of stresses and under high fixation demand.  Value taken from CropGro soybean model</Memo>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>4.5</Value>
 		</Constant>
 		<Constant>
 			<Name>FixationMetabolicCost</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Value>7</Value>
-			<Memo>How much biomass is burned per g of N fixed.  Value taken from CropGro for soybean</Memo>
 		</Constant>
 		<AirTemperatureFunction>
 			<Name>FT</Name>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>0</double>
 					<double>20</double>
@@ -624,6 +646,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 			<Name>FW</Name>
 			<XProperty>[Leaf].Fw</XProperty>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>0</double>
 					<double>1</double>
@@ -638,8 +661,13 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</LinearInterpolationFunction>
 		<LinearInterpolationFunction>
 			<Name>FWlog</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<XProperty>[Leaf].Fw</XProperty>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>0</double>
 					<double>1</double>
@@ -651,7 +679,6 @@ For Potato the potential branching rate is the branching pattern that would be o
 					<double>1</double>
 				</Y>
 			</XYPairs>
-			<Memo>This is just here at the moment.  I have not set it to respond to a sensible x variable</Memo>
 		</LinearInterpolationFunction>
 		<PartitionFractionDemandFunction>
 			<Name>DMDemandFunction</Name>
@@ -659,49 +686,70 @@ For Potato the potential branching rate is the branching pattern that would be o
 				<Name>PartitionFraction</Name>
 				<PhaseLookupValue>
 					<Name>Early</Name>
-					<Start>Emergence</Start>
-					<End>FloralInitiation</End>
 					<Constant>
 						<Name>Function</Name>
 						<Value>0.03</Value>
 					</Constant>
+					<Start>Emergence</Start>
+					<End>StartFlowering</End>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
 					<Name>Middle</Name>
-					<Start>FloralInitiation</Start>
-					<End>StartPodGrowth</End>
 					<Constant>
 						<Name>Function</Name>
 						<Value>0.02</Value>
 					</Constant>
+					<Start>StartFlowering</Start>
+					<End>EndFlowering</End>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
 					<Name>Late</Name>
-					<Start>StartPodGrowth</Start>
-					<End>Maturity</End>
 					<Constant>
 						<Name>Function</Name>
 						<Value>0</Value>
 					</Constant>
+					<Start>EndFlowering</Start>
+					<End>Maturity</End>
 				</PhaseLookupValue>
-				<Memo>Partitioning to root nodules is a small proportion (~5%) of the biomass partitioned to roots (CropGro)</Memo>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 			</PhaseLookup>
 		</PartitionFractionDemandFunction>
 		<Constant>
 			<Name>MaximumNConc</Name>
-			<Value>0.01</Value>
-			<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation -</Memo>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>0.02</Value>
 		</Constant>
 		<Constant>
 			<Name>MinimumNConc</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Value>0.01</Value>
-			<Memo>The MinimumNconc determins the organs essential N demand.  Essential N Demand is N is set by Live.Wt * MinimumNConc and is N the organ must take up to achieve its potential growth.  If the organ is not supplied with sufficient N to maintain MinimunNConc its growth will be constrained by the arbitrator.  All N taken up to MinimunNConc is placed in the StructuralPool and is not mobile</Memo>
 		</Constant>
 		<Constant>
 			<Name>SenescenceRate</Name>
-			<Value>0.0</Value>
-			<Memo>is the proportion of LiveWt that is passed to Dead.Wt each day due to senesence</Memo>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>0</Value>
 		</Constant>
+		<PhaseBasedSwitch>
+			<Name>NitrogenDemandSwitch</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Start>Emergence</Start>
+			<End>EndGrainFill</End>
+		</PhaseBasedSwitch>
 	</Nodule>
 	<GenericAboveGroundOrgan>
 		<Name>Shell</Name>
@@ -713,61 +761,116 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</Biomass>
 		<Constant>
 			<Name>NReallocationFactor</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Value>0</Value>
-			<Memo>Controls the proportion of Non-Structural and senesing Metabolic N that may be Reallocated to other organs each day.  </Memo>
 		</Constant>
 		<Constant>
 			<Name>NRetranslocationFactor</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Value>0.1</Value>
-			<Memo>sets the proportion of Metabolic N that may be Remobilised to meet the demand of other organs each day.  A value of zero means the crop will favor maintaining the N concentration and photosynthetic capacity of its current leaf area (behaviour of crops such as potato and wheat).  Increasing this will enable the crop to grow and increased leaf area with diluted N concentration, favoring larger leaf area over the higher N concentration and photosynthetic capacity of leaves (behaviour of crops such as maize) </Memo>
 		</Constant>
-		<PartitionFractionDemandFunction>
-			<Name>DMDemandFunction</Name>
-			<PhaseLookup>
-				<Name>PartitionFraction</Name>
-				<PhaseLookupValue>
-					<Name>Early</Name>
-					<Start>Flowering</Start>
-					<End>StartPodGrowth</End>
-					<Constant>
-						<Name>Function</Name>
-						<Value>0.1</Value>
-					</Constant>
-				</PhaseLookupValue>
-				<PhaseLookupValue>
-					<Name>Late</Name>
-					<Start>StartPodGrowth</Start>
-					<End>Maturity</End>
-					<Constant>
-						<Name>Function</Name>
-						<Value>0.2</Value>
-					</Constant>
-				</PhaseLookupValue>
-			</PhaseLookup>
-		</PartitionFractionDemandFunction>
 		<Constant>
 			<Name>StructuralFraction</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Value>0.7</Value>
-			<Memo>Sets the proporiton of DM allocation that is partitioned to the organ the is put into the structural pool         </Memo>
 		</Constant>
 		<Constant>
 			<Name>MaximumNConc</Name>
-			<Value>0.01</Value>
-			<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation -</Memo>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>0.03</Value>
 		</Constant>
 		<Constant>
 			<Name>MinimumNConc</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Value>0.01</Value>
-			<Memo>The MinimumNconc determins the organs essential N demand.  Essential N Demand is N is set by Live.Wt * MinimumNConc and is N the organ must take up to achieve its potential growth.  If the organ is not supplied with sufficient N to maintain MinimunNConc its growth will be constrained by the arbitrator.  All N taken up to MinimunNConc is placed in the StructuralPool and is not mobile</Memo>
+		</Constant>
+		<Constant>
+			<Name>DMRetranslocationFactor</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>0.1</Value>
 		</Constant>
 		<PhaseBasedSwitch>
 			<Name>NitrogenDemandSwitch</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Start>Germination</Start>
 			<End>Maturity</End>
-			<Memo>Returns a value of 1 if crop is between start and finish stages and zero if not.  
-		Applied in model code but can not be nested with other functions.
-			</Memo>
 		</PhaseBasedSwitch>
+		<PopulationBasedDemandFunction>
+			<Name>DMDemandFunction</Name>
+			<VariableReference>
+				<Name>ThermalTime</Name>
+				<VariableName>[Phenology].ThermalTime.Value</VariableName>
+			</VariableReference>
+			<VariableReference>
+				<Name>OrganPopulation</Name>
+				<VariableName>[Shell].PodNumber.Value</VariableName>
+			</VariableReference>
+			<Constant>
+				<Name>ExpansionStress</Name>
+				<Value>1</Value>
+			</Constant>
+			<AddFunction>
+				<Name>GrowthDuration</Name>
+				<VariableReference>
+					<Name>FloweringGrowthPeriod</Name>
+					<VariableName>[Phenology].Flowering.Target.Value</VariableName>
+				</VariableReference>
+				<Constant>
+					<Name>PostFloweringGrowthPeriod</Name>
+					<Value>60</Value>
+				</Constant>
+			</AddFunction>
+			<StartStage>4</StartStage>
+			<MaximumOrganWt>0.5</MaximumOrganWt>
+		</PopulationBasedDemandFunction>
+		<MultiplyFunction>
+			<Name>PodNumber</Name>
+			<Constant>
+				<Name>PodsPerNode</Name>
+				<Value>1</Value>
+			</Constant>
+			<VariableReference>
+				<Name>StemPopulation</Name>
+				<VariableName>[Structure].TotalStemPopn</VariableName>
+			</VariableReference>
+			<PhaseLookupValue>
+				<Name>FloweringNodes</Name>
+				<SubtractFunction>
+					<Name>FloweringNodes</Name>
+					<VariableReference>
+						<Name>TotalNodes</Name>
+						<VariableName>[Structure].MainStemNodeNo</VariableName>
+					</VariableReference>
+					<VariableReference>
+						<Name>VegetativeNodes</Name>
+						<VariableName>[Phenology].NFF.Value</VariableName>
+					</VariableReference>
+				</SubtractFunction>
+				<Start>StartFlowering</Start>
+				<End>HarvestRipe</End>
+			</PhaseLookupValue>
+		</MultiplyFunction>
 	</GenericAboveGroundOrgan>
 	<Leaf>
 		<Name>Leaf</Name>
@@ -797,12 +900,6 @@ For Potato the potential branching rate is the branching pattern that would be o
 			</Propertys>
 			<ArraySize>[Leaf].MaxNodeNo</ArraySize>
 		</ArrayBiomass>
-		<MaxCover>1</MaxCover>
-		<KDead>0.3</KDead>
-		<GsMax>0.03</GsMax>
-		<R50>200</R50>
-		<Emissivity>0.96</Emissivity>
-		<Albido>0.26</Albido>
 		<LeafCohort>
 			<Name>InitialLeaf1</Name>
 			<Rank>1</Rank>
@@ -823,14 +920,20 @@ For Potato the potential branching rate is the branching pattern that would be o
 			<VariableName>[Phenology].ThermalTime.Value</VariableName>
 		</VariableReference>
 		<LeafCohortParameters>
+			<Name>LeafCohortParameters</Name>
 			<LinearInterpolationFunction>
 				<Name>GrowthDuration</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<XProperty>[Phenology].Stage</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>1</double>
-						<double>5.5</double>
-						<double>7</double>
+						<double>4.5</double>
+						<double>6</double>
 					</X>
 					<Y>
 						<double>90</double>
@@ -838,12 +941,16 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<double>40</double>
 					</Y>
 				</XYPairs>
-				<Memo>gives the amount of thermal time that each leaf requires to reach full expansion (MaxArea)</Memo>
 			</LinearInterpolationFunction>
 			<LinearInterpolationFunction>
 				<Name>MaxArea</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<XProperty>[Phenology].Stage</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>1</double>
 						<double>2</double>
@@ -865,38 +972,46 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<double>0</double>
 					</Y>
 				</XYPairs>
-				<Memo>Gives the size of individual leaves when they are fully expanded (mm2)</Memo>
 			</LinearInterpolationFunction>
 			<LinearInterpolationFunction>
 				<Name>LagDuration</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<XProperty>[Phenology].Stage</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>1</double>
-						<double>5.5</double>
-						<double>5.75</double>
+						<double>4.5</double>
+						<double>4.75</double>
+						<double>5</double>
 						<double>6</double>
-						<double>7</double>
 					</X>
 					<Y>
 						<double>400</double>
 						<double>400</double>
 						<double>200</double>
 						<double>100</double>
-						<double>50</double>	
-					</Y>						
+						<double>50</double>
+					</Y>
 				</XYPairs>
-				<Memo>Gives the amount of thermal time that a leaf may spend at full expansion.  The leaves area may begin to decrease before the lag period is complete if the cover overlying it exceeds that specified in SenescenceInducingCover or if the crop enters N shortage and begins remobilising N from older leaves.</Memo>
 			</LinearInterpolationFunction>
 			<LinearInterpolationFunction>
 				<Name>SenescenceDuration</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<XProperty>[Phenology].Stage</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>1</double>
+						<double>5</double>
+						<double>5.5</double>
 						<double>6</double>
-						<double>6.5</double>
-						<double>7</double>
 					</X>
 					<Y>
 						<double>80</double>
@@ -904,22 +1019,25 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<double>40</double>
 						<double>10</double>
 					</Y>
-
 				</XYPairs>
-				<Memo>This is the amount of thermal time it takes for leaves to complete senesence in the absence of shading and N stress.</Memo>
 			</LinearInterpolationFunction>
 			<Constant>
 				<Name>DetachmentLagDuration</Name>
-				<Value>1e6</Value>
+				<Value>1000000</Value>
 			</Constant>
 			<Constant>
 				<Name>DetachmentDuration</Name>
-				<Value>1e6</Value>
+				<Value>1000000</Value>
 			</Constant>
 			<LinearInterpolationFunction>
 				<Name>SpecificLeafAreaMax</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<XProperty>[Leaf].LAI</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>4</double>
@@ -933,18 +1051,24 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<double>40000</double>
 					</Y>
 				</XYPairs>
-				<Memo>The Maximum SLA set the lowest density the leaves can become and is used to calculate Structural DM demand as DeltaPotentialArea / SpecificLeafAreaMax.  </Memo>
 			</LinearInterpolationFunction>
 			<Constant>
 				<Name>StructuralFraction</Name>
-				<Value>.5</Value>
-				<Memo>StructuralFraction sets the size of the metabolic pool with Metabolic DM demand calculated as: 
-	(StructuralDMDemand * (1 / StructuralFraction)) - StructuralDMDemand such that the actual SLA of leaves will normally be less than SpecificLeafAreaMax.  If the leaf cohort is not partitioned sufficient biomass to meet both structural and metabolic N demands it will reduce the growth of both proportinatly.  With moderate DM limitations leaves will get less dense but when they reach SpecificLeafAreaMax and then leaf size will become constrained.</Memo>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
+				<Value>0.5</Value>
 			</Constant>
 			<LinearInterpolationFunction>
 				<Name>SpecificLeafAreaMin</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<XProperty>[Leaf].LAI</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>4</double>
@@ -958,12 +1082,16 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<double>20000</double>
 					</Y>
 				</XYPairs>
-				<Memo>sets the maximum density that leaves can obtain and sets up the potential size of the Non-Structural pool.  If leaf is partitioned enough DM to meet Structural and Metabolic Demands its SLA will be (DeltaStructuralWt * SpecificLeafAreaMax)/(DeltaStructuralWt* 1/StructuralFraction).  However, if there is surpless DM after all organs are allocated their DM demands it will be partitioned back to the leaf (assuming this would actually be stored as sugar of starch in such a situation) and the leaves can become more dense until they reach SpecificLeafAreaMin.  If leaf area expansion is constrained by water stress leaves will also get more dense until they reach SpecificLeafAreaMin.  Once leaves reach SpecificLeafAreaMin they can not absorb any further excess DM and if there are no other DM sinks available the leaf will discard potential biomass production, assuming that in this situation the leaf would down regulate photosynthesis due to source limitation.</Memo>
 			</LinearInterpolationFunction>
 			<LinearInterpolationFunction>
 				<Name>ExpansionStress</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<XProperty>[FieldPea].WaterSupplyDemandRatio</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>1</double>
@@ -973,42 +1101,60 @@ For Potato the potential branching rate is the branching pattern that would be o
 						<double>1</double>
 					</Y>
 				</XYPairs>
-				<Memo>This controls the effect of water stress on leaf area expansion</Memo>
 			</LinearInterpolationFunction>
 			<Constant>
 				<Name>MinimumNConc</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<Value>0.03</Value>
-				<Memo>The MinimumNconc determins the organs essential N demand.  Essential N Demand is N is set by Live.Wt * MinimumNConc and is N the organ must take up to achieve its potential growth.  If the organ is not supplied with sufficient N to maintain MinimunNConc its growth will be constrained by the arbitrator.  All N taken up to MinimunNConc is placed in the StructuralPool and is not mobile</Memo>
 			</Constant>
 			<Constant>
 				<Name>CriticalNConc</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<Value>0.05</Value>
-				<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation.</Memo>
 			</Constant>
 			<Constant>
 				<Name>MaximumNConc</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<Value>0.08</Value>
-				<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation.</Memo>
 			</Constant>
 			<Constant>
 				<Name>NReallocationFactor</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<Value>1</Value>
-				<Memo>Controls the proportion of Non-Structural and senesing Metabolic N that may be Reallocated to other organs each day.  </Memo>
 			</Constant>
 			<Constant>
 				<Name>NRetranslocationFactor</Name>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
 				<Value>0</Value>
-				<Memo>sets the proportion of Metabolic N that may be Remobilised to meet the demand of other organs each day.  A value of zero means the crop will favor maintaining the N concentration and photosynthetic capacity of its current leaf area (behaviour of crops such as potato and wheat).  Increasing this will enable the crop to grow and increased leaf area with diluted N concentration, favoring larger leaf area over the higher N concentration and photosynthetic capacity of leaves (behaviour of crops such as maize) </Memo>
 			</Constant>
 			<Constant>
 				<Name>DMRetranslocationFactor</Name>
-				<Value>.5</Value>
-				<Memo>This sets the proportion of NonStructural Wt that can be remobilised each day.</Memo>
+				<Memo>
+					<Name>Memo</Name>
+					<MemoText><![CDATA[]]></MemoText>
+				</Memo>
+				<Value>0.5</Value>
 			</Constant>
 			<LinearInterpolationFunction>
 				<Name>ShadeInducedSenescenceRate</Name>
 				<XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>0.9</double>
@@ -1032,8 +1178,13 @@ For Potato the potential branching rate is the branching pattern that would be o
 		</LeafCohortParameters>
 		<LinearInterpolationFunction>
 			<Name>ExtinctionCoeff</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<XProperty>[Leaf].LAI</XProperty>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>0</double>
 					<double>0.5</double>
@@ -1043,18 +1194,18 @@ For Potato the potential branching rate is the branching pattern that would be o
 					<double>0.7</double>
 				</Y>
 			</XYPairs>
-			<Memo>Quantifies the relationship between Leaf area index and radiation interception.  The PotentialExtinctionCoeff is the unstressed value and extinction coefficient declines in response to water stress as leaves wilt to reduce their radiation load</Memo>
 		</LinearInterpolationFunction>
 		<RUEModel>
 			<Name>Photosynthesis</Name>
 			<Constant>
 				<Name>RUE</Name>
-				<Value>1.4</Value>
+				<Value>1</Value>
 			</Constant>
 			<WeightedTemperatureFunction>
 				<Name>FT</Name>
 				<MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>15</double>
@@ -1073,6 +1224,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 				<Name>FVPD</Name>
 				<XProperty>[Leaf].Photosynthesis.VPD</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>10</double>
@@ -1089,6 +1241,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 				<Name>FN</Name>
 				<XProperty>[Leaf].Fn</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>1</double>
@@ -1105,6 +1258,7 @@ For Potato the potential branching rate is the branching pattern that would be o
 				<Name>FW</Name>
 				<XProperty>[Leaf].Fw</XProperty>
 				<XYPairs>
+					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
 						<double>1</double>
@@ -1121,13 +1275,24 @@ For Potato the potential branching rate is the branching pattern that would be o
 				<Name>Fco2</Name>
 				<PhotosyntheticPathway>C3</PhotosyntheticPathway>
 			</RUECO2Function>
-			<Memo>Potential photosynthesis is set by the radiation use efficiency (RUE in gDM/MJ).  Stress and CO2 adjustments are applied as:
-Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[
+<html><body>
+Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ<br/>
+
+</body></html>]]></MemoText>
+			</Memo>
 		</RUEModel>
 		<LinearInterpolationFunction>
 			<Name>FrostFraction</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<XProperty>[Weather].MinT</XProperty>
 			<XYPairs>
+				<Name>XYPairs</Name>
 				<X>
 					<double>-1</double>
 					<double>0</double>
@@ -1137,18 +1302,26 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 					<double>0</double>
 				</Y>
 			</XYPairs>
-			<Memo>Sets the proportion of leaf area that is killed by frost</Memo>
 		</LinearInterpolationFunction>
+		<CurrentExpandingLeaf>0</CurrentExpandingLeaf>
+		<StartFractionExpanded>0</StartFractionExpanded>
+		<FractionNextleafExpanded>0</FractionNextleafExpanded>
+		<_ExpandedNodeNo>0</_ExpandedNodeNo>
+		<DeadNodesYesterday>0</DeadNodesYesterday>
+		<MaxCover>1</MaxCover>
+		<PotentialEP>0</PotentialEP>
+		<KDead>0.3</KDead>
+		<GsMax>0.03</GsMax>
+		<R50>200</R50>
+		<Emissivity>0.96</Emissivity>
+		<Albido>0.26</Albido>
+		<FractionDied>0</FractionDied>
 	</Leaf>
 	<GenericAboveGroundOrgan>
 		<Name>Stem</Name>
-		<Memo>The generic organ has 6 optional paramaters.  If you wish to override the defaults values specified below drop a function onto this organ and name and set accordingly
-1. SenescenceRate.  Default value is 0 which means the organ will not seness.  If senesence is required place a function on the organ named SenescenceRate.  It needs to be a number for 0 - 1 that represents the proportion of total biomass that is senessed each day.
-2. NReallocationFactor.  Default value is 0 which means the organ will not allow any of its N to be reallocated as it senesses.  If reallocation of senessing N is required place a function on the organ named NReallocationFactor.  It needs to be a number from 0 - 1 that represents the proportion of senessing N that is available for reallocation
-3. NRetranslocationFactor.  Default value is 0 which means none of the nonstructuralN in this organ is available for retranslocation.  If retranslocation is required place a function on the organ named NRetranslocationFactor. It needs to be a number from 0 -1 that represents the proportion of non-structural N that can be removed from an organ on any day.
-4. NitrogenDemandSwitch.  Default value is 1 which means the organ always has a N demand if its N content is below maximum N conc.  If N demand needs to be switched off place a function on the organ named NitrogenDemandSwitch which returns a value of 1 when no demand is expressed.
-5. DMRetranslocationFactor.  Default value is 0 which means the organ will not retranslocate NonStructural biomass.  If retranslocation is desired turn change this to a value between 0 - 1.  This represents the proportion of NonStructural biomass in the organ that can be retranslocated each day.
-6. StructuralFraction.  Derault value is 1 which means all biomass partitioned to this organ is put into the structrual pool.  If you wish this organ to have NonStructural DM that can be retranslocated set this to a value lower than 1 (between 0 - 1). Also note that making structural fraction less then 1 may influence the biomass partitioning to this organ because biomass is only partitioned to NonStructural Pools after the DM demand from other pools has been met.
+		<Memo>
+			<Name>Memo</Name>
+			<MemoText><![CDATA[]]></MemoText>
 		</Memo>
 		<Biomass>
 			<Name>Live</Name>
@@ -1158,73 +1331,59 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 		</Biomass>
 		<Constant>
 			<Name>NReallocationFactor</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Value>0</Value>
-			<Memo>Controls the proportion of Non-Structural and senesing Metabolic N that may be Reallocated to other organs each day.  </Memo>
 		</Constant>
 		<Constant>
 			<Name>NRetranslocationFactor</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
 			<Value>0.1</Value>
-			<Memo>sets the proportion of Metabolic N that may be Remobilised to meet the demand of other organs each day.  A value of zero means the crop will favor maintaining the N concentration and photosynthetic capacity of its current leaf area (behaviour of crops such as potato and wheat).  Increasing this will enable the crop to grow and increased leaf area with diluted N concentration, favoring larger leaf area over the higher N concentration and photosynthetic capacity of leaves (behaviour of crops such as maize) </Memo>
 		</Constant>
-		<PartitionFractionDemandFunction>
+		<Constant>
+			<Name>DMRetranslocationFactor</Name>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>0.1</Value>
+		</Constant>
+		<InternodeDemandFunction>
 			<Name>DMDemandFunction</Name>
-			<PhaseLookup>
-				<Name>PartitionFraction</Name>
-				<PhaseLookupValue>
-					<Name>Early</Name>
-					<Start>Emergence</Start>
-					<End>Flowering</End>
-					<Constant>
-						<Name>Function</Name>
-						<Value>0.39</Value>
-					</Constant>
-				</PhaseLookupValue>
-				<PhaseLookupValue>
-					<Name>middle</Name>
-					<Start>Flowering</Start>
-					<End>StartPodGrowth</End>
-					<Constant>
-						<Name>Function</Name>
-						<Value>0.45</Value>
-					</Constant>
-				</PhaseLookupValue>
-				<PhaseLookupValue>
-					<Name>Late</Name>
-					<Start>StartPodGrowth</Start>
-					<End>Maturity</End>
-					<Constant>
-						<Name>Function</Name>
-						<Value>0</Value>
-					</Constant>
-				</PhaseLookupValue>
-				<PhaseLookupValue>
-					<Name>PostMaturity</Name>
-					<Start>Maturity</Start>
-					<End>Unused</End>
-					<Constant>
-						<Name>Function</Name>
-						<Value>0.3</Value>
-					</Constant>
-				</PhaseLookupValue>
-			</PhaseLookup>
-		</PartitionFractionDemandFunction>
+			<Constant>
+				<Name>InterNodeWt</Name>
+				<Value>0.1</Value>
+			</Constant>
+		</InternodeDemandFunction>
 		<Constant>
 			<Name>MaximumNConc</Name>
-			<Value>0.01</Value>
-			<Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation -</Memo>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>0.03</Value>
 		</Constant>
 		<Constant>
 			<Name>MinimumNConc</Name>
-			<Value>0.003</Value>
-			<Memo>The MinimumNconc determins the organs essential N demand.  Essential N Demand is N is set by Live.Wt * MinimumNConc and is N the organ must take up to achieve its potential growth.  If the organ is not supplied with sufficient N to maintain MinimunNConc its growth will be constrained by the arbitrator.  All N taken up to MinimunNConc is placed in the StructuralPool and is not mobile</Memo>
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
+			</Memo>
+			<Value>0.01</Value>
 		</Constant>
 		<PhaseBasedSwitch>
 			<Name>NitrogenDemandSwitch</Name>
-			<Start>Germination</Start>
-			<End>Maturity</End>
-			<Memo>Returns a value of 1 if crop is between start and finish stages and zero if not.  
-		Applied in model code but can not be nested with other functions.
+			<Memo>
+				<Name>Memo</Name>
+				<MemoText><![CDATA[]]></MemoText>
 			</Memo>
+			<Start>Emergence</Start>
+			<End>EndGrainFill</End>
 		</PhaseBasedSwitch>
 		<Constant>
 			<Name>StructuralFraction</Name>
@@ -1328,4 +1487,55 @@ Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2</Memo>
 	<Cultivar>
 		<Name>Crusader</Name>
 	</Cultivar>
+	<Cultivar>
+		<Name>Massey</Name>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 13,16</Command>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 8.2, 7.5</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 14,16</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 6.5, 4</Command>
+	</Cultivar>
+	<Cultivar>
+		<Name>Patea</Name>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 12,16</Command>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 12,10.9</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 14,16</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 6,4</Command>
+	</Cultivar>
+	<Cultivar>
+		<Name>Trounce</Name>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 12,16</Command>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 13.7,12</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 14,16</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 6,3</Command>
+	</Cultivar>
+	<Cultivar>
+		<Name>Rovar</Name>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 12,16</Command>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 13.7,12</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 14,16</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 5,5</Command>
+	</Cultivar>
+	<Cultivar>
+		<Name>Whero</Name>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.X = 12,16</Command>
+		<Command>[Phenology].Vegetative.CompletionNodeNumber.XYPairs.Y = 18,18</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 13,16</Command>
+		<Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 4,4</Command>
+	</Cultivar>
+	<Memo>
+		<Name>Memo</Name>
+		<MemoText><![CDATA[
+<html><body>
+<h2>References<br/>
+<b><h3>Ayaz S, McKenzie BA, McNeil DL, Hill GD.</b> <b>2004</b>. Light interception and utilization of four grain legumes sown at different plant populations and depths. <i>Journal of Agricultural Science,</i> <b>142</b>: 297-308.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.</b> <b>2004</b>. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. <i>Journal of Agricultural Science,</i> <b>142</b>: 21-28.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.</b> <b>2004</b>. Nitrogen distribution in four grain legumes. <i>Journal of Agricultural Science,</i> <b>142</b>: 309-317.<br/>
+<b>Wilson DR, Robertson MJ.</b> <b>1996.</b> Pea phenology responses to temperature and photoperiod.  <i>Australian Agronomy Society</i>.<br/>
+<br/>
+</h3>
+
+</body></html>]]></MemoText>
+	</Memo>
+	<CropType>FieldPea</CropType>
 </Plant>
+        
