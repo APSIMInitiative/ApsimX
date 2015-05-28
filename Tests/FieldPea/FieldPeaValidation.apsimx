@@ -900,8 +900,8 @@ namespace Models
         </Operations>
         <Plant>
           <Name>FieldPea</Name>
-          <Resource>FieldPea</Resource>
-		  <CropType>FieldPea</CropType>
+          <ResourceName>FieldPea</ResourceName>
+          <CropType>FieldPea</CropType>
         </Plant>
         <Area>1</Area>
         <Slope>0</Slope>
@@ -4081,8 +4081,8 @@ namespace Models
         </Soil>
         <Plant>
           <Name>FieldPea</Name>
-          <Resource>FieldPea</Resource>
-		  <CropType>FieldPea</CropType>
+          <ResourceName>FieldPea</ResourceName>
+          <CropType>FieldPea</CropType>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -6678,8 +6678,8 @@ namespace Models
         </Soil>
         <Plant>
           <Name>FieldPea</Name>
-          <Resource>FieldPea</Resource>
-		  <CropType>FieldPea</CropType>
+          <ResourceName>FieldPea</ResourceName>
+          <CropType>FieldPea</CropType>
         </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -13160,8 +13160,8 @@ namespace Models
         </Folder>
         <Plant>
           <Name>FieldPea</Name>
+          <ResourceName>FieldPea</ResourceName>
           <CropType>FieldPea</CropType>
-		  <Resource>FieldPea</Resource>
         </Plant>
         <Area>1</Area>
         <Slope>0</Slope>
