@@ -1166,6 +1166,23 @@ namespace Models
                   </Y>
                 </XYPairs>
               </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>CHO_response</Name>
+                <XProperty>[Stem].Live.NonStructuralWt</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>10</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
               <Memo>
                 <Name>Memo1</Name>
                 <MemoText><![CDATA[]]></MemoText>
@@ -1483,7 +1500,7 @@ namespace Models
                 <Name>Memo</Name>
                 <MemoText><![CDATA[]]></MemoText>
               </Memo>
-              <Value>45</Value>
+              <Value>4.5</Value>
             </Constant>
             <Constant>
               <Name>FixationMetabolicCost</Name>
@@ -1491,7 +1508,7 @@ namespace Models
                 <Name>Memo</Name>
                 <MemoText><![CDATA[]]></MemoText>
               </Memo>
-              <Value>0</Value>
+              <Value>7</Value>
             </Constant>
             <AirTemperatureFunction>
               <Name>FT</Name>
@@ -1667,6 +1684,14 @@ namespace Models
                 <MemoText><![CDATA[]]></MemoText>
               </Memo>
               <Value>0.01</Value>
+            </Constant>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.1</Value>
             </Constant>
             <PhaseBasedSwitch>
               <Name>NitrogenDemandSwitch</Name>
@@ -2060,7 +2085,7 @@ namespace Models
               <Name>Photosynthesis</Name>
               <Constant>
                 <Name>RUE</Name>
-                <Value>1.4</Value>
+                <Value>1</Value>
               </Constant>
               <WeightedTemperatureFunction>
                 <Name>FT</Name>
@@ -2138,7 +2163,11 @@ namespace Models
               </RUECO2Function>
               <Memo>
                 <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
+                <MemoText><![CDATA[
+<html><body>
+Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ<br/>
+
+</body></html>]]></MemoText>
               </Memo>
             </RUEModel>
             <LinearInterpolationFunction>
@@ -2196,6 +2225,14 @@ namespace Models
             </Constant>
             <Constant>
               <Name>NRetranslocationFactor</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.1</Value>
+            </Constant>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
               <Memo>
                 <Name>Memo</Name>
                 <MemoText><![CDATA[]]></MemoText>
@@ -2371,6 +2408,20 @@ namespace Models
             <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 13,16</Command>
             <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 4,4</Command>
           </Cultivar>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[
+<html><body>
+<h2>References<br/>
+<b><h3>Ayaz S, McKenzie BA, McNeil DL, Hill GD.</b> <b>2004</b>. Light interception and utilization of four grain legumes sown at different plant populations and depths. <i>Journal of Agricultural Science,</i> <b>142</b>: 297-308.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.</b> <b>2004</b>. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. <i>Journal of Agricultural Science,</i> <b>142</b>: 21-28.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.</b> <b>2004</b>. Nitrogen distribution in four grain legumes. <i>Journal of Agricultural Science,</i> <b>142</b>: 309-317.<br/>
+<b>Wilson DR, Robertson MJ.</b> <b>1996.</b> Pea phenology responses to temperature and photoperiod.  <i>Australian Agronomy Society</i>.<br/>
+<br/>
+</h3>
+
+</body></html>]]></MemoText>
+          </Memo>
           <CropType>FieldPea</CropType>
         </Plant>
         <Area>1</Area>
@@ -14674,6 +14725,8 @@ namespace Models
             <string>[Soil].SoilWater.pond</string>
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.SWmm</string>
+            <string>[DiagnosticsVariables].Script.NonStructuralDM</string>
+            <string>[FieldPea].Stem.Live.NonStructuralWt</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -17437,6 +17490,7 @@ namespace Models
 		[XmlIgnore] public double MineralN { get; set; }
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
+		[XmlIgnore] public double NonStructuralDM {get; set;}
 		
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -17507,6 +17561,8 @@ namespace Models
 			AccumRunoff -= Soil.SoilWater.Runoff;
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
 			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
+			
+			NonStructuralDM = (double)zone.Get("FieldPea.Leaf.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Stem.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Root.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Nodule.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Shell.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Grain.Live.NonStructuralWt");
 		}
 	}
 }
@@ -17515,6 +17571,20 @@ namespace Models
         </Folder>
         <Plant>
           <Name>FieldPea</Name>
+          <Memo>
+            <Name>Memo1</Name>
+            <MemoText><![CDATA[
+<html><body>
+<h2>References<br/>
+<b><h3>Ayaz S, McKenzie BA, McNeil DL, Hill GD.2004</b>. Light interception and utilization of four grain legumes sown at different plant populations and depths. <i>Journal of Agricultural Science,<b></i>142</b>: 297-308.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004</b>. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. <i>Journal of Agricultural Science,<b></i>142</b>: 21-28.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004</b>. Nitrogen distribution in four grain legumes. <i>Journal of Agricultural Science,<b></i>142</b>: 309-317.<br/>
+<b>Wilson DR, Robertson MJ.1996.</b>Pea phenology responses to temperature and photoperiod.  <i>Australian Agronomy Society</i>.<br/>
+<br/>
+</h3>
+
+</body></html>]]></MemoText>
+          </Memo>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
             <NArbitrationOption>RelativeAllocation</NArbitrationOption>
@@ -17778,6 +17848,23 @@ namespace Models
                     <double>1</double>
                     <double>1</double>
                     <double>0</double>
+                  </Y>
+                </XYPairs>
+              </LinearInterpolationFunction>
+              <LinearInterpolationFunction>
+                <Name>CHO_response</Name>
+                <XProperty>[Stem].Live.NonStructuralWt</XProperty>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>10</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </Y>
                 </XYPairs>
               </LinearInterpolationFunction>
@@ -18283,6 +18370,14 @@ namespace Models
               </Memo>
               <Value>0.01</Value>
             </Constant>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.1</Value>
+            </Constant>
             <PhaseBasedSwitch>
               <Name>NitrogenDemandSwitch</Name>
               <Memo>
@@ -18675,7 +18770,7 @@ namespace Models
               <Name>Photosynthesis</Name>
               <Constant>
                 <Name>RUE</Name>
-                <Value>1.4</Value>
+                <Value>1</Value>
               </Constant>
               <WeightedTemperatureFunction>
                 <Name>FT</Name>
@@ -18753,7 +18848,11 @@ namespace Models
               </RUECO2Function>
               <Memo>
                 <Name>Memo</Name>
-                <MemoText><![CDATA[]]></MemoText>
+                <MemoText><![CDATA[
+<html><body>
+Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature conditions for field pea.  Halving this to make it total radiation gives 0.8 g/MJ and adding 20% to account for root and  nodule production and N fixiation costs gives 1.0 g/MJ<br/>
+
+</body></html>]]></MemoText>
               </Memo>
             </RUEModel>
             <LinearInterpolationFunction>
@@ -18811,6 +18910,14 @@ namespace Models
             </Constant>
             <Constant>
               <Name>NRetranslocationFactor</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <Value>0.1</Value>
+            </Constant>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
               <Memo>
                 <Name>Memo</Name>
                 <MemoText><![CDATA[]]></MemoText>
@@ -18986,6 +19093,20 @@ namespace Models
             <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.X = 13,16</Command>
             <Command>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.XYPairs.Y = 4,4</Command>
           </Cultivar>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[
+<html><body>
+<h2>References<br/>
+<b><h3>Ayaz S, McKenzie BA, McNeil DL, Hill GD.</b> <b>2004</b>. Light interception and utilization of four grain legumes sown at different plant populations and depths. <i>Journal of Agricultural Science,</i> <b>142</b>: 297-308.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.</b> <b>2004</b>. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. <i>Journal of Agricultural Science,</i> <b>142</b>: 21-28.<br/>
+<b>Ayaz S, McKenzie BA, Hill GD, McNeil DL.</b> <b>2004</b>. Nitrogen distribution in four grain legumes. <i>Journal of Agricultural Science,</i> <b>142</b>: 309-317.<br/>
+<b>Wilson DR, Robertson MJ.</b> <b>1996.</b> Pea phenology responses to temperature and photoperiod.  <i>Australian Agronomy Society</i>.<br/>
+<br/>
+</h3>
+
+</body></html>]]></MemoText>
+          </Memo>
           <CropType>FieldPea</CropType>
         </Plant>
         <Area>1</Area>
@@ -19503,7 +19624,265 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <Graph>
+        <Name>DMDemand</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Arbitrator.DMDemand</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Nodule Wt</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Nodule.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Leaf Wt</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Leaf.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>RootWt</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Root.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Branch number</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Leaf Area Index (m2/m2)</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Structure.TotalStemPopn</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NonStructuralWt</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Predicted</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-32768</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>FieldPea.Stem.Live.NonStructuralWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopRight</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>312</ExplorerWidth>
+  <ExplorerWidth>431</ExplorerWidth>
 </Simulations>
