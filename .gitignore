@@ -34,6 +34,11 @@ Documentation/html
 *.db
 packages/
 Documents/
+<<<<<<< HEAD
 Models/Resources/Fieldpea2.xml
 Tests/Maize/Ames2.met
 Models/Weather.cs.rej
+=======
+Tests/Sorghum/HERems.ldb
+Tests/Sorghum/HERems.mdb
+>>>>>>> 5e6f770f0f4898e402f557555944f6d9d8e4a611
