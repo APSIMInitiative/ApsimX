@@ -12,6 +12,8 @@ namespace Models.PMF.Functions
     /// Linear interpolation function
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
     public class LinearInterpolationFunction : Model, IFunction, IFunctionArray
     {
@@ -21,12 +23,15 @@ namespace Models.PMF.Functions
         /// <value>The xy pairs.</value>
         public XYPairs XYPairs { get; set; }
         /// <summary>The x property</summary>
-        public string XProperty = "";
+        [Description("XProperty")]
+        public string XProperty { get; set; }
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
+            if (XYPairs == null)
+                XYPairs = (XYPairs)Apsim.Child(this, typeof(XYPairs)); 
             if (XYPairs != null)
             {
                 for (int i = 1; i < XYPairs.Y.Length; i++)

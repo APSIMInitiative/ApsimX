@@ -20,6 +20,11 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets or sets the xy pairs.</summary>
         public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
+        private void OnLoaded()
+        {
+            if (XYPairs == null)
+                XYPairs = (XYPairs)Apsim.Child(this, typeof(XYPairs));
+        }
 
         /// <summary>Number of 3 hourly temperatures</summary>
         private const int num3hr = 24 / 3;           // 
