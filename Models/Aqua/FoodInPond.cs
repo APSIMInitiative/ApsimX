@@ -47,6 +47,7 @@ namespace Models.Aqua
         private Food food;
 
 
+
         /// <summary>
         ///  Data Structure that stores the different feeds that are in the pond.
         /// </summary>
@@ -54,90 +55,6 @@ namespace Models.Aqua
         public Food Food { get { return food; } }
 
 
-
-
-
-        #region Outputs
-
-
-
-        /// <summary>
-        /// Total Dry Matter in the pond (kg)
-        /// </summary>
-        /// <value>
-        /// Summation of every type of feed in the pond. 
-        /// </value>
-        [XmlIgnore]
-        [Units("kg")]
-        public double TotalDM
-            {
-            get
-                {
-                int i = 0;
-                double result = 0.0;
-                foreach (Feed f in food)
-                    {
-                    result = result + f.DryMatter;
-                    i++;
-                    }
-                return result;
-                }
-            }
-
-
-        /// <summary>
-        /// Total Nitrogen in the pond (kg)
-        /// </summary>
-        /// <value>
-        ///  Summation of every type of feed in the pond.
-        /// </value>
-        [XmlIgnore]
-        [Units("kg")]
-        public double TotalN
-            {
-            get
-                {
-                int i = 0;
-                double result = 0.0;
-                foreach (Feed f in food)
-                    {
-                    result = result + f.Nitrogen;
-                    i++;
-                    }
-                return result;
-                }
-            }
-
-
-
-
-        /// <summary>
-        /// Total Digestible Energy in the pond (MJ)
-        /// </summary>
-        /// <value>
-        ///  Summation of every type of feed in the pond. 
-        /// </value>
-        [XmlIgnore]
-        [Units("MJ")]
-        public double TotalDE
-            {
-            get
-                {
-                int i = 0;
-                double result = 0.0;
-                foreach (Feed f in food)
-                    {
-                    result = result + f.DigestibleEnergy;
-                    i++;
-                    }
-                return result;
-                }
-            }
-
-
-
-
-        #endregion
 
 
 
@@ -212,7 +129,50 @@ namespace Models.Aqua
 
 
 
-        #region Methods
+        #region Food Manipulation Methods
+
+
+        /// <summary>
+        /// Add some food to this food.
+        /// If a feed (in the food to add) already exist then add it to the exsting feed.
+        /// otherwise just add it as a new feed.
+        /// </summary>
+        /// <param name="FoodToAdd">Food to add to this food</param>
+        public void AddToExisting(Food FoodToAdd)
+            {
+            foreach (Feed feed in FoodToAdd)
+                {
+                AddFeed(feed);
+                }
+            }
+
+
+        /// <summary>
+        /// Remove some food from this food.
+        /// If a feed (in the food to remove) already exists then remove it from the existing feed.
+        /// otherwise just ignore that feed.
+        /// </summary>
+        /// <param name="FoodToRemove">Food to remove from this food</param>
+        public void RemoveFromExisting(Food FoodToRemove)
+            {
+            foreach (Feed feed in FoodToRemove)
+                {
+                if (IsThisFeedInFood(feed.FeedName))
+                    {
+                    Feed existing = GetFeed(feed.FeedName);
+                    existing.RemoveFromExisting(feed);
+                    }
+
+                }
+            }
+
+
+        #endregion
+
+
+
+
+        #region Feed Manipulation Methods
 
 
 
@@ -239,11 +199,11 @@ namespace Models.Aqua
 
 
         /// <summary>
-        /// Check to see if this feed is already in the pond
+        /// Check to see if this feed is already in the food
         /// </summary>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public bool IsThisFeedInPond(string Name)
+        public bool IsThisFeedInFood(string Name)
             {
             foreach (Feed f in this)
                 {
@@ -278,37 +238,128 @@ namespace Models.Aqua
 
 
         /// <summary>
-        /// Add a Feed to the Pond
+        /// Add a Feed to the Food
+        /// If it is not already present in this food then add it
+        /// If it is already present then add it to the existing feed.
         /// </summary>
-        /// <param name="NewFeed"></param>
+        /// <param name="NewFeed">The new feed to add to the food</param>
         public void AddFeed(Feed NewFeed)
             {
             NewFeed.FeedName = CleanUpFeedName(NewFeed.FeedName);
-            bool alreadyInPond = IsThisFeedInPond(NewFeed.FeedName);
+            bool alreadyInFood = IsThisFeedInFood(NewFeed.FeedName);
 
-            if (alreadyInPond == false)
+            if (alreadyInFood == false)
                 {
                 feeds.Add(NewFeed);
                 }
             else
                 {
                 Feed existing = GetFeed(NewFeed.FeedName);
-                existing.AddSomeFeed(NewFeed);
+                existing.AddToExisting(NewFeed);
                 }
             }
 
 
 
         /// <summary>
-        /// Remove ALL the feeds from the pond.
+        /// Remove ALL the feeds from the Food.
         /// </summary>
-        public void RemoveAllFeedFromPond()
+        public void RemoveAllFeedFromFood()
             {
             feeds.Clear();
             }
 
 
         #endregion
+
+
+
+
+
+
+        #region Outputs
+
+
+
+        /// <summary>
+        /// Total Dry Matter in the food (kg)
+        /// </summary>
+        /// <value>
+        /// Summation of every type of feed in the food. 
+        /// </value>
+        [XmlIgnore]
+        [Units("kg")]
+        public double TotalDM
+            {
+            get
+                {
+                int i = 0;
+                double result = 0.0;
+                foreach (Feed f in this)
+                    {
+                    result = result + f.DryMatter;
+                    i++;
+                    }
+                return result;
+                }
+            }
+
+
+        /// <summary>
+        /// Total Nitrogen in the food(kg)
+        /// </summary>
+        /// <value>
+        ///  Summation of every type of feed in the food.
+        /// </value>
+        [XmlIgnore]
+        [Units("kg")]
+        public double TotalN
+            {
+            get
+                {
+                int i = 0;
+                double result = 0.0;
+                foreach (Feed f in this)
+                    {
+                    result = result + f.Nitrogen;
+                    i++;
+                    }
+                return result;
+                }
+            }
+
+
+
+
+        /// <summary>
+        /// Total Digestible Energy in the food (MJ)
+        /// </summary>
+        /// <value>
+        ///  Summation of every type of feed in the food. 
+        /// </value>
+        [XmlIgnore]
+        [Units("MJ")]
+        public double TotalDE
+            {
+            get
+                {
+                int i = 0;
+                double result = 0.0;
+                foreach (Feed f in this)
+                    {
+                    result = result + f.DigestibleEnergy;
+                    i++;
+                    }
+                return result;
+                }
+            }
+
+
+
+
+        #endregion
+
+
 
 
 
@@ -535,7 +586,7 @@ namespace Models.Aqua
         /// Add some feed to the existing feed.
         /// </summary>
         /// <param name="AddThis"></param>
-        public void AddSomeFeed(Feed AddThis)
+        public void AddToExisting(Feed AddThis)
             {
             this.DryMatter = this.DryMatter + AddThis.DryMatter;
             this.Nitrogen = this.Nitrogen + AddThis.Nitrogen;
@@ -548,7 +599,7 @@ namespace Models.Aqua
         /// then it will only remove whatever feed is there.
         /// </summary>
         /// <param name="RemoveThis">Amounts in this feed (to remove) should be positive values</param>
-        public void RemoveSomeFeed(Feed RemoveThis)
+        public void RemoveFromExisting(Feed RemoveThis)
             {
             double result;
 
