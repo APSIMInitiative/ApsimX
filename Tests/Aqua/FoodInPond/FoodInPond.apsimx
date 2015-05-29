@@ -323,9 +323,9 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[FoodInPond].TotalDM as TotalDM</string>
-          <string>[FoodInPond].TotalN as TotalN</string>
-          <string>[FoodInPond].TotalDE as TotalDE </string>
+          <string>[FoodInPond].Food.TotalDM as TotalDM</string>
+          <string>[FoodInPond].Food..TotalN as TotalN</string>
+          <string>[FoodInPond].Food..TotalDE as TotalDE </string>
           <string>[FoodInPond].Food.NumFeeds as NumFeeds</string>
           <string>[FoodInPond].Food.FeedNames as FeedNames</string>
           <string>[FoodInPond].Food.FeedDMs as FeedDMs</string>
