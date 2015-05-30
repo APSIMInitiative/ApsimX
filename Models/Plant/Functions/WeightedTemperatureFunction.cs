@@ -14,9 +14,15 @@ namespace Models.PMF.Functions
     public class WeightedTemperatureFunction : Model, IFunction
     {
         #region Class Data Members
-        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
+        public XYPairs XYPairs  // Temperature effect on Growth Interpolation Set
+        {
+            get
+            {
+                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
+            }
+        }
 
         /// <summary>The maximum temperature weighting</summary>
         public double MaximumTemperatureWeighting = 0.0;
@@ -26,7 +32,6 @@ namespace Models.PMF.Functions
         protected IWeather MetData = null;
         
         #endregion
-
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>

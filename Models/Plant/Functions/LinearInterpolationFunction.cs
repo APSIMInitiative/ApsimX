@@ -19,9 +19,15 @@ namespace Models.PMF.Functions
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
-        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs { get; set; }
+        public XYPairs XYPairs
+        {
+            get
+            {
+                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
+            }
+        }
         /// <summary>The x property</summary>
         [Description("XProperty")]
         public string XProperty { get; set; }
@@ -30,8 +36,6 @@ namespace Models.PMF.Functions
         [EventSubscribe("Loaded")]
         private void OnLoaded()
         {
-            if (XYPairs == null)
-                XYPairs = (XYPairs)Apsim.Child(this, typeof(XYPairs)); 
             if (XYPairs != null)
             {
                 for (int i = 1; i < XYPairs.Y.Length; i++)

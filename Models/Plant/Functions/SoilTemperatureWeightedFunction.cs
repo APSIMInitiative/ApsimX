@@ -24,8 +24,13 @@ namespace Models.PMF.Functions
         private double Today = 0;
         /// <summary>Gets or sets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
-
+        public XYPairs XYPairs  // Temperature effect on Growth Interpolation Set
+        {
+            get
+            {
+                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
+            }
+        }
         /// <summary>The maxt_soil_surface</summary>
         [Units("oC")]
         double maxt_soil_surface = 15;  //Fixme.  Need to connect to soil temp model when it is working

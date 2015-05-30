@@ -19,11 +19,13 @@ namespace Models.PMF.Functions
         protected IWeather MetData = null;
 
         /// <summary>Gets or sets the xy pairs.</summary>
-        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
-        private void OnLoaded()
+        /// <value>The xy pairs.</value>
+        public XYPairs XYPairs  // Temperature effect on Growth Interpolation Set
         {
-            if (XYPairs == null)
-                XYPairs = (XYPairs)Apsim.Child(this, typeof(XYPairs));
+            get
+            {
+                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
+            }
         }
 
         /// <summary>Number of 3 hourly temperatures</summary>

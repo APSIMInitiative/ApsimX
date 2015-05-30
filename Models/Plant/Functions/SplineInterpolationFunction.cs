@@ -17,9 +17,15 @@ namespace Models.PMF.Functions
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
     public class SplineInterpolationFunction : Model, IFunction
     {
-        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs { get; set; }
+        public XYPairs XYPairs
+        {
+            get
+            {
+                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
+            }
+        }
 
         /// <summary>The x property</summary>
         public string XProperty = "";

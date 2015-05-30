@@ -14,11 +14,12 @@ namespace Models.PMF.Functions
     {
         #region Class Data Members
         /// <summary>The xy pairs</summary>
-        public XYPairs XYPairs { get; set; }    // Temperature effect on Growth Interpolation Set
-        private void OnLoaded()
+        public XYPairs XYPairs  // Temperature effect on Growth Interpolation Set
         {
-            if (XYPairs == null)
-                XYPairs = (XYPairs)Apsim.Child(this, typeof(XYPairs));
+            get
+            {
+                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
+            }
         }
         /// <summary>The maxt_soil_surface</summary>
         public double maxt_soil_surface = 20; //Fixme.  These need to be connected to soil temp model when complete
@@ -36,7 +37,7 @@ namespace Models.PMF.Functions
             get
             {
                 AirTemperatureFunction airtempfunction = new AirTemperatureFunction();
-                airtempfunction.XYPairs = XYPairs;
+                //airtempfunction.XYPairs = XYPairs;
                 return airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, XYPairs);
             }
         }
