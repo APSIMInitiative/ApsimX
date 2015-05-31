@@ -16,13 +16,8 @@ namespace Models.PMF.Functions
         #region Class Data Members
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs  // Temperature effect on Growth Interpolation Set
-        {
-            get
-            {
-                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
-            }
-        }
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maximum temperature weighting</summary>
         public double MaximumTemperatureWeighting = 0.0;

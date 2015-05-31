@@ -21,13 +21,9 @@ namespace Models.PMF.Functions
         private bool YsAreAllTheSame = false;
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs
-        {
-            get
-            {
-                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
-            }
-        }
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+
         /// <summary>The x property</summary>
         [Description("XProperty")]
         public string XProperty { get; set; }

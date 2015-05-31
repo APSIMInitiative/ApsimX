@@ -14,13 +14,9 @@ namespace Models.PMF.Functions
     {
         #region Class Data Members
         /// <summary>The xy pairs</summary>
-        public XYPairs XYPairs  // Temperature effect on Growth Interpolation Set
-        {
-            get
-            {
-                return Apsim.Child(this, typeof(XYPairs)) as XYPairs;
-            }
-        }
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+
         /// <summary>The maxt_soil_surface</summary>
         public double maxt_soil_surface = 20; //Fixme.  These need to be connected to soil temp model when complete
         /// <summary>The mint_soil_surface</summary>
