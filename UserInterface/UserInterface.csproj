@@ -90,6 +90,7 @@
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +126,10 @@
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Presenters\ConstantPresenter.cs" />
+    <Compile Include="Presenters\GenericPMFPresenter.cs" />
+    <Compile Include="Presenters\PhaseLookupValuePresenter.cs" />
+    <Compile Include="Presenters\VariableReferencePresenter.cs" />
+    <Compile Include="Presenters\PhasePresenter.cs" />
     <Compile Include="Presenters\XYFunctionPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -194,6 +199,12 @@
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
+    <Compile Include="Views\GenericPMFView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\GenericPMFView.Designer.cs">
+      <DependentUpon>GenericPMFView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\EditorView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -386,6 +397,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FunctionView.resx">
       <DependentUpon>FunctionView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\GenericPMFView.resx">
+      <DependentUpon>GenericPMFView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InitialWaterView.resx">
       <DependentUpon>InitialWaterView.cs</DependentUpon>
