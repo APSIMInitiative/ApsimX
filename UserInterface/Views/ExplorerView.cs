@@ -660,6 +660,14 @@ namespace UserInterface.Views
         }
 
         #endregion
+
+        private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TreeView.SelectedNode = e.Node;
+            }
+        }
     }
 }
 

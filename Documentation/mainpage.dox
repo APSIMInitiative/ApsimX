@@ -13,5 +13,7 @@ in the APSIM model.
 \section related_pages Related pages
 - \subpage pathspecification "Path Specification"
 - \subpage initialisation "Initialisation"
+- \subpage runsimulation "Run simulation"
+- \subpage events "Events"
 - \subpage tutorial "Tutorials"
 */

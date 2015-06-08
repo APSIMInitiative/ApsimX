@@ -6,16 +6,16 @@
 namespace UserInterface.Presenters
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Data;
+    using System.Drawing;
     using System.Linq;
     using System.Text;
     using Models.Graph;
     using Models.Core;
     using Views;
-    using System.Data;
     using Models;
-    using System.Collections;
-    using System.Drawing;
     using APSIM.Shared.Utilities;
 
     /// <summary>A presenter for displaying weather data</summary>
@@ -40,72 +40,94 @@ namespace UserInterface.Presenters
             this.weatherData = (model as Weather);
             this.weatherDataView = (view as IMetDataView);
 
-            this.WriteTable(this.weatherData.FullFileName);
-            this.WriteSummary();
-
             this.weatherDataView.BrowseClicked += this.OnBrowse;
+            this.WriteTableAndSummary(this.weatherData.FullFileName);
         }
-        
+
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
             this.weatherDataView.BrowseClicked -= this.OnBrowse;
         }
-        
+
         /// <summary>Called when [browse].</summary>
         /// <param name="fileName">Name of the file.</param>
         public void OnBrowse(string fileName)
         {
-            this.WriteTable(fileName);
-            this.WriteSummary();
+            if (this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName))
+            {
+                this.WriteTableAndSummary(fileName);
+            }
         }
-        
-        /// <summary>Get the DataTable from the WeatherFile and send it to the View</summary>
+
+        /// <summary>
+        /// Get data from the weather file and present it to the view as both a table and a summary
+        /// </summary>
         /// <param name="filename">The filename.</param>
-        private void WriteTable(string filename)
+        private void WriteTableAndSummary(string filename)
         {
+            // Clear any previous summary
+            this.weatherDataView.Summarylabel = string.Empty;
+            this.weatherDataView.Graph.Clear();
+            this.weatherDataView.Graph.Refresh();
             if (filename != null)
             {
-                this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
-                DataTable data = this.weatherData.GetAllData();
-
-                //format the data into useful columns
-                if (data != null)
+                try
                 {
-                    int siteIdx = data.Columns.IndexOf("site");
-                    if (siteIdx >= 0)
-                        data.Columns.RemoveAt(siteIdx);
-                    int yrCol = data.Columns.IndexOf("year");
-                    int dayCol = data.Columns.IndexOf("day");
-                    if ((yrCol >= 0) && (dayCol >= 0))
-                    {
-                        //add a new column for the date string
-                        DataColumn dateCol = data.Columns.Add("Date", Type.GetType("System.String"));
-                        dateCol.SetOrdinal(0);
-                        yrCol++;    //moved along
-                        dayCol++;
-
-                        int yr, day;
-                        for (int r = 0; r < data.Rows.Count; r++)               //for each row in the grid
-                        {
-                            yr = Convert.ToInt32(data.Rows[r][yrCol]);
-                            day = Convert.ToInt32(data.Rows[r][dayCol]);
-                            DateTime rowDate = new DateTime(yr, 1, 1);
-                            rowDate = rowDate.AddDays(day - 1);                 //calc date
-                            data.Rows[r][0] = rowDate.ToShortDateString();      //store in Date col
-                        }
-                        data.Columns.RemoveAt(yrCol);       //remove unwanted columns
-                        data.Columns.RemoveAt(--dayCol);
-                    }
-                    this.weatherDataView.PopulateData(data);
+                    this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                    DataTable data = this.weatherData.GetAllData();
+                    this.WriteTable(data);
+                    this.WriteSummary(data);
+                }
+                catch (Exception err)
+                {
+                    string message = err.Message;
+                    message += "\r\n" + err.StackTrace;
+                    this.weatherDataView.Summarylabel = err.Message;
+                    this.explorerPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
                 }
             }
-
-            this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, explorerPresenter.ApsimXFile.FileName);
+            this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
         }
-        
+
+        /// <summary>Send the DataTable to the View</summary>
+        private void WriteTable(DataTable data)
+        {
+            // format the data into useful columns
+            if (data != null)
+            {
+                int siteIdx = data.Columns.IndexOf("site");
+                if (siteIdx >= 0)
+                    data.Columns.RemoveAt(siteIdx);
+                int yrCol = data.Columns.IndexOf("year");
+                int dayCol = data.Columns.IndexOf("day");
+                if ((yrCol >= 0) && (dayCol >= 0))
+                {
+                    // add a new column for the date string
+                    DataColumn dateCol = data.Columns.Add("Date", Type.GetType("System.String"));
+                    dateCol.SetOrdinal(0);
+                    yrCol++;    // moved along
+                    dayCol++;
+
+                    int yr, day;
+                    // for each row in the grid
+                    for (int r = 0; r < data.Rows.Count; r++)
+                    {
+                        yr = Convert.ToInt32(data.Rows[r][yrCol]);
+                        day = Convert.ToInt32(data.Rows[r][dayCol]);
+                        DateTime rowDate = new DateTime(yr, 1, 1);
+                        rowDate = rowDate.AddDays(day - 1);                 // calc date
+                        data.Rows[r][0] = rowDate.ToShortDateString();      // store in Date col
+                    }
+                    data.Columns.RemoveAt(yrCol);       // remove unwanted columns
+                    data.Columns.RemoveAt(--dayCol);
+                }
+                this.weatherDataView.PopulateData(data);
+            }
+        }
+
         /// <summary>Format a summary string about the weather file</summary>
-        private void WriteSummary()
+        private void WriteSummary(DataTable table)
         {
             StringBuilder summary = new StringBuilder();
             summary.AppendLine("File name: " + this.weatherData.FileName);
@@ -118,7 +140,6 @@ namespace UserInterface.Presenters
 
             // Make sure the data in the table consists of full years of data i.e.
             // exclude the first and/or last year of data if they aren't complete.
-            DataTable table = this.weatherData.GetAllData();
             if (table != null && table.Rows.Count > 0)
             {
                 DateTime firstDate = DataTableUtilities.GetDateFromRow(table.Rows[0]);
@@ -161,15 +182,15 @@ namespace UserInterface.Presenters
         /// <param name="title">The title.</param>
         private void PopulateGraph(double[] monthlyRain, double[] montlyMaxt, double[] monthlyMint, string title)
         {
-            weatherDataView.Graph.Clear();
-            weatherDataView.Graph.DrawBar("", 
+            this.weatherDataView.Graph.Clear();
+            this.weatherDataView.Graph.DrawBar("",
                                       DateUtilities.LowerCaseMonths,
                                       monthlyRain,
                                       Axis.AxisType.Bottom,
                                       Axis.AxisType.Left,
                                       Color.LightSkyBlue,
                                       true);
-            weatherDataView.Graph.DrawLineAndMarkers("Maximum temperature",
+            this.weatherDataView.Graph.DrawLineAndMarkers("Maximum temperature",
                                                      DateUtilities.LowerCaseMonths,
                                                      montlyMaxt,
                                                      Axis.AxisType.Bottom,
@@ -178,7 +199,7 @@ namespace UserInterface.Presenters
                                                      Series.LineType.Solid,
                                                      Series.MarkerType.None,
                                                      true);
-            weatherDataView.Graph.DrawLineAndMarkers("Minimum temperature",
+            this.weatherDataView.Graph.DrawLineAndMarkers("Minimum temperature",
                                                      DateUtilities.LowerCaseMonths,
                                                      monthlyMint,
                                                      Axis.AxisType.Bottom,
@@ -187,11 +208,11 @@ namespace UserInterface.Presenters
                                                      Series.LineType.Solid,
                                                      Series.MarkerType.None,
                                                      true);
-            weatherDataView.Graph.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN);
-            weatherDataView.Graph.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
-            weatherDataView.Graph.FormatAxis(Axis.AxisType.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN);
-            weatherDataView.Graph.FormatTitle(title);
-            weatherDataView.Graph.Refresh();            
+            this.weatherDataView.Graph.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN);
+            this.weatherDataView.Graph.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);
+            this.weatherDataView.Graph.FormatAxis(Axis.AxisType.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN);
+            this.weatherDataView.Graph.FormatTitle(title);
+            this.weatherDataView.Graph.Refresh();
         }
     }
 }

@@ -139,6 +139,9 @@ namespace UserInterface.Presenters
 
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            
+            this.view.ProfileGrid.ResizeControls();
+            this.view.PropertyGrid.ResizeControls();
         }
 
         /// <summary>

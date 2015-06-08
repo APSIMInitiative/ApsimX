@@ -440,7 +440,8 @@
 				</XYPairs>
 			</LinearInterpolationFunction>
 		</MultiplyFunction>
-		<InitialLeafValues>
+		<LeafCohortParameters>
+      <Name>CohortParameters</Name>
 			<PhaseLookup>
 				<Name>GrowthDuration</Name>
 				<PhaseLookupValue>
@@ -604,13 +605,27 @@
 				<Name>InitialNConc</Name>
 				<Value>0</Value>
 			</Constant>
-		</InitialLeafValues>
+		</LeafCohortParameters>
 	</Leaf>
 	<Root>
 		<InitialDM>5</InitialDM>
 		<SpecificRootLength>40000</SpecificRootLength>
-		<KNO3>0.02</KNO3>
-		<KNH4>0.0</KNH4>
+        <KNO3_yProperty>
+			<double>0.02</double>
+			<double>0.02</double>
+		</KNO3_yProperty>
+		<KNO3_xRootLength>
+			<double>0</double>
+			<double>0.003</double>
+		</KNO3_xRootLength>
+		<KNH4_yProperty>
+			<double>0</double>
+			<double>0</double>
+		</KNH4_yProperty>
+		<KNH4_xRootLength>
+			<double>0</double>
+			<double>0.003</double>
+		</KNH4_xRootLength>	        
 		<Constant>
 			<Name>KLModifier</Name>
 			<Value>1.0</Value>
