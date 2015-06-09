@@ -742,6 +742,7 @@
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N balance components</Name>
@@ -924,6 +925,7 @@
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WaterBalanceComponents</Name>
@@ -1145,6 +1147,7 @@
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Nitrogen components</Name>
@@ -1406,6 +1409,7 @@
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Water supply and demand</Name>
@@ -1575,6 +1579,7 @@
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Crop structure</Name>
@@ -1723,6 +1728,7 @@
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N supply and demand</Name>
@@ -1792,6 +1798,7 @@
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Stress Factors</Name>
@@ -1861,6 +1868,7 @@
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
@@ -1874,6 +1882,11 @@
       <Name>Input1</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>FRNLRivageObservedData.txt</FileName>
+    </Input>
+    <Input>
+      <Name>Input11</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>%root%\Tests\FodderBeet\FodderBeetObservedData.txt</FileName>
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
@@ -1984,6 +1997,7 @@
     <LegendPosition>TopLeft</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>
