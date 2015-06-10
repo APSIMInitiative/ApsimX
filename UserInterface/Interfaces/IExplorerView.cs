@@ -16,6 +16,8 @@ namespace UserInterface.Interfaces
     {
         /// <summary>The name</summary>
         public string Name;
+        /// <summary>The type(name) displayed on hover</summary>
+        public string ToolTip = "";
         /// <summary>
         /// The resource name for image
         /// </summary>
