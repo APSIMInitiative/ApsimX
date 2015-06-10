@@ -12,8 +12,15 @@ namespace Models.PMF.Functions
     [Serializable]
     [Description("Returns the temperature of the surface soil layer with the weighting: " +
                  "0.25*DayBeforeYesterday + 0.5*Yesterday + 0.25*Today")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureWeightedFunction : Model, IFunction
     {
+        /// <summary>constructor</summary>
+        public SoilTemperatureWeightedFunction()
+        {
+            maxt_soil_surface = 15;
+        }
         #region Class Data Members
 
         /// <summary>The day before yesterday</summary>
@@ -24,11 +31,12 @@ namespace Models.PMF.Functions
         private double Today = 0;
         /// <summary>Gets or sets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maxt_soil_surface</summary>
         [Units("oC")]
-        double maxt_soil_surface = 15;  //Fixme.  Need to connect to soil temp model when it is working
+        double maxt_soil_surface { get; set; }  //Fixme.  Need to connect to soil temp model when it is working
 
         #endregion
 

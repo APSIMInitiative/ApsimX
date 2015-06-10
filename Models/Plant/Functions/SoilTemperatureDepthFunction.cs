@@ -11,6 +11,8 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Return soil temperature (oC) from a specified soil profile layer.  The source of soil temperature array can be either SoilN (st) or SoilTemp (ave_soil_temp) property")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureDepthFunction : Model, IFunction
     {
 
@@ -21,7 +23,8 @@ namespace Models.PMF.Functions
 
         /// <summary>The depth</summary>
         [Units("mm")]
-        public double Depth = 0;
+        [Description("Depth")]
+        public double Depth { get; set; }
 
 
         /// <summary>The soil temporary source</summary>
