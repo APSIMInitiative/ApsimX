@@ -31,18 +31,12 @@ namespace Models.PMF.Functions
         /// <summary>The spline</summary>
         [NonSerialized]
         private CubicSpline spline = null;
-        /// <summary>The property name</summary>
-        private string PropertyName;
-        /// <summary>The array spec</summary>
-        private string ArraySpec;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SplineInterpolationFunction"/> class.
         /// </summary>
         public SplineInterpolationFunction()
         {
-            PropertyName = XProperty;
-            ArraySpec = StringUtilities.SplitOffBracketedValue(ref PropertyName, '[', ']');
         }
 
         /// <summary>Gets the value.</summary>
