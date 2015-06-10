@@ -15,6 +15,8 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SplineInterpolationFunction : Model, IFunction
     {
         /// <summary>Gets the xy pairs.</summary>
@@ -23,7 +25,8 @@ namespace Models.PMF.Functions
         private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The x property</summary>
-        public string XProperty = "";
+        [Description("XProperty")]
+        public string XProperty { get; set; }
 
         /// <summary>The spline</summary>
         [NonSerialized]
