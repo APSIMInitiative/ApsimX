@@ -369,14 +369,12 @@ namespace UserInterface.Views
                         for (int col = 0; col < this.DataSource.Columns.Count; col++)
                         {
                             this.Grid[col, row].Value = this.DataSource.Rows[row][col];
-
                             //if (row == 0)
                             //{
                             //    this.Grid.Columns[col].Width = Math.Max(this.Grid.Columns[col].MinimumWidth,
                             //                                            this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true));
                             //}
                         }
-
                         this.Grid.RowCount = this.DataSource.Rows.Count;
                     }
                 }
@@ -466,6 +464,9 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Called when the window is resized to resize all grid controls.
+        /// </summary>
         public void ResizeControls()
         {
             if (Grid.ColumnCount == 0)
@@ -478,7 +479,7 @@ namespace UserInterface.Views
             foreach (DataGridViewColumn col in Grid.Columns)
                 width += col.Width;
             foreach (DataGridViewRow row in Grid.Rows)
-                height += row.Height;
+                    height += row.Height;
             height += Grid.ColumnHeadersHeight;
             if (width + 3 > Grid.Parent.Width)
                 Grid.Width = Grid.Parent.Width;
@@ -500,6 +501,7 @@ namespace UserInterface.Views
             if (Grid.RowCount == 0)
             {
                 Grid.Width = 0;
+                Grid.Height = 0;
                 Grid.Visible = false;
             }
 

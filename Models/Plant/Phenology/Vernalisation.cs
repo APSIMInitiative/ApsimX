@@ -10,6 +10,8 @@ namespace Models.PMF.Phen
     /// Vernalisation model
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Vernalisation : Model
     {
         /// <summary>The phenology</summary>
@@ -25,9 +27,11 @@ namespace Models.PMF.Phen
         IWeather Weather = null;
 
         /// <summary>The start stage</summary>
-        public string StartStage = "";
+        [Description("StartStage")]
+        public string StartStage { get; set; }
         /// <summary>The end stage</summary>
-        public string EndStage = "";
+        [Description("EndStage")]
+        public string EndStage { get; set; }
 
         /// <summary>The cumulative vd</summary>
         private double CumulativeVD = 0;

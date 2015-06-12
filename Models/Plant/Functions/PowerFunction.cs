@@ -11,11 +11,19 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Raises the value of the child to the power of the exponent specified")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PowerFunction : Model, IFunction
     {
+        /// <summary>constructor</summary>
+        public PowerFunction()
+        {
+            Exponent = 1.0;
+        }
         /// <summary>The exponent</summary>
-        public double Exponent = 1.0;
-
+        [Description("Exponent")]
+        public double Exponent { get; set; }
+        
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
         /// <summary>Gets the value.</summary>

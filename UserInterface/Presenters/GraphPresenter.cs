@@ -179,6 +179,15 @@ namespace UserInterface.Presenters
                 FillSeriesInfoFromRawSeries(series);
                 return;
             }
+            if (this.Graph.Parent is Models.PMF.Functions.XYPairs)
+            {
+                FillSeriesInfoFromRawSeries(series);
+                if (Graph.Parent != null && Graph.Parent.Parent != null)
+                {
+                    series.Title = Graph.Parent.Parent.Name;
+                }
+                return;
+            }
 
             // See if graph is inside a simulation. If so then graph the simulation.
             if (parentSimulation != null)
