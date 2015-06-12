@@ -91,6 +91,7 @@
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
+    <Compile Include="Plant\Phenology\NodeNumberPhase.cs" />
     <Compile Include="Plant\PlantTypes.cs" />
     <Compile Include="PostSimulationTools\Probability.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
@@ -379,6 +380,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Resources\FodderBeet.xml" />
+    <None Include="Resources\FieldPea.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>
