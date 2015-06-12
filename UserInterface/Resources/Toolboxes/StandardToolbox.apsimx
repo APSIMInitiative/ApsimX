@@ -610,19 +610,6 @@
       <AutoHarvest>true</AutoHarvest>
       <CropType>Wheat</CropType>
     </Plant15>
-    <OilPalm>
-      <Name>OilPalm</Name>
-      <ResourceName>OilPalm</ResourceName>
-      <interception>0</interception>
-      <UnderstoryCoverMax>0</UnderstoryCoverMax>
-      <UnderstoryLegumeFraction>0</UnderstoryLegumeFraction>
-      <InterceptionFraction>0</InterceptionFraction>
-      <MaximumRootDepth>0</MaximumRootDepth>
-      <RootDepth>0</RootDepth>
-      <DltDM>0</DltDM>
-      <ReproductiveGrowthFraction>0</ReproductiveGrowthFraction>
-      <UnderstoryCoverGreen>0</UnderstoryCoverGreen>
-    </OilPalm>
     <Plant>
       <Name>Potato</Name>
       <ResourceName>Potato</ResourceName>
