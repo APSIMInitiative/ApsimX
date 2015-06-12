@@ -11,22 +11,25 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("This Function calculates a mean daily temperature from Max and Min weighted toward Max according to the specified MaximumTemperatureWeighting factor.  This is then passed into the XY matrix as the x property and the function returns the y value")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class WeightedTemperatureFunction : Model, IFunction
     {
         #region Class Data Members
-        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maximum temperature weighting</summary>
-        public double MaximumTemperatureWeighting = 0.0;
+        [Description("MaximumTemperatureWeighting")]
+        public double MaximumTemperatureWeighting { get; set; }
 
         /// <summary>The met data</summary>
         [Link]
         protected IWeather MetData = null;
         
         #endregion
-
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>

@@ -779,7 +779,7 @@ namespace UserInterface.Presenters
             else
                 imageFileName = model.GetType().Name;
 
-            if(model.GetType().Namespace.Contains("Models"))
+            if (model.GetType().Namespace.Contains("Models.PMF"))
             {
                 description.ToolTip = model.GetType().Name;
             }

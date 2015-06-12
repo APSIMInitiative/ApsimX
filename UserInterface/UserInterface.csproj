@@ -90,7 +90,6 @@
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -125,12 +124,7 @@
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
-    <Compile Include="Presenters\ConstantPresenter.cs" />
-    <Compile Include="Presenters\GenericPMFPresenter.cs" />
-    <Compile Include="Presenters\PhaseLookupValuePresenter.cs" />
-    <Compile Include="Presenters\VariableReferencePresenter.cs" />
-    <Compile Include="Presenters\PhasePresenter.cs" />
-    <Compile Include="Presenters\XYFunctionPresenter.cs" />
+    <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -199,11 +193,11 @@
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
-    <Compile Include="Views\GenericPMFView.cs">
+    <Compile Include="Views\XYPairsView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\GenericPMFView.Designer.cs">
-      <DependentUpon>GenericPMFView.cs</DependentUpon>
+    <Compile Include="Views\XYPairsView.Designer.cs">
+      <DependentUpon>XYPairsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\EditorView.cs">
       <SubType>UserControl</SubType>
@@ -218,12 +212,6 @@
     <Compile Include="Views\CultivarView.Designer.cs">
       <DependentUpon>CultivarView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\FunctionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\FunctionView.Designer.cs">
-      <DependentUpon>FunctionView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\InitialWaterView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -237,12 +225,6 @@
       <DependentUpon>HTMLView.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ISummaryView.cs" />
-    <Compile Include="Views\PhaseView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\PhaseView.Designer.cs">
-      <DependentUpon>PhaseView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\PredictedObservedView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -389,17 +371,14 @@
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\XYPairsView.resx">
+      <DependentUpon>XYPairsView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\CultivarView.resx">
       <DependentUpon>CultivarView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\FunctionView.resx">
-      <DependentUpon>FunctionView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\GenericPMFView.resx">
-      <DependentUpon>GenericPMFView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\InitialWaterView.resx">
       <DependentUpon>InitialWaterView.cs</DependentUpon>
@@ -590,6 +569,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\WaterGraph.xml" />
+    <None Include="Resources\InitialWaterGraph.xml" />
+    <None Include="Resources\XYPairsGraph.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogen.png" />
@@ -722,7 +703,6 @@
     <EmbeddedResource Include="Resources\Toolboxes\Toolbox.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
     <EmbeddedResource Include="Resources\MenuImages\Export to CSV.png" />
-    <None Include="Resources\InitialWaterGraph.xml" />
     <EmbeddedResource Include="Resources\TreeViewImages\ExcelInput.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Cultivar.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenExample.png" />

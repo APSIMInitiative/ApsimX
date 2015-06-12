@@ -9,6 +9,8 @@ namespace Models.PMF.Phen
     /// A special phase that jumps to another phase.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class GotoPhase : Phase
     {
         /// <summary>
@@ -25,7 +27,9 @@ namespace Models.PMF.Phen
         /// <value>The fraction complete.</value>
         /// <exception cref="System.Exception">Cannot call rewind class</exception>
         public override double FractionComplete { get { throw new Exception("Cannot call rewind class"); } }
+
         /// <summary>The phase name to goto</summary>
-        public string PhaseNameToGoto;
+        [Description("PhaseNameToGoto")]
+        public string PhaseNameToGoto { get; set; }
     }
 }

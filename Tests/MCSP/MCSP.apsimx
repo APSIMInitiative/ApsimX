@@ -38,7 +38,7 @@
     <Clock>
       <Name>Clock</Name>
       <StartDate>1998-10-14T00:00:00</StartDate>
-      <EndDate>1999-05-01T00:00:00</EndDate>
+      <EndDate>1999-07-01T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -737,8 +737,8 @@ namespace Models
           <string>[MCSP].Leaf.Height</string>
           <string>[MCSP].Leaf.PotentialBiomass.Value</string>
           <string>[MCSP].Product.LiveFWt</string>
-          <string>[MCSP].OrganArbitrator.NDemand</string>
-          <string>[MCSP].OrganArbitrator.NSupply</string>
+          <string>[MCSP].Arbitrator.NDemand</string>
+          <string>[MCSP].Arbitrator.NSupply</string>
           <string>[MCSP].Leaf.Fw</string>
           <string>[MCSP].Leaf.Fn</string>
           <string>[MCSP].Summariser.Total.Wt</string>
@@ -748,9 +748,14 @@ namespace Models
           <string>[MCSP].TotalBiomassAtStartSenescence.Value</string>
           <string>[MCSP].Ymax.Value</string>
           <string>[MCSP].Summariser.Total.N</string>
-          <string>[MCSP].OrganArbitrator.DMSupply</string>
-          <string>[MCSP].OrganArbitrator.DMDemand</string>
+          <string>[MCSP].Arbitrator.DMSupply</string>
+          <string>[MCSP].Arbitrator.DMDemand</string>
           <string>[MCSP].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[MCSP].Arbitrator.DMSinkLimitation</string>
+          <string>[MCSP].Arbitrator.DMNutrientLimitation</string>
+          <string>[MCSP].Phenology.ThermalTime.Value</string>
+          <string>[MCSP].Phenology.CurrentPhaseName</string>
+          <string>[MCSP].Phenology.Stage</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -804,6 +809,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Stress Factors</Name>
@@ -873,6 +879,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -1058,6 +1065,7 @@ namespace Models
       <LegendPosition>BottomLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WaterBalanceComponents</Name>
@@ -1279,6 +1287,7 @@ namespace Models
       <LegendPosition>BottomLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Biomass components</Name>
@@ -1460,6 +1469,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Nitrogen components</Name>
@@ -1561,6 +1571,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Water supply and demand</Name>
@@ -1730,6 +1741,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Crop structure</Name>
@@ -1765,7 +1777,7 @@ namespace Models
         <Line>Solid</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1785,7 +1797,7 @@ namespace Models
         <Line>Solid</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1805,7 +1817,7 @@ namespace Models
         <Line>Solid</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -1818,6 +1830,7 @@ namespace Models
       <LegendPosition>BottomRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N supply and demand</Name>
@@ -1858,7 +1871,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.OrganArbitrator.NDemand</FieldName>
+          <FieldName>MCSP.Arbitrator.NDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -1878,7 +1891,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.OrganArbitrator.NSupply</FieldName>
+          <FieldName>MCSP.Arbitrator.NSupply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -1887,6 +1900,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DM supply and demand</Name>
@@ -1927,7 +1941,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.OrganArbitrator.DMSupply</FieldName>
+          <FieldName>MCSP.Arbitrator.DMSupply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -1947,15 +1961,126 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.OrganArbitrator.DMDemand</FieldName>
+          <FieldName>MCSP.Arbitrator.DMDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Series3</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>MCSP.Arbitrator.DMSinkLimitation</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Series4</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65408</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>MCSP.Arbitrator.DMNutrientLimitation</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Stress Factors</Name>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Title>Length (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>MCSP.Leaf.Fw</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>MCSP.Leaf.Fn</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
