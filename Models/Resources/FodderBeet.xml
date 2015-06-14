@@ -11,7 +11,7 @@
 		<DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
 		<Memo>
           There are a number of passes involved in the allocation of Weight (Wt).
-          Wt_Step 1. Set up DM supplies and demands.  Each organ may have a demand for Structural, Metabolic and Non-structural Wt.  Each organ may supply Fresh DM from photosynthesis and/or stored DM from retranslocation of its Non-structural pool.
+          Wt_Step 1.   Set up DM supplies and demands.  Each organ may have a demand for Structural, Metabolic and Non-structural Wt.  Each organ may supply Fresh DM from photosynthesis and/or stored DM from retranslocation of its Non-structural pool.
           Wt_Step 2. In this step freshly fixed Wt is partitioned to organs based on their relative Structural and Metabolic demands such that if there is not enough freshly fixed Wt to meet these demands the organs with the highest demands get the greatest share of the photosynthesis.
           Wt_Step 3. In the second step any freshly fixed DM that was surplus to Structural and Metabolic demands is partitioned to sink organs.  An organ will be a sink if it is parameterised to have a Non-structural (mobile) component and the capacity of each organ to receive excess DM depends on its structural fraction (which determines the Non-structural Fraction and subsequent sink capacity).  If there is still fresh DM unallocated after the second pass this remains unallocated with the assumption that in this case the plant would down regulate photosynthesis due to lack of sink capacity.
           Wt_Step 4. In this step, Non-structural DM is reallocated from Non-Structural pools if there was insufficient DM to meet the structural and metabolic DM demands of organs.
