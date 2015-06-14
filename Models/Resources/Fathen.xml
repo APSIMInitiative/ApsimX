@@ -366,8 +366,8 @@
 
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value type="text" description="Value">7.5</Value>
-          <Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation -</Memo>
+          <Value>7.5</Value>
+          <Memo>This is the highest potential N uptake (kg/ha) -</Memo>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -407,7 +407,7 @@
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
-      <Value >0.06</Value>
+      <Value >0.03</Value>
     </Constant>
 
     <Constant>
