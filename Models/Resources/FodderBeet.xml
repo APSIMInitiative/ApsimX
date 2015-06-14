@@ -56,7 +56,7 @@
 							</X>
 							<Y>
 								<double>0</double>
-								<double>18</double>
+								<double>20</double>
 								<double>35</double>
 							</Y>
 						</XYPairs>
@@ -77,7 +77,7 @@
 							</X>
 							<Y>
 								<double>0</double>
-								<double>18</double>
+								<double>20</double>
 								<double>35</double>
 							</Y>
 						</XYPairs>
@@ -149,7 +149,7 @@
 			<End>BulbGrowth</End>
 			<Constant>
 				<Name>Target</Name>
-				<Value>400</Value>
+				<Value>600</Value>
 			</Constant>
 			<VariableReference>
 				<Name>ThermalTime</Name>
@@ -162,7 +162,7 @@
 			<End>EndLinear</End>
 			<Constant>
 				<Name>Target</Name>
-				<Value>520</Value>
+				<Value>1000</Value>
 			</Constant>
 			<VariableReference>
 				<Name>ThermalTime</Name>
@@ -175,7 +175,7 @@
 			<End>StartSenescence</End>
 			<Constant>
 				<Name>Target</Name>
-				<Value>400</Value>
+				<Value>800</Value>
 			</Constant>
 			<VariableReference>
 				<Name>ThermalTime</Name>
@@ -188,7 +188,7 @@
 			<End>EndSenescence</End>
 			<Constant>
 				<Name>Target</Name>
-				<Value>900</Value>
+				<Value>3500</Value>
 			</Constant>
 			<VariableReference>
 				<Name>ThermalTime</Name>
@@ -262,7 +262,7 @@
 			<End>Maturity</End>
 			<Constant>
 				<Name>Phyllochron</Name>
-				<Value>57</Value>
+				<Value>50</Value>
 			</Constant>
 		</PhaseLookupValue>
 		<Constant>
@@ -504,7 +504,7 @@
 			</LinearInterpolationFunction>
 			<Constant>
 				<Name>LagDuration</Name>
-				<Value>200</Value>
+				<Value>900</Value>
 			</Constant>
 			<Constant>
 				<Name>SenescenceDuration</Name>
@@ -579,7 +579,7 @@
 				<Value>0.2</Value>
 				<Constant>
 					<Name>NonStructuralFraction</Name>
-					<Value>.2</Value>
+					<Value>0.2</Value>
 				</Constant>
 			</Constant>
 			<LinearInterpolationFunction>
