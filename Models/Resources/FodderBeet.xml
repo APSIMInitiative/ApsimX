@@ -488,17 +488,17 @@
 					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
-						<double>2</double>
 						<double>6</double>
-						<double>8</double>
-						<double>10</double>
+						<double>11</double>
+						<double>15</double>
+						<double>21</double>
 					</X>
 					<Y>
-						<double>125</double>
-						<double>500</double>
-						<double>3000</double>
 						<double>15000</double>
-						<double>25000</double>
+						<double>21000</double>
+						<double>50000</double>
+						<double>42000</double>
+						<double>24500</double>
 					</Y>
 				</XYPairs>
 			</LinearInterpolationFunction>
