@@ -497,8 +497,8 @@
 						<double>15000</double>
 						<double>21000</double>
 						<double>50000</double>
-						<double>42000</double>
-						<double>24500</double>
+						<double>50000</double>
+						<double>50000</double>
 					</Y>
 				</XYPairs>
 			</LinearInterpolationFunction>
@@ -508,7 +508,7 @@
 			</Constant>
 			<Constant>
 				<Name>SenescenceDuration</Name>
-				<Value>600</Value>
+				<Value>6000</Value>
 			</Constant>
 			<Constant>
 				<Name>DetachmentLagDuration</Name>
