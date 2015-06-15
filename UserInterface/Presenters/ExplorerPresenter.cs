@@ -772,7 +772,8 @@ namespace UserInterface.Presenters
             description.Name = model.Name;
 
             string imageFileName;
-            if (model is ModelCollectionFromResource)
+            if (model is ModelCollectionFromResource &&
+                (model as ModelCollectionFromResource).ResourceName != null)
                 imageFileName = (model as ModelCollectionFromResource).ResourceName;
             else if (model.GetType().Name == "Plant" || model.GetType().Name == "OldPlant")
                 imageFileName = model.Name;
