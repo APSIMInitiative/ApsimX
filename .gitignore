@@ -33,4 +33,11 @@ _ReSharper*/
 Documentation/html
 *.db
 packages/
+<<<<<<< HEAD
+Tests/Fathen/GrowthModel.apsim
+Tests/Fathen/FodderBeetTest2.apsimx
+Tests/Fathen/Fathen_plant2.sum
+Tests/Fathen/FathenTest2.apsimx
+=======
 Documents/
+>>>>>>> 07ed53ada6d7dacab34ecc5524e1faec2973bf52
