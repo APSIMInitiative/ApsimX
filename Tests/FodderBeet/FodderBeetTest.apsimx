@@ -1883,7 +1883,7 @@
   <DataStore>
     <Name>DataStore</Name>
     <Input>
-      <Name>Input1</Name>
+      <Name>FRNLObserved</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>%root%\Tests\FodderBeet\FRNLObservedData.txt</FileName>
     </Input>
@@ -1989,12 +1989,12 @@
       <Marker>Diamond</Marker>
       <Line>None</Line>
       <X>
-        <TableName>ObservedData</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>ObservedData</TableName>
-        <FieldName>FodderBeet.Phenology.Stage</FieldName>
+        <TableName>FRNLObserved</TableName>
+        <FieldName>Phenology.StageCode.Value</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
