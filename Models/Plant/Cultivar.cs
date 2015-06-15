@@ -89,11 +89,18 @@ namespace Models.PMF
                     if (propertyName != string.Empty && propertyValue != string.Empty)
                     {
                         IVariable property = Apsim.GetVariableObject(model, propertyName) as IVariable;
-                        if (property != null)
+                        if (property.GetType() != null)
                         {
-                            this.oldPropertyValues.Add(property.Value);
-                            property.Value = propertyValue;
-                            this.properties.Add(property);
+                            object oldValue = property.Value;
+                            if (oldValue is string || oldValue.GetType().IsArray || !oldValue.GetType().IsClass)
+                            {
+                                this.oldPropertyValues.Add(oldValue);
+                                property.Value = propertyValue;
+                                this.properties.Add(property);
+                            }
+                            else
+                                throw new ApsimXException(this, "Invalid type for setting cultivar parameter: " + propertyName +
+                                                                ". Must be a built-in type e.g. double");
                         }
                         else
                         {

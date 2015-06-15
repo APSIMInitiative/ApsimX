@@ -8,6 +8,7 @@ namespace Importer
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using System.Text;
@@ -1318,7 +1319,7 @@ namespace Importer
                 {
                     XmlNode child = nodes[i];
                     if (child.InnerText.Length > 0)
-                        values[i] = Convert.ToDouble(child.InnerText);
+                        values[i] = Convert.ToDouble(child.InnerText, CultureInfo.InvariantCulture);
                     else
                         values[i] = defValue;
                 }
@@ -1338,7 +1339,7 @@ namespace Importer
         {
             XmlNode srcNode = XmlUtilities.Find(parentNode, nodePath);
             if ((srcNode != null) && (srcNode.InnerText.Length > 0))
-                return Convert.ToDouble(srcNode.InnerText);
+                return Convert.ToDouble(srcNode.InnerText, CultureInfo.InvariantCulture);
             else
                 return defValue;
         }

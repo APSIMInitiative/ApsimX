@@ -754,7 +754,7 @@ namespace Models
       <Manager>
         <Name>ResetPMFSlurpProperties</Name>
         <Script>
-          <OverRidePath>PMFSlurp.Leaf.LAIFunction.value</OverRidePath>
+          <OverRidePath>PMFSlurp.Leaf.LAIFunction.Value</OverRidePath>
           <OverRideInterger>5</OverRideInterger>
           <ChangeDate>1998-11-14</ChangeDate>
         </Script>

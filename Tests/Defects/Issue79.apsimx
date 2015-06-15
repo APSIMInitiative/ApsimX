@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Test</Name>
+    <Memo>
+      <Name>Memo</Name>
+      <MemoText><![CDATA[
+<html><body>
+This test simulation has two 'Weather' models in it, one at the top level and one in the Field. It tests that GetWeather in the field links to the local 'WeatherOverridden' model and not the top level one. It also tests that WeatherOverridden can have a link to the top level Weather.<br/>
+
+</body></html>]]></MemoText>
+    </Memo>
+    <Weather>
+      <Name>Weather</Name>
+      <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
+    </Weather>
+    <Clock>
+      <Name>Clock</Name>
+      <StartDate>1960-01-02T00:00:00</StartDate>
+      <EndDate>1960-01-02T00:00:00</EndDate>
+    </Clock>
+    <Summary>
+      <Name>Summary</Name>
+    </Summary>
+    <Zone>
+      <Name>Field</Name>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[GetWeather].Script.LocalMaxT</string>
+          <string>[GetWeather].Script.LocalMinT</string>
+          <string>[GetWeather].Script.LocalRain</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
+      <Manager>
+        <Name>WeatherOverridden</Name>
+        <Script />
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Interfaces;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model, IWeather
+	{
+		[Link] Clock Clock;
+		[Link] IWeather weather; // parent weather.
+		
+		/// <summary>Gets the start date of the weather file</summary>
+        public DateTime StartDate { get { return weather.StartDate; } }
+
+        /// <summary>Gets the end date of the weather file</summary>
+        public DateTime EndDate { get { return weather.EndDate; } }
+
+        /// <summary>Gets or sets the maximum temperature (oc)</summary>
+        public double MaxT { get { return 1.0; } }
+
+        /// <summary>Gets or sets the minimum temperature (oc)</summary>
+        public double MinT { get { return 2.0; } }
+
+        /// <summary>Gets or sets the rainfall (mm)</summary>
+        public double Rain { get { return weather.Rain; } }
+
+        /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
+        public double Radn { get { return weather.Radn; } }
+
+        /// <summary>Gets or sets the vapor pressure</summary>
+        public double VP { get { return 5.0; } }
+
+        /// <summary>
+        /// Gets or sets the wind value found in weather file or zero if not specified.
+        /// </summary>
+        public double Wind { get { return 6.0; } }
+
+        /// <summary>
+        /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
+        /// </summary>
+        public double CO2 { get { return 7.0; } }
+
+        /// <summary>Gets the latitude</summary>
+        public double Latitude { get { return 8.0; } }
+
+        /// <summary>Gets the average temperature</summary>
+        public double Tav { get { return 9.0; } }
+
+        /// <summary>Gets the temperature amplitude.</summary>
+        public double Amp { get { return 10.0; } }
+
+        /// <summary>Gets the duration of the day in hours.</summary>
+        public double DayLength { get { return 11.0; } }
+		
+	}
+}
+]]></Code>
+      </Manager>
+      <Manager>
+        <Name>GetWeather</Name>
+        <Script />
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Interfaces;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] IWeather localWeather; // parent in this field.
+		
+		public DateTime LocalStartDate { get { return localWeather.StartDate; } }
+		public double LocalMaxT { get {	return localWeather.MaxT; } }
+		public double LocalMinT { get {	return localWeather.MinT; } }
+		public double LocalRain { get {	return localWeather.Rain; } }
+	}
+	
+
+}
+]]></Code>
+      </Manager>
+      <Area>0</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Area>0</Area>
+    <Slope>0</Slope>
+  </Simulation>
+  <DataStore>
+    <Name>DataStore</Name>
+    <AutoExport>false</AutoExport>
+  </DataStore>
+  <Tests>
+    <Name>Tests</Name>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>GetWeather.Script.LocalMaxT</ColumnNames>
+      <Parameters>1</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>GetWeather.Script.LocalMinT</ColumnNames>
+      <Parameters>2</Parameters>
+    </Test>
+    <Test>
+      <SimulationName>Test</SimulationName>
+      <TableName>Report</TableName>
+      <Type>EqualTo</Type>
+      <ColumnNames>GetWeather.Script.LocalRain</ColumnNames>
+      <Parameters>100</Parameters>
+    </Test>
+  </Tests>
+  <ExplorerWidth>250</ExplorerWidth>
+</Simulations>

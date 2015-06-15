@@ -47,12 +47,12 @@ namespace Models
     <Name>PMFSlurpTestBase</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\lincoln.met</FileName>
+      <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
-      <StartDate>1998-10-14T00:00:00</StartDate>
-      <EndDate>1999-05-01T00:00:00</EndDate>
+      <StartDate>2010-11-15T00:00:00</StartDate>
+      <EndDate>2011-02-02T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
@@ -414,7 +414,7 @@ namespace Models
         <Script>
           <CultivarName>StaticCrop</CultivarName>
           <InitialRootDepth>600</InitialRootDepth>
-          <SowingDate>1998-10-14</SowingDate>
+          <SowingDate>2011-01-01</SowingDate>
         </Script>
         <Code><![CDATA[
         using System;

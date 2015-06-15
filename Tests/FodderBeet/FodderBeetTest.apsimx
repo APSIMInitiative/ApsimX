@@ -2,18 +2,18 @@
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Simulation>
-    <Name>FodderBeetTest</Name>
+    <Name>FRNLRivage</Name>
     <Clock>
       <Name>clock</Name>
-      <StartDate>2000-10-15T00:00:00</StartDate>
-      <EndDate>2001-06-01T00:00:00</EndDate>
+      <StartDate>2014-10-15T00:00:00</StartDate>
+      <EndDate>2015-05-10T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
     </Summary>
     <Weather>
       <Name>Weather</Name>
-      <FileName>%root%\Tests\Potato\lincoln.met</FileName>
+      <FileName>lincoln from 2014.met</FileName>
     </Weather>
     <Zone>
       <Name>paddock</Name>
@@ -353,148 +353,10 @@
       <Operations>
         <Name>OpperationsSchedule</Name>
         <Operation>
-          <Date>2000-10-15T00:00:00</Date>
+          <Date>2014-10-17T00:00:00</Date>
           <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:20, rowSpacing:720);</Action>
         </Operation>
       </Operations>
-      <Manager>
-        <Name>ExtraVariables</Name>
-        <Script />
-        <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant FodderBeet;          
-		[Link] Zone zone;			
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
-
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-			InitialDay = true;
-		}	   
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			AccumFert += Fert.NitrogenApplied;
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("FodderBeet.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-
-			AccumIrrigation += Irrig.IrrigationApplied;
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[FodderBeet].Leaf.Transpiration");
-            AccumEP -= (double)zone.Get("FodderBeet.Root.WaterUptake");
-			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage -= Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
-		}
-	}
-}
-	   ]]></Code>
-      </Manager>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
         <ResidueTypes>
@@ -534,69 +396,17 @@ namespace Models
         <Name>Report</Name>
         <VariableNames>
           <string>[Clock].Today</string>
-          <string>[ExtraVariables].Script.AccumPlantN</string>
-          <string>[ExtraVariables].Script.AccumMineralisation</string>
-          <string>[ExtraVariables].Script.AccumDenit</string>
-          <string>[ExtraVariables].Script.AccumFert</string>
-          <string>[ExtraVariables].Script.AccumLeach</string>
-          <string>[ExtraVariables].Script.AccumDetach</string>
-          <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-          <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-          <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-          <string>[FodderBeet].Root.NSupply</string>
-          <string>[Soil].SoilWater.Eo</string>
-          <string>[Soil].SoilWater.Es</string>
-          <string>[ExtraVariables].Script.SWC</string>
-          <string>[ExtraVariables].Script.DUL</string>
-          <string>[Soil].SoilWater.Drainage</string>
-          <string>[Soil].SoilWater.Runoff</string>
-          <string>[ExtraVariables].Script.OutFlowLat</string>
-          <string>[Soil].SoilWater.pond</string>
-          <string>[ExtraVariables].Script.AccumEO</string>
-          <string>[ExtraVariables].Script.AccumEP</string>
-          <string>[ExtraVariables].Script.AccumES</string>
-          <string>[ExtraVariables].Script.AccumDrainage</string>
-          <string>[ExtraVariables].Script.AccumRunoff</string>
-          <string>[ExtraVariables].Script.AccumRainfall</string>
-          <string>[ExtraVariables].Script.AccumIrrigation</string>
-          <string>[ExtraVariables].Script.AccumOutflowLat</string>
-          <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-          <string>[FodderBeet].Bulb.Live.Wt</string>
-          <string>[FodderBeet].Petiole.Live.Wt</string>
-          <string>[FodderBeet].Bulb.Live.N</string>
-          <string>[FodderBeet].Petiole.Live.N</string>
-          <string>[FodderBeet].Leaf.Live.Wt</string>
-          <string>[FodderBeet].Root.Live.Wt</string>
-          <string>[FodderBeet].Leaf.Live.N</string>
-          <string>[FodderBeet].Root.Live.N</string>
-          <string>[FodderBeet].Leaf.Live.NConc</string>
-          <string>[FodderBeet].Root.Live.NConc</string>
-          <string>[FodderBeet].Root.WaterSupply</string>
-          <string>[FodderBeet].Root.WaterUptake</string>
-          <string>[FodderBeet].Leaf.Transpiration</string>
-          <string>[FodderBeet].Leaf.WaterDemand</string>
-          <string>[FodderBeet].Root.Depth</string>
-          <string>[FodderBeet].Leaf.CoverTotal</string>
-          <string>[FodderBeet].Leaf.CoverDead</string>
-          <string>[FodderBeet].Leaf.LAI</string>
-          <string>[FodderBeet].Leaf.Height</string>
-          <string>[FodderBeet].Leaf.PotentialBiomass.Value</string>
-          <string>[Soil].SoilWater.SWmm</string>
-          <string>[Soil].NO3N</string>
-          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[FodderBeet].Arbitrator.NDemand</string>
-          <string>[MicroClimate].net_radn</string>
-          <string>[MicroClimate].peta</string>
-          <string>[MicroClimate].petr</string>
-          <string>[ExtraVariables].Script.FomN</string>
-          <string>[ExtraVariables].Script.HumN</string>
-          <string>[ExtraVariables].Script.BiomN</string>
-          <string>[ExtraVariables].Script.DltNMinRes</string>
-          <string>[ExtraVariables].Script.DltNMinTot</string>
           <string>[FodderBeet].Leaf.Fw</string>
           <string>[FodderBeet].Leaf.Fn</string>
           <string>[FodderBeet].Phenology.CurrentPhaseName</string>
           <string>[FodderBeet].Phenology.Stage</string>
+          <string>[FodderBeet].Phenology.ThermalTime.Value</string>
+          <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[FodderBeet].Leaf.Live.Wt</string>
+          <string>[FodderBeet].Summariser.Total.Wt</string>
+          <string>[FodderBeet].Petiole.Live.Wt</string>
+          <string>[FodderBeet].Bulb.Live.Wt</string>
+          <string>[FodderBeet].Leaf.LAI</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -622,12 +432,19 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <Axis>
+        <Type>Top</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <Series>
         <Title>Leaf</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
+        <ColourArgb>-65281</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -667,7 +484,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
+        <ColourArgb>-16711872</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -842,9 +659,90 @@ namespace Models
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
+      <Series>
+        <Title>ObsLiveWt</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388608</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Input1</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Input1</TableName>
+          <FieldName>FodderBeet.Total.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>ObsPetiole</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>Square</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Input1</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Input1</TableName>
+          <FieldName>FodderBeet.Petiole.LiveWt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>ObsLeaf</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65281</ColourArgb>
+        <Marker>Triangle</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Input1</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Input1</TableName>
+          <FieldName>FodderBeet.Leaf.LiveWt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>ObsBulb</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>FilledSquare</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Input1</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Input1</TableName>
+          <FieldName>FodderBeet.Bulb.LiveWt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N balance components</Name>
@@ -1027,6 +925,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WaterBalanceComponents</Name>
@@ -1248,6 +1147,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Nitrogen components</Name>
@@ -1509,6 +1409,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Water supply and demand</Name>
@@ -1678,6 +1579,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Crop structure</Name>
@@ -1826,6 +1728,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N supply and demand</Name>
@@ -1895,6 +1798,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Stress Factors</Name>
@@ -1964,16 +1868,185 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
     </SoilArbitrator>
+    <Graph>
+      <Name>StageCode</Name>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Stagecode</Title>
+        <Inverted>false</Inverted>
+        <Minimum>0</Minimum>
+        <Maximum>10</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>stage</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>FodderBeet.Phenology.Stage</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>false</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
+    <Input>
+      <Name>Input1</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>FRNLRivageObservedData.txt</FileName>
+    </Input>
+    <Input>
+      <Name>Input11</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>%root%\Tests\FodderBeet\FodderBeetObservedData.txt</FileName>
+    </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
+  <Graph>
+    <Name>StageCode</Name>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Crop Biomass (g/m2)</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Right</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>stage</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Phenology.Stage</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <Series>
+      <Title>TT</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Right</YAxis>
+      <ColourArgb>-16711936</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <Series>
+      <Title>LAI</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Leaf.LAI</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <Series>
+      <Title>ObsLAI</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>DashDot</Line>
+      <X>
+        <TableName>Input1</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Input1</TableName>
+        <FieldName>FoddeBeet.LeafLAI</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

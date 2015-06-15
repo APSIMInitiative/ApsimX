@@ -63,6 +63,7 @@ namespace Models.Report
 
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
+            variableNames.Add("Name as ZoneName");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
@@ -97,8 +98,10 @@ namespace Models.Report
         {
             // Get rid of old data in .db
             DataStore dataStore = new DataStore(this);
-            dataStore.DeleteOldContentInTable(this.simulation.Name, this.Name);
-
+            if (this.simulation != null)
+            {
+                dataStore.DeleteOldContentInTable(this.simulation.Name, this.Name);
+            }
             // Write and store a table in the DataStore
             if (this.columns != null && this.columns.Count > 0)
             {

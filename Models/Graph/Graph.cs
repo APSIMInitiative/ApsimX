@@ -99,6 +99,11 @@ namespace Models.Graph
         public List<string> DisabledSeries { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
+        /// </summary>
+        public bool IncludeInDocumentation { get; set; }
+
+        /// <summary>
         /// Gets an instance of the data store. Creates it if it doesn't exist.
         /// </summary>
         public DataStore DataStore

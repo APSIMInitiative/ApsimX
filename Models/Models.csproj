@@ -79,11 +79,14 @@
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
+    <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
+    <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Plant\Functions\DeltaFunction.cs" />
+    <Compile Include="Plant\Functions\DemandFunctions\FillingRateFunction.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Plant\Interfaces\IFunctionArray.cs" />
@@ -372,16 +375,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Maize.xml">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Resources\MCSP.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Resources\FodderBeet.xml">
+      <SubType>Designer</SubType>
+    </None>
+<<<<<<< HEAD
     <None Include="Resources\FodderBeet.xml" />
     <None Include="Resources\Fathen.xml">
       <SubType>Designer</SubType>
     </None>
+=======
+>>>>>>> 07ed53ada6d7dacab34ecc5524e1faec2973bf52
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>
