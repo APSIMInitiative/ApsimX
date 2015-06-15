@@ -22,19 +22,12 @@ namespace Models.PMF.Functions
         /// <summary>The x value</summary>
         [Link]
         IFunction XValue = null;
-
-        /// <summary>The xo</summary>
-        [XmlElement("Xo")]
-        [Description("Xo")]
-        public double Xo { get; set; }
-        //public double Xo = 1.0;
+        /// <summary>The Xo</summary>
+        [Link]
+        IFunction Xo = null;
         /// <summary>The b</summary>
-        [XmlElement("b")]
-        [Description("b")]
-        public double b { get; set; }
-        //public double b = 1.0;
-
-
+        [Link]
+        IFunction b = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -46,7 +39,7 @@ namespace Models.PMF.Functions
 
                 try
                 {
-                    double _return = Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo) / b));
+                    double _return = Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo.Value) / b.Value));
                     return _return;
                 }
                 catch (Exception)
