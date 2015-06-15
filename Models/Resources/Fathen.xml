@@ -1,0 +1,895 @@
+<Plant>
+  <Name>Fathen</Name>
+  <CropType>Fathen</CropType>
+  <Cultivar>
+    <Name>std</Name>
+  </Cultivar>
+
+   <OrganArbitrator>
+        <NArbitrationOption type="text" description="NArbitrationOption">PriorityAllocation</NArbitrationOption>
+        <DMArbitrationOption type="text" description="DMArbitrationOption">PriorityAllocation</DMArbitrationOption>
+      </OrganArbitrator>
+  <Phenology>
+    <AirTemperatureFunction>
+      <Name>ThermalTime</Name>
+      <XYPairs>
+        <Name>XYPairs</Name>
+      <X>
+        <double>2</double>
+        <double>20</double>
+        <double>35</double>
+      </X>
+      <Y>
+        <double>0</double>
+        <double>18</double>
+        <double>0</double>
+      </Y>
+      </XYPairs>
+    </AirTemperatureFunction>
+    <GerminatingPhase>
+      <Name>Planted</Name>
+      <Start>Sowing</Start>
+      <End>Germination</End>
+    </GerminatingPhase>
+    <EmergingPhase>
+      <Name>Germinating</Name>
+      <Start>Germination</Start>
+      <End>Emergence</End>
+      <ShootLag>15</ShootLag>
+      <ShootRate>2</ShootRate>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <VariableName>[Phenology].ThermalTime.Value</VariableName>
+      </VariableReference>
+    </EmergingPhase>
+    <GenericPhase>
+      <Name>Emerged</Name>
+      <Start>Emergence</Start>
+      <End>Expanding</End>
+      <Constant>
+        <Name>Target</Name>
+        <Value>350</Value>
+      </Constant>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <VariableName>[Phenology].ThermalTime.Value</VariableName>
+      </VariableReference>
+    </GenericPhase>
+
+    <GenericPhase>
+      <Name>Expanding</Name>
+      <Start>Expanding</Start>
+      <End>Vegetative</End>
+      <Constant>
+        <Name>Target</Name>
+        <Value>500</Value>
+      </Constant>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <VariableName>[Phenology].ThermalTime.Value</VariableName>
+      </VariableReference>
+    </GenericPhase>
+  
+    <GenericPhase>
+      <Name>Vegetative</Name>
+      <Start>Vegetative</Start>
+      <End>Maturity</End>
+      <Constant>
+        <Name>Target</Name>
+        <Value>500</Value>
+      </Constant>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <VariableName>[Phenology].ThermalTime.Value</VariableName>
+      </VariableReference>
+    </GenericPhase>
+
+
+    <EndPhase>
+      <Name>Maturity</Name>
+      <Start>Maturity</Start>
+      <End>Unused</End>
+      <Constant>
+        <Name>Target</Name>
+        <Value>15000</Value>
+      </Constant>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <VariableName>[Phenology].ThermalTime.Value</VariableName>
+      </VariableReference>
+      </EndPhase>
+    </Phenology>
+  <Structure>
+    <Name>Structure</Name>
+      <PrimaryBudNo>1</PrimaryBudNo>
+      <InitialiseStage>Emergence</InitialiseStage>
+      <VariableReference>
+        <Name>ThermalTime</Name>
+        <VariableName>[Phenology].ThermalTime.Value</VariableName>
+      </VariableReference>
+
+    <LinearInterpolationFunction>
+      <Name>HeightModel</Name>
+      <XProperty>[Structure].MainStemNodeNo</XProperty>
+      <XYPairs>
+        <X>
+          <double> 0</double>
+          <double> 12</double>
+          <double> 30</double>
+          <double> 50</double>
+          <double> 60</double>
+        </X>
+        <Y>
+          <double> 20</double>
+          <double> 100</double>
+          <double> 900</double>
+          <double> 1600</double>
+          <double> 2000</double>
+        </Y>
+      </XYPairs>
+    </LinearInterpolationFunction>
+    <PhaseLookupValue>
+      <Name>MainStemPrimordiaInitiationRate</Name>
+      <Start>Emergence</Start>
+      <End>Maturity</End>
+      <DivideFunction>
+        <Name>NodeInitiationRateFunction</Name>
+        <VariableReference>
+          <Name>Phyllochron</Name>
+          <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
+        </VariableReference>
+        <Constant>
+          <Name>PrimordiaPerMainstemNode</Name>
+          <Value>2</Value>
+        </Constant>
+      </DivideFunction>
+    </PhaseLookupValue>
+    <PhaseLookupValue>
+      <Name>MainStemNodeAppearanceRate</Name>
+      <Start>Emergence</Start>
+      <End>Maturity</End>
+      <Constant>
+        <Name>Phyllochron</Name>
+        <Value>17</Value>
+      </Constant>
+    </PhaseLookupValue>
+    <VariableReference>
+      <Name>AirTemperatureFunction</Name>
+      <VariableName>[Phenology].ThermalTime.Value</VariableName>
+    </VariableReference>
+
+    <Constant>
+      <Name>MainStemFinalNodeNumber</Name>
+      <Value>80</Value>
+    </Constant>
+
+    <Constant>
+      <Name>DroughtInducedBranchMortality</Name>
+      <Value>0</Value>
+    </Constant>
+
+    <MultiplyFunction>
+      <Name>BranchingRate</Name>
+     <Memo>
+        The branching rates sets the number of new branches initiated.  If we have a plant with one stem and branching rate is set as zero this plant will continue to have only one stem.  If this value increases to 1 for the appearance of 1 mainstem node and then reduces to zero again the plant will produce one branch on its mainstem that has the same properties as the mainstem.  The higher this number is and the longer is remains above 0 the more branches the plant will produce.
+        For Potato the potential branching rate is the branching pattern that would be observed in wide spaced plantings.  There is a cover response factor to reduce branching rates in closer spacings.
+      </Memo>
+      <LinearInterpolationFunction>
+        <Name>Potential_Branching_Rate</Name>
+        <XProperty>[Structure].MainStemNodeNo</XProperty>
+        <XYPairs>
+          <X>
+            <double>0</double>
+            <double>10</double>
+            <double>20</double>
+            <double>30</double>
+            <double>40</double>
+            <double>50</double>
+          </X>
+          <Y>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+          </Y>
+        </XYPairs>
+      </LinearInterpolationFunction>
+      <LinearInterpolationFunction>
+        <Name>Cover_response></Name>
+        <XProperty>[leaf].CoverGreen</XProperty>
+        <XYPairs>
+          <X>
+            <double>0</double>
+            <double>1</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>1</double>
+          </Y>
+        </XYPairs>
+      </LinearInterpolationFunction>
+    </MultiplyFunction>
+    <LinearInterpolationFunction>
+      <Name>ShadeInducedBranchMortality</Name>
+      <XProperty>[Leaf].LAI</XProperty>
+      <XYPairs>
+        <X>
+          <double>0</double>
+          <double>4</double>
+          <double>10</double>
+        </X>
+        <Y>
+          <double>0</double>
+          <double>0</double>
+          <double>0.01</double>
+        </Y>
+    </XYPairs>
+      </LinearInterpolationFunction>
+    <LinearInterpolationFunction>
+      <Name>PlantMortality></Name>
+      <XProperty>[Leaf].CoverGreen</XProperty>
+      <XYPairs>
+        <X>
+          <double>0</double>
+          <double>0.98</double>
+          <double>1</double>
+        </X>
+        <Y>
+          <double>0</double>
+          <double>0</double>
+          <double>0.01</double>
+        </Y>
+        </XYPairs>
+      </LinearInterpolationFunction>
+   </Structure>
+  <Root>
+        <InitialDM>1</InitialDM>
+        <SpecificRootLength>40000</SpecificRootLength>
+        <KNO3>0.02</KNO3>
+        <KNH4>0.0</KNH4>
+        <LinearInterpolationFunction>
+          <Name>KLModifier</Name>
+          <XProperty>[Leaf].LAI</XProperty>
+          <XYPairs>
+            <X>
+              <double>0</double>
+              <double>3</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>3</double>
+            </Y>
+          </XYPairs>
+
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>SoilWaterEffect></Name>
+          <Value>1.0</Value>
+        </Constant>
+        <AirTemperatureFunction>
+          <Name>TemperatureEffect</Name>
+          <XYPairs>
+            <X>
+              <double>0</double>
+              <double>26</double>
+              <double>35</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+           </XYPairs>
+        </AirTemperatureFunction>
+        <PhaseLookup>
+          <Name>RootFrontVelocity</Name>
+          <PhaseLookupValue>
+            <Name>Emerging</Name>
+            <Start>Germination</Start>
+            <End>Emergence</End>
+            <Constant>
+              <Value>1</Value>
+            </Constant>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>Emerged</Name>
+            <Start>Emergence</Start>
+            <End>Maturity</End>
+            <Constant>
+              <Value>10</Value>
+            </Constant>
+          </PhaseLookupValue>
+        </PhaseLookup>
+        <PhaseLookup>
+          <Name>PartitionFraction</Name>
+          <PhaseLookupValue>
+            <Name>Emergence</Name>
+            <Start>Emergence</Start>
+            <End>Vegetative</End>
+            <Constant>
+              <Name>Function</Name>
+              <Value>0.1</Value>
+            </Constant>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>Vegetative</Name>
+            <Start>Vegetative</Start>
+            <End>Maturity</End>
+            <Constant>
+              <Name>Function</Name>
+              <Value>.1</Value>
+            </Constant>
+          </PhaseLookupValue>
+        </PhaseLookup>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.01</Value>
+          <Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the MinimumNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - MinimumNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation -</Memo>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.005</Value>
+          <Memo>The MinimumNconc determins the organs essential N demand.  Essential N Demand is N is set by Live.Wt * MinimumNConc and is N the organ must take up to achieve its potential growth.  If the organ is not supplied with sufficient N to maintain MinimunNConc its growth will be constrained by the arbitrator.  All N taken up to MinimunNConc is placed in the StructuralPool and is not mobile</Memo>
+        </Constant>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Start>Emergence</Start>
+          <End >Maturity</End>
+          <Memo>
+            Stops the roots from demanding Nitrogen after final leaf stage
+          </Memo>
+        </PhaseBasedSwitch>
+        <LinearInterpolationFunction>
+          <Name>SenescenceRate</Name>
+          <XProperty >[Leaf].FractionDied</XProperty>
+          <XYPairs>
+            <X>
+              <double>0</double>
+              <double>1</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>0.01</double>
+            </Y>
+          </XYPairs>
+        </LinearInterpolationFunction>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>[Root].LayerLive</Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>[Root].LayerDead</Propertys>
+        </CompositeBiomass>
+
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <Value>7.5</Value>
+          <Memo>This is the highest potential N uptake (kg/ha) -</Memo>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+          <Memo>Demand for DM is based on demand to grow structural components.  If the structural fraction is less than 1 the organ has the capacity to accumulate Non-structural biomass.  The lower the number the greater the capacity.  However, the arbitrator will only partition biomass to non-structural pools after all structural and metabolic DM demands have been met so the Non-Structural DM proportion of the organ may be less smaller that 1 - StructuralFraction.</Memo>
+        </Constant>
+        <LinearInterpolationFunction>
+          <Name>MaxDailyNUptakeXY></Name>
+          <XProperty>[Stem].Live.Wt</XProperty>
+          <XYPairs>
+            <X>
+              <double>0</double>
+              <double>150</double>
+              <double>300</double>
+              <double>600</double>
+              <double>900</double>
+              <double>3000</double>
+            </X>
+            <Y>
+              <double>3</double>
+              <double>3.5</double>
+              <double>4.5</double>
+              <double>5</double>
+              <double>7.5</double>
+              <double>7.5</double>
+            </Y>
+           </XYPairs>
+          <Memo>Takes the current value of the XProperty and returns the corresponding y value from the XY maxtix specified</Memo>
+        </LinearInterpolationFunction>
+      </Root>
+  <GenericAboveGroundOrgan>
+    <Name>Stem</Name>
+    <Constant>
+      <Name>StructuralFraction></Name>
+      <Value >1</Value>
+      <Memo>Demand for DM is based on demand to grow structural components.  If the structural fraction is less than 1 the organ has the capacity to accumulate Non-structural biomass.  The lower the number the greater the capacity.  However, the arbitrator will only partition biomass to non-structural pools after all structural and metabolic DM demands have been met so the Non-Structural DM proportion of the organ may be less smaller that 1 - StructuralFraction.</Memo>
+    </Constant>
+    <Constant>
+      <Name>MaximumNConc</Name>
+      <Value >0.03</Value>
+    </Constant>
+
+    <Constant>
+      <Name>MinimumNConc</Name>
+      <Value >0.006</Value>
+      <Memo>The MinimumNconc determins the organs essential N demand.  Essential N Demand is N is set by Live.Wt * MinimumNConc and is N the organ must take up to achieve its potential growth.  If the organ is not supplied with sufficient N to maintain MinimunNConc its growth will be constrained by the arbitrator.  All N taken up to MinimunNConc is placed in the StructuralPool and is not mobile</Memo>
+    </Constant>
+    
+    <PhaseBasedSwitch>
+      <Name>NitrogenDemandSwitch></Name>
+      <Start >Germination</Start>
+      <End >Maturity</End>
+      <Memo>
+        stops the stem from demanding N following final leaf stage
+      </Memo>
+    </PhaseBasedSwitch>
+    <Constant>
+      <Name>NReallocationFactor</Name>
+      <Value>.05</Value>
+      <Memo>Controls the proportion of Non-Structural and senesing Metabolic N that may be Reallocated to other organs each day.  </Memo>
+    </Constant>
+    <Constant>
+      <Name>NRetranslocationFactor</Name>
+      <Value >.05</Value>
+      <Memo>sets the proportion of Non-Structural N that may be Remobilised to meet the demand of other organs each day.  A value of zero means the crop will favor maintaining the N concentration and photosynthetic capacity of its current leaf area (behaviour of crops such as potato and wheat).  Increasing this will enable the crop to grow and increased leaf area with diluted N concentration, favoring larger leaf area over the higher N concentration and photosynthetic capacity of leaves (behaviour of crops such as maize) </Memo>
+    </Constant>
+    <Constant>
+      <Name>DMRetranslocationFactor</Name>
+      <Value >0</Value>
+      <Memo>This sets the proportion of NonStructural Wt that can be remobilised each day.</Memo>
+    </Constant>
+    <Memo>
+      The stem inherits from the generic organ so has 6 optional paramaters.  If you wish to override the defaults values specified below drop a function onto this organ and name and set accordingly
+      1. SenescenceRate.  Default value is 0 which means the organ will not seness.  If senesence is required place a function on the organ named SenescenceRate.  It needs to be a number for 0 - 1 that represents the proportion of total biomass that is senessed each day.
+      2. NReallocationFactor.  Default value is 0 which means the organ will not allow any of its N to be reallocated as it senesses.  If reallocation of senessing N is required place a function on the organ named NReallocationFactor.  It needs to be a number from 0 - 1 that represents the proportion of senessing N that is available for reallocation
+      3. NRetranslocationFactor.  Default value is 0 which means none of the nonstructuralN in this organ is available for retranslocation.  If retranslocation is required place a function on the organ named NRetranslocationFactor. It needs to be a number from 0 -1 that represents the proportion of non-structural N that can be removed from an organ on any day.
+      4. NitrogenDemandSwitch.  Default value is 1 which means the organ always has a N demand if its N content is below maximum N conc.  If N demand needs to be switched off place a function on the organ named NitrogenDemandSwitch which returns a value of 1 when no demand is expressed.
+      5. DMRetranslocationFactor.  Default value is 0 which means the organ will not retranslocate NonStructural biomass.  If retranslocation is desired turn change this to a value between 0 - 1.  This represents the proportion of NonStructural biomass in the organ that can be retranslocated each day.
+      6. StructuralFraction.  Derault value is 1 which means all biomass partitioned to this organ is put into the structrual pool.  If you wish this organ to have NonStructural DM that can be retranslocated set this to a value lower than 1 (between 0 - 1). Also note that making structural fraction less then 1 may influence the biomass partitioning to this organ because biomass is only partitioned to NonStructural Pools after the DM demand from other pools has been met.
+    </Memo>
+    <Biomass>
+      <Name>Live</Name>
+    </Biomass>
+    <Biomass>
+      <Name>Dead</Name>
+    </Biomass>
+    <Constant>
+      <Name>DMSinkCapacity</Name>
+      <Value >1</Value>
+      <Memo>This sets the proportion of NonStructural Wt that can be remobilised each day.</Memo>
+    </Constant>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <PhaseLookup>
+        <Name>PartitionFraction</Name>
+        <PhaseLookupValue>
+          <Name>Early</Name>
+          <Start>Emergence</Start>
+          <End >Vegetative</End>
+          <Constant>
+            <Name>Function</Name>
+            <Value >0.45</Value>
+          </Constant>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>Maturity</Name>
+          <Start >Vegetative</Start>
+          <End >Maturity</End>
+          <Constant>
+            <Name>Function</Name>
+            <Value >0.45</Value>
+          </Constant>
+        </PhaseLookupValue>
+        <PhaseLookupValue>
+          <Name>Postmaturity</Name>
+          <Start >Maturity</Start>
+          <End >Unused</End>
+          <Constant>
+            <Name>Function</Name>
+            <Value >0.9</Value>
+          </Constant>
+        </PhaseLookupValue>
+      </PhaseLookup>
+    </PartitionFractionDemandFunction>
+  </GenericAboveGroundOrgan>
+      <Leaf>
+        <MaxCover>1.0</MaxCover>
+        <KDead>.03</KDead>
+        <AirTemperatureFunction>
+          <Name>ThermalTime</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>2</double>
+              <double>20</double>
+              <double>35</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>18</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+        </AirTemperatureFunction>
+        <InitialLeafValues>
+          <PhaseLookup>
+            <Name>GrowthDuration</Name>
+            <Memo>Returns the value of the "PhaseLookupValue" functions child if phenology is between the specified start and end value.  Multiple "PhaseLookupValue" functions can be added to this function returning different values durring different phases.  Function returns 0 if none of the "PhaseLookupValue" are in phase </Memo>
+            <PhaseLookupValue>
+              <Name>Early</Name>
+              <Start>Emergence</Start>
+              <End>Expanding</End>
+              <Constant>
+                <Name>Function</Name>
+                <Value>120</Value>
+              </Constant>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Maturity</Name>
+              <Start >Expanding</Start>
+              <End >Maturity</End>
+              <Constant>
+                <Name>Function</Name>
+                <Value>120</Value>
+              </Constant>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>PostMaturty</Name>
+              <Start>Maturity</Start>
+              <End>Unused</End>
+              <Constant>
+                <Name>Function</Name>
+                <Value>120</Value>
+              </Constant>
+            </PhaseLookupValue>
+          </PhaseLookup>
+          <LinearInterpolationFunction>
+            <Name>MaxArea</Name>
+            <XProperty>[Structure].MainStemNodeNo</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>1</double>
+                <double>4</double>
+                <double>7</double>
+                <double>12</double>
+                <double>18</double>
+                <double>24</double>
+                <double>32</double>
+                <double>40</double>
+                <double>45</double>
+              </X>
+              <Y>
+                <double>500</double>
+                <double>16000</double>
+                <double>120000</double>
+                <double>190000</double>
+                <double>135000</double>
+                <double>113000</double>
+                <double>60000</double>
+                <double>20000</double>
+                <double>1200</double>
+                <double>400</double>
+              </Y>
+            </XYPairs>
+            <Memo>Gives the size of individual leaves when they are fully expanded (mm2)</Memo>
+          </LinearInterpolationFunction>
+          <Constant>
+            <Name>LagDurationConst</Name>
+            <Value>200</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>LagDuration</Name>
+            <XProperty>[Fathen].LAI</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>3.5</double>
+                <double>9</double>
+              </X>
+              <Y>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+              </Y>
+            </XYPairs>
+            <Memo>This controls the effect of water stress on leaf area expansion</Memo>
+          </LinearInterpolationFunction>
+          <Constant>
+            <Name>SenescenceDuration</Name>
+            <Value>20</Value>
+          </Constant>
+          <Constant>
+            <Name>DetachmentLagDuration</Name>
+            <Value>1e6</Value>
+          </Constant>
+          <Constant>
+            <Name>DetachmentDuration</Name>
+            <Value >1e6</Value>
+          </Constant>
+          <Constant>
+            <Name>StructuralFraction</Name>
+            <Value>.5</Value>
+            <Memo>
+              StructuralFraction sets the size of the metabolic pool with Metabolic DM demand calculated as:
+              (StructuralDMDemand * (1 / StructuralFraction)) - StructuralDMDemand such that the actual SLA of leaves will normally be less than SpecificLeafAreaMax.  If the leaf cohort is not partitioned sufficient biomass to meet both structural and metabolic N demands it will reduce the growth of both proportinatly.  With moderate DM limitations leaves will get less dense but when they reach SpecificLeafAreaMax and then leaf size will become constrained.
+            </Memo>
+          </Constant>
+          <Constant>
+            <Name>SpecificLeafAreaMin</Name>
+            <Value >15000</Value>
+            <Memo>sets the maximum density that leaves can obtain and sets up the potential size of the Non-Structural pool.  If leaf is partitioned enough DM to meet Structural and Metabolic Demands its SLA will be (DeltaStructuralWt * SpecificLeafAreaMax)/(DeltaStructuralWt* 1/StructuralFraction).  However, if there is surpless DM after all organs are allocated their DM demands it will be partitioned back to the leaf (assuming this would actually be stored as sugar of starch in such a situation) and the leaves can become more dense until they reach SpecificLeafAreaMin.  If leaf area expansion is constrained by water stress leaves will also get more dense until they reach SpecificLeafAreaMin.  Once leaves reach SpecificLeafAreaMin they can not absorb any further excess DM and if there are no other DM sinks available the leaf will discard potential biomass production, assuming that in this situation the leaf would down regulate photosynthesis due to source limitation.</Memo>
+          </Constant>
+          <Constant>
+            <Name>SpecificLeafAreaMax</Name>
+            <Value>16000</Value>
+            <Memo>sets the maximum density that leaves can obtain and sets up the potential size of the Non-Structural pool.  If leaf is partitioned enough DM to meet Structural and Metabolic Demands its SLA will be (DeltaStructuralWt * SpecificLeafAreaMax)/(DeltaStructuralWt* 1/StructuralFraction).  However, if there is surpless DM after all organs are allocated their DM demands it will be partitioned back to the leaf (assuming this would actually be stored as sugar of starch in such a situation) and the leaves can become more dense until they reach SpecificLeafAreaMin.  If leaf area expansion is constrained by water stress leaves will also get more dense until they reach SpecificLeafAreaMin.  Once leaves reach SpecificLeafAreaMin they can not absorb any further excess DM and if there are no other DM sinks available the leaf will discard potential biomass production, assuming that in this situation the leaf would down regulate photosynthesis due to source limitation.</Memo>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>ExpansionStress</Name>
+            <XProperty>[Fathen].WaterSupplyDemandRatio</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>0.75</double>
+                <double>1.5</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <Memo>This controls the effect of water stress on leaf area expansion</Memo>
+          </LinearInterpolationFunction>
+
+          <Constant>
+            <Name>CriticalNConc</Name>
+            <Value>0.05</Value>
+          </Constant>
+
+          <Constant>
+            <Name>MinimumNConc</Name>
+            <Value >0.015</Value>
+          </Constant>
+          <Constant>
+            <Name>MaximumNConc</Name>
+            <Value>0.02</Value>
+            <Memo>This is the highest N concentration that the organ can achieve.  This sets the upper limit to N demand and includes essential and Luxury N demands.  Essential N demand is set by the CriticalNConc of the organ.  Luxary N Demand is N is set by Live.Wt * (MaximumNConc - CriticalNConc) and is N the organ may take up in surples to its growth requirements and store in its Non-Structural pool for reallocation.</Memo>
+          </Constant>
+          <Constant>
+            <Name>NReallocationFactor</Name>
+            <Value >0.95</Value>
+            <Memo>Controls the proportion of Non-Structural and senesing Metabolic N that may be Reallocated to other organs each day.  </Memo>
+          </Constant>
+          <Constant>
+            <Name>NRetranslocationFactor</Name>
+            <Value>.01</Value>
+            <Memo>sets the proportion of Metabolic N that may be Remobilised to meet the demand of other organs each day.  A value of zero means the crop will favor maintaining the N concentration and photosynthetic capacity of its current leaf area (behaviour of crops such as potato and wheat).  Increasing this will enable the crop to grow and increased leaf area with diluted N concentration, favoring larger leaf area over the higher N concentration and photosynthetic capacity of leaves (behaviour of crops such as maize) </Memo>
+          </Constant>
+          <Constant>
+            <Name>DMRetranslocationFactor</Name>
+            <Value>.95</Value>
+            <Memo>This sets the proportion of NonStructural Wt that can be remobilised each day.</Memo>
+          </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <Value>0.8</Value>
+            <Memo>This sets the proportion of Leaf Wt senesced that is reallocated each day.</Memo>
+          </Constant>
+          <Constant>
+            <Name>NonStructuralFraction</Name>
+            <Value >.2</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>ShadeInducedSenescenceRate</Name>
+            <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>0.5</double>
+                <double>0.95</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0.1</double>
+              </Y>
+            </XYPairs>
+          </LinearInterpolationFunction>
+
+          <Constant>
+            <Name>InitialNConc</Name>
+            <Value>0</Value>
+          </Constant>
+
+
+
+        </InitialLeafValues>
+
+
+ 
+
+        <MultiplyFunction>
+          <Name>ExtinctionCoeff</Name>
+          <Memo>Quantifies the relationship between Leaf area index and radiation interception.  The PotentialExtinctionCoeff is the unstressed value and extinction coefficient declines in response to water stress as leaves wilt to reduce their radiation load</Memo>
+          <Constant>
+            <Name>PotentialExtinctionCoeff</Name>
+            <Value>0.6</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>WaterStressReduction</Name>
+            <XProperty>[Fathen].WaterSupplyDemandRatio</XProperty>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0.5</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
+         <LinearInterpolationFunction>
+          <Name>FrostFraction</Name>
+          <XProperty>[Weather].MinT</XProperty>
+          <XYPairs>
+            <X>
+              <double>-1</double>
+              <double>0</double>
+            </X>
+            <Y>
+              <double>-1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <Memo>Sets the proportion of leaf area that is killed by frost</Memo>
+        </LinearInterpolationFunction>
+       <LeafCohort>
+          <Name>InitialLeaves[1]></Name>
+          <Rank >1</Rank>
+          <Area>50</Area>
+        </LeafCohort>
+        <Memo>The Leaf organ has 3 biomass pools, Structural, Metabolic and Non-Structural.
+
+Initial ages and initial areas are array fields so the size and age of multiple leaves can be entered, separated by a space.  The initial age is used to set how far through its expansion phase each leaf is on the day of planting.</Memo>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>[Leaf].Cohort.Live</Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>[Leaf].Cohort.Dead</Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Total</Name>
+          <Propertys>[Leaf].Live</Propertys>
+          <Propertys>[Leaf].Dead</Propertys>
+        </CompositeBiomass>
+        <ArrayBiomass>
+          <Name>CohortLive</Name>
+          <ArraySize>[Leaf].MaxNodeNo</ArraySize>
+          <Propertys>[Leaf].Cohort.Live</Propertys>
+        </ArrayBiomass>
+        <ArrayBiomass>
+          <Name>Cohortdead</Name>
+          <ArraySize>[Leaf].MaxNodeNo</ArraySize>
+          <Propertys>[Leaf].Cohort.Dead</Propertys>
+        </ArrayBiomass>
+        <RUEModel>
+          <Name>Photosynthesis</Name>
+          <Constant>
+            <Name>RUE</Name>
+            <Value>1.35</Value>
+          </Constant>
+          <WeightedTemperatureFunction>
+            <Name>FT</Name>
+            <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
+            <XYPairs>
+              <X>
+                <double>0</double>
+                <double>10</double>
+                <double>18</double>
+                <double>26</double>
+                <double>38</double>
+              </X>
+              <Y>
+                <double>0.2</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+          </WeightedTemperatureFunction>
+          <Constant>
+            <Name>FVPD</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>FN</Name>
+            <Value>1</Value>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>FW</Name>
+            <XProperty>[Leaf].Fw</XProperty>
+            <XYPairs>
+            <X>
+              <double>0</double>
+              <double>1</double>
+              <double>1.5</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+            </XYPairs>
+          </LinearInterpolationFunction>
+          <Memo>
+            Potential photosynthesis is set by the radiation use efficiency (RUE in gDM/MJ).  Stress and CO2 adjustments are applied as:
+            Photosynthesis =  RadnInt * RUE * Min(Ft, Min(Fn Fvpd)) * Fw * Fco2
+          </Memo>
+          <RUECO2Function>
+            <Name>FCO2</Name>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
+          </RUECO2Function>
+        </RUEModel>
+        <Constant>
+          <Name>DMSinkCapacity</Name>
+          <Value >0</Value>
+          <Memo>This sets the proportion of NonStructural Wt that can be remobilised each day.</Memo>
+        </Constant>
+      </Leaf>
+  <Summariser>
+    <Name>Summariser</Name>
+    <CompositeBiomass>
+    <Name>AboveGround</Name>
+    <Propertys>[Leaf].Live</Propertys>
+    <Propertys>[Leaf].Dead</Propertys>
+    <Propertys>[Stem].Live</Propertys>
+    <Propertys>[Stem].Dead</Propertys>
+    </CompositeBiomass>
+    <CompositeBiomass>
+      <Name>BelowGround</Name>
+      <Propertys>
+        <string>[Root].Live</string>
+        <string>[Root].Dead</string>
+      </Propertys>
+    </CompositeBiomass>
+    <CompositeBiomass>
+      <Name>Total</Name>
+      <Propertys>
+        <string>[Leaf].Live</string>
+        <string>[Leaf].Dead</string>
+        <string>[Stem].Live</string>
+        <string>[Stem].Dead</string>
+        <string>[Root].Live</string>
+        <string>[Root].Dead</string>
+      </Propertys>
+      </CompositeBiomass>
+    <CompositeBiomass>
+      <Name>TotalLive</Name>
+      <Propertys>
+        <string>[Leaf].Live</string>
+        <string>[Stem].Live</string>
+        <string>[Root].Live</string>
+      </Propertys>
+    </CompositeBiomass>
+    <CompositeBiomass>
+      <Name>TotalDead</Name>
+      <Propertys>
+        <string>[Leaf].Dead</string>
+        <string>[Stem].Dead</string>
+        <string>[Root].Dead</string>
+      </Propertys>
+    </CompositeBiomass>
+  </Summariser>
+</Plant>
+    
+
