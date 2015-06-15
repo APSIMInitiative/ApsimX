@@ -879,6 +879,19 @@ namespace Models
       <Plant>
         <Name>MCSP</Name>
         <SigmoidFunction2>
+          <Name>TotalBiomassAtStartReproductive</Name>
+          <VariableReference>
+            <Name>XValue</Name>
+            <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Ymax</Name>
+            <VariableName>[Ymax].Value</VariableName>
+          </VariableReference>
+          <Xo>1080</Xo>
+          <b>216</b>
+        </SigmoidFunction2>
+        <SigmoidFunction2>
           <Name>TotalBiomassAtStartSenescence</Name>
           <AddFunction>
             <Name>XValue</Name>
@@ -892,21 +905,8 @@ namespace Models
             </VariableReference>
           </AddFunction>
           <VariableReference>
-            <Name>Ymax1</Name>
-            <VariableName>[Ymax].Value</VariableName>
-          </VariableReference>
-          <Xo>1080</Xo>
-          <b>216</b>
-        </SigmoidFunction2>
-        <SigmoidFunction2>
-          <Name>TotalBiomassAtStartReproductive</Name>
-          <VariableReference>
             <Name>Ymax</Name>
             <VariableName>[Ymax].Value</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>XValue</Name>
-            <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
           </VariableReference>
           <Xo>1080</Xo>
           <b>216</b>
@@ -929,7 +929,7 @@ namespace Models
             </VariableReference>
           </AddFunction>
           <VariableReference>
-            <Name>Ymax1</Name>
+            <Name>Ymax</Name>
             <VariableName>[Ymax].Value</VariableName>
           </VariableReference>
           <Xo>1080</Xo>
@@ -943,6 +943,88 @@ namespace Models
           <Name>HarvestIndex</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>HarvestIndex</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>HarvestIndex</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
             <Graph>
               <Name>Graph</Name>
               <Axis>
@@ -1022,29 +1104,10 @@ namespace Models
             <Name>DryYield</Name>
             <VariableName>[DryYield].Value</VariableName>
           </VariableReference>
-          <LessThanFunction>
-            <Name>LessThanFunction</Name>
-            <VariableReference>
-              <Name>VariableReference</Name>
-              <VariableName>[HarvestIndex].Value</VariableName>
-            </VariableReference>
-            <Constant>
-              <Name>Criteria</Name>
-              <Value>0.011</Value>
-            </Constant>
-            <Constant>
-              <Name>IfTrue</Name>
-              <Value>1</Value>
-            </Constant>
-            <VariableReference>
-              <Name>IfFalse</Name>
-              <VariableName>[HarvestIndex].Value</VariableName>
-            </VariableReference>
-          </LessThanFunction>
           <SubtractFunction>
-            <Name>AboveGroundDM</Name>
+            <Name>AboveGroundDMProportion</Name>
             <Constant>
-              <Name>Function</Name>
+              <Name>One</Name>
               <Value>1</Value>
             </Constant>
             <VariableReference>
@@ -1052,6 +1115,10 @@ namespace Models
               <VariableName>[RootProportion].Value</VariableName>
             </VariableReference>
           </SubtractFunction>
+          <VariableReference>
+            <Name>HarvestIndex</Name>
+            <VariableName>[HarvestIndex].Value</VariableName>
+          </VariableReference>
         </DivideFunction>
         <OrganArbitrator>
           <Name>Arbitrator</Name>
@@ -1254,11 +1321,11 @@ namespace Models
             <LessThanFunction>
               <Name>RootFrontVelocity</Name>
               <VariableReference>
-                <Name>VariableReference</Name>
+                <Name>TestVariable</Name>
                 <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
               </VariableReference>
               <Constant>
-                <Name>Criteria</Name>
+                <Name>LessThan</Name>
                 <Value>2010</Value>
               </Constant>
               <Constant>
@@ -1393,7 +1460,7 @@ namespace Models
                 <SubtractFunction>
                   <Name>DMPartitionCoefficient</Name>
                   <Constant>
-                    <Name>Constant</Name>
+                    <Name>One</Name>
                     <Value>1</Value>
                   </Constant>
                   <VariableReference>
@@ -1407,7 +1474,7 @@ namespace Models
               <PhaseLookupValue>
                 <Name>YieldIncreasing</Name>
                 <DivideFunction>
-                  <Name>DivideFunction</Name>
+                  <Name>DMPartitionCoefficient</Name>
                   <SubtractFunction>
                     <Name>Stover</Name>
                     <MultiplyFunction>
@@ -1419,7 +1486,7 @@ namespace Models
                       <SubtractFunction>
                         <Name>AboveGroundProportion</Name>
                         <Constant>
-                          <Name>Constant</Name>
+                          <Name>One</Name>
                           <Value>1</Value>
                         </Constant>
                         <VariableReference>
@@ -1430,7 +1497,7 @@ namespace Models
                       <SubtractFunction>
                         <Name>StoverProportion</Name>
                         <Constant>
-                          <Name>Constant</Name>
+                          <Name>One</Name>
                           <Value>1</Value>
                         </Constant>
                         <VariableReference>
@@ -1476,7 +1543,7 @@ namespace Models
               <PhaseLookupValue>
                 <Name>Maturing</Name>
                 <Constant>
-                  <Name>Function</Name>
+                  <Name>Zero</Name>
                   <Value>0</Value>
                 </Constant>
                 <Start>StartSenescence</Start>
@@ -1552,15 +1619,11 @@ namespace Models
                     <SubtractFunction>
                       <Name>TTSenesce</Name>
                       <VariableReference>
-                        <Name>XValue</Name>
+                        <Name>AccumulatedThermalTime</Name>
                         <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
                       </VariableReference>
                       <OnEventFunction>
                         <Name>TTToSenescence</Name>
-                        <VariableReference>
-                          <Name>XValue</Name>
-                          <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
-                        </VariableReference>
                         <Constant>
                           <Name>PreEventValue</Name>
                           <Value>3000</Value>
@@ -1783,7 +1846,7 @@ namespace Models
           <Name>Barley_Spring</Name>
           <Alias>Barley_Spring</Alias>
           <Command>[Root].MaximumRootDepth.Value = 1000</Command>
-          <Command>[Root].RootFrontVelocity.RootFrontVelocity.Criteria.Value = 2010</Command>
+          <Command>[Root].RootFrontVelocity.RootFrontVelocity.LessThan.Value = 2010</Command>
           <Command>[Root].RootFrontVelocity.RootFrontVelocity.IfTrue.Value = 0.5</Command>
           <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo = 540</Command>
           <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b = 120</Command>
@@ -1803,7 +1866,7 @@ namespace Models
           <Command>[ProductDMProportion].Value = 0.87</Command>
           <Command>[Phenology].CanopyExpanding.Target.Value = 1021</Command>
           <Command>[Phenology].YieldIncreasing.Target.Value= 479</Command>
-          <Command>[Phenology].Senescing.Target.Value = 1000</Command>
+          <Command>[Phenology].Senescing.Target.Value = 300</Command>
           <Command>[Phenology].Mature.Target.Value = 300</Command>
           <Command>[leaf].NConc.Value = 0.005</Command>
           <Command>[Product].MinimumNConc.Value = 0.005</Command>
