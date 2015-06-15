@@ -1049,8 +1049,8 @@ namespace Models
                 <Name>PartitionFraction</Name>
                 <VariableName>[RootProportion].Value</VariableName>
               </VariableReference>
-              <Start>Germination</Start>
-              <End>Maturity</End>
+              <Start>Emergence</Start>
+              <End>EndReproductive</End>
             </PhaseLookupValue>
           </PhaseLookup>
           <Constant>
@@ -1431,7 +1431,7 @@ namespace Models
             <SigmoidFunction2>
               <Name>Integral</Name>
               <VariableReference>
-                <Name>Ymax1</Name>
+                <Name>Ymax</Name>
                 <VariableName>[Ymax].Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -1526,7 +1526,7 @@ namespace Models
                   </VariableReference>
                 </SubtractFunction>
                 <Start>StartSenescence</Start>
-                <End>Maturity</End>
+                <End>EndReproductive</End>
               </PhaseLookupValue>
             </PhaseLookup>
           </PartitionFractionDemandFunction>
@@ -1777,7 +1777,7 @@ namespace Models
           <Command>[ProductDMProportion].Value = 0.87</Command>
           <Command>[Phenology].CanopyExpanding.Target.Value = 1021</Command>
           <Command>[Phenology].YieldIncreasing.Target.Value= 479</Command>
-          <Command>[Phenology].Senescing.Target.Value = 3000</Command>
+          <Command>[Phenology].Senescing.Target.Value = 300</Command>
           <Command>[Phenology].Maturing.Target.Value = 300</Command>
           <Command>[leaf].NConc.Value = 0.005</Command>
           <Command>[Product].MinimumNConc.Value = 0.005</Command>

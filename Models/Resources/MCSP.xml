@@ -173,7 +173,7 @@
           <VariableName>[RootProportion].Value</VariableName>
         </VariableReference>
         <Start>Germination</Start>
-        <End>Maturity</End>
+        <End>EndReproductive</End>
       </PhaseLookupValue>
     </PhaseLookup>
     <Constant>
