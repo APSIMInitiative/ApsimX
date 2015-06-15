@@ -1514,60 +1514,46 @@ namespace Models
             <PhaseLookupValue>
               <Name>Senescence</Name>
               <MultiplyFunction>
-                <Name>TotalCoverLoss</Name>
-                <OnEventFunction>
-                  <Name>MaxCoverFunction</Name>
-                  <Constant>
-                    <Name>PreEventValue</Name>
-                    <Value>0</Value>
-                  </Constant>
+                <Name>DecreasingCover</Name>
+                <HoldFunction>
+                  <Name>MaxCover</Name>
                   <VariableReference>
-                    <Name>PostEventValue</Name>
-                    <VariableName>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value</VariableName>
+                    <Name>ValueToHold</Name>
+                    <VariableName>[Leaf].CoverGreen</VariableName>
                   </VariableReference>
-                  <SetEvent>StartSenescence</SetEvent>
-                  <ReSetEvent>never</ReSetEvent>
-                </OnEventFunction>
+                  <WhenToHold>StartSenescence</WhenToHold>
+                </HoldFunction>
                 <SubtractFunction>
-                  <Name>LossOfCover</Name>
+                  <Name>ProportionLost</Name>
                   <Constant>
                     <Name>Constant</Name>
-                    <Value>0.999</Value>
+                    <Value>1</Value>
                   </Constant>
-                  <MultiplyFunction>
-                    <Name>PCLoss</Name>
-                    <DivideFunction>
-                      <Name>SenescenceRate</Name>
-                      <Constant>
-                        <Name>Inverse</Name>
-                        <Value>1</Value>
-                      </Constant>
-                      <VariableReference>
-                        <Name>Duration</Name>
-                        <VariableName>[Phenology].Senescing.Target.Value</VariableName>
-                      </VariableReference>
-                    </DivideFunction>
+                  <DivideFunction>
+                    <Name>ProportionRemaining</Name>
                     <SubtractFunction>
                       <Name>TTSenesce</Name>
                       <VariableReference>
                         <Name>AccumulatedThermalTime</Name>
                         <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
                       </VariableReference>
-                      <OnEventFunction>
-                        <Name>TTToSenescence</Name>
-                        <Constant>
-                          <Name>PreEventValue</Name>
-                          <Value>3000</Value>
-                        </Constant>
-                        <Constant>
-                          <Name>PostEventValue</Name>
-                          <Value>0</Value>
-                        </Constant>
-                        <SetEvent>StartSenescence</SetEvent>
-                        <ReSetEvent>Maturity</ReSetEvent>
-                      </OnEventFunction>
+                      <AddFunction>
+                        <Name>ThermalTimeAtStartSenescence</Name>
+                        <VariableReference>
+                          <Name>CanopyExpandingTT</Name>
+                          <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+                        </VariableReference>
+                        <VariableReference>
+                          <Name>YieldIncreasingTT</Name>
+                          <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
+                        </VariableReference>
+                      </AddFunction>
                     </SubtractFunction>
-                  </MultiplyFunction>
+                    <VariableReference>
+                      <Name>SenescentPhaseDuration</Name>
+                      <VariableName>[Phenology].Senescing.Target.Value</VariableName>
+                    </VariableReference>
+                  </DivideFunction>
                 </SubtractFunction>
               </MultiplyFunction>
               <Start>StartSenescence</Start>
