@@ -411,6 +411,7 @@
           <string>[FodderBeet].Leaf.PlantAppearedLeafNo</string>
           <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
           <string>[FodderBeet].Leaf.CoverGreen</string>
+          <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2058,11 +2059,11 @@
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>FoddeBeet.LeafLAI</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2127,11 +2128,11 @@
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>FodderBeet.Leaf.PlantAppearedLeafNo</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2331,11 +2332,11 @@
       <Marker>Circle</Marker>
       <Line>None</Line>
       <X>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>FodderBeet.Bulb.LiveWt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2351,11 +2352,11 @@
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>FodderBeet.Leaf.LiveWt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2371,11 +2372,11 @@
       <Marker>FilledTriangle</Marker>
       <Line>None</Line>
       <X>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>FodderBeet.Petiole.LiveWt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2391,11 +2392,11 @@
       <Marker>FilledDiamond</Marker>
       <Line>None</Line>
       <X>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>FodderBeet.Total.Wt</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -2439,6 +2440,48 @@
       <Y>
         <TableName>Report</TableName>
         <FieldName>FodderBeet.Structure.MainStemNodeNo</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>MaxLeafArea</Name>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Crop Biomass (g/m2)</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>MaxLeafArea</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16711936</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Structure.MainStemNodeNo</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Leaf.CohortParameters.MaxArea.Value</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
