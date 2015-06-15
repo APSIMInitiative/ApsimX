@@ -1283,18 +1283,6 @@ namespace Models
             <Name>SenescenceRate</Name>
             <Value>0</Value>
           </Constant>
-          <PhaseLookup>
-            <Name>PartitionFraction</Name>
-            <PhaseLookupValue>
-              <Name>PhaseLookupValue</Name>
-              <VariableReference>
-                <Name>PartitionFraction</Name>
-                <VariableName>[RootProportion].Value</VariableName>
-              </VariableReference>
-              <Start>Emergence</Start>
-              <End>EndReproductive</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
           <Constant>
             <Name>MaximumNConc</Name>
             <Value>0.009</Value>
@@ -1342,6 +1330,15 @@ namespace Models
               <VariableName>[Phenology].ThermalTime.Value</VariableName>
             </VariableReference>
           </MultiplyFunction>
+          <PhaseLookupValue>
+            <Name>PartitionFraction</Name>
+            <VariableReference>
+              <Name>RootProportion</Name>
+              <VariableName>[RootProportion].Value</VariableName>
+            </VariableReference>
+            <Start>Emergence</Start>
+            <End>EndReproductive</End>
+          </PhaseLookupValue>
           <InitialDM>0.2</InitialDM>
           <SpecificRootLength>40000</SpecificRootLength>
           <KNO3_yProperty>
@@ -1403,58 +1400,10 @@ namespace Models
             <Name>NConc</Name>
             <Value>0.008</Value>
           </Constant>
-          <PhaseLookup>
-            <Name>NitrogenDemandSwitch</Name>
-            <PhaseLookupValue>
-              <Name>PreErmergence</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0</Value>
-              </Constant>
-              <Start>Sowing</Start>
-              <End>Emergence</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Expanding</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>1</Value>
-              </Constant>
-              <Start>Emergence</Start>
-              <End>StartSenescence</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Senescence</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0</Value>
-              </Constant>
-              <Start>StartSenescence</Start>
-              <End>EndReproductive</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Mature</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0</Value>
-              </Constant>
-              <Start>EndReproductive</Start>
-              <End>Maturity</End>
-            </PhaseLookupValue>
-          </PhaseLookup>
           <PartitionFractionDemandFunction>
             <Name>DMDemandFunction</Name>
             <PhaseLookup>
               <Name>PartitionFraction</Name>
-              <PhaseLookupValue>
-                <Name>PreErmergence</Name>
-                <Constant>
-                  <Name>Function</Name>
-                  <Value>0</Value>
-                </Constant>
-                <Start>Sowing</Start>
-                <End>Emergence</End>
-              </PhaseLookupValue>
               <PhaseLookupValue>
                 <Name>Expanding</Name>
                 <SubtractFunction>
@@ -1540,28 +1489,10 @@ namespace Models
                 <Start>StartReproductive</Start>
                 <End>StartSenescence</End>
               </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>Maturing</Name>
-                <Constant>
-                  <Name>Zero</Name>
-                  <Value>0</Value>
-                </Constant>
-                <Start>StartSenescence</Start>
-                <End>Maturity</End>
-              </PhaseLookupValue>
             </PhaseLookup>
           </PartitionFractionDemandFunction>
           <PhaseLookup>
             <Name>CoverFunction</Name>
-            <PhaseLookupValue>
-              <Name>PreErmergence</Name>
-              <Constant>
-                <Name>Function</Name>
-                <Value>0</Value>
-              </Constant>
-              <Start>Sowing</Start>
-              <End>Emergence</End>
-            </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>Expanding</Name>
               <SigmoidFunction2>
@@ -1642,15 +1573,6 @@ namespace Models
               <Start>StartSenescence</Start>
               <End>Maturity</End>
             </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Mature</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <Value>0</Value>
-              </Constant>
-              <Start>Maturity</Start>
-              <End>Unused</End>
-            </PhaseLookupValue>
           </PhaseLookup>
           <Constant>
             <Name>FRGRFunction</Name>
@@ -1681,6 +1603,15 @@ namespace Models
             </SigmoidFunction2>
             <StartStageName>Emergence</StartStageName>
           </DeltaFunction>
+          <PhaseLookupValue>
+            <Name>NitrogenDemandSwitch</Name>
+            <Constant>
+              <Name>Function</Name>
+              <Value>1</Value>
+            </Constant>
+            <Start>Emergence</Start>
+            <End>StartSenescence</End>
+          </PhaseLookupValue>
           <BiomassYesterday>0</BiomassYesterday>
           <LAI>0</LAI>
           <Height>0</Height>
@@ -1712,24 +1643,6 @@ namespace Models
             <Name>DMDemandFunction</Name>
             <PhaseLookup>
               <Name>PartitionFraction</Name>
-              <PhaseLookupValue>
-                <Name>PreErmergence</Name>
-                <Constant>
-                  <Name>Function</Name>
-                  <Value>0</Value>
-                </Constant>
-                <Start>Sowing</Start>
-                <End>Emergence</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>Expanding</Name>
-                <Constant>
-                  <Name>Function</Name>
-                  <Value>0</Value>
-                </Constant>
-                <Start>Emergence</Start>
-                <End>StartReproductive</End>
-              </PhaseLookupValue>
               <PhaseLookupValue>
                 <Name>YieldIncreasing</Name>
                 <SubtractFunction>
