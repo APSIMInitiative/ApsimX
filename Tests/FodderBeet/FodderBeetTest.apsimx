@@ -2528,7 +2528,7 @@
         <FieldName>FodderBeet.Leaf.PlantAppearedLeafNo</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
     </Series>
     <Series>
@@ -2548,7 +2548,7 @@
         <FieldName>FodderBeet.Structure.MainStemNodeNo</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
     </Series>
     <LegendPosition>TopLeft</LegendPosition>
