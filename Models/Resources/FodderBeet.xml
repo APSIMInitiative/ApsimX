@@ -441,7 +441,7 @@
 			</LinearInterpolationFunction>
 		</MultiplyFunction>
 		<LeafCohortParameters>
-      <Name>CohortParameters</Name>
+			<Name>CohortParameters</Name>
 			<PhaseLookup>
 				<Name>GrowthDuration</Name>
 				<PhaseLookupValue>
@@ -610,7 +610,7 @@
 	<Root>
 		<InitialDM>5</InitialDM>
 		<SpecificRootLength>40000</SpecificRootLength>
-        <KNO3_yProperty>
+		<KNO3_yProperty>
 			<double>0.02</double>
 			<double>0.02</double>
 		</KNO3_yProperty>
