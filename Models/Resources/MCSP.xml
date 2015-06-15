@@ -11,8 +11,14 @@
       <Name>Ymax</Name>
       <VariableName>[Ymax].Value</VariableName>
     </VariableReference>
-    <Xo>1080</Xo>
-    <b>216</b>
+    <VariableReference>
+      <Name>Xo</Name>
+      <VariableName>[XoBiomass].Value</VariableName>
+    </VariableReference>
+    <VariableReference>
+      <Name>b</Name>
+      <VariableName>[bBiomass].Value</VariableName>
+    </VariableReference>
   </SigmoidFunction2>
   <SigmoidFunction2>
     <Name>TotalBiomassAtStartSenescence</Name>
@@ -31,8 +37,14 @@
       <Name>Ymax</Name>
       <VariableName>[Ymax].Value</VariableName>
     </VariableReference>
-    <Xo>1080</Xo>
-    <b>216</b>
+    <VariableReference>
+      <Name>Xo</Name>
+      <VariableName>[XoBiomass].Value</VariableName>
+    </VariableReference>
+    <VariableReference>
+      <Name>b</Name>
+      <VariableName>[bBiomass].Value</VariableName>
+    </VariableReference>
   </SigmoidFunction2>
   <SigmoidFunction2>
     <Name>TotalBiomassAtMaturity</Name>
@@ -55,9 +67,23 @@
       <Name>Ymax</Name>
       <VariableName>[Ymax].Value</VariableName>
     </VariableReference>
-    <Xo>1080</Xo>
-    <b>216</b>
+    <VariableReference>
+      <Name>Xo</Name>
+      <VariableName>[XoBiomass].Value</VariableName>
+    </VariableReference>
+    <VariableReference>
+      <Name>b</Name>
+      <VariableName>[bBiomass].Value</VariableName>
+    </VariableReference>
   </SigmoidFunction2>
+  <Constant>
+    <Name>XoBiomass</Name>
+    <Value>800</Value>
+  </Constant>
+  <Constant>
+    <Name>bBiomass</Name>
+    <Value>800</Value>
+  </Constant>
   <Constant>
     <Name>ExpectedYield</Name>
     <Value>800</Value>
@@ -351,15 +377,6 @@
       </VariableReference>
       <StartStageName>Emergence</StartStageName>
       <EndStageName>Maturity</EndStageName>
-    </AccumulateFunction>
-    <AccumulateFunction>
-      <Name>AccumulatedEmergingThermalTime</Name>
-      <VariableReference>
-        <Name>ThermalTime</Name>
-        <VariableName>[Phenology].ThermalTime.Value</VariableName>
-      </VariableReference>
-      <StartStageName>Germination</StartStageName>
-      <EndStageName>Emergence</EndStageName>
     </AccumulateFunction>
     <Emerged>false</Emerged>
   </Phenology>
@@ -710,8 +727,14 @@
             <Name>XValue</Name>
             <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
           </VariableReference>
-          <Xo>540</Xo>
-          <b>120</b>
+          <Constant>
+            <Name>Xo</Name>
+            <Value>540</Value>
+          </Constant>
+          <Constant>
+            <Name>b</Name>
+            <Value>120</Value>
+          </Constant>
         </SigmoidFunction2>
         <Start>Emergence</Start>
         <End>StartSenescence</End>
@@ -789,8 +812,14 @@
           <Name>XValue</Name>
           <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
         </VariableReference>
-        <Xo>1080</Xo>
-        <b>216</b>
+        <VariableReference>
+          <Name>Xo</Name>
+          <VariableName>[XoBiomass].Value</VariableName>
+        </VariableReference>
+        <VariableReference>
+          <Name>b</Name>
+          <VariableName>[bBiomass].Value</VariableName>
+        </VariableReference>
       </SigmoidFunction2>
       <StartStageName>Emergence</StartStageName>
     </DeltaFunction>
@@ -952,25 +981,49 @@
     <Command>[Root].MaximumRootDepth.Value = 1000</Command>
     <Command>[Root].RootFrontVelocity.RootFrontVelocity.LessThan.Value = 2010</Command>
     <Command>[Root].RootFrontVelocity.RootFrontVelocity.IfTrue.Value = 0.5</Command>
-    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo = 540</Command>
-    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b = 120</Command>
+    <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+    <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
+    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
+    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
     <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
-    <Command>[Leaf].PotentialBiomass.Integral.Xo = 1080</Command>
-    <Command>[Leaf].PotentialBiomass.Integral.b = 218</Command>
-    <Command>[TotalBiomassAtStartReproductive].Xo = 1080</Command>
-    <Command>[TotalBiomassAtStartReproductive].b = 218</Command>
-    <Command>[TotalBiomassAtStartSenescence].Xo = 1080</Command>
-    <Command>[TotalBiomassAtStartSenescence].b = 218</Command>
-    <Command>[TotalBiomassAtMaturity].Xo = 1080</Command>
-    <Command>[TotalBiomassAtMaturity].b = 218</Command>
+    <Command>[XoBiomass].Value = 1080</Command>
+    <Command>[bBiomass].Value = 218</Command>
     <Command>[ExpectedYield].Value = 800</Command>
     <Command>[RootProportion].Value = 0.1</Command>
     <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
     <Command>[HarvestIndex].XYPairs.Y = 0.14,0.6</Command>
     <Command>[ProductDMProportion].Value = 0.87</Command>
-    <Command>[Phenology].CanopyExpanding.Target.Value = 1021</Command>
-    <Command>[Phenology].YieldIncreasing.Target.Value= 479</Command>
+    <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
+    <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
     <Command>[Phenology].Senescing.Target.Value = 300</Command>
+    <Command>[Phenology].Mature.Target.Value = 300</Command>
+    <Command>[leaf].NConc.Value = 0.005</Command>
+    <Command>[Product].MinimumNConc.Value = 0.005</Command>
+    <Command>[Product].MaximumNConc.Value = 0.012</Command>
+    <Command>[Root].MinimumNConc.Value = 0.009</Command>
+    <Command>[Root].MaximumNConc.Value = 0.009</Command>
+  </Cultivar>
+  <Cultivar>
+    <Name>Wheat_Winter</Name>
+    <Alias>Barley_Spring</Alias>
+    <Command>[Root].MaximumRootDepth.Value = 1500</Command>
+    <Command>[Root].RootFrontVelocity.RootFrontVelocity.LessThan.Value = 3000</Command>
+    <Command>[Root].RootFrontVelocity.RootFrontVelocity.IfTrue.Value = 0.5</Command>
+    <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+    <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3</Command>
+    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
+    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
+    <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
+    <Command>[XoBiomass].Value = 1830</Command>
+    <Command>[bBiomass].Value = 399</Command>
+    <Command>[ExpectedYield].Value = 1450</Command>
+    <Command>[RootProportion].Value = 0.1</Command>
+    <Command>[HarvestIndex].XYPairs.X = 0,1733</Command>
+    <Command>[HarvestIndex].XYPairs.Y = 0.08,0.6</Command>
+    <Command>[ProductDMProportion].Value = 0.87</Command>
+    <Command>[Phenology].CanopyExpanding.Target.Value = 1830</Command>
+    <Command>[Phenology].YieldIncreasing.Target.Value= 615</Command>
+    <Command>[Phenology].Senescing.Target.Value = 600</Command>
     <Command>[Phenology].Mature.Target.Value = 300</Command>
     <Command>[leaf].NConc.Value = 0.005</Command>
     <Command>[Product].MinimumNConc.Value = 0.005</Command>
