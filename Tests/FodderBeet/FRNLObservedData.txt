@@ -1,4 +1,4 @@
-SimulationName Phenology.StageCode.Value Phenology.Stage Clock.Today FodderBeet.Phenology.AccumulatedThermalTime.Value FodderBeet.Summariser.LiveDM FodderBeet.Bulb.LiveWt FodderBeet.Petiole.LiveWt FodderBeet.Leaf.LiveWt FodderBeet.Total.Wt FodderBeet.TotalDead.Wt FoddeBeet.LeafLAI
+SimulationName FodderBeet.Phenology.Stage FodderBeet.Phenology.CurrentPhaseName Clock.Today FodderBeet.Phenology.AccumulatedThermalTime.Value FodderBeet.Summariser.LiveDM FodderBeet.Bulb.LiveWt FodderBeet.Petiole.LiveWt FodderBeet.Leaf.LiveWt FodderBeet.Total.Wt FodderBeet.TotalDead.Wt FoddeBeet.LeafLAI
 () () () () (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (m2/m2)
 FRNLRivageSD2 * * 2014-12-08 677.65 7.3 0.7 1.2 5.4 7.3 0.0 0.1
 FRNLRivageSD2 * * 2015-01-12 1267.75 473.3 225.5 91.9 155.9 487.2 14.0 2.3
