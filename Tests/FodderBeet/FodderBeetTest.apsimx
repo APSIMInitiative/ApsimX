@@ -2,7 +2,7 @@
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
   <Simulation>
-    <Name>FRNLRivage</Name>
+    <Name>FRNLRivageSD2</Name>
     <Clock>
       <Name>clock</Name>
       <StartDate>2014-10-15T00:00:00</StartDate>
@@ -1874,13 +1874,13 @@
       <Name>Soil Arbitrator</Name>
     </SoilArbitrator>
     <Graph>
-      <Name>StageCode</Name>
+      <Name>LAI</Name>
       <Axis>
         <Type>Left</Type>
-        <Title>Stagecode</Title>
+        <Title>Crop Biomass (g/m2)</Title>
         <Inverted>false</Inverted>
-        <Minimum>0</Minimum>
-        <Maximum>10</Maximum>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
       <Axis>
@@ -1898,7 +1898,7 @@
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>stage</Title>
+        <Title>LAI</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1911,10 +1911,30 @@
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>FodderBeet.Phenology.Stage</FieldName>
+          <FieldName>FodderBeet.Leaf.LAI</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>ObsLAI</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>FilledCircle</Marker>
+        <Line>None</Line>
+        <X>
+          <TableName>Input1</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Input1</TableName>
+          <FieldName>FoddeBeet.LeafLAI</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -1930,7 +1950,7 @@
     <Input>
       <Name>Input1</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>FRNLRivageObservedData.txt</FileName>
+      <FileName>%root%\Tests\FodderBeet\FRNLObservedData.txt</FileName>
     </Input>
     <Input>
       <Name>Input11</Name>
@@ -1980,7 +2000,7 @@
         <FieldName>FodderBeet.Phenology.Stage</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
     </Series>
     <Series>
@@ -2000,7 +2020,7 @@
         <FieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
     </Series>
     <Series>
@@ -2020,7 +2040,7 @@
         <FieldName>FodderBeet.Leaf.LAI</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
+      <ShowInLegend>true</ShowInLegend>
       <Cumulative>false</Cumulative>
     </Series>
     <Series>
@@ -2038,6 +2058,55 @@
       <Y>
         <TableName>Input1</TableName>
         <FieldName>FoddeBeet.LeafLAI</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>Phenology</Name>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Crop Biomass (g/m2)</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Right</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>stage</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Phenology.CurrentPhaseName</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>false</ShowInLegend>
