@@ -14,7 +14,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [Description("Returns the value of a nominated internal Plant numerical variable")]
     [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.VariableReferencePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class VariableReference : Model, IFunction
     {
         /// <summary>The variable name</summary>
