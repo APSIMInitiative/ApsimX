@@ -411,6 +411,7 @@
           <string>[FodderBeet].Leaf.PlantAppearedLeafNo</string>
           <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
           <string>[FodderBeet].Leaf.CoverGreen</string>
+          <string>[FodderBeet].Leaf.CohortMaxArea</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -2058,11 +2059,11 @@
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>FoddeBeet.LeafLAI</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
