@@ -178,6 +178,12 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Depth { get; set; }
 
+        /// <summary>Gets depth or the mid point of the cuttent layer under examination</summary>
+        /// <value>The depth.</value>
+        [XmlIgnore]
+        [Units("mm")]
+        public double LayerMidPointDepth { get; set; }
+
         /// <summary>Clears this instance.</summary>
         protected override void Clear()
         {
@@ -904,14 +910,23 @@ namespace Models.PMF.Organs
                 throw new Exception("PMF can only deal with one soil arbitrator zone at the moment");
 
             double[] SW = zones[0].Water;
-
             double[] supply = new double[Soil.Thickness.Length];
+
+            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
+            double depth_to_layer_top = 0;      // depth to top of layer (mm)
+
             for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+            {
+                depth_to_layer_bottom += Soil.Thickness[layer];
+                depth_to_layer_top = depth_to_layer_bottom - Soil.Thickness[layer];
+                LayerMidPointDepth = (depth_to_layer_bottom + depth_to_layer_top) / 2;
+
                 if (layer <= LayerIndex(Depth))
                     supply[layer] = Math.Max(0.0, soilCrop.KL[layer] * KLModifier.Value *
                         (SW[layer] - soilCrop.LL[layer] * Soil.Thickness[layer]) * RootProportion(layer, Depth));
                 else
                     supply[layer] = 0;
+            }
 
             return supply;
         }

@@ -783,7 +783,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Series 0</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1258,6 +1258,88 @@ namespace Models
             <Name>KLModifier</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>KLModifier</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>KLModifier</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
               <X>
                 <double>0</double>
                 <double>200</double>
@@ -1269,7 +1351,7 @@ namespace Models
                 <double>0</double>
               </Y>
             </XYPairs>
-            <XProperty>[Leaf].LAI</XProperty>
+            <XProperty>[Root].LayerMidPointDepth</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>SoilWaterEffect</Name>
