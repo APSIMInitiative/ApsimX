@@ -84,45 +84,52 @@
             <double>300</double>
           </Thickness>
           <BD>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
-            <double>1.2</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1.59</double>
+            <double>1.57</double>
+            <double>1.6</double>
+            <double>1.6</double>
           </BD>
           <AirDry>
-            <double>0.08</double>
-            <double>0.13</double>
-            <double>0.1</double>
-            <double>0.06</double>
-            <double>0.04</double>
-            <double>0.02</double>
+            <double>0.05</double>
+            <double>0.05</double>
+            <double>0.16</double>
+            <double>0.17</double>
+            <double>0.17</double>
+            <double>0.12</double>
           </AirDry>
           <LL15>
-            <double>0.13</double>
-            <double>0.13</double>
             <double>0.1</double>
-            <double>0.06</double>
-            <double>0.04</double>
-            <double>0.02</double>
+            <double>0.1</double>
+            <double>0.16</double>
+            <double>0.17</double>
+            <double>0.17</double>
+            <double>0.12</double>
           </LL15>
           <DUL>
-            <double>0.33</double>
-            <double>0.33</double>
-            <double>0.31</double>
-            <double>0.15</double>
-            <double>0.1</double>
-            <double>0.06</double>
+            <double>0.27</double>
+            <double>0.27</double>
+            <double>0.29</double>
+            <double>0.3</double>
+            <double>0.3</double>
+            <double>0.3</double>
           </DUL>
           <SAT>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.44</double>
-            <double>0.46</double>
-            <double>0.44</double>
-            <double>0.44</double>
+            <double>0.42</double>
+            <double>0.4</double>
+            <double>0.36</double>
+            <double>0.37</double>
+            <double>0.37</double>
+            <double>0.32</double>
           </SAT>
+          <KS>
+            <double>4832</double>
+            <double>389</double>
+            <double>16</double>
+            <double>16</double>
+            <double>98</double>
+          </KS>
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
@@ -3499,6 +3506,48 @@
       <Y>
         <TableName>Report</TableName>
         <FieldName>FodderBeet.Leaf.Fn</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>LeafFW</Name>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Crop Biomass (g/m2)</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>LeafFN</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16711936</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Leaf.Fw</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
