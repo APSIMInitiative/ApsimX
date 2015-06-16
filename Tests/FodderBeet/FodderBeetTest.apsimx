@@ -75,33 +75,6 @@
               <double>1</double>
             </XF>
           </SoilCrop>
-          <SoilCrop>
-            <Name>PotatoSoil</Name>
-            <LL>
-              <double>0.13</double>
-              <double>0.13</double>
-              <double>0.27</double>
-              <double>0.27</double>
-              <double>0.3</double>
-              <double>0.3</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.06</double>
-              <double>0.03</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>0.1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -830,7 +803,7 @@
                 <Name>Memo</Name>
                 <MemoText><![CDATA[]]></MemoText>
               </Memo>
-              <Value>16000</Value>
+              <Value>18000</Value>
             </Constant>
             <LinearInterpolationFunction>
               <Name>ExpansionStress</Name>
@@ -1348,6 +1321,77 @@
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
+      <Operations>
+        <Name>Irrigation_and_Fertiliser</Name>
+        <Operation>
+          <Date>2014-11-16T00:00:00</Date>
+          <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0);</Action>
+        </Operation>
+        <Operation>
+          <Date>2014-11-28T00:00:00</Date>
+          <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
+        </Operation>
+        <Operation>
+          <Date>2014-12-24T00:00:00</Date>
+          <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
+        </Operation>
+        <Operation>
+          <Date>2015-04-15T00:00:00</Date>
+          <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 0); </Action>
+        </Operation>
+        <Operation>
+          <Date>2014-11-14T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2014-11-24T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2014-12-10T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2014-12-24T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-01-06T00:00:00</Date>
+          <Action>[Irrigation].Apply(15);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-01-13T00:00:00</Date>
+          <Action>[Irrigation].Apply(25);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-02-04T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-02-10T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-02-20T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-03-02T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-03-10T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-04-07T00:00:00</Date>
+          <Action>[Irrigation].Apply(35);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-04-15T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+      </Operations>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -3423,5 +3467,47 @@
     <DisabledSeries />
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
-  <ExplorerWidth>250</ExplorerWidth>
+  <Graph>
+    <Name>LeafFN</Name>
+    <Axis>
+      <Type>Left</Type>
+      <Title>Crop Biomass (g/m2)</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>LeafFN</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16711936</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Leaf.Fn</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>TopLeft</LegendPosition>
+    <ShowRegressionLine>false</ShowRegressionLine>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <ExplorerWidth>528</ExplorerWidth>
 </Simulations>
