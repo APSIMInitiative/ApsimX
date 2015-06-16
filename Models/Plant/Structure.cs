@@ -160,8 +160,16 @@ namespace Models.PMF
     /// 
     /// Three factors are considered to reduce the population of total stem (\f$P_{stem}\f$), i.e.
     /// 1) Plant mortality (\f$\Delta P\f$), 2) Drought(\f$\Delta N_{drought}\f$), 
-    /// 3) Shade (\f$\Delta N_{shade}\f$). Plant mortality reduces population of main stem, and
-    /// drought and shade reduce population of branches.
+    /// 3) Shade (\f$\Delta N_{shade}\f$). 
+    /// 
+    /// During a day, branches are first killed by plant mortality which 
+    /// reduces population through killing all stems in a plant.
+    /// \f[
+    /// P_{branch} = P_{branch} - \frac{(P_{branch} + P_{ms})}{P_{ms}} \times \Delta P
+    /// \f]
+    /// 
+    /// Then environmental stresses (drought and shade) only cause mortality of 
+    /// the remaining branches.
     /// \f[
     ///     P_{branch} = P_{branch} \times [1 - (\Delta N_{drought}+\Delta N_{shade})]
     /// \f]
