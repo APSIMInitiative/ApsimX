@@ -1359,7 +1359,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Value>1</Value>
           </Constant>
           <StartStage>5.2</StartStage>
-          <GrowthDuration>120</GrowthDuration>
           <MaximumOrganWt>25</MaximumOrganWt>
         </PopulationBasedDemandFunction>
         <Biomass>
@@ -1424,7 +1423,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Value>1</Value>
           </Constant>
           <StartStage>5.5</StartStage>
-          <GrowthDuration>300</GrowthDuration>
           <MaximumOrganWt>25</MaximumOrganWt>
         </PopulationBasedDemandFunction>
         <Biomass>
