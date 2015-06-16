@@ -956,7 +956,7 @@
     </Summary>
     <Weather>
       <Name>Weather</Name>
-      <FileName>%root%\Tests\Potato\lincoln.met</FileName>
+      <FileName>%root%\Prototypes\Potato\lincoln.met</FileName>
     </Weather>
     <Zone>
       <Name>paddock</Name>
