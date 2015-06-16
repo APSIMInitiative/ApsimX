@@ -12,6 +12,8 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Adds the value of all childern functions to the previous days accumulation between start and end phases")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateFunction : Model, IFunction
     {
         //Class members
@@ -25,9 +27,13 @@ namespace Models.PMF.Functions
         Phenology Phenology = null;
 
         /// <summary>The start stage name</summary>
-        public string StartStageName = "";
+        [Description("StartStageName")]
+        public string StartStageName { get; set; }
+
         /// <summary>The end stage name</summary>
-        public string EndStageName = "";
+        [Description("EndStageName")]
+        public string EndStageName { get; set; }
+    
         /// <summary>The fraction removed on cut</summary>
         private double FractionRemovedOnCut = 0; //FIXME: This should be passed from teh manager when "cut event" is called. Must be made general to other events.
 
