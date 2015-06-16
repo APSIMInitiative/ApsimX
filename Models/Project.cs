@@ -108,6 +108,8 @@ namespace Models
                 exitCode = 1;
             }
 
+            if (exitCode != 0)
+                Console.WriteLine("ERRORS FOUND!!");
             return exitCode;
         }
 
