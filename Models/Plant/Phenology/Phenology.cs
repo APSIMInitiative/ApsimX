@@ -58,7 +58,7 @@ namespace Models.PMF.Phen
     /// \ref Models.PMF.Phen.Phase "Phase" function, except for the last phase. 
     /// The equality of stage and phase number raise from the last phase,
     /// which is \ref Models.PMF.Phen.EndPhase "EndPhase" model and the 
-    /// \t End stage is unused. 
+    /// \p End stage is unused. 
     /// 
     /// For example, the wheat phenology model defines 9 stages from sowing to maturity.
     /// See the diagram below for definitions of stages and phases, 
