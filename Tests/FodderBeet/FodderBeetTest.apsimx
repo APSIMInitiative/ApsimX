@@ -13,7 +13,7 @@
     </Summary>
     <Weather>
       <Name>Weather</Name>
-      <FileName>lincoln from 2014.met</FileName>
+      <FileName>%root%\Tests\FodderBeet\lincoln from 2014.met</FileName>
     </Weather>
     <Zone>
       <Name>paddock</Name>
@@ -309,7 +309,10 @@
           <Name>Arbitrator</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
+            <MemoText><![CDATA[
+<html><body>
+
+</body></html>]]></MemoText>
           </Memo>
           <NArbitrationOption>RelativeAllocation</NArbitrationOption>
           <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
@@ -1437,6 +1440,57 @@
         </Operation>
         <Operation>
           <Date>2015-04-15T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+      </Operations>
+      <Operations>
+        <Name>Fake_Irrigation_For_FW_Test</Name>
+        <Operation>
+          <Date>2014-12-24T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2014-12-29T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-01-03T00:00:00</Date>
+          <Action>[Irrigation].Apply(25);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-01-10T00:00:00</Date>
+          <Action>[Irrigation].Apply(25);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-01-23T00:00:00</Date>
+          <Action>[Irrigation].Apply(25);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-02-06T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-02-15T00:00:00</Date>
+          <Action>[Irrigation].Apply(10);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-02-22T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-03-05T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-03-10T00:00:00</Date>
+          <Action>[Irrigation].Apply(30);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-04-10T00:00:00</Date>
+          <Action>[Irrigation].Apply(35);</Action>
+        </Operation>
+        <Operation>
+          <Date>2015-04-20T00:00:00</Date>
           <Action>[Irrigation].Apply(10);</Action>
         </Operation>
       </Operations>
@@ -3027,7 +3081,7 @@
     <LegendPosition>TopLeft</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>LAI</Name>
@@ -3096,7 +3150,7 @@
     <LegendPosition>TopLeft</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>LeafNo</Name>
@@ -3185,7 +3239,7 @@
     <LegendPosition>TopLeft</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>LightInterception</Name>
@@ -3233,11 +3287,11 @@
       <Marker>FilledCircle</Marker>
       <Line>None</Line>
       <X>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>Clock.Today</FieldName>
       </X>
       <Y>
-        <TableName>Input1</TableName>
+        <TableName>FRNLObserved</TableName>
         <FieldName>FodderBeet.Leaf.CoverGreen</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
@@ -3247,7 +3301,7 @@
     <LegendPosition>TopLeft</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>Biomass</Name>
@@ -3429,7 +3483,7 @@
     <LegendPosition>TopLeft</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>LeafNovsTT</Name>
