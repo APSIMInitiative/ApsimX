@@ -1117,7 +1117,7 @@
                 <Name>Middle</Name>
                 <Constant>
                   <Name>Target</Name>
-                  <Value>0.6</Value>
+                  <Value>0.7</Value>
                 </Constant>
                 <Start>BulbGrowth</Start>
                 <End>EndLinear</End>
@@ -1200,7 +1200,7 @@
                 <Name>Middle</Name>
                 <Constant>
                   <Name>Target</Name>
-                  <Value>0.2</Value>
+                  <Value>0.1</Value>
                 </Constant>
                 <Start>BulbGrowth</Start>
                 <End>EndLinear</End>
@@ -1444,7 +1444,7 @@
         </Operation>
       </Operations>
       <Operations>
-        <Name>Fake_Irrigation_For_FW_Test</Name>
+        <Name>FW_sensibility_test_Irrigations</Name>
         <Operation>
           <Date>2014-12-24T00:00:00</Date>
           <Action>[Irrigation].Apply(30);</Action>
@@ -3180,26 +3180,6 @@
       <Title>EmergedLeaves</Title>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
-      <YAxis>Right</YAxis>
-      <ColourArgb>-16711936</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>FodderBeet.Leaf.PlantAppearedLeafNo</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <Series>
-      <Title>Obs_EmergeLeaves</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16711936</ColourArgb>
       <Marker>FilledCircle</Marker>
@@ -3570,10 +3550,10 @@
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Graph>
-    <Name>LeafFN</Name>
+    <Name>StressFactors</Name>
     <Axis>
       <Type>Left</Type>
-      <Title>Crop Biomass (g/m2)</Title>
+      <Title>Water (mm)</Title>
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
@@ -3586,54 +3566,20 @@
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
-    <Series>
-      <Title>LeafFN</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16711936</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>FodderBeet.Leaf.Fn</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>true</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <LegendPosition>TopLeft</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
-    <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>LeafFW</Name>
     <Axis>
-      <Type>Left</Type>
-      <Title>Crop Biomass (g/m2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Bottom</Type>
+      <Type>Right</Type>
+      <Title>Length (mm)</Title>
       <Inverted>false</Inverted>
       <Minimum>NaN</Minimum>
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
     <Series>
-      <Title>LeafFN</Title>
+      <Title>Series 0</Title>
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-16711936</ColourArgb>
+      <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
       <X>
@@ -3643,6 +3589,26 @@
       <Y>
         <TableName>Report</TableName>
         <FieldName>FodderBeet.Leaf.Fw</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <Series>
+      <Title>Series2</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16744448</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <X>
+        <TableName>Report</TableName>
+        <FieldName>Clock.Today</FieldName>
+      </X>
+      <Y>
+        <TableName>Report</TableName>
+        <FieldName>FodderBeet.Leaf.Fn</FieldName>
       </Y>
       <ShowRegressionLine>false</ShowRegressionLine>
       <ShowInLegend>true</ShowInLegend>
