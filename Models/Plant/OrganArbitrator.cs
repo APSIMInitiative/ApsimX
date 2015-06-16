@@ -18,6 +18,8 @@ namespace Models.PMF
     /// minimum N concentrations if N is not sufficient
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class OrganArbitrator : Model, IUptake
     {
         #region Class Members
@@ -33,10 +35,10 @@ namespace Models.PMF
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [Description("Select method used for Arbitration")]
-        public string NArbitrationOption = "";
+        public string NArbitrationOption { get; set; }
         /// <summary>The mentod used to arbitrate DM allocations </summary>
         [Description("Select method used for DMArbitration")]
-        public string DMArbitrationOption = "";
+        public string DMArbitrationOption { get; set; }
         /// <summary>The nutrient drivers</summary>
         [Description("List of nutrients that the arbitrator will consider")]
         public string[] NutrientDrivers = null;

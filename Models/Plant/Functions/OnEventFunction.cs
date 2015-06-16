@@ -11,15 +11,19 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of PreEventValue child function from Initialisation to SetEvent, PostEventValue from ReSetEvent and PreEventValue again from ReSetEvent to the next SetEvent")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class OnEventFunction : Model, IFunction
     {
         /// <summary>The _ value</summary>
         private double _Value = 0;
 
         /// <summary>The set event</summary>
-        public string SetEvent = "";
+        [Description("SetEvent")]
+        public string SetEvent { get; set; }
         /// <summary>The re set event</summary>
-        public string ReSetEvent = "";
+        [Description("ReSetEvent")]
+        public string ReSetEvent {get; set;}
 
 
         /// <summary>The pre event value</summary>

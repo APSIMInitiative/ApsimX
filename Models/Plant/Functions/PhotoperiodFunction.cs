@@ -15,6 +15,8 @@ namespace Models.PMF.Functions
     /// \param Twilight The interval between sunrise or sunset and the time when the true centre of the sun is below the horizon as a specified angle.
     /// \retval The day length of a specified day and location. Variable "photoperiod" will be returned if simulation environment has a variable called ClimateControl.PhotoPeriod.
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of todays photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead")]
     public class PhotoperiodFunction : Model, IFunction
     {
@@ -28,7 +30,8 @@ namespace Models.PMF.Functions
         protected Clock Clock = null;
 
         /// <summary>The twilight</summary>
-        public double Twilight = 0;
+        [Description("Twilight")]
+        public double Twilight { get; set; }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
