@@ -1272,6 +1272,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -1394,6 +1395,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -1482,6 +1484,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -1624,6 +1627,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -1746,6 +1750,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -1808,6 +1813,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -1910,6 +1916,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -1972,6 +1979,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -2080,6 +2088,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -3415,6 +3424,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -3537,6 +3547,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -3625,6 +3636,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -3767,6 +3779,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -3889,6 +3902,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -3951,6 +3965,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -4053,6 +4068,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -4115,6 +4131,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -4223,6 +4240,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -5459,6 +5477,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -5541,6 +5560,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -5629,6 +5649,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -5771,6 +5792,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -5853,6 +5875,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -5915,6 +5938,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -6017,6 +6041,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -6079,6 +6104,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -6187,6 +6213,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -7527,6 +7554,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -7649,6 +7677,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -7737,6 +7766,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -7879,6 +7909,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -8001,6 +8032,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -8063,6 +8095,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -8165,6 +8198,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -8227,6 +8261,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -8335,6 +8370,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -9576,6 +9612,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -9658,6 +9695,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -9746,6 +9784,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -9888,6 +9927,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -9970,6 +10010,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -10032,6 +10073,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -10134,6 +10176,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -10196,6 +10239,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -10304,6 +10348,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -11821,6 +11866,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -11943,6 +11989,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -12071,6 +12118,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -12213,6 +12261,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -12335,6 +12384,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -12397,6 +12447,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -12499,6 +12550,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -12561,6 +12613,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -12669,6 +12722,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -14191,6 +14245,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -14299,6 +14354,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -14441,6 +14497,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -14523,6 +14580,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -14585,6 +14643,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -14687,6 +14746,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -14749,6 +14809,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -14857,6 +14918,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>

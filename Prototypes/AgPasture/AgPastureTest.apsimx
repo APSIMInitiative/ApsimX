@@ -14,7 +14,7 @@
     </Clock>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\Ruakura.met</FileName>
+      <FileName>%root%\Tests\WeatherFiles\Ruakura.met</FileName>
     </Weather>
     <Manager>
       <Name>SetCO2</Name>
@@ -972,7 +972,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -992,7 +992,7 @@ namespace Models
         </Series>
         <Series>
           <Title>AboveGroundWt</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -1012,7 +1012,7 @@ namespace Models
         </Series>
         <Series>
           <Title>StandingWt</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -1032,7 +1032,7 @@ namespace Models
         </Series>
         <Series>
           <Title>HarvestableWt</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -1053,6 +1053,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -1074,7 +1075,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>TotalPlantWt</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1094,7 +1095,7 @@ namespace Models
         </Series>
         <Series>
           <Title>RyegrassTotal</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -1114,7 +1115,7 @@ namespace Models
         </Series>
         <Series>
           <Title>RyegrassAbvGround</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -1135,6 +1136,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -1156,7 +1158,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>DMcut</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1177,6 +1179,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -1198,7 +1201,7 @@ namespace Models
         </Axis>
         <Series>
           <Title>Potential</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
@@ -1218,7 +1221,7 @@ namespace Models
         </Series>
         <Series>
           <Title>PotentialW</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
@@ -1238,7 +1241,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Actual</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16744448</ColourArgb>
@@ -1258,7 +1261,7 @@ namespace Models
         </Series>
         <Series>
           <Title>Herbage</Title>
-          <Type>Line</Type>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
@@ -1279,6 +1282,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -1361,6 +1365,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -1423,6 +1428,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -1505,6 +1511,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -1567,6 +1574,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -1675,6 +1683,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -1695,7 +1704,7 @@ namespace Models
     </Clock>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\Ruakura.met</FileName>
+      <FileName>%root%\Tests\WeatherFiles\Ruakura.met</FileName>
     </Weather>
     <Manager>
       <Name>SetCO2</Name>
@@ -2788,6 +2797,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -2870,6 +2880,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -2912,6 +2923,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -3014,6 +3026,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -3096,6 +3109,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -3158,6 +3172,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -3240,6 +3255,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -3302,6 +3318,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -3410,6 +3427,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -3430,7 +3448,7 @@ namespace Models
     </Clock>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\Ruakura.met</FileName>
+      <FileName>%root%\Tests\WeatherFiles\Ruakura.met</FileName>
     </Weather>
     <Manager>
       <Name>SetCO2</Name>
@@ -4531,6 +4549,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SpeciesWt</Name>
@@ -4653,6 +4672,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>DMYield</Name>
@@ -4695,6 +4715,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>GrowthRate</Name>
@@ -4797,6 +4818,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -4879,6 +4901,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantWater</Name>
@@ -4941,6 +4964,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>PlantNuptake</Name>
@@ -5023,6 +5047,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>MineralN</Name>
@@ -5085,6 +5110,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>OrganicN</Name>
@@ -5193,6 +5219,7 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Area>0</Area>
       <Slope>0</Slope>
