@@ -105,35 +105,43 @@ namespace Models.PMF
     /// from parameter MainStemPrimordiaInitiationRate and MainStemNodeAppearanceRate,
     /// respectively.
     /// 
-    /// Total number of primordia \f$N_{p}\f$ and node \f$N_{n}\f$ in main stem are summarised since initialisation.
+    /// Total number of primordia \f$N_{p}\f$ and node \f$N_{n}\f$ in 
+    /// main stem are summarised since initialisation.
     /// \f[
-    ///     N_{p}=\sum_{t=T_{i}}^{T}\Delta N_{p}
+    ///     N_{p}=\sum_{t=T_{0}}^{T}\Delta N_{p}
     /// \f]
     /// 
     /// \f[
-    ///     N_{n}=\sum_{t=T_{i}}^{T}\Delta N_{n}
+    ///     N_{n}=\sum_{t=T_{0}}^{T}\Delta N_{n}
     /// \f]
-    /// where, \f$T_{i}\f$ is day of plant initialisation. \f$T\f$ is today.
+    /// where, \f$T_{0}\f$ is day of plant initialisation. \f$T\f$ is today.
     /// 
     /// Plant population (\f$P\f$) is daily reduced by the plant mortality (\f$\Delta P\f$).
     /// \f[
-    ///     P=P_{0}\prod_{t=T_{i}}^{T}(1-\Delta P)
+    ///     P=P_{0} - \sum_{t=T_{0}}^{T}(\Delta P)
     /// \f]
     /// where, \f$P_{0}\f$ is the sown population, which initialised at sowing.
     /// 
-    /// Total stem (main stem + branching) number (\f$N_{s}\f$) is initialised 
-    /// according plant population (\f$P\f$) and primary bud number (\f$N_b\f$).
+    /// Total main stem number (\f$N_{ms}\f$) is calculated  
+    /// according to plant population (\f$P\f$) and primary bud number (\f$N_b\f$) 
+    /// with default value 1.
     /// \f[
-    ///     N_{s}=P \times N_b
+    ///     N_{ms}=P \times N_b
     /// \f]
-    /// The total stem number is calculated by the daily increase of branching 
-    /// (\f$\Delta N_{s}\f$), and daily decrease caused by drought 
-    /// (\f$\Delta N_{drought}\f$) and shade mortality (\f$\Delta N_{shade}\f$).
+    /// The total stem number (\f$N_{s}\f$) is initialized as the total main stem number (\f$N_{ms}\f$)
+    /// and calculated by the daily increase of branching and daily decrease of population 
+    /// (\f$\Delta N_{s}\f$).
     /// \f[
-    /// N_{s}=PN_{b}[1+\sum_{t=t_{i}}^{T}\Delta N_{s}+\prod_{t=T_{i}}^{T}(1-\Delta N_{drought}-\Delta N_{shade})]
+    /// N_{s}=N_{ms}[1+\sum_{t=t_{0}}^{T}\Delta N_{s}] - \sum_{t=t_{0}}^{T}\Delta{P}
     /// \f]
     /// Daily increase of branching (\f$\Delta N_{s}\f$) is calculated by parameter
-    /// BranchingRate. The mortalities, caused by drought (\f$\Delta N_{drought}\f$)  
+    /// BranchingRate. The total stem number is also daily decreased by drought 
+    /// (\f$\Delta N_{drought}\f$) and shade mortality (\f$\Delta N_{shade}\f$),
+    /// which only cause mortality of branches (or tillers).
+    /// \f[
+    /// N_{s}^{\prime}=N_{s}-(\Delta N_{drought}+\Delta N_{shade})\times(N_{s}-P)
+    /// \f]
+    /// The mortalities, caused by drought (\f$\Delta N_{drought}\f$)  
     /// and shade (\f$\Delta N_{shade}\f$) are calculated by parameters 
     /// DroughtInducedBranchMortality and ShadeInducedBranchMortality, respectively.
     /// 
