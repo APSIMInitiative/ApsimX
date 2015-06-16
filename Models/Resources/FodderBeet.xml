@@ -450,7 +450,7 @@
 					<End>Established</End>
 					<Constant>
 						<Name>Function</Name>
-						<Value>280</Value>
+						<Value>500</Value>
 					</Constant>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
@@ -459,7 +459,7 @@
 					<End>EndLinear</End>
 					<Constant>
 						<Name>Function</Name>
-						<Value>120</Value>
+						<Value>500</Value>
 					</Constant>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
@@ -468,7 +468,7 @@
 					<End>StartSenescence</End>
 					<Constant>
 						<Name>Function</Name>
-						<Value>120</Value>
+						<Value>500</Value>
 					</Constant>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
@@ -477,7 +477,7 @@
 					<End>Maturity</End>
 					<Constant>
 						<Name>Function</Name>
-						<Value>90</Value>
+						<Value>500</Value>
 					</Constant>
 				</PhaseLookupValue>
 			</PhaseLookup>
@@ -488,27 +488,27 @@
 					<Name>XYPairs</Name>
 					<X>
 						<double>0</double>
-						<double>2</double>
 						<double>6</double>
-						<double>8</double>
-						<double>10</double>
+						<double>11</double>
+						<double>15</double>
+						<double>21</double>
 					</X>
 					<Y>
-						<double>125</double>
-						<double>500</double>
-						<double>3000</double>
 						<double>15000</double>
-						<double>25000</double>
+						<double>21000</double>
+						<double>50000</double>
+						<double>50000</double>
+						<double>50000</double>
 					</Y>
 				</XYPairs>
 			</LinearInterpolationFunction>
 			<Constant>
 				<Name>LagDuration</Name>
-				<Value>900</Value>
+				<Value>300</Value>
 			</Constant>
 			<Constant>
 				<Name>SenescenceDuration</Name>
-				<Value>20</Value>
+				<Value>6000</Value>
 			</Constant>
 			<Constant>
 				<Name>DetachmentLagDuration</Name>
@@ -516,7 +516,7 @@
 			</Constant>
 			<Constant>
 				<Name>DetachmentDuration</Name>
-				<Value>1e6</Value>
+				<Value>1</Value>
 			</Constant>
 			<Constant>
 				<Name>StructuralFraction</Name>
