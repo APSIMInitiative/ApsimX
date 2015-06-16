@@ -142,6 +142,7 @@ namespace Models.Core
         private static void CallOnLoaded(IModel model)
         {
             // Call OnLoaded in all models.
+            Apsim.CallEventHandler(model, "Loaded", null);
             foreach (Model child in Apsim.ChildrenRecursively(model))
                 Apsim.CallEventHandler(child, "Loaded", null);
         }
@@ -318,6 +319,8 @@ namespace Models.Core
             else
                 simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
 
+            MakeSubstitutions(simulationsToRun);
+
             NumToRun = simulationsToRun.Length;
             NumCompleted = 0;
 
@@ -335,6 +338,35 @@ namespace Models.Core
                     simulation.Commencing -= OnSimulationCommencing;
                     simulation.Commencing += OnSimulationCommencing;
                     jobManager.AddJob(simulation);
+                }
+            }
+        }
+
+        /// <summary>Make model substitutions if necessary.</summary>
+        /// <param name="simulations">The simulations to make substitutions in.</param>
+        private void MakeSubstitutions(Simulation[] simulations)
+        {
+            IModel replacements = Apsim.Child(this, "Replacements");
+            if (replacements != null)
+            {
+                foreach (IModel replacement in replacements.Children)
+                {
+                    foreach (Simulation simulation in simulations)
+                    {
+                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
+                        {
+                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                // Do replacement.
+                                IModel newModel = Apsim.Clone(replacement);
+                                int index = match.Parent.Children.IndexOf(match as Model);
+                                match.Parent.Children.Insert(index, newModel as Model);
+                                newModel.Parent = match.Parent;
+                                match.Parent.Children.Remove(match as Model);
+                                CallOnLoaded(newModel);
+                            }
+                        }
+                    }
                 }
             }
         }
