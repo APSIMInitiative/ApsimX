@@ -770,7 +770,7 @@
 					<End>BulbGrowth</End>
 					<Constant>
 						<Name>Target</Name>
-						<Value>0.0</Value>
+						<Value>0.1</Value>
 					</Constant>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
@@ -779,7 +779,7 @@
 					<End>EndLinear</End>
 					<Constant>
 						<Name>Target</Name>
-						<Value>0.8</Value>
+						<Value>0.6</Value>
 					</Constant>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
@@ -847,7 +847,7 @@
 					<MultiplyFunction>
 						<Constant>
 							<Name>Target</Name>
-							<Value>1</Value>
+							<Value>0.1</Value>
 						</Constant>
 						<VariableReference>
 							<VariableName>[leaf].PotentialGrowth</VariableName>
@@ -860,7 +860,7 @@
 					<End>EndLinear</End>
 					<Constant>
 						<Name>Target</Name>
-						<Value>0.9</Value>
+						<Value>0.2</Value>
 					</Constant>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
@@ -869,7 +869,7 @@
 					<End>EndSenescence</End>
 					<Constant>
 						<Name>Function</Name>
-						<Value>0.9</Value>
+						<Value>0.1</Value>
 					</Constant>
 				</PhaseLookupValue>
 				<PhaseLookupValue>
