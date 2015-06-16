@@ -15,30 +15,28 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SplineInterpolationFunction : Model, IFunction
     {
-        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs { get; set; }
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The x property</summary>
-        public string XProperty = "";
+        [Description("XProperty")]
+        public string XProperty { get; set; }
 
         /// <summary>The spline</summary>
         [NonSerialized]
         private CubicSpline spline = null;
-        /// <summary>The property name</summary>
-        private string PropertyName;
-        /// <summary>The array spec</summary>
-        private string ArraySpec;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SplineInterpolationFunction"/> class.
         /// </summary>
         public SplineInterpolationFunction()
         {
-            PropertyName = XProperty;
-            ArraySpec = StringUtilities.SplitOffBracketedValue(ref PropertyName, '[', ']');
         }
 
         /// <summary>Gets the value.</summary>

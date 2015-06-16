@@ -97,6 +97,7 @@ namespace UserInterface.Views
             TreeView.Nodes.Add(rootNode);
             RefreshNode(rootNode, nodeDescriptions);
             TreeView.Nodes[0].Expand(); // expand the root tree node
+            TreeView.ShowNodeToolTips = true;
         }
 
         /// <summary>Moves the specified node up 1 position.</summary>
@@ -382,6 +383,8 @@ namespace UserInterface.Views
         private void RefreshNode(TreeNode node, NodeDescriptionArgs description)
         {
             node.Text = description.Name;
+
+            node.ToolTipText = description.ToolTip;
 
             // Make sure the tree node image is right.
             int imageIndex = TreeImageList.Images.IndexOfKey(description.ResourceNameForImage);

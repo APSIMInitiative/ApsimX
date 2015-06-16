@@ -42,6 +42,9 @@ namespace Models.PMF.Organs
     /// 
     /// </remarks>
     [Serializable]
+    [Description("Leaf Cohort")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafCohort : Model
     {
         #region Paramater Input Classes
@@ -71,9 +74,11 @@ namespace Models.PMF.Organs
 
         #region Class Fields
         /// <summary>The rank</summary>
-        public int Rank = 0;  // 1 based ranking
+        [Description("Rank")]
+        public int Rank { get; set; }  // 1 based ranking
         /// <summary>The area</summary>
-        public double Area = 0;
+        [Description("Area")]
+        public double Area { get; set; }
         //Leaf coefficients
         /// <summary>The age</summary>
         [XmlIgnore]

@@ -19,7 +19,9 @@ namespace Models.PMF.Functions
         protected IWeather MetData = null;
 
         /// <summary>Gets or sets the xy pairs.</summary>
-        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
+        /// <value>The xy pairs.</value>
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>Number of 3 hourly temperatures</summary>
         private const int num3hr = 24 / 3;           // 

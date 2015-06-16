@@ -82,6 +82,8 @@ namespace Models.PMF.Organs
     /// </remarks>
     [Serializable]
     [Description("Leaf Class")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Leaf : BaseOrgan, AboveGround, ICanopy
     {
         #region Canopy interface
@@ -284,15 +286,19 @@ namespace Models.PMF.Organs
         public double KDead { get; set; }
         /// <summary>Gets or sets the gs maximum.</summary>
         /// <value>The gs maximum.</value>
+        [Description("GsMax")]
         public double GsMax { get; set; }
         /// <summary>Gets or sets the R50.</summary>
         /// <value>The R50.</value>
+        [Description("R50")]
         public double R50 { get; set; }
         /// <summary>Gets or sets the emissivity.</summary>
         /// <value>The emissivity.</value>
+        [Description("Emissivity")]
         public double Emissivity { get; set; }
         /// <summary>Gets or sets the albido.</summary>
         /// <value>The albido.</value>
+        [Description("Albido")]
         public double Albido { get; set; }
         
         #endregion

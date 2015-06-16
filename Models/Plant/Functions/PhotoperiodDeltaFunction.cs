@@ -12,6 +12,8 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the difference between today's and yesterday's photoperiods in hours.")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PhotoperiodDeltaFunction : Model, IFunction
     {
 
@@ -24,6 +26,7 @@ namespace Models.PMF.Functions
         protected Clock Clock = null;
 
         /// <summary>The twilight</summary>
+        [Description("Twilight")]
         public double Twilight = 0;
 
         /// <summary>Gets the value.</summary>

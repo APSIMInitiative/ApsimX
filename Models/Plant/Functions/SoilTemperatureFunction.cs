@@ -10,16 +10,27 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("returns the temperature of the surface soil layer")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureFunction : Model, IFunction
     {
+        /// <summary>constructor</summary>
+        public SoilTemperatureFunction()
+        {
+            maxt_soil_surface = 20;
+            mint_soil_surface = 10;
+        }
         #region Class Data Members
         /// <summary>The xy pairs</summary>
-        public XYPairs XYPairs { get; set; }    // Temperature effect on Growth Interpolation Set
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maxt_soil_surface</summary>
-        public double maxt_soil_surface = 20; //Fixme.  These need to be connected to soil temp model when complete
+        [Description("maxt_soil_surface")]
+        public double maxt_soil_surface { get; set; } //Fixme.  These need to be connected to soil temp model when complete
         /// <summary>The mint_soil_surface</summary>
-        public double mint_soil_surface = 10; //Fixme.  These need to be connected to soil temp model when complete
+        [Description("mint_soil_surface")]
+        public double mint_soil_surface { get; set; } //Fixme.  These need to be connected to soil temp model when complete
         
         #endregion
 
@@ -32,7 +43,7 @@ namespace Models.PMF.Functions
             get
             {
                 AirTemperatureFunction airtempfunction = new AirTemperatureFunction();
-                airtempfunction.XYPairs = XYPairs;
+                //airtempfunction.XYPairs = XYPairs;
                 return airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, XYPairs);
             }
         }
