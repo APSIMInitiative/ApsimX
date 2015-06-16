@@ -344,8 +344,6 @@
                 <Name>SoilTemperature</Name>
                 <SoilTemperatureFunction>
                   <Name>ThermalTime</Name>
-                  <maxt_soil_surface>20</maxt_soil_surface>
-                  <mint_soil_surface>10</mint_soil_surface>
                   <XYPairs>
                     <Name>XYPairs</Name>
                     <X>
@@ -359,6 +357,8 @@
                       <double>35</double>
                     </Y>
                   </XYPairs>
+                  <maxt_soil_surface>20</maxt_soil_surface>
+                  <mint_soil_surface>10</mint_soil_surface>
                 </SoilTemperatureFunction>
                 <Start>Sowing</Start>
                 <End>Germination</End>
@@ -399,7 +399,6 @@
                 </Constant>
                 <LinearInterpolationFunction>
                   <Name>StressFactor</Name>
-                  <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
                   <XYPairs>
                     <Name>XYPairs</Name>
                     <X>
@@ -411,6 +410,7 @@
                       <double>0</double>
                     </Y>
                   </XYPairs>
+                  <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
                 </LinearInterpolationFunction>
               </MultiplyFunction>
             </AddFunction>
@@ -429,7 +429,7 @@
             <Start>Germination</Start>
             <End>PreEmerge</End>
             <ShootLag>15</ShootLag>
-            <ShootRate>2</ShootRate>
+            <ShootRate>30</ShootRate>
           </EmergingPhase>
           <GenericPhase>
             <Name>Emerging</Name>
@@ -528,7 +528,6 @@
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>HeightModel</Name>
-            <XProperty>[Structure].MainStemNodeNo</XProperty>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -540,6 +539,7 @@
                 <double>2500</double>
               </Y>
             </XYPairs>
+            <XProperty>[Structure].MainStemNodeNo</XProperty>
           </LinearInterpolationFunction>
           <PhaseLookupValue>
             <Name>MainStemPrimordiaInitiationRate</Name>
@@ -584,7 +584,6 @@
           </Constant>
           <LinearInterpolationFunction>
             <Name>PlantMortality</Name>
-            <XProperty>[Leaf].CoverGreen</XProperty>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -596,6 +595,7 @@
                 <double>1</double>
               </Y>
             </XYPairs>
+            <XProperty>[Leaf].CoverGreen</XProperty>
           </LinearInterpolationFunction>
           <InitialiseStage>PreEmerge</InitialiseStage>
           <PrimaryBudNo>1</PrimaryBudNo>
@@ -660,7 +660,6 @@
             </Constant>
             <WeightedTemperatureFunction>
               <Name>FT</Name>
-              <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -678,10 +677,10 @@
                   <double>0</double>
                 </Y>
               </XYPairs>
+              <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
             </WeightedTemperatureFunction>
             <LinearInterpolationFunction>
               <Name>FW</Name>
-              <XProperty>[Leaf].Fw</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -695,6 +694,7 @@
                   <double>1</double>
                 </Y>
               </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
             </LinearInterpolationFunction>
             <RUECO2Function>
               <Name>FCO2</Name>
@@ -703,7 +703,6 @@
           </RUEModel>
           <LinearInterpolationFunction>
             <Name>FrostFraction</Name>
-            <XProperty>[Weather].MinT</XProperty>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -715,6 +714,7 @@
                 <double>0</double>
               </Y>
             </XYPairs>
+            <XProperty>[Weather].MinT</XProperty>
           </LinearInterpolationFunction>
           <MultiplyFunction>
             <Name>ExtinctionCoeff</Name>
@@ -724,7 +724,6 @@
             </Constant>
             <LinearInterpolationFunction>
               <Name>WaterStress</Name>
-              <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -736,6 +735,7 @@
                   <double>1</double>
                 </Y>
               </XYPairs>
+              <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
           <LeafCohortParameters>
@@ -781,7 +781,6 @@
             </PhaseLookup>
             <LinearInterpolationFunction>
               <Name>MaxArea</Name>
-              <XProperty>[Structure].MainStemNodeNo</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -799,6 +798,7 @@
                   <double>50000</double>
                 </Y>
               </XYPairs>
+              <XProperty>[Structure].MainStemNodeNo</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>LagDuration</Name>
@@ -806,7 +806,7 @@
             </Constant>
             <Constant>
               <Name>SenescenceDuration</Name>
-              <Value>6000</Value>
+              <Value>0</Value>
             </Constant>
             <Constant>
               <Name>DetachmentLagDuration</Name>
@@ -834,7 +834,6 @@
             </Constant>
             <LinearInterpolationFunction>
               <Name>ExpansionStress</Name>
-              <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -846,6 +845,7 @@
                   <double>1</double>
                 </Y>
               </XYPairs>
+              <XProperty>[FodderBeet].WaterSupplyDemandRatio</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>MinimumNConc</Name>
@@ -885,7 +885,6 @@
             </Constant>
             <LinearInterpolationFunction>
               <Name>ShadeInducedSenescenceRate</Name>
-              <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -901,6 +900,7 @@
                   <double>0.1</double>
                 </Y>
               </XYPairs>
+              <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>InitialNConc</Name>
@@ -986,7 +986,6 @@
           </PhaseBasedSwitch>
           <LinearInterpolationFunction>
             <Name>SenescenceRate</Name>
-            <XProperty>[Leaf].FractionDied</XProperty>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -998,6 +997,7 @@
                 <double>0.001</double>
               </Y>
             </XYPairs>
+            <XProperty>[Leaf].FractionDied</XProperty>
           </LinearInterpolationFunction>
           <CompositeBiomass>
             <Name>Live</Name>
@@ -1285,7 +1285,7 @@
         <Name>OperationsSchedule</Name>
         <Operation>
           <Date>2014-10-17T00:00:00</Date>
-          <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:20, rowSpacing:720);</Action>
+          <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:10, rowSpacing:720);</Action>
         </Operation>
       </Operations>
       <SurfaceOrganicMatter>
