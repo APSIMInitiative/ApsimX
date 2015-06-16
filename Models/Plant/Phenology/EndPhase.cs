@@ -8,6 +8,8 @@ namespace Models.PMF.Phen
 
     /// <summary>The end phase in phenology</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class EndPhase : Phase
     {
         /// <summary>The _ cumulative value</summary>

@@ -11,14 +11,18 @@ namespace Models.PMF.Functions
     /// Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.XYPairsView")]
+    [PresenterName("UserInterface.Presenters.XYPairsPresenter")]
     [Description("Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty")]
     public class XYPairs : Model, IFunction
     {
         /// <summary>Gets or sets the x.</summary>
         /// <value>The x.</value>
+        [Description("X")]
         public double[] X { get; set; }
         /// <summary>Gets or sets the y.</summary>
         /// <value>The y.</value>
+        [Description("Y")]
         public double[] Y { get; set; }
 
         /// <summary>Gets the value.</summary>

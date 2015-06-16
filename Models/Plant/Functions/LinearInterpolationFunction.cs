@@ -12,16 +12,21 @@ namespace Models.PMF.Functions
     /// Linear interpolation function
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A value is returned via linear interpolation of a given set of XY pairs")]
     public class LinearInterpolationFunction : Model, IFunction, IFunctionArray
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
-        /// <summary>Gets or sets the xy pairs.</summary>
+        /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        public XYPairs XYPairs { get; set; }
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+
         /// <summary>The x property</summary>
-        public string XProperty = "";
+        [Description("XProperty")]
+        public string XProperty { get; set; }
 
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]

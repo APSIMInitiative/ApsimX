@@ -51,10 +51,12 @@ namespace Models.PMF.Phen
     abstract public class Phase : Model
     {
         /// <summary>The start</summary>
-        public string Start;
+        [Models.Core.Description("Start")]
+        public string Start { get; set; }
 
         /// <summary>The end</summary>
-        public string End;
+        [Models.Core.Description("End")]
+        public string End { get; set; }
 
         /// <summary>The phenology</summary>
         [Link]

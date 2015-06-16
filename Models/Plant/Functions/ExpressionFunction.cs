@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Text;
 using System.Reflection;
 
-using System.Data;
 using Models.Core;
 using APSIM.Shared.Utilities;
 
@@ -16,9 +15,12 @@ namespace Models.PMF.Functions
     /// Evaluate a mathematical expression using the EvaluateExpression dll. Obs: Expression can contain variable names from Plant2"
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ExpressionFunction : Model, IFunction
     {
         /// <summary>The expression</summary>
+        [Core.Description("Expression")]
         public string Expression = "";
 
         /// <summary>The function</summary>

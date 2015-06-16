@@ -25,7 +25,7 @@ source("Tests/RTestSuite/tests.R")
 # if 1 argument, assume it is a single test to run
 ifelse(length(args) == 1,
        files <- args[1],
-       files <- list.files(path="Tests", pattern="apsimx$", full.names=TRUE, recursive=TRUE, ignore.case=TRUE))
+       files <- list.files(path=".", pattern="apsimx$", full.names=TRUE, recursive=TRUE, ignore.case=TRUE))
 
 # create an empty data frame to hold all test output
 buildRecord <- data.frame(BuildID=integer(), System=character(),Date=character(), Time=character(), Simulation=character(), ColumnName=character(), Test=character(), 

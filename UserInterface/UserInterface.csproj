@@ -124,6 +124,7 @@
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -192,6 +193,12 @@
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
+    <Compile Include="Views\XYPairsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\XYPairsView.Designer.cs">
+      <DependentUpon>XYPairsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\EditorView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -363,6 +370,9 @@
     <EmbeddedResource Include="Forms\FormInsertHyperlink.resx">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\XYPairsView.resx">
+      <DependentUpon>XYPairsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\EditorView.resx">
       <DependentUpon>EditorView.cs</DependentUpon>
@@ -559,6 +569,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\WaterGraph.xml" />
+    <None Include="Resources\InitialWaterGraph.xml" />
+    <None Include="Resources\XYPairsGraph.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogen.png" />
@@ -615,6 +627,8 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilArbitrator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Replacements.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plant.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Maize.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HeightFunction.png" />
@@ -691,7 +705,6 @@
     <EmbeddedResource Include="Resources\Toolboxes\Toolbox.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
     <EmbeddedResource Include="Resources\MenuImages\Export to CSV.png" />
-    <None Include="Resources\InitialWaterGraph.xml" />
     <EmbeddedResource Include="Resources\TreeViewImages\ExcelInput.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Cultivar.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenExample.png" />

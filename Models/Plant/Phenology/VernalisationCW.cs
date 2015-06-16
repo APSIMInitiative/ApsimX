@@ -57,6 +57,8 @@ namespace Models.PMF.Phen
     /// where \f$L_{P}\f$ is the day length (h) from \ref Models.PMF.Functions.PhotoperiodFunction.
     ///</remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class VernalisationCW : Model
     {
         /// <summary>The phenology</summary>
@@ -87,18 +89,24 @@ namespace Models.PMF.Phen
         private double Mint = 0;
         /// <summary>Gets or sets the vern sens.</summary>
         /// <value>The vern sens.</value>
+        [Description("VernSens")]
         public double VernSens { get; set; }
         /// <summary>Gets or sets the photop sens.</summary>
         /// <value>The photop sens.</value>
+        [Description("PhotopSens")]
         public double PhotopSens { get; set; }
         /// <summary>The start stage for effects</summary>
-        public string StartStageForEffects = "";
+        [Description("StartStageForEffects")]
+        public string StartStageForEffects { get; set; }
         /// <summary>The end stage for effects</summary>
-        public string EndStageForEffects = "";
+        [Description("EndStageForEffects")]
+        public string EndStageForEffects { get; set; }
         /// <summary>The start stage for cumulative vd</summary>
-        public string StartStageForCumulativeVD = "";
+        [Description("StartStageForCumulativeVD")]
+        public string StartStageForCumulativeVD { get; set; }
         /// <summary>The end stage for cumulative vd</summary>
-        public string EndStageForCumulativeVD = "";
+        [Description("EndStageForCumulativeVD")]
+        public string EndStageForCumulativeVD { get; set; }
 
         /// <summary>The cumulative vd</summary>
         private double CumulativeVD = 0;
