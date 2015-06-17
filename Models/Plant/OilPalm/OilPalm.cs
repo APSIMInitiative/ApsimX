@@ -1170,14 +1170,14 @@ namespace Models.PMF.OilPalm
             if (VPD <= 18.0)
                 Fvpd = 1;
             else
-                Fvpd = Math.Max(0.0,1-(VPD-18)/(50-18));
+                Fvpd = Math.Max(0.0, 1 - (VPD - 18) / (50 - 18));
 
 
-            PEP = Soil.SoilWater.Eo * cover_green*Math.Min(Fn,Fvpd);
+            PEP = Soil.SoilWater.Eo * cover_green*Math.Min(Fn, Fvpd);
 
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green/0.9,0.01) * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green / 0.9, 0.01) * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
 
