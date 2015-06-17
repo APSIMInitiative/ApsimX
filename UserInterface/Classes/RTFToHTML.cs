@@ -190,7 +190,7 @@ namespace UserInterface.Classes
 
             if (Array.IndexOf(codesToKeep, code) != -1)
             {
-                if (code == "par" && RTFCodes[RTFCodes.Count - 1] == "fs20")
+                if (code == "par" && RTFCodes.Count > 0 && RTFCodes[RTFCodes.Count - 1] == "fs20")
                 {
                     // Skip the par - associated with a heading.
                 }
