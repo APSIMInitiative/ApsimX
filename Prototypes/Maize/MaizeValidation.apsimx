@@ -504,7 +504,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>NumberFunction</Name>
+                <Name>GrainNumber</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -535,7 +535,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>NumberFunction</Name>
+                <Name>GrainNumber</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -611,7 +611,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>NumberFunction</Name>
+                <Name>GrainNumber</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <AddFunction>
