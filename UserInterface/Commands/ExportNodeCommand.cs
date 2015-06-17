@@ -16,7 +16,7 @@ namespace UserInterface.Commands
     /// <summary>
     /// This command exports the specified node and all child nodes as HTML.
     /// </summary>
-    class ExportNodeCommand : ICommand
+    public class ExportNodeCommand : ICommand
     {
         private ExplorerPresenter ExplorerPresenter;
         private string NodePath;
@@ -141,7 +141,8 @@ namespace UserInterface.Commands
         /// <param name="modelToExport">The model to export.</param>
         /// <param name="folderPath">The folder path.</param>
         /// <param name="url">The URL.</param>
-        private void DoExportInternal(TextWriter index, Model modelToExport, string folderPath, string url, int level)
+        /// <returns>True if something was written to index.</returns>
+        private bool DoExportInternal(TextWriter index, Model modelToExport, string folderPath, string url, int level)
         {
             // Make sure the specified folderPath exists because we're going to 
             // write to it.
@@ -153,23 +154,13 @@ namespace UserInterface.Commands
 
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
-            bool experimentFound = false;
-            bool validationGraphs = false;
+            bool somethingWritten = false;
             foreach (Model child in modelToExport.Children)
             {
                 bool ignoreChild = (child is Simulation && child.Parent is Experiment);
 
                 if (!ignoreChild)
                 {
-                    if (child is Experiment && !experimentFound)
-                    {
-                        experimentFound = true;
-                    }
-                    if (child is Models.Graph.Graph && !validationGraphs)
-                    {
-                        validationGraphs = true;
-                    }
-
                     if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
                         string childFolderPath = Path.Combine(folderPath, child.Name);
@@ -177,28 +168,32 @@ namespace UserInterface.Commands
                     }
                     else
                     {
-                        DoExportModel(child, folderPath, index);
+                        string html = ModelToHTML(child, folderPath);
+                        if (html != null)
+                        {
+                            somethingWritten = true;
+                            index.WriteLine(html);
+                        }
                     }
                 }
             }
 
-            
+            return somethingWritten;
         }
 
         /// <summary>
-        /// Export the specified zone.
+        /// Export the specified model to HTML. Can return null if nothing to export.
         /// </summary>
-        /// <param name="modelToExport"></param>
-        /// <param name="folderPath"></param>
-        /// <param name="index"></param>
-        private void DoExportModel(Model modelToExport, string folderPath,TextWriter index)
+        /// <param name="modelToExport">The model to export</param>
+        /// <param name="folderPath">The folder path where images can be stored.</param>
+        private string ModelToHTML(Model modelToExport, string folderPath)
         {
             // If this is a graph then only include it if it has been flagged as 'to be included'
             if (modelToExport is Graph)
             {
                 Graph graph = modelToExport as Graph;
                 if (!graph.IncludeInDocumentation)
-                    return;
+                    return null;
             }
 
             // Select the node in the tree.
@@ -210,8 +205,10 @@ namespace UserInterface.Commands
             if (ExplorerPresenter.CurrentPresenter is IExportable)
             {
                 string html = (ExplorerPresenter.CurrentPresenter as IExportable).ConvertToHtml(folderPath);
-                index.WriteLine("<p>" + html + "</p>");
+                return "<p>" + html + "</p>";
             }
+
+            return null;
         }
 
         /// <summary>Creates the table of contents, returning HTML.</summary>
@@ -237,37 +234,43 @@ namespace UserInterface.Commands
 
                 // extract the heading and heading number (1 to 10)
                 string heading = html.Substring(posHeading + 4, posEndHeading - posHeading - 4);
-                int headingNumber = Convert.ToInt32(Char.GetNumericValue(html[posHeading+2]));
-
-                if (headingNumber > 0 && headingNumber < 4)
+                string htmlFollowingHeading = string.Empty;
+                if (posEndHeading + 7 < html.Length)
+                    htmlFollowingHeading = html.Substring(posEndHeading + 7, 2);
+                if (htmlFollowingHeading != "<H")
                 {
-                    // Update levels based on heading number.
-                    levels[headingNumber - 1]++;
-                    for (int i = headingNumber; i < levels.Length; i++)
-                        if (levels[i] > 0)
-                            levels[i] = 0;
+                    int headingNumber = Convert.ToInt32(Char.GetNumericValue(html[posHeading + 2]));
 
-                    // Insert the levels into the heading e.g. "1.3.2"
-                    string levelString = string.Empty;
-                    for (int i = 0; i < levels.Length; i++)
-                        if (levels[i] > 0)
-                        {
-                            if (levelString != string.Empty)
-                                levelString += ".";
-                            levelString += levels[i].ToString();
-                        }
-                    heading = levelString + " " + heading;
+                    if (headingNumber > 0 && headingNumber < 4)
+                    {
+                        // Update levels based on heading number.
+                        levels[headingNumber - 1]++;
+                        for (int i = headingNumber; i < levels.Length; i++)
+                            if (levels[i] > 0)
+                                levels[i] = 0;
 
-                    // Write the heading back to the html.
+                        // Insert the levels into the heading e.g. "1.3.2"
+                        string levelString = string.Empty;
+                        for (int i = 0; i < levels.Length; i++)
+                            if (levels[i] > 0)
+                            {
+                                if (levelString != string.Empty)
+                                    levelString += ".";
+                                levelString += levels[i].ToString();
+                            }
+                        heading = levelString + " " + heading;
 
-                    htmlModified.Append("<a name=\"" + heading + "\"></a>");
-                    htmlModified.Append("<H" + headingNumber + ">" + heading + "</H" + headingNumber + ">");
+                        // Write the heading back to the html.
 
-                    // Add heading to our list of headings.
-                    toc.Append("<dt>");
-                    for (int i = 0; i < headingNumber; i++)
-                        toc.Append("&nbsp;&nbsp;&nbsp;&nbsp;");
-                    toc.Append("<a href=\"#" + heading + "\">" + heading + "</a><br></dt>\r\n");
+                        htmlModified.Append("<a name=\"" + heading + "\"></a>");
+                        htmlModified.Append("<H" + headingNumber + ">" + heading + "</H" + headingNumber + ">");
+
+                        // Add heading to our list of headings.
+                        toc.Append("<dt>");
+                        for (int i = 0; i < headingNumber; i++)
+                            toc.Append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                        toc.Append("<a href=\"#" + heading + "\">" + heading + "</a><br></dt>\r\n");
+                    }
                 }
 
                 // Find next heading.
