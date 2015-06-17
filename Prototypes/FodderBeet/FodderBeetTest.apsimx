@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
+  <DataStore>
+    <Name>DataStore</Name>
+    <Input>
+      <Name>FRNLObserved</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>%root%\Tests\FodderBeet\FRNLObservedData.txt</FileName>
+    </Input>
+    <Input>
+      <Name>ObservedData</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>%root%\Tests\FodderBeet\FodderBeetObservedData.txt</FileName>
+    </Input>
+    <AutoExport>false</AutoExport>
+  </DataStore>
   <Simulation>
     <Name>FRNLRivageSD2</Name>
     <Clock>
@@ -1452,20 +1466,6 @@
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <Input>
-      <Name>FRNLObserved</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\FodderBeet\FRNLObservedData.txt</FileName>
-    </Input>
-    <Input>
-      <Name>ObservedData</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Tests\FodderBeet\FodderBeetObservedData.txt</FileName>
-    </Input>
-    <AutoExport>false</AutoExport>
-  </DataStore>
   <Graph>
     <Name>TT</Name>
     <Axis>
