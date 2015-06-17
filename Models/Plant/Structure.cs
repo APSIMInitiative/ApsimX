@@ -403,7 +403,7 @@ namespace Models.PMF
             {
                 double DeltaPopn = Plant.Population * PlantMortality.Value;
                 Plant.Population -= DeltaPopn;
-                TotalStemPopn -= DeltaPopn;
+                TotalStemPopn -= DeltaPopn * TotalStemPopn / Plant.Population;
                 ProportionPlantMortality = PlantMortality.Value;
             }
 

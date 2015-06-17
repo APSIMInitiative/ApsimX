@@ -497,9 +497,6 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
-                //Fixme, this can be deleted when arbitrator calculates uptake ?????
-                Uptake = new double[Soil.Thickness.Length];
-
                 Depth = Plant.SowingData.Depth;
                 double AccumulatedDepth = 0;
                 double InitialLayers = 0;
@@ -547,6 +544,9 @@ namespace Models.PMF.Organs
         {
             set
             {
+                if (Uptake == null)
+                    throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
+           
                 if (Depth <= 0)
                     return; //cannot allocate growth where no length
 
