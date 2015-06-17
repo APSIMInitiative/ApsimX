@@ -611,8 +611,8 @@
         <MultiplyFunction>
           <Name>NumberFunction</Name>
           <VariableReference>
-            <Name>StemNumber</Name>
-            <VariableName>[Structure].TotalStemPopn</VariableName>
+            <Name>HeadNumber</Name>
+            <VariableName>[Spike].HeadNumber.Value</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>GrainsPerSpike</Name>
@@ -629,10 +629,6 @@
             </XYPairs>
             <XProperty>[Spike].Live.Wt</XProperty>
           </LinearInterpolationFunction>
-          <Constant>
-            <Name>FertileTillers</Name>
-            <Value>1</Value>
-          </Constant>
         </MultiplyFunction>
         <RipeStage>Ripe</RipeStage>
       </ReproductiveOrgan>
@@ -1186,9 +1182,22 @@
             <Name>ExpansionStress</Name>
             <Value>1</Value>
           </Constant>
-          <StartStage>5.2</StartStage>
-          <GrowthDuration>453</GrowthDuration>
-          <MaximumOrganWt>0.7</MaximumOrganWt>
+          <VariableReference>
+            <Name>OrganPopulation</Name>
+            <VariableName>[Spike].HeadNumber.Value</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>StartStage</Name>
+            <Value>5.2</Value>
+          </Constant>
+          <Constant>
+            <Name>MaximumOrganWt</Name>
+            <Value>0.7</Value>
+          </Constant>
+          <Constant>
+            <Name>GrowthDuration</Name>
+            <Value>453</Value>
+          </Constant>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -1216,6 +1225,17 @@
           <Name>MinimumNConc</Name>
           <Value>0.01</Value>
         </Constant>
+        <MultiplyFunction>
+          <Name>HeadNumber</Name>
+          <Constant>
+            <Name>FertileTillers</Name>
+            <Value>1</Value>
+          </Constant>
+          <VariableReference>
+            <Name>StemPopulation</Name>
+            <VariableName>[Structure].TotalStemPopn</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
       </GenericAboveGroundOrgan>
       <GenericAboveGroundOrgan>
         <Name>Stem</Name>
@@ -2353,7 +2373,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Pond</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
@@ -2373,7 +2393,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumEO</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -2393,7 +2413,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumEP</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -2413,7 +2433,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumES</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-32768</ColourArgb>
@@ -2433,7 +2453,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumDrainage</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65281</ColourArgb>
@@ -2453,7 +2473,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumRunoff</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711681</ColourArgb>
@@ -2473,7 +2493,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumRainfall</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-8388544</ColourArgb>
@@ -2493,7 +2513,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumIrrigation</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-12582784</ColourArgb>
@@ -2513,7 +2533,7 @@ namespace Models
       </Series>
       <Series>
         <Title>AccumLatOutFlow</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777216</ColourArgb>
@@ -2533,7 +2553,7 @@ namespace Models
       </Series>
       <Series>
         <Title>SoilWaterDeficit</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16777056</ColourArgb>
@@ -3522,5 +3542,5 @@ namespace Models
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <ExplorerWidth>289</ExplorerWidth>
+  <ExplorerWidth>254</ExplorerWidth>
 </Simulations>

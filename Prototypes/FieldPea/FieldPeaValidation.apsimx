@@ -846,8 +846,14 @@
               <Value>60</Value>
             </Constant>
           </AddFunction>
-          <StartStage>4</StartStage>
-          <MaximumOrganWt>0.5</MaximumOrganWt>
+          <Constant>
+            <Name>StartStage</Name>
+            <Value>4</Value>
+          </Constant>
+          <Constant>
+            <Name>MaximumOrganWt</Name>
+            <Value>0.5</Value>
+          </Constant>
         </PopulationBasedDemandFunction>
         <MultiplyFunction>
           <Name>PodNumber</Name>

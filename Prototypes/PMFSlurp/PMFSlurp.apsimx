@@ -1,53 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
+  <Replacements>
+    <Name>Replacements</Name>
+    <Plant>
+      <Name>Slurp</Name>
+      <Cultivar>
+        <Name>StaticCrop</Name>
+        <Alias>StaticCrop</Alias>
+      </Cultivar>
+      <OrganArbitrator>
+        <Name>Arbitrator</Name>
+        <NArbitrationOption>PriorityThenRelativeAllocation</NArbitrationOption>
+        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+      </OrganArbitrator>
+      <Root>
+        <Name>Root</Name>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>
+            <string>[Root].LayerLive</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>
+            <string>[Root].LayerDead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <Value>1</Value>
+        </Constant>
+        <AirTemperatureFunction>
+          <Name>TemperatureEffect</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>26</double>
+              <double>35</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+        </AirTemperatureFunction>
+        <Constant>
+          <Name>RootFrontVelocity</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <Value>6</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.01</Value>
+        </Constant>
+        <Constant>
+          <Name>KLModifier</Name>
+          <Value>1</Value>
+        </Constant>
+        <InitialDM>50</InitialDM>
+        <SpecificRootLength>40000</SpecificRootLength>
+        <KNO3_yProperty>
+          <double>0.02</double>
+          <double>0.02</double>
+        </KNO3_yProperty>
+        <KNO3_xRootLength>
+          <double>0</double>
+          <double>0.003</double>
+        </KNO3_xRootLength>
+        <KNH4_yProperty>
+          <double>0</double>
+          <double>0</double>
+        </KNH4_yProperty>
+        <KNH4_xRootLength>
+          <double>0</double>
+          <double>0.003</double>
+        </KNH4_xRootLength>
+        <NuptakeSupply>0</NuptakeSupply>
+      </Root>
+      <SimpleLeaf>
+        <Name>Leaf</Name>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Constant>
+          <Name>FRGRFunction</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>PotentialBiomass</Name>
+          <Value>5</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>1</Value>
+          </Constant>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>NConc</Name>
+          <Value>0.05</Value>
+        </Constant>
+        <Constant>
+          <Name>LAIFunction</Name>
+          <Value>5</Value>
+        </Constant>
+        <Constant>
+          <Name>ExtinctionCoefficientFunction</Name>
+          <Value>0.7</Value>
+        </Constant>
+        <Constant>
+          <Name>HeightFunction</Name>
+          <Value>150</Value>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>0.5</Value>
+        </Constant>
+        <BiomassYesterday>0</BiomassYesterday>
+        <LAI>0</LAI>
+        <Height>0</Height>
+        <FRGR>0</FRGR>
+        <PotentialEP>0</PotentialEP>
+        <K>0</K>
+        <KDead>0</KDead>
+        <DeltaBiomass>0</DeltaBiomass>
+        <LAIDead>0</LAIDead>
+        <WaterAllocation>0</WaterAllocation>
+      </SimpleLeaf>
+      <CropType>Slurp</CropType>
+    </Plant>
+  </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <Manager>
-    <Name>ResetPMFSlurpProperties</Name>
-    <Script>
-      <OverRidePath>[PMFSlurp].Leaf.LAIFunction.Value</OverRidePath>
-      <OverRideInterger>5</OverRideInterger>
-    </Script>
-    <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-	[Link] Plant Plant;  
-    [Link] Zone zone;
-					
-		[Description("Path for coefficient to be Overwritten")]
-		public string OverRidePath { get; set; }
-		[Description("Value for new coefficient Interger")]
-        public int OverRideInterger { get; set; }
-        
-		[EventSubscribe("AboutToSow")]
-		private void OnAboutToSow(object sender, EventArgs e)
-		{
-			object ResetValue = OverRideInterger;
-			zone.Set(OverRidePath, ResetValue);
-	    }
-	}
-}
-	   ]]></Code>
-  </Manager>
   <Simulation>
     <Name>PMFSlurpTestBase</Name>
     <Weather>
       <Name>Weather</Name>
-      <FileName>..\WeatherFiles\lincoln.met</FileName>
+      <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
@@ -57,6 +167,9 @@ namespace Models
     <Summary>
       <Name>Summary</Name>
     </Summary>
+    <SoilArbitrator>
+      <Name>Soil Arbitrator</Name>
+    </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
       <Soil>
@@ -91,7 +204,7 @@ namespace Models
         <Water>
           <Name>Water</Name>
           <SoilCrop>
-            <Name>PMFSlurpSoil</Name>
+            <Name>SlurpSoil</Name>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -380,7 +493,7 @@ namespace Models
         <Longitude>0</Longitude>
       </Soil>
       <Plant>
-        <Name>PMFSlurp</Name>
+        <Name>Slurp</Name>
         <ResourceName>Slurp</ResourceName>
         <CropType>Slurp</CropType>
       </Plant>
@@ -410,7 +523,7 @@ namespace Models
         <Name>Fertiliser</Name>
       </Fertiliser>
       <Manager>
-        <Name>PMFSlurpSowingRule</Name>
+        <Name>SlurpSowingRule</Name>
         <Script>
           <CultivarName>StaticCrop</CultivarName>
           <InitialRootDepth>600</InitialRootDepth>
@@ -428,7 +541,7 @@ namespace Models
            [System.Xml.Serialization.XmlInclude(typeof(Model))]
             public class Script : Model
             {      
-               [Link] Plant PMFSlurp;
+               [Link] Plant Slurp;
                [Link] Clock Clock;
 
                [Description("Cultivar")]
@@ -443,7 +556,7 @@ namespace Models
                private void OnDoManagement(object sender, EventArgs e)
                {
 				if (Clock.Today.Date == SowingDate)
-                    PMFSlurp.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
+                    Slurp.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
                 //Potato.Sow(... Contains the following arguements:
                 //Population  double  Optional  Seeds sowing/m2.  Default is zero
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -481,7 +594,7 @@ namespace Models
 		[Link] Weather Met;   
 		[Link] Fertiliser Fert;
 		[Link] Irrigation Irrig;  
-		[Link] Plant PMFSlurp;
+		[Link] Plant Slurp;
         [Link] Zone zone;
 					
 		[XmlIgnore] public bool InitialDay { get; set; }
@@ -560,7 +673,7 @@ namespace Models
 			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
             AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
             AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("PMFSlurp.Root.NUptake");
+			AccumPlantN -= (double)zone.Get("Slurp.Root.NUptake");
 			DeltaSoilOMN = OrganicN - InitialSoilOMN;
 			DeltaSoilMineralN = MineralN - InitialMineralN;
 			SoilNitrogenContent = MineralN;
@@ -570,8 +683,8 @@ namespace Models
 
 			AccumIrrigation += Irrig.IrrigationApplied;
 			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[PMFSlurp].Leaf.Transpiration");
-            AccumEP -= (double)zone.Get("PMFSlurp.Root.WaterUptake");
+			//AccumEP -= (double)zone.Get("[Slurp].Leaf.Transpiration");
+            AccumEP -= (double)zone.Get("Slurp.Root.WaterUptake");
 			SoilWaterDeficit =  (SWC - DUL);
 			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
 			AccumOutflowLat -= OutFlowLat;
@@ -698,7 +811,7 @@ namespace Models
           <string>[ExtraVariables].Script.DeltaSoilOMN</string>
           <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
           <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-          <string>[PMFSlurp].Root.NSupply</string>
+          <string>[Slurp].Root.NSupply</string>
           <string>[Soil].SoilWater.Eo</string>
           <string>[Soil].SoilWater.Es</string>
           <string>[ExtraVariables].Script.SWC</string>
@@ -716,26 +829,26 @@ namespace Models
           <string>[ExtraVariables].Script.AccumIrrigation</string>
           <string>[ExtraVariables].Script.AccumOutflowLat</string>
           <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-          <string>[PMFSlurp].Leaf.Live.Wt</string>
-          <string>[PMFSlurp].Root.Live.Wt</string>
-          <string>[PMFSlurp].Leaf.Live.N</string>
-          <string>[PMFSlurp].Root.Live.N</string>
-          <string>[PMFSlurp].Leaf.Live.NConc</string>
-          <string>[PMFSlurp].Root.Live.NConc</string>
-          <string>[PMFSlurp].Root.WaterSupply</string>
-          <string>[PMFSlurp].Root.WaterUptake</string>
-          <string>[PMFSlurp].Leaf.Transpiration</string>
-          <string>[PMFSlurp].Leaf.WaterDemand</string>
-          <string>[PMFSlurp].Root.Depth</string>
-          <string>[PMFSlurp].Leaf.CoverTotal</string>
-          <string>[PMFSlurp].Leaf.CoverDead</string>
-          <string>[PMFSlurp].Leaf.LAI</string>
-          <string>[PMFSlurp].Leaf.Height</string>
-          <string>[PMFSlurp].Leaf.PotentialBiomass.Value</string>
+          <string>[Slurp].Leaf.Live.Wt</string>
+          <string>[Slurp].Root.Live.Wt</string>
+          <string>[Slurp].Leaf.Live.N</string>
+          <string>[Slurp].Root.Live.N</string>
+          <string>[Slurp].Leaf.Live.NConc</string>
+          <string>[Slurp].Root.Live.NConc</string>
+          <string>[Slurp].Root.WaterSupply</string>
+          <string>[Slurp].Root.WaterUptake</string>
+          <string>[Slurp].Leaf.Transpiration</string>
+          <string>[Slurp].Leaf.WaterDemand</string>
+          <string>[Slurp].Root.Depth</string>
+          <string>[Slurp].Leaf.CoverTotal</string>
+          <string>[Slurp].Leaf.CoverDead</string>
+          <string>[Slurp].Leaf.LAI</string>
+          <string>[Slurp].Leaf.Height</string>
+          <string>[Slurp].Leaf.PotentialBiomass.Value</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[PMFSlurp].Arbitrator.NDemand</string>
+          <string>[Slurp].Arbitrator.NDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -744,17 +857,17 @@ namespace Models
           <string>[ExtraVariables].Script.BiomN</string>
           <string>[ExtraVariables].Script.DltNMinRes</string>
           <string>[ExtraVariables].Script.DltNMinTot</string>
-          <string>[PMFSlurp].Leaf.Fw</string>
-          <string>[PMFSlurp].Leaf.Fn</string>
+          <string>[Slurp].Leaf.Fw</string>
+          <string>[Slurp].Leaf.Fn</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
       <Manager>
-        <Name>ResetPMFSlurpProperties</Name>
+        <Name>ResetSlurpProperties</Name>
         <Script>
-          <OverRidePath>PMFSlurp.Leaf.LAIFunction.Value</OverRidePath>
+          <OverRidePath>Slurp.Leaf.LAIFunction.Value</OverRidePath>
           <OverRideInterger>5</OverRideInterger>
           <ChangeDate>1998-11-14</ChangeDate>
         </Script>
@@ -844,6 +957,7 @@ namespace Models
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Arbitrator>
         <Name>Arbitrator</Name>
@@ -888,7 +1002,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -908,7 +1022,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -928,7 +1042,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -948,7 +1062,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumFert</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -968,7 +1082,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -988,7 +1102,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1008,7 +1122,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1028,12 +1142,13 @@ namespace Models
           <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>WaterBalanceComponents</Name>
@@ -1053,26 +1168,6 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Pond</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>SoilWater.pond</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
         <Title>AccumEO</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
@@ -1089,7 +1184,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumEO</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1109,7 +1204,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumEP</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1129,7 +1224,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumES</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1149,7 +1244,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumDrainage</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1169,7 +1264,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumRunoff</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1189,7 +1284,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumRainfall</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1209,7 +1304,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumIrrigation</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1229,7 +1324,7 @@ namespace Models
           <FieldName>ExtraVariables.Script.AccumOutflowLat</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -1249,12 +1344,13 @@ namespace Models
           <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Biomass components</Name>
@@ -1290,31 +1386,11 @@ namespace Models
           <FieldName>Slurp.Leaf.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Stem</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16760704</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Stem.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Tuber</Title>
+        <Title>Root</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1327,175 +1403,16 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Slurp.Tuber.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65281</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
           <FieldName>Slurp.Root.Live.Wt</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Leaf</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388480</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Leaf.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Step</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Stem.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Tuber</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Tuber.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root Dead</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711681</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Root.Dead.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Above Ground Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8372160</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Summariser.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Below Ground Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777088</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Summariser.BelowGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Total Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Summariser.Total.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Plant Nitrogen components</Name>
@@ -1531,11 +1448,11 @@ namespace Models
           <FieldName>Slurp.Leaf.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Stem</Title>
+        <Title>Root</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1548,215 +1465,16 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>Slurp.Stem.Live.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Tuber</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Tuber.Live.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65281</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
           <FieldName>Slurp.Root.Live.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Leaf</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388480</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Leaf.Dead.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Step</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Stem.Dead.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Dead Tuber</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Tuber.Dead.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root Dead</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711681</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Root.Dead.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Above Ground Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8372160</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Summariser.AboveGround.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Below Ground Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777088</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Summariser.BelowGround.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Total Wt</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388608</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Summariser.Total.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Total Live N</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Summariser.TotalLive.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Water supply and demand</Name>
@@ -1926,6 +1644,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Crop structure</Name>
@@ -1952,47 +1671,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Cover Dead</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8372224</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Leaf.CoverDead</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Cover Green</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Leaf.CoverGreen</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>CoverTotal</Title>
+        <Title>Cover Total</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2032,27 +1711,7 @@ namespace Models
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>LAI Dead</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Slurp.Leaf.LAIDead</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Root depth</Title>
+        <Title>RootDepth</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Right</YAxis>
@@ -2074,12 +1733,13 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>N supply and demand</Name>
       <Axis>
         <Type>Left</Type>
-        <Title>Water (mm)</Title>
+        <Title>Nitrogen (g/m2)</Title>
         <Inverted>false</Inverted>
         <Minimum>NaN</Minimum>
         <Maximum>NaN</Maximum>
@@ -2117,7 +1777,7 @@ namespace Models
           <FieldName>Slurp.Arbitrator.NDemand</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
@@ -2137,12 +1797,13 @@ namespace Models
           <FieldName>Slurp.Root.NSupply.Uptake</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Stress Factors</Name>
@@ -2170,7 +1831,7 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <Series>
-        <Title>Series 0</Title>
+        <Title>FW</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2186,11 +1847,11 @@ namespace Models
           <FieldName>Slurp.Leaf.Fw</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Series2</Title>
+        <Title>FN</Title>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2206,12 +1867,13 @@ namespace Models
           <FieldName>Slurp.Leaf.Fn</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
