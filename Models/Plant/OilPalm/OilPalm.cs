@@ -228,6 +228,12 @@ namespace Models.PMF.OilPalm
         [Units("0-1")]
         double FWexpan = 0.0;
 
+        /// <summary>Factor for daily VPD effect on photosynthesis</summary>
+        [XmlIgnore]
+        [Units("0-1")]
+        public double Fvpd { get; set; }
+
+
         /// <summary>Factor for daily nitrogen stress effect on photosynthesis</summary>
         /// <value>The function.</value>
         [XmlIgnore]
@@ -676,6 +682,7 @@ namespace Models.PMF.OilPalm
             BunchGrowth = 0;
             Fn = 1;
             FW = 1;
+            Fvpd = 1;
             PEP = 0;
             EP = 0;
             RootDepth = 0;
@@ -723,7 +730,11 @@ namespace Models.PMF.OilPalm
             for (int i = 0; i < (int)InitialFrondNumber.Value + 60; i++)
             {
                 BunchType B = new BunchType();
-                B.FemaleFraction = FemaleFlowerFraction.Value;
+                if (i>40) 
+                   B.FemaleFraction =  FemaleFlowerFraction.Value;
+                else
+                    B.FemaleFraction = 0;
+
                 Bunches.Add(B);
             }
             RootDepth = InitialRootDepth;
@@ -760,7 +771,7 @@ namespace Models.PMF.OilPalm
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(this, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of "+SowingData.Cultivar+" OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -993,7 +1004,7 @@ namespace Models.PMF.OilPalm
             double RUEcloud = RUE.Value * (1 + 0.33 * cover_green);
             double WF = DiffuseLightFraction;
             double RUEadj = WF * WF * RUEcloud + (1 - WF * WF) * RUEclear;
-            DltDM = RUEadj * Fn * MetData.Radn * cover_green * FW;
+            DltDM = RUEadj * Math.Min(Fn,Fvpd) * MetData.Radn * cover_green * FW;
 
             double DMAvailable = DltDM;
             double[] FrondsAge = new double[Fronds.Count];
@@ -1124,14 +1135,49 @@ namespace Models.PMF.OilPalm
                 BiomassRemoved.Invoke(BiomassRemovedData);
             }
         }
+        /// <summary>Saturated Vapour Pressuer</summary>
+        /// <param name="temp">The temperature.</param>
+        /// <returns></returns>
+        private double svp(double temp)  
+        {
+            return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
+        }
+
+        /// <summary>VPDs this instance.</summary>
+        /// <returns></returns>
+        /// The following helper functions [VDP and svp] are for calculating Fvdp
+        ///         /// <summary>Gets the lai.</summary>
+        /// <value>The lai.</value>
+        [Description("Vapour Pressure Deficit")]
+        [Units("kPa")]
+        public double VPD
+        {
+            get
+            {
+                double VPDmint = svp(MetData.MinT) - MetData.VP;
+                VPDmint = Math.Max(VPDmint, 0.0);
+
+                double VPDmaxt = svp(MetData.MaxT) - MetData.VP;
+                VPDmaxt = Math.Max(VPDmaxt, 0.0);
+
+                double vdp = 0.75 * VPDmaxt + 0.25 * VPDmint;
+                return vdp;
+            }
+        }
         /// <summary>Does the water balance.</summary>
         private void DoWaterBalance()
         {
-            PEP = Soil.SoilWater.Eo * cover_green;
+            if (VPD <= 18.0)
+                Fvpd = 1;
+            else
+                Fvpd = Math.Max(0.0, 1 - (VPD - 18) / (50 - 18));
+
+
+            PEP = Soil.SoilWater.Eo * cover_green*Math.Min(Fn, Fvpd);
 
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green / 0.9, 0.01) * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
 
