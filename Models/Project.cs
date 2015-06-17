@@ -92,11 +92,11 @@ namespace Models
                     JobManager jobManager = new JobManager();
                     jobManager.AddJob(runApsim);
                     jobManager.Start(waitUntilFinished: true);
-                    
-                    if (runApsim.JobsRanOK())
-                        exitCode = 0;
-                    else
+
+                    if (jobManager.SomeHadErrors)
                         exitCode = 1;
+                    else
+                        exitCode = 0;
                 }
 
                 timer.Stop();
@@ -108,6 +108,8 @@ namespace Models
                 exitCode = 1;
             }
 
+            if (exitCode != 0)
+                Console.WriteLine("ERRORS FOUND!!");
             return exitCode;
         }
 
