@@ -23,8 +23,6 @@
     <Summary>
       <Name>Summary</Name>
     </Summary>
-    <Arbitrator/>
-    <Supplement/>
     <Report>
       <Name>Report</Name>
       <VariableNames>
@@ -576,7 +574,6 @@
 </html>]]>
       </MemoText>
     </Memo>
-    <Log />
   </Folder>
   <Folder>
     <Name>Crops</Name>
@@ -590,11 +587,6 @@
       <Name>OilPalm</Name>
       <ResourceName>OilPalm</ResourceName>
     </OilPalm>
-    <Plant>
-      <Name>Potato</Name>
-      <ResourceName>Potato</ResourceName>
-      <CropType>Potato</CropType>
-    </Plant>
     <Slurp>
       <Name>Slurp</Name>
       <CropType>Slurp</CropType>
@@ -612,36 +604,6 @@
       <localRootDepth>500</localRootDepth>
       <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
     </Slurp>
-    <AgPasture>
-      <Name>AgPasture</Name>
-      <alt_N_uptake>no</alt_N_uptake>
-      <SwardName>AgPasture</SwardName>
-      <NumSpecies>1</NumSpecies>
-      <WaterUptakeSource>calc</WaterUptakeSource>
-      <SpeciesName>
-        <string>Ryegrass</string>
-      </SpeciesName>
-      <SpeciesNType>
-        <string>grass</string>
-      </SpeciesNType>
-      <SpeciesCType>
-        <string>C3</string>
-      </SpeciesCType>
-      <InitialDMShoot>
-        <double>2000</double>
-      </InitialDMShoot>
-      <InitialDMRoot>
-        <double>500</double>
-      </InitialDMRoot>
-      <MinimumGreenWt>
-        <double>300</double>
-      </MinimumGreenWt>
-      <InitialRootDepth>
-        <double>750</double>
-      </InitialRootDepth>
-      <ExpoLinearDepthParam>0.1</ExpoLinearDepthParam>
-      <ExpoLinearCurveParam>3</ExpoLinearCurveParam>
-    </AgPasture>
     <Folder>
       <Name>Wheat cultivars</Name>
       <Folder>
