@@ -648,6 +648,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\FieldPea.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NodeNumberPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilArbitrator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Replacements.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plant.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Maize.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HeightFunction.png" />
