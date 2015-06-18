@@ -121,7 +121,7 @@ namespace UserInterface.Classes
                     if (!writtenCultivarHeading)
                     {
                         writtenCultivarHeading = true;
-                        writer.WriteLine("<h2>Cultivars</h2>");
+                        writer.WriteLine("<H2>Cultivars</H2>nbsp;");
                     }
                     DocumentNode(writer, CN, 3);
                 }
