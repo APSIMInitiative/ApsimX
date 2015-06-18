@@ -38,8 +38,6 @@ namespace Models.PMF.Organs
     /// -----------------------
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GenericPMFView")]
-    [PresenterName("UserInterface.Presenters.GenericPMFPresenter")]
     public class GenericOrgan : BaseOrgan, IArbitration
     {
         #region Class Dependency Links and Structures
@@ -60,7 +58,7 @@ namespace Models.PMF.Organs
         /// <summary>The senescence rate function</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
-        public IFunction SenescenceRateFunction = null;
+        IFunction SenescenceRateFunction = null;
         /// <summary>The detachment rate function</summary>
         [Link(IsOptional = true)]
         [Units("/d")]
