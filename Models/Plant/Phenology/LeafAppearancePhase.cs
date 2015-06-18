@@ -10,9 +10,9 @@ namespace Models.PMF.Phen
     /// Leaf appearance phenological phase
     /// </summary>
     [Serializable]
-    [Description("This phase extends from the end of the previous phase until the end of leaf appearance.  The duration of this phase is determined by leaf appearance and the final main stem leaf number.")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [Description("This phase extends from the end of the previous phase until the end of leaf appearance.  The duration of this phase is determined by leaf appearance and the final main stem leaf number.")]
     public class LeafAppearancePhase : Phase
     {
         /// <summary>The leaf</summary>

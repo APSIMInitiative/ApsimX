@@ -25,94 +25,85 @@ namespace Models.PMF.Phen
         /// <summary>The stage at phase change</summary>
         public String EventStageName = "";
     }
-        /*! <summary>
-    Perform daily increase of phenology.
-    </summary>
-    \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
-    should be included as the last child of 
-    \ref Models.PMF.Phen.Phenology "Phenology" model
-    \pre A Models.Clock "Clock" model has to exist.
-    \retval CurrentPhaseName The current phase name.
-    \retval CurrentStageName The current stage name. 
-    Return name of parameter \p Start of 
-    \ref Models.PMF.Phen.Phase "Phase" model 
-    on the day of phase starting, or ? in other days.
-    \retval Stage A one based stage number (start from 1).
-    \retval DaysAfterSowing The day after sowing. 
-    \retval FractionInCurrentPhase The fraction in current phase (0-1).
-    <remarks>
-    Generally, the plant phenology is divided into \f$N_{p}\f$ 
-    phases (i.e. \ref Models.PMF.Phen.Phase "Phase" functions) and stages 
-    (children number of Phenology model, only count 
-    \ref Models.PMF.Phen.Phase "Phase" models).
-    Any models inherited from \ref Models.PMF.Phen.Phase "Phase" models 
-    could be used as children of Phenology model, except the last phase,
-    which should be the \ref Models.PMF.Phen.EndPhase "EndPhase" model.
-    
-    The stage names are defined by the \p Start and \p End parameters 
-    in each \ref Models.PMF.Phen.Phase "Phase" model. Consequently,
-    The parameter value of \p Start should equal to the parameter value
-    of \p End of previous \ref Models.PMF.Phen.Phase "Phase" model,
-    except for the first phase. The parameter value of \p End 
-    should equal to the parameter value of \p Start of next 
-    \ref Models.PMF.Phen.Phase "Phase" function, except for the last phase. 
-    The equality of stage and phase number raise from the last phase,
-    which is \ref Models.PMF.Phen.EndPhase "EndPhase" model and the 
-    \t End stage is unused. 
-    
-    For example, the wheat phenology model defines 9 stages from sowing to maturity.
-    See the diagram below for definitions of stages and phases, 
-    and models used for each phase.
-    
-    \startuml
-    Sowing -> Germination : Germinating
-    Germination -> Emergence : Emerging
-    Emergence ->  TerminalSpikelet : Vegetative
-    TerminalSpikelet-> FlagLeaf : FloralInitiation\nToFlagLeaf
-    FlagLeaf -> Flowering : Spike\nDevelopment
-    Flowering -> StartGrainFill: Grain\nDevelopment
-    StartGrainFill -> EndGrainFill : GrainFilling
-    EndGrainFill -> Maturity : Maturing
-    Maturity -> Unused: ReadyFor\nHarvesting
-
-    note over Sowing, Germination : GerminatingPhase
-    note over Germination, Emergence : EmergingPhase
-    note over Emergence, TerminalSpikelet : GenericPhase
-    note over TerminalSpikelet, FlagLeaf : LeafAppearancePhase
-    note over FlagLeaf, Flowering : GenericPhase
-    note over Flowering, StartGrainFill: GenericPhase
-    note over StartGrainFill, EndGrainFill : GenericPhase
-    note over EndGrainFill, Maturity : GenericPhase
-    note over Maturity, Unused: EndPhase
-    \enduml
-
-    
-    
-    On commencing simulation and sowing
-    ----------------
-    On commencing simulation and sowing
-    \ref Models.PMF.Phen.Phenology "Phenology" function and all related 
-    \ref Models.PMF.Phen.Phase "Phase" functions will be reset.
-    
-    On harvest
-    -----------------
-    On harvest, \ref Models.PMF.Phen.Phenology "Phenology" will 
-    jump to the last phase function i.e. \ref Models.PMF.Phen.EndPhase 
-    "EndPhase" function.
-    
-    On daily
-    -----------------
-    Phenology function performs a daily time step function, get the current 
-    phase to do its development for the day. If thermal time is leftover after 
-    Phase is progressed, and the time step for the subsequent phase is calculated 
-    using leftover thermal time.
-    
-    
-    </remarks>
-    */
     /// <summary>
-    /// A phenology model
+    /// Perform daily increase of phenology.
     /// </summary>
+    /// \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
+    /// should be included as the last child of 
+    /// \ref Models.PMF.Phen.Phenology "Phenology" model
+    /// \pre A Models.Clock "Clock" model has to exist.
+    /// \retval CurrentPhaseName The current phase name.
+    /// \retval CurrentStageName The current stage name. 
+    /// Return name of parameter \p Start of 
+    /// \ref Models.PMF.Phen.Phase "Phase" model 
+    /// on the day of phase starting, or ? in other days.
+    /// \retval Stage A one based stage number (start from 1).
+    /// \retval DaysAfterSowing The day after sowing. 
+    /// \retval FractionInCurrentPhase The fraction in current phase (0-1).
+    /// <remarks>
+    /// Generally, the plant phenology is divided into \f$N_{p}\f$ 
+    /// phases (i.e. \ref Models.PMF.Phen.Phase "Phase" functions) and stages 
+    /// (children number of Phenology model, only count 
+    /// \ref Models.PMF.Phen.Phase "Phase" models).
+    /// 
+    /// Any models inherited from \ref Models.PMF.Phen.Phase "Phase" models 
+    /// could be used as children of Phenology model, except the last phase,
+    /// which should be the \ref Models.PMF.Phen.EndPhase "EndPhase" model.
+    /// The stage names are defined by the \p Start and \p End parameters 
+    /// in each \ref Models.PMF.Phen.Phase "Phase" model. Consequently,
+    /// The parameter value of \p Start should equal to the parameter value
+    /// of \p End of previous \ref Models.PMF.Phen.Phase "Phase" model,
+    /// except for the first phase. The parameter value of \p End 
+    /// should equal to the parameter value of \p Start of next 
+    /// \ref Models.PMF.Phen.Phase "Phase" function, except for the last phase. 
+    /// The equality of stage and phase number raise from the last phase,
+    /// which is \ref Models.PMF.Phen.EndPhase "EndPhase" model and the 
+    /// \p End stage is unused. 
+    /// 
+    /// For example, the wheat phenology model defines 9 stages from sowing to maturity.
+    /// See the diagram below for definitions of stages and phases, 
+    /// and models used for each phase.
+    /// 
+    /// \startuml
+    /// Sowing -> Germination : Germinating
+    /// Germination -> Emergence : Emerging
+    /// Emergence ->  TerminalSpikelet : Vegetative
+    /// TerminalSpikelet-> FlagLeaf : FloralInitiation\nToFlagLeaf
+    /// FlagLeaf -> Flowering : Spike\nDevelopment
+    /// Flowering -> StartGrainFill: Grain\nDevelopment
+    /// StartGrainFill -> EndGrainFill : GrainFilling
+    /// EndGrainFill -> Maturity : Maturing
+    /// Maturity -> Unused: ReadyFor\nHarvesting
+    /// 
+    /// note over Sowing, Germination : GerminatingPhase
+    /// note over Germination, Emergence : EmergingPhase
+    /// note over Emergence, TerminalSpikelet : GenericPhase
+    /// note over TerminalSpikelet, FlagLeaf : LeafAppearancePhase
+    /// note over FlagLeaf, Flowering : GenericPhase
+    /// note over Flowering, StartGrainFill: GenericPhase
+    /// note over StartGrainFill, EndGrainFill : GenericPhase
+    /// note over EndGrainFill, Maturity : GenericPhase
+    /// note over Maturity, Unused: EndPhase
+    /// \enduml
+    /// 
+    /// On commencing simulation and sowing
+    /// ----------------
+    /// On commencing simulation and sowing
+    /// \ref Models.PMF.Phen.Phenology "Phenology" function and all related 
+    /// \ref Models.PMF.Phen.Phase "Phase" functions will be reset.
+    /// On harvest
+    /// -----------------
+    /// On harvest, \ref Models.PMF.Phen.Phenology "Phenology" will 
+    /// jump to the last phase function i.e. \ref Models.PMF.Phen.EndPhase 
+    /// "EndPhase" function.
+    /// On daily
+    /// -----------------
+    /// Phenology function performs a daily time step function, get the current 
+    /// phase to do its development for the day. If thermal time is leftover after 
+    /// Phase is progressed, and the time step for the subsequent phase is calculated 
+    /// using leftover thermal time.
+    /// 
+    /// </remarks>
     [Serializable]
     [Description("This model simulates the development of the crop through successive growth <i>phases</i>.  Each phase is bound by distinct growth <i>stages</i>.  Phases often require a target to be reached to signal movement to the next phase.  Differences between cultivars are specified by changing the values of the default parameters shown below.")]
     public class Phenology : Model
