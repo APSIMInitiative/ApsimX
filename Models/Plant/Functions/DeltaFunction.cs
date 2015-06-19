@@ -17,10 +17,18 @@ namespace Models.PMF.Functions
         //Class members
         /// <summary>The accumulated value</summary>
         private double YesterdaysValue = 0;
-        
+
+        /// <summary>The start stage name</summary>
+        [Description("StartStageName")]
+        public string StartStageName { get; set; }
+
         /// <summary>The child function to return a delta for</summary>
         [Link]
         IFunction Integral = null;
+
+        /// <summary>The phenology</summary>
+        [Link]
+        Phenology Phenology = null;
 
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
@@ -30,7 +38,15 @@ namespace Models.PMF.Functions
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            YesterdaysValue = Integral.Value;
+            if (StartStageName != null) //For functions that don't start giving values on the first day of simulation and don't have zero as their first value we need to set a start stage so the first values is picked up on the correct day
+            {
+                if (Phenology.Beyond(StartStageName))
+                {
+                    YesterdaysValue = Integral.Value;
+                }
+            }
+            else
+                YesterdaysValue = Integral.Value;
         }
 
         /// <summary>Gets the value.</summary>
