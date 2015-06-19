@@ -264,6 +264,8 @@ namespace UserInterface.Presenters
         public void SelectNode(string nodePath)
         {
             this.view.SelectedNode = nodePath;
+            this.HideRightHandPanel();
+            this.ShowRightHandPanel();
         }
 
         /// <summary>
@@ -385,8 +387,9 @@ namespace UserInterface.Presenters
                         newDoc.AppendChild(newDoc.CreateElement("D"));
                         APSIMImporter importer = new APSIMImporter();
                         importer.ImportSoil(document.DocumentElement, newDoc.DocumentElement, newDoc.DocumentElement);
-                        XmlNode soilNode = newDoc.DocumentElement;
-                        if (XmlUtilities.FindByType(soilNode, "Sample") == null &&
+                        XmlNode soilNode = XmlUtilities.FindByType(newDoc.DocumentElement, "Soil");
+                        if (soilNode != null &&
+                            XmlUtilities.FindByType(soilNode, "Sample") == null &&
                             XmlUtilities.FindByType(soilNode, "InitialWater") == null)
                         {
                             // Add in an initial water and initial conditions models.
@@ -404,7 +407,7 @@ namespace UserInterface.Presenters
                             XmlUtilities.SetValue(initialConditions, "NH4Units", "kgha");
                             XmlUtilities.SetValue(initialConditions, "SWUnits", "Volumetric");
                         }
-                        document = newDoc;
+                        document.LoadXml(newDoc.DocumentElement.InnerXml);
                     }
 
                     IModel child = XmlUtilities.Deserialise(document.DocumentElement, Assembly.GetExecutingAssembly()) as IModel;
@@ -769,14 +772,15 @@ namespace UserInterface.Presenters
             description.Name = model.Name;
 
             string imageFileName;
-            if (model is ModelCollectionFromResource)
+            if (model is ModelCollectionFromResource &&
+                (model as ModelCollectionFromResource).ResourceName != null)
                 imageFileName = (model as ModelCollectionFromResource).ResourceName;
             else if (model.GetType().Name == "Plant" || model.GetType().Name == "OldPlant")
                 imageFileName = model.Name;
             else
                 imageFileName = model.GetType().Name;
 
-            if(model.GetType().Namespace.Contains("Models"))
+            if (model.GetType().Namespace.Contains("Models.PMF"))
             {
                 description.ToolTip = model.GetType().Name;
             }
