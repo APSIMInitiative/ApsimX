@@ -303,7 +303,7 @@ namespace Models.Core
             DataStore store = Apsim.Child(this, typeof(DataStore)) as DataStore;
 
             // Remove old simulation data.
-           store.RemoveUnwantedSimulations(this);
+            store.RemoveUnwantedSimulations(this);
 
             Simulation[] simulationsToRun;
             if (SimulationToRun == null)
