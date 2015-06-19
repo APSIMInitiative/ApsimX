@@ -184,12 +184,15 @@
             set
             {
                 string St = string.Empty;
-                foreach (string Value in value)
+                if (value != null)
                 {
-                    if (St != string.Empty)
-                        St += "\r\n";
+                    foreach (string Value in value)
+                    {
+                        if (St != string.Empty)
+                            St += "\r\n";
 
-                    St += Value;
+                        St += Value;
+                    }
                 }
                 Text = St;
             }

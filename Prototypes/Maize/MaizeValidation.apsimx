@@ -20687,8 +20687,7 @@ Testing of APSIM Maize under New Zealand conditions to determine the perormance 
 <html><body>
 <h3>Lincoln2012 (Rain-Shelter Trail)<br/>
 </h3>
-Testing of APSIM Maize under New Zealand conditions was undertaken using the data of Teixeira et al(2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass growth and nitrogen content of individual organs, soil water contents, leaf area index, phenology and yield components. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.<h3><br/>
-</h3>
+Testing of APSIM Maize under New Zealand conditions was undertaken using the data of Teixeira et al(2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass growth and nitrogen content of individual organs, soil water contents, leaf area index, phenology and yield components. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.<br/>
 
 </body></html>]]></MemoText>
       </Memo>
@@ -26418,8 +26417,7 @@ namespace Models
 <html><body>
 <h3>Lincoln2010 (Leaf properties trial)<br/>
 </h3>
-This trial was conducted to provide data for parametersising the Leaf Area model and is described in detail by Teixeira <i>et.al.</i> (2011).  Detailed measurements were conducted on leaf apperance and expansion with some measurements of biomass accumulation.  Treatments of plus and minus Nitrogen were applied but there was sufficient N in the soil than N responses were very small<h3><br/>
-</h3>
+This trial was conducted to provide data for parametersising the Leaf Area model and is described in detail by Teixeira <i>et.al.</i>(2011).  Detailed measurements were conducted on leaf apperance and expansion with some measurements of biomass accumulation.  Treatments of plus and minus Nitrogen were applied but there was sufficient N in the soil than N responses were very small.<br/>
 
 </body></html>]]></MemoText>
       </Memo>
@@ -33066,8 +33064,8 @@ Carberry, P.S., Muchow, R.C., McCown, R.L., 1989. Testing the CERES-Maize simula
 <br/>
 Keating, B. A., B. M. Wafula, and J. M. Watiki. "Development of a modelling capability for maize in semi-arid eastern Kenya." In ACIAR Proc, vol. 41, pp. 26-33. 1992.<br/>
 <br/>
-Teixeira EI, George M, Brown HE, Fletcher AL. 2011. A framework for quantifying maize leaf expansion and senescence at the individual leaf level. Agronomy New Zealand, 41: 59-65.<h3><br/>
-</h3>
+Teixeira EI, George M, Brown HE, Fletcher AL. 2011. A framework for quantifying maize leaf expansion and senescence at the individual leaf level. Agronomy New Zealand, 41: 59-65.<br/>
+<br/>
 Teixeira, E.I., George, M., Herreman, T., Brown, H., Fletcher, A., Chakwizira, E., de Ruiter, J., Maley, S., Noble, A., 2014. The impact of water and nitrogen limitation on maize biomass and resource-use efficiencies for radiation, water and nitrogen. Field Crops Research 168(0) 109-118.<br/>
 
 </body></html>]]></MemoText>

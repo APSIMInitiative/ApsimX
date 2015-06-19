@@ -743,6 +743,7 @@ namespace Models
             SetupCropTypes("vine", "Crop");
             SetupCropTypes("weed", "Crop");
             SetupCropTypes("wheat", "Crop");
+            SetupCropTypes("Tef", "Crop");
             SetupCropTypes("WheatPMFPrototype", "Crop");
             SetupCropTypes("WhiteClover", "Legume");
             SetupCropTypes("FodderBeet", "Crop");

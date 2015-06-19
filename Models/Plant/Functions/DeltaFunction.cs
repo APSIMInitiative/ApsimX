@@ -8,7 +8,7 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// This function returs the daily delta for its child function
+    /// This function returns the daily delta for its child function
     /// </summary>
     [Serializable]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
