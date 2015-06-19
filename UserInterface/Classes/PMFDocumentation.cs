@@ -295,6 +295,24 @@ namespace UserInterface.Classes
         /// <param name="oper"></param>
         private void DocumentFunction(TextWriter writer, XmlNode N, int NextLevel, string oper)
         {
+            // Look for memo
+            string memo = string.Empty;
+            XmlNode memoNode = XmlUtilities.Find(N, "memo");
+            if (memoNode != null)
+                memo = MemoToHTML(memoNode, 0);
+
+            // Get the corresponding model.
+            string desc = string.Empty;
+            IModel modelForNode = GetModelForNode(N);
+            DescriptionAttribute Description = ReflectionUtilities.GetAttribute(modelForNode.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+            if (Description != null)
+                desc = Description.ToString();
+
+            writer.Write("<p>");
+            writer.Write(memo);
+            writer.Write(desc);
+            writer.Write("</p>");
+
             string msg = string.Empty;
             foreach (XmlNode child in XmlUtilities.ChildNodes(N, ""))
             {
@@ -429,12 +447,17 @@ namespace UserInterface.Classes
 
             // Look for units.
             string units = string.Empty;
+            string desc = string.Empty;
             PropertyInfo property = modelForNode.GetType().GetProperty(XmlUtilities.Value(Node, "Name"));
             if (property != null)
             {
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (unitsAttribute != null)
                     units = "(" + unitsAttribute.ToString() + ")";
+                DescriptionAttribute descAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (descAttribute != null)
+                    desc = descAttribute.ToString();
+
             }
 
             // Look for memo
@@ -447,7 +470,10 @@ namespace UserInterface.Classes
             writer.Write(Header(name, NextLevel, null));
             writer.Write("<p>");
             writer.Write(memo);
-            writer.Write(name + units + " is set to <i>PostEventValue</i> in response to a "+setevent+" event.  ");
+            writer.Write(desc);
+            writer.Write("</p>");
+            writer.Write("<p>");
+            writer.Write(name + units + " is set to <i>PostEventValue</i> in response to a " + setevent + " event.  ");
             writer.Write("Prior to this it is set to a <i>PreEventValue</i>.");
             if (resetevent!="never")
                 writer.Write("The value is reset in response to a " + resetevent + " event.</br>");
