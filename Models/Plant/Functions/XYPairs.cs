@@ -8,7 +8,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty
+    /// Returns a y value from the specified xy matrix corresponding to the current value of the Xproperty
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.XYPairsView")]
