@@ -22,8 +22,8 @@ namespace Models.PMF.Functions
                 if (ChildFunctions == null)
                     ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
-                double Variable = 0.0;
-                double Criteria = 0.0;
+                double TestVariable = 0.0;
+                double LessThanCriteria = 0.0;
                 double IfTrue = 0.0;
                 double IfFalse = 0.0;
 
@@ -33,16 +33,16 @@ namespace Models.PMF.Functions
                 {
                     F = ChildFunctions[i] as IFunction;
                     if (i == 0)
-                        Variable = F.Value;
+                        TestVariable = F.Value;
                     if (i == 1)
-                        Criteria = F.Value;
+                        LessThanCriteria = F.Value;
                     if (i == 2)
                         IfTrue = F.Value;
                     if (i == 3)
                         IfFalse = F.Value;
                 }
 
-                if (Variable < Criteria)
+                if (TestVariable < LessThanCriteria)
                     return IfTrue;
                 else
                     return IfFalse;

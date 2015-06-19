@@ -514,6 +514,29 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>
+        /// A utility function to return true if the simulation is at or past
+        /// the specified startstage.
+        /// </summary>
+        /// <param name="Start">The start.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot test between stages  + Start +   + End</exception>
+        public bool Beyond(String Start)
+        {
+            string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
+            double StartFraction = 0;
+            if (StartFractionSt != "")
+                StartFraction = Convert.ToDouble(StartFractionSt);
+
+            int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
+            int CurrentPhaseIndex = Phases.IndexOf(CurrentPhase);
+
+            if (CurrentPhaseIndex >= StartPhaseIndex)
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
         /// A utility function to return the phenological phase that starts with
         /// the specified start stage name.
         /// </summary>
