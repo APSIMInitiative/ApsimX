@@ -2910,7 +2910,7 @@ namespace Models
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\ApsimX\Prototypes\Chickpea\cooper.met</FileName>
+          <FileName>%root%\Prototypes\Chickpea\cooper.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -4148,7 +4148,7 @@ namespace Models
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>C:\ApsimX\Prototypes\Chickpea\biloela.met</FileName>
+          <FileName>%root%\Prototypes\Chickpea\biloela.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
