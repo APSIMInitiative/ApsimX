@@ -89,6 +89,8 @@ namespace Models.PMF
                     if (propertyName != string.Empty && propertyValue != string.Empty)
                     {
                         IVariable property = Apsim.GetVariableObject(model, propertyName) as IVariable;
+                        if (property == null)
+                            throw new Exception("Cannot find cultivar property: " + propertyName);
                         if (property.GetType() != null)
                         {
                             object oldValue = property.Value;
