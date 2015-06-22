@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>Introduction</Name>
+    <MemoText><![CDATA[
+<html><body>
+The APSIM Wheat model has been tested on a range of datasets to provide tests across a range of environmental conditions.  <br/>
+
+</body></html>]]></MemoText>
+  </Memo>
   <DataStore>
     <Name>DataStore</Name>
     <Model xsi:type="ExcelInput">
       <Name>Observed</Name>
-      <FileName>Observed.xlsx</FileName>
+      <FileName>%root%\Tests\Wheat\Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
       </SheetNames>
@@ -19,7 +27,7 @@
     <Input>
       <Name>NZObservations</Name>
       <ErrorMessage />
-      <FileName>RainShelterBiomass.txt</FileName>
+      <FileName>%root%\Tests\Wheat\RainShelterBiomass.txt</FileName>
     </Input>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
@@ -785,7 +793,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -805,7 +813,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Series2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -826,6 +834,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -848,7 +857,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -868,7 +877,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Series2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -889,6 +898,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -1491,7 +1501,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1511,7 +1521,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Series2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1532,6 +1542,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -1554,7 +1565,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1574,7 +1585,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Series2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -1595,6 +1606,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -2440,6 +2452,7 @@ private void OnDoManagement(object sender, EventArgs e)
       <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -4402,7 +4415,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -4422,7 +4435,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <Series>
         <Title>Series 1</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-256</ColourArgb>
@@ -4442,7 +4455,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <Series>
         <Title>Series 2</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16711936</ColourArgb>
@@ -4462,7 +4475,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Series>
       <Series>
         <Title>Series 3</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744256</ColourArgb>
@@ -4483,6 +4496,7 @@ private void OnDoManagement(object sender, EventArgs e)
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>LAI</Name>
@@ -4504,7 +4518,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
@@ -4525,6 +4539,7 @@ private void OnDoManagement(object sender, EventArgs e)
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -6124,7 +6139,7 @@ public class Script : Model
       </Axis>
       <Series>
         <Title>Predicted</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
@@ -6144,7 +6159,7 @@ public class Script : Model
       </Series>
       <Series>
         <Title>Observed</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
@@ -6165,6 +6180,7 @@ public class Script : Model
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Biomass</Name>
@@ -6226,6 +6242,7 @@ public class Script : Model
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -7285,7 +7302,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Predicted</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
@@ -7305,7 +7322,7 @@ namespace Models
       </Series>
       <Series>
         <Title>Observed</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -7326,6 +7343,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>TotalSW</Name>
@@ -7367,6 +7385,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -8566,7 +8585,7 @@ namespace Models
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -8587,6 +8606,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -9710,7 +9730,7 @@ private void OnDoManagement(object sender, EventArgs e)
       </Axis>
       <Series>
         <Title>Series 0</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
@@ -9731,6 +9751,7 @@ private void OnDoManagement(object sender, EventArgs e)
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
   <Experiment>
@@ -11601,6 +11622,15 @@ private void OnDoManagement(object sender, EventArgs e)
       <Slope>0</Slope>
     </Simulation>
   </Experiment>
+  <Memo>
+    <Name>Combined Results</Name>
+    <MemoText><![CDATA[
+<html><body>
+<h3>Combined Results</h3>
+Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).<br/>
+
+</body></html>]]></MemoText>
+  </Memo>
   <Graph>
     <Name>Yield</Name>
     <Caption />
@@ -11643,6 +11673,7 @@ private void OnDoManagement(object sender, EventArgs e)
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>Biomass</Name>
@@ -11685,6 +11716,7 @@ private void OnDoManagement(object sender, EventArgs e)
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>MicrobialN</Name>
@@ -11727,6 +11759,7 @@ private void OnDoManagement(object sender, EventArgs e)
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>GrainNumber</Name>
@@ -11769,6 +11802,7 @@ private void OnDoManagement(object sender, EventArgs e)
     <LegendPosition>BottomRight</LegendPosition>
     <ShowRegressionLine>true</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Tests>
     <Name>Tests</Name>

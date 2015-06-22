@@ -6,7 +6,7 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// Returns the temperature of the surface soil laye
+    /// Returns the temperature of the surface soil layer
     /// </summary>
     [Serializable]
     [Description("returns the temperature of the surface soil layer")]

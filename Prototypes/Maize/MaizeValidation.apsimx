@@ -504,7 +504,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>NumberFunction</Name>
+                <Name>GrainNumber</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -535,7 +535,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>NumberFunction</Name>
+                <Name>GrainNumber</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <VariableReference>
@@ -611,7 +611,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
               <VariableReference>
-                <Name>NumberFunction</Name>
+                <Name>GrainNumber</Name>
                 <VariableName>[Grain].NumberFunction.Value</VariableName>
               </VariableReference>
               <AddFunction>
@@ -1358,9 +1358,22 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>ExpansionStress</Name>
             <Value>1</Value>
           </Constant>
-          <StartStage>5.2</StartStage>
-          <GrowthDuration>120</GrowthDuration>
-          <MaximumOrganWt>25</MaximumOrganWt>
+          <Constant>
+            <Name>StartStage</Name>
+            <Value>5.2</Value>
+          </Constant>
+          <Constant>
+            <Name>GrowthDuration</Name>
+            <Value>120</Value>
+          </Constant>
+          <Constant>
+            <Name>MaximumOrganWt</Name>
+            <Value>25</Value>
+          </Constant>
+          <VariableReference>
+            <Name>OrganPopulation</Name>
+            <VariableName>[Rachis].CobNumber.Value</VariableName>
+          </VariableReference>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -1423,9 +1436,22 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>ExpansionStress</Name>
             <Value>1</Value>
           </Constant>
-          <StartStage>5.5</StartStage>
-          <GrowthDuration>300</GrowthDuration>
-          <MaximumOrganWt>25</MaximumOrganWt>
+          <Constant>
+            <Name>StartStage</Name>
+            <Value>5.5</Value>
+          </Constant>
+          <Constant>
+            <Name>GrowthDuration</Name>
+            <Value>300</Value>
+          </Constant>
+          <Constant>
+            <Name>MaximumOrganWt</Name>
+            <Value>25</Value>
+          </Constant>
+          <VariableReference>
+            <Name>OrganPopulation</Name>
+            <VariableName>[Rachis].CobNumber.Value</VariableName>
+          </VariableReference>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -1745,7 +1771,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 14</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 14</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
       </Cultivar>
@@ -1757,7 +1783,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 101</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 813</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 25</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
       </Cultivar>
@@ -1769,7 +1795,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 25</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
       </Cultivar>
@@ -1781,7 +1807,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 50</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 713</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 25</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
       </Cultivar>
@@ -1793,7 +1819,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 101</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 694</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 25</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 25</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 25</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 550</Command>
       </Cultivar>
@@ -1807,7 +1833,7 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].GrainFilling.Target.Value = 812</Command>
         <Command>[Phenology].Maturing.Target.Value = 1</Command>
         <Command>[Phenology].MaturityToHarvestRipe.Target.Value = 1</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 36</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 36</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 36</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 720</Command>
       </Cultivar>
@@ -1826,7 +1852,7 @@ VShort duration variety released in New Zealand by Pioneer
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 170</Command>
         <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
         <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 18</Command>
+        <Command>[Rachis].DMDemandFunction.MaximumOrganWt.Value = 18</Command>
         <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
         <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
         <Command>[Stem].DMDemandFunction.PotentialDMAccumulation.PotentialInternodeWt.XYPairs.Y = 0, 0.15, 10</Command>
@@ -20687,8 +20713,7 @@ Testing of APSIM Maize under New Zealand conditions to determine the perormance 
 <html><body>
 <h3>Lincoln2012 (Rain-Shelter Trail)<br/>
 </h3>
-Testing of APSIM Maize under New Zealand conditions was undertaken using the data of Teixeira et al(2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass growth and nitrogen content of individual organs, soil water contents, leaf area index, phenology and yield components. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.<h3><br/>
-</h3>
+Testing of APSIM Maize under New Zealand conditions was undertaken using the data of Teixeira et al(2014).  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass growth and nitrogen content of individual organs, soil water contents, leaf area index, phenology and yield components. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.<br/>
 
 </body></html>]]></MemoText>
       </Memo>
@@ -26418,8 +26443,7 @@ namespace Models
 <html><body>
 <h3>Lincoln2010 (Leaf properties trial)<br/>
 </h3>
-This trial was conducted to provide data for parametersising the Leaf Area model and is described in detail by Teixeira <i>et.al.</i> (2011).  Detailed measurements were conducted on leaf apperance and expansion with some measurements of biomass accumulation.  Treatments of plus and minus Nitrogen were applied but there was sufficient N in the soil than N responses were very small<h3><br/>
-</h3>
+This trial was conducted to provide data for parametersising the Leaf Area model and is described in detail by Teixeira <i>et.al.</i>(2011).  Detailed measurements were conducted on leaf apperance and expansion with some measurements of biomass accumulation.  Treatments of plus and minus Nitrogen were applied but there was sufficient N in the soil than N responses were very small.<br/>
 
 </body></html>]]></MemoText>
       </Memo>
@@ -33066,8 +33090,8 @@ Carberry, P.S., Muchow, R.C., McCown, R.L., 1989. Testing the CERES-Maize simula
 <br/>
 Keating, B. A., B. M. Wafula, and J. M. Watiki. "Development of a modelling capability for maize in semi-arid eastern Kenya." In ACIAR Proc, vol. 41, pp. 26-33. 1992.<br/>
 <br/>
-Teixeira EI, George M, Brown HE, Fletcher AL. 2011. A framework for quantifying maize leaf expansion and senescence at the individual leaf level. Agronomy New Zealand, 41: 59-65.<h3><br/>
-</h3>
+Teixeira EI, George M, Brown HE, Fletcher AL. 2011. A framework for quantifying maize leaf expansion and senescence at the individual leaf level. Agronomy New Zealand, 41: 59-65.<br/>
+<br/>
 Teixeira, E.I., George, M., Herreman, T., Brown, H., Fletcher, A., Chakwizira, E., de Ruiter, J., Maley, S., Noble, A., 2014. The impact of water and nitrogen limitation on maize biomass and resource-use efficiencies for radiation, water and nitrogen. Field Crops Research 168(0) 109-118.<br/>
 
 </body></html>]]></MemoText>
