@@ -14,8 +14,8 @@
   </Cultivar>
   <Cultivar>
     <Name>Nigeria_IRHO</Name>
-    <Command>[BunchSizeMax].XYPairs.X = 0, 1,3,7,11,15</Command>
-    <Command>[BunchSizeMax].XYPairs.Y = 0, 53,265,7000,11600,12750</Command>
+    <Command>[BunchSizeMax].XYPairs.X = 0, 1,3,7,12,16</Command>
+    <Command>[BunchSizeMax].XYPairs.Y = 0, 53,265,7000,10000,11000</Command>
     <Command>[FrondAppearanceRate].XYPairs.X =     0,    2,     5,   10,   15</Command>
     <Command>[FrondAppearanceRate].XYPairs.Y =  10.1,  7.7,   10.1,  11,   11</Command>    
   </Cultivar>

@@ -103,6 +103,13 @@ namespace UserInterface.Classes
             writer.WriteLine(ClassDescription(node));
             writer.WriteLine(paramTable);
 
+
+            // Look for memo
+            string memo = string.Empty;
+            XmlNode memoNode = XmlUtilities.Find(node, "memo");
+            if (memoNode != null)
+                memo = MemoToHTML(memoNode, 0);
+
             // Get the corresponding model.
             string desc = string.Empty;
             IModel modelForNode = GetModelForNode(node);
@@ -111,8 +118,12 @@ namespace UserInterface.Classes
                 DescriptionAttribute Description = ReflectionUtilities.GetAttribute(modelForNode.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (Description != null)
                     desc = Description.ToString();
-                writer.Write(desc + "<br/>");
             }
+            writer.Write("<p>");
+            writer.Write(desc);
+            writer.Write(memo);
+            writer.Write("</p>");
+
             // Document all other child nodes.
             foreach (XmlNode CN in XmlUtilities.ChildNodes(node, ""))
             {
@@ -243,8 +254,8 @@ namespace UserInterface.Classes
             writer.Write(Header(name + " Phase", NextLevel, null));
             writer.Write("<p>");
             writer.Write("The "+ name + " phase extends between the " + start + " and " + end+" stages.  ");
-            writer.Write(memo);
             writer.Write(desc);
+            writer.Write(memo);
             
             writer.WriteLine("</p>");
             foreach (XmlNode child in XmlUtilities.ChildNodes(node, ""))
@@ -309,8 +320,8 @@ namespace UserInterface.Classes
                 desc = Description.ToString();
 
             writer.Write("<p>");
-            writer.Write(memo);
             writer.Write(desc);
+            writer.Write(memo);
             writer.Write("</p>");
 
             string msg = string.Empty;
