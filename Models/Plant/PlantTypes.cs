@@ -101,21 +101,36 @@
         public Plant Plant = null;
 
         /// <summary>The cultivar</summary>
-        public String Cultivar = "";
+        public String Cultivar { get; set; }
         /// <summary>The population</summary>
-        public Double Population = 100;
+        public Double Population { get; set; }
         /// <summary>The depth</summary>
-        public Double Depth = 100;
+        public Double Depth { get; set; }
         /// <summary>The row spacing</summary>
-        public Double RowSpacing = 150;
+        public Double RowSpacing { get; set; }
         /// <summary>The maximum cover</summary>
-        public Double MaxCover = 1;
+        public Double MaxCover { get; set; }
         /// <summary>The bud number</summary>
-        public Double BudNumber = 1;
+        public Double BudNumber { get; set; }
         /// <summary>The skip row</summary>
-        public Double SkipRow; //Not yet handled in Code
+        public Double SkipRow { get; set; }
         /// <summary>The skip plant</summary>
-        public Double SkipPlant; //Not yet handled in Code
+        public Double SkipPlant { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SowPlant2Type"/> class.
+        /// </summary>
+        public SowPlant2Type()
+        {
+            Cultivar = "";
+            Population = 100;
+            Depth = 100;
+            RowSpacing = 150;
+            MaxCover = 1;
+            BudNumber = 1;
+        }
+
+
     }
     /// <summary>
     /// 
