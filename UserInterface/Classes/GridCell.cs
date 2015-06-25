@@ -68,6 +68,10 @@ namespace UserInterface.Classes
                 {
                     return EditorTypeEnum.DateTime;
                 }
+                else if (this.gridView.Grid[this.ColumnIndex, this.RowIndex] is DataGridViewButtonCell)
+                {
+                    return EditorTypeEnum.Button;
+                }
                 else
                 {
                     return EditorTypeEnum.DropDown;
@@ -101,6 +105,12 @@ namespace UserInterface.Classes
                     case EditorTypeEnum.DateTime:
                         {
                             this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new CalendarCell();
+                            break;
+                        }
+
+                    case EditorTypeEnum.Button:
+                        {
+                            this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewButtonCell();
                             break;
                         }
 

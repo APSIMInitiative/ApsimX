@@ -24,6 +24,9 @@ namespace UserInterface.Interfaces
         /// </summary>
         event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
 
+        /// <summary>Occurs when user clicks a button on the cell.</summary>
+        event EventHandler<GridCellsChangedArgs> ButtonClick;
+
         /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
