@@ -7476,7 +7476,7 @@ namespace Models
         </Memo>
         <Weather>
           <Name>Weather</Name>
-          <FileName>Herm8889.met</FileName>
+          <FileName>%root%\Prototypes\Chickpea\Herm8889.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
@@ -10381,12 +10381,12 @@ Several minimal datasets are available with only flowering dates for a ranges of
         <Name>Beverley</Name>
         <Weather>
           <Name>Weather</Name>
-          <FileName>Beverley.met</FileName>
+          <FileName>%root%\Prototypes\Chickpea\Beverley.met</FileName>
         </Weather>
         <Clock>
           <Name>clock</Name>
           <StartDate>1989-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <EndDate>1990-12-30T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -11044,7 +11044,7 @@ namespace Models
         <Clock>
           <Name>clock</Name>
           <StartDate>1989-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <EndDate>1990-12-30T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -11695,7 +11695,7 @@ namespace Models
         <Clock>
           <Name>clock</Name>
           <StartDate>1989-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <EndDate>1990-12-30T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -12346,7 +12346,7 @@ namespace Models
         <Clock>
           <Name>clock</Name>
           <StartDate>1989-01-01T00:00:00</StartDate>
-          <EndDate>1990-12-31T00:00:00</EndDate>
+          <EndDate>1990-12-30T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
