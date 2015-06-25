@@ -125,7 +125,8 @@ namespace UserInterface.Presenters
                 List<double> y = new List<double>();
                 foreach (SeriesInfo seriesInfo in seriesMetadata)
                 {
-                    if (seriesInfo.X != null && seriesInfo.Y != null)
+                    if (seriesInfo.X != null && seriesInfo.Y != null && 
+                        seriesInfo.X is double[] && seriesInfo.Y is double[])
                     {
                         foreach (double value in seriesInfo.X)
                             x.Add(value);

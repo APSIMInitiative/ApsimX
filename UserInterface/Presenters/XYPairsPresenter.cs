@@ -88,7 +88,7 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.DisconnectViewEvents();
-            this.xyPairs.Parent.Children.Remove(this.graph);
+            this.xyPairs.Children.Remove(this.graph);
         }
 
         /// <summary>
