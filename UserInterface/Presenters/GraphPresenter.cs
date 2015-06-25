@@ -221,9 +221,14 @@ namespace UserInterface.Presenters
 
             if (experiments.Length > 0)
             {
+                int i = this.seriesMetadata.Count;
                 FillSeriesInfoFromExperiments(experiments, series);
-                for (int i = 0; i < this.seriesMetadata.Count; i++)
-                    this.seriesMetadata[i].Title = experiments[i].Name;
+                int j = i;
+                while (i < this.seriesMetadata.Count)
+                {
+                    seriesMetadata[i].Title = experiments[i - j].Name;
+                    i++;
+                }
             }
 
             if (simulations.Length > 0)
