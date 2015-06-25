@@ -52,6 +52,9 @@ namespace UserInterface.Classes
         {
             get
             {
+                if (this.ColumnIndex < 0 || this.RowIndex < 0)
+                    return EditorTypeEnum.TextBox;
+
                 if (this.gridView.Grid[this.ColumnIndex, this.RowIndex] == null)
                 {
                     return EditorTypeEnum.TextBox;
