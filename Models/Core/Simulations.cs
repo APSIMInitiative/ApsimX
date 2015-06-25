@@ -20,6 +20,10 @@ namespace Models.Core
     {
         /// <summary>The _ file name</summary>
         private string _FileName;
+
+        /// <summary>The job manager</summary>
+        JobManager jobManager;
+
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
@@ -297,7 +301,7 @@ namespace Models.Core
             this.ErrorMessage = null;
 
             // Get a reference to the JobManager so that we can add jobs to it.
-            JobManager jobManager = e.Argument as JobManager;
+            jobManager = e.Argument as JobManager;
 
             // Get a reference to our child DataStore.
             DataStore store = Apsim.Child(this, typeof(DataStore)) as DataStore;
@@ -392,16 +396,23 @@ namespace Models.Core
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
+            Simulation simulation = sender as Simulation;
             bool RunAllCompleted = false;
             lock (this)
             {
                 NumCompleted++;
                 RunAllCompleted = NumCompleted == NumToRun;
+                if (simulation.ErrorMessage != null)
+                {
+                    if (ErrorMessage == null)
+                        ErrorMessage += "Errors were found in these simulations:\r\n";
+                    ErrorMessage += simulation.Name + "\r\n";
+                }
             }
             if (RunAllCompleted)
             {
                 CallAllCompleted();
-                (sender as Simulation).Commencing -= OnSimulationCommencing;
+                simulation.Commencing -= OnSimulationCommencing;
             }
         }
 
