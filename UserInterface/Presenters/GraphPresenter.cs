@@ -77,10 +77,16 @@ namespace UserInterface.Presenters
             GraphView.Clear();
             if (Graph != null && Graph.Series != null)
             {
+                bool isEmpty = true;
+
                 // Create all series.
                 FillSeriesInfo();
                 foreach (SeriesInfo seriesInfo in seriesMetadata)
+                {
                     seriesInfo.DrawOnView(this.GraphView);
+                    if (seriesInfo.X != null || seriesInfo.Y != null)
+                        isEmpty = false;
+                }
 
                 // Format the axes.
                 foreach (Models.Graph.Axis A in Graph.Axes)
@@ -107,6 +113,11 @@ namespace UserInterface.Presenters
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.Graph.DisabledSeries));
                 this.Graph.DisabledSeries.Clear();
                 this.Graph.DisabledSeries.AddRange(seriesTitlesToKeep);
+
+                // If there is current nothing to display, provide the user with the editor panel, 
+                // rather than just giving them an apparently empty panel
+                if (isEmpty)
+                    DisplayEditorPanel();
 
                 GraphView.Refresh();
             }
@@ -451,6 +462,18 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Display the editor panel to allow series to be added, deleted or modified
+        /// </summary>
+        private void DisplayEditorPanel()
+        {
+            SeriesPresenter SeriesPresenter = new SeriesPresenter();
+            CurrentPresenter = SeriesPresenter;
+            SeriesView SeriesView = new SeriesView();
+            GraphView.ShowEditorPanel(SeriesView);
+            SeriesPresenter.Attach(Graph, SeriesView, ExplorerPresenter);
+        }
+
+        /// <summary>
         /// The graph model has changed.
         /// </summary>
         private void OnGraphModelChanged(object Model)
@@ -477,11 +500,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnPlotClick(object sender, EventArgs e)
         {
-            SeriesPresenter SeriesPresenter = new SeriesPresenter();
-            CurrentPresenter = SeriesPresenter; 
-            SeriesView SeriesView = new SeriesView();
-            GraphView.ShowEditorPanel(SeriesView);
-            SeriesPresenter.Attach(Graph, SeriesView, ExplorerPresenter);
+            DisplayEditorPanel();
         }
 
         /// <summary>
