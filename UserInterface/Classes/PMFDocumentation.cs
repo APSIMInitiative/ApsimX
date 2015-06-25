@@ -327,18 +327,24 @@ namespace UserInterface.Classes
         {
             string name = XmlUtilities.Value(constantNode, "Name");
             string value = XmlUtilities.Value(constantNode, "Value");
+            
 
             // Get the corresponding model.
             IModel modelForNode = GetModelForNode(constantNode);
 
             // Look for units.
             string units = string.Empty;
+            string desc = string.Empty;
             FieldInfo property = modelForNode.Parent.GetType().GetField(name, BindingFlags.NonPublic| BindingFlags.Instance);
             if (property != null)
             {
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (unitsAttribute != null)
                     units = "(" + unitsAttribute.ToString() + ")";
+                DescriptionAttribute descAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (descAttribute != null)
+                    desc = descAttribute.ToString();
+
             }
             else
             {
@@ -354,8 +360,11 @@ namespace UserInterface.Classes
             
             writer.Write(Header(name,NextLevel,null));
             writer.Write("<p>");
+            writer.Write(desc);
             writer.Write(memo);
-            writer.Write(name + " is given a constant value of " + value + " "+ units);
+            writer.Write("</p>");
+            writer.Write("<p>");
+            writer.Write(name + " is given a constant value of " + value + " "+ units+".");
             writer.WriteLine("</p>");
         }
         /// <summary>
@@ -374,12 +383,17 @@ namespace UserInterface.Classes
 
             // Look for units.
             string units = string.Empty;
+            string desc = string.Empty;
             PropertyInfo property = modelForNode.GetType().GetProperty(XmlUtilities.Value(constantNode, "Name"));
             if (property != null)
             {
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (unitsAttribute != null)
                     units = "(" + unitsAttribute.ToString() + ")";
+                DescriptionAttribute descAttribute = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (descAttribute != null)
+                    desc = descAttribute.ToString();
+
             }
 
             // Look for memo
@@ -392,6 +406,9 @@ namespace UserInterface.Classes
             writer.Write(Header(name, NextLevel, null));
             writer.Write("<p>");
             writer.Write(memo);
+            writer.Write(desc);
+            writer.Write("</p>");
+            writer.Write("<p>");
             writer.Write(name + units + " in this function uses the value given by " + variablename);
             writer.WriteLine("</p>");
         }
