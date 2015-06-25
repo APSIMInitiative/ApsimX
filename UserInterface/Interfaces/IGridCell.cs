@@ -3,6 +3,7 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+using System;
 namespace UserInterface.Interfaces
 {
     /// <summary>
@@ -33,7 +34,12 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// A drop down editor
         /// </summary>
-        DropDown
+        DropDown,
+
+        /// <summary>
+        /// A button editor
+        /// </summary>
+        Button
     }
 
     /// <summary>
