@@ -83,7 +83,7 @@ namespace Models.PMF
 
         /// <summary>The sowing data</summary>
         [XmlIgnore]
-        public SowPlant2Type SowingData;
+        public SowPlant2Type SowingData { get; set; }
 
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
