@@ -1004,7 +1004,7 @@
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
         <Command>[XoBiomass].Value = 1080</Command>
-        <Command>[bBiomass].Value = 218</Command>
+        <Command>[bBiomass].Value = 216</Command>
         <Command>[ExpectedYield].Value = 800</Command>
         <Command>[RootProportion].Value = 0.1</Command>
         <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
@@ -1030,7 +1030,7 @@
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
         <Command>[XoBiomass].Value = 1080</Command>
-        <Command>[bBiomass].Value = 218</Command>
+        <Command>[bBiomass].Value = 216</Command>
         <Command>[ExpectedYield].Value = 800</Command>
         <Command>[RootProportion].Value = 0.1</Command>
         <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
@@ -1042,12 +1042,12 @@
         <Command>[Phenology].Mature.Target.Value = 300</Command>
         <Command>[leaf].NConc.Value = 0.005</Command>
         <Command>[Product].MinimumNConc.Value = 0.005</Command>
-        <Command>[Product].MaximumNConc.Value = 0.012</Command>
+        <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
       </Cultivar>
       <Cultivar>
-        <Name>Wheat_Winter</Name>
+        <Name>Wheat_Autumn</Name>
         <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
@@ -1055,48 +1055,48 @@
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
-        <Command>[XoBiomass].Value = 2000</Command>
+        <Command>[XoBiomass].Value = 1830</Command>
         <Command>[bBiomass].Value = 399</Command>
         <Command>[ExpectedYield].Value = 1450</Command>
         <Command>[RootProportion].Value = 0.1</Command>
         <Command>[HarvestIndex].XYPairs.X = 0,1733</Command>
         <Command>[HarvestIndex].XYPairs.Y = 0.08,0.6</Command>
         <Command>[ProductDMProportion].Value = 0.87</Command>
-        <Command>[Phenology].CanopyExpanding.Target.Value = 1700</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 1785</Command>
         <Command>[Phenology].YieldIncreasing.Target.Value= 615</Command>
         <Command>[Phenology].Senescing.Target.Value = 600</Command>
         <Command>[Phenology].Mature.Target.Value = 300</Command>
         <Command>[leaf].NConc.Value = 0.005</Command>
         <Command>[Product].MinimumNConc.Value = 0.005</Command>
-        <Command>[Product].MaximumNConc.Value = 0.012</Command>
+        <Command>[Product].MaximumNConc.Value = 0.013</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
       </Cultivar>
       <Cultivar>
         <Name>Potatoes_Long</Name>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
+        <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
-        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
-        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.1, 0.0, 0.0</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 60</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
-        <Command>[XoBiomass].Value = 1080</Command>
-        <Command>[bBiomass].Value = 218</Command>
-        <Command>[ExpectedYield].Value = 800</Command>
+        <Command>[XoBiomass].Value = 1500</Command>
+        <Command>[bBiomass].Value = 330</Command>
+        <Command>[ExpectedYield].Value = 5800</Command>
         <Command>[RootProportion].Value = 0.1</Command>
-        <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
-        <Command>[HarvestIndex].XYPairs.Y = 0.14,0.6</Command>
-        <Command>[ProductDMProportion].Value = 0.87</Command>
-        <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
-        <Command>[Phenology].Senescing.Target.Value = 300</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,11000</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.84,0.97</Command>
+        <Command>[ProductDMProportion].Value = 0.22</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 652</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 1598</Command>
+        <Command>[Phenology].Senescing.Target.Value = 600</Command>
         <Command>[Phenology].Mature.Target.Value = 300</Command>
-        <Command>[leaf].NConc.Value = 0.005</Command>
-        <Command>[Product].MinimumNConc.Value = 0.005</Command>
-        <Command>[Product].MaximumNConc.Value = 0.012</Command>
-        <Command>[Root].MinimumNConc.Value = 0.009</Command>
-        <Command>[Root].MaximumNConc.Value = 0.009</Command>
+        <Command>[leaf].NConc.Value = 0.02</Command>
+        <Command>[Product].MinimumNConc.Value = 0.012</Command>
+        <Command>[Product].MaximumNConc.Value = 0.018</Command>
+        <Command>[Root].MinimumNConc.Value = 0.01</Command>
+        <Command>[Root].MaximumNConc.Value = 0.01</Command>
       </Cultivar>
       <Cultivar>
         <Name>Green_Peas</Name>
@@ -1127,39 +1127,39 @@
       <Cultivar>
         <Name>Maize_Short</Name>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
-        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
-        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
-        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
-        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
-        <Command>[XoBiomass].Value = 1080</Command>
-        <Command>[bBiomass].Value = 218</Command>
-        <Command>[ExpectedYield].Value = 800</Command>
-        <Command>[RootProportion].Value = 0.1</Command>
-        <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
-        <Command>[HarvestIndex].XYPairs.Y = 0.14,0.6</Command>
-        <Command>[ProductDMProportion].Value = 0.87</Command>
-        <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
-        <Command>[Phenology].Senescing.Target.Value = 300</Command>
-        <Command>[Phenology].Mature.Target.Value = 300</Command>
-        <Command>[leaf].NConc.Value = 0.005</Command>
-        <Command>[Product].MinimumNConc.Value = 0.005</Command>
-        <Command>[Product].MaximumNConc.Value = 0.012</Command>
-        <Command>[Root].MinimumNConc.Value = 0.009</Command>
-        <Command>[Root].MaximumNConc.Value = 0.009</Command>
-      </Cultivar>
-      <Cultivar>
-        <Name>RyeGrass_1st_year</Name>
-        <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3</Command>
-        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
-        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 900</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 180</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
-        <Command>[XoBiomass].Value = 2000</Command>
+        <Command>[XoBiomass].Value = 1620</Command>
+        <Command>[bBiomass].Value = 330</Command>
+        <Command>[ExpectedYield].Value = 1220</Command>
+        <Command>[RootProportion].Value = 0.1</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,1830</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.5,0.6</Command>
+        <Command>[ProductDMProportion].Value = 0.87</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 1486</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 614</Command>
+        <Command>[Phenology].Senescing.Target.Value = 1500</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[leaf].NConc.Value = 0.007</Command>
+        <Command>[Product].MinimumNConc.Value = 0.007</Command>
+        <Command>[Product].MaximumNConc.Value = 0.014</Command>
+        <Command>[Root].MinimumNConc.Value = 0.007</Command>
+        <Command>[Root].MaximumNConc.Value = 0.007</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Spinich</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 500</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 360</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.8</Command>
+        <Command>[XoBiomass].Value = 540</Command>
         <Command>[bBiomass].Value = 399</Command>
         <Command>[ExpectedYield].Value = 1450</Command>
         <Command>[RootProportion].Value = 0.1</Command>
@@ -3321,9 +3321,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>WinterWheat</Name>
+        <Name>AutumnWheat</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Wheat_Winter</string>
+          <string>[MCSPSowingRule].Script.CultivarName = Wheat_Autumn</string>
           <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
         </Specifications>
       </Factor>
@@ -3349,9 +3349,9 @@ namespace Models
         </Specifications>
       </Factor>
       <Factor>
-        <Name>GrassSeed</Name>
+        <Name>Spinich</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = RyeGrass_1st_year</string>
+          <string>[MCSPSowingRule].Script.CultivarName = Spinich</string>
           <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
         </Specifications>
       </Factor>
