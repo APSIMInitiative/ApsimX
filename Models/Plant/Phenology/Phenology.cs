@@ -368,27 +368,31 @@ namespace Models.PMF.Phen
 
                 if (FractionOfDayLeftOver > 0)
                 {
-                    // Transition to the next phase.
-                    if (CurrentPhaseIndex + 1 >= Phases.Count)
-                        throw new Exception("Cannot transition to the next phase. No more phases exist");
+                     while (FractionOfDayLeftOver > 0)// Transition to the next phase.
+                    {
+                        if (CurrentPhaseIndex + 1 >= Phases.Count)
+                            throw new Exception("Cannot transition to the next phase. No more phases exist");
 
-                    if (CurrentPhase is EmergingPhase)
-                        Emerged = true;
+                        if (CurrentPhase is EmergingPhase)
+                            Emerged = true;
 
-                    CurrentPhase = Phases[CurrentPhaseIndex + 1];
-                    if (GrowthStage != null)
-                        GrowthStage.Invoke();
+                        CurrentPhase = Phases[CurrentPhaseIndex + 1];
+                        if (GrowthStage != null)
+                            GrowthStage.Invoke();
 
-
-                    // Tell the new phase to use the fraction of day left.
-                    FractionOfDayLeftOver = CurrentPhase.AddTT(FractionOfDayLeftOver);
-                    Stage = CurrentPhaseIndex + 1;
+                       // run the next phase with the left over time step from the phase we have just completed
+                        FractionOfDayLeftOver = CurrentPhase.DoTimeStep(FractionOfDayLeftOver);
+                       
+                        Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+                    }
                 }
                 else
+                {
                     Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+                }
 
                 _AccumulatedTT += CurrentPhase.TTForToday;
-
+               
                 if (Emerged && PostPhenology != null)
                     PostPhenology.Invoke(this, new EventArgs());
 
