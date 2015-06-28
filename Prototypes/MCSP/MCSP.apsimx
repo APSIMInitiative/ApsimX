@@ -538,14 +538,32 @@
               <Name>TestVariable</Name>
               <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
             </VariableReference>
-            <Constant>
-              <Name>LessThan</Name>
-              <Value>2010</Value>
-            </Constant>
-            <Constant>
+            <AddFunction>
+              <Name>GrowthDuration</Name>
+              <VariableReference>
+                <Name>CanopyExpandingTT</Name>
+                <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>YieldIncreasingTT</Name>
+                <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>SenescingTT</Name>
+                <VariableName>[Phenology].Senescing.Target.Value</VariableName>
+              </VariableReference>
+            </AddFunction>
+            <DivideFunction>
               <Name>IfTrue</Name>
-              <Value>10</Value>
-            </Constant>
+              <VariableReference>
+                <Name>MaxRootDepth</Name>
+                <VariableName>[Root].MaximumRootDepth.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>GrowthDuration</Name>
+                <VariableName>[Root].RootFrontVelocity.RootFrontVelocity.GrowthDuration.Value</VariableName>
+              </VariableReference>
+            </DivideFunction>
             <Constant>
               <Name>IfFalse</Name>
               <Value>0</Value>
@@ -977,14 +995,35 @@
         </CompositeBiomass>
       </Summariser>
       <Cultivar>
-        <Name>Dash</Name>
-      </Cultivar>
-      <Cultivar>
         <Name>Barley_Spring</Name>
         <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
-        <Command>[Root].RootFrontVelocity.RootFrontVelocity.LessThan.Value = 2010</Command>
-        <Command>[Root].RootFrontVelocity.RootFrontVelocity.IfTrue.Value = 0.5</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
+        <Command>[XoBiomass].Value = 1080</Command>
+        <Command>[bBiomass].Value = 218</Command>
+        <Command>[ExpectedYield].Value = 800</Command>
+        <Command>[RootProportion].Value = 0.1</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.14,0.6</Command>
+        <Command>[ProductDMProportion].Value = 0.87</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
+        <Command>[Phenology].Senescing.Target.Value = 300</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[leaf].NConc.Value = 0.005</Command>
+        <Command>[Product].MinimumNConc.Value = 0.005</Command>
+        <Command>[Product].MaximumNConc.Value = 0.012</Command>
+        <Command>[Root].MinimumNConc.Value = 0.009</Command>
+        <Command>[Root].MaximumNConc.Value = 0.009</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Wheat_Spring</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
@@ -1011,8 +1050,110 @@
         <Name>Wheat_Winter</Name>
         <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1500</Command>
-        <Command>[Root].RootFrontVelocity.RootFrontVelocity.LessThan.Value = 3000</Command>
-        <Command>[Root].RootFrontVelocity.RootFrontVelocity.IfTrue.Value = 0.5</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
+        <Command>[XoBiomass].Value = 2000</Command>
+        <Command>[bBiomass].Value = 399</Command>
+        <Command>[ExpectedYield].Value = 1450</Command>
+        <Command>[RootProportion].Value = 0.1</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,1733</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.08,0.6</Command>
+        <Command>[ProductDMProportion].Value = 0.87</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 1700</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 615</Command>
+        <Command>[Phenology].Senescing.Target.Value = 600</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[leaf].NConc.Value = 0.005</Command>
+        <Command>[Product].MinimumNConc.Value = 0.005</Command>
+        <Command>[Product].MaximumNConc.Value = 0.012</Command>
+        <Command>[Root].MinimumNConc.Value = 0.009</Command>
+        <Command>[Root].MaximumNConc.Value = 0.009</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Potatoes_Long</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
+        <Command>[XoBiomass].Value = 1080</Command>
+        <Command>[bBiomass].Value = 218</Command>
+        <Command>[ExpectedYield].Value = 800</Command>
+        <Command>[RootProportion].Value = 0.1</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.14,0.6</Command>
+        <Command>[ProductDMProportion].Value = 0.87</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
+        <Command>[Phenology].Senescing.Target.Value = 300</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[leaf].NConc.Value = 0.005</Command>
+        <Command>[Product].MinimumNConc.Value = 0.005</Command>
+        <Command>[Product].MaximumNConc.Value = 0.012</Command>
+        <Command>[Root].MinimumNConc.Value = 0.009</Command>
+        <Command>[Root].MaximumNConc.Value = 0.009</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Green_Peas</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 700</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 60</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
+        <Command>[XoBiomass].Value = 750</Command>
+        <Command>[bBiomass].Value = 180</Command>
+        <Command>[ExpectedYield].Value = 630</Command>
+        <Command>[RootProportion].Value = 0.1</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,1200</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.45,0.45</Command>
+        <Command>[ProductDMProportion].Value = 0.21</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 707</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 400</Command>
+        <Command>[Phenology].Senescing.Target.Value = 200</Command>
+        <Command>[Phenology].Mature.Target.Value = 100</Command>
+        <Command>[leaf].NConc.Value = 0.03</Command>
+        <Command>[Product].MinimumNConc.Value = 0.03</Command>
+        <Command>[Product].MaximumNConc.Value = 0.035</Command>
+        <Command>[Root].MinimumNConc.Value = 0.015</Command>
+        <Command>[Root].MaximumNConc.Value = 0.015</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Maize_Short</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
+        <Command>[XoBiomass].Value = 1080</Command>
+        <Command>[bBiomass].Value = 218</Command>
+        <Command>[ExpectedYield].Value = 800</Command>
+        <Command>[RootProportion].Value = 0.1</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,1150</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.14,0.6</Command>
+        <Command>[ProductDMProportion].Value = 0.87</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 1000</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 500</Command>
+        <Command>[Phenology].Senescing.Target.Value = 300</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[leaf].NConc.Value = 0.005</Command>
+        <Command>[Product].MinimumNConc.Value = 0.005</Command>
+        <Command>[Product].MaximumNConc.Value = 0.012</Command>
+        <Command>[Root].MinimumNConc.Value = 0.009</Command>
+        <Command>[Root].MaximumNConc.Value = 0.009</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>RyeGrass_1st_year</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 1500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
@@ -1433,7 +1574,7 @@
       <Manager>
         <Name>MCSPSowingRule</Name>
         <Script>
-          <CultivarName>Wheat_Winter</CultivarName>
+          <CultivarName>Green_Peas</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
           <SowingDate>1998-10-14</SowingDate>
         </Script>
@@ -3145,7 +3286,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -3157,7 +3298,7 @@ namespace Models
           <FieldName>MCSP.Phenology.Stage</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -3173,9 +3314,9 @@ namespace Models
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>SpringBarley</Name>
+        <Name>SpringWheat</Name>
         <Specifications>
-          <string>[MCSPSowingRule].Script.CultivarName = Barley_Spring</string>
+          <string>[MCSPSowingRule].Script.CultivarName = Wheat_Spring</string>
           <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
         </Specifications>
       </Factor>
@@ -3183,6 +3324,34 @@ namespace Models
         <Name>WinterWheat</Name>
         <Specifications>
           <string>[MCSPSowingRule].Script.CultivarName = Wheat_Winter</string>
+          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Potatoes</Name>
+        <Specifications>
+          <string>[MCSPSowingRule].Script.CultivarName = Potatoes_Long</string>
+          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Peas</Name>
+        <Specifications>
+          <string>[MCSPSowingRule].Script.CultivarName = Green_Peas</string>
+          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Maize</Name>
+        <Specifications>
+          <string>[MCSPSowingRule].Script.CultivarName = Maize_Short</string>
+          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>GrassSeed</Name>
+        <Specifications>
+          <string>[MCSPSowingRule].Script.CultivarName = RyeGrass_1st_year</string>
           <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
         </Specifications>
       </Factor>
