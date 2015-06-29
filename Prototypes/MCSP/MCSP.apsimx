@@ -1055,7 +1055,7 @@
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
-        <Command>[XoBiomass].Value = 1830</Command>
+        <Command>[XoBiomass].Value = 1900</Command>
         <Command>[bBiomass].Value = 399</Command>
         <Command>[ExpectedYield].Value = 1450</Command>
         <Command>[RootProportion].Value = 0.1</Command>
@@ -1160,19 +1160,19 @@
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.8</Command>
         <Command>[XoBiomass].Value = 540</Command>
-        <Command>[bBiomass].Value = 399</Command>
-        <Command>[ExpectedYield].Value = 1450</Command>
+        <Command>[bBiomass].Value = 90</Command>
+        <Command>[ExpectedYield].Value = 2200</Command>
         <Command>[RootProportion].Value = 0.1</Command>
-        <Command>[HarvestIndex].XYPairs.X = 0,1733</Command>
-        <Command>[HarvestIndex].XYPairs.Y = 0.08,0.6</Command>
-        <Command>[ProductDMProportion].Value = 0.87</Command>
-        <Command>[Phenology].CanopyExpanding.Target.Value = 1700</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 615</Command>
-        <Command>[Phenology].Senescing.Target.Value = 600</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,3300</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.7,0.7</Command>
+        <Command>[ProductDMProportion].Value = 0.05</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 436</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 1664</Command>
+        <Command>[Phenology].Senescing.Target.Value = 900</Command>
         <Command>[Phenology].Mature.Target.Value = 300</Command>
-        <Command>[leaf].NConc.Value = 0.005</Command>
-        <Command>[Product].MinimumNConc.Value = 0.005</Command>
-        <Command>[Product].MaximumNConc.Value = 0.012</Command>
+        <Command>[leaf].NConc.Value = 0.015</Command>
+        <Command>[Product].MinimumNConc.Value = 0.015</Command>
+        <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
       </Cultivar>
@@ -1574,7 +1574,7 @@
       <Manager>
         <Name>MCSPSowingRule</Name>
         <Script>
-          <CultivarName>Green_Peas</CultivarName>
+          <CultivarName>Potatoes_Long</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
           <SowingDate>1998-10-14</SowingDate>
         </Script>
@@ -1802,7 +1802,7 @@ namespace Models
         <Name>operations</Name>
         <Operation>
           <Date>1998-10-15T00:00:00</Date>
-          <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 10);</Action>
+          <Action>[Fertiliser].Apply(200, Fertiliser.Types.UreaN, 10);</Action>
         </Operation>
         <Operation>
           <Date>1998-10-02T00:00:00</Date>
@@ -3149,7 +3149,7 @@ namespace Models
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
+        <Cumulative>false</Cumulative>
       </Series>
       <Series>
         <Title>Series2</Title>
@@ -3176,7 +3176,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-32704</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
         <X>
@@ -3951,7 +3951,7 @@ namespace Models
           <Name>operations</Name>
           <Operation>
             <Date>1998-10-15T00:00:00</Date>
-            <Action>[Fertiliser].Apply(50, Fertiliser.Types.UreaN, 10);</Action>
+            <Action>[Fertiliser].Apply(200, Fertiliser.Types.UreaN, 10);</Action>
           </Operation>
           <Operation>
             <Date>1998-10-02T00:00:00</Date>
@@ -5546,6 +5546,55 @@ namespace Models
         <Y>
           <TableName>Report</TableName>
           <FieldName>MCSP.Summariser.Total.Wt</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>BottomRight</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>CropN</Name>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Cover </Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Cover</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>MCSP.Summariser.Total.N</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
