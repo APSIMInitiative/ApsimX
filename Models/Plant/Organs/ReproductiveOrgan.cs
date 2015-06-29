@@ -150,8 +150,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            Number = NumberFunction.Value;
-            MaximumSize = MaximumPotentialGrainSize.Value;
+            if (Plant.IsAlive)
+            {
+                Number = NumberFunction.Value;
+                MaximumSize = MaximumPotentialGrainSize.Value;
+            }
         }
 
         /// <summary>Called when crop is ending</summary>

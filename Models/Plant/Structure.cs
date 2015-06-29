@@ -426,7 +426,10 @@ namespace Models.PMF
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             //Set PlantTotalNodeNo    
-            PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
+            if (Plant.IsAlive)
+            {
+                PlantTotalNodeNo = Leaf.PlantAppearedLeafNo / Plant.Population;
+            }
         }
         #endregion
 
