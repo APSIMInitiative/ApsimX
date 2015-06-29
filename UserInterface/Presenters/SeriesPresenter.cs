@@ -61,6 +61,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
             this.dataStore = graph.DataStore;
 
+            ConnectViewEvents();
             // Populate the series names.
             PopulateSeriesNames();
 

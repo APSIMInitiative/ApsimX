@@ -31,7 +31,14 @@ namespace Models.Core
             /// <summary>
             /// A cultivar name editor.
             /// </summary>
-            CultivarName
+            CultivarName,
+
+            /// <summary>
+            /// A file name editor.
+            /// </summary>
+            FileName
+
+
         }
 
         /// <summary>

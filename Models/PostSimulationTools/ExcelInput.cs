@@ -21,28 +21,27 @@ namespace Models.PostSimulationTools
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ExcelInput : Model, IPostSimulationTool
     {
+        private string _filename;
+
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this. 
-        /// </summary>
-        [XmlIgnore]
         [Description("EXCEL file name")]
-        public string FullFileName
+        [Display(DisplayType=DisplayAttribute.DisplayTypeEnum.FileName)]
+        public string FileName
         {
             get
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
+                return this._filename;
             }
 
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                if (simulations != null && simulations.FileName != null)
+                    this._filename = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    this._filename = value;
             }
         }
 
@@ -63,13 +62,23 @@ namespace Models.PostSimulationTools
             }
         }
 
+        /// <summary>Gets the absolute file name.</summary>
+        private string AbsoluteFileName
+        {
+            get
+            {
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
+            }
+        }
+
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
         /// <param name="dataStore">The data store to store the data</param>
         public void Run(DataStore dataStore)
         {
-            string fullFileName = FullFileName;
+            string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
             {
                 dataStore.DeleteTable(this.Name);

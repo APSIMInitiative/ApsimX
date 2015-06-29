@@ -259,6 +259,16 @@ namespace UserInterface.Presenters
             return this.view.AskUserForFolder(prompt);
         }
 
+        /// <summary>A helper function that asks user for a filename.</summary>
+        /// <param name="prompt">Prompt string</param>
+        /// <returns>
+        /// Returns the selected folder or null if action cancelled by user.
+        /// </returns>
+        public string AskUserForFile(string prompt)
+        {
+            return this.view.AskUserForFile(prompt);
+        }
+
         /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
         public void SelectNode(string nodePath)

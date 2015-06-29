@@ -141,7 +141,7 @@ namespace Models
         public void WriteMessage(IModel model, string message)
         {
             string modelFullPath = Apsim.FullPath(model);
-            string relativeModelPath = modelFullPath.Replace(Apsim.FullPath(Simulation) + ".", string.Empty);
+            string relativeModelPath = modelFullPath.Replace(Apsim.FullPath(Simulation) + ".", string.Empty).TrimStart(".".ToCharArray());
                 
             DataRow newRow = this.messagesTable.NewRow();
             newRow["ComponentName"] = relativeModelPath;
@@ -191,9 +191,16 @@ namespace Models
                 {
                     // Work out the column 1 text.
                     string modelName = (string)row[1];
-                    DateTime date = (DateTime)row[2];
-                    string col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
-
+                    
+                    string col1Text;
+                    if (row[2].GetType() == typeof(DateTime))
+                    {
+                        DateTime date = (DateTime)row[2];
+                        col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
+                    }
+                    else
+                        col1Text = row[2].ToString();
+                    
                     // If the date and model name have changed then write a row.
                     if (col1Text != previousCol1Text)
                     {
@@ -227,6 +234,10 @@ namespace Models
                     }
 
                     previousMessage += "\r\n";
+                }
+                if (previousMessage != null)
+                {
+                    messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage });
                 }
             }
 

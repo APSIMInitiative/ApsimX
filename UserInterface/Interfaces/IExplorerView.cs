@@ -201,6 +201,12 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <returns>Returns the selected folder or null if action cancelled by user.</returns>
         string AskUserForFolder(string prompt);
+        
+        /// <summary>
+        /// A helper function that asks user for a file.
+        /// </summary>
+        /// <returns>Returns the selected file or null if action cancelled by user.</returns>
+        string AskUserForFile(string prompt);
 
         /// <summary>
         /// Add a status message. A message of null will clear the status message.

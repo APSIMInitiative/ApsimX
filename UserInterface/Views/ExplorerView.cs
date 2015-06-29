@@ -310,6 +310,20 @@ namespace UserInterface.Views
                 return null;
         }
 
+        /// <summary>A helper function that asks user for a file.</summary>
+        /// <param name="prompt"></param>
+        /// <returns>
+        /// Returns the selected file or null if action cancelled by user.
+        /// </returns>
+        public string AskUserForFile(string prompt)
+        {
+            openFileDialog.Title = prompt;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+                return openFileDialog.FileName;
+            else
+                return null;
+        }
+
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>

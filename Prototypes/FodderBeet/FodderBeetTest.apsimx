@@ -2342,7 +2342,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       </Summary>
       <Weather>
         <Name>Weather</Name>
-        <FileName>C:\ApsimX\Prototypes\FodderBeet\Weather\lincoln from 2014.met</FileName>
+        <FileName>%root%\Prototypes\FodderBeet\Weather\lincoln from 2014.met</FileName>
       </Weather>
       <Zone>
         <Name>paddock</Name>

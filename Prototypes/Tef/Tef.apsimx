@@ -1776,9 +1776,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>ExpansionStress</Name>
             <Value>1</Value>
           </Constant>
-          <StartStage>5.2</StartStage>
-          <GrowthDuration>120</GrowthDuration>
-          <MaximumOrganWt>25</MaximumOrganWt>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -1841,9 +1838,6 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>ExpansionStress</Name>
             <Value>1</Value>
           </Constant>
-          <StartStage>5.5</StartStage>
-          <GrowthDuration>300</GrowthDuration>
-          <MaximumOrganWt>25</MaximumOrganWt>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
@@ -2156,7 +2150,6 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
         <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.Value = 120</Command>
         <Command>[Phenology].GrainFilling.Target.Value = 530</Command>
-        <Command>[Rachis].DMDemandFunction.MaximumOrganWt = 14</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.X = 0, 14</Command>
         <Command>[Grain].NumberFunction.KernalsPerCob.XYPairs.Y = 0, 405</Command>
       </Cultivar>
@@ -3400,9 +3393,6 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
             <Name>ExpansionStress</Name>
             <Value>1</Value>
           </Constant>
-          <StartStage>5.2</StartStage>
-          <GrowthDuration>453</GrowthDuration>
-          <MaximumOrganWt>0.7</MaximumOrganWt>
         </PopulationBasedDemandFunction>
         <Biomass>
           <Name>Live</Name>
