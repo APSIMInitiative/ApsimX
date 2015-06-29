@@ -605,35 +605,6 @@
       </Root>
       <SimpleLeaf>
         <Name>Leaf</Name>
-        <XYPairs>
-          <Name>FT</Name>
-          <X>
-            <double>5</double>
-            <double>20</double>
-            <double>25</double>
-            <double>40</double>
-          </X>
-          <Y>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-          </Y>
-        </XYPairs>
-        <XYPairs>
-          <Name>FVPD</Name>
-          <X>
-            <double>0</double>
-            <double>10</double>
-            <double>50</double>
-          </X>
-          <Y>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </Y>
-        </XYPairs>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -811,40 +782,9 @@
           </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
-          <Name>FRGRFunction</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>HeightFunction</Name>
-          <Value>150</Value>
-        </Constant>
-        <Constant>
           <Name>ExtinctionCoefficientFunction</Name>
           <Value>0.5</Value>
         </Constant>
-        <DeltaFunction>
-          <Name>PotentialBiomass</Name>
-          <SigmoidFunction2>
-            <Name>Integral</Name>
-            <VariableReference>
-              <Name>Ymax</Name>
-              <VariableName>[Ymax].Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>XValue</Name>
-              <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>Xo</Name>
-              <VariableName>[XoBiomass].Value</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>b</Name>
-              <VariableName>[bBiomass].Value</VariableName>
-            </VariableReference>
-          </SigmoidFunction2>
-          <StartStageName>Emergence</StartStageName>
-        </DeltaFunction>
         <PhaseLookupValue>
           <Name>NitrogenDemandSwitch</Name>
           <Constant>
@@ -854,6 +794,783 @@
           <Start>Emergence</Start>
           <End>StartSenescence</End>
         </PhaseLookupValue>
+        <LinearInterpolationFunction>
+          <Name>HeightFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>HarvestIndex</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>HarvestIndex</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>HarvestIndex</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>HeightFunction</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>HeightFunction</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>HeightFunction</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <X>
+              <double>3</double>
+              <double>5</double>
+              <double>6</double>
+            </X>
+            <Y>
+              <double>100</double>
+              <double>800</double>
+              <double>1200</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Phenology].Stage</XProperty>
+        </LinearInterpolationFunction>
+        <AirTemperatureFunction>
+          <Name>FRGRFunction</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>FRGRFunction</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Graph</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Y</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title>X</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Series>
+                <Title>FRGRFunction</Title>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-65536</ColourArgb>
+                <Marker>None</Marker>
+                <Line>Solid</Line>
+                <X>
+                  <FieldName>[XYPairs].X</FieldName>
+                </X>
+                <Y>
+                  <FieldName>[XYPairs].Y</FieldName>
+                </Y>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <ShowInLegend>true</ShowInLegend>
+                <Cumulative>false</Cumulative>
+              </Series>
+              <LegendPosition>BottomRight</LegendPosition>
+              <ShowRegressionLine>false</ShowRegressionLine>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <X>
+              <double>0</double>
+              <double>10</double>
+              <double>25</double>
+              <double>40</double>
+            </X>
+            <Y>
+              <double>0</double>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+        </AirTemperatureFunction>
+        <MultiplyFunction>
+          <Name>PotentialBiomass</Name>
+          <DeltaFunction>
+            <Name>PotentialBiomass</Name>
+            <SigmoidFunction2>
+              <Name>Integral</Name>
+              <VariableReference>
+                <Name>Ymax</Name>
+                <VariableName>[Ymax].Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>XValue</Name>
+                <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>Xo</Name>
+                <VariableName>[XoBiomass].Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>b</Name>
+                <VariableName>[bBiomass].Value</VariableName>
+              </VariableReference>
+            </SigmoidFunction2>
+            <StartStageName>Emergence</StartStageName>
+          </DeltaFunction>
+          <LinearInterpolationFunction>
+            <Name>WaterStressFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>HarvestIndex</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>HarvestIndex</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>HarvestIndex</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>HeightFunction</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>HeightFunction</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>HeightFunction</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>WaterStressFactor</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>WaterStressFactor</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>WaterStressFactor</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <X>
+                <double>0</double>
+                <double>0.1</double>
+                <double>0.7</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fw</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <BiomassYesterday>0</BiomassYesterday>
         <LAI>0</LAI>
         <Height>0</Height>
@@ -6143,6 +6860,7 @@ namespace Models
             {      
                [Link] Plant MCSP;
                [Link] Clock Clock;
+               [Link] Fertiliser Fert;
 
                [Description("Cultivar")]
                public string CultivarName { get; set; }
@@ -6169,7 +6887,10 @@ namespace Models
 				
 				//if (Clock.Today.Date == SowingDate)
                 if((SowingDate.Month == Clock.Today.Month) && (SowingDate.Day == Clock.Today.Day) && MCSP.IsAlive == false)
+                    {
                     MCSP.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
+                    Fert.Apply(500, Fertiliser.Types.UreaN, 10);
+                    }
                 //PMFCrop.Sow(... Contains the following arguements:
                 //Population  double  Optional  Seeds sowing/m2.  Default is zero
                 //Cultivar    string  Required  "NameOfCultivar"
@@ -6371,57 +7092,6 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Operations>
-          <Name>operations</Name>
-          <Operation>
-            <Date>1998-10-15T00:00:00</Date>
-            <Action>[Fertiliser].Apply(200, Fertiliser.Types.UreaN, 10);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-10-02T00:00:00</Date>
-            <Action>[Irrigation].Apply(40);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-10-26T00:00:00</Date>
-            <Action>[Irrigation].Apply(70);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-12-15T00:00:00</Date>
-            <Action>[Irrigation].Apply(70);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-12-29T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-12-30T00:00:00</Date>
-            <Action>[Irrigation].Apply(55);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-01-07T00:00:00</Date>
-            <Action>[Irrigation].Apply(50);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-01-21T00:00:00</Date>
-            <Action>[Irrigation].Apply(40);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-02-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(28);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-02-19T00:00:00</Date>
-            <Action>[Irrigation].Apply(15);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-03-09T00:00:00</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-12-29T00:00:00</Date>
-            <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-          </Operation>
-        </Operations>
         <Report>
           <Name>Report</Name>
           <VariableNames>
@@ -6432,12 +7102,6 @@ namespace Models
             <string>[ExtraVariables].Script.AccumFert</string>
             <string>[ExtraVariables].Script.AccumLeach</string>
             <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-            <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-            <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-            <string>[ExtraVariables].Script.SWC</string>
-            <string>[ExtraVariables].Script.DUL</string>
-            <string>[ExtraVariables].Script.OutFlowLat</string>
             <string>[ExtraVariables].Script.AccumEO</string>
             <string>[ExtraVariables].Script.AccumEP</string>
             <string>[ExtraVariables].Script.AccumES</string>
@@ -6445,66 +7109,18 @@ namespace Models
             <string>[ExtraVariables].Script.AccumRunoff</string>
             <string>[ExtraVariables].Script.AccumRainfall</string>
             <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[ExtraVariables].Script.AccumOutflowLat</string>
-            <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-            <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-            <string>[ExtraVariables].Script.FomN</string>
-            <string>[ExtraVariables].Script.HumN</string>
-            <string>[ExtraVariables].Script.BiomN</string>
-            <string>[ExtraVariables].Script.DltNMinRes</string>
-            <string>[ExtraVariables].Script.DltNMinTot</string>
-            <string>[MicroClimate].net_radn</string>
-            <string>[MicroClimate].peta</string>
-            <string>[MicroClimate].petr</string>
-            <string>[Soil].SoilWater.Drainage</string>
-            <string>[Soil].SoilWater.Runoff</string>
-            <string>[Soil].SoilWater.Eo</string>
-            <string>[Soil].SoilWater.Es</string>
-            <string>[Soil].SoilWater.pond</string>
-            <string>[Soil].SoilWater.SWmm</string>
-            <string>[Soil].NO3N</string>
             <string>[MCSP].Leaf.Live.Wt</string>
             <string>[MCSP].Root.Live.Wt</string>
             <string>[MCSP].Product.Live.Wt</string>
             <string>[MCSP].Leaf.Live.N</string>
             <string>[MCSP].Root.Live.N</string>
             <string>[MCSP].Product.Live.N</string>
-            <string>[MCSP].Leaf.Live.NConc</string>
-            <string>[MCSP].Root.Live.NConc</string>
-            <string>[MCSP].Product.Live.NConc</string>
-            <string>[MCSP].Root.WaterSupply</string>
-            <string>[MCSP].Root.WaterUptake</string>
-            <string>[MCSP].Leaf.Transpiration</string>
-            <string>[MCSP].Leaf.WaterDemand</string>
-            <string>[MCSP].Root.Depth</string>
-            <string>[MCSP].Leaf.CoverTotal</string>
-            <string>[MCSP].Leaf.CoverDead</string>
-            <string>[MCSP].Leaf.LAI</string>
-            <string>[MCSP].Leaf.Height</string>
-            <string>[MCSP].Leaf.PotentialBiomass.Value</string>
             <string>[MCSP].Product.LiveFWt</string>
-            <string>[MCSP].Arbitrator.NDemand</string>
-            <string>[MCSP].Arbitrator.NSupply</string>
-            <string>[MCSP].Leaf.Fw</string>
-            <string>[MCSP].Leaf.Fn</string>
             <string>[MCSP].Summariser.Total.Wt</string>
-            <string>[MCSP].ExpectedYield.Value</string>
-            <string>[MCSP].DryYield.Value</string>
-            <string>[MCSP].TotalBiomassAtStartReproductive.Value</string>
-            <string>[MCSP].TotalBiomassAtStartSenescence.Value</string>
-            <string>[MCSP].Ymax.Value</string>
             <string>[MCSP].Summariser.Total.N</string>
-            <string>[MCSP].Arbitrator.DMSupply</string>
-            <string>[MCSP].Arbitrator.DMDemand</string>
-            <string>[MCSP].Phenology.AccumulatedThermalTime.Value</string>
-            <string>[MCSP].Arbitrator.DMSinkLimitation</string>
-            <string>[MCSP].Arbitrator.DMNutrientLimitation</string>
-            <string>[MCSP].Phenology.ThermalTime.Value</string>
-            <string>[MCSP].Phenology.CurrentPhaseName</string>
-            <string>[MCSP].Phenology.Stage</string>
           </VariableNames>
           <EventNames>
-            <string>[Clock].DoReport</string>
+            <string>[MCSP].Harvesting</string>
           </EventNames>
         </Report>
         <Graph>
@@ -8112,7 +8728,7 @@ namespace Models
         <Line>Solid</Line>
         <X>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
+          <FieldName>Clock.Today</FieldName>
         </X>
         <Y>
           <TableName>Report</TableName>
@@ -8122,7 +8738,7 @@ namespace Models
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
-      <LegendPosition>BottomRight</LegendPosition>
+      <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
