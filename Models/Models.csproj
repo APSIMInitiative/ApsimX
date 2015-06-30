@@ -77,6 +77,8 @@
     <Compile Include="AgPasture.cs" />
     <Compile Include="AgPasture\AgPasture1.Sward.cs" />
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
+    <Compile Include="Agroforestry\LocalMicroClimate.cs" />
+    <Compile Include="Agroforestry\StaticForestrySystem.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
@@ -317,6 +319,8 @@
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
+    <Compile Include="Zones\CircularZone.cs" />
+    <Compile Include="Zones\RectangularZone.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
