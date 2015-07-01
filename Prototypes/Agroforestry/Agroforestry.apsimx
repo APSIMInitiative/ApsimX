@@ -39,9 +39,11 @@
         <Code><![CDATA[using System;
 using System.Collections.Generic;
 using Models.Core;
+using Models.Agroforestry;
 using Models.PMF.OldPlant;
 using Models.Soils;
 using Models.Utilities;
+using Models.Zones;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -7163,6 +7165,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SoilWater</Name>
@@ -7205,6 +7208,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SoilNO3N</Name>
@@ -7247,6 +7251,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DailyBiomass</Name>
@@ -7289,6 +7294,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DailyWheatEP</Name>
@@ -7331,6 +7337,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Yield vs Distance</Name>
@@ -7373,6 +7380,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>
@@ -7422,6 +7430,7 @@ namespace Models
     <LegendPosition>TopLeft</LegendPosition>
     <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Simulation>
     <Name>Single Tree Example</Name>
@@ -7461,9 +7470,11 @@ namespace Models
         <Code><![CDATA[using System;
 using System.Collections.Generic;
 using Models.Core;
+using Models.Agroforestry;
 using Models.PMF.OldPlant;
 using Models.Soils;
 using Models.Utilities;
+using Models.Zones;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -10106,6 +10117,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SoilWater</Name>
@@ -10148,6 +10160,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SoilNO3N</Name>
@@ -10190,6 +10203,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DailyBiomass</Name>
@@ -10232,6 +10246,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DailyWheatEP</Name>
@@ -10274,6 +10289,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Yield vs Distance</Name>
@@ -10316,6 +10332,7 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Area>0</Area>
     <Slope>0</Slope>

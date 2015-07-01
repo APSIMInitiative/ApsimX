@@ -8,9 +8,9 @@ using System.Xml.Serialization;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
+using Models.Zones;
 
-
-namespace Models
+namespace Models.Agroforestry
 {
     /// <summary>
     /// A simple agroforestry model

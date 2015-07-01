@@ -2,7 +2,7 @@
 using Models.Core;
 using Models.PMF;
 using Models.Interfaces;
-namespace Models
+namespace Models.Agroforestry
 {
     /// <summary>
     /// Class to calculate and communicate local microclimate in agroforestry systems

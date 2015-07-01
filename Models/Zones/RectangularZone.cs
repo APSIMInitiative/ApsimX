@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using Models.Core;
+using Models.Agroforestry;
 
-namespace Models.Core
+namespace Models.Zones
 {
     /// <summary>A rectangular zone.</summary>
     [Serializable]
