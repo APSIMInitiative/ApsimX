@@ -44,6 +44,8 @@ namespace Models.Core
         [XmlElement(typeof(Zone))]
         [XmlElement(typeof(Model))]
         [XmlElement(typeof(ModelCollectionFromResource))]
+        [XmlElement(typeof(Models.Agroforestry.LocalMicroClimate))]
+        [XmlElement(typeof(Models.Agroforestry.StaticForestrySystem))]
         [XmlElement(typeof(Models.Graph.Graph))]
         [XmlElement(typeof(Models.PMF.Plant))]
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
@@ -197,6 +199,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
+        [XmlElement(typeof(Models.Zones.CircularZone))]
+        [XmlElement(typeof(Models.Zones.RectangularZone))]
         public List<Model> Children { get; set; }
 
         /// <summary>

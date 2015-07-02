@@ -627,6 +627,9 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\StaticForestrySystem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\FieldPea.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NodeNumberPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilArbitrator.png" />
@@ -721,6 +724,8 @@
     <EmbeddedResource Include="Resources\MenuImages\Export to HTML.png" />
     <EmbeddedResource Include="Resources\MenuImages\Save.png" />
     <EmbeddedResource Include="Resources\MenuImages\Help.png" />
+    <EmbeddedResource Include="Resources\PresenterPictures\CircularZone.png" />
+    <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
     <Content Include="Resources\success.wav" />
   </ItemGroup>
   <ItemGroup>
