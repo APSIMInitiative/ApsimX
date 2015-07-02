@@ -14,8 +14,8 @@
   </Cultivar>
   <Cultivar>
     <Name>Nigeria_IRHO</Name>
-    <Command>[BunchSizeMax].XYPairs.X = 0, 1,3,7,11,15</Command>
-    <Command>[BunchSizeMax].XYPairs.Y = 0, 53,265,7000,11600,12750</Command>
+    <Command>[BunchSizeMax].XYPairs.X = 0, 1,3,7,12,16</Command>
+    <Command>[BunchSizeMax].XYPairs.Y = 0, 53,265,7000,10000,11000</Command>
     <Command>[FrondAppearanceRate].XYPairs.X =     0,    2,     5,   10,   15</Command>
     <Command>[FrondAppearanceRate].XYPairs.Y =  10.1,  7.7,   10.1,  11,   11</Command>    
   </Cultivar>
@@ -420,39 +420,69 @@
   
     <Memo>
       <Name>Reference List</Name>
-      <MemoText><![CDATA[
+      <MemoText>
+        <![CDATA[
+<html><body>
+<h2>References</h2>      
 Alton, P.B., North, P.R., Los, S.O., 2007. The impact of diffuse sunlight on canopy light-use efficiency, gross photosynthetic product and net ecosystem exchange in three forest biomes. Global Change Biology 13(4) 776-787.
+<br/>
 Araujo, L.C., Santos, P.M., Rodriguez, D., Pezzopane, J.R.M., Oliveira, P.P.A., Cruz, P.G., 2013. Simulating Guinea Grass Production: Empirical and Mechanistic Approaches. Agronomy Journal 105(1) 61-69.
+<br/>
 Banabas, M., 2007. Study of Nitrogen loss pathways in oil palm (Elaeis guineensis Jacq.) growing agro-ecosystems in volcanic ash soils in Papua New Guinea, Soil Science. Massey University: Palmerston North, New Zealand.
+<br/>
 Banabas, M., Scotter, D.R., Turner, M.A., 2008a. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 2. Nitrogen transformations and leaching, and a residence time model. Australian Journal of Soil Research 46(4) 340-347.
+<br/>
 Banabas, M., Turner, M.A., Scotter, D.R., Nelson, P.N., 2008b. Losses of nitrogen fertiliser under oil palm in Papua New Guinea: 1. Water balance, and nitrogen in soil solution and runoff. Australian Journal of Soil Research 46(4) 332-339.
+<br/>
 Breure, C.J., 1988a. The effect of different planting densities on yield trends in oil palm. Experimental Agriculture 24(1) 37-52.
+<br/>
 Breure, C.J., 1988b. The effect of palm age and planting density on the partitioning of assimilates in oil palm (Elaeis-guineensis). Experimental Agriculture 24(1) 53-66.
+<br/>
 Brown, H.E., Huth, N.I., Holzworth, D.P., Teixeira, E.I., Zyskowski, R.F., Hargreaves, J.N.G., Moot, D.J., these proceedings. Plant Modelling Framework: Software for building and running crop models on the APSIM platform. Environmental Modelling and Software.
+<br/>
 Carr, M.K.V., 2011. The water relations and irrigation requirements of oil palm (Elaeis guineensis): A review. Experimental Agriculture 47(4) 629-652.
+<br/>
 Combres, J.-C., Pallas, B., Rouan, L., Mialet-Serra, I., Caliman, J.-P., Braconnier, S., Soulie, J.-C., Dingkuhn, M., 2013. Simulation of inflorescence dynamics in oil palm and estimation of environment-sensitive phenological phases: a model based analysis. Functional Plant Biology 40(3) 263-279.
+<br/>
 Corley, R.H.V., Hardon, J.J., Tan, G.Y., 1971. Analysis of growth of oil palm (Elaeis-guineensis Jacq) .1. Estimation of growth parameters and application in breeding. Euphytica 20(2) 307-315.
+<br/>
 Goh, K.J., 2005. Fertilizer recommendation systems for oil palm: estimating the fertilizer rates.
+<br/>
 Henson, I.E., Dolmat, M.T., 2003. Physiological analysis of an oil palm density trial on a peat soil. Journal of Oil Palm Research 15(2) 1-27.
+<br/>
 Henson, I.E., Yahya, Z., Noor, M.R.M., Harun, M.H., Mohammed, A.T., 2007. Predicting soil water status, evapotranspiration, growth and yield of young oil palm in a seasonally dry region of Malaysia. Journal of Oil Palm Research 19 398-415.
+<br/>
 Jones, L.H., 1997. The effects of leaf pruning and other stresses on sex determination in the oil palm and their representation by a computer model. Journal of Theoretical Biology 187 241-260.
+<br/>
 Keshvadi, A., Bin Endan, J., Harun, H., Ahmad, D., Saleena, F., 2012. The reflection of moisture content on palm oil development during the ripening process of fresh fruits. Journal of Food Agriculture and Environment 10(1) 203-209.
+<br/>
 Nelson, P.N., Banabas, M., Scotter, D.R., Webb, M.J., 2006. Using soil water depletion to measure spatial distribution of root activity in oil palm (Elaeis guineensis Jacq.) plantations. Plant and Soil 286(1-2) 109-121.
+<br/>
 Nelson, P.N., Webb, M.J., Banabas, M., Nake, S., Goodrick, I., Gordon, J., O'Grady, D., Dubos, B., 2014. Methods to account for tree-scale variability in soil- and plant-related parameters in oil palm plantations. Plant and Soil 374(1-2) 459-471.
+<br/>
 Nelson, P.N., Webb, M.J., Orrell, I., van Rees, H., Banabas, M., Berthelsen, S., Sheaves, M., Bakani, F., Pukam, O., Hoare, M., Griffiths, W., King, G., Carberry, P., Pipai, R., McNeill, A., Meekers, P., Lord, S., Butler, J., Pattison, T., Armour, J., Dewhurst, C., 2010. Environmental sustainability of oil palm cultivation in Papua New Guinea. Australian Centre for International Agricultural Research, Canberra, Australia.
+<br/>
 Nelson, R.A., Cramb, R.A., Mamicpic, M.A., 1998. Erosion/productivity modelling of maize farming in the Philippine uplands part III: Economic analysis of alternative farming methods. Agricultural Systems 58(2) 165-183.
+<br/>
 Pipai, R., 2013. Biological Nitrogen Fixation By Cover Legumes Under Oil Palm Plantations In Papua New Guinea, School of Agriculture, Food and Wine. Faculty of Sciences. The University of Adelaide: Australia.
+<br/>
 Priestley, C.H.B., Taylor, R.J., 1972. On the assessment of surface heat flux and evaporation using large scale parameters. Monthly Weather Review 100 81-92.
+<br/>
 Robertson, M.J., Carberry, P.S., Huth, N.I., Turpin, J.E., Probert, M.E., Poulton, P.L., Bell, M., Wright, G.C., Yeates, S.J., Brinsmead, R.B., 2002. Simulation of growth and development of diverse legume species in APSIM. Australian Journal of Agricultural Research 53 429-446.
+<br/>
 Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling and Software 35 163-170.
+<br/>
 Schultz, H.R., 1992. An empirical model for the simulation of leaf appearance and leaf area development of promary shoots of several grapevine (Vitis-vinifera L) canopy systems. Scientia Horticulturae 52(3) 179-200.
+<br/>
 Sheil, D., Casson, A., Meijaard, E., van Noordwijk, M., Gaskell, J., Sunderland-Groves, J., Wertz, K., Kanninen, M., 2009. The Impacts and Opportunities of Oil Palm in Southeast Asia: What Do We Know and What Do We Need to Know? , Occasional Paper. Center for International Forestry Research: Bogor, Indonesia.
+<br/>
 van Kraalingen, D.W.G., Breure, C.J., Spitters, C.J.T., 1989. Simulation of oil palm growth and yield. Agricultural and Forest Meteorology 46(3) 227-244.
+<br/>
 Van Noordwijk, M., Lusiana, B., Khasanah, N., Mulia, R., 2011. WaNuLCAS version 4.0: Background on a model of water, nutrient and light capture in agroforestry systems. World Agroforestry Centre (ICRAF): Bogor, Indonesia, p. 224.
-von Uexküll, H., Henson, I.E., Fairhurst, T., 2003. Canopy management to optimize yield, In: Fairhurst, T., Härdter, R. (Eds.), The Oil Palm – Management for Large and Sustainable Yields. Potash and Phosphate Institute of Canada, Potash and Phosphate Institute, International Potash Institute: Singapore, pp. 163-180.
+<br/>
+von Uexküll, H., Henson, I.E., Fairhurst, T., 2003. Canopy management to optimize yield, In: Fairhurst, T., Härdter, R. (Eds.), The Oil Palm – Management for Large and Sustainable Yields. Potash and Phosphate Institute of Canada, Potash and Phosphate Institute, International Potash Institute: Singapore, pp. 163-180. 
 
-      
-      ]]></MemoText>
+</body></html>      ]]></MemoText>
     </Memo>  
   
 </OilPalm>
