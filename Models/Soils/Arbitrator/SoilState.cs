@@ -29,15 +29,18 @@ namespace Models.Soils.Arbitrator
         /// <summary>Initialises this instance.</summary>
         public void Initialise()
         {
-            foreach (Zone Z in Apsim.Children(this.Parent, typeof(Zone)))
+            foreach (Zone Z in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
             {
-                ZoneWaterAndN NewZ = new ZoneWaterAndN();
-                NewZ.Name = Z.Name;
                 Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
-                NewZ.Water = soil.Water;
-                NewZ.NO3N = soil.NO3N;
-                NewZ.NH4N = soil.NH4N;
-                Zones.Add(NewZ);
+                if (soil != null)
+                {
+                    ZoneWaterAndN NewZ = new ZoneWaterAndN();
+                    NewZ.Name = Z.Name;
+                    NewZ.Water = soil.Water;
+                    NewZ.NO3N = soil.NO3N;
+                    NewZ.NH4N = soil.NH4N;
+                    Zones.Add(NewZ);
+                }
             }
         }
 
