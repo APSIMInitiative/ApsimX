@@ -3650,7 +3650,7 @@
           <FieldName>Phenology.StageCode.Value</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>false</ShowInLegend>
+        <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>TopLeft</LegendPosition>
@@ -5423,5 +5423,5 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
     </Input>
     <AutoExport>false</AutoExport>
   </DataStore>
-  <ExplorerWidth>218</ExplorerWidth>
+  <ExplorerWidth>355</ExplorerWidth>
 </Simulations>
