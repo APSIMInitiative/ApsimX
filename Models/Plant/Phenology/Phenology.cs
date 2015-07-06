@@ -26,7 +26,7 @@ namespace Models.PMF.Phen
         public String EventStageName = "";
     }
     /// <summary>
-    /// Perform daily increase of phenology.
+    /// This model simulates the development of the crop through successive growth <i>phases</i>.  Each phase is bound by distinct growth <i>stages</i>.  Phases often require a target to be reached to signal movement to the next phase.  Differences between cultivars are specified by changing the values of the default parameters shown below.
     /// </summary>
     /// \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
     /// should be included as the last child of 
@@ -105,7 +105,6 @@ namespace Models.PMF.Phen
     /// 
     /// </remarks>
     [Serializable]
-    [Description("This model simulates the development of the crop through successive growth <i>phases</i>.  Each phase is bound by distinct growth <i>stages</i>.  Phases often require a target to be reached to signal movement to the next phase.  Differences between cultivars are specified by changing the values of the default parameters shown below.")]
     public class Phenology : Model
     {
         #region Links

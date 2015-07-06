@@ -148,5 +148,29 @@ namespace Models.PMF.Phen
         {
             writer.WriteLine("      " + Name);
         }
+        
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            // get description of this class.
+            string description = AutoDocumentation.GetClassDescription(this);
+
+            tags.Add(new AutoDocumentation.Paragraph(description, indent));
+            tags.Add(new AutoDocumentation.Paragraph("The phase goes from " + Start + " to " + End + ".", indent));
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                child.Document(tags, -1, indent);
+        }
     }
 }

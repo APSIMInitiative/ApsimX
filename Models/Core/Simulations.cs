@@ -423,5 +423,47 @@ namespace Models.Core
             foreach (Model model in Apsim.ChildrenRecursively(this))
                 Apsim.CallEventHandler(model, "AllCompleted", args);
         }
+
+        /// <summary>Documents the specified model.</summary>
+        /// <param name="modelNameToDocument">The model name to document.</param>
+        /// <param name="tags">The auto doc tags.</param>
+        /// <param name="headingLevel">The starting heading level.</param>
+        public void DocumentModel(string modelNameToDocument, List<AutoDocumentation.ITag> tags, int headingLevel)
+        {
+            Simulation simulation = Apsim.Find(this, typeof(Simulation)) as Simulation;
+            if (simulation != null)
+            {
+                // Find the model of the right name.
+                IModel modelToDocument = Apsim.Find(simulation, modelNameToDocument);
+
+                // Get the path of the model (relative to parentSimulation) to document so that 
+                // when replacements happen below we will point to the replacement model not the 
+                // one passed into this method.
+                string pathOfSimulation = Apsim.FullPath(simulation) + ".";
+                string pathOfModelToDocument = Apsim.FullPath(modelToDocument).Replace(pathOfSimulation, "");
+
+                // Clone the simulation
+                Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
+
+                // Make any substitutions.
+                MakeSubstitutions(new Simulation[] { clonedSimulation });
+
+                // Now use the path to get the model we want to document.
+                modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
+
+                // resolve all links in cloned simulation.
+                Apsim.ResolveLinks(clonedSimulation);
+                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
+                    Apsim.ResolveLinks(child);
+
+                // Document the model.
+                modelToDocument.Document(tags, headingLevel, 0);
+
+                // Unresolve links.
+                Apsim.UnresolveLinks(clonedSimulation);
+                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
+                    Apsim.UnresolveLinks(child);
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@ using Models.PMF.Functions.StructureFunctions;
 namespace Models.PMF
 {
     /// <summary>
-    /// A structure model for plant
+    /// A structure model for plant. 
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
     /// sowing data, e.g. population, bud number.
@@ -182,7 +182,6 @@ namespace Models.PMF
     /// and population.
     /// </remarks>
     [Serializable]
-    [Description("Keeps Track of Plants Structural Development")]
     public class Structure : Model
     {
         private double _MainStemFinalNodeNo;

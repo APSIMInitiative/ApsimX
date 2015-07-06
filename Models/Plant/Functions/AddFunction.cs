@@ -36,6 +36,35 @@ namespace Models.PMF.Functions
             }
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            // create a string to display 'child1 + child2 + child3...'
+            string msg = string.Empty;
+            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+            {
+                if (msg != string.Empty)
+                    msg += " + ";
+                msg += child.Name;
+            }
+
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + msg + "</i>", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                child.Document(tags, -1, indent + 1);
+        }
     }
 
 }

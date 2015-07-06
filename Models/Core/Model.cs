@@ -214,5 +214,24 @@ namespace Models.Core
         /// </summary>
         [XmlIgnore]
         public bool IsHidden { get; set; }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public virtual void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            string description = AutoDocumentation.GetClassDescription(this);
+            tags.Add(new AutoDocumentation.Paragraph(description, indent));
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                child.Document(tags, headingLevel + 1, indent);
+        }
+
     }
 }

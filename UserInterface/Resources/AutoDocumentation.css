@@ -31,6 +31,14 @@ table, td, tr {
 } 
 
 td {
-    text-align: center;
+    text-align: right;
 	padding: 5px;
+    vertical-align: top;
 }
+
+.tab1 { margin-left: 40px; }
+.tab2 { margin-left: 80px; }
+.tab3 { margin-left: 120px; }
+.tab4 { margin-left: 160px; }
+.tab5 { margin-left: 200px; }
+.tab6 { margin-left: 240px; }

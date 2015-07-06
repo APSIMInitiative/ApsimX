@@ -349,6 +349,7 @@ namespace UserInterface.Views
             message += "\n";
             StatusWindow.Text = message;
             this.toolTip1.SetToolTip(this.StatusWindow, message);
+            Application.DoEvents();
         }
 
         /// <summary>
