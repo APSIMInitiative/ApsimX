@@ -683,6 +683,47 @@
                     <DisabledSeries />
                     <IncludeInDocumentation>false</IncludeInDocumentation>
                   </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
                   <X>
                     <double>0</double>
                     <double>2</double>
@@ -709,6 +750,293 @@
                 <Name>Duration</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
                   <Graph>
                     <Name>Graph</Name>
                     <Axis>
@@ -821,6 +1149,170 @@
                 <Name>Duration</Name>
                 <XYPairs>
                   <Name>XYPairs</Name>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
                   <Graph>
                     <Name>Graph</Name>
                     <Axis>
@@ -1548,6 +2040,129 @@
                     <DisabledSeries />
                     <IncludeInDocumentation>false</IncludeInDocumentation>
                   </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
+                  <Graph>
+                    <Name>Graph</Name>
+                    <Axis>
+                      <Type>Left</Type>
+                      <Title>Y</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Axis>
+                      <Type>Bottom</Type>
+                      <Title>X</Title>
+                      <Inverted>false</Inverted>
+                      <Minimum>NaN</Minimum>
+                      <Maximum>NaN</Maximum>
+                      <Interval>NaN</Interval>
+                    </Axis>
+                    <Series>
+                      <Title>Duration</Title>
+                      <Type>Scatter</Type>
+                      <XAxis>Bottom</XAxis>
+                      <YAxis>Left</YAxis>
+                      <ColourArgb>-65536</ColourArgb>
+                      <Marker>None</Marker>
+                      <Line>Solid</Line>
+                      <X>
+                        <FieldName>[XYPairs].X</FieldName>
+                      </X>
+                      <Y>
+                        <FieldName>[XYPairs].Y</FieldName>
+                      </Y>
+                      <ShowRegressionLine>false</ShowRegressionLine>
+                      <ShowInLegend>true</ShowInLegend>
+                      <Cumulative>false</Cumulative>
+                    </Series>
+                    <LegendPosition>BottomRight</LegendPosition>
+                    <ShowRegressionLine>false</ShowRegressionLine>
+                    <DisabledSeries />
+                    <IncludeInDocumentation>false</IncludeInDocumentation>
+                  </Graph>
                   <X>
                     <double>0</double>
                     <double>2</double>
@@ -1556,7 +2171,11 @@
                     <double>11</double>
                     <double>15</double>
                     <double>20</double>
-                    <double>60</double>
+                    <double>25</double>
+                    <double>30</double>
+                    <double>35</double>
+                    <double>45</double>
+                    <double>55</double>
                   </X>
                   <Y>
                     <double>100</double>
@@ -1567,6 +2186,10 @@
                     <double>700</double>
                     <double>750</double>
                     <double>750</double>
+                    <double>650</double>
+                    <double>550</double>
+                    <double>400</double>
+                    <double>350</double>
                   </Y>
                 </XYPairs>
                 <XProperty>[Structure].MainStemNodeNo</XProperty>
@@ -1620,19 +2243,312 @@
                 <DisabledSeries />
                 <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>MaxArea</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>MaxArea</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>MaxArea</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>MaxArea</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>MaxArea</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>MaxArea</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
+              <Graph>
+                <Name>Graph</Name>
+                <Axis>
+                  <Type>Left</Type>
+                  <Title>Y</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Axis>
+                  <Type>Bottom</Type>
+                  <Title>X</Title>
+                  <Inverted>false</Inverted>
+                  <Minimum>NaN</Minimum>
+                  <Maximum>NaN</Maximum>
+                  <Interval>NaN</Interval>
+                </Axis>
+                <Series>
+                  <Title>MaxArea</Title>
+                  <Type>Scatter</Type>
+                  <XAxis>Bottom</XAxis>
+                  <YAxis>Left</YAxis>
+                  <ColourArgb>-65536</ColourArgb>
+                  <Marker>None</Marker>
+                  <Line>Solid</Line>
+                  <X>
+                    <FieldName>[XYPairs].X</FieldName>
+                  </X>
+                  <Y>
+                    <FieldName>[XYPairs].Y</FieldName>
+                  </Y>
+                  <ShowRegressionLine>false</ShowRegressionLine>
+                  <ShowInLegend>true</ShowInLegend>
+                  <Cumulative>false</Cumulative>
+                </Series>
+                <LegendPosition>BottomRight</LegendPosition>
+                <ShowRegressionLine>false</ShowRegressionLine>
+                <DisabledSeries />
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+              </Graph>
               <X>
                 <double>0</double>
                 <double>6</double>
                 <double>11</double>
                 <double>15</double>
                 <double>21</double>
+                <double>35</double>
+                <double>45</double>
+                <double>50</double>
               </X>
               <Y>
                 <double>15000</double>
                 <double>21000</double>
+                <double>35000</double>
                 <double>50000</double>
-                <double>42000</double>
-                <double>24000</double>
+                <double>40000</double>
+                <double>30000</double>
+                <double>25000</double>
+                <double>20000</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
@@ -2054,7 +2970,7 @@
               <Name>Middle</Name>
               <Constant>
                 <Name>Target</Name>
-                <Value>0.1</Value>
+                <Value>0.05</Value>
               </Constant>
               <Start>BulbGrowth</Start>
               <End>EndLinear</End>
@@ -2063,7 +2979,7 @@
               <Name>Maturity</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0.1</Value>
+                <Value>0.05</Value>
               </Constant>
               <Start>EndLinear</Start>
               <End>EndSenescence</End>
@@ -2806,6 +3722,26 @@
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
+      <Series>
+        <Title>Leaf#</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Right</YAxis>
+        <ColourArgb>-16711872</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>FodderBeet.Leaf.PlantAppearedLeafNo</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
       <LegendPosition>TopLeft</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
@@ -3321,25 +4257,6 @@
     <Area>0</Area>
     <Slope>0</Slope>
   </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <Input>
-      <Name>FRNLObserved</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Prototypes\FodderBeet\Observations\FRNLObservedData.txt</FileName>
-    </Input>
-    <Input>
-      <Name>ObservedData</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Prototypes\FodderBeet\Observations\FodderBeetObservedData.txt</FileName>
-    </Input>
-    <Input>
-      <Name>Lincoln2014_Interc</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>%root%\Prototypes\FodderBeet\Observations\Lincoln2014Observed_Interception.txt</FileName>
-    </Input>
-    <AutoExport>false</AutoExport>
-  </DataStore>
   <Experiment>
     <Name>Lincoln2014</Name>
     <Factors>
@@ -3751,7 +4668,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <Name>SowDateCv</Name>
           <Operation>
             <Date>2014-10-17T00:00:00</Date>
-            <Action>[FodderBeet].Sow(population:12, cultivar:"Rivage", depth:10, rowSpacing:720);</Action>
+            <Action>[FodderBeet].Sow(population:9, cultivar:"Rivage", depth:10, rowSpacing:500);</Action>
           </Operation>
         </Operations>
         <SurfaceOrganicMatter>
@@ -4244,6 +5161,26 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <ShowInLegend>true</ShowInLegend>
           <Cumulative>false</Cumulative>
         </Series>
+        <Series>
+          <Title>ObsBulbWt</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>FRNLObserved</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>FRNLObserved</TableName>
+            <FieldName>FodderBeet.Bulb.LiveWt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
         <LegendPosition>TopLeft</LegendPosition>
         <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
@@ -4280,6 +5217,26 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           </X>
           <Y>
             <TableName>Report</TableName>
+            <FieldName>FodderBeet.Bulb.Live.Wt</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>ObsBulbWt</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>FRNLObserved</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>FRNLObserved</TableName>
             <FieldName>FodderBeet.Bulb.Live.Wt</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
@@ -4447,5 +5404,24 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
+  <DataStore>
+    <Name>DataStore</Name>
+    <Input>
+      <Name>FRNLObserved</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>%root%\Prototypes\FodderBeet\Observations\FRNLObservedData.txt</FileName>
+    </Input>
+    <Input>
+      <Name>ObservedData</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>%root%\Prototypes\FodderBeet\Observations\FodderBeetObservedData.txt</FileName>
+    </Input>
+    <Input>
+      <Name>Lincoln2014_Interc</Name>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>%root%\Prototypes\FodderBeet\Observations\Lincoln2014Observed_Interception.txt</FileName>
+    </Input>
+    <AutoExport>false</AutoExport>
+  </DataStore>
   <ExplorerWidth>218</ExplorerWidth>
 </Simulations>

@@ -1,171 +1,402 @@
-SimulationName Clock.Today Phenology.StageCode.Value Phenology.Stage FodderBeet.Phenology.AccumulatedThermalTime.Value FodderBeet.Summariser.LiveDM FodderBeet.Bulb.LiveWt FodderBeet.Petiole.LiveWt FodderBeet.Leaf.LiveWt FodderBeet.Total.Wt FodderBeet.TotalDead.Wt FoddeBeet.LeafLAI FodderBeet.Leaf.PlantAppearedGreenLeafNo FodderBeet.Leaf.PlantAppearedLeafNo FodderBeet.Leaf.PlantSenescedLeafNo FodderBeet.Leaf.CoverGreen
-() () () () (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (m2/m2) () () () (0-1)
-FRNLRivageSD2 2014-12-08 * * 677.65 7.3 0.7 1.2 5.4 7.3 0.0 0.1 * * * *
-FRNLRivageSD2 2015-01-12 * * 1267.75 473.3 225.5 91.9 155.9 487.2 14.0 2.3 * * * *
-FRNLRivageSD2 2015-02-02 * * 1662.00 1100.3 717.2 168.7 214.4 1139.2 38.9 3.3 * * * *
-FRNLRivageSD2 2015-02-23 * * 1998.40 1746.0 1354.4 171.3 220.3 1834.0 88.1 3.6 * * * *
-FRNLRivageSD2 2015-03-16 * * 2364.85 2029.4 1737.4 126.3 165.6 2178.3 149.0 2.8 * * * *
-FRNLRivageSD2 2015-04-07 * * 2695.35 2147.9 1934.7 96.8 116.4 2376.0 228.1 3.1 * * * *
-FRNLRivageSD2 2015-04-29 * * 2969.80 2102.9 1848.9 116.2 137.8 2300.6 197.7 2.0 * * * *
-FRNLRivageSD2 2015-05-18 * * 3195.50 2071.3 1921.6 58.4 91.4 2262.8 191.5 1.3 * * * *
-FRNLRivageSD1 2014-10-05 3 emergence * * * * * * * * * * * *
-FRNLRivageSD2 2014-11-05 3 emergence * * * * * * * * * * * *
-FRNLRivageSD3 2014-11-22 3 emergence * * * * * * * * * * * *
-FRNLRivageSD4 2014-12-22 3 emergence * * * * * * * * * * * *
-FRNLBrigadierSD1 2014-10-08 3 emergence * * * * * * * * * * * *
-FRNLBrigadierSD2 2014-11-04 3 emergence * * * * * * * * * * * *
-FRNLBrigadierSD3 2014-11-22 3 emergence * * * * * * * * * * * *
-FRNLBrigadierSD4 2014-12-26 3 emergence * * * * * * * * * * * *
-FRNLRivageSD2 2014-11-27 * * * * * * * * * * 3.4 3.4 0.0 *
-FRNLRivageSD2 2014-12-04 * * * * * * * * * * 4.7 4.7 0.0 *
-FRNLRivageSD2 2014-12-11 * * * * * * * * * * 7.1 7.1 0.0 *
-FRNLRivageSD2 2014-12-18 * * * * * * * * * * 8.6 9.0 0.4 *
-FRNLRivageSD2 2014-12-26 * * * * * * * * * * 13.2 14.2 1.0 *
-FRNLRivageSD2 2015-01-02 * * * * * * * * * * 15.3 18.3 3.0 *
-FRNLRivageSD2 2015-01-08 * * * * * * * * * * 17.1 20.6 3.5 *
-FRNLRivageSD2 2015-01-16 * * * * * * * * * * 19.7 23.8 4.1 *
-FRNLRivageSD2 2015-01-22 * * * * * * * * * * 20.6 26.0 5.4 *
-FRNLRivageSD2 2015-01-29 * * * * * * * * * * 22.0 28.5 6.5 *
-FRNLRivageSD2 2015-02-03 * * * * * * * * * * 23.5 30.1 7.5 *
-FRNLRivageSD2 2015-02-10 * * * * * * * * * * 25.0 31.8 8.0 *
-FRNLRivageSD2 2015-02-19 * * * * * * * * * * 25.3 34.1 9.8 *
-FRNLRivageSD2 2015-02-25 * * * * * * * * * * 26.3 36.5 11.3 *
-FRNLRivageSD2 2015-03-04 * * * * * * * * * * 26.7 37.9 12.3 *
-FRNLRivageSD2 2015-03-12 * * * * * * * * * * 26.2 41.4 16.5 *
-FRNLRivageSD2 2015-03-18 * * * * * * * * * * 25.5 43.1 19.5 *
-FRNLRivageSD2 2015-03-25 * * * * * * * * * * 26.2 44.2 19.8 *
-FRNLRivageSD2 2015-04-01 * * * * * * * * * * 27.2 46.8 21.7 *
-FRNLRivageSD2 2015-04-09 * * * * * * * * * * 26.8 49.4 24.5 *
-FRNLRivageSD2 2015-04-15 * * * * * * * * * * 26.7 50.0 25.2 *
-FRNLRivageSD2 2015-04-23 * * * * * * * * * * 27.3 51.5 26.0 *
-FRNLRivageSD2 2015-04-30 * * * * * * * * * * 28.7 53.8 26.8 *
-FRNLRivageSD2 2015-05-07 * * * * * * * * * * 30.2 55.6 27.2 *
-FRNLRivageSD2 2015-05-14 * * * * * * * * * * 30.0 56.3 28.2 *
-FRNLBrigadierSD1 2014-11-20 * * * * * * * * * * * * * 0.1
-FRNLBrigadierSD1 2014-11-24 * * * * * * * * * * * * * 0.15
-FRNLBrigadierSD1 2014-11-27 * * * * * * * * * * * * * 0.2
-FRNLBrigadierSD1 2014-12-02 * * * * * * * * * * * * * 0.28
-FRNLBrigadierSD1 2014-12-08 * * * * * * * * * * * * * 0.46
-FRNLBrigadierSD1 2014-12-16 * * * * * * * * * * * * * 0.64
-FRNLBrigadierSD1 2014-12-22 * * * * * * * * * * * * * 0.78
-FRNLBrigadierSD1 2014-12-30 * * * * * * * * * * * * * 0.82
-FRNLBrigadierSD1 2015-01-08 * * * * * * * * * * * * * 0.84
-FRNLBrigadierSD1 2015-01-16 * * * * * * * * * * * * * 0.85
-FRNLBrigadierSD1 2015-01-22 * * * * * * * * * * * * * 0.9
-FRNLBrigadierSD1 2015-02-04 * * * * * * * * * * * * * 0.93
-FRNLBrigadierSD1 2015-02-10 * * * * * * * * * * * * * 0.96
-FRNLBrigadierSD1 2015-02-20 * * * * * * * * * * * * * 0.88
-FRNLBrigadierSD1 2015-03-09 * * * * * * * * * * * * * 0.87
-FRNLBrigadierSD1 2015-03-25 * * * * * * * * * * * * * 0.8
-FRNLBrigadierSD1 2015-04-10 * * * * * * * * * * * * * 0.71
-FRNLBrigadierSD1 2015-04-29 * * * * * * * * * * * * * 0.82
-FRNLBrigadierSD1 2015-05-13 * * * * * * * * * * * * * 0.86
-FRNLBrigadierSD1 2015-06-02 * * * * * * * * * * * * * 0.87
-FRNLBrigadierSD1 2015-06-10 * * * * * * * * * * * * * 0.87
-FRNLBrigadierSD2 2014-12-08 * * * * * * * * * * * * * 0.17
-FRNLBrigadierSD2 2014-12-16 * * * * * * * * * * * * * 0.21
-FRNLBrigadierSD2 2014-12-22 * * * * * * * * * * * * * 0.41
-FRNLBrigadierSD2 2014-12-30 * * * * * * * * * * * * * 0.65
-FRNLBrigadierSD2 2015-01-08 * * * * * * * * * * * * * 0.78
-FRNLBrigadierSD2 2015-01-16 * * * * * * * * * * * * * 0.87
-FRNLBrigadierSD2 2015-01-22 * * * * * * * * * * * * * 0.92
-FRNLBrigadierSD2 2015-02-04 * * * * * * * * * * * * * 0.92
-FRNLBrigadierSD2 2015-02-10 * * * * * * * * * * * * * 0.97
-FRNLBrigadierSD2 2015-02-20 * * * * * * * * * * * * * 0.94
-FRNLBrigadierSD2 2015-03-09 * * * * * * * * * * * * * 0.95
-FRNLBrigadierSD2 2015-03-25 * * * * * * * * * * * * * 0.89
-FRNLBrigadierSD2 2015-04-10 * * * * * * * * * * * * * 0.82
-FRNLBrigadierSD2 2015-04-29 * * * * * * * * * * * * * 0.82
-FRNLBrigadierSD2 2015-05-13 * * * * * * * * * * * * * 0.86
-FRNLBrigadierSD2 2015-06-02 * * * * * * * * * * * * * 0.86
-FRNLBrigadierSD2 2015-06-10 * * * * * * * * * * * * * 0.86
-FRNLBrigadierSD3 2014-12-30 * * * * * * * * * * * * * 0.17
-FRNLBrigadierSD3 2015-01-08 * * * * * * * * * * * * * 0.45
-FRNLBrigadierSD3 2015-01-16 * * * * * * * * * * * * * 0.73
-FRNLBrigadierSD3 2015-01-22 * * * * * * * * * * * * * 0.81
-FRNLBrigadierSD3 2015-02-04 * * * * * * * * * * * * * 0.85
-FRNLBrigadierSD3 2015-02-10 * * * * * * * * * * * * * 0.91
-FRNLBrigadierSD3 2015-02-20 * * * * * * * * * * * * * 0.95
-FRNLBrigadierSD3 2015-03-09 * * * * * * * * * * * * * 0.96
-FRNLBrigadierSD3 2015-03-25 * * * * * * * * * * * * * 0.9
-FRNLBrigadierSD3 2015-04-10 * * * * * * * * * * * * * 0.81
-FRNLBrigadierSD3 2015-04-29 * * * * * * * * * * * * * 0.82
-FRNLBrigadierSD3 2015-05-13 * * * * * * * * * * * * * 0.85
-FRNLBrigadierSD3 2015-06-02 * * * * * * * * * * * * * 0.86
-FRNLBrigadierSD3 2015-06-10 * * * * * * * * * * * * * 0.86
-FRNLBrigadierSD4 2015-01-16 * * * * * * * * * * * * * 0.05
-FRNLBrigadierSD4 2015-01-22 * * * * * * * * * * * * * 0.13
-FRNLBrigadierSD4 2015-02-04 * * * * * * * * * * * * * 0.46
-FRNLBrigadierSD4 2015-02-10 * * * * * * * * * * * * * 0.76
-FRNLBrigadierSD4 2015-02-20 * * * * * * * * * * * * * 0.83
-FRNLBrigadierSD4 2015-03-09 * * * * * * * * * * * * * 0.9
-FRNLBrigadierSD4 2015-03-25 * * * * * * * * * * * * * 0.91
-FRNLBrigadierSD4 2015-04-10 * * * * * * * * * * * * * 0.85
-FRNLBrigadierSD4 2015-04-29 * * * * * * * * * * * * * 0.87
-FRNLBrigadierSD4 2015-05-13 * * * * * * * * * * * * * 0.81
-FRNLBrigadierSD4 2015-06-02 * * * * * * * * * * * * * 0.89
-FRNLBrigadierSD4 2015-06-10 * * * * * * * * * * * * * 0.86
-FRNLRivageSD1 2014-11-20 * * * * * * * * * * * * * 0.1
-FRNLRivageSD1 2014-11-24 * * * * * * * * * * * * * 0.21
-FRNLRivageSD1 2014-11-27 * * * * * * * * * * * * * 0.23
-FRNLRivageSD1 2014-12-02 * * * * * * * * * * * * * 0.35
-FRNLRivageSD1 2014-12-08 * * * * * * * * * * * * * 0.57
-FRNLRivageSD1 2014-12-16 * * * * * * * * * * * * * 0.72
-FRNLRivageSD1 2014-12-22 * * * * * * * * * * * * * 0.78
-FRNLRivageSD1 2014-12-30 * * * * * * * * * * * * * 0.8
-FRNLRivageSD1 2015-01-08 * * * * * * * * * * * * * 0.89
-FRNLRivageSD1 2015-01-16 * * * * * * * * * * * * * 0.89
-FRNLRivageSD1 2015-01-22 * * * * * * * * * * * * * 0.95
-FRNLRivageSD1 2015-02-04 * * * * * * * * * * * * * 0.9
-FRNLRivageSD1 2015-02-10 * * * * * * * * * * * * * 0.95
-FRNLRivageSD1 2015-02-20 * * * * * * * * * * * * * 0.96
-FRNLRivageSD1 2015-03-09 * * * * * * * * * * * * * 0.94
-FRNLRivageSD1 2015-03-25 * * * * * * * * * * * * * 0.88
-FRNLRivageSD1 2015-04-10 * * * * * * * * * * * * * 0.8
-FRNLRivageSD1 2015-04-29 * * * * * * * * * * * * * 0.83
-FRNLRivageSD1 2015-05-13 * * * * * * * * * * * * * 0.81
-FRNLRivageSD1 2015-06-02 * * * * * * * * * * * * * 0.79
-FRNLRivageSD1 2015-06-10 * * * * * * * * * * * * * 0.74
-FRNLRivageSD2 2014-12-08 * * * * * * * * * * * * * 0.05
-FRNLRivageSD2 2014-12-16 * * * * * * * * * * * * * 0.19
-FRNLRivageSD2 2014-12-22 * * * * * * * * * * * * * 0.36
-FRNLRivageSD2 2014-12-30 * * * * * * * * * * * * * 0.62
-FRNLRivageSD2 2015-01-08 * * * * * * * * * * * * * 0.75
-FRNLRivageSD2 2015-01-16 * * * * * * * * * * * * * 0.86
-FRNLRivageSD2 2015-01-22 * * * * * * * * * * * * * 0.87
-FRNLRivageSD2 2015-02-04 * * * * * * * * * * * * * 0.88
-FRNLRivageSD2 2015-02-10 * * * * * * * * * * * * * 0.89
-FRNLRivageSD2 2015-02-20 * * * * * * * * * * * * * 0.92
-FRNLRivageSD2 2015-03-09 * * * * * * * * * * * * * 0.9
-FRNLRivageSD2 2015-03-25 * * * * * * * * * * * * * 0.87
-FRNLRivageSD2 2015-04-10 * * * * * * * * * * * * * 0.78
-FRNLRivageSD2 2015-04-29 * * * * * * * * * * * * * 0.77
-FRNLRivageSD2 2015-05-13 * * * * * * * * * * * * * 0.73
-FRNLRivageSD2 2015-06-02 * * * * * * * * * * * * * 0.78
-FRNLRivageSD2 2015-06-10 * * * * * * * * * * * * * 0.73
-FRNLRivageSD3 2014-12-30 * * * * * * * * * * * * * 0.16
-FRNLRivageSD3 2015-01-08 * * * * * * * * * * * * * 0.5
-FRNLRivageSD3 2015-01-16 * * * * * * * * * * * * * 0.76
-FRNLRivageSD3 2015-01-22 * * * * * * * * * * * * * 0.81
-FRNLRivageSD3 2015-02-04 * * * * * * * * * * * * * 0.85
-FRNLRivageSD3 2015-02-10 * * * * * * * * * * * * * 0.93
-FRNLRivageSD3 2015-02-20 * * * * * * * * * * * * * 0.93
-FRNLRivageSD3 2015-03-09 * * * * * * * * * * * * * 0.9
-FRNLRivageSD3 2015-03-25 * * * * * * * * * * * * * 0.91
-FRNLRivageSD3 2015-04-10 * * * * * * * * * * * * * 0.81
-FRNLRivageSD3 2015-04-29 * * * * * * * * * * * * * 0.83
-FRNLRivageSD3 2015-05-13 * * * * * * * * * * * * * 0.79
-FRNLRivageSD3 2015-06-02 * * * * * * * * * * * * * 0.78
-FRNLRivageSD3 2015-06-10 * * * * * * * * * * * * * 0.79
-FRNLRivageSD4 2015-01-16 * * * * * * * * * * * * * 0.15
-FRNLRivageSD4 2015-01-22 * * * * * * * * * * * * * 0.23
-FRNLRivageSD4 2015-02-04 * * * * * * * * * * * * * 0.7
-FRNLRivageSD4 2015-02-10 * * * * * * * * * * * * * 0.85
-FRNLRivageSD4 2015-02-20 * * * * * * * * * * * * * 0.83
-FRNLRivageSD4 2015-03-09 * * * * * * * * * * * * * 0.96
-FRNLRivageSD4 2015-03-25 * * * * * * * * * * * * * 0.93
-FRNLRivageSD4 2015-04-10 * * * * * * * * * * * * * 0.84
-FRNLRivageSD4 2015-04-29 * * * * * * * * * * * * * 0.85
-FRNLRivageSD4 2015-05-13 * * * * * * * * * * * * * 0.88
-FRNLRivageSD4 2015-06-02 * * * * * * * * * * * * * 0.86
-FRNLRivageSD4 2015-06-10 * * * * * * * * * * * * * 0.84
+SimulationName SimulationName2 Clock.Today Phenology.StageCode.Value Phenology.Stage FodderBeet.Phenology.AccumulatedThermalTime.Value FodderBeet.Summariser.LiveDM FodderBeet.Bulb.LiveWt FodderBeet.Petiole.LiveWt FodderBeet.Leaf.LiveWt FodderBeet.Total.Wt FodderBeet.TotalDead.Wt FoddeBeet.LeafLAI FodderBeet.Leaf.PlantAppearedGreenLeafNo FodderBeet.Leaf.PlantAppearedLeafNo FodderBeet.Leaf.PlantSenescedLeafNo FodderBeet.Leaf.CoverGreen
+() () () () () (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (g/m2) (m2/m2) () () () (0-1)
+Lincoln2014CvRiv_Sep FRNLRivageSD1 19/11/2014 * * 731.8 14.5 1.9 1.9 10.7 14.5 0.0 0.2 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 8/12/2014 * * 991.0 93.9 16.4 18.0 59.5 93.9 0.0 0.9 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 12/01/2015 * * 1581.1 816.6 470.9 134.5 211.2 842.2 25.6 3.3 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 2/02/2015 * * 1975.4 1446.8 1072.5 172.3 202.1 1506.1 59.3 3.3 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 23/02/2015 * * 2311.8 2075.7 1691.0 172.7 212.1 2174.1 98.4 3.0 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 16/03/2015 * * 2678.2 2023.2 1752.4 135.0 135.9 2178.1 154.9 2.3 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 7/04/2015 * * 3008.7 2383.2 2220.5 71.1 91.6 2594.2 211.0 2.1 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 29/04/2015 * * 3283.2 2178.7 2028.9 64.6 85.2 2348.9 170.2 1.3 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 18/05/2015 * * 3508.9 2178.9 1999.4 72.2 107.3 2374.1 195.3 1.6 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 15/06/2015 * * 3726.7 2490.4 2319.8 65.1 105.5 2706.5 216.1 1.4 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 19/11/2014 * * 731.8 9.5 0.9 1.5 7.1 9.5 0.0 0.1 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 8/12/2014 * * 991.0 118.7 23.5 22.0 73.3 118.7 0.0 1.1 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 12/01/2015 * * 1581.1 845.1 520.1 151.6 173.4 895.0 49.9 2.7 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 2/02/2015 * * 1975.4 1353.4 973.2 174.4 205.8 1423.9 70.5 3.3 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 23/02/2015 * * 2311.8 1709.4 1400.3 127.0 182.1 1859.2 149.8 3.0 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 16/03/2015 * * 2678.2 1712.6 1514.7 92.1 105.8 1890.9 178.3 1.9 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 7/04/2015 * * 3008.7 1882.1 1672.8 101.7 107.5 2125.6 243.5 1.8 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 29/04/2015 * * 3283.2 1924.7 1672.5 116.8 135.4 2124.5 199.8 2.0 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 18/05/2015 * * 3508.9 1849.6 1639.8 91.2 118.5 2057.2 207.6 1.8 * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 15/06/2015 * * 3726.7 1897.3 1687.4 92.4 117.5 2168.8 271.5 1.8 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 8/12/2014 * * 677.7 7.3 0.7 1.2 5.4 7.3 0 0.1 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 12/01/2015 * * 1267.8 473.3 225.5 91.9 155.9 487.2 14 2.3 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2/02/2015 * * 1662.0 1100.3 717.2 168.7 214.4 1139.2 38.9 3.3 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 23/02/2015 * * 1998.4 1746 1354.4 171.3 220.3 1834 88.1 3.6 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 16/03/2015 * * 2364.9 2029.4 1737.4 126.3 165.6 2178.3 149 2.8 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 7/04/2015 * * 2695.4 2147.9 1934.7 96.8 116.4 2376 228.1 3.1 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 29/04/2015 * * 2969.8 2102.9 1848.9 116.2 137.8 2300.6 197.7 2 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 18/05/2015 * * 3195.5 2071.3 1921.6 58.4 91.4 2262.8 191.5 1.3 * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 15/06/2015 * * 3413.3 2439.1 2269.9 68.9 100.3 2694.4 255.3 1.4 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 8/12/2014 * * 677.7 6.6 0.5 1.2 4.9 6.6 0.0 0.1 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 12/01/2015 * * 1267.8 475.2 226.5 101.1 147.6 491.7 16.5 2.6 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 2/02/2015 * * 1662.0 873.1 526.1 141.0 206.0 900.4 27.4 3.1 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 23/02/2015 * * 1998.4 1421.4 1060.6 170.7 190.0 1477.6 56.3 3.4 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 16/03/2015 * * 2364.9 1474.4 1132.1 158.8 183.4 1651.0 176.6 3.2 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 7/04/2015 * * 2695.4 1605.2 1410.3 99.3 95.6 1794.2 188.9 1.9 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 29/04/2015 * * 2969.8 2063.3 1808.3 122.5 132.5 2272.1 208.8 2.1 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 18/05/2015 * * 3195.5 1998.5 1776.5 104.3 117.7 2199.5 201.0 1.8 * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 15/06/2015 * * 3413.3 1948.7 1779.3 79.3 90.0 2205.2 256.5 1.5 * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 12/01/2015 * * 889.0 169.1 41.8 32.8 94.5 171.9 2.8 1.5 * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 2/02/2015 * * 1283.2 677.3 347.7 138.5 191.1 694.0 16.7 3.1 * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 23/02/2015 * * 1619.6 1458.6 942.8 252.2 263.6 1500.6 42.0 3.4 * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 16/03/2015 * * 1986.1 1693.3 1314.0 178.5 200.8 1838.0 144.7 3.6 * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 7/04/2015 * * 2316.6 1621.4 1413.1 93.4 114.9 1817.4 195.9 2.9 * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 29/04/2015 * * 2591.0 1922.1 1655.7 117.0 149.4 2107.9 185.8 2.4 * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 18/05/2015 * * 2816.7 1851.8 1666.3 80.7 104.9 2033.2 181.4 1.5 * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 15/06/2015 * * 3034.5 1836.7 1677.1 66.5 93.0 2080.4 243.7 1.3 * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 12/01/2015 * * 889.0 149.9 33.9 30.0 86.0 152.3 2.4 1.4 * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 2/02/2015 * * 1283.2 588.9 306.4 105.8 176.8 600.7 11.8 2.6 * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 23/02/2015 * * 1619.6 1206.5 754.4 211.3 240.8 1245.2 38.7 3.6 * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 16/03/2015 * * 1986.1 1415.5 1091.2 153.3 171.0 1523.0 107.5 2.8 * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 7/04/2015 * * 2316.6 1385.4 1202.5 84.4 98.4 1552.1 166.7 1.3 * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 29/04/2015 * * 2591.0 1534.8 1278.5 121.7 134.7 1681.0 146.2 2.2 * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 18/05/2015 * * 2816.7 1641.5 1374.6 123.1 143.8 1848.3 206.8 2.4 * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 15/06/2015 * * 3034.5 1651.1 1457.5 83.6 110.0 1900.9 249.8 1.7 * * * *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 2/02/2015 * * 905.6 103.4 24.3 21.1 58.0 105.5 2.1 1.0 * * * *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 23/02/2015 * * 1242.0 618.8 274.9 132.8 211.2 627.6 8.7 3.9 * * * *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 16/03/2015 * * 1608.4 1151.4 687.4 202.4 261.6 1209.2 57.8 4.4 * * * *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 7/04/2015 * * 1938.9 1123.6 857.9 121.8 143.9 1262.5 138.9 2.0 * * * *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 29/04/2015 * * 2213.4 1607.6 1343.0 121.5 143.1 1749.9 142.3 2.3 * * * *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 18/05/2015 * * 2439.1 1511.2 1184.6 142.7 183.9 1671.0 159.8 2.6 * * * *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 15/06/2015 * * 2656.9 1606.5 1383.1 92.8 130.6 1844.1 237.6 1.9 * * * *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 2/02/2015 * * 905.6 87.8 19.3 18.2 50.3 89.4 1.6 0.9 * * * *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 23/02/2015 * * 1242.0 468.4 200.1 91.7 176.6 477.4 9.0 4.5 * * * *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 16/03/2015 * * 1608.4 965.9 662.8 130.8 172.2 1034.3 68.4 3.2 * * * *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 7/04/2015 * * 1938.9 1052.6 784.9 126.6 141.1 1214.4 161.8 1.7 * * * *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 29/04/2015 * * 2213.4 1150.2 914.5 110.2 125.6 1269.9 119.7 2.0 * * * *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 18/05/2015 * * 2439.1 1273.4 1038.7 106.7 128.0 1422.3 148.9 2.1 * * * *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 15/06/2015 * * 2656.9 1349.6 1168.2 86.1 95.3 1568.8 219.2 1.5 * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 5/10/2014 3 emergence * * * * * * * * * * * *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 5/11/2014 3 emergence * * * * * * * * * * * *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 22/11/2014 3 emergence * * * * * * * * * * * *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 22/12/2014 3 emergence * * * * * * * * * * * *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 8/10/2014 3 emergence * * * * * * * * * * * *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 4/11/2014 3 emergence * * * * * * * * * * * *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 22/11/2014 3 emergence * * * * * * * * * * * *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 26/12/2014 3 emergence * * * * * * * * * * * *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 7/11/2014 * * * * * * * * * * 6.2 6.2 0.0 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 13/11/2014 * * * * * * * * * * 8.4 8.4 0.0 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 21/11/2014 * * * * * * * * * * 10.4 10.4 0.0 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 27/11/2014 * * * * * * * * * * 12.5 12.9 0.4 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 4/12/2014 * * * * * * * * * * 13.8 15.6 1.8 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 11/12/2014 * * * * * * * * * * 15.4 18.1 2.7 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 18/12/2014 * * * * * * * * * * 17.1 20.9 3.8 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 26/12/2014 * * * * * * * * * * 19.6 24.0 4.4 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 2/01/2015 * * * * * * * * * * 21.5 26.7 5.2 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 8/01/2015 * * * * * * * * * * 22.5 28.8 6.3 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 16/01/2015 * * * * * * * * * * 23.4 31.3 7.9 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 22/01/2015 * * * * * * * * * * 24.0 33.4 9.4 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 29/01/2015 * * * * * * * * * * 25.9 35.8 9.9 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 3/02/2015 * * * * * * * * * * 24.7 36.3 9.5 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 10/02/2015 * * * * * * * * * * 25.8 37.7 9.8 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 19/02/2015 * * * * * * * * * * 27.5 40.6 11.0 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 25/02/2015 * * * * * * * * * * 27.8 43.0 13.0 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 4/03/2015 * * * * * * * * * * 26.0 44.3 16.7 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 12/03/2015 * * * * * * * * * * 25.3 47.6 19.5 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 18/03/2015 * * * * * * * * * * 24.8 49.3 22.0 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 25/03/2015 * * * * * * * * * * 24.0 51.5 24.8 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 1/04/2015 * * * * * * * * * * 23.3 54.2 28.3 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 9/04/2015 * * * * * * * * * * 23.5 56.7 26.7 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 15/04/2015 * * * * * * * * * * 23.7 57.7 27.3 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 23/04/2015 * * * * * * * * * * 24.5 60.4 33.7 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 30/04/2015 * * * * * * * * * * 25.2 62.8 30.3 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 7/05/2015 * * * * * * * * * * 25.5 64.2 31.1 *
+Lincoln2014CvRiv_Sep FRNLRivageSD1 14/05/2015 * * * * * * * * * * 26.2 65.9 37.0 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 7/11/2014 * * * * * * * * * * 5.9 5.9 0.0 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 13/11/2014 * * * * * * * * * * 8.0 8.0 0.0 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 21/11/2014 * * * * * * * * * * 10.5 10.5 0.0 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 27/11/2014 * * * * * * * * * * 12.4 12.4 0.0 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 4/12/2014 * * * * * * * * * * 14.2 16.0 1.8 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 11/12/2014 * * * * * * * * * * 15.4 18.6 3.2 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 18/12/2014 * * * * * * * * * * 17.3 21.2 3.9 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 26/12/2014 * * * * * * * * * * 20.0 25.1 5.1 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 2/01/2015 * * * * * * * * * * 21.7 27.7 6.0 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 8/01/2015 * * * * * * * * * * 22.7 30.3 7.6 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 16/01/2015 * * * * * * * * * * 23.0 30.9 7.9 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 22/01/2015 * * * * * * * * * * 23.8 33.3 9.6 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 29/01/2015 * * * * * * * * * * 24.6 35.3 9.7 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 3/02/2015 * * * * * * * * * * 23.3 36.6 9.6 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 10/02/2015 * * * * * * * * * * 23.7 38.2 12.3 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 19/02/2015 * * * * * * * * * * 23.5 40.8 15.3 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 25/02/2015 * * * * * * * * * * 24.5 43.0 16.3 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 4/03/2015 * * * * * * * * * * 24.0 44.9 25.3 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 12/03/2015 * * * * * * * * * * 25.5 47.8 20.2 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 18/03/2015 * * * * * * * * * * 23.3 49.3 23.7 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 25/03/2015 * * * * * * * * * * 24.3 51.6 21.3 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 1/04/2015 * * * * * * * * * * 24.3 54.1 23.3 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 9/04/2015 * * * * * * * * * * 23.0 56.6 26.1 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 15/04/2015 * * * * * * * * * * 23.0 57.2 27.1 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 23/04/2015 * * * * * * * * * * 23.5 60.2 33.2 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 30/04/2015 * * * * * * * * * * 25.8 62.6 28.3 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 7/05/2015 * * * * * * * * * * 26.3 64.6 29.9 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 14/05/2015 * * * * * * * * * * 23.3 65.1 33.0 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 27/11/2014 * * * * * * * * * * 3.4 3.4 0 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 4/12/2014 * * * * * * * * * * 4.7 4.7 0 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 11/12/2014 * * * * * * * * * * 7.1 7.1 0 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 18/12/2014 * * * * * * * * * * 8.6 9 0.4 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 26/12/2014 * * * * * * * * * * 13.2 14.2 1 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2/01/2015 * * * * * * * * * * 15.3 18.3 3 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 8/01/2015 * * * * * * * * * * 17.1 20.6 3.5 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 16/01/2015 * * * * * * * * * * 19.7 23.8 4.1 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 22/01/2015 * * * * * * * * * * 20.6 26 5.4 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 29/01/2015 * * * * * * * * * * 22 28.5 6.5 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 3/02/2015 * * * * * * * * * * 23.5 30.1 7.5 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 10/02/2015 * * * * * * * * * * 25 31.8 8 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 19/02/2015 * * * * * * * * * * 25.3 34.1 9.8 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 25/02/2015 * * * * * * * * * * 26.3 36.5 11.3 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 4/03/2015 * * * * * * * * * * 26.7 37.9 12.3 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 12/03/2015 * * * * * * * * * * 26.2 41.4 16.5 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 18/03/2015 * * * * * * * * * * 25.5 43.1 19.5 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 25/03/2015 * * * * * * * * * * 26.2 44.2 19.8 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 1/04/2015 * * * * * * * * * * 27.2 46.8 21.7 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 9/04/2015 * * * * * * * * * * 26.8 49.4 24.5 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 15/04/2015 * * * * * * * * * * 26.7 50 25.2 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 23/04/2015 * * * * * * * * * * 27.3 51.5 26 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 30/04/2015 * * * * * * * * * * 28.7 53.8 26.8 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 7/05/2015 * * * * * * * * * * 30.2 55.6 27.2 *
+Lincoln2014CvRiv_Oct FRNLRivageSD2 14/05/2015 * * * * * * * * * * 30 56.3 28.2 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 27/11/2014 * * * * * * * * * * 4.5 4.5 0.0 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 4/12/2014 * * * * * * * * * * 6.2 6.2 0.0 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 11/12/2014 * * * * * * * * * * 8.1 8.1 0.0 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 18/12/2014 * * * * * * * * * * 9.6 10.8 1.2 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 26/12/2014 * * * * * * * * * * 13.4 15.5 2.1 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 2/01/2015 * * * * * * * * * * 15.9 18.8 2.9 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 8/01/2015 * * * * * * * * * * 17.2 20.9 3.7 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 16/01/2015 * * * * * * * * * * 19.6 23.7 4.1 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 22/01/2015 * * * * * * * * * * 19.6 25.5 5.9 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 29/01/2015 * * * * * * * * * * 21.3 27.6 6.3 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 3/02/2015 * * * * * * * * * * 22.0 28.7 7.2 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 10/02/2015 * * * * * * * * * * 22.3 30.4 8.3 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 19/02/2015 * * * * * * * * * * 23.2 32.9 10.2 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 25/02/2015 * * * * * * * * * * 23.2 34.2 11.3 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 4/03/2015 * * * * * * * * * * 22.8 36.3 13.8 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 12/03/2015 * * * * * * * * * * 23.0 39.1 16.2 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 18/03/2015 * * * * * * * * * * 21.4 40.7 22.7 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 25/03/2015 * * * * * * * * * * 23.2 42.9 19.7 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 1/04/2015 * * * * * * * * * * 24.2 45.3 20.7 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 9/04/2015 * * * * * * * * * * 24.7 47.6 22.3 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 15/04/2015 * * * * * * * * * * 25.8 48.3 22.0 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 23/04/2015 * * * * * * * * * * 26.2 50.0 23.3 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 30/04/2015 * * * * * * * * * * 27.2 51.9 24.5 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 7/05/2015 * * * * * * * * * * 28.3 54.1 25.7 *
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 14/05/2015 * * * * * * * * * * 27.8 54.6 26.7 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 26/12/2014 * * * * * * * * * * 7.5 7.5 0.0 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 2/01/2015 * * * * * * * * * * 11.7 11.7 0.0 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 8/01/2015 * * * * * * * * * * 13.6 14.8 1.2 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 16/01/2015 * * * * * * * * * * 15.6 18.0 2.4 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 23/01/2015 * * * * * * * * * * 16.1 20.2 4.1 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 29/01/2015 * * * * * * * * * * 18.2 22.7 4.5 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 3/02/2015 * * * * * * * * * * 19.3 24.3 6.0 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 10/02/2015 * * * * * * * * * * 21.2 26.0 6.0 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 19/02/2015 * * * * * * * * * * 22.8 28.6 7.2 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 25/02/2015 * * * * * * * * * * 23.5 30.8 8.7 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 4/03/2015 * * * * * * * * * * 23.0 33.4 11.7 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 12/03/2015 * * * * * * * * * * 24.2 36.1 13.2 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 18/03/2015 * * * * * * * * * * 22.8 37.4 16.2 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 25/03/2015 * * * * * * * * * * 24.2 39.4 17.0 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 1/04/2015 * * * * * * * * * * 24.0 42.0 20.2 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 9/04/2015 * * * * * * * * * * 24.5 43.7 20.7 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 15/04/2015 * * * * * * * * * * 25.3 44.6 21.3 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 23/04/2015 * * * * * * * * * * 26.3 47.1 23.0 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 30/04/2015 * * * * * * * * * * 28.0 48.9 23.2 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 7/05/2015 * * * * * * * * * * 28.7 50.6 24.5 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 14/05/2015 * * * * * * * * * * 28.2 51.7 26.0 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 22/05/2015 * * * * * * * * * * 27.8 53.0 27.7 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 27/05/2015 * * * * * * * * * * 28.3 53.9 28.2 *
+Lincoln2014CvRiv_Nov FRNLRivageSD3 8/06/2015 * * * * * * * * * * 26.5 57.2 33.5 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 26/12/2014 * * * * * * * * * * 8.0 8.0 0.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 2/01/2015 * * * * * * * * * * 11.9 12.9 1.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 8/01/2015 * * * * * * * * * * 13.9 15.3 1.4 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 16/01/2015 * * * * * * * * * * 15.4 18.4 3.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 23/01/2015 * * * * * * * * * * 17.0 21.2 4.2 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 29/01/2015 * * * * * * * * * * 19.3 23.9 4.6 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 3/02/2015 * * * * * * * * * * 19.3 25.5 7.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 10/02/2015 * * * * * * * * * * 20.2 27.2 8.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 19/02/2015 * * * * * * * * * * 22.2 29.7 8.8 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 25/02/2015 * * * * * * * * * * 23.2 32.1 10.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 4/03/2015 * * * * * * * * * * 22.2 34.4 13.5 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 12/03/2015 * * * * * * * * * * 21.2 37.1 16.5 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 18/03/2015 * * * * * * * * * * 23.8 39.1 15.7 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 25/03/2015 * * * * * * * * * * 22.8 41.2 18.8 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 1/04/2015 * * * * * * * * * * 23.7 43.5 20.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 9/04/2015 * * * * * * * * * * 23.7 45.6 22.7 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 15/04/2015 * * * * * * * * * * 24.7 49.0 23.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 23/04/2015 * * * * * * * * * * 27.0 51.2 23.0 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 30/04/2015 * * * * * * * * * * 29.0 53.6 23.2 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 7/05/2015 * * * * * * * * * * 29.8 55.6 24.2 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 14/05/2015 * * * * * * * * * * 28.3 55.8 26.2 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 22/05/2015 * * * * * * * * * * 28.7 57.0 27.5 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 27/05/2015 * * * * * * * * * * 27.7 57.6 28.7 *
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 8/06/2015 * * * * * * * * * * 23.8 61.2 36.2 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 16/01/2015 * * * * * * * * * * 6.8 6.8 0.0 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 22/01/2015 * * * * * * * * * * 9.9 9.9 0.0 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 29/01/2015 * * * * * * * * * * 14.1 14.6 0.5 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 3/02/2015 * * * * * * * * * * 14.7 17.2 2.2 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 10/02/2015 * * * * * * * * * * 16.3 20.0 3.0 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 19/02/2015 * * * * * * * * * * 17.8 22.8 4.2 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 26/02/2015 * * * * * * * * * * 19.3 25.4 5.2 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 4/03/2015 * * * * * * * * * * 20.5 27.6 6.3 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 12/03/2015 * * * * * * * * * * 20.9 30.3 8.3 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 18/03/2015 * * * * * * * * * * 20.9 32.6 10.0 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 25/03/2015 * * * * * * * * * * 21.7 34.2 11.0 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 1/04/2015 * * * * * * * * * * 21.3 36.3 13.3 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 9/04/2015 * * * * * * * * * * 20.8 39.6 16.8 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 15/04/2015 * * * * * * * * * * 20.7 40.8 17.8 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 23/04/2015 * * * * * * * * * * 22.3 43.9 18.6 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 30/04/2015 * * * * * * * * * * 24.6 45.6 19.2 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 7/05/2015 * * * * * * * * * * 26.6 47.4 19.0 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 14/05/2015 * * * * * * * * * * 26.6 48.8 20.4 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 22/05/2015 * * * * * * * * * * 27.4 50.5 21.4 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 27/05/2015 * * * * * * * * * * 27.2 51.3 22.6 *
+Lincoln2014CvRiv_Dec FRNLRivageSD4 8/06/2015 * * * * * * * * * * 23.4 52.5 27.2 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 16/01/2015 * * * * * * * * * * 5.5 5.5 0.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 22/01/2015 * * * * * * * * * * 7.9 8.2 0.3 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 29/01/2015 * * * * * * * * * * 11.8 12.4 0.6 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 3/02/2015 * * * * * * * * * * 14.3 15.1 2.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 10/02/2015 * * * * * * * * * * 16.2 17.8 3.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 19/02/2015 * * * * * * * * * * 19.0 21.7 4.3 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 26/02/2015 * * * * * * * * * * 21.2 24.3 5.2 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 4/03/2015 * * * * * * * * * * 21.2 25.6 10.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 12/03/2015 * * * * * * * * * * 21.0 27.6 9.2 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 18/03/2015 * * * * * * * * * * 21.6 29.3 10.4 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 25/03/2015 * * * * * * * * * * 21.8 34.7 16.4 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 1/04/2015 * * * * * * * * * * 23.2 37.2 18.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 9/04/2015 * * * * * * * * * * 23.8 40.2 21.2 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 15/04/2015 * * * * * * * * * * 26.3 41.1 18.3 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 23/04/2015 * * * * * * * * * * 26.3 40.8 17.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 30/04/2015 * * * * * * * * * * 27.0 42.2 19.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 7/05/2015 * * * * * * * * * * 29.0 44.0 19.5 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 14/05/2015 * * * * * * * * * * 27.5 45.0 22.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 22/05/2015 * * * * * * * * * * 26.0 45.6 24.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 27/05/2015 * * * * * * * * * * 26.0 46.2 25.0 *
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 8/06/2015 * * * * * * * * * * 24.5 48.0 28.0 *
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 20/11/2014 * * * * * * * * * * * * * 0.1
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 24/11/2014 * * * * * * * * * * * * * 0.15
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 27/11/2014 * * * * * * * * * * * * * 0.2
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 2/12/2014 * * * * * * * * * * * * * 0.28
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 8/12/2014 * * * * * * * * * * * * * 0.46
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 16/12/2014 * * * * * * * * * * * * * 0.64
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 22/12/2014 * * * * * * * * * * * * * 0.78
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 30/12/2014 * * * * * * * * * * * * * 0.82
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 8/01/2015 * * * * * * * * * * * * * 0.84
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 16/01/2015 * * * * * * * * * * * * * 0.85
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 22/01/2015 * * * * * * * * * * * * * 0.9
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 4/02/2015 * * * * * * * * * * * * * 0.93
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 10/02/2015 * * * * * * * * * * * * * 0.96
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 20/02/2015 * * * * * * * * * * * * * 0.88
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 9/03/2015 * * * * * * * * * * * * * 0.87
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 25/03/2015 * * * * * * * * * * * * * 0.8
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 10/04/2015 * * * * * * * * * * * * * 0.71
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 29/04/2015 * * * * * * * * * * * * * 0.82
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 13/05/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 2/06/2015 * * * * * * * * * * * * * 0.87
+Lincoln2014CvBri_Sep FRNLBrigadierSD1 10/06/2015 * * * * * * * * * * * * * 0.87
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 8/12/2014 * * * * * * * * * * * * * 0.17
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 16/12/2014 * * * * * * * * * * * * * 0.21
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 22/12/2014 * * * * * * * * * * * * * 0.41
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 30/12/2014 * * * * * * * * * * * * * 0.65
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 8/01/2015 * * * * * * * * * * * * * 0.78
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 16/01/2015 * * * * * * * * * * * * * 0.87
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 22/01/2015 * * * * * * * * * * * * * 0.92
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 4/02/2015 * * * * * * * * * * * * * 0.92
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 10/02/2015 * * * * * * * * * * * * * 0.97
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 20/02/2015 * * * * * * * * * * * * * 0.94
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 9/03/2015 * * * * * * * * * * * * * 0.95
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 25/03/2015 * * * * * * * * * * * * * 0.89
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 10/04/2015 * * * * * * * * * * * * * 0.82
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 29/04/2015 * * * * * * * * * * * * * 0.82
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 13/05/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 2/06/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvBri_Oct FRNLBrigadierSD2 10/06/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 30/12/2014 * * * * * * * * * * * * * 0.17
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 8/01/2015 * * * * * * * * * * * * * 0.45
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 16/01/2015 * * * * * * * * * * * * * 0.73
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 22/01/2015 * * * * * * * * * * * * * 0.81
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 4/02/2015 * * * * * * * * * * * * * 0.85
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 10/02/2015 * * * * * * * * * * * * * 0.91
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 20/02/2015 * * * * * * * * * * * * * 0.95
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 9/03/2015 * * * * * * * * * * * * * 0.96
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 25/03/2015 * * * * * * * * * * * * * 0.9
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 10/04/2015 * * * * * * * * * * * * * 0.81
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 29/04/2015 * * * * * * * * * * * * * 0.82
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 13/05/2015 * * * * * * * * * * * * * 0.85
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 2/06/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvBri_Nov FRNLBrigadierSD3 10/06/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 16/01/2015 * * * * * * * * * * * * * 0.05
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 22/01/2015 * * * * * * * * * * * * * 0.13
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 4/02/2015 * * * * * * * * * * * * * 0.46
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 10/02/2015 * * * * * * * * * * * * * 0.76
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 20/02/2015 * * * * * * * * * * * * * 0.83
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 9/03/2015 * * * * * * * * * * * * * 0.9
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 25/03/2015 * * * * * * * * * * * * * 0.91
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 10/04/2015 * * * * * * * * * * * * * 0.85
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 29/04/2015 * * * * * * * * * * * * * 0.87
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 13/05/2015 * * * * * * * * * * * * * 0.81
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 2/06/2015 * * * * * * * * * * * * * 0.89
+Lincoln2014CvBri_Dec FRNLBrigadierSD4 10/06/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvRiv_Sep FRNLRivageSD1 20/11/2014 * * * * * * * * * * * * * 0.1
+Lincoln2014CvRiv_Sep FRNLRivageSD1 24/11/2014 * * * * * * * * * * * * * 0.21
+Lincoln2014CvRiv_Sep FRNLRivageSD1 27/11/2014 * * * * * * * * * * * * * 0.23
+Lincoln2014CvRiv_Sep FRNLRivageSD1 2/12/2014 * * * * * * * * * * * * * 0.35
+Lincoln2014CvRiv_Sep FRNLRivageSD1 8/12/2014 * * * * * * * * * * * * * 0.57
+Lincoln2014CvRiv_Sep FRNLRivageSD1 16/12/2014 * * * * * * * * * * * * * 0.72
+Lincoln2014CvRiv_Sep FRNLRivageSD1 22/12/2014 * * * * * * * * * * * * * 0.78
+Lincoln2014CvRiv_Sep FRNLRivageSD1 30/12/2014 * * * * * * * * * * * * * 0.8
+Lincoln2014CvRiv_Sep FRNLRivageSD1 8/01/2015 * * * * * * * * * * * * * 0.89
+Lincoln2014CvRiv_Sep FRNLRivageSD1 16/01/2015 * * * * * * * * * * * * * 0.89
+Lincoln2014CvRiv_Sep FRNLRivageSD1 22/01/2015 * * * * * * * * * * * * * 0.95
+Lincoln2014CvRiv_Sep FRNLRivageSD1 4/02/2015 * * * * * * * * * * * * * 0.9
+Lincoln2014CvRiv_Sep FRNLRivageSD1 10/02/2015 * * * * * * * * * * * * * 0.95
+Lincoln2014CvRiv_Sep FRNLRivageSD1 20/02/2015 * * * * * * * * * * * * * 0.96
+Lincoln2014CvRiv_Sep FRNLRivageSD1 9/03/2015 * * * * * * * * * * * * * 0.94
+Lincoln2014CvRiv_Sep FRNLRivageSD1 25/03/2015 * * * * * * * * * * * * * 0.88
+Lincoln2014CvRiv_Sep FRNLRivageSD1 10/04/2015 * * * * * * * * * * * * * 0.8
+Lincoln2014CvRiv_Sep FRNLRivageSD1 29/04/2015 * * * * * * * * * * * * * 0.83
+Lincoln2014CvRiv_Sep FRNLRivageSD1 13/05/2015 * * * * * * * * * * * * * 0.81
+Lincoln2014CvRiv_Sep FRNLRivageSD1 2/06/2015 * * * * * * * * * * * * * 0.79
+Lincoln2014CvRiv_Sep FRNLRivageSD1 10/06/2015 * * * * * * * * * * * * * 0.74
+Lincoln2014CvRiv_Oct FRNLRivageSD2 8/12/2014 * * * * * * * * * * * * * 0.05
+Lincoln2014CvRiv_Oct FRNLRivageSD2 16/12/2014 * * * * * * * * * * * * * 0.19
+Lincoln2014CvRiv_Oct FRNLRivageSD2 22/12/2014 * * * * * * * * * * * * * 0.36
+Lincoln2014CvRiv_Oct FRNLRivageSD2 30/12/2014 * * * * * * * * * * * * * 0.62
+Lincoln2014CvRiv_Oct FRNLRivageSD2 8/01/2015 * * * * * * * * * * * * * 0.75
+Lincoln2014CvRiv_Oct FRNLRivageSD2 16/01/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvRiv_Oct FRNLRivageSD2 22/01/2015 * * * * * * * * * * * * * 0.87
+Lincoln2014CvRiv_Oct FRNLRivageSD2 4/02/2015 * * * * * * * * * * * * * 0.88
+Lincoln2014CvRiv_Oct FRNLRivageSD2 10/02/2015 * * * * * * * * * * * * * 0.89
+Lincoln2014CvRiv_Oct FRNLRivageSD2 20/02/2015 * * * * * * * * * * * * * 0.92
+Lincoln2014CvRiv_Oct FRNLRivageSD2 9/03/2015 * * * * * * * * * * * * * 0.9
+Lincoln2014CvRiv_Oct FRNLRivageSD2 25/03/2015 * * * * * * * * * * * * * 0.87
+Lincoln2014CvRiv_Oct FRNLRivageSD2 10/04/2015 * * * * * * * * * * * * * 0.78
+Lincoln2014CvRiv_Oct FRNLRivageSD2 29/04/2015 * * * * * * * * * * * * * 0.77
+Lincoln2014CvRiv_Oct FRNLRivageSD2 13/05/2015 * * * * * * * * * * * * * 0.73
+Lincoln2014CvRiv_Oct FRNLRivageSD2 2/06/2015 * * * * * * * * * * * * * 0.78
+Lincoln2014CvRiv_Oct FRNLRivageSD2 10/06/2015 * * * * * * * * * * * * * 0.73
+Lincoln2014CvRiv_Nov FRNLRivageSD3 30/12/2014 * * * * * * * * * * * * * 0.16
+Lincoln2014CvRiv_Nov FRNLRivageSD3 8/01/2015 * * * * * * * * * * * * * 0.5
+Lincoln2014CvRiv_Nov FRNLRivageSD3 16/01/2015 * * * * * * * * * * * * * 0.76
+Lincoln2014CvRiv_Nov FRNLRivageSD3 22/01/2015 * * * * * * * * * * * * * 0.81
+Lincoln2014CvRiv_Nov FRNLRivageSD3 4/02/2015 * * * * * * * * * * * * * 0.85
+Lincoln2014CvRiv_Nov FRNLRivageSD3 10/02/2015 * * * * * * * * * * * * * 0.93
+Lincoln2014CvRiv_Nov FRNLRivageSD3 20/02/2015 * * * * * * * * * * * * * 0.93
+Lincoln2014CvRiv_Nov FRNLRivageSD3 9/03/2015 * * * * * * * * * * * * * 0.9
+Lincoln2014CvRiv_Nov FRNLRivageSD3 25/03/2015 * * * * * * * * * * * * * 0.91
+Lincoln2014CvRiv_Nov FRNLRivageSD3 10/04/2015 * * * * * * * * * * * * * 0.81
+Lincoln2014CvRiv_Nov FRNLRivageSD3 29/04/2015 * * * * * * * * * * * * * 0.83
+Lincoln2014CvRiv_Nov FRNLRivageSD3 13/05/2015 * * * * * * * * * * * * * 0.79
+Lincoln2014CvRiv_Nov FRNLRivageSD3 2/06/2015 * * * * * * * * * * * * * 0.78
+Lincoln2014CvRiv_Nov FRNLRivageSD3 10/06/2015 * * * * * * * * * * * * * 0.79
+Lincoln2014CvRiv_Dec FRNLRivageSD4 16/01/2015 * * * * * * * * * * * * * 0.15
+Lincoln2014CvRiv_Dec FRNLRivageSD4 22/01/2015 * * * * * * * * * * * * * 0.23
+Lincoln2014CvRiv_Dec FRNLRivageSD4 4/02/2015 * * * * * * * * * * * * * 0.7
+Lincoln2014CvRiv_Dec FRNLRivageSD4 10/02/2015 * * * * * * * * * * * * * 0.85
+Lincoln2014CvRiv_Dec FRNLRivageSD4 20/02/2015 * * * * * * * * * * * * * 0.83
+Lincoln2014CvRiv_Dec FRNLRivageSD4 9/03/2015 * * * * * * * * * * * * * 0.96
+Lincoln2014CvRiv_Dec FRNLRivageSD4 25/03/2015 * * * * * * * * * * * * * 0.93
+Lincoln2014CvRiv_Dec FRNLRivageSD4 10/04/2015 * * * * * * * * * * * * * 0.84
+Lincoln2014CvRiv_Dec FRNLRivageSD4 29/04/2015 * * * * * * * * * * * * * 0.85
+Lincoln2014CvRiv_Dec FRNLRivageSD4 13/05/2015 * * * * * * * * * * * * * 0.88
+Lincoln2014CvRiv_Dec FRNLRivageSD4 2/06/2015 * * * * * * * * * * * * * 0.86
+Lincoln2014CvRiv_Dec FRNLRivageSD4 10/06/2015 * * * * * * * * * * * * * 0.84
