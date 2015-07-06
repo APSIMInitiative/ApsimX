@@ -7,7 +7,7 @@ using Models.Core;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Germinating phase in phenology
+    /// This model assumes that germination will be complete if the extractable soil water is greater than zero on any day after sowing.
     /// </summary>
     /// \pre A \ref Models.Soils.Soil "Soil" function has to exist to 
     /// provide the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)" 
@@ -19,7 +19,6 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("This model assumes that germination will be complete if the extractable soil water is greater than zero on any day after sowing.")]
     public class GerminatingPhase : Phase
     {
         [Link(IsOptional = true)]
@@ -52,5 +51,6 @@ namespace Models.PMF.Phen
                 return 0.999;
             }
         }
+
     }
 }

@@ -10,6 +10,7 @@ using Models;
 using System.Collections.Generic;
 using System.Text;
 using Models.Graph;
+using System.Drawing;
 
 namespace UserInterface.Commands
 {
@@ -21,6 +22,9 @@ namespace UserInterface.Commands
         private ExplorerPresenter ExplorerPresenter;
         private string NodePath;
         private string FolderPath;
+        string[] indents = new string[] { string.Empty, " class=\"tab1\"", " class=\"tab2\"", " class=\"tab3\"",
+                                                        " class=\"tab4\"", " class=\"tab5\"", " class=\"tab6\"",
+                                                        " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
 
         // Setup a list of model types that we will recurse down through.
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
@@ -47,9 +51,8 @@ namespace UserInterface.Commands
         {
             
             // Get the model we are to export.
-            Model modelToExport = Apsim.Get(ExplorerPresenter.ApsimXFile, NodePath) as Model;
-            if (modelToExport != null)
-                DoExport(modelToExport, FolderPath);
+            string modelName = Path.GetFileNameWithoutExtension(ExplorerPresenter.ApsimXFile.FileName.Replace("Validation", ""));
+            DoExport(modelName, FolderPath);
         }
 
 
@@ -63,189 +66,90 @@ namespace UserInterface.Commands
         /// <summary>
         /// Main export code.
         /// </summary>
-        public void DoExport(Model modelToExport, string folderPath)
+        public void DoExport(string modelNameToExport, string workingDirectory)
         {
             // Make sure the specified folderPath exists because we're going to 
             // write to it.
-            Directory.CreateDirectory(folderPath);
-
-            string savedWorkingDirectory = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(folderPath);
+            Directory.CreateDirectory(workingDirectory);
 
             //Load CSS resource
             Assembly assembly = Assembly.GetExecutingAssembly();
-            StreamReader reader = new StreamReader(assembly.GetManifestResourceStream("UserInterface.Resources.Export.css"));
-            string css = reader.ReadToEnd();
 
             // Write the css file.
-            using (FileStream file = new FileStream(Path.Combine(folderPath, "export.css"), FileMode.Create, FileAccess.Write))
+            using (FileStream file = new FileStream(Path.Combine(workingDirectory, "AutoDocumentation.css"), FileMode.Create, FileAccess.Write))
             {
-                assembly.GetManifestResourceStream("UserInterface.Resources.Export.css").CopyTo(file);
+                assembly.GetManifestResourceStream("UserInterface.Resources.AutoDocumentation.css").CopyTo(file);
             }
 
             //write image files
-            using (FileStream file = new FileStream(Path.Combine(folderPath, "apsim_logo.png"), FileMode.Create, FileAccess.Write))
+            using (FileStream file = new FileStream(Path.Combine(workingDirectory, "apsim_logo.png"), FileMode.Create, FileAccess.Write))
             {
                 assembly.GetManifestResourceStream("UserInterface.Resources.apsim_logo.png").CopyTo(file);
             }
 
-            using (FileStream file = new FileStream(Path.Combine(folderPath, "hd_bg.png"), FileMode.Create, FileAccess.Write))
+            using (FileStream file = new FileStream(Path.Combine(workingDirectory, "hd_bg.png"), FileMode.Create, FileAccess.Write))
             {
                 assembly.GetManifestResourceStream("UserInterface.Resources.hd_bg.png").CopyTo(file);
             }
 
-            // Create HTML file.
-            StringWriter index = new StringWriter();
-
-            // Look for a crop and export it.
-            string titlePageHTML = string.Empty;
-            List<IModel> crop = Apsim.ChildrenRecursively(ExplorerPresenter.ApsimXFile, typeof(ICrop));
-            if (crop.Count > 0)
-            {
-                index.WriteLine("<H1>Model Description</H1>");
-                Classes.PMFDocumentation doc = new Classes.PMFDocumentation();
-                doc.Go(index, crop[0] as Model);
-                titlePageHTML = doc.TitlePageHTML(crop[0] as Model);
-            }
-
-            // Export the validation.
-            index.WriteLine("<H1>Model testing</H1>");
-            DoExportInternal(index, modelToExport, "", string.Empty, 2);
-
-            // Update html for table of contents.
-            string newHTML = CreateTOC(index.ToString());
-  
             // Write file.
-            StreamWriter index2 = new StreamWriter(Path.Combine(folderPath, "Index.html"));
-            index2.WriteLine("<!DOCTYPE html><html lang=\"en-AU\">");
-            index2.WriteLine("<head>");
-            index2.WriteLine("   <link rel=\"stylesheet\" type=\"text/css\" href=\"export.css\">");
-            index2.WriteLine("</head>");
-            index2.WriteLine("<body>");
-            index2.WriteLine("<div id=\"content\"><div id=\"left\"><img src=\"apsim_logo.png\" /></div>");
-            index2.WriteLine("<div id=\"right\"><img src=\"hd_bg.png\" /></div>");
+            StreamWriter index = new StreamWriter(Path.Combine(workingDirectory, "Index.html"));
+            index.WriteLine("<!DOCTYPE html><html lang=\"en-AU\">");
+            index.WriteLine("<head>");
+            index.WriteLine("   <link rel=\"stylesheet\" type=\"text/css\" href=\"AutoDocumentation.css\">");
+            index.WriteLine("   <title>" + modelNameToExport + " documentation</title>");
+            index.WriteLine("</head>");
+            index.WriteLine("<body>");
+            index.WriteLine("<img src=\"apsim_logo.png\"/><div id=\"right\"><img src=\"hd_bg.png\" /></div>");
 
-            index2.WriteLine(titlePageHTML);
-            index2.WriteLine(newHTML);
+            List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
 
-            index2.WriteLine("</body>");
-            index2.WriteLine("</html>");
-            index2.Close();
-
-            Directory.SetCurrentDirectory(savedWorkingDirectory);
-        }
-
-        /// <summary>
-        /// Internal export method.
-        /// </summary>
-        /// <param name="modelToExport">The model to export.</param>
-        /// <param name="folderPath">The folder path.</param>
-        /// <param name="url">The URL.</param>
-        /// <returns>True if something was written to index.</returns>
-        private bool DoExportInternal(TextWriter index, Model modelToExport, string folderPath, string url, int level)
-        {
-            // Make sure the specified folderPath exists because we're going to 
-            // write to it.
-            if (folderPath != string.Empty)
-                Directory.CreateDirectory(folderPath);
-
-            if (modelToExport.Name != "Simulations")
-                index.WriteLine("<H" + level.ToString() + ">" + modelToExport.Name + "</H" + level.ToString() + ">");
-
-            // Look for child models that are a folder or simulation etc
-            // that we need to recurse down through.
-            bool somethingWritten = false;
-            foreach (Model child in modelToExport.Children)
+            // See if there is a title page.
+            IModel titlePage = Apsim.Find(ExplorerPresenter.ApsimXFile, "TitlePage");
+            if (titlePage != null)
             {
-                bool ignoreChild = (child is Simulation && child.Parent is Experiment);
-
-                if (!ignoreChild)
-                {
-                    if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
-                    {
-                        string childFolderPath = Path.Combine(folderPath, child.Name);
-                        DoExportInternal(index, child, childFolderPath, url + "../", level+1);
-                    }
-                    else
-                    {
-                        string html = ModelToHTML(child, folderPath);
-                        if (html != null)
-                        {
-                            somethingWritten = true;
-                            index.WriteLine(html);
-                        }
-                    }
-                }
+                titlePage.Document(tags, 1, 0);
+                WriteHTML(index, tags, workingDirectory);
+                tags.Clear();
             }
 
-            return somethingWritten;
+            // Document model description.
+            tags.Add(new AutoDocumentation.Heading("Model description", 1));
+            ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 2);
+
+            // Document model validation.
+            tags.Add(new AutoDocumentation.Heading("Validation", 1));
+            AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
+
+            CreateTableOfContents(index, tags);
+
+            WriteHTML(index, tags, workingDirectory);
+
+            index.WriteLine("</body>");
+            index.WriteLine("</html>");
+            index.Close();
+
+            ExplorerPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
         }
 
-        /// <summary>
-        /// Export the specified model to HTML. Can return null if nothing to export.
-        /// </summary>
-        /// <param name="modelToExport">The model to export</param>
-        /// <param name="folderPath">The folder path where images can be stored.</param>
-        private string ModelToHTML(Model modelToExport, string folderPath)
+        /// <summary>Creates a table of contents.</summary>
+        /// <param name="writer">The writer to write to.</param>
+        /// <param name="tags">The autodoc tags.</param>
+        private void CreateTableOfContents(TextWriter writer, List<AutoDocumentation.ITag> tags)
         {
-            // If this is a graph then only include it if it has been flagged as 'to be included'
-            if (modelToExport is Graph)
-            {
-                Graph graph = modelToExport as Graph;
-                if (!graph.IncludeInDocumentation)
-                    return null;
-            }
+            writer.WriteLine("<dl>");
 
-            // Select the node in the tree.
-            ExplorerPresenter.SelectNode(Apsim.FullPath(modelToExport));
-
-            // If the presenter is exportable then simply export this child.
-            // Otherwise, if it is one of a folder, simulation, experiment or zone then
-            // recurse down.
-            if (ExplorerPresenter.CurrentPresenter is IExportable)
-            {
-                string html = (ExplorerPresenter.CurrentPresenter as IExportable).ConvertToHtml(folderPath);
-                return "<p>" + html + "</p>";
-            }
-
-            return null;
-        }
-
-        /// <summary>Creates the table of contents, returning HTML.</summary>
-        /// <param name="html">The HTML to parse for heading tags and change for TOC</param>
-        /// <returns>The modified HTML.</returns>
-        private string CreateTOC(string html)
-        {
             int[] levels = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            int posLastHeading = 0;
-            int posHeading = html.IndexOf("<H", StringComparison.CurrentCultureIgnoreCase);
-
-            StringBuilder toc = new StringBuilder();
-            StringBuilder htmlModified = new StringBuilder();
-
-            toc.Append("<dl>");
-
-            while (posHeading != -1)
+            foreach (AutoDocumentation.ITag tag in tags)
             {
-                // write everything up to the old heading;
-                htmlModified.Append(html.Substring(posLastHeading, posHeading - posLastHeading));
-
-                int posEndHeading = html.IndexOf("</H", posHeading, StringComparison.CurrentCultureIgnoreCase);
-
-                // extract the heading and heading number (1 to 10)
-                string heading = html.Substring(posHeading + 4, posEndHeading - posHeading - 4);
-                string htmlFollowingHeading = string.Empty;
-                if (posEndHeading + 7 < html.Length)
-                    htmlFollowingHeading = html.Substring(posEndHeading + 7, 2);
-                if (htmlFollowingHeading != "<H")
+                if (tag is AutoDocumentation.Heading)
                 {
-                    int headingNumber = Convert.ToInt32(Char.GetNumericValue(html[posHeading + 2]));
-
-                    if (headingNumber > 0 && headingNumber < 4)
+                    AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
+                    if (heading.headingLevel > 0)
                     {
                         // Update levels based on heading number.
-                        levels[headingNumber - 1]++;
-                        for (int i = headingNumber; i < levels.Length; i++)
+                        levels[heading.headingLevel - 1]++;
+                        for (int i = heading.headingLevel; i < levels.Length; i++)
                             if (levels[i] > 0)
                                 levels[i] = 0;
 
@@ -258,32 +162,135 @@ namespace UserInterface.Commands
                                     levelString += ".";
                                 levelString += levels[i].ToString();
                             }
-                        heading = levelString + " " + heading;
-
-                        // Write the heading back to the html.
-
-                        htmlModified.Append("<a name=\"" + heading + "\"></a>");
-                        htmlModified.Append("<H" + headingNumber + ">" + heading + "</H" + headingNumber + ">");
-
-                        // Add heading to our list of headings.
-                        toc.Append("<dt>");
-                        for (int i = 0; i < headingNumber; i++)
-                            toc.Append("&nbsp;&nbsp;&nbsp;&nbsp;");
-                        toc.Append("<a href=\"#" + heading + "\">" + heading + "</a><br></dt>\r\n");
+                        heading.text = levelString + " " + heading.text;
+                        if (heading.headingLevel < 3 || levelString.StartsWith("2"))
+                            writer.WriteLine("<dt{0}><a href=\"#{1}\">{1}</a><br/></dt>", indents[heading.headingLevel], heading.text);
                     }
                 }
-
-                // Find next heading.
-                posLastHeading = posEndHeading + 5;
-                posHeading = html.IndexOf("<H", posLastHeading, StringComparison.CurrentCultureIgnoreCase);
             }
+            writer.WriteLine("</dl>");
+        }
 
-            // write remainder of file.
-            htmlModified.Append(html.Substring(posLastHeading));
+        /// <summary>Writes HTML for specified auto-doc commands.</summary>
+        /// <param name="writer">The writer to write to.</param>
+        /// <param name="tags">The autodoc tags.</param>
+        /// <param name="workingDirectory">The working directory.</param>
+        private void WriteHTML(TextWriter writer, List<AutoDocumentation.ITag> tags, string workingDirectory)
+        {
 
-            toc.Append("</dl>");
+            foreach (AutoDocumentation.ITag tag in tags)
+            {
+                if (tag is AutoDocumentation.Heading)
+                {
+                    AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
+                    if (heading.headingLevel > 0 && heading.headingLevel < 4)
+                    {
+                        writer.WriteLine("<a name=\"{0}\"></a>", heading.text);
+                        writer.WriteLine("<h{0}>{1}</h{0}>", heading.headingLevel, heading.text);
+                    }
+                }
+                else if (tag is AutoDocumentation.Paragraph)
+                {
+                    AutoDocumentation.Paragraph paragraph = tag as AutoDocumentation.Paragraph;
+                    writer.WriteLine("<p" + indents[paragraph.indent] + ">" + paragraph.text + "</p>");
+                }
+                else if (tag is AutoDocumentation.GraphAndTable)
+                {
+                    CreateGraph(writer, tag as AutoDocumentation.GraphAndTable, workingDirectory);
+                }
+                else if (tag is Graph)
+                {
+                    GraphPresenter graphPresenter = new GraphPresenter();
+                    GraphView graphView = new GraphView();
+                    graphView.BackColor = Color.White;
+                    //graphView.Show();
+                    graphPresenter.Attach(tag, graphView, ExplorerPresenter);
+                    writer.WriteLine(graphPresenter.ConvertToHtml(workingDirectory));
+                    graphPresenter.Detach();
+                }
+            }
+        }
 
-            return toc.ToString() + htmlModified.ToString();
+        /// <summary>Creates the graph.</summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="graphAndTable">The graph and table to convert to html.</param>
+        /// <param name="workingDirectory">The working directory.</param>
+        private void CreateGraph(TextWriter writer, AutoDocumentation.GraphAndTable graphAndTable, string workingDirectory)
+        {
+            // Ensure graphs directory exists.
+            string graphDirectory = Path.Combine(workingDirectory, "Graphs");
+            Directory.CreateDirectory(graphDirectory);
+
+            // Determine the name of the .png file to write.
+            string PNGFileName = Path.Combine(graphDirectory,
+                                              graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + ".png");
+
+            // Start the outside table.
+            writer.WriteLine("<table" + indents[graphAndTable.indent] + ">");
+
+            // output chart as a column to the outer table.
+            writer.WriteLine("<tr><td><img src=\"" + PNGFileName + "\"></td>");
+
+            // output xy table as a table.
+            writer.WriteLine("<td><table width=\"300\">");
+            writer.WriteLine("<td>" + graphAndTable.xName + "</td><td>" + graphAndTable.yName + "</td>");
+            for (int i = 0; i < graphAndTable.xyPairs.X.Length; i++)
+                writer.WriteLine("<tr><td>" + graphAndTable.xyPairs.X[i] + "</td><td>" + graphAndTable.xyPairs.Y[i] + "</td></tr>");
+            writer.WriteLine("</table></td>");
+            writer.WriteLine("</tr></table>");
+
+            // Setup graph.
+            GraphView graph = new GraphView();
+            graph.Clear();
+
+            // Create a line series.
+            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, 
+                                     Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
+                                     Color.Blue, Models.Graph.Series.LineType.Solid, Models.Graph.Series.MarkerType.None, true);
+
+            // Format the axes.
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
+            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN);
+            graph.BackColor = Color.White;
+            graph.Refresh();
+            graph.FormatTitle(graphAndTable.title);
+
+            // Export graph to bitmap file.
+            Bitmap image = new Bitmap(480, 480);
+            graph.Export(image);
+            image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
+        }
+
+        /// <summary>
+        /// Internal export method.
+        /// </summary>
+        /// <param name="tags">The autodoc tags.</param>
+        /// <param name="modelToExport">The model to export.</param>
+        /// <param name="workingDirectory">The folder path where bitmaps can be written.</param>
+        /// <param name="url">The URL.</param>
+        /// <returns>True if something was written to index.</returns>
+        private void AddValidationTags(List<AutoDocumentation.ITag> tags, IModel modelToExport, int headingLevel, string workingDirectory)
+        {
+            if (modelToExport.Name != "Simulations")
+                tags.Add(new AutoDocumentation.Heading(modelToExport.Name, headingLevel));
+
+            // Look for child models that are a folder or simulation etc
+            // that we need to recurse down through.
+            foreach (Model child in modelToExport.Children)
+            {
+                bool ignoreChild = (child is Simulation && child.Parent is Experiment);
+
+                if (!ignoreChild)
+                {
+                    if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
+                    {
+                        string childFolderPath = Path.Combine(workingDirectory, child.Name);
+                        AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
+                    }
+                    else if (child is Memo || child is Graph)
+                        child.Document(tags, headingLevel, 0);
+                }
+            }
         }
     }
 }

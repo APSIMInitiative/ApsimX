@@ -104,7 +104,6 @@
     <Compile Include="Classes\GridColumn.cs" />
     <Compile Include="Classes\HtmlEditor.cs" />
     <Compile Include="Classes\HTMLToRTF.cs" />
-    <Compile Include="Classes\PMFDocumentation.cs" />
     <Compile Include="Classes\RTFToHTML.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
@@ -713,10 +712,9 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ExcelInput.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Cultivar.png" />
     <EmbeddedResource Include="Resources\Toolboxes\OpenExample.png" />
-    <EmbeddedResource Include="Resources\Export.css" />
+    <EmbeddedResource Include="Resources\AutoDocumentation.css" />
     <EmbeddedResource Include="Resources\hd_bg.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Memo.png" />
-    <None Include="Resources\Plant2.css" />
     <EmbeddedResource Include="Resources\TreeViewImages\OilPalm.png" />
     <EmbeddedResource Include="Resources\MenuImages\Delete.png" />
     <EmbeddedResource Include="Resources\MenuImages\Refresh.png" />
