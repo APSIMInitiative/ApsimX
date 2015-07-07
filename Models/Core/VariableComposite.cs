@@ -119,7 +119,10 @@ namespace Models.Core
         {
             get
             {
-                return null;
+                if (this.variables.Count == 0)
+                    return string.Empty;
+
+                return variables[variables.Count - 1].Units;
             }
 
             set

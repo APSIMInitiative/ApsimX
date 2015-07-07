@@ -7,10 +7,9 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// Returns the value of PreEventValue child function from Initialisation to SetEvent, PostEventValue from ReSetEvent and PreEventValue again from ReSetEvent to the next SetEvent
+    /// Returns the a value depending on whether an event has occurred.
     /// </summary>
     [Serializable]
-    [Description("Returns the value of PreEventValue child function from Initialisation to SetEvent, PostEventValue from ReSetEvent and PreEventValue again from ReSetEvent to the next SetEvent")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class OnEventFunction : Model, IFunction
@@ -19,10 +18,9 @@ namespace Models.PMF.Functions
         private double _Value = 0;
 
         /// <summary>The set event</summary>
-        [Description("SetEvent")]
         public string SetEvent { get; set; }
+
         /// <summary>The re set event</summary>
-        [Description("ReSetEvent")]
         public string ReSetEvent {get; set;}
 
 
@@ -66,15 +64,33 @@ namespace Models.PMF.Functions
             _Value = PostEventValue.Value;
         }
 
-
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
         public double Value
         {
             get
             {
                 return _Value;
             }
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
+            (PreEventValue as IModel).Document(tags, -1, indent + 1);
+
+            tags.Add(new AutoDocumentation.Paragraph("After " + SetEvent, indent));
+            (PostEventValue as IModel).Document(tags, -1, indent + 1);
         }
 
     }

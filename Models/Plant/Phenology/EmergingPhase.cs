@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Emerging phase in phenology
+    /// This phase simulates time to emergence as a function of sowing depth.  Thermal time to emergence = Sowing Depth x Shoot Rate + Shoot Lag.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 
     /// provide the sowing depth (\f$D_{seed}\f$).
@@ -32,7 +32,6 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("This phase simulates time to emergence as a function of sowing depth.  Thermal time to emergence = Sowing Depth x Shoot Rate + Shoot Lag.")]
     public class EmergingPhase : GenericPhase
     {
         /// <summary>The plant</summary>

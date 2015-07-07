@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using System.IO;
 
 namespace Models.PMF.Functions
 {
@@ -32,6 +33,24 @@ namespace Models.PMF.Functions
                 }
                 return 0;  // Default value is zero
             }
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                child.Document(tags, -1, indent);
         }
 
     }

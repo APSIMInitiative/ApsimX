@@ -98,8 +98,8 @@ namespace Models.Core
             }
             catch (ApsimXException err)
             {
-                DataStore store = new DataStore(this);
-
+                DateTime errorDate = Clock.Today;
+                
                 string Msg = "ERROR in file: " + FileName + "\r\n" +
                              "Simulation name: " + Name + "\r\n";
                 Msg += err.Message;
@@ -113,15 +113,17 @@ namespace Models.Core
                 {
                     modelFullPath = Apsim.FullPath(err.model);
                 }
-                store.WriteMessage(Name, Clock.Today, modelFullPath, err.Message, DataStore.ErrorLevel.Error);
-                store.Disconnect();
+
+                ErrorMessage = Msg;
+                ISummary summary = Apsim.Find(this, typeof(Summary)) as ISummary;
+                summary.WriteMessage(this, Msg);
                 CleanupRun(Msg);
+
                 throw new Exception(Msg);
             }
             catch (Exception err)
             {
-                DataStore store = new DataStore(this);
-
+                DateTime errorDate = Clock.Today;
                 string Msg = "ERROR in file: " + FileName + "\r\n" +
                              "Simulation name: " + Name + "\r\n"; 
                 Msg += err.Message;
@@ -130,10 +132,11 @@ namespace Models.Core
                 else
                     Msg += "\r\n" + err.StackTrace;
 
-                store.WriteMessage(Name, Clock.Today, "Unknown", err.Message, DataStore.ErrorLevel.Error);
-                store.Disconnect();
-
+                ErrorMessage = Msg; 
+                ISummary summary = Apsim.Find(this, typeof(Summary)) as ISummary;
+                summary.WriteMessage(this, Msg);
                 CleanupRun(Msg);
+
                 throw new Exception(Msg);
             }
             if (e != null)
@@ -198,6 +201,7 @@ namespace Models.Core
                 Console.WriteLine(errorMessage);
             }
         }
+
 
     }
 
