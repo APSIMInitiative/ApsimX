@@ -5,8 +5,12 @@
     <Name>Introduction</Name>
     <MemoText><![CDATA[
 <html><body>
-The APSIM Maize model has been tested on a range of datasets from around the world to provide tests across a range of environmental conditions.  Tests include ranges in plant population, nitrogen management and irrigation levels, as well as including historical datasets from africa using cultivars developed during the 1960's, through to modern varieties grown in the American mid-West.<br/>
+<p>
+The APSIM Maize model has been tested on a range of datasets from around the world to provide tests across a range of environmental conditions.  Tests include ranges in plant population, nitrogen management and irrigation levels, as well as including historical datasets from africa using cultivars developed during the 1960's, through to modern varieties grown in the American mid-West.
+</p>
+<p>
 
+</p>
 </body></html>]]></MemoText>
   </Memo>
   <Replacements>
@@ -17,12 +21,16 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
         <Name>TitlePage</Name>
         <MemoText><![CDATA[
 <html><body>
-<div><p><H1>The APSIM Maize Model</H1></p></div>
-<p><i>Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P.</i></p>
-<br/>
-The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of Brown <i>et al</i>(2014).
-This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
-<br/>
+<h1>The APSIM Maize Model</h1>
+<p>
+<i>Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P.</i>
+</p>
+<p>
+The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of Brown <i>et al</i>(2014).This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+</p>
+<p>
+
+</p>
 </body></html>]]></MemoText>
       </Memo>
       <OrganArbitrator>

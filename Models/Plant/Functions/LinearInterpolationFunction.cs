@@ -119,7 +119,7 @@ namespace Models.PMF.Functions
             {
                 IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
                 string xName = XProperty;
-                if (xProperty.Units != string.Empty)
+                if (xProperty != null && xProperty.Units != string.Empty)
                     xName += " (" + xProperty.Units + ")";
                 tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, Name, xName, Name, indent));
             }
