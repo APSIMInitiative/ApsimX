@@ -40,7 +40,8 @@ namespace Models.PMF.Functions
             if (units != string.Empty)
                 units = " (" + units + ")";
 
-            tags.Add(new AutoDocumentation.Paragraph(description, indent));
+            if (description != string.Empty)
+                tags.Add(new AutoDocumentation.Paragraph(description, indent));
             tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + Value + units + "</i>.", indent));
         }
     }

@@ -33,7 +33,16 @@ namespace Models.PMF.OldPlant
         public double CanopyWidth { get { return _CanopyWidth; } set { _CanopyWidth = value; } }
         /// <summary>Gets the row spacing.</summary>
         /// <value>The row spacing.</value>
-        public double RowSpacing { get { return Plant.SowingData.RowSpacing; } }
+        public double RowSpacing 
+        { 
+            get 
+            {
+                if (Plant.SowingData != null)
+                    return Plant.SowingData.RowSpacing;
+                else
+                    return 0;
+            } 
+        }
         /// <summary>Gets the canopy factor.</summary>
         /// <value>The canopy factor.</value>
         /// <exception cref="System.NotImplementedException"></exception>
