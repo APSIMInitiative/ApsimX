@@ -485,6 +485,8 @@ namespace UserInterface.Commands
                 row.Cells[1].AddParagraph(graphAndTable.xyPairs.Y[i].ToString());
             }
 
+            // Add an empty paragraph for spacing.
+            section.AddParagraph();
 
         }
 
@@ -543,7 +545,7 @@ namespace UserInterface.Commands
             para.Format.LeftIndent = Unit.FromCentimeter(paragraph.indent);
 
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml("<p>" + paragraph.text + "</p>");
+            doc.LoadXml("<p>" + paragraph.text.Replace("&", " and") + "</p>");
 
             foreach (XmlNode element in doc.DocumentElement.ChildNodes)
             {
