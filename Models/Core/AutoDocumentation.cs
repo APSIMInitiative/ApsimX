@@ -143,6 +143,12 @@ namespace Models.Core
             /// <summary>The indent level.</summary>
             public int indent;
 
+            /// <summary>The bookmark name (optional)</summary>
+            public string bookmarkName;
+
+            /// <summary>Should the paragraph indent all lines except the first?</summary>
+            public bool handingIndent;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Paragraph"/> class.
             /// </summary>

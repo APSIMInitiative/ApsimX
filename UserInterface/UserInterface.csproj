@@ -121,6 +121,7 @@
     <Compile Include="Classes\HTMLToRTF.cs" />
     <Compile Include="Classes\RTFToHTML.cs" />
     <Compile Include="CommandHistory.cs" />
+    <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\ExportNodeCommand.cs" />

@@ -26,15 +26,21 @@ namespace UserInterface.Commands
     {
         private ExplorerPresenter ExplorerPresenter;
         private string NodePath;
-        string[] indents = new string[] { string.Empty, " class=\"tab1\"", " class=\"tab2\"", " class=\"tab3\"",
-                                                        " class=\"tab4\"", " class=\"tab5\"", " class=\"tab6\"",
-                                                        " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
+        private string[] indents = new string[] { string.Empty, " class=\"tab1\"", " class=\"tab2\"", " class=\"tab3\"",
+                                                  " class=\"tab4\"", " class=\"tab5\"", " class=\"tab6\"",
+                                                  " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
 
         // Setup a list of model types that we will recurse down through.
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
                                                                     typeof(Simulations),
                                                                     typeof(Simulation),
                                                                     typeof(Experiment)};
+
+        /// <summary>A .bib file instance.</summary>
+        private BibTeX bibTeX;
+
+        /// <summary>A list of all citations found.</summary>
+        private List<BibTeX.Citation> citations;
 
         /// <summary>Gets the name of the file .</summary>
         public string FileNameWritten { get; private set; }
@@ -55,6 +61,10 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
+            string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\APSIM.bib");
+            bibTeX = new BibTeX(bibFile);
+            citations = new List<BibTeX.Citation>();
+
             // Get the model we are to export.
             string modelName = Path.GetFileNameWithoutExtension(ExplorerPresenter.ApsimXFile.FileName.Replace("Validation", ""));
             DoExportPDF(modelName);
@@ -361,6 +371,7 @@ namespace UserInterface.Commands
             if (titlePage != null)
             {
                 titlePage.Document(tags, 1, 0);
+                ScanForCitations(tags);
                 WritePDF(section, tags, workingDirectory);
                 tags.Clear();
             }
@@ -372,6 +383,12 @@ namespace UserInterface.Commands
             // Document model validation.
             tags.Add(new AutoDocumentation.Heading("Validation", 1));
             AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
+
+            // Scan for citations.
+            ScanForCitations(tags);
+
+            // Create a bibliography.
+            CreateBibliography(tags);
 
             // numebr all headings.
             NumberHeadings(tags);
@@ -543,9 +560,19 @@ namespace UserInterface.Commands
         {
             Paragraph para = section.AddParagraph();
             para.Format.LeftIndent = Unit.FromCentimeter(paragraph.indent);
+            if (paragraph.bookmarkName != null)
+                para.AddBookmark(paragraph.bookmarkName);
+
+            if (paragraph.handingIndent)
+            {
+                para.Format.LeftIndent = "1cm";
+                para.Format.FirstLineIndent = "-1cm";
+            }
+
+            string text = paragraph.text;
 
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml("<p>" + paragraph.text.Replace("&", " and") + "</p>");
+            doc.LoadXml("<p>" + text.Replace(@"\&", "and") + "</p>");
 
             foreach (XmlNode element in doc.DocumentElement.ChildNodes)
             {
@@ -555,8 +582,93 @@ namespace UserInterface.Commands
                     para.AddFormattedText(element.InnerText, TextFormat.Bold);
                 else if (element.Name == "u")
                     para.AddFormattedText(element.InnerText, TextFormat.Underline);
+                else if (element.Name == "a")
+                {
+                    string href = XmlUtilities.Attribute(element, "href");
+                    Hyperlink link;
+                    if (href.StartsWith("#"))
+                    {
+                        link = para.AddHyperlink(href.Substring(1), HyperlinkType.Bookmark);
+                    }
+                    else
+                        link = para.AddHyperlink(href, HyperlinkType.Web);
+
+                    link.Font.Color = new MigraDoc.DocumentObjectModel.Color(33, 151, 210);
+                    string linkText = element.InnerText;
+                    link.AddText(linkText);
+                }
                 else
                     para.AddText(element.InnerText);
+            }
+        }
+
+        /// <summary>Scans for citations.</summary>
+        /// <param name="t">The tags to go through looking for citations.</param>
+        private void ScanForCitations(List<AutoDocumentation.ITag> tags)
+        {
+            foreach (AutoDocumentation.ITag tag in tags)
+            {
+                if (tag is AutoDocumentation.Paragraph)
+                {
+                    AutoDocumentation.Paragraph paragraph = tag as AutoDocumentation.Paragraph;
+                    string text = paragraph.text;
+                    int posBracket = text.IndexOf('[');
+                    while (posBracket != -1)
+                    {
+                        int posEndBracket = text.IndexOf(']', posBracket);
+                        if (posEndBracket != -1)
+                        {
+                            // found a possible citation.
+                            string citationName = text.Substring(posBracket + 1, posEndBracket - posBracket - 1);
+
+                            // see if we have already encountered the citation.
+                            BibTeX.Citation citation = citations.Find(c => c.Name == citationName);
+
+                            // If we haven't encountered it, look it up in the .bib file.
+                            if (citation == null)
+                                citation = bibTeX.Lookup(citationName);
+
+                            if (citation != null)
+                            {
+                                // Add it to our list of citations.
+                                citations.Add(citation);
+
+                                // Replace the in-text citation with (author et al., year)
+                                string htmlRef = string.Format("(<a href=\"#{0}\">{1}</a>)", citation.Name, citation.InTextCite);
+                                text = text.Remove(posBracket, posEndBracket - posBracket + 1);
+                                text = text.Insert(posBracket, htmlRef);
+                            }
+                        }
+
+                        // Find the next bracketed potential citation.
+                        posBracket = text.IndexOf('[', posBracket + 1);
+                    }
+
+                    paragraph.text = text;
+                }
+            }
+        }
+
+        /// <summary>Creates the bibliography.</summary>
+        /// <param name="tags">The tags to add to.</param>
+        private void CreateBibliography(List<AutoDocumentation.ITag> tags)
+        {
+            // Create the heading.
+            tags.Add(new AutoDocumentation.Heading("References", 1));
+
+            foreach (BibTeX.Citation citation in citations)
+            {
+                string url = citation.URL;
+                string text;
+                if (url != string.Empty)
+                    text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
+                else
+                    text = citation.BibliographyText;
+
+                AutoDocumentation.Paragraph paragraph = new AutoDocumentation.Paragraph(text, 0);
+                paragraph.bookmarkName = citation.Name;
+                paragraph.handingIndent = true;
+                tags.Add(paragraph);
             }
         }
 
