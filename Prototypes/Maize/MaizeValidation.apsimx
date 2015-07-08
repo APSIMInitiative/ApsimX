@@ -23,10 +23,7 @@ The APSIM Maize model has been tested on a range of datasets from around the wor
 <html><body>
 <h1>The APSIM Maize Model</h1>
 <p>
-<i>Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P.</i>
-</p>
-<p>
-The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of Brown <i>et al</i>(2014).This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+<i>Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P.</i>The APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014].This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
 </p>
 <p>
 
@@ -1846,27 +1843,6 @@ VShort duration variety released in New Zealand by Pioneer
         <Name>Pioneer_33M54</Name>
         <Command>[Phenology].GrainFilling.Target.Value = 550</Command>
       </Cultivar>
-      <Memo>
-        <Name>References</Name>
-        <MemoText><![CDATA[
-<html><body>
-<h2>References</h2>
-<br/>
-Brown, H.E., Huth, N.I., Holzworth, D.P., Teixeira, E.I., Zyskowski, R.F., Hargreaves, J.N., Moot, D.J., 2014. Plant modelling framework: software for building and running crop models on the APSIM platform. Environmental Modelling & Software 62 385-398.
-<br/><br/>
-Hammer, G.L., Dong, Z., McLean, G., Doherty, A., Messina, C., Schussler, J., Zinselmeier, C., Paszkiewicz, S., Cooper, M., 2009. Can Changes in Canopy and/or Root System Architecture Explain Historical Maize Yield Trends in the U.S. Corn Belt? Crop Science 49(1) 299-312.
-<br/><br/>
-Jones, C.A. and Kiniry, J.R. (1986) CERES-Maize: a Simulation Model of Maize Growth and Development. Texas A&M University Press, College Station, 194pp.
-<br/><br/>
-Meinke, H., Hammer, G.L., Want, P., 1993. POTENTIAL SOIL-WATER EXTRACTION BY SUNFLOWER ON A RANGE OF SOILS. Field Crops Research 32(1-2) 59-81.
-<br/><br/>
-Ning, P., Li, S., White, P.J., Li, C., 2015. Maize Varieties Released in Different Eras Have Similar Root Length Density Distributions in the Soil, Which Are Negatively Correlated with Local Concentrations of Soil Mineral Nitrogen. PLoS ONE 10(3) e0121892.
-<br/><br/>
-Njoroge, K., 1986. Earliness and yield in maize: an evaluation of some Katumani maize varieties. East African Agricultural and Forestry Journal 48(1/4) 40-50.
-<br/><br/>
-Peake, A.S., Huth, N.I., Kelly, A.M., Bell, K.L., 2013. Variation in water extraction with maize plant density and its impact on model application. Field Crops Research 146(0) 31-37.
-</body></html>]]></MemoText>
-      </Memo>
       <CropType>Maize</CropType>
     </Plant>
   </Replacements>
@@ -33040,26 +33016,5 @@ Simulation results for the combined datasets from the various countries are show
     <DisabledSeries />
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
-  <Memo>
-    <Name>References</Name>
-    <MemoText><![CDATA[
-<html><body>
-<h3>References</h3>
-Archontoulis, S.V., Miguez, F.E., Moore, K.J., 2014. Evaluating APSIM Maize, Soil Water, Soil Nitrogen, Manure, and Soil Temperature Modules in the Midwestern United States. Agronomy Journal 106(3) 1025-1040.<br/>
-<br/>
-Brown, H.E., Huth, N.I., Holzworth, D.P., Teixeira, E.I., Zyskowski, R.F., Hargreaves, J.N., Moot, D.J., 2014. Plant modelling framework: software for building and running crop models on the APSIM platform. Environmental Modelling and Software 62 385-398.<br/>
-<br/>
-Carberry, P.S., Abrecht, D.G., 1991. Tailoring crop models to the semi-arid tropics. In: Muchow, R.C., Bellamy, J.A. (Eds.), Climatic Risk in Crop Production: Models and Management for the Semiarid Tropics and Subtropics. CAB International, Wallingford, UK, pp. 157-182.<br/>
-<br/>
-Carberry, P.S., Muchow, R.C., McCown, R.L., 1989. Testing the CERES-Maize simulation model in a semi-arid tropical environment. Field Crops Research 20(4) 297-315.<br/>
-<br/>
-Keating, B. A., B. M. Wafula, and J. M. Watiki. "Development of a modelling capability for maize in semi-arid eastern Kenya." In ACIAR Proc, vol. 41, pp. 26-33. 1992.<br/>
-<br/>
-Teixeira EI, George M, Brown HE, Fletcher AL. 2011. A framework for quantifying maize leaf expansion and senescence at the individual leaf level. Agronomy New Zealand, 41: 59-65.<br/>
-<br/>
-Teixeira, E.I., George, M., Herreman, T., Brown, H., Fletcher, A., Chakwizira, E., de Ruiter, J., Maley, S., Noble, A., 2014. The impact of water and nitrogen limitation on maize biomass and resource-use efficiencies for radiation, water and nitrogen. Field Crops Research 168(0) 109-118.<br/>
-
-</body></html>]]></MemoText>
-  </Memo>
   <ExplorerWidth>283</ExplorerWidth>
 </Simulations>
