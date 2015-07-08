@@ -85,7 +85,10 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return _TTinPhase / CalcTarget();
+                if (CalcTarget() == 0)
+                    return 1;
+                else
+                    return _TTinPhase / CalcTarget();
             }
         }
 
