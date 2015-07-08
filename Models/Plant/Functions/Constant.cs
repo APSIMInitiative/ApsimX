@@ -28,7 +28,8 @@ namespace Models.PMF.Functions
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (headingLevel > 0)
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))

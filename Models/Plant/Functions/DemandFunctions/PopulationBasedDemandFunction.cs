@@ -6,10 +6,9 @@ using Models.Core;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
-    /// Population based demand function
+    /// Demand is calculated from the product of growth rate, thermal time and population.
     /// </summary>
     [Serializable]
-    [Description("Demand is calculated from the product of growth rate, thermal time and population.")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PopulationBasedDemandFunction : Model, IFunction

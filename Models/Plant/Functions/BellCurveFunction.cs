@@ -7,10 +7,9 @@ using Models.Core;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// A bell curve function
+    /// Calculates the maximum leaf size (mm2/leaf) given its node position (Elings, 2000 - Agronomy Journal 92, 436-444)
     /// </summary>
     [Serializable]
-    [Description("Calculates the maximum leaf size (mm2/leaf) given its node position (Elings, 2000 - Agronomy Journal 92, 436-444)")]
     public class BellCurveFunction : Model, IFunction
     {
         /// <summary>The largest leaf position</summary>
@@ -23,8 +22,6 @@ namespace Models.PMF.Functions
         [Link] IFunction Skewness = null;
         /// <summary>The structure</summary>
         [Link] Structure Structure = null;
-
-
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>

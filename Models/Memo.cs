@@ -66,6 +66,8 @@ namespace Models
                             tags.Add(new AutoDocumentation.Heading(child.InnerText, headingLevel));
                         else if (child.InnerXml != string.Empty)
                             tags.Add(new AutoDocumentation.Paragraph(child.InnerXml, indent));
+                        else if (child.InnerText != string.Empty)
+                            tags.Add(new AutoDocumentation.Paragraph(child.InnerText, indent));
                     }
 
                 }
