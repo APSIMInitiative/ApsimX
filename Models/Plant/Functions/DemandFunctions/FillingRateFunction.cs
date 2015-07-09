@@ -6,10 +6,9 @@ using Models.Core;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
-    /// Partition fraction demand function
+    /// Filling rate is calculated from grain number, a maximum mass to be filled and the duration of the filling process.
     /// </summary>
     [Serializable]
-    [Description("Filling rate is calculated from grain number, a maximum mass to be filled and the duration of the filling process.")]
     public class FillingRateFunction : Model, IFunction
     {
         /// <summary>The partition fraction</summary>

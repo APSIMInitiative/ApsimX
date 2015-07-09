@@ -27,47 +27,64 @@ namespace UserInterface.Classes
             // Create HTML from our list of RTF bits.
             StringBuilder HTML = new StringBuilder("\r\n<html><body>\r\n");
 
+            bool inParagraph = false;
+            bool inHeading = false;
             string style = string.Empty;
             bool superscript = false;
             foreach (string code in RTFParsed)
             {
-                if (code == "fs32") { HTML.Append("<h1>"); style = "h1"; }
-                else if (code == "fs28") { HTML.Append("<h2>"); style = "h2"; }
-                else if (code == "fs24") { HTML.Append("<h3>"); style = "h3"; }
+                if (code == "fs32")      { inHeading = true; HTML.Append("<h1>"); style = "h1"; }
+                else if (code == "fs28") { inHeading = true; HTML.Append("<h2>"); style = "h2"; }
+                else if (code == "fs24") { inHeading = true; HTML.Append("<h3>"); style = "h3"; }
                 else if (code == "fs20")
                 {
                     if (style != string.Empty)
                     {
                         HTML.Append("</" + style + ">\r\n");
                         style = string.Empty;
+                        inHeading = false; 
                     }
 
                 }
                 else if (code == "par")
                 {
-                    HTML.Append("<br/>\r\n");
+                    if (inParagraph)
+                        HTML.Append("\r\n</p>\r\n");
+                    HTML.Append("<p>\r\n");
+                    inParagraph = true;
                 }
-                else if (code == "b") HTML.Append("<b>");
-                else if (code == "b0") HTML.Append("</b>");
-                else if (code == "i") HTML.Append("<i>");
-                else if (code == "i0") HTML.Append("</i>");
-                else if (code == "ul") HTML.Append("<u>");
-                else if (code == "ulnone") HTML.Append("</u>");
-                else if (code == "strike") HTML.Append("<strike>");
-                else if (code == "strike0") HTML.Append("</strike>");
-                else if (code == "up9") { HTML.Append("<sup>"); superscript = true; }
-                else if (code == "dn9") { HTML.Append("<sub>"); }
-                else if (code == "up0")
-                {
-                    if (superscript)
-                    { HTML.Append("</sup>"); superscript = false; }
-                    else
-                    { HTML.Append("</sub>"); }
-                }
-                else if (code.StartsWith("http://"))
-                    HTML.Append("<a href=\"" + code + "\">" + code + "</a>");
-                else
+                else if (inHeading)
                     HTML.Append(code);
+                else
+                {
+                    if (!inParagraph)
+                    {
+                        HTML.Append("<p>\r\n");
+                        inParagraph = true;
+                    }
+
+                    if (code == "b") HTML.Append("<b>");
+                    else if (code == "b0") HTML.Append("</b>");
+                    else if (code == "i") HTML.Append("<i>");
+                    else if (code == "i0") HTML.Append("</i>");
+                    else if (code == "ul") HTML.Append("<u>");
+                    else if (code == "ulnone") HTML.Append("</u>");
+                    else if (code == "strike") HTML.Append("<strike>");
+                    else if (code == "strike0") HTML.Append("</strike>");
+                    else if (code == "up9") { HTML.Append("<sup>"); superscript = true; }
+                    else if (code == "dn9") { HTML.Append("<sub>"); }
+                    else if (code == "up0")
+                    {
+                        if (superscript)
+                        { HTML.Append("</sup>"); superscript = false; }
+                        else
+                        { HTML.Append("</sub>"); }
+                    }
+                    else if (code.StartsWith("http://"))
+                        HTML.Append("<a href=\"" + code + "\">" + code + "</a>");
+                    else
+                        HTML.Append(code);
+                }
             }
 
             // Make sure we close any outstanding styles.
@@ -76,6 +93,8 @@ namespace UserInterface.Classes
                 HTML.Append("</" + style + ">\r\n");
                 style = string.Empty;
             }
+            if (inParagraph)
+                HTML.Append("\r\n</p>");
 
             HTML.Append("\r\n</body></html>");
 

@@ -452,6 +452,22 @@ namespace UserInterface.Presenters
             return html;
         }
 
+        /// <summary>
+        /// Export the contents of this graph to the specified file.
+        /// </summary>
+        public string ExportToPDF(string folder)
+        {
+            Rectangle r = new Rectangle(0, 0, 800, 500);
+            Bitmap img = new Bitmap(r.Width, r.Height);
+
+            GraphView.Export(img);
+
+            string fileName = Path.Combine(folder, Graph.Name + ".png");
+            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            return fileName;
+        }
+
         /// <summary>Gets the series names.</summary>
         /// <returns></returns>
         public string[] GetSeriesNames()

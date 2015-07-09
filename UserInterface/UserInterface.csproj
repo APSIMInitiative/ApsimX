@@ -72,6 +72,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
+    <Reference Include="MigraDoc.DocumentObjectModel-gdi">
+      <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\MigraDoc.DocumentObjectModel-gdi.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Rendering-gdi">
+      <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\MigraDoc.Rendering-gdi.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.RtfRendering-gdi">
+      <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\MigraDoc.RtfRendering-gdi.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -82,6 +91,12 @@
     <Reference Include="OxyPlot.WindowsForms, Version=2013.1.1.1, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\OxyPlot.WindowsForms.2014.1.464\lib\net40\OxyPlot.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp-gdi">
+      <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\PdfSharp-gdi.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting-gdi">
+      <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\PdfSharp.Charting-gdi.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -106,6 +121,7 @@
     <Compile Include="Classes\HTMLToRTF.cs" />
     <Compile Include="Classes\RTFToHTML.cs" />
     <Compile Include="CommandHistory.cs" />
+    <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\ExportNodeCommand.cs" />

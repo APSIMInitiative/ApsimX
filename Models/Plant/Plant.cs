@@ -284,8 +284,18 @@ namespace Models.PMF
         {
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel, indent);
+            {
+                if (child is Cultivar)
+                {
+                }
+                else
+                    child.Document(tags, headingLevel, indent);
+            }
 
+            // now write all cultivars in a list.
+            tags.Add(new AutoDocumentation.Heading("Cultivars", headingLevel));
+            foreach (IModel child in Apsim.Children(this, typeof(Cultivar)))
+                tags.Add(new AutoDocumentation.Paragraph(child.Name, indent));
         }
     }
 }

@@ -88,7 +88,7 @@ namespace Models.PMF.Functions
             
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent);
+                child.Document(tags, -1, indent + 1);
         }
 
     }

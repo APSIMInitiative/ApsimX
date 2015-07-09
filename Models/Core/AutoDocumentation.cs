@@ -58,10 +58,11 @@ namespace Models.Core
         }
 
 
-        /// <summary>Gets the description from a class.</summary>
+        /// <summary>Writes the description of a class to the tags.</summary>
         /// <param name="model">The model to get documentation for.</param>
-        /// <returns>The description or any empty string.</returns>
-        public static string GetClassDescription(object model)
+        /// <param name="tags">The tags to add to.</param>
+        /// <param name="indent">The indentation level.</param>
+        public static void GetClassDescription(object model, List<ITag> tags, int indent)
         {
             if (doc == null)
             {
@@ -71,10 +72,34 @@ namespace Models.Core
             }
 
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, "members/T:" + model.GetType().FullName + "/summary");
-            if (summaryNode == null)
-                return string.Empty;
-            else
-                return summaryNode.InnerText.Replace("\r\n", "<br/>");
+            if (summaryNode != null)
+            {
+                string paragraphSoFar = string.Empty;
+                StringReader reader = new StringReader(summaryNode.InnerText);
+                string line = reader.ReadLine();
+                while (line != null)
+                {
+                    line = line.Trim(" ".ToCharArray());
+                    if (line == string.Empty)
+                    {
+                        if (paragraphSoFar != string.Empty)
+                        {
+                            tags.Add(new Paragraph(paragraphSoFar, indent));
+                            paragraphSoFar = string.Empty;
+                        }
+                    }
+                    else
+                        paragraphSoFar += line + " ";
+
+                    line = reader.ReadLine();
+                }
+
+                if (paragraphSoFar != string.Empty)
+                {
+                    tags.Add(new Paragraph(paragraphSoFar, indent));
+                    paragraphSoFar = string.Empty;
+                }
+            }
         }
 
         /// <summary>
@@ -117,6 +142,12 @@ namespace Models.Core
 
             /// <summary>The indent level.</summary>
             public int indent;
+
+            /// <summary>The bookmark name (optional)</summary>
+            public string bookmarkName;
+
+            /// <summary>Should the paragraph indent all lines except the first?</summary>
+            public bool handingIndent;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Paragraph"/> class.
