@@ -584,7 +584,8 @@ namespace UserInterface.Commands
                     para.AddFormattedText(element.InnerText, TextFormat.Underline);
                 else if (element.Name == "a")
                 {
-                    string href = XmlUtilities.Attribute(element, "href");
+                    string href = XmlUtilities.Attribute(element, "href").Replace("EQUALS", "=");
+                    href = href.Replace("AND", "&");
                     Hyperlink link;
                     if (href.StartsWith("#"))
                     {
@@ -658,7 +659,8 @@ namespace UserInterface.Commands
 
             foreach (BibTeX.Citation citation in citations)
             {
-                string url = citation.URL;
+                string url = citation.URL.Replace("=", "EQUALS");
+                url = url.Replace("&", "AND");
                 string text;
                 if (url != string.Empty)
                     text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
