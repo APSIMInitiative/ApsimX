@@ -61,7 +61,7 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory CommandHistory)
         {
-            string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\APSIM.bib");
+            string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "APSIM.bib");
             bibTeX = new BibTeX(bibFile);
             citations = new List<BibTeX.Citation>();
 

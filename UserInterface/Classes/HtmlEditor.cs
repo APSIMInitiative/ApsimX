@@ -29,7 +29,7 @@ namespace UserInterface.Classes
 
             sb.Append("</body>\r\n</html>");
 
-            System.IO.File.WriteAllText(@"C:\temp\html.html", sb.ToString());
+            System.IO.File.WriteAllText(Path.Combine(Path.GetTempPath(), "html.html"), sb.ToString());
 
             return sb.ToString();
         }

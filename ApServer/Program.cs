@@ -26,7 +26,7 @@ namespace ApServer
     {
         private TcpListener tcpListener;
         private Thread listenThread;
-        private static string dataDir = @"c:\temp\ApServer";
+        private static string dataDir = "";
 
         public static void Main(string[] args)
         {
@@ -36,6 +36,15 @@ namespace ApServer
         public Server()
         {
             Console.WriteLine("Server started.");
+
+            if (string.IsNullOrEmpty(dataDir))
+            {
+                // Create a temporary working directory.
+                dataDir = Path.Combine(Path.GetTempPath(), "ApServer");
+                if (Directory.Exists(dataDir))
+                    Directory.Delete(dataDir, true);
+                Directory.CreateDirectory(dataDir);
+            }
 
             this.tcpListener = new TcpListener(IPAddress.Any, 50000);
             this.listenThread = new Thread(new ThreadStart(ListenForClients));
