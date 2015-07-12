@@ -3581,6 +3581,19 @@ van Delden, S.H., Vos, J., Stomph, T.-J., Brouwer, G., Struik, P.C., 2012. Photo
   </Folder>
   <DataStore>
     <Name>DataStore</Name>
+    <Model xsi:type="ExcelInput">
+      <Name>Observed</Name>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>ObservedHarvestData</string>
+      </SheetNames>
+    </Model>
+    <PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <PredictedTableName>HarvestReport</PredictedTableName>
+      <ObservedTableName>ObservedHarvestData</ObservedTableName>
+      <FieldNameUsedForMatch>Stage</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
   </DataStore>
   <Folder>
@@ -4164,14 +4177,14 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Tef.Phenology.CurrentStageName</string>
-              <string>Tef.AboveGround.Wt</string>
-              <string>Tef.Grain.Yield</string>
-              <string>Tef.Grain.Size</string>
-              <string>Tef.Grain.Wt</string>
+              <string>[Tef].Phenology.CurrentStageName as Stage</string>
+              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Tef].Grain.Yield</string>
+              <string>[Tef].Grain.Size as GrainSize</string>
+              <string>[Tef].Grain.Live.Wt as GrainWt</string>
               <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value</string>
-              <string>[Tef].Phenology.MaturityDAS.Value</string>
+              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Tef].Harvesting</string>
@@ -4804,14 +4817,14 @@ namespace Models
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Tef.Phenology.CurrentStageName</string>
-              <string>Tef.AboveGround.Wt</string>
-              <string>Tef.Grain.Yield</string>
-              <string>Tef.Grain.Size</string>
-              <string>Tef.Grain.Wt</string>
+              <string>[Tef].Phenology.CurrentStageName as Stage</string>
+              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Tef].Grain.Yield</string>
+              <string>[Tef].Grain.Size as GrainSize</string>
+              <string>[Tef].Grain.Live.Wt as GrainWt</string>
               <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value</string>
-              <string>[Tef].Phenology.MaturityDAS.Value</string>
+              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Tef].Harvesting</string>
@@ -5531,14 +5544,14 @@ namespace Models
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Tef.Phenology.CurrentStageName</string>
-              <string>Tef.AboveGround.Wt</string>
-              <string>Tef.Grain.Yield</string>
-              <string>Tef.Grain.Size</string>
-              <string>Tef.Grain.Wt</string>
+              <string>[Tef].Phenology.CurrentStageName as Stage</string>
+              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Tef].Grain.Yield</string>
+              <string>[Tef].Grain.Size as GrainSize</string>
+              <string>[Tef].Grain.Live.Wt as GrainWt</string>
               <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value</string>
-              <string>[Tef].Phenology.MaturityDAS.Value</string>
+              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Tef].Harvesting</string>
@@ -6251,14 +6264,14 @@ namespace Models
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Tef.Phenology.CurrentStageName</string>
-              <string>Tef.AboveGround.Wt</string>
-              <string>Tef.Grain.Yield</string>
-              <string>Tef.Grain.Size</string>
-              <string>Tef.Grain.Wt</string>
+              <string>[Tef].Phenology.CurrentStageName as Stage</string>
+              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Tef].Grain.Yield</string>
+              <string>[Tef].Grain.Size as GrainSize</string>
+              <string>[Tef].Grain.Live.Wt as GrainWt</string>
               <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value</string>
-              <string>[Tef].Phenology.MaturityDAS.Value</string>
+              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Tef].Harvesting</string>
@@ -6906,14 +6919,14 @@ Field Crops Research 116 (2010) 196204</h3>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Tef.Phenology.CurrentStageName</string>
-              <string>Tef.AboveGround.Wt</string>
-              <string>Tef.Grain.Yield</string>
-              <string>Tef.Grain.Size</string>
-              <string>Tef.Grain.Wt</string>
+              <string>[Tef].Phenology.CurrentStageName as Stage</string>
+              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Tef].Grain.Yield</string>
+              <string>[Tef].Grain.Size as GrainSize</string>
+              <string>[Tef].Grain.Live.Wt as GrainWt</string>
               <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value</string>
-              <string>[Tef].Phenology.MaturityDAS.Value</string>
+              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDASS</string>
             </VariableNames>
             <EventNames>
               <string>[Tef].Harvesting</string>
@@ -7547,14 +7560,14 @@ Field Crops Research 116 (2010) 196204</h3>
             <Name>HarvestReport</Name>
             <VariableNames>
               <string>[Clock].Today</string>
-              <string>Tef.Phenology.CurrentStageName</string>
-              <string>Tef.AboveGround.Wt</string>
-              <string>Tef.Grain.Yield</string>
-              <string>Tef.Grain.Size</string>
-              <string>Tef.Grain.Wt</string>
+              <string>[Tef].Phenology.CurrentStageName as Stage</string>
+              <string>[Tef].Summariser.AboveGround.Wt as Biomass</string>
+              <string>[Tef].Grain.Yield</string>
+              <string>[Tef].Grain.Size as GrainSize</string>
+              <string>[Tef].Grain.Live.Wt as GrainWt</string>
               <string>[Tef].Structure.MainStemFinalNodeNo</string>
-              <string>[Tef].Phenology.FloweringDAS.Value</string>
-              <string>[Tef].Phenology.MaturityDAS.Value</string>
+              <string>[Tef].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Tef].Phenology.MaturityDAS.Value  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Tef].Harvesting</string>
@@ -7618,5 +7631,91 @@ namespace Models
       </Simulation>
     </Experiment>
   </Folder>
+  <Graph>
+    <Name>GrainWt</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.GrainWt</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.GrainWt</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>Biomass</Name>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Series>
+      <Title>Series1</Title>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <X>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Observed.Biomass</FieldName>
+      </X>
+      <Y>
+        <TableName>PredictedObserved</TableName>
+        <FieldName>Predicted.Biomass</FieldName>
+      </Y>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <ShowInLegend>true</ShowInLegend>
+      <Cumulative>false</Cumulative>
+    </Series>
+    <LegendPosition>BottomRight</LegendPosition>
+    <ShowRegressionLine>true</ShowRegressionLine>
+    <DisabledSeries />
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Graph>
   <ExplorerWidth>513</ExplorerWidth>
 </Simulations>
