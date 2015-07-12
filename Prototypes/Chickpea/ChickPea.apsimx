@@ -2806,8 +2806,12 @@ Robertson et al (2002) used a constant phyllochron of 46 degree days.
               <Name>Memo</Name>
               <MemoText><![CDATA[
 <html><body>
-Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leaves and 600 mm2 thereafter.<br/>
+<p>
+Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leaves and 600 mm2 thereafter.
+</p>
+<p>
 
+</p>
 </body></html>]]></MemoText>
             </Memo>
             <XYPairs>
@@ -3060,15 +3064,15 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
               </Graph>
               <X>
                 <double>1</double>
-                <double>9.5</double>
-                <double>9.6</double>
-                <double>40</double>
+                <double>12</double>
+                <double>16</double>
+                <double>19</double>
               </X>
               <Y>
                 <double>300</double>
                 <double>300</double>
-                <double>600</double>
-                <double>600</double>
+                <double>450</double>
+                <double>850</double>
               </Y>
             </XYPairs>
             <XProperty>[Structure].MainStemNodeNo</XProperty>
@@ -5115,7 +5119,7 @@ namespace Models
           <Operations>
             <Name>2</Name>
             <Operation>
-              <Date>1991-08-08T00:00:00</Date>
+              <Date>1991-07-30T00:00:00</Date>
               <Action> [Chickpea].Sow(population:28, cultivar:"Amethyst", depth:50, rowSpacing:350);</Action>
             </Operation>
             <Operation>
@@ -5283,6 +5287,7 @@ namespace Models
               <string>[Chickpea].Leaf.LAI</string>
               <string>[Chickpea].Structure.MainStemNodeNo</string>
               <string>[Chickpea].Structure.PlantTotalNodeNo</string>
+              <string>[Chickpea].Leaf.DeadCohortNo</string>
               <string>[Chickpea].Structure.TotalStemPopn</string>
               <string>[Chickpea].Summariser.AboveGround.Wt</string>
               <string>[Chickpea].Leaf.Live.Wt</string>
@@ -5692,6 +5697,195 @@ namespace Models
         <Slope>0</Slope>
       </Simulation>
       <Graph>
+        <Name>MSLeafNo</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Nodes</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Chickpea.Structure.MainStemNodeNo</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series2</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>Date</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>MSLeaves</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>MSDeafLeafNo</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Nodes</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Chickpea.Leaf.DeadCohortNo</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series2</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>Date</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>MSDeadLeaves</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>TotalLeaves</Name>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Series>
+          <Title>Nodes</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Chickpea.Structure.PlantTotalNodeNo</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series2</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>Circle</Marker>
+          <Line>None</Line>
+          <X>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>Date</FieldName>
+          </X>
+          <Y>
+            <TableName>ObservedTimeseriesData</TableName>
+            <FieldName>TotalLeaves</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>true</ShowRegressionLine>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
+      <Graph>
         <Name>LAI</Name>
         <Axis>
           <Type>Bottom</Type>
@@ -5744,69 +5938,6 @@ namespace Models
           <Y>
             <TableName>Report</TableName>
             <FieldName>Chickpea.Leaf.LAI</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>true</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Structure</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Nodes</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Chickpea.Structure.MainStemNodeNo</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>TotalNodes</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Chickpea.Structure.PlantTotalNodeNo</FieldName>
           </Y>
           <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>false</ShowInLegend>

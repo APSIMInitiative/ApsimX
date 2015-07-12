@@ -451,7 +451,7 @@ namespace Models.Core
                     if (model is Manager)
                     {
                         Manager manager = model as Manager;
-                        if (type.IsAssignableFrom(manager.Script.GetType()))
+                        if (manager.Script != null && type.IsAssignableFrom(manager.Script.GetType()))
                         {
                             if (manager.Script != relativeTo)
                                 modelsToReturn.Add(manager.Script);

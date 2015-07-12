@@ -41,7 +41,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\Bin\Models.xml</DocumentationFile>
+    <DocumentationFile>..\Bin\Model.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -52,7 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
-    <DocumentationFile>..\Bin\Model.XML</DocumentationFile>
+    <DocumentationFile>..\Bin\Model.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
@@ -77,9 +77,12 @@
     <Compile Include="AgPasture.cs" />
     <Compile Include="AgPasture\AgPasture1.Sward.cs" />
     <Compile Include="AgPasture\AgPasture1.PastureSpecies.cs" />
+    <Compile Include="Agroforestry\LocalMicroClimate.cs" />
+    <Compile Include="Agroforestry\StaticForestrySystem.cs" />
     <Compile Include="Arbitrator\Arbitrator.cs" />
     <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
+    <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Replacements.cs" />
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
@@ -317,6 +320,8 @@
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
+    <Compile Include="Zones\CircularZone.cs" />
+    <Compile Include="Zones\RectangularZone.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

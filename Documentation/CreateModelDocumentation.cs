@@ -31,12 +31,15 @@ public class Script
         presenter.SelectNode(".Simulations");
 
         // Export the model to HTML
-        string folderName = Path.Combine(binFolder, @"..\Documentation\html\" + modelName);
+        string folderName = Path.Combine(binFolder, @"..\Documentation\PDF");
         Directory.CreateDirectory(folderName);
        
-        ExportNodeCommand command = new ExportNodeCommand(presenter, presenter.CurrentNodePath, folderName);
+        ExportNodeCommand command = new ExportNodeCommand(presenter, presenter.CurrentNodePath);
         command.Do(null);
-                
+
+        // Copy the file into the PDF directory.
+        File.Copy(command.FileNameWritten, @"..\Documentation\PDF\" + modelName + ".pdf");
+
         // Close the user interface.
         tabbedExplorerPresenter.Close(false);
     }

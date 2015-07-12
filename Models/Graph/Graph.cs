@@ -17,7 +17,7 @@ namespace Models.Graph
     [ViewName("UserInterface.Views.GraphView")]
     [PresenterName("UserInterface.Presenters.GraphPresenter")]
     [Serializable]
-    public class Graph : Model
+    public class Graph : Model, AutoDocumentation.ITag
     {
         /// <summary>
         /// The data store to use when retrieving data
@@ -124,6 +124,18 @@ namespace Models.Graph
         public IEnumerable GetValidFieldNames(GraphValues graphValues)
         {
             return graphValues.ValidFieldNames(this);
+        }
+
+        /// <summary>
+        /// Writes documentation for this function by adding to the list of documentation tags.
+        /// </summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+                tags.Add(this);
         }
     }
 }
