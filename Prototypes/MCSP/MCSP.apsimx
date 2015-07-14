@@ -6476,12 +6476,12 @@ namespace Models
       <Name>CropCompBase</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Tests\WeatherFiles\lincoln.met</FileName>
+        <FileName>%root%\Prototypes\MCSP\Weather\P078064.met</FileName>
       </Weather>
       <Clock>
         <Name>Clock</Name>
-        <StartDate>1998-03-01T00:00:00</StartDate>
-        <EndDate>2002-07-01T00:00:00</EndDate>
+        <StartDate>1980-03-01T00:00:00</StartDate>
+        <EndDate>2010-07-01T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
