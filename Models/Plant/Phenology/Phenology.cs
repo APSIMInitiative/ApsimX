@@ -157,8 +157,10 @@ namespace Models.PMF.Phen
         private int CurrentPhaseIndex;
         /// <summary>The _ accumulated tt</summary>
         private double _AccumulatedTT = 0;
-        /// <summary>The currently on first day of phase</summary>
-        private string CurrentlyOnFirstDayOfPhase = "";
+        /// <summary>The currently on first day of phase.  This is an array that lists all the stages that are pased on this day</summary>
+        private string[] CurrentlyOnFirstDayOfPhase = new string[] {"","","","","",""};
+        /// <summary>The number of stages that have been passed today</summary>
+        private int StagesPassedToday = 0;
         /// <summary>The just initialised</summary>
         private bool JustInitialised = true;
         /// <summary>The fraction biomass removed</summary>
@@ -180,7 +182,7 @@ namespace Models.PMF.Phen
             JustInitialised = true;
             Emerged = false;
             SowDate = Clock.Today;
-            CurrentlyOnFirstDayOfPhase = "";
+            CurrentlyOnFirstDayOfPhase = new string[] { "", "", "", "", "", "" };
             CurrentPhaseIndex = 0;
             FractionBiomassRemoved = 0;
             foreach (Phase phase in Phases)
@@ -313,6 +315,20 @@ namespace Models.PMF.Phen
                 Clear();
         }
   
+         /// <summary>Called at the start of each day</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            //reset all members to the CurrentlyOnFirstDayOfPhase array to nothing so new stages passed today can be inserted
+            for (int i = 0; i < CurrentlyOnFirstDayOfPhase.Length; i++)
+                CurrentlyOnFirstDayOfPhase[i] = "";
+            //reset StagesPassedToday to zero to restart count for the new day
+            StagesPassedToday = 0;
+        }
+
+
         /// <summary>Look for a particular phase and return it's index or -1 if not found.</summary>
         /// <param name="Name">The name.</param>
         /// <returns></returns>
@@ -358,12 +374,13 @@ namespace Models.PMF.Phen
                 if (Phases == null || Phases.Count == 0)
                     OnSimulationCommencing(null, null);
 
-                CurrentlyOnFirstDayOfPhase = "";
-                if (JustInitialised)
-                {
-                    CurrentlyOnFirstDayOfPhase = Phases[0].Start;
-                    JustInitialised = false;
-                }
+                    if (CurrentlyOnFirstDayOfPhase[0] == "")
+                        if (JustInitialised)
+                        {
+                            CurrentlyOnFirstDayOfPhase[0] = Phases[0].Start;
+                            JustInitialised = false;
+                        }
+
                 double FractionOfDayLeftOver = CurrentPhase.DoTimeStep(1.0);
 
                 if (FractionOfDayLeftOver > 0)
@@ -427,7 +444,8 @@ namespace Models.PMF.Phen
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
 
-                CurrentlyOnFirstDayOfPhase = CurrentPhase.Start;
+                CurrentlyOnFirstDayOfPhase[StagesPassedToday] = CurrentPhase.Start;
+                StagesPassedToday += 1;
 
                 // If the new phase is a rewind phase then reinitialise all phases and rewind back to the
                 // first phase.
@@ -466,7 +484,13 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public bool OnDayOf(String StageName)
         {
-            return (StageName.Equals(CurrentlyOnFirstDayOfPhase, StringComparison.CurrentCultureIgnoreCase));
+            bool StageToday = false;
+            for (int i = 0; i < CurrentlyOnFirstDayOfPhase.Length; i++)
+                if (CurrentlyOnFirstDayOfPhase[i] == StageName)
+                    StageToday = true;
+            
+            return StageToday;
+            //return (StageName.Equals(CurrentlyOnFirstDayOfPhase, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
