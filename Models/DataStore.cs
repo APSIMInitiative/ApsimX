@@ -572,7 +572,7 @@ namespace Models
             StreamWriter report = report = new StreamWriter(fileName);
             foreach (string simulationName in dataStore.SimulationNames)
             {
-                Summary.WriteReport(dataStore, simulationName, report, null, html: false);
+                Summary.WriteReport(dataStore, simulationName, report, null, outtype: Summary.OutputType.html);
                 report.WriteLine();
                 report.WriteLine();
                 report.WriteLine("############################################################################");
