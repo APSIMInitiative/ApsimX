@@ -520,12 +520,12 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the grain number.</summary>
         private void DoGrainNumber()
         {
-            if (Phenology.OnDayOf("emergence"))
+            if (Phenology.OnDayOf("Emergence"))
             {
                 // seedling has just emerged.
                 GrainNo = 0.0;
             }
-            else if (Phenology.OnDayOf("flowering"))
+            else if (Phenology.OnDayOf("Flowering"))
             {
                 // we are at first day of grainfill.
                 GrainNo = GrainsPerGramStem * Stem.Live.Wt;

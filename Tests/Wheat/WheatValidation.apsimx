@@ -22,7 +22,7 @@ The APSIM Wheat model has been tested on a range of datasets to provide tests ac
       <Name>PredictedObserved</Name>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
-      <FieldNameUsedForMatch>Wheat.Zadok.Stage</FieldNameUsedForMatch>
+      <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
     </PredictedObserved>
     <Input>
       <Name>NZObservations</Name>
@@ -6201,7 +6201,7 @@ public class Script : Model
       </Axis>
       <Series>
         <Title>Predicted</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
@@ -6221,7 +6221,7 @@ public class Script : Model
       </Series>
       <Series>
         <Title>Observed</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>0</ColourArgb>
@@ -11719,7 +11719,7 @@ Simulation results for the combined datasets from the various countries are show
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
-    <Name>MicrobialN</Name>
+    <Name>BiomassN</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Observed Above Ground N</Title>
