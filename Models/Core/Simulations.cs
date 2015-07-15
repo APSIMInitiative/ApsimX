@@ -28,6 +28,10 @@ namespace Models.Core
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
 
+        /// <summary>Gets or sets the version.</summary>
+        [XmlAttribute("Version")]
+        public int Version { get; set; }
+
         /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
         [XmlIgnore]
         public bool IsCompleted { get; set; }
@@ -67,7 +71,9 @@ namespace Models.Core
         /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public static Simulations Read(string FileName)
         {
-            
+            // Run the converter.
+            Converter.ConvertToLatestVersion(FileName);
+
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
 
@@ -116,6 +122,8 @@ namespace Models.Core
         /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public static Simulations Read(XmlNode node)
         {
+            // Run the converter.
+            Converter.ConvertToLatestVersion(node);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;

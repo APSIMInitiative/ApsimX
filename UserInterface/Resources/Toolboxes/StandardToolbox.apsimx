@@ -836,25 +836,17 @@
       </Axis>
       <Series>
         <Title>Series1</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName></FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
     </Graph>
+    <Regression></Regression>
   </Folder>
   <Folder>
     <Name>Data store and analysis models</Name>
