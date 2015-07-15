@@ -39,11 +39,6 @@ namespace UserInterface.Interfaces
         event EventHandler<LegendClickArgs> OnLegendClick;
 
         /// <summary>
-        /// Invoked when the user clicks on the graph title.
-        /// </summary>
-        event EventHandler OnTitleClick;
-
-        /// <summary>
         /// Invoked when the user clicks on the graph caption.
         /// </summary>
         event EventHandler OnCaptionClick;
@@ -98,8 +93,8 @@ namespace UserInterface.Interfaces
              Models.Graph.Axis.AxisType xAxisType, 
              Models.Graph.Axis.AxisType yAxisType,
              Color colour,
-             Models.Graph.Series.LineType lineType,
-             Models.Graph.Series.MarkerType markerType,
+             Models.Graph.LineType lineType,
+             Models.Graph.MarkerType markerType,
             bool showInLegend);
 
         /// <summary>
@@ -196,20 +191,23 @@ namespace UserInterface.Interfaces
         /// Format the footer.
         /// </summary>
         /// <param name="text">The text for the footer</param>
-        void FormatCaption(string text);
+        /// <param name="italics">Italics?</param>
+        void FormatCaption(string text, bool italics);
 
         /// <summary>
         /// Export the graph to the specified 'bitmap'
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
-        void Export(Bitmap bitmap);
+        /// <param name="legendOutside">Put legend outside of graph?</param>
+        void Export(Bitmap bitmap, bool legendOutside);
 
         /// <summary>
         /// Add an action (on context menu) on the memo.
         /// </summary>
         /// <param name="menuText">Menu item text</param>
+        /// <param name="ticked">Menu ticked?</param>
         /// <param name="onClick">Event handler for menu item click</param>
-        void AddContextAction(string menuText, System.EventHandler onClick);
+        void AddContextAction(string menuText, bool ticked, System.EventHandler onClick);
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.
@@ -221,6 +219,11 @@ namespace UserInterface.Interfaces
         /// </summary>
         double AxisMinimum(Models.Graph.Axis.AxisType axisType);
 
+        /// <summary>
+        /// Gets the interval (major step) of the specified axis.
+        /// </summary>
+        double AxisMajorStep(Models.Graph.Axis.AxisType axisType);
+        
         /// <summary>Gets the series names.</summary>
         /// <returns></returns>
         string[] GetSeriesNames();

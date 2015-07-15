@@ -316,7 +316,7 @@ namespace UserInterface.Commands
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
-                                     System.Drawing.Color.Blue, Models.Graph.Series.LineType.Solid, Models.Graph.Series.MarkerType.None, true);
+                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None, true);
 
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
@@ -327,7 +327,7 @@ namespace UserInterface.Commands
 
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(480, 480);
-            graph.Export(image);
+            graph.Export(image, false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
         }
         
@@ -464,7 +464,7 @@ namespace UserInterface.Commands
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
-                                     System.Drawing.Color.Blue, Models.Graph.Series.LineType.Solid, Models.Graph.Series.MarkerType.None, true);
+                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None, true);
 
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN);
@@ -475,7 +475,7 @@ namespace UserInterface.Commands
 
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(440, 440);
-            graph.Export(image);
+            graph.Export(image, false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
             MigraDoc.DocumentObjectModel.Shapes.Image image1 = section.AddImage(PNGFileName);
             image1.Height = "8cm";

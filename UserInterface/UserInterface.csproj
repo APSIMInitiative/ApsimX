@@ -167,13 +167,12 @@
     <Compile Include="Interfaces\IGridCell.cs" />
     <Compile Include="Interfaces\IGridColumn.cs" />
     <Compile Include="Interfaces\IGridView.cs" />
-    <Compile Include="Interfaces\ISeriesEditorView.cs" />
+    <Compile Include="Interfaces\ISeriesView.cs" />
     <Compile Include="Interfaces\IDataStoreView.cs" />
     <Compile Include="Interfaces\IInitialWaterView.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Interfaces\IGraphView.cs" />
-    <Compile Include="Interfaces\ISeriesView.cs" />
     <Compile Include="Interfaces\ITestView.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
@@ -201,7 +200,6 @@
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ManagerPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
-    <Compile Include="Utility\Colour.cs" />
     <Compile Include="Utility\ColourPickerCell.cs" />
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\DataGridViewAutoFilterColumnHeaderCell.cs" />
@@ -246,11 +244,11 @@
     <Compile Include="Views\PredictedObservedView.Designer.cs">
       <DependentUpon>PredictedObservedView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\SeriesEditorView.cs">
+    <Compile Include="Views\SeriesView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\SeriesEditorView.Designer.cs">
-      <DependentUpon>SeriesEditorView.cs</DependentUpon>
+    <Compile Include="Views\SeriesView.Designer.cs">
+      <DependentUpon>SeriesView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\SummaryView.cs">
       <SubType>UserControl</SubType>
@@ -299,12 +297,6 @@
     </Compile>
     <Compile Include="Views\ProfileView.Designer.cs">
       <DependentUpon>ProfileView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SeriesView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\SeriesView.Designer.cs">
-      <DependentUpon>SeriesView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\AxisView.cs">
       <SubType>UserControl</SubType>
@@ -404,8 +396,8 @@
     <EmbeddedResource Include="Views\PredictedObservedView.resx">
       <DependentUpon>PredictedObservedView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\SeriesEditorView.resx">
-      <DependentUpon>SeriesEditorView.cs</DependentUpon>
+    <EmbeddedResource Include="Views\SeriesView.resx">
+      <DependentUpon>SeriesView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SummaryView.resx">
       <DependentUpon>SummaryView.cs</DependentUpon>
@@ -430,9 +422,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ProfileView.resx">
       <DependentUpon>ProfileView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\SeriesView.resx">
-      <DependentUpon>SeriesView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ExplorerView.resx">
       <DependentUpon>ExplorerView.cs</DependentUpon>
@@ -642,6 +631,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CircularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StaticForestrySystem.png" />

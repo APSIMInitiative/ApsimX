@@ -65,9 +65,12 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             if (this.ShowCaption)
-                this.view.Populate(this.graph.Caption);
+            {
+                if (this.graph.Caption != "Double click to add a caption")
+                    this.view.Populate(this.graph.Caption);
+            }
             else
-                this.view.Populate(this.graph.Title);
+                this.view.Populate(this.graph.Name);
         }
 
         /// <summary>
@@ -100,7 +103,10 @@ namespace UserInterface.Presenters
         public void OnTitleChanged(string newText)
         {
             if (this.ShowCaption)
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Caption", newText));
+            {
+                if (newText != "Double click to add a caption")
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Caption", newText));
+            }
             else
                 this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Title", newText));
         }
