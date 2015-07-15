@@ -397,16 +397,16 @@ namespace UserInterface.Commands
             WritePDF(section, tags, workingDirectory);
 
             // Write the PDF file.
+            FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false, PdfSharp.Pdf.PdfFontEmbedding.Always);
             pdfRenderer.Document = document;
             pdfRenderer.RenderDocument();
-            FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
             pdfRenderer.PdfDocument.Save(FileNameWritten);
 
             // Remove temporary working directory.
             Directory.Delete(workingDirectory, true);
         }
-
+    
         /// <summary>Creates the PDF syles.</summary>
         /// <param name="document">The document to create the styles in.</param>
         public void CreatePDFSyles(Document document)
@@ -548,6 +548,9 @@ namespace UserInterface.Commands
                     graphPresenter.Attach(tag, graphView, ExplorerPresenter);
                     string PNGFileName = graphPresenter.ExportToPDF(workingDirectory);
                     section.AddImage(PNGFileName);
+                    string caption = (tag as Graph).Caption;
+                    if (caption != null)
+                        section.AddParagraph(caption);
                     graphPresenter.Detach();
                 }
             }
@@ -598,6 +601,16 @@ namespace UserInterface.Commands
                     string linkText = element.InnerText;
                     link.AddText(linkText);
                 }
+                else if (element.Name == "sub")
+                {
+                    FormattedText subText = para.AddFormattedText(element.InnerText);
+                    subText.Subscript = true;
+                }
+                else if (element.Name == "sup")
+                {
+                    FormattedText supText = para.AddFormattedText(element.InnerText);
+                    supText.Superscript = true;
+                }
                 else
                     para.AddText(element.InnerText);
             }
@@ -622,23 +635,33 @@ namespace UserInterface.Commands
                             // found a possible citation.
                             string citationName = text.Substring(posBracket + 1, posEndBracket - posBracket - 1);
 
-                            // see if we have already encountered the citation.
-                            BibTeX.Citation citation = citations.Find(c => c.Name == citationName);
+                            string[] inTextCitations = citationName.Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string replacementText = string.Empty;
 
-                            // If we haven't encountered it, look it up in the .bib file.
-                            if (citation == null)
-                                citation = bibTeX.Lookup(citationName);
-
-                            if (citation != null)
+                            foreach (string inTextCitation in inTextCitations)
                             {
-                                // Add it to our list of citations.
-                                citations.Add(citation);
+                                // see if we have already encountered the citation.
+                                BibTeX.Citation citation = citations.Find(c => c.Name == inTextCitation);
 
-                                // Replace the in-text citation with (author et al., year)
-                                string htmlRef = string.Format("(<a href=\"#{0}\">{1}</a>)", citation.Name, citation.InTextCite);
-                                text = text.Remove(posBracket, posEndBracket - posBracket + 1);
-                                text = text.Insert(posBracket, htmlRef);
+                                // If we haven't encountered it, look it up in the .bib file.
+                                if (citation == null)
+                                    citation = bibTeX.Lookup(inTextCitation);
+
+                                if (citation != null)
+                                {
+                                    // Add it to our list of citations.
+                                    citations.Add(citation);
+
+                                    // Replace the in-text citation with (author et al., year)
+                                    if (replacementText != string.Empty)
+                                        replacementText += "; ";
+                                    replacementText += string.Format("<a href=\"#{0}\">{1}</a>", citation.Name, citation.InTextCite);
+                                }
                             }
+
+                            replacementText = "(" + replacementText + ")";
+                            text = text.Remove(posBracket, posEndBracket - posBracket + 1);
+                            text = text.Insert(posBracket, replacementText);
                         }
 
                         // Find the next bracketed potential citation.
@@ -657,6 +680,7 @@ namespace UserInterface.Commands
             // Create the heading.
             tags.Add(new AutoDocumentation.Heading("References", 1));
 
+            citations.Sort(new BibTeX.CitationComparer());
             foreach (BibTeX.Citation citation in citations)
             {
                 string url = citation.URL.Replace("=", "EQUALS");
