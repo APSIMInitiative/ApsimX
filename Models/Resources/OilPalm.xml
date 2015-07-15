@@ -4,6 +4,10 @@
     <Name>Memo</Name>
     <MemoText><![CDATA[The base configuration of the oil palm model has been configured to match commercial dura x pisifera palms developed in Dami, West New Britain in Papua New Guinea.  Other varieties are specified in terms of how they differ from this base variety.]]></MemoText>
   </Memo>
+  <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
+  <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
+  <InterceptionFraction>0</InterceptionFraction>
+  <MaximumRootDepth>5000</MaximumRootDepth>
   <Cultivar>
     <Name>Dami</Name>
   </Cultivar>

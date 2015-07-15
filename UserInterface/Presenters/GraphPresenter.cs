@@ -77,10 +77,16 @@ namespace UserInterface.Presenters
             GraphView.Clear();
             if (Graph != null && Graph.Series != null)
             {
+                bool isEmpty = true;
+
                 // Create all series.
                 FillSeriesInfo();
                 foreach (SeriesInfo seriesInfo in seriesMetadata)
+                {
                     seriesInfo.DrawOnView(this.GraphView);
+                    if (seriesInfo.X != null || seriesInfo.Y != null)
+                        isEmpty = false;
+                }
 
                 // Format the axes.
                 foreach (Models.Graph.Axis A in Graph.Axes)
@@ -108,6 +114,11 @@ namespace UserInterface.Presenters
                 this.Graph.DisabledSeries.Clear();
                 this.Graph.DisabledSeries.AddRange(seriesTitlesToKeep);
 
+                // If there is current nothing to display, provide the user with the editor panel, 
+                // rather than just giving them an apparently empty panel
+                if (isEmpty)
+                    DisplayEditorPanel();
+
                 GraphView.Refresh();
             }
         }
@@ -125,7 +136,8 @@ namespace UserInterface.Presenters
                 List<double> y = new List<double>();
                 foreach (SeriesInfo seriesInfo in seriesMetadata)
                 {
-                    if (seriesInfo.X != null && seriesInfo.Y != null)
+                    if (seriesInfo.X != null && seriesInfo.Y != null && 
+                        seriesInfo.X is double[] && seriesInfo.Y is double[])
                     {
                         foreach (double value in seriesInfo.X)
                             x.Add(value);
@@ -221,9 +233,14 @@ namespace UserInterface.Presenters
 
             if (experiments.Length > 0)
             {
+                int i = this.seriesMetadata.Count;
                 FillSeriesInfoFromExperiments(experiments, series);
-                for (int i = 0; i < this.seriesMetadata.Count; i++)
-                    this.seriesMetadata[i].Title = experiments[i].Name;
+                int j = i;
+                while (i < this.seriesMetadata.Count)
+                {
+                    seriesMetadata[i].Title = experiments[i - j].Name;
+                    i++;
+                }
             }
 
             if (simulations.Length > 0)
@@ -435,6 +452,22 @@ namespace UserInterface.Presenters
             return html;
         }
 
+        /// <summary>
+        /// Export the contents of this graph to the specified file.
+        /// </summary>
+        public string ExportToPDF(string folder)
+        {
+            Rectangle r = new Rectangle(0, 0, 800, 500);
+            Bitmap img = new Bitmap(r.Width, r.Height);
+
+            GraphView.Export(img);
+
+            string fileName = Path.Combine(folder, Graph.Name + ".png");
+            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            return fileName;
+        }
+
         /// <summary>Gets the series names.</summary>
         /// <returns></returns>
         public string[] GetSeriesNames()
@@ -442,6 +475,18 @@ namespace UserInterface.Presenters
             IEnumerable<string> validSeriesTitles = this.seriesMetadata.Select(s => s.Title);
 
             return validSeriesTitles.ToArray();
+        }
+
+        /// <summary>
+        /// Display the editor panel to allow series to be added, deleted or modified
+        /// </summary>
+        private void DisplayEditorPanel()
+        {
+            SeriesPresenter SeriesPresenter = new SeriesPresenter();
+            CurrentPresenter = SeriesPresenter;
+            SeriesView SeriesView = new SeriesView();
+            GraphView.ShowEditorPanel(SeriesView);
+            SeriesPresenter.Attach(Graph, SeriesView, ExplorerPresenter);
         }
 
         /// <summary>
@@ -471,11 +516,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnPlotClick(object sender, EventArgs e)
         {
-            SeriesPresenter SeriesPresenter = new SeriesPresenter();
-            CurrentPresenter = SeriesPresenter; 
-            SeriesView SeriesView = new SeriesView();
-            GraphView.ShowEditorPanel(SeriesView);
-            SeriesPresenter.Attach(Graph, SeriesView, ExplorerPresenter);
+            DisplayEditorPanel();
         }
 
         /// <summary>

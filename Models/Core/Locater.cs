@@ -215,6 +215,8 @@ namespace Models.Core
 
                     // Look for either a property or a child model.
                     IModel localModel = null;
+                    if (relativeToObject == null)
+                        return null;
                     PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
                     if (propertyInfo == null && ignoreCase) // If not found, try using a case-insensitive search
                         propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
@@ -449,7 +451,7 @@ namespace Models.Core
                     if (model is Manager)
                     {
                         Manager manager = model as Manager;
-                        if (type.IsAssignableFrom(manager.Script.GetType()))
+                        if (manager.Script != null && type.IsAssignableFrom(manager.Script.GetType()))
                         {
                             if (manager.Script != relativeTo)
                                 modelsToReturn.Add(manager.Script);

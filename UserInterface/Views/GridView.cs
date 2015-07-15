@@ -63,6 +63,9 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
 
+        /// <summary>Occurs when user clicks a button on the cell.</summary>
+        public event EventHandler<GridCellsChangedArgs> ButtonClick;
+
         /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
@@ -714,6 +717,23 @@ namespace UserInterface.Views
         private void GridView_Resize(object sender, EventArgs e)
         {
             ResizeControls();
+        }
+
+        /// <summary>
+        /// User has clicked a cell.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="DataGridViewCellEventArgs"/> instance containing the event data.</param>
+        private void OnCellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            IGridCell cell = this.GetCell(e.ColumnIndex, e.RowIndex);
+            if (cell != null && cell.EditorType == EditorTypeEnum.Button)
+            {
+                GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
+                cellClicked.ChangedCells = new List<IGridCell>();
+                cellClicked.ChangedCells.Add(cell);
+                ButtonClick(this, cellClicked);
+            }
         }
     }
 }

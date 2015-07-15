@@ -344,16 +344,22 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Create documentation", AppliesTo = new Type[] { typeof(Simulations) })]
+        [ContextMenu(MenuName = "Create documentation")]
         public void CreateDocumentation(object sender, EventArgs e)
         {
-            string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder where documentation should be created.");
+            string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
             if (destinationFolder != null)
             {
-                ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
+                explorerPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
+                Cursor.Current = Cursors.WaitCursor;
+
+                ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
                 this.explorerPresenter.CommandHistory.Add(command, true);
 
-                explorerPresenter.ShowMessage("Finished", DataStore.ErrorLevel.Information);
+                explorerPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
+                Cursor.Current = Cursors.Default;
+
+                Process.Start(command.FileNameWritten);
             }
         }
 

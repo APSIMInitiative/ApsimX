@@ -44,6 +44,8 @@ namespace Models.Core
         [XmlElement(typeof(Zone))]
         [XmlElement(typeof(Model))]
         [XmlElement(typeof(ModelCollectionFromResource))]
+        [XmlElement(typeof(Models.Agroforestry.LocalMicroClimate))]
+        [XmlElement(typeof(Models.Agroforestry.StaticForestrySystem))]
         [XmlElement(typeof(Models.Graph.Graph))]
         [XmlElement(typeof(Models.PMF.Plant))]
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
@@ -197,6 +199,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
+        [XmlElement(typeof(Models.Zones.CircularZone))]
+        [XmlElement(typeof(Models.Zones.RectangularZone))]
         public List<Model> Children { get; set; }
 
         /// <summary>
@@ -210,5 +214,23 @@ namespace Models.Core
         /// </summary>
         [XmlIgnore]
         public bool IsHidden { get; set; }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public virtual void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                child.Document(tags, headingLevel + 1, indent);
+        }
+
     }
 }

@@ -334,7 +334,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Leaves[CurrentRank-1].CoverAbove;
+                if (CurrentRank - 1 < Leaves.Count || CurrentRank - 1 >= Leaves.Count)
+                    return 0;
+                else
+                    return Leaves[CurrentRank-1].CoverAbove;
             }
         }
 

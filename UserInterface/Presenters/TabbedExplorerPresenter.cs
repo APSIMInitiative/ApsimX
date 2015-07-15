@@ -321,7 +321,7 @@ namespace UserInterface.Presenters
             {
                 // use an examples directory relative to this assembly
                 initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                initialPath = Path.GetFullPath(Path.Combine(initialPath, @"../Examples"));
+                initialPath = Path.GetFullPath(Path.Combine(initialPath, "..", "Examples"));
             }
             string fileName = this.view.AskUserForFileName(initialPath, "*.apsimx|*.apsimx");
 

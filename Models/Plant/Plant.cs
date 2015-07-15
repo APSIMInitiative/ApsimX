@@ -83,7 +83,7 @@ namespace Models.PMF
 
         /// <summary>The sowing data</summary>
         [XmlIgnore]
-        public SowPlant2Type SowingData;
+        public SowPlant2Type SowingData { get; set; }
 
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
@@ -128,6 +128,7 @@ namespace Models.PMF
         private Cultivar cultivarDefinition;
 
         /// <summary>Gets the water supply demand ratio.</summary>
+        [Units("0-1")]
         public double WaterSupplyDemandRatio
         {
             get
@@ -273,5 +274,28 @@ namespace Models.PMF
             Population = 0;
         }
         #endregion
+
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child is Cultivar)
+                {
+                }
+                else
+                    child.Document(tags, headingLevel, indent);
+            }
+
+            // now write all cultivars in a list.
+            tags.Add(new AutoDocumentation.Heading("Cultivars", headingLevel));
+            foreach (IModel child in Apsim.Children(this, typeof(Cultivar)))
+                tags.Add(new AutoDocumentation.Paragraph(child.Name, indent));
+        }
     }
 }
