@@ -67,6 +67,24 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Set or get the text of the richedit
+        /// </summary>
+        public string MemoRTF
+        {
+            get
+            {
+                return richTextBox1.Rtf;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    richTextBox1.Rtf = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get or set the readonly name of the richedit.
         /// </summary>
         public bool ReadOnly 
@@ -230,8 +248,6 @@ namespace UserInterface.Views
         }
 
         #endregion
-
-
     }
 
 }
