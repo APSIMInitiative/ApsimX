@@ -59,9 +59,14 @@ namespace UserInterface.Views
         public event EventHandler YOnRightChanged;
 
         /// <summary>
-        /// Invoked when the user changes the cumulative field
+        /// Invoked when the user changes the cumulative Y field
         /// </summary>
-        public event EventHandler CumulativeChanged;
+        public event EventHandler CumulativeYChanged;
+        
+        /// <summary>
+        /// Invoked when the user changes the cumulative X field
+        /// </summary>
+        public event EventHandler CumulativeXChanged;
 
         /// <summary>
         /// Invoked when the user changes the x
@@ -193,10 +198,10 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the series is cumulative.
+        /// Gets or sets a value indicating whether the Y series is cumulative.
         /// </summary>
         /// <value><c>true</c> if cumulative; otherwise, <c>false</c>.</value>
-        public bool Cumulative
+        public bool CumulativeY
         {
             get
             {
@@ -206,6 +211,23 @@ namespace UserInterface.Views
             set
             {
                 this.cumulativeCheckBox.Checked = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the X series is cumulative.
+        /// </summary>
+        /// <value><c>true</c> if cumulative; otherwise, <c>false</c>.</value>
+        public bool CumulativeX
+        {
+            get
+            {
+                return this.cumulativeCheckBoxX.Checked;
+            }
+
+            set
+            {
+                this.cumulativeCheckBoxX.Checked = value;
             }
         }
 
@@ -501,8 +523,17 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnCheckedChanged(object sender, EventArgs e)
         {
-            if (this.CumulativeChanged != null)
-                this.CumulativeChanged(this, e);
+            if (this.CumulativeYChanged != null)
+                this.CumulativeYChanged(this, e);
+        }
+
+        /// <summary>Handles the CheckedChanged event of the cumulativeCheckBoxX control.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnCumulativeXCheckedChanged(object sender, EventArgs e)
+        {
+            if (this.CumulativeXChanged != null)
+                this.CumulativeXChanged(this, e);
         }
 
     }

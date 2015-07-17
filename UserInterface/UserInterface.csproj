@@ -139,6 +139,7 @@
     <Compile Include="EventArguments\GridHeaderClickedArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
+    <Compile Include="Presenters\FolderPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -206,6 +207,12 @@
     <Compile Include="Utility\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
+    <Compile Include="Views\FolderView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\FolderView.Designer.cs">
+      <DependentUpon>FolderView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\XYPairsView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -377,6 +384,9 @@
     <EmbeddedResource Include="Forms\FormInsertHyperlink.resx">
       <DependentUpon>FormInsertHyperlink.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FolderView.resx">
+      <DependentUpon>FolderView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\XYPairsView.resx">
       <DependentUpon>XYPairsView.cs</DependentUpon>
