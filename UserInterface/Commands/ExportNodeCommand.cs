@@ -137,7 +137,7 @@ namespace UserInterface.Commands
                         string childFolderPath = Path.Combine(workingDirectory, child.Name);
                         AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                     }
-                    else if (child is Memo || child is Graph)
+                    else if (child.Name != "TitlePage" && (child is Memo || child is Graph))
                         child.Document(tags, headingLevel, 0);
                 }
             }

@@ -84,9 +84,14 @@ namespace Models.Graph
         public bool ShowInLegend { get; set; }
 
         /// <summary>
-        /// Gets or sets a string indicating what the series should be split on e.g. 'simulation' or 'experiment'
+        /// Gets or sets a value indicating whether the Y variables should be cumulative.
         /// </summary>
         public bool Cumulative { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the X variables should be cumulative.
+        /// </summary>
+        public bool CumulativeX { get; set; }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
@@ -247,6 +252,11 @@ namespace Models.Graph
                 {
                     definition.x = GetDataFromTable(data, XFieldName);
                     definition.y = GetDataFromTable(data, YFieldName);
+                    if (Cumulative)
+                        definition.y = MathUtilities.Cumulative(definition.y as IEnumerable<double>);
+                    if (CumulativeX)
+                        definition.x = MathUtilities.Cumulative(definition.x as IEnumerable<double>);
+
                     if (X2FieldName != null && Y2FieldName != null &&
                         data.Columns.Contains(X2FieldName) && data.Columns.Contains(Y2FieldName))
                     {
@@ -292,7 +302,7 @@ namespace Models.Graph
                     // Try by assuming the name is a type.
                     Type t = ReflectionUtilities.GetTypeFromUnqualifiedName(modelName);
                     if (t != null)
-                        modelWithData = Apsim.Find(this, t) as IModel;
+                        modelWithData = Apsim.Find(this.Parent.Parent, t) as IModel;
                 }
 
                 if (modelWithData != null)
@@ -316,5 +326,6 @@ namespace Models.Graph
                 series.GetAnnotationsToPutOnGraph(annotations);
 
         }
+
     }
 }

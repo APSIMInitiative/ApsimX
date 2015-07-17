@@ -93,7 +93,8 @@ namespace UserInterface.Presenters
             this.seriesView.X2Changed += OnX2Changed;
             this.seriesView.Y2Changed += OnY2Changed;
             this.seriesView.ShowInLegendChanged += OnShowInLegendChanged;
-            this.seriesView.CumulativeChanged += OnCumulativeChanged;
+            this.seriesView.CumulativeYChanged += OnCumulativeYChanged;
+            this.seriesView.CumulativeXChanged += OnCumulativeXChanged;
         }
 
         /// <summary>
@@ -113,7 +114,8 @@ namespace UserInterface.Presenters
             this.seriesView.X2Changed -= OnX2Changed;
             this.seriesView.Y2Changed -= OnY2Changed;
             this.seriesView.ShowInLegendChanged -= OnShowInLegendChanged;
-            this.seriesView.CumulativeChanged -= OnCumulativeChanged;
+            this.seriesView.CumulativeYChanged -= OnCumulativeYChanged;
+            this.seriesView.CumulativeXChanged -= OnCumulativeXChanged;
         }
 
         /// <summary>
@@ -223,9 +225,19 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void OnCumulativeChanged(object sender, EventArgs e)
+        private void OnCumulativeYChanged(object sender, EventArgs e)
         {
-            this.SetModelProperty("Cumulative", this.seriesView.Cumulative);
+            this.SetModelProperty("Cumulative", this.seriesView.CumulativeY);
+        }
+
+        /// <summary>
+        /// Cumulative X check box has been changed by the user.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCumulativeXChanged(object sender, EventArgs e)
+        {
+            this.SetModelProperty("CumulativeX", this.seriesView.CumulativeX);
         }
 
         /// <summary>
@@ -300,7 +312,8 @@ namespace UserInterface.Presenters
             this.seriesView.XOnTop = series.XAxis == Axis.AxisType.Top;
             this.seriesView.YOnRight = series.YAxis == Axis.AxisType.Right;
             this.seriesView.ShowInLegend = series.ShowInLegend;
-            this.seriesView.Cumulative = series.Cumulative;
+            this.seriesView.CumulativeX = series.CumulativeX;
+            this.seriesView.CumulativeY = series.Cumulative;
             this.seriesView.DataSource = series.TableName;
 
             PopulateFieldNames(dataStore);

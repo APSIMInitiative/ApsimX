@@ -51,6 +51,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cumulativeCheckBox = new System.Windows.Forms.CheckBox();
             this.graphView1 = new Views.GraphView();
+            this.cumulativeCheckBoxX = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label2
@@ -313,10 +314,23 @@
             this.graphView1.Size = new System.Drawing.Size(605, 316);
             this.graphView1.TabIndex = 38;
             // 
+            // cumulativeCheckBoxX
+            // 
+            this.cumulativeCheckBoxX.AutoSize = true;
+            this.cumulativeCheckBoxX.Location = new System.Drawing.Point(477, 56);
+            this.cumulativeCheckBoxX.Margin = new System.Windows.Forms.Padding(4);
+            this.cumulativeCheckBoxX.Name = "cumulativeCheckBoxX";
+            this.cumulativeCheckBoxX.Size = new System.Drawing.Size(105, 21);
+            this.cumulativeCheckBoxX.TabIndex = 39;
+            this.cumulativeCheckBoxX.Text = "cumulative?";
+            this.cumulativeCheckBoxX.UseVisualStyleBackColor = true;
+            this.cumulativeCheckBoxX.CheckedChanged += new System.EventHandler(this.OnCumulativeXCheckedChanged);
+            // 
             // SeriesView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cumulativeCheckBoxX);
             this.Controls.Add(this.graphView1);
             this.Controls.Add(this.cumulativeCheckBox);
             this.Controls.Add(this.label1);
@@ -372,5 +386,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox cumulativeCheckBox;
         private GraphView graphView1;
+        private System.Windows.Forms.CheckBox cumulativeCheckBoxX;
     }
 }
