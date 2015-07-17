@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
+  <Memo>
+    <Name>TitlePage</Name>
+    <MemoText><![CDATA[
+<html><body>
+<h1>The APSIM Soil Arbitrator Model</h1>
+<p>
+<i>Huth, N.I., Fainges, J.L. and Holzworth, D.P.</i>
+</p>
+</body></html>]]></MemoText>
+  </Memo>
   <DataStore>
     <Name>DataStore</Name>
     <AutoExport>false</AutoExport>
@@ -12,10 +22,58 @@
       <MemoText><![CDATA[
 <html><body>
 <p>
-This test compares the water and nitrogen competition for simulations where a static crop canopy with LAI of 3, rooting depth of 1m and a daily N demand of 0.15 kgN/ha is a single crop, two half-crops or three third-crops.  In each case the total canopy size and water demand of each of the single or split populations will be the same.  If the soil arbitrator is operating correctly the overall water and nitrogen balance of each simulation should be the same.  In the case of the split populations, the water and nitrogen supplies provided by the soil arbitrator to the sub-populations should sum to the same value provided in simulation for the the full population.This test simulation also tests that the uptakes provided by the arbitrator are passed to the correct instances of each crop model within a multiple zone simulation.  In such a simulation there may be multiple instances of a wheat model for example.  The arbrator must communicate correctly such that the correct information is supplied to each instance of each particular crop model.The simulation includes 3 fields with up to three crops in each.Field 1Wheat: LAI = 3 (m2/m2), N demand = 0.15 (kg/ha)Field 2Wheat: LAI = 1.5 (m2/m2), N demand = 0.075 (kg/ha)Barley: LAI = 1.5 (m2/m2), N demand = 0.075 (kg/ha)Field 3Wheat: LAI = 1.0 (m2/m2), N demand = 0.05 (kg/ha)Barley: LAI = 1.0 (m2/m2), N demand = 0.05 (kg/ha)Oats:   LAI = 1.0 (m2/m2), N demand = 0.05 (kg/ha)The crops are simple instances of a static plant model and so the crop type is only of use in references the various instances of the models.
+This test compares the water and nitrogen competition for simulations where a static crop canopy with LAI of 3, rooting depth of 1m and a daily N demand of 0.15 kgN/ha is a single crop, two half-populations or three one third-populations.  In each case the total canopy size and water demand of each of the single or split populations will be the same.  If the soil arbitrator is operating correctly the overall water and nitrogen balance of each simulation should be the same.  In the case of the split populations, the water and nitrogen supplies provided by the soil arbitrator to the sub-populations should sum to the same value calculated in the simulation for the full population.
+</p>
+<p>
+This test simulation also tests that the uptakes provided by the arbitrator are passed to the correct instances of each crop model within a multiple zone simulation.  In such a simulation there may be multiple instances of a wheat model for example.  The arbitrator must communicate such that the correct information is supplied to each instance of each particular crop model.
 </p>
 <p>
 
+</p>
+<p>
+The simulation includes 3 fields with up to three crops in each.
+</p>
+<p>
+
+</p>
+<p>
+Field 1
+</p>
+<p>
+Wheat: LAI = 3 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.15 (kg/ha)
+</p>
+<p>
+
+</p>
+<p>
+Field 2
+</p>
+<p>
+Wheat: LAI = 1.5 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.075 (kg/ha)
+</p>
+<p>
+Barley: LAI = 1.5 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.075 (kg/ha)
+</p>
+<p>
+
+</p>
+<p>
+Field 3
+</p>
+<p>
+Wheat: LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
+</p>
+<p>
+Barley: LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
+</p>
+<p>
+Oats:   LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
+</p>
+<p>
+
+</p>
+<p>
+The crops are simple instances of a static plant model and so the crop type is only of use in referencing the various instances of the models.
 </p>
 </body></html>]]></MemoText>
     </Memo>
@@ -1524,7 +1582,48 @@ This test compares the water and nitrogen competition for simulations where a st
     </Simulation>
     <Graph>
       <Name>SoilWater</Name>
-      <Title>Total soil water within the soil profile</Title>
+      <Series>
+        <Name>Field1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report1</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SWTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Name>Field2</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report2</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SWTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Name>Field3</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744384</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>Report3</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>SWTotal</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
       <Caption>Note: Soil water levels are identical under single or split populations.</Caption>
       <Axis>
         <Type>Bottom</Type>
@@ -1542,74 +1641,54 @@ This test compares the water and nitrogen competition for simulations where a st
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>SoilNO3</Name>
       <Series>
-        <Title>Field1</Title>
+        <Name>Field1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>SWTotal</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report1</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field2</Title>
+        <Name>Field2</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>SWTotal</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report2</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field3</Title>
+        <Name>Field3</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744384</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report3</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report3</TableName>
-          <FieldName>SWTotal</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report3</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>SoilNO3</Name>
-      <Title>Total soil nitrate within the soil profile</Title>
       <Caption>Note: Soil nitrate levels are identical under single or split populations.</Caption>
       <Axis>
         <Type>Bottom</Type>
@@ -1627,74 +1706,54 @@ This test compares the water and nitrogen competition for simulations where a st
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>SoilNH4</Name>
       <Series>
-        <Title>Field1</Title>
+        <Name>Field1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>NO3Total</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report1</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field2</Title>
+        <Name>Field2</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>NO3Total</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report2</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field3</Title>
+        <Name>Field3</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744384</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report3</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report3</TableName>
-          <FieldName>NO3Total</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report3</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>SoilNH4</Name>
-      <Title>Total soil ammonium in the soil profile</Title>
       <Caption>Note: Soil ammonium levels are identical under single or split populations.</Caption>
       <Axis>
         <Type>Bottom</Type>
@@ -1712,74 +1771,54 @@ This test compares the water and nitrogen competition for simulations where a st
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>PotentialEP</Name>
       <Series>
-        <Title>Field1</Title>
+        <Name>Field1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>NH4Total</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report1</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>wheat.PotentialEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field2</Title>
+        <Name>Field2</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>NH4Total</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report2</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalPEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field3</Title>
+        <Name>Field3</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744384</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report3</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report3</TableName>
-          <FieldName>NH4Total</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report3</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalPEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
-      <LegendPosition>TopRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>PotentialEP</Name>
-      <Title>Total Potential EP across summed across populations</Title>
       <Caption>Note that potential EP is identical across single or split populations.  This shows that the calculations in the Microclimate model are effective in handling split populations also.</Caption>
       <Axis>
         <Type>Bottom</Type>
@@ -1797,74 +1836,54 @@ This test compares the water and nitrogen competition for simulations where a st
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>ActualEP</Name>
       <Series>
-        <Title>Field1</Title>
+        <Name>Field1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>wheat.PotentialEP</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report1</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>wheat.EP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field2</Title>
+        <Name>Field2</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>TotalPEP</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report2</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
       <Series>
-        <Title>Field3</Title>
+        <Name>Field3</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744384</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report3</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report3</TableName>
-          <FieldName>TotalPEP</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report3</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>ActualEP</Name>
-      <Title>Total Actual EP across summed across populations</Title>
       <Caption>Note that actual EP summed across single or split populations is identical for each simulation.</Caption>
       <Axis>
         <Type>Bottom</Type>
@@ -1882,68 +1901,7 @@ This test compares the water and nitrogen competition for simulations where a st
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Field1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report1</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report1</TableName>
-          <FieldName>wheat.EP</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Field2</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report2</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report2</TableName>
-          <FieldName>TotalEP</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <Series>
-        <Title>Field3</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744384</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report3</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report3</TableName>
-          <FieldName>TotalEP</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
