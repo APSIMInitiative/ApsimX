@@ -5,6 +5,18 @@
     <Name>Replacements</Name>
     <Plant>
       <Name>MCSP</Name>
+      <Memo>
+        <Name>Introduction</Name>
+        <MemoText><![CDATA[
+<html><body>
+<p>
+This model has been built to simulate Multiple Crops in simulations that serve a Single Purpose (MCSP).  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands.  It does not simulate yield, this is specified as an input.  Yield will be reduced below the specified potential yield is N or water supplies from the soil are insufficient to meet demand.  The model has been paramaterised for the single purpose of simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that it is empirical and the parameters might need changing for crops from different areas.
+</p>
+<p>
+
+</p>
+</body></html>]]></MemoText>
+      </Memo>
       <SigmoidFunction2>
         <Name>TotalBiomassAtStartReproductive</Name>
         <VariableReference>
@@ -150,11 +162,6 @@
           <VariableName>[HarvestIndex].Value</VariableName>
         </VariableReference>
       </DivideFunction>
-      <OrganArbitrator>
-        <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-      </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
         <AirTemperatureFunction>
@@ -261,143 +268,11 @@
         </AccumulateFunction>
         <Emerged>false</Emerged>
       </Phenology>
-      <Root>
-        <Name>Root</Name>
-        <CompositeBiomass>
-          <Name>Live</Name>
-          <Propertys>
-            <string>[Root].LayerLive</string>
-          </Propertys>
-        </CompositeBiomass>
-        <CompositeBiomass>
-          <Name>Dead</Name>
-          <Propertys>
-            <string>[Root].LayerDead</string>
-          </Propertys>
-        </CompositeBiomass>
-        <LinearInterpolationFunction>
-          <Name>KLModifier</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>200</double>
-              <double>1500</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].LayerMidPointDepth</XProperty>
-        </LinearInterpolationFunction>
-        <Constant>
-          <Name>SoilWaterEffect</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaxDailyNUptake</Name>
-          <Value>12</Value>
-        </Constant>
-        <Constant>
-          <Name>SenescenceRate</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <Value>0.009</Value>
-        </Constant>
-        <Constant>
-          <Name>MinimumNConc</Name>
-          <Value>0.009</Value>
-        </Constant>
-        <PhaseBasedSwitch>
-          <Name>NitrogenDemandSwitch</Name>
-          <Start>Germination</Start>
-          <End>Maturity</End>
-        </PhaseBasedSwitch>
-        <Constant>
-          <Name>TemperatureEffect</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>MaximumRootDepth</Name>
-          <Value>1500</Value>
-        </Constant>
-        <MultiplyFunction>
-          <Name>RootFrontVelocity</Name>
-          <LessThanFunction>
-            <Name>RootFrontVelocity</Name>
-            <VariableReference>
-              <Name>TestVariable</Name>
-              <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
-            </VariableReference>
-            <AddFunction>
-              <Name>GrowthDuration</Name>
-              <VariableReference>
-                <Name>CanopyExpandingTT</Name>
-                <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>YieldIncreasingTT</Name>
-                <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>SenescingTT</Name>
-                <VariableName>[Phenology].Senescing.Target.Value</VariableName>
-              </VariableReference>
-            </AddFunction>
-            <DivideFunction>
-              <Name>IfTrue</Name>
-              <VariableReference>
-                <Name>MaxRootDepth</Name>
-                <VariableName>[Root].MaximumRootDepth.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>GrowthDuration</Name>
-                <VariableName>[Root].RootFrontVelocity.RootFrontVelocity.GrowthDuration.Value</VariableName>
-              </VariableReference>
-            </DivideFunction>
-            <Constant>
-              <Name>IfFalse</Name>
-              <Value>0</Value>
-            </Constant>
-          </LessThanFunction>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <PhaseLookupValue>
-          <Name>PartitionFraction</Name>
-          <VariableReference>
-            <Name>RootProportion</Name>
-            <VariableName>[RootProportion].Value</VariableName>
-          </VariableReference>
-          <Start>Emergence</Start>
-          <End>EndReproductive</End>
-        </PhaseLookupValue>
-        <InitialDM>0.2</InitialDM>
-        <SpecificRootLength>40000</SpecificRootLength>
-        <KNO3_yProperty>
-          <double>0.02</double>
-          <double>0.02</double>
-        </KNO3_yProperty>
-        <KNO3_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNO3_xRootLength>
-        <KNH4_yProperty>
-          <double>0</double>
-          <double>0</double>
-        </KNH4_yProperty>
-        <KNH4_xRootLength>
-          <double>0</double>
-          <double>0.003</double>
-        </KNH4_xRootLength>
-        <NuptakeSupply>0</NuptakeSupply>
-      </Root>
+      <OrganArbitrator>
+        <Name>Arbitrator</Name>
+        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
+        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+      </OrganArbitrator>
       <SimpleLeaf>
         <Name>Leaf</Name>
         <Biomass>
@@ -754,6 +629,143 @@
           <VariableName>[ProductDMProportion].Value</VariableName>
         </VariableReference>
       </GenericAboveGroundOrgan>
+      <Root>
+        <Name>Root</Name>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>
+            <string>[Root].LayerLive</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>
+            <string>[Root].LayerDead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <LinearInterpolationFunction>
+          <Name>KLModifier</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>200</double>
+              <double>1500</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>0</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Root].LayerMidPointDepth</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>SoilWaterEffect</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <Value>12</Value>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.009</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.009</Value>
+        </Constant>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Start>Germination</Start>
+          <End>Maturity</End>
+        </PhaseBasedSwitch>
+        <Constant>
+          <Name>TemperatureEffect</Name>
+          <Value>1</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumRootDepth</Name>
+          <Value>1500</Value>
+        </Constant>
+        <MultiplyFunction>
+          <Name>RootFrontVelocity</Name>
+          <LessThanFunction>
+            <Name>RootFrontVelocity</Name>
+            <VariableReference>
+              <Name>TestVariable</Name>
+              <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
+            </VariableReference>
+            <AddFunction>
+              <Name>GrowthDuration</Name>
+              <VariableReference>
+                <Name>CanopyExpandingTT</Name>
+                <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>YieldIncreasingTT</Name>
+                <VariableName>[Phenology].YieldIncreasing.Target.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>SenescingTT</Name>
+                <VariableName>[Phenology].Senescing.Target.Value</VariableName>
+              </VariableReference>
+            </AddFunction>
+            <DivideFunction>
+              <Name>IfTrue</Name>
+              <VariableReference>
+                <Name>MaxRootDepth</Name>
+                <VariableName>[Root].MaximumRootDepth.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>GrowthDuration</Name>
+                <VariableName>[Root].RootFrontVelocity.RootFrontVelocity.GrowthDuration.Value</VariableName>
+              </VariableReference>
+            </DivideFunction>
+            <Constant>
+              <Name>IfFalse</Name>
+              <Value>0</Value>
+            </Constant>
+          </LessThanFunction>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+        <PhaseLookupValue>
+          <Name>PartitionFraction</Name>
+          <VariableReference>
+            <Name>RootProportion</Name>
+            <VariableName>[RootProportion].Value</VariableName>
+          </VariableReference>
+          <Start>Emergence</Start>
+          <End>EndReproductive</End>
+        </PhaseLookupValue>
+        <InitialDM>0.2</InitialDM>
+        <SpecificRootLength>40000</SpecificRootLength>
+        <KNO3_yProperty>
+          <double>0.02</double>
+          <double>0.02</double>
+        </KNO3_yProperty>
+        <KNO3_xRootLength>
+          <double>0</double>
+          <double>0.003</double>
+        </KNO3_xRootLength>
+        <KNH4_yProperty>
+          <double>0</double>
+          <double>0</double>
+        </KNH4_yProperty>
+        <KNH4_xRootLength>
+          <double>0</double>
+          <double>0.003</double>
+        </KNH4_xRootLength>
+        <NuptakeSupply>0</NuptakeSupply>
+      </Root>
       <Nodule>
         <Name>Nodule</Name>
         <Biomass>
@@ -994,6 +1006,58 @@
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Root].MinimumNConc.Value = 0.009</Command>
         <Command>[Root].MaximumNConc.Value = 0.009</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Kale</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 1200</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.0</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 867</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 141</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.95</Command>
+        <Command>[XoBiomass].Value = 1830</Command>
+        <Command>[bBiomass].Value = 540</Command>
+        <Command>[ExpectedYield].Value = 7500</Command>
+        <Command>[RootProportion].Value = 0.1</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,1600</Command>
+        <Command>[HarvestIndex].XYPairs.Y = 0.9,0.5</Command>
+        <Command>[ProductDMProportion].Value = 0.16</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 1</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 1900</Command>
+        <Command>[Phenology].Senescing.Target.Value = 300</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[leaf].NConc.Value = 0.01</Command>
+        <Command>[Product].MinimumNConc.Value = 0.02</Command>
+        <Command>[Product].MaximumNConc.Value = 0.03</Command>
+        <Command>[Root].MinimumNConc.Value = 0.008</Command>
+        <Command>[Root].MaximumNConc.Value = 0.008</Command>
+      </Cultivar>
+      <Cultivar>
+        <Name>Rape</Name>
+        <Alias>Barley_Spring</Alias>
+        <Command>[Root].MaximumRootDepth.Value = 1200</Command>
+        <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.0</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 770</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 57</Command>
+        <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.95</Command>
+        <Command>[XoBiomass].Value = 1296</Command>
+        <Command>[bBiomass].Value = 189</Command>
+        <Command>[ExpectedYield].Value = 4615</Command>
+        <Command>[RootProportion].Value = 0.1</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,1600</Command>
+        <Command>[HarvestIndex].XYPairs.Y = .95,0.5</Command>
+        <Command>[ProductDMProportion].Value = 0.13</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 1</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 1300</Command>
+        <Command>[Phenology].Senescing.Target.Value = 300</Command>
+        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[leaf].NConc.Value = 0.01</Command>
+        <Command>[Product].MinimumNConc.Value = 0.02</Command>
+        <Command>[Product].MaximumNConc.Value = 0.03</Command>
+        <Command>[Root].MinimumNConc.Value = 0.008</Command>
+        <Command>[Root].MaximumNConc.Value = 0.008</Command>
       </Cultivar>
       <CropType>SLURP</CropType>
     </Plant>
@@ -1393,7 +1457,7 @@
       <Manager>
         <Name>MCSPSowingRule</Name>
         <Script>
-          <CultivarName>Potatoes_Long</CultivarName>
+          <CultivarName>Rape</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
           <SowingDate>1998-10-14</SowingDate>
         </Script>
@@ -3129,49 +3193,63 @@ namespace Models
     <Slope>0</Slope>
   </Simulation>
   <Experiment>
-    <Name>5CropTestRun</Name>
+    <Name>7CropTestRun</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
         <Name>SpringWheat</Name>
         <Specifications>
           <string>[MCSPSowingRule].Script.CultivarName = Wheat_Spring</string>
-          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+          <string>[MCSPSowingRule].Script.SowingDate = 1998-09-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>AutumnWheat</Name>
         <Specifications>
           <string>[MCSPSowingRule].Script.CultivarName = Wheat_Autumn</string>
-          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+          <string>[MCSPSowingRule].Script.SowingDate = 1998-05-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Potatoes</Name>
         <Specifications>
           <string>[MCSPSowingRule].Script.CultivarName = Potatoes_Long</string>
-          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+          <string>[MCSPSowingRule].Script.SowingDate = 1998-10-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Peas</Name>
         <Specifications>
           <string>[MCSPSowingRule].Script.CultivarName = Green_Peas</string>
-          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+          <string>[MCSPSowingRule].Script.SowingDate = 1998-10-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Maize</Name>
         <Specifications>
           <string>[MCSPSowingRule].Script.CultivarName = Maize_Short</string>
-          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+          <string>[MCSPSowingRule].Script.SowingDate = 1998-11-15</string>
         </Specifications>
       </Factor>
       <Factor>
         <Name>Spinich</Name>
         <Specifications>
           <string>[MCSPSowingRule].Script.CultivarName = Spinich</string>
-          <string>[MCSPSowingRule].Script.InitialRootDepth = 10</string>
+          <string>[MCSPSowingRule].Script.SowingDate = 1998-05-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Kale</Name>
+        <Specifications>
+          <string>[MCSPSowingRule].Script.CultivarName = Kale</string>
+          <string>[MCSPSowingRule].Script.SowingDate = 1998-10-15</string>
+        </Specifications>
+      </Factor>
+      <Factor>
+        <Name>Rape</Name>
+        <Specifications>
+          <string>[MCSPSowingRule].Script.CultivarName = Rape</string>
+          <string>[MCSPSowingRule].Script.SowingDate = 1998-10-15</string>
         </Specifications>
       </Factor>
     </Factors>
@@ -3183,7 +3261,7 @@ namespace Models
       </Weather>
       <Clock>
         <Name>Clock</Name>
-        <StartDate>1998-10-14T00:00:00</StartDate>
+        <StartDate>1998-05-01T00:00:00</StartDate>
         <EndDate>1999-07-01T00:00:00</EndDate>
       </Clock>
       <Summary>
@@ -5518,2290 +5596,6 @@ namespace Models
         <Cumulative>false</Cumulative>
       </Series>
       <LegendPosition>BottomRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-  </Experiment>
-  <Experiment>
-    <Name>ClimateXSoil tests</Name>
-    <Factors>
-      <Name>Factors</Name>
-      <Factor>
-        <Name>Crop</Name>
-        <Factor>
-          <Name>SpringWheat</Name>
-          <Specifications>
-            <string>[MCSPSowingRule].Script.CultivarName = Wheat_Spring</string>
-            <string>[MCSPSowingRule].Script.SowingDateString = 15-Aug</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>AutumnWheat</Name>
-          <Specifications>
-            <string>[MCSPSowingRule].Script.CultivarName = Wheat_Autumn</string>
-            <string>[MCSPSowingRule].Script.SowingDateString = 1-May</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>Potatoes</Name>
-          <Specifications>
-            <string>[MCSPSowingRule].Script.CultivarName = Potatoes_Long</string>
-            <string>[MCSPSowingRule].Script.SowingDateString = 10-Oct</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>Peas</Name>
-          <Specifications>
-            <string>[MCSPSowingRule].Script.CultivarName = Green_Peas</string>
-            <string>[MCSPSowingRule].Script.SowingDateString = 15-Sep</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>Maize</Name>
-          <Specifications>
-            <string>[MCSPSowingRule].Script.CultivarName = Maize_Short</string>
-            <string>[MCSPSowingRule].Script.SowingDateString = 1-Nov</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>Spinich</Name>
-          <Specifications>
-            <string>[MCSPSowingRule].Script.CultivarName = Spinich</string>
-            <string>[MCSPSowingRule].Script.SowingDateString = 1-May</string>
-          </Specifications>
-        </Factor>
-        <Specifications />
-      </Factor>
-      <Factor>
-        <Name>Climate</Name>
-        <Factor>
-          <Name>P078064</Name>
-          <Specifications>
-            <string>[Weather].FileName = %root%\Prototypes\MCSP\Weather\P078064.met</string>
-          </Specifications>
-        </Factor>
-        <Specifications />
-      </Factor>
-    </Factors>
-    <Simulation>
-      <Name>CropCompBase</Name>
-      <Weather>
-        <Name>Weather</Name>
-        <FileName>%root%\Prototypes\MCSP\Weather\P078064.met</FileName>
-      </Weather>
-      <Clock>
-        <Name>Clock</Name>
-        <StartDate>1980-03-01T00:00:00</StartDate>
-        <EndDate>2010-07-01T00:00:00</EndDate>
-      </Clock>
-      <Summary>
-        <Name>Summary</Name>
-      </Summary>
-      <SoilArbitrator>
-        <Name>Soil Arbitrator</Name>
-      </SoilArbitrator>
-      <Zone>
-        <Name>Field</Name>
-        <Soil>
-          <Name>Soil</Name>
-          <Analysis>
-            <Name>Analysis</Name>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <PH>
-              <double>6.6</double>
-              <double>6.2</double>
-              <double>5.7</double>
-              <double>5.5</double>
-              <double>5.5</double>
-              <double>5.5</double>
-            </PH>
-            <PHUnits>Water</PHUnits>
-            <BoronUnits>HotWater</BoronUnits>
-          </Analysis>
-          <InitialWater>
-            <Name>Initial water</Name>
-            <PercentMethod>EvenlyDistributed</PercentMethod>
-            <FractionFull>1</FractionFull>
-            <DepthWetSoil>NaN</DepthWetSoil>
-          </InitialWater>
-          <Water>
-            <Name>Water</Name>
-            <SoilCrop>
-              <Name>MCSPSoil</Name>
-              <LL>
-                <double>0.13</double>
-                <double>0.13</double>
-                <double>0.1</double>
-                <double>0.08</double>
-                <double>0.11</double>
-                <double>0.11</double>
-              </LL>
-              <KL>
-                <double>0.08</double>
-                <double>0.08</double>
-                <double>0.08</double>
-                <double>0.08</double>
-                <double>0.08</double>
-                <double>0.08</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
-            <SoilCrop>
-              <Name>PotatoSoil</Name>
-              <LL>
-                <double>0.13</double>
-                <double>0.13</double>
-                <double>0.27</double>
-                <double>0.27</double>
-                <double>0.3</double>
-                <double>0.3</double>
-              </LL>
-              <KL>
-                <double>0.1</double>
-                <double>0.06</double>
-                <double>0.03</double>
-                <double>0.01</double>
-                <double>0</double>
-                <double>0</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>0.1</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0</double>
-              </XF>
-            </SoilCrop>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <BD>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-              <double>1.2</double>
-            </BD>
-            <AirDry>
-              <double>0.08</double>
-              <double>0.13</double>
-              <double>0.1</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-            </AirDry>
-            <LL15>
-              <double>0.13</double>
-              <double>0.13</double>
-              <double>0.1</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-            </LL15>
-            <DUL>
-              <double>0.33</double>
-              <double>0.33</double>
-              <double>0.31</double>
-              <double>0.15</double>
-              <double>0.1</double>
-              <double>0.06</double>
-            </DUL>
-            <SAT>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.44</double>
-              <double>0.46</double>
-              <double>0.44</double>
-              <double>0.44</double>
-            </SAT>
-          </Water>
-          <SoilWater>
-            <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
-            <SummerDate>1-Nov</SummerDate>
-            <SummerU>9</SummerU>
-            <SummerCona>4.4</SummerCona>
-            <WinterDate>1-Apr</WinterDate>
-            <WinterU>9</WinterU>
-            <WinterCona>4.4</WinterCona>
-            <DiffusConst>88</DiffusConst>
-            <DiffusSlope>35.4</DiffusSlope>
-            <Salb>0.18</Salb>
-            <CN2Bare>68</CN2Bare>
-            <CNRed>20</CNRed>
-            <CNCov>0.8</CNCov>
-            <slope>0</slope>
-            <discharge_width>0</discharge_width>
-            <catchment_area>0</catchment_area>
-            <max_pond>0</max_pond>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <SWCON>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-              <double>0.55</double>
-            </SWCON>
-            <KLAT>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KLAT>
-          </SoilWater>
-          <SoilNitrogen>
-            <Name>SoilNitrogen</Name>
-            <fom_type>
-              <string>default</string>
-              <string>manure</string>
-              <string>mucuna</string>
-              <string>lablab</string>
-              <string>shemp</string>
-              <string>stable</string>
-            </fom_type>
-            <fract_carb>
-              <double>0.2</double>
-              <double>0.3</double>
-              <double>0.54</double>
-              <double>0.57</double>
-              <double>0.45</double>
-              <double>0</double>
-            </fract_carb>
-            <fract_cell>
-              <double>0.7</double>
-              <double>0.3</double>
-              <double>0.37</double>
-              <double>0.37</double>
-              <double>0.47</double>
-              <double>0.1</double>
-            </fract_cell>
-            <fract_lign>
-              <double>0.1</double>
-              <double>0.4</double>
-              <double>0.09</double>
-              <double>0.06</double>
-              <double>0.08</double>
-              <double>0.9</double>
-            </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
-            <oc>
-              <double>1.8356606676098439</double>
-              <double>1.4633385968844384</double>
-              <double>1.1988393325681357</double>
-              <double>1.0301002994895852</double>
-              <double>0.4703383219429832</double>
-              <double>0.47013790451920212</double>
-            </oc>
-          </SoilNitrogen>
-          <SoilOrganicMatter>
-            <Name>SoilOrganicMatter</Name>
-            <RootCN>30</RootCN>
-            <RootWt>3000</RootWt>
-            <SoilCN>11.5</SoilCN>
-            <EnrACoeff>7.4</EnrACoeff>
-            <EnrBCoeff>0.2</EnrBCoeff>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <Depth>
-              <string>0-10</string>
-              <string>10-30</string>
-              <string>30-60</string>
-              <string>60-90</string>
-              <string>90-120</string>
-              <string>120-150</string>
-            </Depth>
-            <OC>
-              <double>1.82</double>
-              <double>1.47</double>
-              <double>1.2</double>
-              <double>1.03</double>
-              <double>0.47</double>
-              <double>0.47</double>
-            </OC>
-            <FBiom>
-              <double>0.025</double>
-              <double>0.025</double>
-              <double>0.015</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-            </FBiom>
-            <FInert>
-              <double>0.3</double>
-              <double>0.4</double>
-              <double>0.75</double>
-              <double>0.9</double>
-              <double>0.96</double>
-              <double>0.96</double>
-            </FInert>
-            <OCUnits>Total</OCUnits>
-          </SoilOrganicMatter>
-          <Sample>
-            <Name>Initial nitrogen</Name>
-            <Thickness>
-              <double>100</double>
-              <double>200</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-              <double>300</double>
-            </Thickness>
-            <NO3>
-              <double>270</double>
-              <double>30</double>
-              <double>5</double>
-              <double>5</double>
-              <double>0</double>
-              <double>0</double>
-            </NO3>
-            <NH4>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </NH4>
-            <NO3Units>kgha</NO3Units>
-            <NH4Units>ppm</NH4Units>
-            <SWUnits>Volumetric</SWUnits>
-            <OCUnits>Total</OCUnits>
-            <PHUnits>Water</PHUnits>
-          </Sample>
-          <RecordNumber>0</RecordNumber>
-          <SoilType />
-          <LocalName />
-          <Site />
-          <NearestTown />
-          <Region />
-          <NaturalVegetation />
-          <Latitude>0</Latitude>
-          <Longitude>0</Longitude>
-        </Soil>
-        <MicroClimate>
-          <Name>MicroClimate</Name>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
-          <sun_angle>15</sun_angle>
-          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-          <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
-          <refheight>2</refheight>
-          <albedo>0.26</albedo>
-          <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
-          <a_interception>0</a_interception>
-          <b_interception>1</b_interception>
-          <c_interception>0</c_interception>
-          <d_interception>0</d_interception>
-          <soil_albedo>0.23</soil_albedo>
-        </MicroClimate>
-        <Irrigation>
-          <Name>Irrigation</Name>
-        </Irrigation>
-        <Fertiliser>
-          <Name>Fertiliser</Name>
-        </Fertiliser>
-        <Manager>
-          <Name>MCSPSowingRule</Name>
-          <Script>
-            <CultivarName>Barley_Spring</CultivarName>
-            <InitialRootDepth>10</InitialRootDepth>
-            <SowingDateString>15-Aug</SowingDateString>
-            <SowingDate>0001-01-01</SowingDate>
-            <TodayMonth>0</TodayMonth>
-            <SowingDateMonth>0</SowingDateMonth>
-            <TodayDay>0</TodayDay>
-            <SowingDateDay>0</SowingDateDay>
-          </Script>
-          <Code><![CDATA[
-        using System;
-        using Models.Core;
-        using Models.PMF;
-        namespace Models
-        {
-           [Serializable] 
-           [System.Xml.Serialization.XmlInclude(typeof(Model))]
-            public class Script : Model
-            {      
-               [Link] Plant MCSP;
-               [Link] Clock Clock;
-               [Link] Fertiliser Fert;
-
-               [Description("Cultivar")]
-               public string CultivarName { get; set; }
-               [Description("Initial Root Depth")]
-               public double InitialRootDepth { get; set; }
-			   [Description("Sowing Date (dd/mm)")]
-               public string SowingDateString { get; set; }
-
-			   public DateTime SowingDate {get; set;}
-			   public int TodayMonth {get; set;}
-			   public int SowingDateMonth {get; set;}
-			   public int TodayDay {get; set;}
-			   public int SowingDateDay {get; set;}
-				
-               
-               [EventSubscribe("DoManagement")]
-               private void OnDoManagement(object sender, EventArgs e)
-               {
-				SowingDate = DateTime.Parse(SowingDateString);
-				TodayMonth = Clock.Today.Month;
-				SowingDateMonth = SowingDate.Month;
-				TodayDay = Clock.Today.Day;
-				SowingDateDay = SowingDate.Day;
-				
-				//if (Clock.Today.Date == SowingDate)
-                if((SowingDate.Month == Clock.Today.Month) && (SowingDate.Day == Clock.Today.Day) && MCSP.IsAlive == false)
-                    {
-                    MCSP.Sow(cultivar:CultivarName, population:1, depth:InitialRootDepth, rowSpacing:150);
-                    Fert.Apply(500, Fertiliser.Types.UreaN, 10);
-                    }
-                //PMFCrop.Sow(... Contains the following arguements:
-                //Population  double  Optional  Seeds sowing/m2.  Default is zero
-                //Cultivar    string  Required  "NameOfCultivar"
-                //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm 
-                //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0
-                //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0
-                //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm
-                //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is "Plant"
-			   
-			    if(MCSP.Phenology.Stage >= 7.0)
-			    {
-			       MCSP.Harvest();
-			       MCSP.EndCrop();
-			    }
-			   
-			   }
-            }
-        }
-				]]></Code>
-        </Manager>
-        <Manager>
-          <Name>ExtraVariables</Name>
-          <Script />
-          <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{      
-		[Link] Clock Clock;
-		[Link] Soils.Soil Soil;
-		[Link] Models.SurfaceOM.SurfaceOrganicMatter SOM;
-		[Link] Weather Met;   
-		[Link] Fertiliser Fert;
-		[Link] Irrigation Irrig;  
-		[Link] Plant MCSP;
-        [Link] Zone zone;
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double AccumPlantN { get; set; }
-		[XmlIgnore] public double AccumMineralisation { get; set; }
-		[XmlIgnore] public double AccumDenit { get; set; }
-		[XmlIgnore] public double AccumFert { get; set; }
-		[XmlIgnore] public double AccumLeach { get; set; }
-		[XmlIgnore] public double AccumDetach { get; set; }
-		[XmlIgnore] public double DeltaSoilOMN { get; set; }
-		[XmlIgnore] public double DeltaSurfaceOMN { get; set; }
-		[XmlIgnore] public double DeltaSoilMineralN { get; set; }
-		[XmlIgnore] public double SoilNitrogenContent { get; set; }
-		
-		[XmlIgnore] public double AccumEO { get; set; }
-		[XmlIgnore] public double AccumEP { get; set; }
-		[XmlIgnore] public double AccumES { get; set; }
-		[XmlIgnore] public double AccumDrainage { get; set; }
-		[XmlIgnore] public double AccumRunoff { get; set; }
-		[XmlIgnore] public double AccumOutflowLat { get; set; }
-		[XmlIgnore] public double AccumIrrigation { get; set; }
-		[XmlIgnore] public double AccumRainfall { get; set; }
-		[XmlIgnore] public double SoilWaterDeficit { get; set; }
-	
-		[XmlIgnore] public double  InitialSoilOMN { get; set; }
-		[XmlIgnore] public double  InitialSurfaceOMN { get; set; }
-		[XmlIgnore] public double  InitialMineralN { get; set; }
-		
-		[XmlIgnore] public double SWC { get; set; }
-		[XmlIgnore] public double DUL { get; set; }
-		[XmlIgnore] public double OutFlowLat { get; set; }
-
-		[XmlIgnore] public double FomN { get; set; }
-		[XmlIgnore] public double BiomN { get; set; }
-		[XmlIgnore] public double HumN { get; set; }
-		[XmlIgnore] public double OrganicN { get; set; }
-		[XmlIgnore] public double NO3N { get; set; }
-		[XmlIgnore] public double NH4N { get; set; }
-		[XmlIgnore] public double UreaN { get; set; }
-		[XmlIgnore] public double MineralN { get; set; }
-		[XmlIgnore] public double DltNMinRes { get; set; }
-		[XmlIgnore] public double DltNMinTot { get; set; }
-		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-			InitialDay = true;
-		}	   
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			//!!!!!! Nitrogen balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-           	FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			OrganicN = FomN + HumN + BiomN;
-			NO3N = MathUtilities.Sum(Soil.NO3N);
-			NH4N = MathUtilities.Sum(Soil.NH4N);
-			UreaN = MathUtilities.Sum(Soil.SoilNitrogen.urea);
-			MineralN = NO3N + NH4N + UreaN; 
-			DltNMinRes = MathUtilities.Sum(Soil.SoilNitrogen.dlt_n_min_res);
-			DltNMinTot = MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            int layers = Soil.Thickness.Length;
-			if (InitialDay == true)
-			{
-				InitialSurfaceOMN = SOM.N;
-				InitialSoilOMN = OrganicN;
-				InitialMineralN = MineralN;
-				InitialDay = false;
-			}
-			DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;
-			AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails
-            AccumMineralisation += MathUtilities.Sum(Soil.SoilNitrogen.MineralisedN);
-            AccumDenit -= MathUtilities.Sum(Soil.SoilNitrogen.Denitrification);
-			AccumPlantN -= (double)zone.Get("MCSP.Root.NUptake");
-			DeltaSoilOMN = OrganicN - InitialSoilOMN;
-			DeltaSoilMineralN = MineralN - InitialMineralN;
-			SoilNitrogenContent = MineralN;
-			
-			//!!!!!! Water balance components !!!!!!
-			//!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!
-
-			AccumRainfall += Met.Rain;
-			//AccumEP -= (double)zone.Get("[MCSP].Leaf.Transpiration");
-            AccumEP -= (double)zone.Get("MCSP.Root.WaterUptake");
-			SoilWaterDeficit =  (SWC - DUL);
-			double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.outflow_lat);
-			AccumOutflowLat -= OutFlowLat;
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			FomN = MathUtilities.Sum(Soil.SoilNitrogen.FOMN);
-			HumN = MathUtilities.Sum(Soil.SoilNitrogen.HumicN);
-		    BiomN = MathUtilities.Sum(Soil.SoilNitrogen.MicrobialN);
-			AccumFert += Fert.NitrogenApplied;
-			AccumIrrigation += Irrig.IrrigationApplied;
-			
-			
-			AccumEO -= Soil.SoilWater.Eo;
-			AccumES -= Soil.SoilWater.Es; 
-			AccumDrainage -= Soil.SoilWater.Drainage;
-			AccumRunoff -= Soil.SoilWater.Runoff;
-			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
-		}
-	}
-}
-	   ]]></Code>
-        </Manager>
-        <SurfaceOrganicMatter>
-          <Name>surface organic matter</Name>
-          <PondActive>no</PondActive>
-          <ReportAdditions>no</ReportAdditions>
-          <ReportRemovals>no</ReportRemovals>
-          <ResidueTypes>
-            <Name>ResidueTypes</Name>
-            <LoadFromResource>ResidueTypes</LoadFromResource>
-          </ResidueTypes>
-          <TillageTypes>
-            <Name>TillageTypesList</Name>
-            <TillageType />
-          </TillageTypes>
-          <Pools>
-            <Pool>
-              <PoolName>wheat</PoolName>
-              <ResidueType>wheat</ResidueType>
-              <Mass>2000</Mass>
-              <CNRatio>80</CNRatio>
-              <CPRatio>NaN</CPRatio>
-              <StandingFraction>0</StandingFraction>
-            </Pool>
-          </Pools>
-          <PoolName>wheat</PoolName>
-          <type>wheat</type>
-          <mass>2000</mass>
-          <standing_fraction>0</standing_fraction>
-          <cpr />
-          <cnr>80</cnr>
-          <CriticalResidueWeight>2000</CriticalResidueWeight>
-          <OptimumDecompTemp>20</OptimumDecompTemp>
-          <MaxCumulativeEOS>20</MaxCumulativeEOS>
-          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-          <TotalLeachRain>25</TotalLeachRain>
-          <MinRainToLeach>10</MinRainToLeach>
-          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-          <DefaultCPRatio>0</DefaultCPRatio>
-          <DefaultStandingFraction>0</DefaultStandingFraction>
-          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-          <FractionFaecesAdded>0.5</FractionFaecesAdded>
-        </SurfaceOrganicMatter>
-        <Report>
-          <Name>Report</Name>
-          <VariableNames>
-            <string>[Clock].Today</string>
-            <string>[ExtraVariables].Script.AccumPlantN</string>
-            <string>[ExtraVariables].Script.AccumMineralisation</string>
-            <string>[ExtraVariables].Script.AccumDenit</string>
-            <string>[ExtraVariables].Script.AccumFert</string>
-            <string>[ExtraVariables].Script.AccumLeach</string>
-            <string>[ExtraVariables].Script.AccumDetach</string>
-            <string>[ExtraVariables].Script.AccumEO</string>
-            <string>[ExtraVariables].Script.AccumEP</string>
-            <string>[ExtraVariables].Script.AccumES</string>
-            <string>[ExtraVariables].Script.AccumDrainage</string>
-            <string>[ExtraVariables].Script.AccumRunoff</string>
-            <string>[ExtraVariables].Script.AccumRainfall</string>
-            <string>[ExtraVariables].Script.AccumIrrigation</string>
-            <string>[MCSP].Leaf.Live.Wt</string>
-            <string>[MCSP].Root.Live.Wt</string>
-            <string>[MCSP].Product.Live.Wt</string>
-            <string>[MCSP].Leaf.Live.N</string>
-            <string>[MCSP].Root.Live.N</string>
-            <string>[MCSP].Product.Live.N</string>
-            <string>[MCSP].Product.LiveFWt</string>
-            <string>[MCSP].Summariser.Total.Wt</string>
-            <string>[MCSP].Summariser.Total.N</string>
-          </VariableNames>
-          <EventNames>
-            <string>[MCSP].Harvesting</string>
-          </EventNames>
-        </Report>
-        <Graph>
-          <Name>Nitrogen supply and demand1</Name>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Water (mm)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Right</Type>
-            <Title>Length (mm)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>MCSP.Leaf.Live.NConc</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Stress Factors</Name>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Water (mm)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Right</Type>
-            <Title>Length (mm)</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>MCSP.Leaf.Fw</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Series2</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>MCSP.Leaf.Fn</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>true</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Plant>
-          <Name>MCSP</Name>
-          <CropType>MCSP</CropType>
-        </Plant>
-        <Area>0</Area>
-        <Slope>0</Slope>
-      </Zone>
-      <Graph>
-        <Name>N balance components</Name>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>X axis title 2</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Accumulated N changes (kg/ha)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>AccumPlantN</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumPlantN</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumMineralisation</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388353</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumMineralisation</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumDenit</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744193</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumDenit</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumFert</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-256</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumFert</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumLeach</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumLeach</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>DeltaSoilOMN</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8372224</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.DeltaSoilOMN</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>DeltaSurfaceOMN</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.DeltaSurfaceOMN</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>DeltaSoilMineralN</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777152</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.DeltaSoilMineralN</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>BottomLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>WaterBalanceComponents</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Accumulated Water Changes (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>AccumEO</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumEO</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumEP</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumEP</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumES</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumES</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumDrainage</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65281</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumDrainage</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumRunoff</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711681</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumRunoff</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumRainfall</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388544</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumRainfall</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumIrrigation</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-12582784</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumIrrigation</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>AccumLatOutFlow</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.AccumOutflowLat</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>SoilWaterDeficit</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777056</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>ExtraVariables.Script.SoilWaterDeficit</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>BottomLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Plant Biomass components</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Crop Biomass (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Stover</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Root</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Root.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Product</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Product.Live.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Total</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Summariser.Total.Wt</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>ParamDryYield</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32704</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Dash</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.DryYield.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>ParamTotalBiomStartReproductive</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Dot</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.TotalBiomassAtStartReproductive.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>ParamTotalBiomStartSen</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>DashDot</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.TotalBiomassAtStartSenescence.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>ParamYmax</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Dash</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Ymax.Value</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series9</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.Stage</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series10</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.AccumulatedThermalTime.Value</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Arbitrator.DMSupply</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>true</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Plant Nitrogen components</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Crop Nitrogen (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Leaf</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Live.N</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Root</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Root.Live.N</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Product</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-32704</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Product.Live.N</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Total</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777216</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Summariser.Total.N</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Water supply and demand</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Water (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Title>Length (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Supply</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16777088</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Root.WaterSupply</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Uptake</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-8372224</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Root.WaterUptake</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Demand</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.WaterDemand</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Transpiration</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Transpiration</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Potential</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65281</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>Soil.SoilWater.Eo</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Root Depth</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-32768</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Root.Depth</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Canopy Height</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Height</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Crop structure</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Cover </Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Root Depth</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Root.Depth</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>CoverTotal</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.CoverTotal</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>LAI</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.LAI</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>BottomRight</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>N supply and demand</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Nitrogen (g/m2)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Title>Length (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Series 0</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Arbitrator.NDemand</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series2</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Arbitrator.NSupply</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>DM supply and demand</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>DM (g/m2/d)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Title>Length (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Series 0</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Arbitrator.DMSupply</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series2</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Arbitrator.DMDemand</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series3</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Arbitrator.DMSinkLimitation</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series4</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65408</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Arbitrator.DMNutrientLimitation</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Stress Factors</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Water (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Title>Length (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Series 0</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Fw</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series2</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Fn</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series3</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Phenology.Stage</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>false</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
-    </Simulation>
-    <Graph>
-      <Name>Biomass</Name>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Crop biomass (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Cover</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.Total.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>CropN</Name>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Crop Nitrogen (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Cover</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Summariser.Total.N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>BottomRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Yeild</Name>
-      <Axis>
-        <Type>Left</Type>
-        <Title>dry Yield (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Cover</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Product.Live.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>BottomRight</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>FreshYield</Name>
-      <Axis>
-        <Type>Left</Type>
-        <Title>fresh Yield (g/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Cover</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>MCSP.Product.LiveFWt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
-      <LegendPosition>TopRight</LegendPosition>
       <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
