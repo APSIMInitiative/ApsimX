@@ -775,10 +775,6 @@ This model has been built to simulate Multiple Crops in simulations that serve a
           <Name>Dead</Name>
         </Biomass>
         <Constant>
-          <Name>FixationSwitch</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
           <Name>MaximumNConc</Name>
           <Value>0</Value>
         </Constant>
@@ -786,30 +782,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
           <Name>MinimumNConc</Name>
           <Value>0</Value>
         </Constant>
-        <Constant>
-          <Name>DMDemandFunction</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>FT</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>FW</Name>
-          <Value>1</Value>
-        </Constant>
-        <Constant>
-          <Name>FWlog</Name>
-          <Value>0.01</Value>
-        </Constant>
-        <Constant>
-          <Name>FixationMetabolicCost</Name>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
-          <Name>SpecificNitrogenaseActivity</Name>
-          <Value>0</Value>
-        </Constant>
+        <NFixationOption>None</NFixationOption>
       </Nodule>
       <Summariser>
         <Name>Summariser</Name>
@@ -906,9 +879,9 @@ This model has been built to simulate Multiple Crops in simulations that serve a
       <Cultivar>
         <Name>Potatoes_Long</Name>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 500</Command>
+        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.3, 0.0, 0.0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.5, 0.2, 0.05</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 60</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
@@ -932,7 +905,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
       <Cultivar>
         <Name>Green_Peas</Name>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 700</Command>
+        <Command>[Root].MaximumRootDepth.Value = 800</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.4, 0.0, 0.0</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
@@ -954,6 +927,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
         <Command>[Product].MaximumNConc.Value = 0.035</Command>
         <Command>[Root].MinimumNConc.Value = 0.015</Command>
         <Command>[Root].MaximumNConc.Value = 0.015</Command>
+        <Command>[Nodule].NFixationOption = Majic</Command>
       </Cultivar>
       <Cultivar>
         <Name>Maize_Short</Name>
@@ -984,7 +958,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
       <Cultivar>
         <Name>Spinich</Name>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 500</Command>
+        <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.3, 0.0, 0.0</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 360</Command>
@@ -1073,16 +1047,34 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[HarvestIndex].XYPairs.X = 0,6000</Command>
         <Command>[HarvestIndex].XYPairs.Y = .95,0.5</Command>
         <Command>[ProductDMProportion].Value = 0.13</Command>
-        <Command>[Phenology].CanopyExpanding.Target.Value = 1</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 1300</Command>
-        <Command>[Phenology].Senescing.Target.Value = 300</Command>
-        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 0</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 3000</Command>
+        <Command>[Phenology].Senescing.Target.Value = 0</Command>
+        <Command>[Phenology].Mature.Target.Value = 0</Command>
         <Command>[leaf].NConc.Value = 0.01</Command>
         <Command>[Product].MinimumNConc.Value = 0.02</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
         <Command>[Root].MinimumNConc.Value = 0.008</Command>
         <Command>[Root].MaximumNConc.Value = 0.008</Command>
       </Cultivar>
+      <MinimumFunction>
+        <Name>FN</Name>
+        <DivideFunction>
+          <Name>NsupplyDemandRatio</Name>
+          <VariableReference>
+            <Name>Nsupply</Name>
+            <VariableName>[Arbitrator].NSupply</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>NDemand</Name>
+            <VariableName>[Arbitrator].NDemand</VariableName>
+          </VariableReference>
+        </DivideFunction>
+        <Constant>
+          <Name>Maximum</Name>
+          <Value>1</Value>
+        </Constant>
+      </MinimumFunction>
       <CropType>SLURP</CropType>
     </Plant>
   </Replacements>
@@ -1453,6 +1445,48 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
       </Soil>
+      <SurfaceOrganicMatter>
+        <Name>surface organic matter</Name>
+        <PondActive>no</PondActive>
+        <ReportAdditions>no</ReportAdditions>
+        <ReportRemovals>no</ReportRemovals>
+        <ResidueTypes>
+          <Name>ResidueTypes</Name>
+          <LoadFromResource>ResidueTypes</LoadFromResource>
+        </ResidueTypes>
+        <TillageTypes>
+          <Name>TillageTypesList</Name>
+          <TillageType />
+        </TillageTypes>
+        <Pools>
+          <Pool>
+            <PoolName>wheat</PoolName>
+            <ResidueType>wheat</ResidueType>
+            <Mass>2000</Mass>
+            <CNRatio>80</CNRatio>
+            <CPRatio>NaN</CPRatio>
+            <StandingFraction>0</StandingFraction>
+          </Pool>
+        </Pools>
+        <PoolName>wheat</PoolName>
+        <type>wheat</type>
+        <mass>2000</mass>
+        <standing_fraction>0</standing_fraction>
+        <cpr />
+        <cnr>80</cnr>
+        <CriticalResidueWeight>2000</CriticalResidueWeight>
+        <OptimumDecompTemp>20</OptimumDecompTemp>
+        <MaxCumulativeEOS>20</MaxCumulativeEOS>
+        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+        <TotalLeachRain>25</TotalLeachRain>
+        <MinRainToLeach>10</MinRainToLeach>
+        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+        <DefaultCPRatio>0</DefaultCPRatio>
+        <DefaultStandingFraction>0</DefaultStandingFraction>
+        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+        <FractionFaecesAdded>0.5</FractionFaecesAdded>
+      </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
         <air_pressure>1010</air_pressure>
@@ -1472,6 +1506,10 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
       </MicroClimate>
+      <Plant>
+        <Name>MCSP</Name>
+        <CropType>MCSP</CropType>
+      </Plant>
       <Irrigation>
         <Name>Irrigation</Name>
       </Irrigation>
@@ -1481,7 +1519,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
       <Manager>
         <Name>MCSPSowingRule</Name>
         <Script>
-          <CultivarName>Rape</CultivarName>
+          <CultivarName>Green_Peas</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
           <SowingDate>1998-10-14</SowingDate>
         </Script>
@@ -1663,279 +1701,6 @@ namespace Models
 }
 	   ]]></Code>
       </Manager>
-      <SurfaceOrganicMatter>
-        <Name>surface organic matter</Name>
-        <PondActive>no</PondActive>
-        <ReportAdditions>no</ReportAdditions>
-        <ReportRemovals>no</ReportRemovals>
-        <ResidueTypes>
-          <Name>ResidueTypes</Name>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <TillageTypes>
-          <Name>TillageTypesList</Name>
-          <TillageType />
-        </TillageTypes>
-        <Pools>
-          <Pool>
-            <PoolName>wheat</PoolName>
-            <ResidueType>wheat</ResidueType>
-            <Mass>2000</Mass>
-            <CNRatio>80</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>wheat</PoolName>
-        <type>wheat</type>
-        <mass>2000</mass>
-        <standing_fraction>0</standing_fraction>
-        <cpr />
-        <cnr>80</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
-      </SurfaceOrganicMatter>
-      <Operations>
-        <Name>operations</Name>
-        <Operation>
-          <Date>1998-10-15T00:00:00</Date>
-          <Action>[Fertiliser].Apply(400, Fertiliser.Types.UreaN, 10);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-29T00:00:00</Date>
-          <Action>[Fertiliser].Apply(400, Fertiliser.Types.UreaN, 10);</Action>
-        </Operation>
-      </Operations>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[ExtraVariables].Script.AccumPlantN</string>
-          <string>[ExtraVariables].Script.AccumMineralisation</string>
-          <string>[ExtraVariables].Script.AccumDenit</string>
-          <string>[ExtraVariables].Script.AccumFert</string>
-          <string>[ExtraVariables].Script.AccumLeach</string>
-          <string>[ExtraVariables].Script.AccumDetach</string>
-          <string>[ExtraVariables].Script.DeltaSoilOMN</string>
-          <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
-          <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
-          <string>[ExtraVariables].Script.SWC</string>
-          <string>[ExtraVariables].Script.DUL</string>
-          <string>[ExtraVariables].Script.OutFlowLat</string>
-          <string>[ExtraVariables].Script.AccumEO</string>
-          <string>[ExtraVariables].Script.AccumEP</string>
-          <string>[ExtraVariables].Script.AccumES</string>
-          <string>[ExtraVariables].Script.AccumDrainage</string>
-          <string>[ExtraVariables].Script.AccumRunoff</string>
-          <string>[ExtraVariables].Script.AccumRainfall</string>
-          <string>[ExtraVariables].Script.AccumIrrigation</string>
-          <string>[ExtraVariables].Script.AccumOutflowLat</string>
-          <string>[ExtraVariables].Script.SoilWaterDeficit</string>
-          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[ExtraVariables].Script.FomN</string>
-          <string>[ExtraVariables].Script.HumN</string>
-          <string>[ExtraVariables].Script.BiomN</string>
-          <string>[ExtraVariables].Script.DltNMinRes</string>
-          <string>[ExtraVariables].Script.DltNMinTot</string>
-          <string>[MicroClimate].net_radn</string>
-          <string>[MicroClimate].peta</string>
-          <string>[MicroClimate].petr</string>
-          <string>[Soil].SoilWater.Drainage</string>
-          <string>[Soil].SoilWater.Runoff</string>
-          <string>[Soil].SoilWater.Eo</string>
-          <string>[Soil].SoilWater.Es</string>
-          <string>[Soil].SoilWater.pond</string>
-          <string>[Soil].SoilWater.SWmm</string>
-          <string>[Soil].NO3N</string>
-          <string>[MCSP].Leaf.Live.Wt</string>
-          <string>[MCSP].Root.Live.Wt</string>
-          <string>[MCSP].Product.Live.Wt</string>
-          <string>[MCSP].Leaf.Live.N</string>
-          <string>[MCSP].Root.Live.N</string>
-          <string>[MCSP].Product.Live.N</string>
-          <string>[MCSP].Leaf.Live.NConc</string>
-          <string>[MCSP].Root.Live.NConc</string>
-          <string>[MCSP].Product.Live.NConc</string>
-          <string>[MCSP].Root.WaterSupply</string>
-          <string>[MCSP].Root.WaterUptake</string>
-          <string>[MCSP].Leaf.Transpiration</string>
-          <string>[MCSP].Leaf.WaterDemand</string>
-          <string>[MCSP].Root.Depth</string>
-          <string>[MCSP].Leaf.CoverTotal</string>
-          <string>[MCSP].Leaf.CoverDead</string>
-          <string>[MCSP].Leaf.LAI</string>
-          <string>[MCSP].Leaf.Height</string>
-          <string>[MCSP].Leaf.PotentialBiomass.Value</string>
-          <string>[MCSP].Product.LiveFWt</string>
-          <string>[MCSP].Arbitrator.NDemand</string>
-          <string>[MCSP].Arbitrator.NSupply</string>
-          <string>[MCSP].Leaf.Fw</string>
-          <string>[MCSP].Leaf.Fn</string>
-          <string>[MCSP].Summariser.Total.Wt</string>
-          <string>[MCSP].ExpectedYield.Value</string>
-          <string>[MCSP].DryYield.Value</string>
-          <string>[MCSP].TotalBiomassAtStartReproductive.Value</string>
-          <string>[MCSP].TotalBiomassAtStartSenescence.Value</string>
-          <string>[MCSP].Ymax.Value</string>
-          <string>[MCSP].Summariser.Total.N</string>
-          <string>[MCSP].Arbitrator.DMSupply</string>
-          <string>[MCSP].Arbitrator.DMDemand</string>
-          <string>[MCSP].Phenology.AccumulatedThermalTime.Value</string>
-          <string>[MCSP].Arbitrator.DMSinkLimitation</string>
-          <string>[MCSP].Arbitrator.DMNutrientLimitation</string>
-          <string>[MCSP].Phenology.ThermalTime.Value</string>
-          <string>[MCSP].Phenology.CurrentPhaseName</string>
-          <string>[MCSP].Phenology.Stage</string>
-          <string>[AutomaticIrrigation].Script.Top_Refull</string>
-          <string>[AutomaticIrrigation].Script.Top_Trigger</string>
-          <string>[AutomaticIrrigation].Script.Top_SW</string>
-          <string>[AutomaticIrrigation].Script.Top_DUL</string>
-          <string>[Irrigation].IrrigationApplied</string>
-          <string>[AutomaticIrrigation].Script.Amount_to_apply</string>
-          <string>[AutomaticIrrigation].Script.StartDate</string>
-          <string>[Clock].Today</string>
-          <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
-          <string>[AutomaticIrrigation].Script.EndDate</string>
-          <string>[AutomaticIrrigation].Script.TodayYear</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <Graph>
-        <Name>Nitrogen supply and demand1</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Water (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Title>Length (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Series 0</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Live.NConc</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Stress Factors</Name>
-        <Axis>
-          <Type>Left</Type>
-          <Title>Water (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Bottom</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Title>Length (mm)</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Series>
-          <Title>Series 0</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Fw</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <Series>
-          <Title>Series2</Title>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <X>
-            <TableName>Report</TableName>
-            <FieldName>Clock.Today</FieldName>
-          </X>
-          <Y>
-            <TableName>Report</TableName>
-            <FieldName>MCSP.Leaf.Fn</FieldName>
-          </Y>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-        </Series>
-        <LegendPosition>TopLeft</LegendPosition>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Plant>
-        <Name>MCSP</Name>
-        <CropType>MCSP</CropType>
-      </Plant>
       <Manager>
         <Name>AutomaticIrrigation</Name>
         <Script>
@@ -2115,6 +1880,251 @@ namespace Models
              
              ]]></Code>
       </Manager>
+      <Manager>
+        <Name>AutomaticFertiliser</Name>
+        <Script>
+          <Fertiliser_Yes_No>no</Fertiliser_Yes_No>
+          <Season_Start>1-Aug</Season_Start>
+          <Season_End>30-Apr</Season_End>
+          <Season_Allocation>1000</Season_Allocation>
+          <TriggerN>50</TriggerN>
+          <NApplicationAmount>25</NApplicationAmount>
+          <Return_days>3</Return_days>
+          <Top_Depth>300</Top_Depth>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+   [Serializable] 
+   [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {      
+	   //Communication to other modules
+	   [Link] ISummary summary = null;
+	   [Link] Fertiliser Fertiliser;
+	   [Link] Clock Clock;
+	   [Link] Soils.Soil Soil;
+	   [Link] Plant MCSP;
+	   
+	   //User inputs from properties tab
+	   [Description("Fertiliser on (yes or no)")]
+	   public string Fertiliser_Yes_No { get; set; }
+	   [Description("SeasonStart (dd-MMM)")]
+	   public string Season_Start { get; set; }
+	   [Description("SeasonEnd (dd-MMM)")]
+	   public string Season_End { get; set; }
+	   [Description("Season Allocation (kg/ha)")]
+	   public double Season_Allocation { get; set; }
+	   [Description("Mineral N to maintain soil above (kg/ha)")]
+	   public double TriggerN { get; set; }
+	   [Description("Amount of N to apply (kg/ha)")]
+	   public double NApplicationAmount { get; set; }
+	   [Description("Minimum days for Fertiliser spreader to return")]
+	   public double Return_days { get; set; }
+	   [Description("Depth to calculate mineral N (mm)")]
+	   public double Top_Depth { get; set; }
+	   
+	   //Class members
+	   [XmlIgnore] private bool FertiliserIsAvailable { get; set; }
+	   [XmlIgnore] public bool SeasonIsOpen { get; set; }
+	   [XmlIgnore] private bool CropIsActive { get; set; }
+	   [XmlIgnore] private bool FertSpreaderIsAvailable { get; set; }
+	   [XmlIgnore] private bool SoilNIsLow { get; set; }
+	   [XmlIgnore] public double Top_SoilN { get; set; }
+	   [XmlIgnore] public double Accumulated_depth { get; set; }   
+	   [XmlIgnore] public double Days_since_fertiliser { get; set; }
+	   [XmlIgnore] public double Season_Application { get; set; }
+		
+	   //Variables for date logic testing
+	   [XmlIgnore] public string StartString {get; set;}
+	   [XmlIgnore] public string EndString {get; set;}
+	   [XmlIgnore] public DateTime StartDate {get; set;}
+	   [XmlIgnore] public DateTime EndDate {get; set;}
+	   [XmlIgnore] public int TodayYear {get; set;}
+	   [XmlIgnore] public int TodayMonth {get; set;}
+	   [XmlIgnore] public int StartMonth {get; set;}
+	   [XmlIgnore] public int EndMonth {get; set;}
+	   [XmlIgnore] public int TodayDay {get; set;}
+	   [XmlIgnore] public int StartDay {get; set;}
+	   [XmlIgnore] public int EndDay {get; set;}
+	   	   
+	   //Determine daily requirement for fertiliser
+		[EventSubscribe("StartOfDay")]
+	   	private void OnStartOfDay(object sender, EventArgs e)
+	   	{ 
+	      //Can we irrigate?
+	      FertiliserIsAvailable = false; 
+	      if (Fertiliser_Yes_No == "yes")
+	         FertiliserIsAvailable = true; 
+	
+	      //Are we Allowed to Irrigate?
+	      TodayYear = Clock.Today.Year;
+	      StartString = Season_Start + "-" + TodayYear.ToString();
+	      EndString = Season_End + "-" + TodayYear.ToString();
+	      StartDate = DateTime.Parse(StartString);
+	      EndDate = DateTime.Parse(EndString);
+		  TodayMonth = Clock.Today.Month;
+		  TodayDay = Clock.Today.Day;
+		  StartDay = StartDate.Day;
+		  StartMonth = StartDate.Month;
+		  EndDay = EndDate.Day;
+		  EndMonth = EndDate.Month;
+		  
+		  SeasonIsOpen = false;
+		  //if we are in the spring and after the start date then yes
+		  if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+		  SeasonIsOpen = true;
+		  //if we are in the autumn and before the end date then yes
+		  if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+		  SeasonIsOpen = true;
+		  
+	      //Is there a crop in the ground that needs irrigation?
+	      CropIsActive = false;
+	      if ((MCSP.Phenology.Stage >= 3.0) && (MCSP.Phenology.Stage < 6.0))
+	            CropIsActive = true;
+	      
+	      //Is the irrigator available?
+	      FertSpreaderIsAvailable = false;
+	      Days_since_fertiliser += 1;
+	      if (Days_since_fertiliser >= Return_days)
+	         FertSpreaderIsAvailable = true;
+	      
+	      //Is the soil N low enough to require fertiliser?
+	      SoilNIsLow = false;
+	      double CurrentRootDepth = 0;
+	      double RootDepth = MCSP.Root.Depth;
+	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+	      
+	      Accumulated_depth = 0;
+	      Top_SoilN = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_SoilN += Soil.NO3N[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      if (Top_SoilN <= TriggerN)
+	         SoilNIsLow = true;
+	            
+	      //Lets bloody well irrigate then!!!!
+	      if((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation
+	      {
+	         Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);
+	         Days_since_fertiliser = 0;
+	         Season_Application += NApplicationAmount;
+	         summary.WriteMessage(this, "Automatic Fertiliser");
+            
+	      }
+	   }
+	}
+}
+             
+             ]]></Code>
+      </Manager>
+      <Report>
+        <Name>Report</Name>
+        <VariableNames>
+          <string>[Clock].Today</string>
+          <string>[ExtraVariables].Script.AccumPlantN</string>
+          <string>[ExtraVariables].Script.AccumMineralisation</string>
+          <string>[ExtraVariables].Script.AccumDenit</string>
+          <string>[ExtraVariables].Script.AccumFert</string>
+          <string>[ExtraVariables].Script.AccumLeach</string>
+          <string>[ExtraVariables].Script.AccumDetach</string>
+          <string>[ExtraVariables].Script.DeltaSoilOMN</string>
+          <string>[ExtraVariables].Script.DeltaSurfaceOMN</string>
+          <string>[ExtraVariables].Script.DeltaSoilMineralN</string>
+          <string>[ExtraVariables].Script.SWC</string>
+          <string>[ExtraVariables].Script.DUL</string>
+          <string>[ExtraVariables].Script.OutFlowLat</string>
+          <string>[ExtraVariables].Script.AccumEO</string>
+          <string>[ExtraVariables].Script.AccumEP</string>
+          <string>[ExtraVariables].Script.AccumES</string>
+          <string>[ExtraVariables].Script.AccumDrainage</string>
+          <string>[ExtraVariables].Script.AccumRunoff</string>
+          <string>[ExtraVariables].Script.AccumRainfall</string>
+          <string>[ExtraVariables].Script.AccumIrrigation</string>
+          <string>[ExtraVariables].Script.AccumOutflowLat</string>
+          <string>[ExtraVariables].Script.SoilWaterDeficit</string>
+          <string>[ExtraVariables].Script.SoilNitrogenContent</string>
+          <string>[ExtraVariables].Script.FomN</string>
+          <string>[ExtraVariables].Script.HumN</string>
+          <string>[ExtraVariables].Script.BiomN</string>
+          <string>[ExtraVariables].Script.DltNMinRes</string>
+          <string>[ExtraVariables].Script.DltNMinTot</string>
+          <string>[MicroClimate].net_radn</string>
+          <string>[MicroClimate].peta</string>
+          <string>[MicroClimate].petr</string>
+          <string>[Soil].SoilWater.Drainage</string>
+          <string>[Soil].SoilWater.Runoff</string>
+          <string>[Soil].SoilWater.Eo</string>
+          <string>[Soil].SoilWater.Es</string>
+          <string>[Soil].SoilWater.pond</string>
+          <string>[Soil].SoilWater.SWmm</string>
+          <string>[Soil].NO3N</string>
+          <string>[MCSP].Leaf.Live.Wt</string>
+          <string>[MCSP].Root.Live.Wt</string>
+          <string>[MCSP].Product.Live.Wt</string>
+          <string>[MCSP].Leaf.Live.N</string>
+          <string>[MCSP].Root.Live.N</string>
+          <string>[MCSP].Product.Live.N</string>
+          <string>[MCSP].Leaf.Live.NConc</string>
+          <string>[MCSP].Root.Live.NConc</string>
+          <string>[MCSP].Product.Live.NConc</string>
+          <string>[MCSP].Root.WaterSupply</string>
+          <string>[MCSP].Root.WaterUptake</string>
+          <string>[MCSP].Leaf.Transpiration</string>
+          <string>[MCSP].Leaf.WaterDemand</string>
+          <string>[MCSP].Root.Depth</string>
+          <string>[MCSP].Leaf.CoverTotal</string>
+          <string>[MCSP].Leaf.CoverDead</string>
+          <string>[MCSP].Leaf.LAI</string>
+          <string>[MCSP].Leaf.Height</string>
+          <string>[MCSP].Leaf.PotentialBiomass.Value</string>
+          <string>[MCSP].Product.LiveFWt</string>
+          <string>[MCSP].Arbitrator.NDemand</string>
+          <string>[MCSP].Arbitrator.NSupply</string>
+          <string>[MCSP].Leaf.Fw</string>
+          <string>[MCSP].Leaf.Fn</string>
+          <string>[MCSP].Summariser.Total.Wt</string>
+          <string>[MCSP].ExpectedYield.Value</string>
+          <string>[MCSP].DryYield.Value</string>
+          <string>[MCSP].TotalBiomassAtStartReproductive.Value</string>
+          <string>[MCSP].TotalBiomassAtStartSenescence.Value</string>
+          <string>[MCSP].Ymax.Value</string>
+          <string>[MCSP].Summariser.Total.N</string>
+          <string>[MCSP].Arbitrator.DMSupply</string>
+          <string>[MCSP].Arbitrator.DMDemand</string>
+          <string>[MCSP].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[MCSP].Arbitrator.DMSinkLimitation</string>
+          <string>[MCSP].Arbitrator.DMNutrientLimitation</string>
+          <string>[MCSP].Phenology.ThermalTime.Value</string>
+          <string>[MCSP].Phenology.CurrentPhaseName</string>
+          <string>[MCSP].Phenology.Stage</string>
+          <string>[AutomaticIrrigation].Script.Top_Refull</string>
+          <string>[AutomaticIrrigation].Script.Top_Trigger</string>
+          <string>[AutomaticIrrigation].Script.Top_SW</string>
+          <string>[AutomaticIrrigation].Script.Top_DUL</string>
+          <string>[Irrigation].IrrigationApplied</string>
+          <string>[AutomaticIrrigation].Script.Amount_to_apply</string>
+          <string>[AutomaticIrrigation].Script.StartDate</string>
+          <string>[Clock].Today</string>
+          <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
+          <string>[AutomaticIrrigation].Script.EndDate</string>
+          <string>[AutomaticIrrigation].Script.TodayYear</string>
+          <string>[MCSP].FN.Value</string>
+        </VariableNames>
+        <EventNames>
+          <string>[Clock].DoReport</string>
+        </EventNames>
+      </Report>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -3482,7 +3492,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.Leaf.Fn</FieldName>
+          <FieldName>MCSP.FN.Value</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -4168,57 +4178,6 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Operations>
-          <Name>operations</Name>
-          <Operation>
-            <Date>1998-10-15T00:00:00</Date>
-            <Action>[Fertiliser].Apply(200, Fertiliser.Types.UreaN, 10);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-10-02T00:00:00</Date>
-            <Action>[Irrigation].Apply(40);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-10-26T00:00:00</Date>
-            <Action>[Irrigation].Apply(70);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-12-15T00:00:00</Date>
-            <Action>[Irrigation].Apply(70);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-12-29T00:00:00</Date>
-            <Action>[Irrigation].Apply(10);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-12-30T00:00:00</Date>
-            <Action>[Irrigation].Apply(55);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-01-07T00:00:00</Date>
-            <Action>[Irrigation].Apply(50);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-01-21T00:00:00</Date>
-            <Action>[Irrigation].Apply(40);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-02-10T00:00:00</Date>
-            <Action>[Irrigation].Apply(28);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-02-19T00:00:00</Date>
-            <Action>[Irrigation].Apply(15);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-03-09T00:00:00</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-12-29T00:00:00</Date>
-            <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-          </Operation>
-        </Operations>
         <Report>
           <Name>Report</Name>
           <VariableNames>
@@ -4428,6 +4387,333 @@ namespace Models
           <Name>MCSP</Name>
           <CropType>MCSP</CropType>
         </Plant>
+        <Manager>
+          <Name>AutomaticIrrigation</Name>
+          <Script>
+            <Irrigation_Yes_No>yes</Irrigation_Yes_No>
+            <Season_Start>1-Oct</Season_Start>
+            <Season_End>30-Apr</Season_End>
+            <Season_Allocation>1000</Season_Allocation>
+            <Refull_Frac>0.9</Refull_Frac>
+            <Trigger_Frac>0.7</Trigger_Frac>
+            <Return_days>3</Return_days>
+            <Maximum_Irrigation_Amount>40</Maximum_Irrigation_Amount>
+            <Top_Depth>600</Top_Depth>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+   [Serializable] 
+   [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {      
+	   //Communication to other modules
+	   [Link] ISummary summary = null;
+	   [Link] Irrigation Irrigation;
+	   [Link] Clock Clock;
+	   [Link] Soil Soil;
+	   [Link] Plant MCSP;
+	   
+	   //User inputs from properties tab
+	   [Description("Irrigation on (yes or no)")]
+	   public string Irrigation_Yes_No { get; set; }
+	   [Description("SeasonStart (dd-MMM)")]
+	   public string Season_Start { get; set; }
+	   [Description("SeasonEnd (dd-MMM)")]
+	   public string Season_End { get; set; }
+	   [Description("Season Allocation (mm)")]
+	   public double Season_Allocation { get; set; }
+	   [Description("% PAWC to refill soil to (0-1)")]
+	   public double Refull_Frac { get; set; }
+	   [Description("% PAWC to trigger irrigation (0-1)")]
+	   public double Trigger_Frac { get; set; }
+	   [Description("Minimum days for irrigation to return")]
+	   public double Return_days { get; set; }
+	   [Description("Maximum irrigation application (mm)")]
+	   public double Maximum_Irrigation_Amount { get; set; }
+	   [Description("Depth to calculate PAWC (mm)")]
+	   public double Top_Depth { get; set; }
+	   
+	   //Class members
+	   [XmlIgnore] private bool IrrigationIsAvailable { get; set; }
+	   [XmlIgnore] public bool SeasonIsOpen { get; set; }
+	   [XmlIgnore] private bool CropIsActive { get; set; }
+	   [XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
+	   [XmlIgnore] private bool SoilIsDry { get; set; }
+	   [XmlIgnore] public double Top_DUL { get; set; }
+	   [XmlIgnore] public double Top_Refull { get; set; }
+	   [XmlIgnore] public double Top_Trigger { get; set; }
+	   [XmlIgnore] public double Top_LL { get; set; }
+	   [XmlIgnore] public double Top_SW { get; set; }
+	   [XmlIgnore] public double Accumulated_depth { get; set; }   
+	   [XmlIgnore] public double Days_since_irrigation { get; set; }
+	   [XmlIgnore] public double Amount_to_apply { get; set; }
+	   [XmlIgnore] public double Season_Application { get; set; }
+		
+	   //Variables for date logic testing
+	   [XmlIgnore] public string StartString {get; set;}
+	   [XmlIgnore] public string EndString {get; set;}
+	   [XmlIgnore] public DateTime StartDate {get; set;}
+	   [XmlIgnore] public DateTime EndDate {get; set;}
+	   [XmlIgnore] public int TodayYear {get; set;}
+	   [XmlIgnore] public int TodayMonth {get; set;}
+	   [XmlIgnore] public int StartMonth {get; set;}
+	   [XmlIgnore] public int EndMonth {get; set;}
+	   [XmlIgnore] public int TodayDay {get; set;}
+	   [XmlIgnore] public int StartDay {get; set;}
+	   [XmlIgnore] public int EndDay {get; set;}
+	   
+	
+	   //Calculate static soil variables
+	   [EventSubscribe("StartOfSimulation")]
+	   private void OnStartOfSimulation(object sender, EventArgs e)
+	   {   
+	      //Calculated soil water variables
+	      Accumulated_depth = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_LL += Soil.SoilWater.LL15mm[layer];
+	         Top_DUL += Soil.SoilWater.DULmm[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
+	   }
+	   
+	  
+	   //Determine daily requirement for irrigation
+		[EventSubscribe("StartOfDay")]
+	   	private void OnStartOfDay(object sender, EventArgs e)
+	   	{ 
+	      //Can we irrigate?
+	      IrrigationIsAvailable = false; 
+	      if (Irrigation_Yes_No == "yes")
+	         IrrigationIsAvailable = true; 
+	
+	      //Are we Allowed to Irrigate?
+	      TodayYear = Clock.Today.Year;
+	      StartString = Season_Start + "-" + TodayYear.ToString();
+	      EndString = Season_End + "-" + TodayYear.ToString();
+	      StartDate = DateTime.Parse(StartString);
+	      EndDate = DateTime.Parse(EndString);
+		  TodayMonth = Clock.Today.Month;
+		  TodayDay = Clock.Today.Day;
+		  StartDay = StartDate.Day;
+		  StartMonth = StartDate.Month;
+		  EndDay = EndDate.Day;
+		  EndMonth = EndDate.Month;
+		  
+		  SeasonIsOpen = false;
+		  //if we are in the spring and after the start date then yes
+		  if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+		  SeasonIsOpen = true;
+		  //if we are in the autumn and before the end date then yes
+		  if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+		  SeasonIsOpen = true;
+		  
+	      //Is there a crop in the ground that needs irrigation?
+	      CropIsActive = false;
+	      if ((MCSP.Phenology.Stage >= 3.0) && (MCSP.Phenology.Stage < 6.0))
+	            CropIsActive = true;
+	      
+	      //Is the irrigator available?
+	      IrrigatorIsAvailable = false;
+	      Days_since_irrigation += 1;
+	      if (Days_since_irrigation >= Return_days)
+	         IrrigatorIsAvailable = true;
+	      
+	      //Is the soil dry enough to require irrigation?
+	      SoilIsDry = false;
+	      double CurrentRootDepth = 0;
+	      double RootDepth = MCSP.Root.Depth;
+	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+	      
+	      double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
+	      Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1-Trigger_Frac)); 
+	      
+	      Accumulated_depth = 0;
+	      Top_SW = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_SW += Soil.SoilWater.SWmm[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      if (Top_SW <= Top_Trigger)
+	         SoilIsDry = true;
+	            
+	      //Lets bloody well irrigate then!!!!
+	      if((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
+	      {
+	         Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
+	         Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
+	         Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
+	         Irrigation.Apply(Amount_to_apply);
+	         Days_since_irrigation = 0;
+	         Season_Application += Amount_to_apply;
+	         summary.WriteMessage(this, "Automatic Irrigation");
+            
+	      }
+	   }
+	}
+}
+             
+             ]]></Code>
+        </Manager>
+        <Manager>
+          <Name>AutomaticFertiliser</Name>
+          <Script>
+            <Fertiliser_Yes_No>yes</Fertiliser_Yes_No>
+            <Season_Start>1-Aug</Season_Start>
+            <Season_End>30-Apr</Season_End>
+            <Season_Allocation>1000</Season_Allocation>
+            <TriggerN>50</TriggerN>
+            <NApplicationAmount>25</NApplicationAmount>
+            <Return_days>3</Return_days>
+            <Top_Depth>300</Top_Depth>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+   [Serializable] 
+   [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {      
+	   //Communication to other modules
+	   [Link] ISummary summary = null;
+	   [Link] Fertiliser Fertiliser;
+	   [Link] Clock Clock;
+	   [Link] Soils.Soil Soil;
+	   [Link] Plant MCSP;
+	   
+	   //User inputs from properties tab
+	   [Description("Fertiliser on (yes or no)")]
+	   public string Fertiliser_Yes_No { get; set; }
+	   [Description("SeasonStart (dd-MMM)")]
+	   public string Season_Start { get; set; }
+	   [Description("SeasonEnd (dd-MMM)")]
+	   public string Season_End { get; set; }
+	   [Description("Season Allocation (kg/ha)")]
+	   public double Season_Allocation { get; set; }
+	   [Description("Mineral N to maintain soil above (kg/ha)")]
+	   public double TriggerN { get; set; }
+	   [Description("Amount of N to apply (kg/ha)")]
+	   public double NApplicationAmount { get; set; }
+	   [Description("Minimum days for Fertiliser spreader to return")]
+	   public double Return_days { get; set; }
+	   [Description("Depth to calculate mineral N (mm)")]
+	   public double Top_Depth { get; set; }
+	   
+	   //Class members
+	   [XmlIgnore] private bool FertiliserIsAvailable { get; set; }
+	   [XmlIgnore] public bool SeasonIsOpen { get; set; }
+	   [XmlIgnore] private bool CropIsActive { get; set; }
+	   [XmlIgnore] private bool FertSpreaderIsAvailable { get; set; }
+	   [XmlIgnore] private bool SoilNIsLow { get; set; }
+	   [XmlIgnore] public double Top_SoilN { get; set; }
+	   [XmlIgnore] public double Accumulated_depth { get; set; }   
+	   [XmlIgnore] public double Days_since_fertiliser { get; set; }
+	   [XmlIgnore] public double Season_Application { get; set; }
+		
+	   //Variables for date logic testing
+	   [XmlIgnore] public string StartString {get; set;}
+	   [XmlIgnore] public string EndString {get; set;}
+	   [XmlIgnore] public DateTime StartDate {get; set;}
+	   [XmlIgnore] public DateTime EndDate {get; set;}
+	   [XmlIgnore] public int TodayYear {get; set;}
+	   [XmlIgnore] public int TodayMonth {get; set;}
+	   [XmlIgnore] public int StartMonth {get; set;}
+	   [XmlIgnore] public int EndMonth {get; set;}
+	   [XmlIgnore] public int TodayDay {get; set;}
+	   [XmlIgnore] public int StartDay {get; set;}
+	   [XmlIgnore] public int EndDay {get; set;}
+	   	   
+	   //Determine daily requirement for fertiliser
+		[EventSubscribe("StartOfDay")]
+	   	private void OnStartOfDay(object sender, EventArgs e)
+	   	{ 
+	      //Can we irrigate?
+	      FertiliserIsAvailable = false; 
+	      if (Fertiliser_Yes_No == "yes")
+	         FertiliserIsAvailable = true; 
+	
+	      //Are we Allowed to Irrigate?
+	      TodayYear = Clock.Today.Year;
+	      StartString = Season_Start + "-" + TodayYear.ToString();
+	      EndString = Season_End + "-" + TodayYear.ToString();
+	      StartDate = DateTime.Parse(StartString);
+	      EndDate = DateTime.Parse(EndString);
+		  TodayMonth = Clock.Today.Month;
+		  TodayDay = Clock.Today.Day;
+		  StartDay = StartDate.Day;
+		  StartMonth = StartDate.Month;
+		  EndDay = EndDate.Day;
+		  EndMonth = EndDate.Month;
+		  
+		  SeasonIsOpen = false;
+		  //if we are in the spring and after the start date then yes
+		  if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+		  SeasonIsOpen = true;
+		  //if we are in the autumn and before the end date then yes
+		  if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+		  SeasonIsOpen = true;
+		  
+	      //Is there a crop in the ground that needs irrigation?
+	      CropIsActive = false;
+	      if ((MCSP.Phenology.Stage >= 3.0) && (MCSP.Phenology.Stage < 6.0))
+	            CropIsActive = true;
+	      
+	      //Is the irrigator available?
+	      FertSpreaderIsAvailable = false;
+	      Days_since_fertiliser += 1;
+	      if (Days_since_fertiliser >= Return_days)
+	         FertSpreaderIsAvailable = true;
+	      
+	      //Is the soil N low enough to require fertiliser?
+	      SoilNIsLow = false;
+	      double CurrentRootDepth = 0;
+	      double RootDepth = MCSP.Root.Depth;
+	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+	      
+	      Accumulated_depth = 0;
+	      Top_SoilN = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_SoilN += Soil.NO3N[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      if (Top_SoilN <= TriggerN)
+	         SoilNIsLow = true;
+	            
+	      //Lets bloody well irrigate then!!!!
+	      if((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation
+	      {
+	         Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);
+	         Days_since_fertiliser = 0;
+	         Season_Application += NApplicationAmount;
+	         summary.WriteMessage(this, "Automatic Fertiliser");
+            
+	      }
+	   }
+	}
+}
+             
+             ]]></Code>
+        </Manager>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>

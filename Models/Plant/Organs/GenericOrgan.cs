@@ -174,7 +174,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
+                if (DMDemandFunction != null)
+                    StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
+                else
+                    StructuralDMDemand = 0;
                 double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
                 MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
                 NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
