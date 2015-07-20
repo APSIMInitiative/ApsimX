@@ -1032,7 +1032,7 @@ Kale has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[bBiomass].Value = 300</Command>
         <Command>[ExpectedYield].Value = 7500</Command>
         <Command>[RootProportion].Value = 0.1</Command>
-        <Command>[HarvestIndex].XYPairs.X = 0,1600</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,10000</Command>
         <Command>[HarvestIndex].XYPairs.Y = 0.9,0.5</Command>
         <Command>[ProductDMProportion].Value = 0.16</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 0</Command>
@@ -1070,7 +1070,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[bBiomass].Value = 189</Command>
         <Command>[ExpectedYield].Value = 4615</Command>
         <Command>[RootProportion].Value = 0.1</Command>
-        <Command>[HarvestIndex].XYPairs.X = 0,1600</Command>
+        <Command>[HarvestIndex].XYPairs.X = 0,6000</Command>
         <Command>[HarvestIndex].XYPairs.Y = .95,0.5</Command>
         <Command>[ProductDMProportion].Value = 0.13</Command>
         <Command>[Phenology].CanopyExpanding.Target.Value = 1</Command>
@@ -1481,7 +1481,7 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
       <Manager>
         <Name>MCSPSowingRule</Name>
         <Script>
-          <CultivarName>Kale</CultivarName>
+          <CultivarName>Rape</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
           <SowingDate>1998-10-14</SowingDate>
         </Script>
@@ -1945,8 +1945,8 @@ namespace Models
           <Season_Allocation>1000</Season_Allocation>
           <Refull_Frac>0.9</Refull_Frac>
           <Trigger_Frac>0.7</Trigger_Frac>
-          <Return_days>1</Return_days>
-          <Maximum_Irrigation_Amount>50</Maximum_Irrigation_Amount>
+          <Return_days>3</Return_days>
+          <Maximum_Irrigation_Amount>40</Maximum_Irrigation_Amount>
           <Top_Depth>600</Top_Depth>
         </Script>
         <Code><![CDATA[using System;
