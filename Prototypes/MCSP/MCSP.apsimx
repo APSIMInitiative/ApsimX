@@ -1009,24 +1009,36 @@ This model has been built to simulate Multiple Crops in simulations that serve a
       </Cultivar>
       <Cultivar>
         <Name>Kale</Name>
+        <Memo>
+          <Name>Forage quirks</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+Kale has 0oCd duration canopy expanding, senescence and maturity targets with a long (4000) yield increasing phase.  This is so biomass is partitioned to the product (leaf and stem in this case) from emergence and so cover increases to a maximum and stays there.  Setting this phase so long meant the roots were growing to slow so the root depth parameter was increased to achieve faster root growth.
+</p>
+<p>
+
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 1200</Command>
+        <Command>[Root].MaximumRootDepth.Value = 3000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.1</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 867</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 141</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.95</Command>
         <Command>[XoBiomass].Value = 1830</Command>
-        <Command>[bBiomass].Value = 540</Command>
+        <Command>[bBiomass].Value = 300</Command>
         <Command>[ExpectedYield].Value = 7500</Command>
         <Command>[RootProportion].Value = 0.1</Command>
         <Command>[HarvestIndex].XYPairs.X = 0,1600</Command>
         <Command>[HarvestIndex].XYPairs.Y = 0.9,0.5</Command>
         <Command>[ProductDMProportion].Value = 0.16</Command>
-        <Command>[Phenology].CanopyExpanding.Target.Value = 1</Command>
-        <Command>[Phenology].YieldIncreasing.Target.Value= 1900</Command>
-        <Command>[Phenology].Senescing.Target.Value = 300</Command>
-        <Command>[Phenology].Mature.Target.Value = 300</Command>
+        <Command>[Phenology].CanopyExpanding.Target.Value = 0</Command>
+        <Command>[Phenology].YieldIncreasing.Target.Value= 4000</Command>
+        <Command>[Phenology].Senescing.Target.Value = 0</Command>
+        <Command>[Phenology].Mature.Target.Value = 0</Command>
         <Command>[leaf].NConc.Value = 0.01</Command>
         <Command>[Product].MinimumNConc.Value = 0.02</Command>
         <Command>[Product].MaximumNConc.Value = 0.03</Command>
@@ -1035,8 +1047,20 @@ This model has been built to simulate Multiple Crops in simulations that serve a
       </Cultivar>
       <Cultivar>
         <Name>Rape</Name>
+        <Memo>
+          <Name>Forage quirks</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+Rape has 0oCd duration canopy expanding, senescence and maturity targets with a long (4000) yield increasing phase.  This is so biomass is partitioned to the product (leaf and stem in this case) from emergence and so cover increases to a maximum and stays there.  Setting this phase so long meant the roots were growing to slow so the root depth parameter was increased to achieve faster root growth.
+</p>
+<p>
+
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 1200</Command>
+        <Command>[Root].MaximumRootDepth.Value = 2400</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
         <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.7, 0.3, 0.0</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 770</Command>
@@ -1151,12 +1175,12 @@ This model has been built to simulate Multiple Crops in simulations that serve a
               <double>0.11</double>
             </LL>
             <KL>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.08</double>
-              <double>0.08</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
+              <double>0.1</double>
             </KL>
             <XF>
               <double>1</double>
@@ -1457,7 +1481,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
       <Manager>
         <Name>MCSPSowingRule</Name>
         <Script>
-          <CultivarName>Rape</CultivarName>
+          <CultivarName>Kale</CultivarName>
           <InitialRootDepth>10</InitialRootDepth>
           <SowingDate>1998-10-14</SowingDate>
         </Script>
@@ -1685,51 +1709,11 @@ namespace Models
         <Name>operations</Name>
         <Operation>
           <Date>1998-10-15T00:00:00</Date>
-          <Action>[Fertiliser].Apply(200, Fertiliser.Types.UreaN, 10);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-10-02T00:00:00</Date>
-          <Action>[Irrigation].Apply(40);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-10-26T00:00:00</Date>
-          <Action>[Irrigation].Apply(70);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-15T00:00:00</Date>
-          <Action>[Irrigation].Apply(70);</Action>
+          <Action>[Fertiliser].Apply(400, Fertiliser.Types.UreaN, 10);</Action>
         </Operation>
         <Operation>
           <Date>1998-12-29T00:00:00</Date>
-          <Action>[Irrigation].Apply(10);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-30T00:00:00</Date>
-          <Action>[Irrigation].Apply(55);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-01-07T00:00:00</Date>
-          <Action>[Irrigation].Apply(50);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-01-21T00:00:00</Date>
-          <Action>[Irrigation].Apply(40);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-02-10T00:00:00</Date>
-          <Action>[Irrigation].Apply(28);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-02-19T00:00:00</Date>
-          <Action>[Irrigation].Apply(15);</Action>
-        </Operation>
-        <Operation>
-          <Date>1999-03-09T00:00:00</Date>
-          <Action>[Irrigation].Apply(25);</Action>
-        </Operation>
-        <Operation>
-          <Date>1998-12-29T00:00:00</Date>
-          <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+          <Action>[Fertiliser].Apply(400, Fertiliser.Types.UreaN, 10);</Action>
         </Operation>
       </Operations>
       <Report>
@@ -1812,6 +1796,17 @@ namespace Models
           <string>[MCSP].Phenology.ThermalTime.Value</string>
           <string>[MCSP].Phenology.CurrentPhaseName</string>
           <string>[MCSP].Phenology.Stage</string>
+          <string>[AutomaticIrrigation].Script.Top_Refull</string>
+          <string>[AutomaticIrrigation].Script.Top_Trigger</string>
+          <string>[AutomaticIrrigation].Script.Top_SW</string>
+          <string>[AutomaticIrrigation].Script.Top_DUL</string>
+          <string>[Irrigation].IrrigationApplied</string>
+          <string>[AutomaticIrrigation].Script.Amount_to_apply</string>
+          <string>[AutomaticIrrigation].Script.StartDate</string>
+          <string>[Clock].Today</string>
+          <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
+          <string>[AutomaticIrrigation].Script.EndDate</string>
+          <string>[AutomaticIrrigation].Script.TodayYear</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -1941,6 +1936,185 @@ namespace Models
         <Name>MCSP</Name>
         <CropType>MCSP</CropType>
       </Plant>
+      <Manager>
+        <Name>AutomaticIrrigation</Name>
+        <Script>
+          <Irrigation_Yes_No>yes</Irrigation_Yes_No>
+          <Season_Start>1-Oct</Season_Start>
+          <Season_End>30-Apr</Season_End>
+          <Season_Allocation>1000</Season_Allocation>
+          <Refull_Frac>0.9</Refull_Frac>
+          <Trigger_Frac>0.7</Trigger_Frac>
+          <Return_days>1</Return_days>
+          <Maximum_Irrigation_Amount>50</Maximum_Irrigation_Amount>
+          <Top_Depth>600</Top_Depth>
+        </Script>
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using System.Xml.Serialization;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+
+        
+namespace Models
+{
+   [Serializable] 
+   [System.Xml.Serialization.XmlInclude(typeof(Model))]
+    public class Script : Model
+    {      
+	   //Communication to other modules
+	   [Link] ISummary summary = null;
+	   [Link] Irrigation Irrigation;
+	   [Link] Clock Clock;
+	   [Link] Soil Soil;
+	   [Link] Plant MCSP;
+	   
+	   //User inputs from properties tab
+	   [Description("Irrigation on (yes or no)")]
+	   public string Irrigation_Yes_No { get; set; }
+	   [Description("SeasonStart (dd-MMM)")]
+	   public string Season_Start { get; set; }
+	   [Description("SeasonEnd (dd-MMM)")]
+	   public string Season_End { get; set; }
+	   [Description("Season Allocation (mm)")]
+	   public double Season_Allocation { get; set; }
+	   [Description("% PAWC to refill soil to (0-1)")]
+	   public double Refull_Frac { get; set; }
+	   [Description("% PAWC to trigger irrigation (0-1)")]
+	   public double Trigger_Frac { get; set; }
+	   [Description("Minimum days for irrigation to return")]
+	   public double Return_days { get; set; }
+	   [Description("Maximum irrigation application (mm)")]
+	   public double Maximum_Irrigation_Amount { get; set; }
+	   [Description("Depth to calculate PAWC (mm)")]
+	   public double Top_Depth { get; set; }
+	   
+	   //Class members
+	   [XmlIgnore] private bool IrrigationIsAvailable { get; set; }
+	   [XmlIgnore] public bool SeasonIsOpen { get; set; }
+	   [XmlIgnore] private bool CropIsActive { get; set; }
+	   [XmlIgnore] private bool IrrigatorIsAvailable { get; set; }
+	   [XmlIgnore] private bool SoilIsDry { get; set; }
+	   [XmlIgnore] public double Top_DUL { get; set; }
+	   [XmlIgnore] public double Top_Refull { get; set; }
+	   [XmlIgnore] public double Top_Trigger { get; set; }
+	   [XmlIgnore] public double Top_LL { get; set; }
+	   [XmlIgnore] public double Top_SW { get; set; }
+	   [XmlIgnore] public double Accumulated_depth { get; set; }   
+	   [XmlIgnore] public double Days_since_irrigation { get; set; }
+	   [XmlIgnore] public double Amount_to_apply { get; set; }
+	   [XmlIgnore] public double Season_Application { get; set; }
+		
+	   //Variables for date logic testing
+	   [XmlIgnore] public string StartString {get; set;}
+	   [XmlIgnore] public string EndString {get; set;}
+	   [XmlIgnore] public DateTime StartDate {get; set;}
+	   [XmlIgnore] public DateTime EndDate {get; set;}
+	   [XmlIgnore] public int TodayYear {get; set;}
+	   [XmlIgnore] public int TodayMonth {get; set;}
+	   [XmlIgnore] public int StartMonth {get; set;}
+	   [XmlIgnore] public int EndMonth {get; set;}
+	   [XmlIgnore] public int TodayDay {get; set;}
+	   [XmlIgnore] public int StartDay {get; set;}
+	   [XmlIgnore] public int EndDay {get; set;}
+	   
+	
+	   //Calculate static soil variables
+	   [EventSubscribe("StartOfSimulation")]
+	   private void OnStartOfSimulation(object sender, EventArgs e)
+	   {   
+	      //Calculated soil water variables
+	      Accumulated_depth = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_LL += Soil.SoilWater.LL15mm[layer];
+	         Top_DUL += Soil.SoilWater.DULmm[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      Top_Refull = Top_LL + (Top_DUL - Top_LL) * Refull_Frac;
+	   }
+	   
+	  
+	   //Determine daily requirement for irrigation
+		[EventSubscribe("StartOfDay")]
+	   	private void OnStartOfDay(object sender, EventArgs e)
+	   	{ 
+	      //Can we irrigate?
+	      IrrigationIsAvailable = false; 
+	      if (Irrigation_Yes_No == "yes")
+	         IrrigationIsAvailable = true; 
+	
+	      //Are we Allowed to Irrigate?
+	      TodayYear = Clock.Today.Year;
+	      StartString = Season_Start + "-" + TodayYear.ToString();
+	      EndString = Season_End + "-" + TodayYear.ToString();
+	      StartDate = DateTime.Parse(StartString);
+	      EndDate = DateTime.Parse(EndString);
+		  TodayMonth = Clock.Today.Month;
+		  TodayDay = Clock.Today.Day;
+		  StartDay = StartDate.Day;
+		  StartMonth = StartDate.Month;
+		  EndDay = EndDate.Day;
+		  EndMonth = EndDate.Month;
+		  
+		  SeasonIsOpen = false;
+		  //if we are in the spring and after the start date then yes
+		  if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))
+		  SeasonIsOpen = true;
+		  //if we are in the autumn and before the end date then yes
+		  if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))
+		  SeasonIsOpen = true;
+		  
+	      //Is there a crop in the ground that needs irrigation?
+	      CropIsActive = false;
+	      if ((MCSP.Phenology.Stage >= 3.0) && (MCSP.Phenology.Stage < 6.0))
+	            CropIsActive = true;
+	      
+	      //Is the irrigator available?
+	      IrrigatorIsAvailable = false;
+	      Days_since_irrigation += 1;
+	      if (Days_since_irrigation >= Return_days)
+	         IrrigatorIsAvailable = true;
+	      
+	      //Is the soil dry enough to require irrigation?
+	      SoilIsDry = false;
+	      double CurrentRootDepth = 0;
+	      double RootDepth = MCSP.Root.Depth;
+	      CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);
+	      
+	      double RelativeRootDepth = Math.Min(1.0, CurrentRootDepth / Top_Depth);
+	      Top_Trigger = Math.Min(Top_Refull, Top_DUL - (Top_DUL - Top_LL) * RelativeRootDepth * (1-Trigger_Frac)); 
+	      
+	      Accumulated_depth = 0;
+	      Top_SW = 0;
+	      for (int layer = 0; Accumulated_depth < Top_Depth; layer++)
+	      {
+	         Top_SW += Soil.SoilWater.SWmm[layer];
+	         Accumulated_depth += Soil.SoilWater.Thickness[layer];
+	      }
+	      if (Top_SW <= Top_Trigger)
+	         SoilIsDry = true;
+	            
+	      //Lets bloody well irrigate then!!!!
+	      if((IrrigationIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (IrrigatorIsAvailable) && (SoilIsDry)) //The conditions are rife for irrigation
+	      {
+	         Amount_to_apply = Math.Min(Top_Refull - Top_SW, Maximum_Irrigation_Amount);
+	         Amount_to_apply = Math.Min(Amount_to_apply, Season_Allocation - Season_Application); 
+	         Amount_to_apply = Math.Max(Amount_to_apply, 0.0);
+	         Irrigation.Apply(Amount_to_apply);
+	         Days_since_irrigation = 0;
+	         Season_Application += Amount_to_apply;
+	         summary.WriteMessage(this, "Automatic Irrigation");
+            
+	      }
+	   }
+	}
+}
+             
+             ]]></Code>
+      </Manager>
       <Area>0</Area>
       <Slope>0</Slope>
     </Zone>
@@ -3089,6 +3263,156 @@ namespace Models
         <Y>
           <TableName>Report</TableName>
           <FieldName>MCSP.Arbitrator.DMNutrientLimitation</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Irrigation</Name>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Water (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>0</Minimum>
+        <Maximum>300</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Right</Type>
+        <Title>Length (mm)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Series 0</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>AutomaticIrrigation.Script.Top_Refull</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Series2</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16744448</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>AutomaticIrrigation.Script.Top_Trigger</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Series3</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>AutomaticIrrigation.Script.Top_SW</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Series4</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>AutomaticIrrigation.Script.Top_DUL</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Series5</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>Irrigation.IrrigationApplied</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+      </Series>
+      <Series>
+        <Title>Series6</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-8388353</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>Report</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>Report</TableName>
+          <FieldName>AutomaticIrrigation.Script.Amount_to_apply</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
@@ -5601,5 +5925,5 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>235</ExplorerWidth>
+  <ExplorerWidth>479</ExplorerWidth>
 </Simulations>
