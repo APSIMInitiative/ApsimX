@@ -803,7 +803,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
         <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.2, 0.0</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
@@ -829,7 +829,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
         <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 1000</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.3, 0.1</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.8, 0.2, 0.0</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 540</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
@@ -879,9 +879,9 @@ This model has been built to simulate Multiple Crops in simulations that serve a
       <Cultivar>
         <Name>Potatoes_Long</Name>
         <Alias>Barley_Spring</Alias>
-        <Command>[Root].MaximumRootDepth.Value = 1000</Command>
+        <Command>[Root].MaximumRootDepth.Value = 500</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.5, 0.2, 0.05</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.5, 0.1, 0.0</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 60</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
@@ -907,7 +907,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
         <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 800</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.4, 0.0, 0.0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.4, 0.2, 0.0</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 690</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 60</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.97</Command>
@@ -960,7 +960,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
         <Alias>Barley_Spring</Alias>
         <Command>[Root].MaximumRootDepth.Value = 700</Command>
         <Command>[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500</Command>
-        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.3, 0.0, 0.0</Command>
+        <Command>[Root].KLModifier.XYPairs.Y = 1, 1, 0.3, 0.1, 0.0</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Xo.Value = 360</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.b.Value = 120</Command>
         <Command>[Leaf].CoverFunction.Expanding.SigCoverFunction.Ymax.Value = 0.8</Command>
