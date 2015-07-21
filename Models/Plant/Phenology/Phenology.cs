@@ -389,7 +389,7 @@ namespace Models.PMF.Phen
                         if (CurrentPhaseIndex + 1 >= Phases.Count)
                             throw new Exception("Cannot transition to the next phase. No more phases exist");
 
-                        if (CurrentPhase is EmergingPhase)
+                        if (CurrentPhase is EmergingPhase || !EmergingPhaseExists)
                             Emerged = true;
 
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
@@ -710,6 +710,24 @@ namespace Models.PMF.Phen
                 }
                 CurrentPhaseIndex = SavedCurrentPhaseIndex;
                 return TTInPhase;
+            }
+        }
+
+        /// <summary>
+        /// Return true if there is no EmergingPhase.
+        /// </summary>
+        public bool EmergingPhaseExists 
+        { 
+            get
+            {
+                bool found = false;
+                foreach (Phase phase in Phases)
+                {
+                    if (phase is EmergingPhase)
+                        found = true;
+                }
+
+                return found;
             }
         }
     }
