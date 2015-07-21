@@ -51,7 +51,7 @@
     <DefineConstants>TRACE;APSIMX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DocumentationFile>..\Bin\Model.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
