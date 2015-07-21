@@ -9,10 +9,5 @@ for %%M in (Wheat OilPalm) do (
     ..\Bin\UserInterface.exe CreateModelDocumentation.cs
 )
 
-echo Generating DOxygen documentation for all of APSIM
-"c:\Program Files\doxygen\bin\doxygen.exe" Doxyfile 1>Nul 2>Nul
-
-echo Can now copy the html directory to \\IIS-EXT1\APSIM-Sites\APSIM\ApsimX
-echo and the PDF directory to the same place.
-
-pause
+rem echo Generating DOxygen documentation for all of APSIM
+rem "c:\Program Files\doxygen\bin\doxygen.exe" Doxyfile 1>Nul 2>Nul
