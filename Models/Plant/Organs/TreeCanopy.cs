@@ -67,6 +67,7 @@ namespace Models.PMF.Organs
         public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
 
         /// <summary>Gets or sets the FRGR.</summary>
+        
         public double FRGR
         {
             get { return _Frgr; }
@@ -87,13 +88,13 @@ namespace Models.PMF.Organs
         /// <summary>The _ water allocation</summary>
         private double _WaterAllocation;
         /// <summary>The _ height</summary>
-        public double _Height;         // Height of the canopy (mm) 
+        private double _Height;         // Height of the canopy (mm) 
         /// <summary>The _ lai</summary>
-        public double _LAI;            // Leaf Area Index (Green)
+        private double _LAI;            // Leaf Area Index (Green)
         /// <summary>The _ lai dead</summary>
-        public double _LAIDead;        // Leaf Area Index (Dead)
+        private double _LAIDead;        // Leaf Area Index (Dead)
         /// <summary>The _ FRGR</summary>
-        public double _Frgr;
+        private double _Frgr=1;
         /// <summary>The ep</summary>
         private double EP = 0;
 

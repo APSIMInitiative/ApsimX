@@ -1,6 +1,492 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
+  <Replacements>
+    <Name>Replacements</Name>
+    <Plant>
+      <Name>Eucalyptus</Name>
+      <AccumulateFunction>
+        <Name>Age</Name>
+        <Constant>
+          <Name>day</Name>
+          <Value>0.0027397260273972603</Value>
+        </Constant>
+        <StartStageName>Planting</StartStageName>
+        <EndStageName>Old</EndStageName>
+      </AccumulateFunction>
+      <Phenology>
+        <Name>Phenology</Name>
+        <StageBasedInterpolation>
+          <Name>StageCode</Name>
+          <Stages>
+            <string>Planting</string>
+            <string>EndJuvenile</string>
+            <string>Maturity</string>
+            <string>Old</string>
+          </Stages>
+          <Codes>
+            <double>1</double>
+            <double>2</double>
+            <double>3</double>
+            <double>4</double>
+          </Codes>
+          <Proportional>true</Proportional>
+        </StageBasedInterpolation>
+        <Constant>
+          <Name>ThermalTime</Name>
+          <Value>1</Value>
+        </Constant>
+        <GenericPhase>
+          <Name>Juvenile</Name>
+          <Constant>
+            <Name>ThermalTime</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>Target</Name>
+            <Value>365</Value>
+          </Constant>
+          <Start>Planting</Start>
+          <End>EndJuvenile</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Mature</Name>
+          <Constant>
+            <Name>ThermalTime</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>Target</Name>
+            <Value>1825</Value>
+          </Constant>
+          <Start>EndJuvenile</Start>
+          <End>Maturity</End>
+        </GenericPhase>
+        <GenericPhase>
+          <Name>Declining</Name>
+          <Constant>
+            <Name>ThermalTime</Name>
+            <Value>1</Value>
+          </Constant>
+          <Constant>
+            <Name>Target</Name>
+            <Value>27010</Value>
+          </Constant>
+          <Start>Maturity</Start>
+          <End>Old</End>
+        </GenericPhase>
+        <EndPhase>
+          <Name>Old</Name>
+          <Constant>
+            <Name>ThermalTime</Name>
+            <Value>1</Value>
+          </Constant>
+          <Start>Old</Start>
+          <End>Unused</End>
+        </EndPhase>
+        <Emerged>false</Emerged>
+      </Phenology>
+      <OrganArbitrator>
+        <Name>Arbitrator</Name>
+        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
+        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+      </OrganArbitrator>
+      <Summariser>
+        <Name>Summariser</Name>
+        <CompositeBiomass>
+          <Name>AboveGround</Name>
+          <Propertys>
+            <string>[Leaf].Live</string>
+            <string>[Leaf].Dead</string>
+            <string>[Stem].Live</string>
+            <string>[Stem].Dead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>BelowGround</Name>
+          <Propertys>
+            <string>[Root].Live</string>
+            <string>[Root].Dead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Total</Name>
+          <Propertys>
+            <string>[Leaf].Live</string>
+            <string>[Leaf].Dead</string>
+            <string>[Stem].Live</string>
+            <string>[Stem].Dead</string>
+            <string>[Root].Live</string>
+            <string>[Root].Dead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>TotalLive</Name>
+          <Propertys>
+            <string>[Leaf].Live</string>
+            <string>[Stem].Live</string>
+            <string>[Root].Live</string>
+          </Propertys>
+        </CompositeBiomass>
+        <DivideFunction>
+          <Name>IndividualTreeLiveWt</Name>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Eucalyptus].Population</VariableName>
+          </VariableReference>
+        </DivideFunction>
+        <CompositeBiomass>
+          <Name>TotalDead</Name>
+          <Propertys>
+            <string>[Leaf].Dead</string>
+            <string>[Stem].Dead</string>
+            <string>[Root].Dead</string>
+          </Propertys>
+        </CompositeBiomass>
+      </Summariser>
+      <TreeCanopy>
+        <Name>Leaf</Name>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.015</Value>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.03</Value>
+        </Constant>
+        <MultiplyFunction>
+          <Name>InitialWtFunction</Name>
+          <Constant>
+            <Name>InitialLeafMass</Name>
+            <Value>3</Value>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Eucalyptus].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+        <MultiplyFunction>
+          <Name>LAIFunction</Name>
+          <LinearInterpolationFunction>
+            <Name>SpecificLeafArea</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>1</double>
+                <double>1.5</double>
+                <double>2</double>
+                <double>2.04</double>
+              </X>
+              <Y>
+                <double>0.016</double>
+                <double>0.013</double>
+                <double>0.011</double>
+                <double>0.01</double>
+                <double>0.008</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Phenology].StageCode.Value</XProperty>
+          </LinearInterpolationFunction>
+          <VariableReference>
+            <Name>LeafMass</Name>
+            <VariableName>[Leaf].Live.Wt</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Start>Planting</Start>
+          <End>Old</End>
+        </PhaseBasedSwitch>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>1</Value>
+        </Constant>
+        <PhaseLookup>
+          <Name>SenescenceRateFunction</Name>
+          <PhaseLookupValue>
+            <Name>Juvenile Foliage</Name>
+            <Constant>
+              <Name>Constant</Name>
+              <Value>0.0003</Value>
+            </Constant>
+            <Start>Planting</Start>
+            <End>EndJuvenile</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>MatureFoliage</Name>
+            <Constant>
+              <Name>Constant</Name>
+              <Value>0.00274</Value>
+            </Constant>
+            <Start>EndJuvenile</Start>
+            <End>Old</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <LinearInterpolationFunction>
+            <Name>PartitionFraction</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>1000</double>
+              </X>
+              <Y>
+                <double>0.48</double>
+                <double>0.16</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Summariser].IndividualTreeLiveWt.Value</XProperty>
+          </LinearInterpolationFunction>
+        </PartitionFractionDemandFunction>
+        <RUEModel>
+          <Name>Photosynthesis</Name>
+          <Constant>
+            <Name>RUE</Name>
+            <Value>1.3</Value>
+          </Constant>
+          <RUECO2Function>
+            <Name>FCO2</Name>
+            <PhotosyntheticPathway>C3</PhotosyntheticPathway>
+          </RUECO2Function>
+          <LinearInterpolationFunction>
+            <Name>FN</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>1</double>
+                <double>1.5</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fn</XProperty>
+          </LinearInterpolationFunction>
+          <WeightedTemperatureFunction>
+            <Name>FT</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>5</double>
+                <double>20</double>
+                <double>25</double>
+                <double>35</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WeightedTemperatureFunction>
+          <LinearInterpolationFunction>
+            <Name>FW</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>1.5</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Leaf].Fw</XProperty>
+          </LinearInterpolationFunction>
+          <LinearInterpolationFunction>
+            <Name>FVPD</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>10</double>
+                <double>50</double>
+              </X>
+              <Y>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Photosynthesis].VPD</XProperty>
+          </LinearInterpolationFunction>
+        </RUEModel>
+        <K>0.5</K>
+        <KDead>0</KDead>
+        <DeltaBiomass>7.7887580562389109</DeltaBiomass>
+        <LAI>1.3834138867169348</LAI>
+        <Height>1000</Height>
+        <FRGR>1</FRGR>
+        <PotentialEP>0</PotentialEP>
+        <WaterAllocation>0</WaterAllocation>
+        <LAIDead>0</LAIDead>
+      </TreeCanopy>
+      <Root>
+        <Name>Root</Name>
+        <CompositeBiomass>
+          <Name>Live</Name>
+          <Propertys>
+            <string>[Root].LayerLive</string>
+          </Propertys>
+        </CompositeBiomass>
+        <CompositeBiomass>
+          <Name>Dead</Name>
+          <Propertys>
+            <string>[Root].LayerDead</string>
+          </Propertys>
+        </CompositeBiomass>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Start>Planting</Start>
+          <End>Old</End>
+        </PhaseBasedSwitch>
+        <AirTemperatureFunction>
+          <Name>TemperatureEffect</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><title></title></head><body><p></p></body></html>]]></MemoText>
+          </Memo>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>26</double>
+              <double>35</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+        </AirTemperatureFunction>
+        <Constant>
+          <Name>RootFrontVelocity</Name>
+          <Value>10</Value>
+        </Constant>
+        <Constant>
+          <Name>SenescenceRate</Name>
+          <Value>0.005</Value>
+        </Constant>
+        <PhaseLookup>
+          <Name>PartitionFraction</Name>
+          <PhaseLookupValue>
+            <Name>PhaseLookupValue</Name>
+            <Constant>
+              <Name>Constant</Name>
+              <Value>0.2</Value>
+            </Constant>
+            <Start>Planting</Start>
+            <End>Old</End>
+          </PhaseLookupValue>
+        </PhaseLookup>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.0041</Value>
+        </Constant>
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <Value>6</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.004</Value>
+        </Constant>
+        <LinearInterpolationFunction>
+          <Name>KLModifier</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <X>
+              <double>0</double>
+              <double>3</double>
+            </X>
+            <Y>
+              <double>1</double>
+              <double>1</double>
+            </Y>
+          </XYPairs>
+          <XProperty>[Leaf].LAI</XProperty>
+        </LinearInterpolationFunction>
+        <InitialDM>5</InitialDM>
+        <SpecificRootLength>100000</SpecificRootLength>
+        <NuptakeSupply>0</NuptakeSupply>
+      </Root>
+      <GenericAboveGroundOrgan>
+        <Name>Stem</Name>
+        <Constant>
+          <Name>NReallocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <Value>0.05</Value>
+        </Constant>
+        <PhaseBasedSwitch>
+          <Name>NitrogenDemandSwitch</Name>
+          <Start>Planting</Start>
+          <End>Old</End>
+        </PhaseBasedSwitch>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <Value>0</Value>
+        </Constant>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Value>1</Value>
+        </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <Value>0.2</Value>
+          </Constant>
+        </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <Value>0.0015</Value>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <Value>0.0014</Value>
+        </Constant>
+        <Constant>
+          <Name>DetachmentRateFunction</Name>
+          <Value>0</Value>
+        </Constant>
+        <Biomass>
+          <Name>Live</Name>
+        </Biomass>
+        <Biomass>
+          <Name>Dead</Name>
+        </Biomass>
+      </GenericAboveGroundOrgan>
+      <Cultivar>
+        <Name>EGrandis</Name>
+        <Alias>EGrandis</Alias>
+        <Command />
+      </Cultivar>
+      <CropType>Eucalyptus</CropType>
+    </Plant>
+  </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <Input>
@@ -26,6 +512,9 @@
       <Summary>
         <Name>Summary</Name>
       </Summary>
+      <SoilArbitrator>
+        <Name>SoilArbitrator</Name>
+      </SoilArbitrator>
       <Zone>
         <Name>Plantation</Name>
         <Soil>
@@ -433,489 +922,6 @@
         </MicroClimate>
         <Plant>
           <Name>Eucalyptus</Name>
-          <AccumulateFunction>
-            <Name>Age</Name>
-            <Constant>
-              <Name>day</Name>
-              <Value>0.0027397260273972603</Value>
-            </Constant>
-            <StartStageName>Planting</StartStageName>
-            <EndStageName>Old</EndStageName>
-          </AccumulateFunction>
-          <Phenology>
-            <Name>Phenology</Name>
-            <StageBasedInterpolation>
-              <Name>StageCode</Name>
-              <Stages>
-                <string>Planting</string>
-                <string>EndJuvenile</string>
-                <string>Maturity</string>
-                <string>Old</string>
-              </Stages>
-              <Codes>
-                <double>1</double>
-                <double>2</double>
-                <double>3</double>
-                <double>4</double>
-              </Codes>
-              <Proportional>true</Proportional>
-            </StageBasedInterpolation>
-            <Constant>
-              <Name>ThermalTime</Name>
-              <Value>1</Value>
-            </Constant>
-            <GenericPhase>
-              <Name>Juvenile</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>365</Value>
-              </Constant>
-              <Start>Planting</Start>
-              <End>EndJuvenile</End>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Mature</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>1825</Value>
-              </Constant>
-              <Start>EndJuvenile</Start>
-              <End>Maturity</End>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Declining</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>27010</Value>
-              </Constant>
-              <Start>Maturity</Start>
-              <End>Old</End>
-            </GenericPhase>
-            <EndPhase>
-              <Name>Old</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Start>Old</Start>
-              <End>Unused</End>
-            </EndPhase>
-            <Emerged>false</Emerged>
-          </Phenology>
-          <OrganArbitrator>
-            <Name>Arbitrator</Name>
-            <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-          </OrganArbitrator>
-          <Summariser>
-            <Name>Summariser</Name>
-            <CompositeBiomass>
-              <Name>AboveGround</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>BelowGround</Name>
-              <Propertys>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Total</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>TotalLive</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Stem].Live</string>
-                <string>[Root].Live</string>
-              </Propertys>
-            </CompositeBiomass>
-            <DivideFunction>
-              <Name>IndividualTreeLiveWt</Name>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </DivideFunction>
-            <CompositeBiomass>
-              <Name>TotalDead</Name>
-              <Propertys>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-          </Summariser>
-          <TreeCanopy>
-            <Name>Leaf</Name>
-            <Biomass>
-              <Name>Live</Name>
-            </Biomass>
-            <Biomass>
-              <Name>Dead</Name>
-            </Biomass>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.015</Value>
-            </Constant>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.03</Value>
-            </Constant>
-            <MultiplyFunction>
-              <Name>InitialWtFunction</Name>
-              <Constant>
-                <Name>InitialLeafMass</Name>
-                <Value>3</Value>
-              </Constant>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>LAIFunction</Name>
-              <LinearInterpolationFunction>
-                <Name>SpecificLeafArea</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1.5</double>
-                    <double>2</double>
-                    <double>2.04</double>
-                  </X>
-                  <Y>
-                    <double>0.016</double>
-                    <double>0.013</double>
-                    <double>0.011</double>
-                    <double>0.01</double>
-                    <double>0.008</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Phenology].StageCode.Value</XProperty>
-              </LinearInterpolationFunction>
-              <VariableReference>
-                <Name>LeafMass</Name>
-                <VariableName>[Leaf].Live.Wt</VariableName>
-              </VariableReference>
-            </MultiplyFunction>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <Constant>
-              <Name>DetachmentRateFunction</Name>
-              <Value>1</Value>
-            </Constant>
-            <PhaseLookup>
-              <Name>SenescenceRateFunction</Name>
-              <PhaseLookupValue>
-                <Name>Juvenile Foliage</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.0003</Value>
-                </Constant>
-                <Start>Planting</Start>
-                <End>EndJuvenile</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>MatureFoliage</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.00274</Value>
-                </Constant>
-                <Start>EndJuvenile</Start>
-                <End>Old</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <PartitionFractionDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <LinearInterpolationFunction>
-                <Name>PartitionFraction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1000</double>
-                  </X>
-                  <Y>
-                    <double>0.48</double>
-                    <double>0.16</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Summariser].IndividualTreeLiveWt.Value</XProperty>
-              </LinearInterpolationFunction>
-            </PartitionFractionDemandFunction>
-            <RUEModel>
-              <Name>Photosynthesis</Name>
-              <Constant>
-                <Name>RUE</Name>
-                <Value>1.3</Value>
-              </Constant>
-              <RUECO2Function>
-                <Name>FCO2</Name>
-                <PhotosyntheticPathway>C3</PhotosyntheticPathway>
-              </RUECO2Function>
-              <LinearInterpolationFunction>
-                <Name>FN</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1.5</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Leaf].Fn</XProperty>
-              </LinearInterpolationFunction>
-              <WeightedTemperatureFunction>
-                <Name>FT</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>5</double>
-                    <double>20</double>
-                    <double>25</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-                <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
-              </WeightedTemperatureFunction>
-              <LinearInterpolationFunction>
-                <Name>FW</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1.5</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Leaf].Fw</XProperty>
-              </LinearInterpolationFunction>
-              <LinearInterpolationFunction>
-                <Name>FVPD</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>10</double>
-                    <double>50</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Photosynthesis].VPD</XProperty>
-              </LinearInterpolationFunction>
-            </RUEModel>
-            <_Height>0</_Height>
-            <_LAI>1.3834138867169348</_LAI>
-            <_LAIDead>0</_LAIDead>
-            <_Frgr>0</_Frgr>
-            <K>0.5</K>
-            <KDead>0</KDead>
-            <DeltaBiomass>7.7887580562389109</DeltaBiomass>
-            <LAI>1.3834138867169348</LAI>
-            <Height>0</Height>
-            <FRGR>0</FRGR>
-            <PotentialEP>0</PotentialEP>
-            <WaterAllocation>0</WaterAllocation>
-            <LAIDead>0</LAIDead>
-          </TreeCanopy>
-          <Root>
-            <Name>Root</Name>
-            <CompositeBiomass>
-              <Name>Live</Name>
-              <Propertys>
-                <string>[Root].LayerLive</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Dead</Name>
-              <Propertys>
-                <string>[Root].LayerDead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <AirTemperatureFunction>
-              <Name>TemperatureEffect</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><title></title></head><body><p></p></body></html>]]></MemoText>
-              </Memo>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>26</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <Constant>
-              <Name>RootFrontVelocity</Name>
-              <Value>10</Value>
-            </Constant>
-            <Constant>
-              <Name>SenescenceRate</Name>
-              <Value>0.005</Value>
-            </Constant>
-            <PhaseLookup>
-              <Name>PartitionFraction</Name>
-              <PhaseLookupValue>
-                <Name>PhaseLookupValue</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.2</Value>
-                </Constant>
-                <Start>Planting</Start>
-                <End>Old</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.0041</Value>
-            </Constant>
-            <Constant>
-              <Name>MaxDailyNUptake</Name>
-              <Value>6</Value>
-            </Constant>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.004</Value>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>KLModifier</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>3</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Leaf].LAI</XProperty>
-            </LinearInterpolationFunction>
-            <InitialDM>5</InitialDM>
-            <SpecificRootLength>100000</SpecificRootLength>
-            <NuptakeSupply>0</NuptakeSupply>
-          </Root>
-          <GenericAboveGroundOrgan>
-            <Name>Stem</Name>
-            <Constant>
-              <Name>NReallocationFactor</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>NRetranslocationFactor</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <Constant>
-              <Name>DMRetranslocationFactor</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>1</Value>
-            </Constant>
-            <PartitionFractionDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <Constant>
-                <Name>PartitionFraction</Name>
-                <Value>0.2</Value>
-              </Constant>
-            </PartitionFractionDemandFunction>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.0015</Value>
-            </Constant>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.0014</Value>
-            </Constant>
-            <Constant>
-              <Name>DetachmentRateFunction</Name>
-              <Value>0</Value>
-            </Constant>
-            <Biomass>
-              <Name>Live</Name>
-            </Biomass>
-            <Biomass>
-              <Name>Dead</Name>
-            </Biomass>
-          </GenericAboveGroundOrgan>
-          <Cultivar>
-            <Name>EGrandis</Name>
-            <Alias>EGrandis</Alias>
-            <Command />
-          </Cultivar>
           <CropType>Eucalyptus</CropType>
         </Plant>
         <Manager>
@@ -1012,6 +1018,7 @@
             <string>Eucalyptus.Root.WaterUptake</string>
             <string>Eucalyptus.Leaf.Transpiration</string>
             <string>Eucalyptus.Leaf.WaterDemand</string>
+            <string>Eucalyptus.Leaf.PotentialEP</string>
             <string>Eucalyptus.Root.Depth</string>
             <string>Eucalyptus.Leaf.CoverGreen</string>
             <string>Eucalyptus.Leaf.CoverTotal</string>
@@ -1044,6 +1051,20 @@
         </Report>
         <Graph>
           <Name>Phenology</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Phenology.StageCode.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1060,33 +1081,26 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Phenology.StageCode.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>RootDepth</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Depth</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1103,33 +1117,40 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
           <Series>
-            <Title>Series 0</Title>
+            <Name>Series 0</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Depth</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LAI</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -1146,155 +1167,118 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Biomass</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
           <Series>
-            <Title>Leaf</Title>
+            <Name>Leaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Stem</Title>
+            <Name>Stem</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Root</Title>
+            <Name>Root</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>DeadLeaf</Title>
+            <Name>DeadLeaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-256</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Dead.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Dead.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>N Uptake</Name>
+          <Series>
+            <Name>N Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.NSupplyUptake</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>N Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Arbitrator.NDemand</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1311,133 +1295,54 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>N Uptake</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.NSupplyUptake</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>N Demand</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Arbitrator.NDemand</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>BottomRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>NO3</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
           <Series>
+            <Name>Series</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(1)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(1)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
+            <Name>Series</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(2)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(2)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
+            <Name>Series</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(3)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(3)</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Plant N</Name>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1454,73 +1359,90 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Plant N</Name>
           <Series>
-            <Title>Leaf</Title>
+            <Name>Leaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Stem</Title>
+            <Name>Stem</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Root</Title>
+            <Name>Root</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SLA Function</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1537,33 +1459,26 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>SLA</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>IndividualTreeLiveWt</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -1580,33 +1495,40 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>AboveGroundWt</Name>
           <Series>
-            <Title>SLA</Title>
+            <Name>Predicted</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -1623,58 +1545,63 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>EP</Name>
           <Series>
-            <Title>Predicted</Title>
+            <Name>SW Uptake</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Transpiration</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Observed</Title>
+            <Name>SW Demand</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.PotentialEP</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
-      <Input>
-        <Name>Input</Name>
-        <ErrorMessage>Please select a file to use.</ErrorMessage>
-      </Input>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
@@ -1695,6 +1622,9 @@
       <Summary>
         <Name>Summary</Name>
       </Summary>
+      <SoilArbitrator>
+        <Name>SoilArbitrator</Name>
+      </SoilArbitrator>
       <Zone>
         <Name>Plantation</Name>
         <Soil>
@@ -2102,489 +2032,6 @@
         </MicroClimate>
         <Plant>
           <Name>Eucalyptus</Name>
-          <AccumulateFunction>
-            <Name>Age</Name>
-            <Constant>
-              <Name>day</Name>
-              <Value>0.0027397260273972603</Value>
-            </Constant>
-            <StartStageName>Planting</StartStageName>
-            <EndStageName>Old</EndStageName>
-          </AccumulateFunction>
-          <Phenology>
-            <Name>Phenology</Name>
-            <StageBasedInterpolation>
-              <Name>StageCode</Name>
-              <Stages>
-                <string>Planting</string>
-                <string>EndJuvenile</string>
-                <string>Maturity</string>
-                <string>Old</string>
-              </Stages>
-              <Codes>
-                <double>1</double>
-                <double>2</double>
-                <double>3</double>
-                <double>4</double>
-              </Codes>
-              <Proportional>true</Proportional>
-            </StageBasedInterpolation>
-            <Constant>
-              <Name>ThermalTime</Name>
-              <Value>1</Value>
-            </Constant>
-            <GenericPhase>
-              <Name>Juvenile</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>365</Value>
-              </Constant>
-              <Start>Planting</Start>
-              <End>EndJuvenile</End>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Mature</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>1825</Value>
-              </Constant>
-              <Start>EndJuvenile</Start>
-              <End>Maturity</End>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Declining</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>27010</Value>
-              </Constant>
-              <Start>Maturity</Start>
-              <End>Old</End>
-            </GenericPhase>
-            <EndPhase>
-              <Name>Old</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Start>Old</Start>
-              <End>Unused</End>
-            </EndPhase>
-            <Emerged>false</Emerged>
-          </Phenology>
-          <OrganArbitrator>
-            <Name>Arbitrator</Name>
-            <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-          </OrganArbitrator>
-          <Summariser>
-            <Name>Summariser</Name>
-            <CompositeBiomass>
-              <Name>AboveGround</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>BelowGround</Name>
-              <Propertys>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Total</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>TotalLive</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Stem].Live</string>
-                <string>[Root].Live</string>
-              </Propertys>
-            </CompositeBiomass>
-            <DivideFunction>
-              <Name>IndividualTreeLiveWt</Name>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </DivideFunction>
-            <CompositeBiomass>
-              <Name>TotalDead</Name>
-              <Propertys>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-          </Summariser>
-          <TreeCanopy>
-            <Name>Leaf</Name>
-            <Biomass>
-              <Name>Live</Name>
-            </Biomass>
-            <Biomass>
-              <Name>Dead</Name>
-            </Biomass>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.015</Value>
-            </Constant>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.03</Value>
-            </Constant>
-            <MultiplyFunction>
-              <Name>InitialWtFunction</Name>
-              <Constant>
-                <Name>InitialLeafMass</Name>
-                <Value>3</Value>
-              </Constant>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>LAIFunction</Name>
-              <LinearInterpolationFunction>
-                <Name>SpecificLeafArea</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1.5</double>
-                    <double>2</double>
-                    <double>2.04</double>
-                  </X>
-                  <Y>
-                    <double>0.016</double>
-                    <double>0.013</double>
-                    <double>0.011</double>
-                    <double>0.01</double>
-                    <double>0.008</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Phenology].StageCode.Value</XProperty>
-              </LinearInterpolationFunction>
-              <VariableReference>
-                <Name>LeafMass</Name>
-                <VariableName>[Leaf].Live.Wt</VariableName>
-              </VariableReference>
-            </MultiplyFunction>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <Constant>
-              <Name>DetachmentRateFunction</Name>
-              <Value>1</Value>
-            </Constant>
-            <PhaseLookup>
-              <Name>SenescenceRateFunction</Name>
-              <PhaseLookupValue>
-                <Name>Juvenile Foliage</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.0003</Value>
-                </Constant>
-                <Start>Planting</Start>
-                <End>EndJuvenile</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>MatureFoliage</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.00274</Value>
-                </Constant>
-                <Start>EndJuvenile</Start>
-                <End>Old</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <PartitionFractionDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <LinearInterpolationFunction>
-                <Name>PartitionFraction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1000</double>
-                  </X>
-                  <Y>
-                    <double>0.48</double>
-                    <double>0.16</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Summariser].IndividualTreeLiveWt.Value</XProperty>
-              </LinearInterpolationFunction>
-            </PartitionFractionDemandFunction>
-            <RUEModel>
-              <Name>Photosynthesis</Name>
-              <Constant>
-                <Name>RUE</Name>
-                <Value>1.3</Value>
-              </Constant>
-              <RUECO2Function>
-                <Name>FCO2</Name>
-                <PhotosyntheticPathway>C3</PhotosyntheticPathway>
-              </RUECO2Function>
-              <LinearInterpolationFunction>
-                <Name>FN</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1.5</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Leaf].Fn</XProperty>
-              </LinearInterpolationFunction>
-              <WeightedTemperatureFunction>
-                <Name>FT</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>5</double>
-                    <double>20</double>
-                    <double>25</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-                <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
-              </WeightedTemperatureFunction>
-              <LinearInterpolationFunction>
-                <Name>FW</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1.5</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Leaf].Fw</XProperty>
-              </LinearInterpolationFunction>
-              <LinearInterpolationFunction>
-                <Name>FVPD</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>10</double>
-                    <double>50</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Photosynthesis].VPD</XProperty>
-              </LinearInterpolationFunction>
-            </RUEModel>
-            <_Height>0</_Height>
-            <_LAI>1.3834138867169348</_LAI>
-            <_LAIDead>0</_LAIDead>
-            <_Frgr>0</_Frgr>
-            <K>0.5</K>
-            <KDead>0</KDead>
-            <DeltaBiomass>7.7887580562389109</DeltaBiomass>
-            <LAI>1.3834138867169348</LAI>
-            <Height>0</Height>
-            <FRGR>0</FRGR>
-            <PotentialEP>0</PotentialEP>
-            <WaterAllocation>0</WaterAllocation>
-            <LAIDead>0</LAIDead>
-          </TreeCanopy>
-          <Root>
-            <Name>Root</Name>
-            <CompositeBiomass>
-              <Name>Live</Name>
-              <Propertys>
-                <string>[Root].LayerLive</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Dead</Name>
-              <Propertys>
-                <string>[Root].LayerDead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <AirTemperatureFunction>
-              <Name>TemperatureEffect</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><title></title></head><body><p></p></body></html>]]></MemoText>
-              </Memo>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>26</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <Constant>
-              <Name>RootFrontVelocity</Name>
-              <Value>10</Value>
-            </Constant>
-            <Constant>
-              <Name>SenescenceRate</Name>
-              <Value>0.005</Value>
-            </Constant>
-            <PhaseLookup>
-              <Name>PartitionFraction</Name>
-              <PhaseLookupValue>
-                <Name>PhaseLookupValue</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.2</Value>
-                </Constant>
-                <Start>Planting</Start>
-                <End>Old</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.0041</Value>
-            </Constant>
-            <Constant>
-              <Name>MaxDailyNUptake</Name>
-              <Value>6</Value>
-            </Constant>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.004</Value>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>KLModifier</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>3</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Leaf].LAI</XProperty>
-            </LinearInterpolationFunction>
-            <InitialDM>5</InitialDM>
-            <SpecificRootLength>100000</SpecificRootLength>
-            <NuptakeSupply>0</NuptakeSupply>
-          </Root>
-          <GenericAboveGroundOrgan>
-            <Name>Stem</Name>
-            <Constant>
-              <Name>NReallocationFactor</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>NRetranslocationFactor</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <Constant>
-              <Name>DMRetranslocationFactor</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>1</Value>
-            </Constant>
-            <PartitionFractionDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <Constant>
-                <Name>PartitionFraction</Name>
-                <Value>0.2</Value>
-              </Constant>
-            </PartitionFractionDemandFunction>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.0015</Value>
-            </Constant>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.0014</Value>
-            </Constant>
-            <Constant>
-              <Name>DetachmentRateFunction</Name>
-              <Value>0</Value>
-            </Constant>
-            <Biomass>
-              <Name>Live</Name>
-            </Biomass>
-            <Biomass>
-              <Name>Dead</Name>
-            </Biomass>
-          </GenericAboveGroundOrgan>
-          <Cultivar>
-            <Name>EGrandis</Name>
-            <Alias>EGrandis</Alias>
-            <Command />
-          </Cultivar>
           <CropType>Eucalyptus</CropType>
         </Plant>
         <Manager>
@@ -4131,6 +3578,20 @@
         </Report>
         <Graph>
           <Name>Phenology</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Phenology.StageCode.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4147,33 +3608,26 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Phenology.StageCode.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>RootDepth</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Depth</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4190,33 +3644,40 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
           <Series>
-            <Title>Series 0</Title>
+            <Name>Series 0</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Depth</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LAI</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -4233,155 +3694,118 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Biomass</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
           <Series>
-            <Title>Leaf</Title>
+            <Name>Leaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Stem</Title>
+            <Name>Stem</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Root</Title>
+            <Name>Root</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>DeadLeaf</Title>
+            <Name>DeadLeaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-256</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Dead.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Dead.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>N Uptake</Name>
+          <Series>
+            <Name>N Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.NSupplyUptake</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>N Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Arbitrator.NDemand</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4398,53 +3822,54 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>N Uptake</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.NSupplyUptake</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>N Demand</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Arbitrator.NDemand</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>BottomRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>NO3</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(1)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(2)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8355840</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(3)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4461,153 +3886,90 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(1)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(2)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(3)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Plant N</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
           <Series>
-            <Title>Leaf</Title>
-            <Type>Line</Type>
+            <Name>Leaf</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Stem</Title>
-            <Type>Line</Type>
+            <Name>Stem</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16711936</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Title>Root</Title>
-            <Type>Line</Type>
+            <Name>Root</Name>
+            <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-8355840</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.N</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SLA Function</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4624,33 +3986,26 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>SLA</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>IndividualTreeLiveWt</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -4667,33 +4022,40 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>AboveGroundWt</Name>
           <Series>
-            <Title>SLA</Title>
+            <Name>Predicted</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -4710,58 +4072,13 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Predicted</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Observed</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
-      <Input>
-        <Name>Input</Name>
-        <ErrorMessage>Please select a file to use.</ErrorMessage>
-      </Input>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
@@ -4782,6 +4099,9 @@
       <Summary>
         <Name>Summary</Name>
       </Summary>
+      <SoilArbitrator>
+        <Name>SoilArbitrator</Name>
+      </SoilArbitrator>
       <Zone>
         <Name>Plantation</Name>
         <Soil>
@@ -5189,489 +4509,6 @@
         </MicroClimate>
         <Plant>
           <Name>Eucalyptus</Name>
-          <AccumulateFunction>
-            <Name>Age</Name>
-            <Constant>
-              <Name>day</Name>
-              <Value>0.0027397260273972603</Value>
-            </Constant>
-            <StartStageName>Planting</StartStageName>
-            <EndStageName>Old</EndStageName>
-          </AccumulateFunction>
-          <Phenology>
-            <Name>Phenology</Name>
-            <StageBasedInterpolation>
-              <Name>StageCode</Name>
-              <Stages>
-                <string>Planting</string>
-                <string>EndJuvenile</string>
-                <string>Maturity</string>
-                <string>Old</string>
-              </Stages>
-              <Codes>
-                <double>1</double>
-                <double>2</double>
-                <double>3</double>
-                <double>4</double>
-              </Codes>
-              <Proportional>true</Proportional>
-            </StageBasedInterpolation>
-            <Constant>
-              <Name>ThermalTime</Name>
-              <Value>1</Value>
-            </Constant>
-            <GenericPhase>
-              <Name>Juvenile</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>365</Value>
-              </Constant>
-              <Start>Planting</Start>
-              <End>EndJuvenile</End>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Mature</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>1825</Value>
-              </Constant>
-              <Start>EndJuvenile</Start>
-              <End>Maturity</End>
-            </GenericPhase>
-            <GenericPhase>
-              <Name>Declining</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Constant>
-                <Name>Target</Name>
-                <Value>27010</Value>
-              </Constant>
-              <Start>Maturity</Start>
-              <End>Old</End>
-            </GenericPhase>
-            <EndPhase>
-              <Name>Old</Name>
-              <Constant>
-                <Name>ThermalTime</Name>
-                <Value>1</Value>
-              </Constant>
-              <Start>Old</Start>
-              <End>Unused</End>
-            </EndPhase>
-            <Emerged>false</Emerged>
-          </Phenology>
-          <OrganArbitrator>
-            <Name>Arbitrator</Name>
-            <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-            <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
-          </OrganArbitrator>
-          <Summariser>
-            <Name>Summariser</Name>
-            <CompositeBiomass>
-              <Name>AboveGround</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>BelowGround</Name>
-              <Propertys>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Total</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Live</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Live</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>TotalLive</Name>
-              <Propertys>
-                <string>[Leaf].Live</string>
-                <string>[Stem].Live</string>
-                <string>[Root].Live</string>
-              </Propertys>
-            </CompositeBiomass>
-            <DivideFunction>
-              <Name>IndividualTreeLiveWt</Name>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Summariser.TotalLive.Wt</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </DivideFunction>
-            <CompositeBiomass>
-              <Name>TotalDead</Name>
-              <Propertys>
-                <string>[Leaf].Dead</string>
-                <string>[Stem].Dead</string>
-                <string>[Root].Dead</string>
-              </Propertys>
-            </CompositeBiomass>
-          </Summariser>
-          <TreeCanopy>
-            <Name>Leaf</Name>
-            <Biomass>
-              <Name>Live</Name>
-            </Biomass>
-            <Biomass>
-              <Name>Dead</Name>
-            </Biomass>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.015</Value>
-            </Constant>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.03</Value>
-            </Constant>
-            <MultiplyFunction>
-              <Name>InitialWtFunction</Name>
-              <Constant>
-                <Name>InitialLeafMass</Name>
-                <Value>3</Value>
-              </Constant>
-              <VariableReference>
-                <Name>Population</Name>
-                <VariableName>[Eucalyptus].Population</VariableName>
-              </VariableReference>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>LAIFunction</Name>
-              <LinearInterpolationFunction>
-                <Name>SpecificLeafArea</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1.5</double>
-                    <double>2</double>
-                    <double>2.04</double>
-                  </X>
-                  <Y>
-                    <double>0.016</double>
-                    <double>0.013</double>
-                    <double>0.011</double>
-                    <double>0.01</double>
-                    <double>0.008</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Phenology].StageCode.Value</XProperty>
-              </LinearInterpolationFunction>
-              <VariableReference>
-                <Name>LeafMass</Name>
-                <VariableName>[Leaf].Live.Wt</VariableName>
-              </VariableReference>
-            </MultiplyFunction>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <Constant>
-              <Name>DetachmentRateFunction</Name>
-              <Value>1</Value>
-            </Constant>
-            <PhaseLookup>
-              <Name>SenescenceRateFunction</Name>
-              <PhaseLookupValue>
-                <Name>Juvenile Foliage</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.0003</Value>
-                </Constant>
-                <Start>Planting</Start>
-                <End>EndJuvenile</End>
-              </PhaseLookupValue>
-              <PhaseLookupValue>
-                <Name>MatureFoliage</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.00274</Value>
-                </Constant>
-                <Start>EndJuvenile</Start>
-                <End>Old</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <PartitionFractionDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <LinearInterpolationFunction>
-                <Name>PartitionFraction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1000</double>
-                  </X>
-                  <Y>
-                    <double>0.48</double>
-                    <double>0.16</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Summariser].IndividualTreeLiveWt.Value</XProperty>
-              </LinearInterpolationFunction>
-            </PartitionFractionDemandFunction>
-            <RUEModel>
-              <Name>Photosynthesis</Name>
-              <Constant>
-                <Name>RUE</Name>
-                <Value>1.3</Value>
-              </Constant>
-              <RUECO2Function>
-                <Name>FCO2</Name>
-                <PhotosyntheticPathway>C3</PhotosyntheticPathway>
-              </RUECO2Function>
-              <LinearInterpolationFunction>
-                <Name>FN</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1.5</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Leaf].Fn</XProperty>
-              </LinearInterpolationFunction>
-              <WeightedTemperatureFunction>
-                <Name>FT</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>5</double>
-                    <double>20</double>
-                    <double>25</double>
-                    <double>35</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0</double>
-                  </Y>
-                </XYPairs>
-                <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
-              </WeightedTemperatureFunction>
-              <LinearInterpolationFunction>
-                <Name>FW</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>1.5</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Leaf].Fw</XProperty>
-              </LinearInterpolationFunction>
-              <LinearInterpolationFunction>
-                <Name>FVPD</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>0</double>
-                    <double>10</double>
-                    <double>50</double>
-                  </X>
-                  <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Photosynthesis].VPD</XProperty>
-              </LinearInterpolationFunction>
-            </RUEModel>
-            <_Height>0</_Height>
-            <_LAI>1.3834138867169348</_LAI>
-            <_LAIDead>0</_LAIDead>
-            <_Frgr>0</_Frgr>
-            <K>0.5</K>
-            <KDead>0</KDead>
-            <DeltaBiomass>7.7887580562389109</DeltaBiomass>
-            <LAI>1.3834138867169348</LAI>
-            <Height>0</Height>
-            <FRGR>0</FRGR>
-            <PotentialEP>0</PotentialEP>
-            <WaterAllocation>0</WaterAllocation>
-            <LAIDead>0</LAIDead>
-          </TreeCanopy>
-          <Root>
-            <Name>Root</Name>
-            <CompositeBiomass>
-              <Name>Live</Name>
-              <Propertys>
-                <string>[Root].LayerLive</string>
-              </Propertys>
-            </CompositeBiomass>
-            <CompositeBiomass>
-              <Name>Dead</Name>
-              <Propertys>
-                <string>[Root].LayerDead</string>
-              </Propertys>
-            </CompositeBiomass>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <AirTemperatureFunction>
-              <Name>TemperatureEffect</Name>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><title></title></head><body><p></p></body></html>]]></MemoText>
-              </Memo>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>26</double>
-                  <double>35</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-            </AirTemperatureFunction>
-            <Constant>
-              <Name>RootFrontVelocity</Name>
-              <Value>10</Value>
-            </Constant>
-            <Constant>
-              <Name>SenescenceRate</Name>
-              <Value>0.005</Value>
-            </Constant>
-            <PhaseLookup>
-              <Name>PartitionFraction</Name>
-              <PhaseLookupValue>
-                <Name>PhaseLookupValue</Name>
-                <Constant>
-                  <Name>Constant</Name>
-                  <Value>0.2</Value>
-                </Constant>
-                <Start>Planting</Start>
-                <End>Old</End>
-              </PhaseLookupValue>
-            </PhaseLookup>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.0041</Value>
-            </Constant>
-            <Constant>
-              <Name>MaxDailyNUptake</Name>
-              <Value>6</Value>
-            </Constant>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.004</Value>
-            </Constant>
-            <LinearInterpolationFunction>
-              <Name>KLModifier</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>0</double>
-                  <double>3</double>
-                </X>
-                <Y>
-                  <double>1</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Leaf].LAI</XProperty>
-            </LinearInterpolationFunction>
-            <InitialDM>5</InitialDM>
-            <SpecificRootLength>100000</SpecificRootLength>
-            <NuptakeSupply>0</NuptakeSupply>
-          </Root>
-          <GenericAboveGroundOrgan>
-            <Name>Stem</Name>
-            <Constant>
-              <Name>NReallocationFactor</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>NRetranslocationFactor</Name>
-              <Value>0.05</Value>
-            </Constant>
-            <PhaseBasedSwitch>
-              <Name>NitrogenDemandSwitch</Name>
-              <Start>Planting</Start>
-              <End>Old</End>
-            </PhaseBasedSwitch>
-            <Constant>
-              <Name>DMRetranslocationFactor</Name>
-              <Value>0</Value>
-            </Constant>
-            <Constant>
-              <Name>StructuralFraction</Name>
-              <Value>1</Value>
-            </Constant>
-            <PartitionFractionDemandFunction>
-              <Name>DMDemandFunction</Name>
-              <Constant>
-                <Name>PartitionFraction</Name>
-                <Value>0.2</Value>
-              </Constant>
-            </PartitionFractionDemandFunction>
-            <Constant>
-              <Name>MaximumNConc</Name>
-              <Value>0.0015</Value>
-            </Constant>
-            <Constant>
-              <Name>MinimumNConc</Name>
-              <Value>0.0014</Value>
-            </Constant>
-            <Constant>
-              <Name>DetachmentRateFunction</Name>
-              <Value>0</Value>
-            </Constant>
-            <Biomass>
-              <Name>Live</Name>
-            </Biomass>
-            <Biomass>
-              <Name>Dead</Name>
-            </Biomass>
-          </GenericAboveGroundOrgan>
-          <Cultivar>
-            <Name>EGrandis</Name>
-            <Alias>EGrandis</Alias>
-            <Command />
-          </Cultivar>
           <CropType>Eucalyptus</CropType>
         </Plant>
         <Manager>
@@ -7218,6 +6055,20 @@
         </Report>
         <Graph>
           <Name>Phenology</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Phenology.StageCode.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -7234,33 +6085,26 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Series 0</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Phenology.StageCode.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>RootDepth</Name>
+          <Series>
+            <Name>Series 0</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Depth</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -7277,33 +6121,40 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>LAI</Name>
           <Series>
-            <Title>Series 0</Title>
+            <Name>Series 0</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Depth</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LAI</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>None</Line>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAI</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -7320,467 +6171,368 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Biomass</Name>
           <Series>
-            <Title>Series 0</Title>
+            <Name>Leaf</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744320</ColourArgb>
             <Marker>None</Marker>
             <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
           <Series>
+            <Name>Stem</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>Root</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8355840</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>DeadLeaf</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-256</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Dead.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>N Uptake</Name>
+          <Series>
+            <Name>N Uptake</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.NSupplyUptake</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>N Demand</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Arbitrator.NDemand</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>NO3</Name>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(1)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(2)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>Series</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8355840</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Soil.NO3N(3)</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>Plant N</Name>
+          <Series>
+            <Name>Leaf</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744320</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.Live.N</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>Stem</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16711936</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Stem.Live.N</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>Root</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-8355840</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Root.Live.N</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>SLA Function</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>IndividualTreeLiveWt</Name>
+          <Series>
+            <Name>SLA</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>X axis title 2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Y axis title</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16744448</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <TableName>Report</TableName>
+            <XFieldName>Eucalyptus.Age.Value</XFieldName>
+            <YFieldName>Eucalyptus.Summariser.AboveGround.Wt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16744448</ColourArgb>
             <Marker>FilledCircle</Marker>
             <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Eucalyptus.Leaf.LAI</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
+            <TableName>Input</TableName>
+            <XFieldName>Age</XFieldName>
+            <YFieldName>Summariser.AboveGround.Wt</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <Cumulative>false</Cumulative>
           </Series>
-          <LegendPosition>TopRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Biomass</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>Leaf</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Stem</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Root</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>DeadLeaf</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-256</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Dead.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>N Uptake</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>N Uptake</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.NSupplyUptake</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>N Demand</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Arbitrator.NDemand</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>BottomRight</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>NO3</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(1)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(2)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Soil.NO3N(3)</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Plant N</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>Leaf</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744320</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Stem</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16711936</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Stem.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Root</Title>
-            <Type>Line</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-8355840</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Root.Live.N</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>SLA Function</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>SLA</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>IndividualTreeLiveWt</Name>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>X axis title 2</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title>Y axis title</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Series>
-            <Title>SLA</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Clock.Today</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.IndividualTreeLiveWt.Value</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>AboveGroundWt</Name>
           <Axis>
             <Type>Bottom</Type>
             <Title>Plantation Age (y)</Title>
@@ -7797,58 +6549,13 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <Series>
-            <Title>Predicted</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>None</Marker>
-            <Line>Solid</Line>
-            <X>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Age.Value</FieldName>
-            </X>
-            <Y>
-              <TableName>Report</TableName>
-              <FieldName>Eucalyptus.Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
-          <Series>
-            <Title>Observed</Title>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
-            <Marker>FilledCircle</Marker>
-            <Line>None</Line>
-            <X>
-              <TableName>Input</TableName>
-              <FieldName>Age</FieldName>
-            </X>
-            <Y>
-              <TableName>Input</TableName>
-              <FieldName>Summariser.AboveGround.Wt</FieldName>
-            </Y>
-            <ShowRegressionLine>false</ShowRegressionLine>
-            <ShowInLegend>false</ShowInLegend>
-            <Cumulative>false</Cumulative>
-          </Series>
           <LegendPosition>TopLeft</LegendPosition>
-          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Area>0</Area>
         <Slope>0</Slope>
       </Zone>
-      <Input>
-        <Name>Input</Name>
-        <ErrorMessage>Please select a file to use.</ErrorMessage>
-      </Input>
       <Area>0</Area>
       <Slope>0</Slope>
     </Simulation>
