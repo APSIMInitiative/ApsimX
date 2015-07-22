@@ -1057,24 +1057,6 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].MinimumNConc.Value = 0.008</Command>
         <Command>[Root].MaximumNConc.Value = 0.008</Command>
       </Cultivar>
-      <MinimumFunction>
-        <Name>FN</Name>
-        <DivideFunction>
-          <Name>NsupplyDemandRatio</Name>
-          <VariableReference>
-            <Name>Nsupply</Name>
-            <VariableName>[Arbitrator].NSupply</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>NDemand</Name>
-            <VariableName>[Arbitrator].NDemand</VariableName>
-          </VariableReference>
-        </DivideFunction>
-        <Constant>
-          <Name>Maximum</Name>
-          <Value>1</Value>
-        </Constant>
-      </MinimumFunction>
       <CropType>SLURP</CropType>
     </Plant>
   </Replacements>
@@ -2119,7 +2101,7 @@ namespace Models
           <string>[AutomaticIrrigation].Script.SeasonIsOpen</string>
           <string>[AutomaticIrrigation].Script.EndDate</string>
           <string>[AutomaticIrrigation].Script.TodayYear</string>
-          <string>[MCSP].FN.Value</string>
+          <string>[MCSP].Arbitrator.FN</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -3492,7 +3474,7 @@ namespace Models
         </X>
         <Y>
           <TableName>Report</TableName>
-          <FieldName>MCSP.FN.Value</FieldName>
+          <FieldName>MCSP.Arbitrator.FN</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
