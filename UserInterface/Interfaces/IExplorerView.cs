@@ -233,6 +233,11 @@ namespace UserInterface.Interfaces
         /// Gets or sets the width of the tree view.
         /// </summary>
         Int32 TreeWidth { get; set; }
+
+        /// <summary>
+        /// Close down APSIMX user interface.
+        /// </summary>
+        void Close();
     }
 
 
