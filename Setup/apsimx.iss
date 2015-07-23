@@ -10,7 +10,7 @@
 AppName=APSIM
 AppVerName=APSIM v{#AppVerNo}
 AppPublisherURL=http://www.apsim.au
-OutputBaseFilename=Apsim{#AppVerNo} Setup
+OutputBaseFilename=APSIMSetup
 VersionInfoVersion={#AppVerNo}
 PrivilegesRequired=poweruser
 ;LicenseFile=..\license.txt
