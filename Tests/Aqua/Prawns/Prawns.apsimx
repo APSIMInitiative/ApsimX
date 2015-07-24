@@ -214,7 +214,7 @@ namespace Models
           <Script>
             <added_date>05-jan</added_date>
             <FeedName>TestFeed</FeedName>
-            <DryMatter>100</DryMatter>
+            <DryMatter>400</DryMatter>
             <Nitrogen>20</Nitrogen>
             <DigestibleEnergy>3000</DigestibleEnergy>
           </Script>
@@ -412,8 +412,6 @@ namespace Models
           <string>[FoodInPond].Food.TotalDM as FoodDM</string>
           <string>[FoodInPond].Food.TotalN as FoodN</string>
           <string>[FoodInPond].Food.TotalDE as FoodDE </string>
-          <string>[FoodInPond].Food.FeedNames as FoodNames</string>
-          <string>[FoodInPond].Food.FeedDMs as FoodDEs</string>
           <string>[Prawns].NumOfPrawns as Prawns</string>
           <string>[Prawns].LiveWeight as Weight</string>
           <string>[Prawns].Nitrogen as NWeight</string>
@@ -421,6 +419,8 @@ namespace Models
           <string>[Prawns].ConsumedDM as Consumed</string>
           <string>[Prawns].FaecesDM as Faeces</string>
           <string>[Prawns].ExcretedNH4 as Ammonium</string>
+          <string>[FoodInPond].Food.FeedNames as FoodNames</string>
+          <string>[FoodInPond].Food.FeedDMs as FoodDEs</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
