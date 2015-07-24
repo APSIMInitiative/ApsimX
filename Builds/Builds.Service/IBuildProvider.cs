@@ -22,12 +22,30 @@ namespace BuildService
         void AddBuild(int pullRequestNumber, int issueID, string issueTitle);
 
         /// <summary>
-        /// Gets a list of possible upgrades since the specified pull request.
+        /// Gets a list of possible upgrades since the specified issue number.
         /// </summary>
-        /// <param name="pullRequestID">The pull request.</param>
-        /// <returns>The list of merged pull requests.</returns>
+        /// <param name="issueNumber">The issue number.</param>
+        /// <returns>The list of possible upgrades.</returns>
         [OperationContract]
-        List<Upgrade> GetUpgradesSincePullRequest(int pullRequestID);
+        List<Upgrade> GetUpgradesSinceIssue(int issueNumber);
+
+        /// <summary>
+        /// Add a upgrade registration into the database.
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="organisation"></param>
+        /// <param name="address1"></param>
+        /// <param name="address2"></param>
+        /// <param name="city"></param>
+        /// <param name="state"></param>
+        /// <param name="postcode"></param>
+        /// <param name="country"></param>
+        /// <param name="email"></param>
+        /// <param name="product"></param>
+        [OperationContract]
+        void RegisterUpgrade(string firstName, string lastName, string organisation, string address1, string address2,
+                     string city, string state, string postcode, string country, string email, string product);
 
     }
 
@@ -37,7 +55,7 @@ namespace BuildService
     public class Upgrade
     {
         public DateTime ReleaseDate { get; set; }
-        public int pullRequest { get; set; }
+        public int issueNumber { get; set; }
         public string IssueTitle { get; set; }
         public string IssueURL { get; set; }
         public string ReleaseURL { get; set; }

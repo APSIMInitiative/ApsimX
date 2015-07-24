@@ -11,6 +11,8 @@ namespace UserInterface.Presenters
     using Models.Core;
     using System.Diagnostics;
     using global::UserInterface.Forms;
+    using System.Windows.Forms;
+
 
 
     /// <summary>
@@ -108,8 +110,14 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Upgrade")]
         public void OnUpgrade(object sender, EventArgs e)
         {
-            UpgradeForm form = new UpgradeForm(explorerPresenter);
-            form.Show();
+            Version version = new Version(Application.ProductVersion);
+            if (version.Revision == 0)
+                explorerPresenter.ShowMessage("You are on a custom build. You cannot upgrade.", DataStore.ErrorLevel.Error);
+            else
+            {
+                UpgradeForm form = new UpgradeForm(explorerPresenter);
+                form.Show();
+            }
         }
 
     }

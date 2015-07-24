@@ -75,11 +75,18 @@ namespace Updater
             Process installProcess = Process.Start(Path.Combine(Path.GetTempPath(), "ApsimSetup.exe"), "/SILENT");
             installProcess.WaitForExit();
 
+            // Write to the downloads database.
+
             // Run the user interface.
             string userInterface = Path.Combine(newInstallDirectory, "Bin", "UserInterface.exe");
             if (!File.Exists(userInterface))
                 throw new Exception("Cannot find user interface: " + userInterface);
             Process.Start(userInterface);
+        }
+
+        private static void UpdateDB()
+        {
+
         }
     }
 }

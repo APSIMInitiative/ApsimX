@@ -1595,6 +1595,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>SWTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1609,6 +1610,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>SWTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1623,6 +1625,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>SWTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note: Soil water levels are identical under single or split populations.</Caption>
       <Axis>
@@ -1660,6 +1663,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1674,6 +1678,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1688,6 +1693,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note: Soil nitrate levels are identical under single or split populations.</Caption>
       <Axis>
@@ -1725,6 +1731,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1739,6 +1746,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1753,6 +1761,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note: Soil ammonium levels are identical under single or split populations.</Caption>
       <Axis>
@@ -1790,6 +1799,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>wheat.PotentialEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1804,6 +1814,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>TotalPEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1818,6 +1829,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>TotalPEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note that potential EP is identical across single or split populations.  This shows that the calculations in the Microclimate model are effective in handling split populations also.</Caption>
       <Axis>
@@ -1855,6 +1867,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>wheat.EP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1869,6 +1882,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>TotalEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1883,6 +1897,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>TotalEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note that actual EP summed across single or split populations is identical for each simulation.</Caption>
       <Axis>

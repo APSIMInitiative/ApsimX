@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="5f803d57-8eb8-44ec-b442-b32d06dfe311" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c7b33607-d47c-4a5a-a94e-24763631a474" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -21,11 +21,11 @@
     <MetadataSource Address="http://bob.apsim.info/APSIM.Build.Service/Builds.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Builds.disco" MetadataType="Disco" ID="62d5e497-d4db-43ed-95a9-99ad4744154b" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?disco" />
-    <MetadataFile FileName="Builds.xsd" MetadataType="Schema" ID="a88bbb70-0af6-4353-aa54-53c14b72ac90" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd0" />
-    <MetadataFile FileName="Builds1.xsd" MetadataType="Schema" ID="6224424d-fc0b-4c22-b58f-e76c72009e36" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd2" />
-    <MetadataFile FileName="Builds.wsdl" MetadataType="Wsdl" ID="62e2425e-771c-4753-b4e0-fc4e63a99df5" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?wsdl" />
-    <MetadataFile FileName="Builds2.xsd" MetadataType="Schema" ID="c373b6e7-e10a-4243-8b16-d73c8ee1d001" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd1" />
+    <MetadataFile FileName="Builds.disco" MetadataType="Disco" ID="741b6e7d-5999-4a5e-adc6-6e31d6d2a7fc" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?disco" />
+    <MetadataFile FileName="Builds.xsd" MetadataType="Schema" ID="69938927-4d26-4e71-bf43-522f22ba5b16" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd0" />
+    <MetadataFile FileName="Builds1.xsd" MetadataType="Schema" ID="157db75f-4bc5-49f1-bd50-fa7783491084" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd2" />
+    <MetadataFile FileName="Builds.wsdl" MetadataType="Wsdl" ID="f2754734-df85-405d-b0e8-8501480120ad" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?wsdl" />
+    <MetadataFile FileName="Builds2.xsd" MetadataType="Schema" ID="880f69d6-b9c3-4a59-9b79-efffb8df24ac" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -57,58 +57,126 @@ namespace BuildService
             command.ExecuteNonQuery();
         }
 
-
         /// <summary>
-        /// Gets a list of possible upgrades since the specified pull request.
+        /// Gets a list of possible upgrades since the specified issue number.
         /// </summary>
-        /// <param name="pullRequestID">The pull request.</param>
-        /// <returns>The list of merged pull requests.</returns>
-        public List<Upgrade> GetUpgradesSincePullRequest(int pullRequestID)
+        /// <param name="issueNumber">The issue number.</param>
+        /// <returns>The list of possible upgrades.</returns>
+        public List<Upgrade> GetUpgradesSinceIssue(int issueNumber)
         {
-            string sql = "SELECT * FROM ApsimXBuilds " +
-                         "WHERE PullRequestID > " + pullRequestID +
-                         " ORDER BY PullRequestID DESC";
-
             List<Upgrade> upgrades = new List<Upgrade>();
 
-            SqlCommand command = new SqlCommand(sql, connection);
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            DateTime issueResolvedDate = GetIssueResolvedDate(issueNumber);
+            if (issueResolvedDate != DateTime.MinValue)
             {
-                int pullID = (int)reader["PullRequestID"];
-                DateTime date = (DateTime)reader["Date"];
+                string sql = "SELECT * FROM ApsimXBuilds " +
+                             "WHERE Date > " + string.Format("#{0:yyyy-MM-dd}#", issueResolvedDate) +
+                             " ORDER BY Date DESC";
 
-                if (IsMerged(pullID))
+
+                SqlCommand command = new SqlCommand(sql, connection);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    Upgrade upgrade = new Upgrade();
-                    upgrade.ReleaseDate = (DateTime)reader["Date"];
-                    upgrade.pullRequest = pullID;
-                    upgrade.IssueTitle = (string)reader["IssueTitle"];
-                    upgrade.IssueURL = @"https://github.com/APSIMInitiative/ApsimX/issues/" + (int)reader["IssueNumber"];
-                    upgrade.ReleaseURL = @"http://bob.apsim.info/ApsimXFiles/" + pullID + "/APSIMSetup.exe";
+                    int pullID = (int)reader["PullRequestID"];
+                    DateTime date = (DateTime)reader["Date"];
 
-                    upgrades.Add(upgrade);
+                    if (IsClosed(pullID))
+                    {
+                        int buildIssueNumber = (int)reader["IssueNumber"];
+
+                        Upgrade upgrade = new Upgrade();
+                        upgrade.ReleaseDate = (DateTime)reader["Date"];
+                        upgrade.issueNumber = buildIssueNumber;
+                        upgrade.IssueTitle = (string)reader["IssueTitle"];
+                        upgrade.IssueURL = @"https://github.com/APSIMInitiative/ApsimX/issues/" + buildIssueNumber;
+                        upgrade.ReleaseURL = @"http://bob.apsim.info/ApsimXFiles/" + buildIssueNumber + "/APSIMSetup.exe";
+
+                        upgrades.Add(upgrade);
+                    }
                 }
+                reader.Close();
             }
-            reader.Close();
 
             return upgrades;
         }
 
         /// <summary>
-        /// Return true if pull request has been merged.
+        /// Return the date the specified issue was resolved.
         /// </summary>
-        /// <param name="pullID">The pull request ID.</param>
-        /// <returns>true if pull request was merged.</returns>
-        private bool IsMerged(int pullID)
+        /// <param name="issueNumber">The issue number</param>
+        /// <returns>The date.</returns>
+        private DateTime GetIssueResolvedDate(int issueNumber)
+        {
+            DateTime resolvedDate = DateTime.MinValue;
+
+            string sql = "SELECT * FROM ApsimXBuilds " +
+                         "WHERE IssueNumber = " + issueNumber;
+            SqlCommand command = new SqlCommand(sql, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+                resolvedDate = (DateTime)reader["Date"];
+            reader.Close();
+
+            return resolvedDate;
+        }
+
+        /// <summary>
+        /// Add a upgrade registration into the database.
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="organisation"></param>
+        /// <param name="address1"></param>
+        /// <param name="address2"></param>
+        /// <param name="city"></param>
+        /// <param name="state"></param>
+        /// <param name="postcode"></param>
+        /// <param name="country"></param>
+        /// <param name="email"></param>
+        /// <param name="product"></param>
+        public void RegisterUpgrade(string firstName, string lastName, string organisation, string address1, string address2,
+                    string city, string state, string postcode, string country, string email, string product)
+        {
+            string connectionString = System.IO.File.ReadAllText(@"C:\inetpub\wwwroot\dbConnect.txt") + ";Database=ProductRegistrations";
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            string SQL = "INSERT INTO Registrations (Date, FirstName, LastName, Organisation, Address1, Address2, City, State, Postcode, Country, Email, Product) " +
+                        "VALUES (@Date, @FirstName, @LastName, @Organisation, @Address1, @Address2, @City, @State, @Postcode, @Country, @Email, @Product)";
+
+            SqlCommand command = new SqlCommand(SQL, connection);
+            command.Parameters.Add(new SqlParameter("@Date", DateTime.Now));
+            command.Parameters.Add(new SqlParameter("@FirstName", firstName));
+            command.Parameters.Add(new SqlParameter("@LastName", lastName));
+            command.Parameters.Add(new SqlParameter("@Organisation", organisation));
+            command.Parameters.Add(new SqlParameter("@Address1", address1));
+            command.Parameters.Add(new SqlParameter("@Address2", address2));
+            command.Parameters.Add(new SqlParameter("@City", city));
+            command.Parameters.Add(new SqlParameter("@State", state));
+            command.Parameters.Add(new SqlParameter("@Postcode", postcode));
+            command.Parameters.Add(new SqlParameter("@Country", country));
+            command.Parameters.Add(new SqlParameter("@Email", email));
+            command.Parameters.Add(new SqlParameter("@Product", product));
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
+
+        /// <summary>
+        /// Return true if issue has been closed.
+        /// </summary>
+        /// <param name="issueID">The issue ID.</param>
+        /// <returns>true if issue is closed.</returns>
+        private bool IsClosed(int issueID)
         {
             GitHubClient github = new GitHubClient(new ProductHeaderValue("ApsimX"));
             string token = File.ReadAllText(@"C:\inetpub\wwwroot\GitHubToken.txt");
             github.Credentials = new Credentials(token);
-            Task<PullRequest> pullRequestTask = github.PullRequest.Get("APSIMInitiative", "ApsimX", pullID);
-            pullRequestTask.Wait();
-            PullRequest pullRequest = pullRequestTask.Result;
-            return (pullRequest != null && pullRequest.Merged);
+            Task<Issue> issueTask = github.Issue.Get("APSIMInitiative", "ApsimX", issueID);
+            issueTask.Wait();
+            Issue issue = issueTask.Result;
+            return (issue != null && issue.State == ItemState.Closed);
         }
         
         /// <summary>

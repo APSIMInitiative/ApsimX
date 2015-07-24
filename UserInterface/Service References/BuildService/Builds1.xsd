@@ -12,7 +12,7 @@
       <xs:element minOccurs="0" name="IssueURL" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ReleaseDate" type="xs:dateTime" />
       <xs:element minOccurs="0" name="ReleaseURL" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="pullRequest" type="xs:int" />
+      <xs:element minOccurs="0" name="issueNumber" type="xs:int" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Upgrade" nillable="true" type="tns:Upgrade" />

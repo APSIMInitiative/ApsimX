@@ -13,20 +13,30 @@
   <wsdl:message name="IBuildProvider_AddBuild_OutputMessage">
     <wsdl:part name="parameters" element="tns:AddBuildResponse" />
   </wsdl:message>
-  <wsdl:message name="IBuildProvider_GetUpgradesSincePullRequest_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetUpgradesSincePullRequest" />
+  <wsdl:message name="IBuildProvider_GetUpgradesSinceIssue_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUpgradesSinceIssue" />
   </wsdl:message>
-  <wsdl:message name="IBuildProvider_GetUpgradesSincePullRequest_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetUpgradesSincePullRequestResponse" />
+  <wsdl:message name="IBuildProvider_GetUpgradesSinceIssue_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUpgradesSinceIssueResponse" />
+  </wsdl:message>
+  <wsdl:message name="IBuildProvider_RegisterUpgrade_InputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterUpgrade" />
+  </wsdl:message>
+  <wsdl:message name="IBuildProvider_RegisterUpgrade_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterUpgradeResponse" />
   </wsdl:message>
   <wsdl:portType name="IBuildProvider">
     <wsdl:operation name="AddBuild">
       <wsdl:input wsaw:Action="http://tempuri.org/IBuildProvider/AddBuild" message="tns:IBuildProvider_AddBuild_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IBuildProvider/AddBuildResponse" message="tns:IBuildProvider_AddBuild_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetUpgradesSincePullRequest">
-      <wsdl:input wsaw:Action="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequest" message="tns:IBuildProvider_GetUpgradesSincePullRequest_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequestResponse" message="tns:IBuildProvider_GetUpgradesSincePullRequest_OutputMessage" />
+    <wsdl:operation name="GetUpgradesSinceIssue">
+      <wsdl:input wsaw:Action="http://tempuri.org/IBuildProvider/GetUpgradesSinceIssue" message="tns:IBuildProvider_GetUpgradesSinceIssue_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IBuildProvider/GetUpgradesSinceIssueResponse" message="tns:IBuildProvider_GetUpgradesSinceIssue_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUpgrade">
+      <wsdl:input wsaw:Action="http://tempuri.org/IBuildProvider/RegisterUpgrade" message="tns:IBuildProvider_RegisterUpgrade_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IBuildProvider/RegisterUpgradeResponse" message="tns:IBuildProvider_RegisterUpgrade_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IBuildProvider" type="tns:IBuildProvider">
@@ -40,8 +50,17 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetUpgradesSincePullRequest">
-      <soap:operation soapAction="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequest" style="document" />
+    <wsdl:operation name="GetUpgradesSinceIssue">
+      <soap:operation soapAction="http://tempuri.org/IBuildProvider/GetUpgradesSinceIssue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUpgrade">
+      <soap:operation soapAction="http://tempuri.org/IBuildProvider/RegisterUpgrade" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

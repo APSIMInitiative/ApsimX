@@ -31,6 +31,9 @@ namespace Builds.Client
 
                         if (args[1] == "/GetIssueID")
                         {
+                            if (issueID == 0)
+                                throw new Exception("Cannot find issue number in pull request: " + pullRequestID);
+
                             Console.Write(issueID);
                         }
                         else if (args[1] == "/AddBuild")
@@ -76,15 +79,12 @@ namespace Builds.Client
             Task<PullRequest> pullRequestTask = github.PullRequest.Get("APSIMInitiative", "ApsimX", pullID);
             pullRequestTask.Wait();
             PullRequest pullRequest = pullRequestTask.Result;
-            if (pullRequest.Merged)
+            issueID = GetIssueID(pullRequest.Body);
+            if (issueID != -1)
             {
-                issueID = GetIssueID(pullRequest.Body);
-                if (issueID != -1)
-                {
-                    Task<Issue> issueTask = github.Issue.Get("APSIMInitiative", "ApsimX", issueID);
-                    issueTask.Wait();
-                    issueTitle = issueTask.Result.Title;
-                }
+                Task<Issue> issueTask = github.Issue.Get("APSIMInitiative", "ApsimX", issueID);
+                issueTask.Wait();
+                issueTitle = issueTask.Result.Title;
             }
         }
 
@@ -96,6 +96,9 @@ namespace Builds.Client
         private static int GetIssueID(string pullRequestBody)
         {
             int posResolves = pullRequestBody.IndexOf("Resolves", StringComparison.InvariantCultureIgnoreCase);
+            if (posResolves == -1)
+                posResolves = pullRequestBody.IndexOf("Working on", StringComparison.InvariantCultureIgnoreCase);
+
             if (posResolves != -1)
             {
                 int posHash = pullRequestBody.IndexOf("#", posResolves);
@@ -106,6 +109,8 @@ namespace Builds.Client
                     int posSpace = pullRequestBody.IndexOfAny(new char[] { ' ', '\r', '\n',
                                                                            '\t', '.', ';',
                                                                            ':', '+', '&' }, posHash);
+                    if (posSpace == -1)
+                        posSpace = pullRequestBody.Length;
                     if (posSpace != -1)
                         if (Int32.TryParse(pullRequestBody.Substring(posHash + 1, posSpace - posHash - 1), out issueID))
                             return issueID;
