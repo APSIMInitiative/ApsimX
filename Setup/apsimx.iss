@@ -163,9 +163,8 @@ Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 [Files]
 Source: ..\Bin\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
-
 Source: changes.html; DestDir: {app}\Documentation;
-;Source: ..\Documentation\Apsim tutorial.pdf; DestDir: {app}\Documentation;
+Source: ..\Bin\UserInterface.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
 
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
@@ -188,4 +187,4 @@ Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\UserInterface.exe; T
 
 [Run]
 Filename: {app}\Documentation\changes.html; Description: View the CHANGES file; Flags: postinstall shellexec skipifsilent
-Filename: {app}\Bin\UserInterface.exe; Description: Launch Apsim; Flags: postinstall nowait skipifsilent
+Filename: {app}\Bin\UserInterface.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent

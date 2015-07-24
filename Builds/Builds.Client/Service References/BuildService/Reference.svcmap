@@ -24,6 +24,7 @@
   <Metadata>
     <MetadataFile FileName="Builds.disco" MetadataType="Disco" ID="f585e73e-db98-4837-9052-1183f682904d" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?disco" />
     <MetadataFile FileName="Builds.xsd" MetadataType="Schema" ID="8362725e-49f3-47c1-922a-71411a214199" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd0" />
+    <MetadataFile FileName="Builds2.xsd" MetadataType="Schema" ID="bcc30a7c-378a-4940-a4c4-c1f8fa913c8d" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd2" />
     <MetadataFile FileName="Builds.wsdl" MetadataType="Wsdl" ID="45916991-95aa-4dbe-abc9-f1282ccaa26d" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?wsdl" />
     <MetadataFile FileName="Builds1.xsd" MetadataType="Schema" ID="ca02bbef-5dcd-43db-8aa4-57548663e5eb" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd1" />
   </Metadata>

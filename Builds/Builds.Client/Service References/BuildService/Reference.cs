@@ -9,17 +9,134 @@
 //------------------------------------------------------------------------------
 
 namespace Builds.Client.BuildService {
+    using System.Runtime.Serialization;
+    using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Upgrade", Namespace="http://schemas.datacontract.org/2004/07/BuildService")]
+    [System.SerializableAttribute()]
+    public partial class Upgrade : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IssueTitleField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IssueURLField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime ReleaseDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ReleaseURLField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int pullRequestField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IssueTitle {
+            get {
+                return this.IssueTitleField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IssueTitleField, value) != true)) {
+                    this.IssueTitleField = value;
+                    this.RaisePropertyChanged("IssueTitle");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IssueURL {
+            get {
+                return this.IssueURLField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IssueURLField, value) != true)) {
+                    this.IssueURLField = value;
+                    this.RaisePropertyChanged("IssueURL");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime ReleaseDate {
+            get {
+                return this.ReleaseDateField;
+            }
+            set {
+                if ((this.ReleaseDateField.Equals(value) != true)) {
+                    this.ReleaseDateField = value;
+                    this.RaisePropertyChanged("ReleaseDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ReleaseURL {
+            get {
+                return this.ReleaseURLField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ReleaseURLField, value) != true)) {
+                    this.ReleaseURLField = value;
+                    this.RaisePropertyChanged("ReleaseURL");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int pullRequest {
+            get {
+                return this.pullRequestField;
+            }
+            set {
+                if ((this.pullRequestField.Equals(value) != true)) {
+                    this.pullRequestField = value;
+                    this.RaisePropertyChanged("pullRequest");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="BuildService.IBuildProvider")]
     public interface IBuildProvider {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBuildProvider/AddBuild", ReplyAction="http://tempuri.org/IBuildProvider/AddBuildResponse")]
-        void AddBuild(int pullRequestNumber);
+        void AddBuild(int pullRequestNumber, int issueID, string issueTitle);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBuildProvider/AddBuild", ReplyAction="http://tempuri.org/IBuildProvider/AddBuildResponse")]
-        System.Threading.Tasks.Task AddBuildAsync(int pullRequestNumber);
+        System.Threading.Tasks.Task AddBuildAsync(int pullRequestNumber, int issueID, string issueTitle);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequest", ReplyAction="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequestResponse")]
+        Builds.Client.BuildService.Upgrade[] GetUpgradesSincePullRequest(int pullRequestID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequest", ReplyAction="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequestResponse")]
+        System.Threading.Tasks.Task<Builds.Client.BuildService.Upgrade[]> GetUpgradesSincePullRequestAsync(int pullRequestID);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,12 +166,20 @@ namespace Builds.Client.BuildService {
                 base(binding, remoteAddress) {
         }
         
-        public void AddBuild(int pullRequestNumber) {
-            base.Channel.AddBuild(pullRequestNumber);
+        public void AddBuild(int pullRequestNumber, int issueID, string issueTitle) {
+            base.Channel.AddBuild(pullRequestNumber, issueID, issueTitle);
         }
         
-        public System.Threading.Tasks.Task AddBuildAsync(int pullRequestNumber) {
-            return base.Channel.AddBuildAsync(pullRequestNumber);
+        public System.Threading.Tasks.Task AddBuildAsync(int pullRequestNumber, int issueID, string issueTitle) {
+            return base.Channel.AddBuildAsync(pullRequestNumber, issueID, issueTitle);
+        }
+        
+        public Builds.Client.BuildService.Upgrade[] GetUpgradesSincePullRequest(int pullRequestID) {
+            return base.Channel.GetUpgradesSincePullRequest(pullRequestID);
+        }
+        
+        public System.Threading.Tasks.Task<Builds.Client.BuildService.Upgrade[]> GetUpgradesSincePullRequestAsync(int pullRequestID) {
+            return base.Channel.GetUpgradesSincePullRequestAsync(pullRequestID);
         }
     }
 }
