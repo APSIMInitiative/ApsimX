@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Fluxes.cs" />
     <Compile Include="MVG.cs" />
     <Compile Include="Program.cs" />

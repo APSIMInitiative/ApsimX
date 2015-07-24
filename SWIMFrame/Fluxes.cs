@@ -38,11 +38,6 @@ namespace SWIMFrame
         static double[,] qi5 = new double[mx, mx];
         static FluxEnd pe = new FluxEnd();
 
-        public Fluxes()
-        {
-            ft.fend = new FluxEnd[2];
-        }
-
         public static void FluxTable(double dz, SoilProps sp)
         {
             // Generates a flux table for use by other programs.
@@ -52,9 +47,14 @@ namespace SWIMFrame
 
             //diags - timer start here
 
+            ft.fend = new FluxEnd[2];
             nu = sp.nc;
-            ah = sp.hc; aK = sp.Kc; aphi = sp.phic; aS = sp.Sc;
-            aKco = sp.Kco; aphico = sp.phico;
+            Array.Copy(sp.hc, ah, sp.hc.Length);
+            Array.Copy(sp.Kc, aK, sp.Kc.Length);
+            Array.Copy(sp.phic, aphi, sp.phic.Length);
+            Array.Copy(sp.Sc, aS, sp.Sc.Length);
+            Array.Copy(sp.Kco, aKco, sp.Kco.Length);
+            Array.Copy(sp.phico, aphico, sp.phico.Length);
             he = sp.he; Ks = sp.ks;
 
             // Get K values for Simpson's integration rule in subroutine odef.
@@ -67,11 +67,12 @@ namespace SWIMFrame
             // Get fluxes aq(1,:) for values aphi[i] at bottom (wet), aphi(1) at top (dry).
             // These are used to select suitable phi values for flux table.
             nit = 0;
-            aq[1, 1] = aK[1]; // q=K here because dphi/dz=0
+            aq[0, 0] = aK[0]; // q=K here because dphi/dz=0
             dh = 2.0; // for getting phi in saturated region
-            q1 = (aphi[1] - aphi[2]) / dz; // q1 is initial estimate
-            aq[1, 2] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
+            q1 = (aphi[0] - aphi[1]) / dz; // q1 is initial estimate
+            aq[0, 1] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
             for (j = 2; j < nu + 20; j++) // 20*dh should be far enough for small curvature in (phi,q)
+            {
                 if (j > nu) // part satn - set h, K and phi
                 {
                     ah[j] = ah[j - 1] + dh * (j - nu);
@@ -79,14 +80,15 @@ namespace SWIMFrame
                     aphi[j] = aphi[j - 1] + Ks * dh * (j - nu);
                 }
 
-            // get approx q from linear extrapolation
-            q1 = aq[1, j - 1] + (aphi[j] - aphi[j - 1]) * (aq[1, j - 1] - aq[1, j - 2]) / (aphi[j - 1] - aphi[j - 2]);
-            aq[1, j] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
-            nt = j;
-            ns = nt - nu;
-            if (j > nu)
-                if (-(aphi[j] - aphi[j - 1]) / (aq[1, j] - aq[1, j - 1]) < (1 + rerr) * dz)
-                    Environment.Exit(0);
+                // get approx q from linear extrapolation
+                q1 = aq[0, j - 1] + (aphi[j] - aphi[j - 1]) * (aq[0, j - 1] - aq[0, j - 2]) / (aphi[j - 1] - aphi[j - 2]);
+                aq[0, j] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
+                nt = j;
+                ns = nt - nu;
+                if (j > nu)
+                    if (-(aphi[j] - aphi[j - 1]) / (aq[1, j] - aq[1, j - 1]) < (1 + rerr) * dz)
+                        Environment.Exit(0);
+            }
 
             // Get phi values phif for flux table using curvature of q vs phi.
             // rerr and cfac determine spacings of phif.
@@ -100,21 +102,21 @@ namespace SWIMFrame
                 iphif[idx] = 1 + nu - iphifReverse[idx]; // locations of phif in aphi
             aphiV = Vector<double>.Build.DenseOfArray(aphi); //may not need to do this; haevn't check in aphi has changed since last use.
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
-            re = curv(1 + ns, aphiV.SubVector(nu, nt - nu).ToArray(), aqM.Column(1).SubVector(nu, nt - nu).ToArray()); // for sat phi
+            re = curv(1 + ns, aphi.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
             indices(ns - 1, re, ns, cfac, out nfs, ref ifs);
 
-            for (int idx = nphif; i < nphif + nfs - 2; idx++)
+            for (int idx = nphif; idx < nphif + nfs - 2; idx++)
                 iphif[idx] = nu - 1 + ifs[idx];
             nfu = nphif; // no. of unsat phif
             nphif = nphif + nfs - 1;
-            for (int idx = 0; i < nphif; idx++)
+            for (int idx = 0; idx < nphif; idx++)
             {
                 phif[idx] = aphi[iphif[idx]];
                 qf[0, idx] = aq[0, iphif[idx]];
             }
             // Get rest of fluxes
             // First for lower end wetter
-            for (j = 1; j < nphif; j++)
+            for (j = 1; j < nphif - 1; j++)
                 for (i = 1; i < j; i++)
                 {
                     q1 = qf[i - 1, j];
@@ -123,7 +125,7 @@ namespace SWIMFrame
                     qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Then for upper end wetter
-            for (i = 1; i < nphif; i++)
+            for (i = 1; i < nphif - 1; i++)
                 for (j = i - 1; j > 1; j--)
                 {
                     q1 = qf[i, j + 1];
@@ -133,7 +135,7 @@ namespace SWIMFrame
                 }
             // Use of flux table involves only linear interpolation, so gain accuracy
             // by providing fluxes in between using quadratic interpolation.
-            ni = nphif - 1;
+            ni = nphif - 2;
             for (int idx = 0; idx < ni; idx++)
                 phii[idx] = 0.5 * (phif[idx] + phif[idx + 1]);
 
@@ -143,21 +145,21 @@ namespace SWIMFrame
             double[] qi2Return;
             double[] qi3Return;
 
-            for (i = 0; i < nphif; i++)
+            for (i = 0; i < nphif - 1; i++)
             {
                 qi1Return = quadinterp(phif, qfM.Row(i).ToArray(), nphif, phii);
                 for (int idx = 0; idx < qi1Return.Length; idx++)
                     qi1[i, idx] = qi1Return[idx];
             }
 
-            for (j = 0; j < nphif; j++)
+            for (j = 0; j < nphif - 1; j++)
             {
                 qi2Return = quadinterp(phif, qfM.Column(j).ToArray(), nphif, phii);
                 for (int idx = 0; idx < qi2Return.Length; idx++)
                     qi2[idx, i] = qi2Return[idx];
             }
 
-            for (j = 0; j < ni; j++)
+            for (j = 0; j < ni - 1; j++)
             {
                 qi1M = Matrix<double>.Build.DenseOfArray(qi1);
                 qi3Return = quadinterp(phif, qi1M.Column(j).ToArray(), nphif, phii);
@@ -166,8 +168,8 @@ namespace SWIMFrame
             }
 
             // Put all the fluxes together.
-            i = nphif + ni;
-            for (int iidx = 0; iidx < i; i += 2)
+            i = nphif - 1 + ni;
+            for (int iidx = 0; iidx < i; iidx += 2)
                 for (int npidx = 0; npidx < nphif; npidx++)
                     for (int niidx = 0; niidx < ni; niidx++)
                     {
@@ -182,7 +184,7 @@ namespace SWIMFrame
             for (j = 1; j < i; j += 2)
             {
                 ip = ip + 1;
-                ii = iphif[ip + 1] - 1;
+                ii = iphif[ip] - 1;
                 for (int idx = 0; idx < aphi.Length; idx++) // Search down to locate phii position for cubic.
                 {
                     if (aphi[ii] <= phii[ip])
@@ -190,10 +192,10 @@ namespace SWIMFrame
                     ii = ii - 1;
                 }
                 x = phii[ip] - aphi[ii];
-                qi5[j, j] = aK[ii] + x * (aKco[1, ii] + x * (aKco[2, ii] + x * aKco[3, ii]));
+                qi5[j, j] = aK[ii] + x * (aKco[0, ii] + x * (aKco[1, ii] + x * aKco[2, ii]));
             }
 
-            for (int idx = 0; idx < i; i++)
+            for (int idx = 0; idx < i; idx++)
             {
                 phii5[idx * 2] = phif[idx];
                 phii5[idx * 2 + 1] = phii[idx];
@@ -242,16 +244,20 @@ namespace SWIMFrame
             Vector<double> daV = Vector<double>.Build.DenseOfArray(da);
 
             // sum((aphi(n1+1:n2)-aphi(n1:n2-1))*(da(1:np-1)+4*db+da(2:np))/6) for both of these stupid lines... find something better.
-            Vector<double> t1 = aphiV.SubVector(n1, n2 - n1 + 1);
-            Vector<double> t2 = aphiV.SubVector(n1 - 1, n2 - n1+1);
-            Vector<double> t3 = daV.SubVector(0, np);
-            Vector<double> t4 = daV.SubVector(1, np - 1);
+            Vector<double> t1 = Vector<double>.Build.DenseOfArray(aphi.Slice(n1 + 1, n2));
+            Vector<double> t2 = Vector<double>.Build.DenseOfArray(aphi.Slice(n1, n2 - 1));
+            Vector<double> t3 = Vector<double>.Build.DenseOfArray(da.Slice(1, np - 1));
+            Vector<double> t4 = Vector<double>.Build.DenseOfArray(da.Slice(2, np));
+
+            Vector<double> first = t1.Subtract(t2);
+            Vector<double> second = t4.Add(4);
+            Vector<double> third = t4.Divide(6);
 
             //u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
-            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
+            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(t1.Subtract(t2).ToArray(), MathUtilities.Add(MathUtilities.Multiply(t3.Add(4).ToArray(), db), t4.ToArray())), 6)); // this is madness!
             da = MathUtilities.Multiply(da, da);
             db = MathUtilities.Multiply(db, db);
-            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
+            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(t1.Subtract(t2).ToArray(), MathUtilities.Add(MathUtilities.Multiply(t3.Add(4).ToArray(), db), t4.ToArray())), 6)); // this is madness!
             return u;
         }
 
@@ -384,14 +390,12 @@ namespace SWIMFrame
             double[] c = new double[n - 2];
             double[] s = new double[n - 2];
             double[] yl = new double[n - 2];
-            Vector<double> xV = Vector<double>.Build.DenseOfArray(x);
-            Vector<double> yV = Vector<double>.Build.DenseOfArray(y);
-            s = MathUtilities.Divide(MathUtilities.Subtract(yV.SubVector(2, n - 1).ToArray(), yV.SubVector(0, n - 3).ToArray()), MathUtilities.Subtract(xV.SubVector(2, n - 1).ToArray(), xV.SubVector(0, n - 3).ToArray()));
-            yl = MathUtilities.Add(yV.SubVector(0, n - 3).ToArray(), 
-                                  MathUtilities.Multiply(MathUtilities.Subtract(xV.SubVector(1, n - 2).ToArray(),
-                                                                                xV.SubVector(0, n - 3).ToArray()),
+            s = MathUtilities.Divide(MathUtilities.Subtract(y.Slice(3,n), y.Slice(1, n-2)), MathUtilities.Subtract(x.Slice(3, n), x.Slice(1, n-2)));
+            yl = MathUtilities.Add(y.Slice(1, n-2), 
+                                  MathUtilities.Multiply(MathUtilities.Subtract(x.Slice(2, n-1),
+                                                                                x.Slice(1, n-2)),
                                                               s));
-            return MathUtilities.Subtract_Value(MathUtilities.Divide(yV.SubVector(1, n - 2).ToArray(), yl), 1);
+            return MathUtilities.Subtract_Value(MathUtilities.Divide(y.Slice(2, n-1), yl), 1);
         }
 
         // get last point where (x,y) deviates from linearity by < re
@@ -404,17 +408,14 @@ namespace SWIMFrame
             for (i = 2; i < n; i++)
             {
                 s = (y[i] - y[0]) / (x[i] - x[0]);
-                Vector<double> xV = Vector<double>.Build.DenseOfArray(x);
-                Vector<double> ylV = Vector<double>.Build.DenseOfArray(yl);
-                Vector<double> yV = Vector<double>.Build.DenseOfArray(y);
-                Vector<double> xSub = xV.SubVector(1, i - 2);
-                Vector<double> ylSub = ylV.SubVector(0, i - 3);
-                Vector<double> ySub = yV.SubVector(1, i - 2);
-                for (int idx = 0; idx < ylSub.Count; idx++)
+                double[] xSub = x.Slice(2, i - 1);
+                double[] ylSub = yl.Slice(1, i - 2);
+                double[] ySub = y.Slice(2, i - 1);
+                for (int idx = 0; idx < ylSub.Length; idx++)
                 {
-                    ylSub[idx] = y[0] + s * (xSub[i] - x[0]);
+                    ylSub[idx] = y[0] + s * (xSub[idx] - x[0]);
                 }
-                double[] div = MathUtilities.Subtract_Value(MathUtilities.Divide(ySub.ToArray(), ylSub.ToArray()), 1);
+                double[] div = MathUtilities.Subtract_Value(MathUtilities.Divide(ySub, ylSub), 1);
                 for (int idx = 0; idx < div.Length; idx++)
                     div[idx] = Math.Abs(div[idx]);
                 are = MathUtilities.Max(div);
@@ -433,7 +434,7 @@ namespace SWIMFrame
             int[] di = new int[n];
             double[] ac = new double[n];
 
-            for (int idx = 0; idx < n; idx++)
+            for (int idx = 0; idx < c.Length; idx++)
             {
                 ac[idx] = Math.Abs(c[idx]);
                 di[idx] = (int)Math.Round(fac * MathUtilities.Max(ac) / ac[idx], MidpointRounding.ToEven); // min spacings
@@ -500,6 +501,19 @@ namespace SWIMFrame
                 }
             }
             return v;
+        }
+
+        public void TestFluxs()
+        {
+            double[] aK =  new double[] { 8.740528E-10,3.148991E-09,1.116638E-08,3.906024E-08,1.350389E-07,4.621461E-07,1.567779E-06,5.278070E-06,1.765091E-05,5.868045E-05,1.940329E-04,6.381824E-04,2.086113E-03,6.757548E-03,2.152482E-02,6.618264E-02,1.887549E-01,4.655217E-01,9.153457E-01,1.393520E+00,1.733586E+00,1.916091E+00,2.000000E+00,0.000000E+00,0.000000E+00,
+                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
+                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
+                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00};
+            double[] hpK = new double[] { 1.942348E-09,6.760092E-09,2.390674E-08,8.260039E-08,2.837631E-07,9.641152E-07,3.252644E-06,1.089420E-05,3.627295E-05,1.201039E-04,3.956002E-04,1.295509E-03,4.209049E-03,1.348672E-02,4.200805E-02,1.232292E-01,3.212703E-01,6.904247E-01,1.165940E+00,1.578200E+00,1.834724E+00,1.963039E+00,0.000000E+00,0.000000E+00,0.000000E+00,
+                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
+                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,
+                                          0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00,0.000000E+00 };
+            double[] odefOut = odef(1, 2, aK, hpK);
         }
     }
 
