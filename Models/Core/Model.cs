@@ -47,6 +47,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.Agroforestry.LocalMicroClimate))]
         [XmlElement(typeof(Models.Agroforestry.StaticForestrySystem))]
         [XmlElement(typeof(Models.Graph.Graph))]
+        [XmlElement(typeof(Models.Graph.Series))]
+        [XmlElement(typeof(Models.Graph.Regression))]
         [XmlElement(typeof(Models.PMF.Plant))]
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
         [XmlElement(typeof(Models.PMF.OilPalm.OilPalm))]
@@ -225,8 +227,7 @@ namespace Models.Core
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write description of this class.
-            string description = AutoDocumentation.GetClassDescription(this);
-            tags.Add(new AutoDocumentation.Paragraph(description, indent));
+            AutoDocumentation.GetClassDescription(this, tags, indent);
 
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))

@@ -67,9 +67,8 @@ namespace Models.PMF.Functions
                 memo.Document(tags, -1, indent);
 
             // get description of this class.
-            string description = AutoDocumentation.GetClassDescription(this);
+            AutoDocumentation.GetClassDescription(this, tags, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph(description, indent));
             tags.Add(new AutoDocumentation.Paragraph("<i>Twilight = " + Twilight.ToString() + "</i>", indent));
         }
 

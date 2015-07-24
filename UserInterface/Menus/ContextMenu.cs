@@ -353,10 +353,18 @@ namespace UserInterface.Presenters
                 explorerPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
                 Cursor.Current = Cursors.WaitCursor;
 
-                ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
-                this.explorerPresenter.CommandHistory.Add(command, true);
+                try
+                {
+                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
+                    this.explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
+                    Process.Start(command.FileNameWritten);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                }
 
-                explorerPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
                 Cursor.Current = Cursors.Default;
             }
         }

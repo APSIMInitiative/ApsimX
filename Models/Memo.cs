@@ -4,6 +4,7 @@ using Models.Core;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 
 namespace Models
 {
@@ -44,29 +45,35 @@ namespace Models
         {
             if (!Name.Equals("TitlePage", StringComparison.CurrentCultureIgnoreCase) || headingLevel == 1)
             {
-                string html = MemoText;
-                html = html.Replace("<html>", "");
-                html = html.Replace("</html>", "");
-                html = html.Replace("<body>", "");
-                html = html.Replace("</body>", "");
-                html = html.Replace("<div>", "");
+                string html = MemoText.Replace("<div>", "");
                 html = html.Replace("</div>", "");
-
-                int posH = html.IndexOf("<H");
-                while (posH != -1)
+                html = html.Replace("&", "&amp;");
+                if (!html.Contains("<html>"))
                 {
-                    int posEndH = html.IndexOf("</H", posH);
-                    string headingText = html.Substring(posH + 4, posEndH - posH - 4);
-
-                    tags.Add(new AutoDocumentation.Heading(headingText, headingLevel));
-                    html = html.Remove(posH, posEndH - posH + 5);
-
-                    posH = html.IndexOf("<H");
+                    // plain text.
+                    html = "<html><body><p>" + html + "</p></body></html>";
                 }
 
-                // write description of this class.
-                tags.Add(new AutoDocumentation.Paragraph(html, indent));
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(html);
+
+                XmlNode body = XmlUtilities.Find(doc.DocumentElement, "body");
+                if (body != null)
+                {
+                    foreach (XmlNode child in body.ChildNodes)
+                    {
+                        if (child.Name.ToLower().StartsWith("h", StringComparison.CurrentCultureIgnoreCase))
+                            tags.Add(new AutoDocumentation.Heading(child.InnerText, headingLevel));
+                        else if (child.InnerXml != string.Empty)
+                            tags.Add(new AutoDocumentation.Paragraph(child.InnerXml, indent));
+                        else if (child.InnerText != string.Empty)
+                            tags.Add(new AutoDocumentation.Paragraph(child.InnerText, indent));
+                    }
+
+                }
             }
         }
+
+
     }
 }

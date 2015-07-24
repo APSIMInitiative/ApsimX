@@ -57,7 +57,10 @@ namespace UserInterface.Views
         {
             htmlView1.UseMonoSpacedFont();
             htmlView1.ReadOnly = true;
-            this.htmlView1.MemoText = content;
+            if (content.StartsWith(@"{\rtf"))
+                this.htmlView1.MemoRTF = content;
+            else
+                this.htmlView1.MemoText = content;
         }
 
         private void comboBox1_TextChanged(object sender, EventArgs e)

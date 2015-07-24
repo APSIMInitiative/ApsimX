@@ -24,7 +24,9 @@
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(graphXmL);
 
-                return XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as Models.Graph.Graph;
+                Models.Graph.Graph graph = XmlUtilities.Deserialise(doc.DocumentElement, Assembly.GetExecutingAssembly()) as Models.Graph.Graph;
+                Apsim.ParentAllChildren(graph);
+                return graph;
             }
             return null;
         }

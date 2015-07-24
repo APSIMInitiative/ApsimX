@@ -1180,6 +1180,8 @@ namespace Models.PMF.OilPalm
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green / 0.9, 0.01) * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
+            if (TotPotSWUptake == 0)
+                throw new Exception("Total potential soil water uptake is zero");
 
             EP = 0.0;
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)

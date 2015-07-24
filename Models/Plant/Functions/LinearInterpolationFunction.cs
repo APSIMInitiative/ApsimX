@@ -110,18 +110,21 @@ namespace Models.PMF.Functions
             // add a heading.
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
             // add graph and table.
             if (XYPairs != null)
             {
                 IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
                 string xName = XProperty;
-                if (xProperty.Units != string.Empty)
+                if (xProperty != null && xProperty.Units != string.Empty)
                     xName += " (" + xProperty.Units + ")";
-                tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, Name, xName, Name, indent));
+
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of " + xName + "</i>", indent));
+            
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
+
+                tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, Name, indent));
             }
         }
 
