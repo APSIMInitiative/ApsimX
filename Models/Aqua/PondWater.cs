@@ -29,9 +29,9 @@ namespace Models.Aqua
         #region Links
 
 
-        ///// <summary>The clock</summary>
-        //[Link]
-        //private Clock Clock = null;
+        /// <summary>The clock</summary>
+        [Link]
+        private Clock Clock = null;
 
 
         /// <summary>The weather</summary>
@@ -217,7 +217,8 @@ namespace Models.Aqua
         #region local variables
 
         private double mm2m = 0.001;  //convert mm to meters
-        private double m2mm = 1000;    
+        private double m2mm = 1000;
+        double mm2kg = 1; // mm (per unit area) of water converted to kg (per unit area) of water. (1mm/m^2 = 1 kg/m^2)(1000mm/^m2 = 1000kg/m^2 [1m/m^2 = 1 tonne/m^2])
 
         private double pondVolume = 0;
 
@@ -505,6 +506,221 @@ namespace Models.Aqua
 
 
         #endregion
+
+
+
+
+        #region Calculate Heat Change
+
+        /// <summary>
+        /// Fraction of sunlight reflected from the water surface.
+        /// </summary>
+        /// <param name="Today">DateTime for today</param>
+        /// <param name="Latitude">(Not used at present but should use it to calculate Solar Altitude Angle)</param>
+        /// <param name="WindSpeed">(m/s)</param>
+        /// <returns>(0-1)</returns>
+        private double ReflectionWaterSurface(DateTime Today, double Latitude, double WindSpeed)
+            {
+            double angleSolarAltitude;  //aka. lambda (units are in Radians)
+
+            //TODO: convert latitude into Solar Altitude Angle. 
+            //for now hard code summer and winder values for northern australia.
+
+            bool isWinter = DateUtilities.WithinDates("01Apr", Today, "01Nov");
+
+            if (isWinter)
+                angleSolarAltitude = 0.873;
+            else
+                angleSolarAltitude = Math.PI / 2; //90 degrees
+
+            return (2.2 * Math.Pow((180 * (angleSolarAltitude/Math.PI)), -0.97)) * (1-(0.08* WindSpeed)); 
+            
+            }
+
+
+        /// <summary>
+        /// Heat Flux due to incomming solar radiation penetrating the surface of the water
+        /// </summary>
+        /// <param name="Heat_S_Radn">Solar Radiation (taken from APSIM met file) (MJ/m^2/day)</param>
+        /// <param name="Reflection">Fraction Reflected from the water surface (0-1)</param>
+        /// <returns>(kJ/m^2/day)</returns>
+        private double HeatIn_SN_SolarRadiation(double Heat_S_Radn, double Reflection)
+            {
+            double MJ2kJ = 1000;
+            return Heat_S_Radn * (1 - Reflection) * MJ2kJ; 
+            }
+
+
+        /// <summary>
+        /// Heat Flux due to incomming atmospheric radiation
+        /// (Long-wave, sensible heat transfer from the atmospheric air)
+        /// This still occurs at night unlike the solar radiation. 
+        /// </summary>
+        /// <param name="MaxT">Maximum Temperature of the Atmosphere (oC)</param>
+        /// <param name="MinT">Minimum Temperature of the Atmosphere (oC)</param>
+        /// <returns>(kJ/m^2/hr)</returns>
+        private double HeatIn_AT_AtmosphericLongWaveRadn(double MaxT, double MinT)
+            {
+            double r = 0.03; //reflectance of the water to long wave radiation (unitless)
+            double sigma = 2.07 * Math.Pow(10, -7); //Stefan Boltzman constant (kJ/m^2/hr/K^4)
+            double avgTemp_K = ((MaxT+MinT)/2) + 273.15;  //average temperature converted from oC to Kelvin
+
+            //Emittance of the atmosphere. 
+            //Emittance is the ratio of emissivity of a particular body to the the emissivity of a of a perfect black body.
+            double emittanceAtmosphere; //ratio (dimensionless) (between 0 and 1)
+            emittanceAtmosphere = 0.398 * Math.Pow(10, -5) * Math.Pow(avgTemp_K, 2.148); 
+
+            //Stephan Boltzmans Law decribes the power radiated from a perfect black body. 
+            //(The choice of units for Stephan Boltzmans constant gives the units)
+            double stephanBoltzmansLaw = sigma * Math.Pow(avgTemp_K, 4);  //kJ/m^2/hr
+
+            //TODO: Don't we need to multiply by 24 to convert the units from hourly to daily.
+            return (1 - r) * emittanceAtmosphere * stephanBoltzmansLaw;
+            }
+
+
+        /// <summary>
+        /// Heat Flux radiated from the water surface to the atmosphere.
+        /// </summary>
+        /// <param name="PondTemp">Temperature of the Pond Water (oC)</param>
+        /// <returns>(kJ/m^2/hr)</returns>
+        private double HeatOut_WS_FromWaterSurface(double PondTemp)
+            {
+            double sigma = 2.07 * Math.Pow(10, -7); //Stefan Boltzman constant (kJ/m^2/hr/K^4)
+            double pondTemp_K = PondTemp + 273.15;  //Pond Water Temp converted from oC to Kelvin
+
+            //Emittance of the Pond Water Surface. 
+            //Emittance is the ratio of emissivity of a particular body to the the emissivity of a of a perfect black body.
+            double emittanceWaterSurface = 0.97; //ratio (dimensionless) (between 0 and 1)
+
+            //Stephan Boltzmans Law decribes the power radiated from a perfect black body. 
+            //(The choice of units for Stephan Boltzmans constant gives the units)
+            double stephanBoltzmansLaw = sigma * Math.Pow(pondTemp_K, 4);  //kJ/m^2/hr
+
+            //TODO: Don't we need to multiply by 24 to convert the units from hourly to daily.
+            return emittanceWaterSurface * stephanBoltzmansLaw;
+            }
+
+        /// <summary>
+        /// Heat Flux caused by evaporation from the pond.
+        /// When water evaporates it takes away the latent heat required to go from liquid to vapour.
+        /// </summary>
+        /// <param name="PondTemp">Temperature of the Pond Water (oC)</param>
+        /// <param name="MinT">Minimum Temperature of the Atmosphere (oC)</param>
+        /// <param name="WindSpeed">Wind Speed (m/s)</param>
+        /// <returns>(kJ/day)</returns>
+        private double HeatOut_E_EvaporationLatentHeat(double PondTemp, double MinT, double WindSpeed)
+            {
+            double N = 5.0593; //constant (kJ/m^2/km/mmHg)
+
+            double satVP; //saturated vapour pressure
+            double pondVP; //vapour pressure above the pond surface;
+
+            satVP = 25.374 * Math.Exp(17.62 - (5271 / PondTemp));
+            pondVP = 610.78 * Math.Exp(17.2694 * ((MinT - 2) / (MinT + 235.3)));
+            double VPdeficit = satVP - pondVP;   
+
+            return N * WindSpeed * VPdeficit;
+            }
+
+
+        /// <summary>
+        /// Heat Flux caused by evaporation from the pond.
+        /// When water evaporates it takes away the latent heat required to go from liquid to vapour.
+        /// </summary>
+        /// <param name="Evaporation_mm">Amount of water evaporated from the pond (mm)</param>
+        /// <returns>(kJ/m^2/day)</returns>
+        private double HeatOut_E_EvaporationLatentHeat(double Evaporation_mm)
+            {
+            double latentHeatVaporization = 2258.0;  //Specific Latent Heat of Vaporization for water (kJ/kg) at 100oC
+
+            double Evaporation_kg = Evaporation_mm * mm2kg; //actually mm2kg = 1, but nice to be explicit about the conversion.
+
+            return latentHeatVaporization * Evaporation_kg;
+            }
+
+
+
+        /// <summary>
+        /// Heat Flux caused by transfer of heat from the atmosphere to the pond AND vice versa.
+        /// Basically this is via the Conduction of Heat when two bodies are in contact.
+        /// </summary>
+        /// <param name="PondTemp">Temperature of the Pond Water (oC)</param>
+        /// <param name="MaxT">Maximum Temperature of the Atmosphere (oC)</param>
+        /// <param name="MinT">Minimum Temperature of the Atmosphere (oC)</param>
+        /// <param name="WindSpeed">(m/s)</param>
+        /// <returns>(kJ/day)</returns>
+        private double HeatFlux_C_SensibleHeatTransferBetweenAirAndPond(double PondTemp, double MaxT, double MinT, double WindSpeed)
+            {
+            double airTemp = (MaxT + MinT) / 2;
+
+            double tempGradient = PondTemp - airTemp;
+
+            return 1.5701 * WindSpeed * tempGradient; 
+            }
+
+
+        /// <summary>
+        /// Heat from solar radiation that passed through the pond and reached the bottom.
+        /// This has to be removed from what entered the pond to give the net amount absorbed in the pond.
+        /// </summary>
+        /// <param name="HeatIn_SN">Radiation that entered the pond (kJ/m^2/day)</param>
+        /// <param name="Reflection">Fraction of light reflected from the surface of the pond (0-1)</param>
+        /// <param name="SDD">Secchi Disk Depth (m)</param>
+        /// <param name="PondDepth">Current Depth of the Pond Water (oC)</param>
+        /// <returns>(kJ/day)</returns>
+        private double HeatOut_SNZ_SolarRadiationReachingBottomOfPond(double HeatIn_SN, double Reflection, double SDD, double PondDepth)
+            {
+            double fractAborbedAtSurface = 0.03;  //fraction of the light absorbed at the surface.
+            double lightExtinctionCoeff = 1.7 / SDD;
+
+            double fractReachingBtm = (1 - Reflection) * (1 - fractAborbedAtSurface) * Math.Exp(-lightExtinctionCoeff * PondDepth);
+
+            return HeatIn_SN * fractReachingBtm;
+            }
+
+
+
+        /// <summary>
+        /// Heat Flux caused by transfer of heat from pond water and bottom of the pond.
+        /// Basically this is via the Conduction of Heat when two bodies are in contact.
+        /// </summary>
+        /// <param name="PondTemp">Temperature of the Pond Water (oC)</param>
+        /// <param name="SedimentTemp">Temperature of the Sediment at the bottom of the pond (oC)</param>
+        /// <param name="PondDepth">Current Depth of the Pond Water (oC)</param>
+        /// <returns>(kJ/day)</returns>
+        private double HeatFlux_SED_HeatTransferBetweenWaterAndBottomOfPond(double PondTemp, double SedimentTemp, double PondDepth)
+            {
+            double Ksed = 2.53; //thermal conductivity coefficient for the Sediment. (kJ/m/hr/oC)
+            double deltaZ = PondDepth;  //distance between centres of the volume elements (m)
+
+            double tempGradient = PondTemp - SedimentTemp;
+
+            return Ksed * (tempGradient / deltaZ);
+            }
+
+
+        /// <summary>
+        /// Heat Lost from the Sediment to the Ground Water
+        /// Basically this is via the Conduction of Heat when two bodies are in contact.
+        /// </summary>
+        /// <param name="SedimentTemp">Temperature of the Sediment at the bottom of the pond (oC)</param>
+        /// <returns>(kJ/day)</returns>
+        private double HeatOut_GW_HeatLostFromSedimentToGroundWater(double SedimentTemp)
+            {
+            double Ke = 2.53;  //thermal conductivity coefficient for the Earth. (kJ/m/hr/oC)  //nb. using same value for Sediment (Ksed)
+            double groundWaterTemp = 20;   //Temperature of the Ground Water (oC) 
+            double deltaZ = 5;    //distance betweeen centres of sediment and GW volumes (m)
+
+            double tempGradient = SedimentTemp - groundWaterTemp;
+
+            return Ke * (tempGradient / deltaZ);
+            }
+
+
+        #endregion
+
+
 
 
 
