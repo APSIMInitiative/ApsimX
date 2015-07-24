@@ -62,6 +62,7 @@ namespace UserInterface.Forms
         /// </summary>
         private void PopulateForm()
         {
+            listView1.Items.Clear();
             Version version = new Version(Application.ProductVersion);
             if (version.Major == 0)
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
@@ -70,6 +71,34 @@ namespace UserInterface.Forms
                 label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below. \r\nRight click on them to show more detail or to upgrade.";
                 PopulateUpgradeList();
             }
+
+            firstNameBox.Text = Utility.Configuration.Settings.FirstName;
+            lastNameBox.Text = Utility.Configuration.Settings.LastName;
+            organisationBox.Text = Utility.Configuration.Settings.Organisation;
+            address1Box.Text = Utility.Configuration.Settings.Address1;
+            address2Box.Text = Utility.Configuration.Settings.Address2;
+            cityBox.Text = Utility.Configuration.Settings.City;
+            stateBox.Text = Utility.Configuration.Settings.State;
+            postcodeBox.Text = Utility.Configuration.Settings.Postcode;
+            countryBox.Text = Utility.Configuration.Settings.Country;
+            emailBox.Text = Utility.Configuration.Settings.Email;
+
+            WebClient web = new WebClient();
+
+            string tempLicenseFileName = Path.Combine(Path.GetTempPath(), "APSIMLicense.rtf");
+            if (File.Exists(tempLicenseFileName))
+                File.Delete(tempLicenseFileName);
+
+            try
+            {
+                web.DownloadFile(@"https://www.apsim.info/ProductRegistration/APSIMDisclaimer.rtf", tempLicenseFileName);
+                htmlView1.MemoRTF = File.ReadAllText(tempLicenseFileName);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Cannot download the license.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         /// <summary>
@@ -77,18 +106,17 @@ namespace UserInterface.Forms
         /// </summary>
         private void PopulateUpgradeList()
         {
-            listView1.Items.Clear();
+            Version version = new Version(Application.ProductVersion);
             using (BuildService.BuildProviderClient buildService = new BuildService.BuildProviderClient())
             {
-                upgrades = buildService.GetUpgradesSincePullRequest(0);
+                upgrades = buildService.GetUpgradesSinceIssue(version.Revision);
                 foreach (Upgrade upgrade in upgrades)
                 {
-                    string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.pullRequest;
+                    string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
                     ListViewItem newItem = new ListViewItem(versionNumber);
                     newItem.SubItems.Add(upgrade.IssueTitle);
                     listView1.Items.Add(newItem);
                 }
-
             }
         }
 
@@ -114,8 +142,11 @@ namespace UserInterface.Forms
             {
                 try
                 {
+                    if (!checkBox1.Checked)
+                        throw new Exception("You must agree to the license terms before upgrading.");
+
                     Upgrade upgrade = upgrades[listView1.SelectedIndices[0]];
-                    string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.pullRequest;
+                    string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
 
                     if (MessageBox.Show("Are you sure you want to upgrade to version " + versionNumber + "?",
                                         "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -138,6 +169,9 @@ namespace UserInterface.Forms
                         {
                             MessageBox.Show("Cannot download this release. Error message is: \r\n" + err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
+
+                        // Write to the registration database.
+                        WriteUpgradeRegistration(versionNumber);
 
                         if (File.Exists(tempSetupFileName))
                         {
@@ -176,5 +210,42 @@ namespace UserInterface.Forms
             }
         }
 
+        /// <summary>
+        /// Write to the registration database.
+        /// </summary>
+        private void WriteUpgradeRegistration(string version)
+        {
+            if (firstNameBox.Text == null || lastNameBox.Text == null ||
+                emailBox.Text == null || countryBox.Text == null)
+                throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
+
+            using (BuildService.BuildProviderClient buildService = new BuildService.BuildProviderClient())
+            {
+                buildService.RegisterUpgrade(firstNameBox.Text, lastNameBox.Text, organisationBox.Text,
+                                             address1Box.Text, address2Box.Text, cityBox.Text,
+                                             stateBox.Text, postcodeBox.Text, countryBox.Text,
+                                             emailBox.Text, version);
+            }
+        }
+
+
+        /// <summary>
+        /// Form is closing - save personal details.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            Utility.Configuration.Settings.FirstName = firstNameBox.Text;
+            Utility.Configuration.Settings.LastName = lastNameBox.Text;
+            Utility.Configuration.Settings.Organisation = organisationBox.Text;
+            Utility.Configuration.Settings.Address1 = address1Box.Text;
+            Utility.Configuration.Settings.Address2 = address2Box.Text;
+            Utility.Configuration.Settings.City = cityBox.Text;
+            Utility.Configuration.Settings.State = stateBox.Text;
+            Utility.Configuration.Settings.Postcode = postcodeBox.Text;
+            Utility.Configuration.Settings.Country = countryBox.Text;
+            Utility.Configuration.Settings.Email = emailBox.Text;
+        }
     }
 }

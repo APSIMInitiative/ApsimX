@@ -35,7 +35,7 @@ namespace UserInterface.BuildService {
         private string ReleaseURLField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int pullRequestField;
+        private int issueNumberField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -100,14 +100,14 @@ namespace UserInterface.BuildService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int pullRequest {
+        public int issueNumber {
             get {
-                return this.pullRequestField;
+                return this.issueNumberField;
             }
             set {
-                if ((this.pullRequestField.Equals(value) != true)) {
-                    this.pullRequestField = value;
-                    this.RaisePropertyChanged("pullRequest");
+                if ((this.issueNumberField.Equals(value) != true)) {
+                    this.issueNumberField = value;
+                    this.RaisePropertyChanged("issueNumber");
                 }
             }
         }
@@ -127,19 +127,22 @@ namespace UserInterface.BuildService {
     public interface IBuildProvider {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBuildProvider/AddBuild", ReplyAction="http://tempuri.org/IBuildProvider/AddBuildResponse")]
-        void AddBuild(int pullRequestNumber);
+        void AddBuild(int pullRequestNumber, int issueID, string issueTitle);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequest", ReplyAction="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequestResponse")]
-        BuildService.Upgrade[] GetUpgradesSincePullRequest(int pullRequestID);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBuildProvider/GetUpgradesSinceIssue", ReplyAction="http://tempuri.org/IBuildProvider/GetUpgradesSinceIssueResponse")]
+        BuildService.Upgrade[] GetUpgradesSinceIssue(int issueNumber);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBuildProvider/RegisterUpgrade", ReplyAction="http://tempuri.org/IBuildProvider/RegisterUpgradeResponse")]
+        void RegisterUpgrade(string firstName, string lastName, string organisation, string address1, string address2, string city, string state, string postcode, string country, string email, string product);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IBuildProviderChannel : IBuildProvider, System.ServiceModel.IClientChannel {
+    public interface IBuildProviderChannel : BuildService.IBuildProvider, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class BuildProviderClient : System.ServiceModel.ClientBase<IBuildProvider>, BuildService.IBuildProvider {
+    public partial class BuildProviderClient : System.ServiceModel.ClientBase<BuildService.IBuildProvider>, BuildService.IBuildProvider {
         
         public BuildProviderClient() {
         }
@@ -160,12 +163,16 @@ namespace UserInterface.BuildService {
                 base(binding, remoteAddress) {
         }
         
-        public void AddBuild(int pullRequestNumber) {
-            base.Channel.AddBuild(pullRequestNumber);
+        public void AddBuild(int pullRequestNumber, int issueID, string issueTitle) {
+            base.Channel.AddBuild(pullRequestNumber, issueID, issueTitle);
         }
         
-        public BuildService.Upgrade[] GetUpgradesSincePullRequest(int pullRequestID) {
-            return base.Channel.GetUpgradesSincePullRequest(pullRequestID);
+        public BuildService.Upgrade[] GetUpgradesSinceIssue(int issueNumber) {
+            return base.Channel.GetUpgradesSinceIssue(issueNumber);
+        }
+        
+        public void RegisterUpgrade(string firstName, string lastName, string organisation, string address1, string address2, string city, string state, string postcode, string country, string email, string product) {
+            base.Channel.RegisterUpgrade(firstName, lastName, organisation, address1, address2, city, state, postcode, country, email, product);
         }
     }
 }
