@@ -659,9 +659,12 @@ namespace UserInterface.Commands
                                 }
                             }
 
-                            replacementText = "(" + replacementText + ")";
-                            text = text.Remove(posBracket, posEndBracket - posBracket + 1);
-                            text = text.Insert(posBracket, replacementText);
+                            if (replacementText != string.Empty)
+                            {
+                                replacementText = "(" + replacementText + ")";
+                                text = text.Remove(posBracket, posEndBracket - posBracket + 1);
+                                text = text.Insert(posBracket, replacementText);
+                            }
                         }
 
                         // Find the next bracketed potential citation.

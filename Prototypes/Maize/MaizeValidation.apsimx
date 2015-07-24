@@ -93,6 +93,15 @@ The APSIM maize model has been developed using the Plant Modelling Framework (PM
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>Target</Name>
+            <Memo>
+              <Name>memo</Name>
+              <MemoText><![CDATA[
+<html><body>
+<p>
+The photoperiod is likely to vary with individual maize cultivars.  Therefore, the response shown here is indicative only.  See the descriptions of individual cultivars for more detail on photoperiod responses used by the maize model.
+</p>
+</body></html>]]></MemoText>
+            </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -248,8 +257,9 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Name>memo</Name>
           <MemoText><![CDATA[
 <html><body>
+<p>
 Though tillering is common in some maize varieties under certain agronomic conditions, no tillering is accounted for within this model.  Therefore all branching has been parameterised out of the current maize model.
-<br/>
+</p>
 </body></html>]]></MemoText>
         </Memo>
         <VariableReference>
@@ -549,6 +559,15 @@ Though tillering is common in some maize varieties under certain agronomic condi
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>KernalsPerCob</Name>
+            <Memo>
+              <Name>memo</Name>
+              <MemoText><![CDATA[
+<html><body>
+<p>
+The number of kernals per cob is likely to vary with individual maize cultivars.  Therefore, the relationship shown here is indicative only.  See the descriptions of individual cultivars for more detail on kernal number determination used by the maize model.
+</p>
+</body></html>]]></MemoText>
+            </Memo>
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
@@ -563,7 +582,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <XProperty>[Rachis].CobSize.Value</XProperty>
           </LinearInterpolationFunction>
           <Constant>
-            <Name>GrainPerKernal</Name>
+            <Name>GrainsPerKernal</Name>
             <Value>1</Value>
           </Constant>
         </MultiplyFunction>
@@ -689,14 +708,15 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
             <Name>memo</Name>
             <MemoText><![CDATA[
 <html><body>
+<p>
 Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.
-<br/>
+</p>
 </body></html>]]></MemoText>
           </Memo>
           <PhaseLookupValue>
             <Name>PreFlowering</Name>
             <Constant>
-              <Name>Function</Name>
+              <Name>RootFrontVelocity</Name>
               <Value>25</Value>
             </Constant>
             <Start>Germination</Start>
@@ -705,7 +725,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <PhaseLookupValue>
             <Name>PostFlowering</Name>
             <Constant>
-              <Name>Function</Name>
+              <Name>RootFrontVelocity</Name>
               <Value>0</Value>
             </Constant>
             <Start>Flowering</Start>
@@ -14446,8 +14466,9 @@ namespace Models
       <Name>memo</Name>
       <MemoText><![CDATA[
 <html><body>
-The data for two trials from near Katherine, Northern Territory, Australia, have been included from Carberry et al (1989) and Carberry and Abrecht (1991).  These include two planting dates for the summer of 1983/1984 (labelled as K841, K842).  At each planting date, cultivar Dekalb XL82 was sown at 4 populations (3, 5, 7, 9 plants/m<sup>2</sup>) under low and high irrigation conditions.  The low irrigation treatments only included preliminary applications to ensure crop establishment.<br/>
-
+<p>
+The data for two trials from near Katherine, Northern Territory, Australia, have been included from Carberry et al (1989) and Carberry and Abrecht (1991).  These include two planting dates for the summer of 1983/1984 (labelled as K841, K842).  At each planting date, cultivar Dekalb XL82 was sown at 4 populations (3, 5, 7, 9 plants/m<sup>2</sup>) under low and high irrigation conditions.  The low irrigation treatments only included preliminary applications to ensure crop establishment.
+</p>
 </body></html>]]></MemoText>
     </Memo>
     <Experiment>
@@ -31231,8 +31252,9 @@ namespace Models
     <MemoText><![CDATA[
 <html><body>
 <h3>Combined Results</h3>
-Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).<br/>
-
+<p>
+Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
+</p>
 </body></html>]]></MemoText>
   </Memo>
   <Graph>

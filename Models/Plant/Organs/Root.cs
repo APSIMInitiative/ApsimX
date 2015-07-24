@@ -12,7 +12,7 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF.Organs
 {
     ///<summary>
-    /// The generic root model
+    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density.
     ///</summary>
     /// \param InitialDM <b>(Constant)</b> The initial dry weight of root (\f$g mm^{-2}\f$. CHECK).
     /// \param SpecificRootLength <b>(Constant)</b> The length of the specific root 
