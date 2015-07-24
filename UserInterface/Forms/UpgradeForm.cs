@@ -63,11 +63,11 @@ namespace UserInterface.Forms
         private void PopulateForm()
         {
             Version version = new Version(Application.ProductVersion);
-            //if (version.Major == 0)
-            //    label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
-            //else
+            if (version.Major == 0)
+                label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
+            else
             {
-                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below. Right click on them to show more detail or to upgrade.";
+                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below. \r\nRight click on them to show more detail or to upgrade.";
                 PopulateUpgradeList();
             }
         }
@@ -120,6 +120,8 @@ namespace UserInterface.Forms
                     if (MessageBox.Show("Are you sure you want to upgrade to version " + versionNumber + "?",
                                         "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
+                        Cursor.Current = Cursors.WaitCursor;
+
                         explorerPresenter.Save();
 
                         WebClient web = new WebClient();
@@ -158,6 +160,8 @@ namespace UserInterface.Forms
                                                StringUtilities.DQuote(newDirectory);
                             Process.Start(upgraderFileName, arguments);
 
+                            Cursor.Current = Cursors.Default;
+
                             // Shutdown the user interface
                             Close();
                             explorerPresenter.Close();
@@ -166,6 +170,7 @@ namespace UserInterface.Forms
                 }
                 catch (Exception err)
                 {
+                    Cursor.Current = Cursors.Default;
                     MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

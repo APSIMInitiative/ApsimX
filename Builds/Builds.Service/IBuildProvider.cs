@@ -16,8 +16,10 @@ namespace BuildService
     {
         /// <summary>Add a build to the build database.</summary>
         /// <param name="pullRequestNumber">The GitHub pull request number.</param>
+        /// <param name="issueID">The issue ID.</param>
+        /// <param name="issueTitle">The issue title.</param>
         [OperationContract]
-        void AddBuild(int pullRequestNumber);
+        void AddBuild(int pullRequestNumber, int issueID, string issueTitle);
 
         /// <summary>
         /// Gets a list of possible upgrades since the specified pull request.
