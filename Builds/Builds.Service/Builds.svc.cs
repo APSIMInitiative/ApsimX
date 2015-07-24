@@ -1,7 +1,6 @@
 ﻿
 namespace BuildService
 {
-    using APSIM.Shared.Utilities;
     using Octokit;
     using System;
     using System.Collections.Generic;
@@ -42,15 +41,19 @@ namespace BuildService
 
         /// <summary>Add a build to the build database.</summary>
         /// <param name="pullRequestNumber">The GitHub pull request number.</param>
-        public void AddBuild(int pullRequestNumber)
+        /// <param name="issueID">The issue ID.</param>
+        /// <param name="issueTitle">The issue title.</param>
+        public void AddBuild(int pullRequestNumber, int issueID, string issueTitle)
         {
             CheckDBIsOpen();
-            string sql = "INSERT INTO ApsimXBuilds (Date, PullRequestID) " +
-                                      "VALUES (@Date, @PullRequestID)";
+            string sql = "INSERT INTO ApsimXBuilds (Date, PullRequestID, IssueNumber, IssueTitle) " +
+                                      "VALUES (@Date, @PullRequestID, @IssueNumber, @IssueTitle)";
 
             SqlCommand command = new SqlCommand(sql, connection);
             command.Parameters.Add(new SqlParameter("@Date", DateTime.Now.ToString("yyyy-MM-dd hh:mm tt")));
             command.Parameters.Add(new SqlParameter("@PullRequestID", pullRequestNumber));
+            command.Parameters.Add(new SqlParameter("@IssueNumber", issueID));
+            command.Parameters.Add(new SqlParameter("@IssueTitle", issueTitle));
             command.ExecuteNonQuery();
         }
 
@@ -75,9 +78,17 @@ namespace BuildService
                 int pullID = (int)reader["PullRequestID"];
                 DateTime date = (DateTime)reader["Date"];
 
-                Upgrade upgrade = GetUpgrade(pullID);
-                if (upgrade != null)
-                    upgrades.Add(upgrade);               
+                if (IsMerged(pullID))
+                {
+                    Upgrade upgrade = new Upgrade();
+                    upgrade.ReleaseDate = (DateTime)reader["Date"];
+                    upgrade.pullRequest = pullID;
+                    upgrade.IssueTitle = (string)reader["IssueTitle"];
+                    upgrade.IssueURL = @"https://github.com/APSIMInitiative/ApsimX/issues/" + (int)reader["IssueNumber"];
+                    upgrade.ReleaseURL = @"http://bob.apsim.info/ApsimXFiles/" + pullID + "/APSIMSetup.exe";
+
+                    upgrades.Add(upgrade);
+                }
             }
             reader.Close();
 
@@ -85,71 +96,20 @@ namespace BuildService
         }
 
         /// <summary>
-        /// Try and get an upgrade object for the specified pull request id. If not 
-        /// a valid release then will return null;
+        /// Return true if pull request has been merged.
         /// </summary>
-        /// <remarks>
-        /// A valid release is one that is merged and has 'Resolves #xxx" in the body
-        /// of the pull request.
-        /// </remarks>
-        /// <param name="pullID"></param>
-        /// <returns></returns>
-        private Upgrade GetUpgrade(int pullID)
+        /// <param name="pullID">The pull request ID.</param>
+        /// <returns>true if pull request was merged.</returns>
+        private bool IsMerged(int pullID)
         {
             GitHubClient github = new GitHubClient(new ProductHeaderValue("ApsimX"));
             github.Credentials = new Credentials("aba686a636c017ccb0b933560d2615e001985c71");
             Task<PullRequest> pullRequestTask = github.PullRequest.Get("APSIMInitiative", "ApsimX", pullID);
             pullRequestTask.Wait();
             PullRequest pullRequest = pullRequestTask.Result;
-            if (pullRequest.Merged)
-            {
-                int issueID = GetIssueID(pullRequest.Body);
-                if (issueID != -1)
-                {
-                    Task<Issue> issueTask = github.Issue.Get("APSIMInitiative", "ApsimX", issueID);
-                    issueTask.Wait();
-                    Issue issue = issueTask.Result;
-
-                    Upgrade upgrade = new Upgrade();
-                    upgrade.ReleaseDate = pullRequest.MergedAt.Value.DateTime;
-                    upgrade.pullRequest = pullID;
-                    upgrade.IssueTitle = issue.Title;
-                    upgrade.IssueURL = @"https://github.com/APSIMInitiative/ApsimX/issues/" + issueID;
-                    upgrade.ReleaseURL = @"http://bob.apsim.info/ApsimXFiles/" + pullID + "/APSIMSetup.exe";
-                    return upgrade;
-                }
-            }
-
-            return null;
+            return (pullRequest != null && pullRequest.Merged);
         }
-
-        /// <summary>
-        /// Returns a resolved issue id or -1 if not found.
-        /// </summary>
-        /// <param name="pullRequestBody">The text of the pull request body.</param>
-        /// <returns>The issue ID or -1 if not found.</returns>
-        private int GetIssueID(string pullRequestBody)
-        {
-            int posResolves = pullRequestBody.IndexOf("Resolves", StringComparison.InvariantCultureIgnoreCase);
-            if (posResolves != -1)
-            {
-                int posHash = pullRequestBody.IndexOf("#", posResolves);
-                if (posHash != -1)
-                {
-                    int issueID = 0;
-
-                    int posSpace = pullRequestBody.IndexOfAny(new char[] { ' ', '\r', '\n',
-                                                                           '\t', '.', ';',
-                                                                           ':', '+', '&' }, posHash);
-                    if (posSpace != -1)
-                        if (Int32.TryParse(pullRequestBody.Substring(posHash + 1, posSpace - posHash - 1), out issueID))
-                            return issueID;
-                }
-            }
-            return -1;
-        }
-
-
+        
         /// <summary>
         /// Open the builds database ready for use.
         /// </summary>

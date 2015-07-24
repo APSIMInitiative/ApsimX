@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "2015-06-07",
             "text"}, -1);
             this.label1 = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@
             // 
             this.label1.Location = new System.Drawing.Point(12, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(706, 33);
+            this.label1.Size = new System.Drawing.Size(706, 46);
             this.label1.TabIndex = 1;
             this.label1.Text = "You are currently at version xxx. Newer versions are listed below.";
             // 
@@ -64,12 +64,12 @@
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView1.HideSelection = false;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
-            this.listView1.Location = new System.Drawing.Point(13, 36);
+            listViewItem1});
+            this.listView1.Location = new System.Drawing.Point(13, 49);
             this.listView1.Name = "listView1";
             this.listView1.Scrollable = false;
             this.listView1.ShowGroups = false;
-            this.listView1.Size = new System.Drawing.Size(694, 553);
+            this.listView1.Size = new System.Drawing.Size(694, 540);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -115,7 +115,7 @@
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.label1);
             this.Name = "UpgradeForm";
-            this.Text = "UpgradeForm";
+            this.Text = "APSIM Upgrade Form";
             this.Shown += new System.EventHandler(this.OnShown);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);

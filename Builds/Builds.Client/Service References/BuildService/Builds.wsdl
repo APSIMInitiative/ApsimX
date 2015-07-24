@@ -4,6 +4,7 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/BuildService" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IBuildProvider_AddBuild_InputMessage">
@@ -12,16 +13,35 @@
   <wsdl:message name="IBuildProvider_AddBuild_OutputMessage">
     <wsdl:part name="parameters" element="tns:AddBuildResponse" />
   </wsdl:message>
+  <wsdl:message name="IBuildProvider_GetUpgradesSincePullRequest_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUpgradesSincePullRequest" />
+  </wsdl:message>
+  <wsdl:message name="IBuildProvider_GetUpgradesSincePullRequest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUpgradesSincePullRequestResponse" />
+  </wsdl:message>
   <wsdl:portType name="IBuildProvider">
     <wsdl:operation name="AddBuild">
       <wsdl:input wsaw:Action="http://tempuri.org/IBuildProvider/AddBuild" message="tns:IBuildProvider_AddBuild_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IBuildProvider/AddBuildResponse" message="tns:IBuildProvider_AddBuild_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUpgradesSincePullRequest">
+      <wsdl:input wsaw:Action="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequest" message="tns:IBuildProvider_GetUpgradesSincePullRequest_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequestResponse" message="tns:IBuildProvider_GetUpgradesSincePullRequest_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IBuildProvider" type="tns:IBuildProvider">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="AddBuild">
       <soap:operation soapAction="http://tempuri.org/IBuildProvider/AddBuild" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUpgradesSincePullRequest">
+      <soap:operation soapAction="http://tempuri.org/IBuildProvider/GetUpgradesSincePullRequest" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

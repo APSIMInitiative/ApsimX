@@ -59,14 +59,27 @@ namespace Updater
             Process uninstallProcess = Process.Start(uninstaller, "/SILENT");
             uninstallProcess.WaitForExit();
 
+            // Wait for the uninstaller to close - just in case.
+            i = 0;
+            while (i < 5 && Process.GetProcessesByName("unins000.exe").Count() > 0)
+            {
+                Thread.Sleep(1000);
+                i++;
+            }
+
+            // If user interface didn't shut down then abort.
+            if (i == 5)
+                throw new Exception("Uninstaller is still running. Aborting upgrade.");
+
             // Install new version.
             Process installProcess = Process.Start(Path.Combine(Path.GetTempPath(), "ApsimSetup.exe"), "/SILENT");
             installProcess.WaitForExit();
 
             // Run the user interface.
             string userInterface = Path.Combine(newInstallDirectory, "Bin", "UserInterface.exe");
-            if (File.Exists(userInterface))
-                Process.Start(userInterface);
+            if (!File.Exists(userInterface))
+                throw new Exception("Cannot find user interface: " + userInterface);
+            Process.Start(userInterface);
         }
     }
 }
