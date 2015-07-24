@@ -103,7 +103,8 @@ namespace BuildService
         private bool IsMerged(int pullID)
         {
             GitHubClient github = new GitHubClient(new ProductHeaderValue("ApsimX"));
-            github.Credentials = new Credentials("aba686a636c017ccb0b933560d2615e001985c71");
+            string token = File.ReadAllText(@"C:\inetpub\wwwroot\GitHubToken.txt");
+            github.Credentials = new Credentials(token);
             Task<PullRequest> pullRequestTask = github.PullRequest.Get("APSIMInitiative", "ApsimX", pullID);
             pullRequestTask.Wait();
             PullRequest pullRequest = pullRequestTask.Result;
