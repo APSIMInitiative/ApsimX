@@ -57,7 +57,7 @@ namespace Models.Agroforestry
         public double[] heights { get; set; }
 
         /// <summary>
-        /// Return the distance from the tree for a given zone
+        /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
         /// </summary>
         /// <param name="z">Zone</param>
         /// <returns>Distance from a static tree</returns>

@@ -7035,7 +7035,6 @@ namespace Models
           <string>200 to 300m</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>Wind reduction (%)</string>
           <string>Shade (%)</string>
           <string>Root Length Density (cm/cm3)</string>
           <string>Depth (cm)</string>
@@ -7048,7 +7047,6 @@ namespace Models
           <string>150-180</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>0</string>
           <string>60</string>
           <string />
           <string />
@@ -7062,7 +7060,6 @@ namespace Models
         </ArrayOfString>
         <ArrayOfString>
           <string>0</string>
-          <string>0</string>
           <string />
           <string />
           <string>.06</string>
@@ -7074,7 +7071,6 @@ namespace Models
           <string>.01</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>5</string>
           <string>0</string>
           <string />
           <string />
@@ -7087,7 +7083,6 @@ namespace Models
           <string>.01</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>10</string>
           <string>0</string>
           <string />
           <string />
@@ -7100,7 +7095,6 @@ namespace Models
           <string>.01</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>15</string>
           <string>0</string>
           <string />
           <string />
@@ -7113,7 +7107,6 @@ namespace Models
           <string>0</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>20</string>
           <string>0</string>
           <string />
           <string />
@@ -7126,7 +7119,6 @@ namespace Models
           <string>0</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>25</string>
           <string>0</string>
           <string />
           <string />
@@ -7139,72 +7131,6 @@ namespace Models
           <string>0</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>30</string>
-          <string>0</string>
-          <string />
-          <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-        </ArrayOfString>
-        <ArrayOfString>
-          <string>35</string>
-          <string>0</string>
-          <string />
-          <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-        </ArrayOfString>
-        <ArrayOfString>
-          <string>40</string>
-          <string>0</string>
-          <string />
-          <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-        </ArrayOfString>
-        <ArrayOfString>
-          <string>50</string>
-          <string>0</string>
-          <string />
-          <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-        </ArrayOfString>
-        <ArrayOfString>
-          <string>50</string>
-          <string>0</string>
-          <string />
-          <string />
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-          <string>0</string>
-        </ArrayOfString>
-        <ArrayOfString>
-          <string>25</string>
           <string>0</string>
           <string />
           <string />
@@ -7218,6 +7144,65 @@ namespace Models
         </ArrayOfString>
         <ArrayOfString>
           <string>0</string>
+          <string />
+          <string />
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>0</string>
+          <string />
+          <string />
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>0</string>
+          <string />
+          <string />
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>0</string>
+          <string />
+          <string />
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+        </ArrayOfString>
+        <ArrayOfString>
+          <string>0</string>
+          <string />
+          <string />
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+          <string>0</string>
+        </ArrayOfString>
+        <ArrayOfString>
           <string>0</string>
           <string />
           <string />
@@ -10109,7 +10094,6 @@ namespace Models
           <string>20 to 25m</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>Wind reduction (%)</string>
           <string>Shade (%)</string>
           <string>Root Length Density (cm/cm3)</string>
           <string>Depth (cm)</string>
@@ -10122,7 +10106,6 @@ namespace Models
           <string>150-180</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>0</string>
           <string>50</string>
           <string />
           <string />
@@ -10135,7 +10118,6 @@ namespace Models
           <string>.01</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>0</string>
           <string>10</string>
           <string />
           <string />
@@ -10149,7 +10131,6 @@ namespace Models
         </ArrayOfString>
         <ArrayOfString>
           <string>0</string>
-          <string>0</string>
           <string />
           <string />
           <string>.02</string>
@@ -10162,7 +10143,6 @@ namespace Models
         </ArrayOfString>
         <ArrayOfString>
           <string>0</string>
-          <string>0</string>
           <string />
           <string />
           <string>.01</string>
@@ -10174,7 +10154,6 @@ namespace Models
           <string>0</string>
         </ArrayOfString>
         <ArrayOfString>
-          <string>0</string>
           <string>0</string>
           <string />
           <string />

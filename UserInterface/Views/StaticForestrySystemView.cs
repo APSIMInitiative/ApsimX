@@ -602,7 +602,7 @@ namespace UserInterface.Views
             return names.ToArray();
         }
 
-        public void SetupGrid(List<List<string>> data)
+        public void SetupGrid(List<List<string>> data, double[] zoneWidths)
         {
             // setup scalar variables
             Scalars.Rows.Clear();
@@ -627,20 +627,20 @@ namespace UserInterface.Views
             }
             Grid.DataSource = table;
             Grid.Columns[0].ReadOnly = true; //name column
-            Grid.Rows[2].ReadOnly = true; //RLD title row
+            Grid.Rows[1].ReadOnly = true; //RLD title row
+            Grid.Rows[1].DefaultCellStyle.BackColor = Color.LightGray;
+            Grid.Rows[2].ReadOnly = true; //Depth title row
             Grid.Rows[2].DefaultCellStyle.BackColor = Color.LightGray;
-            Grid.Rows[3].ReadOnly = true; //Depth title row
-            Grid.Rows[3].DefaultCellStyle.BackColor = Color.LightGray;
             ResizeControls();
 
-            SetupGraphs();
+            SetupGraphs(zoneWidths);
         }
 
         public void SetupHeights(DateTime[] dates, double[] heights)
         {
             for (int i = 0; i < dates.Count(); i++)
             {
-                dgvHeights.Rows.Add(dates[i], heights[i] / 1000);
+                dgvHeights.Rows.Add(dates[i].ToShortDateString(), heights[i] / 1000);
             }
         }
 
@@ -678,20 +678,44 @@ namespace UserInterface.Views
             }
             else
                 Grid.Height = height + 25;
-            Grid.Location = new Point(Scalars.Width + 10, 0);
+            Grid.Location = new Point(Math.Max(Scalars.Width, calendar.Width) + 5, 0);
+
+            //relocate date picker
+            calendar.Location = new Point(0, Scalars.Location.Y + Scalars.Height + 10);
+
+            //resize tree heights grid
+            int hWidth = 0;
+            int hHeight = 0;
+            foreach(DataGridViewColumn col in dgvHeights.Columns)
+                hWidth += col.Width;
+            foreach (DataGridViewRow row in dgvHeights.Rows)
+                hHeight += row.Height;
+            dgvHeights.Width = hWidth + dgvHeights.RowHeadersWidth + 3; 
+            if (hHeight + 25 + dgvHeights.Location.Y >= Grid.Height)
+            {
+                dgvHeights.Height = Grid.Height - dgvHeights.Location.Y;
+                dgvHeights.Width = hWidth + dgvHeights.RowHeadersWidth + 25;
+            }
+            else
+                dgvHeights.Height = hHeight + dgvHeights.ColumnHeadersHeight + 3; //ternary is to catch case where Rows.Count == 0
+            dgvHeights.Location = new Point(0, calendar.Location.Y + calendar.Height + 10);
+
+            height = Math.Max(Grid.Height, dgvHeights.Height);
+            width = Math.Max(Grid.Width, dgvHeights.Width);
+
 
             //resize above ground graph
             pAboveGround.Width = pAboveGround.Parent.Width / 2;
-            pAboveGround.Height = pAboveGround.Parent.Height - Grid.Height;
-            pAboveGround.Location = new Point(0, Grid.Height);
+            pAboveGround.Height = pAboveGround.Parent.Height - height;
+            pAboveGround.Location = new Point(0, height);
 
             //resize below ground graph
             pBelowGround.Width = pBelowGround.Parent.Width / 2;
-            pBelowGround.Height = pBelowGround.Parent.Height - Grid.Height;
-            pBelowGround.Location = new Point(pAboveGround.Width, Grid.Height);
+            pBelowGround.Height = pBelowGround.Parent.Height - height;
+            pBelowGround.Location = new Point(pAboveGround.Width, height);
         }
 
-        private void SetupGraphs()
+        private void SetupGraphs(double[] x)
         {
             try
             {
@@ -702,7 +726,7 @@ namespace UserInterface.Views
                 pAboveGround.Model.Title = "Above Ground";
                 pAboveGround.Model.PlotAreaBorderColor = OxyColors.White;
                 pAboveGround.Model.LegendBorder = OxyColors.Transparent;
-                CategoryAxis agxAxis = new CategoryAxis();
+                LinearAxis agxAxis = new LinearAxis();
                 agxAxis.Title = "Zone";
                 agxAxis.AxislineStyle = LineStyle.Solid;
                 agxAxis.AxisDistance = 2;
@@ -712,43 +736,28 @@ namespace UserInterface.Views
                 agyAxis.Title = "%";
                 agyAxis.AxislineStyle = LineStyle.Solid;
                 agyAxis.AxisDistance = 2;
-                Utility.LineSeriesWithTracker seriesWind = new Utility.LineSeriesWithTracker();
                 Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
-                List<DataPoint> pointsWind = new List<DataPoint>();
                 List<DataPoint> pointsShade = new List<DataPoint>();
-                DataRow rowWind = table.Rows[0];
-                DataRow rowShade = table.Rows[1];
+                DataRow rowShade = table.Rows[0];
                 DataColumn col = table.Columns[0];
-                double[] x = new double[table.Columns.Count - 1];
-                double[] yWind = new double[table.Columns.Count - 1];
                 double[] yShade = new double[table.Columns.Count - 1];
 
-                for (int i = 1; i < table.Columns.Count; i++)
-                {
-                    agxAxis.Labels.Add(table.Columns[i].ColumnName);
-                }
                 pAboveGround.Model.Axes.Add(agxAxis);
                 pAboveGround.Model.Axes.Add(agyAxis);
 
                 for (int i = 1; i < table.Columns.Count; i++)
                 {
-                    if (rowWind[i].ToString() == "" || rowShade[i].ToString() == "")
+                    if (rowShade[i].ToString() == "")
                         return;
-                    yWind[i - 1] = Convert.ToDouble(rowWind[i]);
                     yShade[i - 1] = Convert.ToDouble(rowShade[i]);
-                    x[i - 1] = i - 1;
                 }
 
                 for (int i = 0; i < x.Length; i++)
                 {
-                    pointsWind.Add(new DataPoint(x[i], yWind[i]));
                     pointsShade.Add(new DataPoint(x[i], yShade[i]));
                 }
-                seriesWind.Title = "Wind";
                 seriesShade.Title = "Shade";
-                seriesWind.ItemsSource = pointsWind;
                 seriesShade.ItemsSource = pointsShade;
-                pAboveGround.Model.Series.Add(seriesWind);
                 pAboveGround.Model.Series.Add(seriesShade);
             }
             //don't draw the series if the format is wrong
@@ -909,9 +918,15 @@ namespace UserInterface.Views
             }
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        private void dgvHeights_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            dgvHeights.Rows.Add(dateTimePicker1.Value.Date, 0);
+            ResizeControls();
+        }
+
+        private void calendar_DateSelected(object sender, DateRangeEventArgs e)
+        {
+            dgvHeights.Rows.Add(calendar.SelectionStart.ToShortDateString(), 0);
+            ResizeControls();
         }
     }
 }
