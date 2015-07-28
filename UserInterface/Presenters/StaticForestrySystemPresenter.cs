@@ -8,6 +8,7 @@
     using System.Text;
     using Models.Core;
     using Models.Soils;
+    using Models.Agroforestry;
     using Models;
     using Views;
 
@@ -30,6 +31,8 @@
         public void Detach()
         { 
             SaveTable();
+            ForestryModel.dates = ForestryViewer.SaveDates();
+            ForestryModel.heights = ForestryViewer.SaveHeights();
             ForestryViewer.OnCellEndEdit -= OnCellEndEdit;
         }
 
@@ -71,6 +74,10 @@
             List<IModel> Zones = Apsim.ChildrenRecursively(ForestryModel, typeof(Zone));
             if (Zones.Count == 0)
                 return;
+
+            //setup tree heights
+            ForestryViewer.SetupHeights(ForestryModel.dates, ForestryModel.heights);
+
             //get the first soil. For now we're assuming all soils have the same structure.
             Soil = Apsim.Find(Zones[0], typeof(Soil)) as Soil;
 

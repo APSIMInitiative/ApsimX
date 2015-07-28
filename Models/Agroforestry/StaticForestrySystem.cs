@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using MathNet.Numerics.Interpolation;
 using Models.Core;
 using System.Xml.Serialization;
 using Models.Interfaces;
@@ -44,6 +45,18 @@ namespace Models.Agroforestry
         public List<ZoneInfo> ZoneInfoList;
 
         /// <summary>
+        /// Date list for tree heights over lime
+        /// </summary>
+        [Summary]
+        public DateTime[] dates { get; set; }
+
+        /// <summary>
+        /// Tree heights
+        /// </summary>
+        [Summary]
+        public double[] heights { get; set; }
+
+        /// <summary>
         /// Return the distance from the tree for a given zone
         /// </summary>
         /// <param name="z">Zone</param>
@@ -63,7 +76,7 @@ namespace Models.Agroforestry
                     return D;
             }
         
-            throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
+            throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
         /// <summary>
         /// Return the %Shade for a given zone
@@ -76,18 +89,47 @@ namespace Models.Agroforestry
                 if (zi.zone == z)
                     return zi.Shade;
             throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
+
+            
         }
         /// <summary>
         /// Return the %Wind Reduction for a given zone
         /// </summary>
         /// <param name="z">Zone</param>
+        /// <param name="Today">The current date</param>
         /// <returns>%Wind Reduction</returns>
-        public double GetWindReduction(Zone z)
+        public double GetWindReduction(Zone z, DateTime Today)
         {
             foreach (ZoneInfo zi in ZoneInfoList)
                 if (zi.zone == z)
-                    return zi.WindReduction;
-            throw new ApsimXException(this, "Could not find a shade value for zone called " + z.Name);
+                {
+                    double UrelMin = Math.Max(0.0, 1.14 * 0.5 - 0.16); // 0.5 is porosity, will be dynamic in the future
+                    double Urel;
+                    double H;
+                    bool didInterp;
+                    double[] OADates = new double[dates.Count()];
+                    double heightToday;
+
+                    for (int i = 0; i < dates.Count(); i++)
+                        OADates[i] = dates[i].ToOADate();
+
+                    heightToday = MathUtilities.LinearInterpReal(Today.ToOADate(), OADates, heights, out didInterp);
+
+                    if (heightToday < 1000)
+                        Urel = 1;
+                    else
+                    {
+                        H = GetDistanceFromTrees(z) / (heightToday / 1000);
+                        if (H < 6)
+                            Urel = UrelMin + (1 - UrelMin) / 2 - H / 6 * (1 - UrelMin) / 2;
+                        else if (H < 6.1)
+                            Urel = UrelMin;
+                        else
+                            Urel = UrelMin + (1 - UrelMin) / (1 + 0.000928 * Math.Exp(Math.Pow(12.9372 * (H - 6), -0.26953)));
+                    }
+                    return Urel;
+                }
+            throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
         /// <summary>
         /// Return the area of the zone.
@@ -131,7 +173,7 @@ namespace Models.Agroforestry
             for (int i = 2; i < Table.Count; i++)
             {
                 ZoneInfo newZone = new ZoneInfo();
-                newZone.zone = Apsim.Child(this,Table[0][i - 1]) as Zone;
+                newZone.zone = Apsim.Child(this, Table[0][i - 1]) as Zone;
                 newZone.WindReduction = Convert.ToDouble(Table[i][0]);
                 newZone.Shade = Convert.ToDouble(Table[i][1]);
                 newZone.RLD = new double[Table[1].Count - 4];

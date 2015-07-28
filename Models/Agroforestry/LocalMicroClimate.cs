@@ -14,9 +14,11 @@ namespace Models.Agroforestry
     {
 
         [Link]
-        Weather weather=null; // parent weather.
+        Weather weather = null; // parent weather.
         [Link]
-        StaticForestrySystem ParentSystem=null;
+        StaticForestrySystem ParentSystem = null;
+        [Link]
+        Clock clock = null;
 
         /// <summary>Gets the start date of the weather file</summary>
         public DateTime StartDate { get { return weather.StartDate; } }
@@ -42,7 +44,7 @@ namespace Models.Agroforestry
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified.
         /// </summary>
-        public double Wind { get { return weather.Wind * (1 - ParentSystem.GetWindReduction(Parent as Zone) / 100); } }
+        public double Wind { get { return weather.Wind * ParentSystem.GetWindReduction(Parent as Zone, clock.Today); } }
 
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.

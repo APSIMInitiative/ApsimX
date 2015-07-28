@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Windbreak Example</Name>
@@ -22,6 +22,113 @@
       <Name>WindbreakSystem</Name>
       <Manager>
         <Name>SowingRule</Name>
+        <Manager>
+          <Name>SowingRule</Name>
+          <Script>
+            <StartDate>1-may</StartDate>
+            <EndDate>10-jul</EndDate>
+            <MinESW>10</MinESW>
+            <ESWZoneName>0 to 5m</ESWZoneName>
+            <MinRain>25</MinRain>
+            <RainDays>7</RainDays>
+            <CultivarName>Hartog</CultivarName>
+            <SowingDepth>30</SowingDepth>
+            <RowSpacing>250</RowSpacing>
+            <Population>120</Population>
+            <Amount>100</Amount>
+            <CropName>wheat</CropName>
+          </Script>
+          <Code><![CDATA[using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Agroforestry;
+using Models.PMF.OldPlant;
+using Models.Soils;
+using Models.Utilities;
+using Models.Zones;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Summary Summary;
+		Accumulator accumulatedRain;
+		
+		[Description("Start of sowing window (d-mmm)")]
+		public string StartDate { get; set;}
+		[Description("End of sowing window (d-mmm)")]
+		public string EndDate { get; set;}
+		[Description("Minimum extractable soil water for sowing (mm)")]
+		public double MinESW { get; set;}
+		[Description("Name of Zone to use for minimum ESW condition")]
+		public string ESWZoneName { get; set;}
+		[Description("Accumulated rainfall required for sowing (mm)")]
+		public double MinRain { get; set;}
+		[Description("Duration of rainfall accumulation (d)")]
+		public int RainDays { get; set;}
+		[Description("Cultivar to be sown")]
+		public string CultivarName { get; set;}
+		[Description("Sowing depth (mm)")]
+		public double SowingDepth { get; set;}		
+		[Description("Row spacing (mm)")]
+		public double RowSpacing { get; set;}	
+		[Description("Plant population (/m2)")]
+		public double Population { get; set;}	
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount { get; set;}	
+		[Description("Crop to be fertilised")]
+		public string CropName { get; set;}			
+		
+		private Zone ESWZone;
+		private List<IModel> Zones;
+		private Plant15 Wheat;
+		private Soil Soil;
+		
+		[EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Zones = Apsim.FindAll(this, typeof(RectangularZone));
+            foreach (Model m in Zones)
+			{
+				if(m.Name == ESWZoneName)
+				{
+					ESWZone = m as Zone;
+					break;
+				}
+			}
+			accumulatedRain = new Accumulator(this, "[Weather].Rain", RainDays);
+        }    
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{		
+			accumulatedRain.Update();
+			
+			Soil ESWSoil = Apsim.Find(ESWZone, typeof(Soil)) as Soil;
+			
+			foreach (Zone z in Zones)
+			{
+				Wheat = Apsim.Find(z, typeof(Plant15)) as Plant15;	
+				Soil = Apsim.Find(z, typeof(Soil)) as Soil;
+						
+				if (Wheat != null && DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
+				    Wheat.plant_status=="out" &&
+				    ESWSoil.SoilWater.ESW > MinESW &&
+				    accumulatedRain.Sum > MinRain)
+				{
+				   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);
+				   Fertiliser Fertiliser = Apsim.Find(Wheat.Parent, typeof(Fertiliser)) as Fertiliser;
+				   Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
+				}
+			}
+		}	
+	}
+}
+]]></Code>
+        </Manager>
         <Script>
           <StartDate>1-may</StartDate>
           <EndDate>10-jul</EndDate>
@@ -166,6 +273,7 @@ namespace Models
           <Name>DailyReport</Name>
           <VariableNames>
             <string>[Clock].Today</string>
+            <string>LocalMicroClimate.Wind</string>
             <string>sum([Soil].SoilWater.SWmm) as TotalSWmm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
@@ -1103,6 +1211,7 @@ namespace Models
           <Name>Report</Name>
           <VariableNames>
             <string>[Clock].Today</string>
+            <string>[Zone].LocalMicroClimate.Wind</string>
             <string>Wheat.Zadok.Stage</string>
             <string>Wheat.Phenology.CurrentStageName</string>
             <string>Wheat.AboveGround.Wt</string>
@@ -1125,12 +1234,12 @@ namespace Models
           <Name>DailyReport</Name>
           <VariableNames>
             <string>[Clock].Today</string>
+            <string>LocalMicroClimate.Wind</string>
             <string>sum([Soil].SoilWater.SWmm) as TotalSWmm</string>
             <string>sum([Soil].NO3N) as TotalNO3N</string>
             <string>sum([Soil].NH4N) as TotalNH4N</string>
             <string>[Wheat].AboveGround.Wt</string>
             <string>[Wheat].EP</string>
-            <string>LocalMicroClimate.Wind</string>
             <string>[MicroClimate].ga</string>
             <string>[MicroClimate].gc</string>
             <string>[Wheat].Leaf.LAI</string>
@@ -7123,52 +7232,71 @@ namespace Models
       </Table>
       <NDemand>10</NDemand>
       <RootRadius>0</RootRadius>
+      <dates>
+        <dateTime>2015-07-10T00:00:00</dateTime>
+        <dateTime>2015-07-23T00:00:00</dateTime>
+        <dateTime>2015-07-20T00:00:00</dateTime>
+      </dates>
+      <heights>
+        <double>5000</double>
+        <double>10000</double>
+        <double>20000</double>
+      </heights>
     </StaticForestrySystem>
     <Graph>
       <Name>Yield</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>Circle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.Grain.Yield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Grain.Yield</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SoilWater</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalSWmm</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -7185,33 +7313,27 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Series1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>DailyReport</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>DailyReport</TableName>
-          <FieldName>TotalSWmm</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SoilNO3N</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalNO3N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -7228,33 +7350,27 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Series1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>DailyReport</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>DailyReport</TableName>
-          <FieldName>TotalNO3N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DailyBiomass</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -7271,76 +7387,27 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Series1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>DailyReport</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>DailyReport</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DailyWheatEP</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>DailyReport</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>DailyReport</TableName>
-          <FieldName>Wheat.EP</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.EP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Yield vs Distance</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -7357,28 +7424,81 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Yield vs Distance</Name>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Distance</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.Grain.Yield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report</TableName>
+        <XFieldName>Distance</XFieldName>
+        <YFieldName>Wheat.Grain.Yield</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Wind</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>Circle</Marker>
+        <Line>None</Line>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>LocalMicroClimate.Wind</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
@@ -7391,6 +7511,21 @@ namespace Models
   </DataStore>
   <Graph>
     <Name>Yield</Name>
+    <Series>
+      <Name>Series1</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16744448</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>Dash</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Distance</XFieldName>
+      <YFieldName>Wheat.Grain.Yield</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
     <Axis>
       <Type>Bottom</Type>
       <Title />
@@ -7407,28 +7542,7 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
-    <Series>
-      <Title>Series1</Title>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16744448</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>Dash</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Distance</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Wheat.Grain.Yield</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
     <LegendPosition>TopLeft</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
     <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
@@ -10075,52 +10189,77 @@ namespace Models
       </Table>
       <NDemand>10</NDemand>
       <RootRadius>0</RootRadius>
+      <dates>
+        <dateTime>1900-01-03T00:00:00</dateTime>
+        <dateTime>1900-02-01T00:00:00</dateTime>
+        <dateTime>1900-03-01T00:00:00</dateTime>
+        <dateTime>1900-04-01T00:00:00</dateTime>
+        <dateTime>1900-05-01T00:00:00</dateTime>
+        <dateTime>1900-06-01T00:00:00</dateTime>
+      </dates>
+      <heights>
+        <double>1000</double>
+        <double>2000</double>
+        <double>3000</double>
+        <double>4000</double>
+        <double>5000</double>
+        <double>6000</double>
+      </heights>
     </StaticForestrySystem>
     <Graph>
       <Name>Yield</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>Circle</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.Grain.Yield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.Grain.Yield</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SoilWater</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalSWmm</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -10137,33 +10276,27 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Series1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>DailyReport</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>DailyReport</TableName>
-          <FieldName>TotalSWmm</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>SoilNO3N</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>TotalNO3N</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -10180,33 +10313,27 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Series1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>DailyReport</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>DailyReport</TableName>
-          <FieldName>TotalNO3N</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DailyBiomass</Name>
+      <Series>
+        <Name>Series1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -10223,76 +10350,27 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
-      <Series>
-        <Title>Series1</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>DailyReport</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>DailyReport</TableName>
-          <FieldName>Wheat.AboveGround.Wt</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-      </Series>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>DailyWheatEP</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-65536</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>DailyReport</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>DailyReport</TableName>
-          <FieldName>Wheat.EP</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Wheat.EP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Yield vs Distance</Name>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -10309,28 +10387,44 @@ namespace Models
         <Maximum>NaN</Maximum>
         <Interval>NaN</Interval>
       </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Yield vs Distance</Name>
       <Series>
-        <Title>Series1</Title>
+        <Name>Series1</Name>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16744448</ColourArgb>
         <Marker>FilledCircle</Marker>
         <Line>None</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Distance</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName>Wheat.Grain.Yield</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
+        <TableName>Report</TableName>
+        <XFieldName>Distance</XFieldName>
+        <YFieldName>Wheat.Grain.Yield</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>

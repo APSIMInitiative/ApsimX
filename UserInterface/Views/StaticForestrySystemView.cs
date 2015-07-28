@@ -102,6 +102,88 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Update the graph data sources; this causes the axes minima and maxima to be calculated
+        /// </summary>
+        public void UpdateView()
+        {
+            foreach (PlotView plotView in plots)
+            {
+                IPlotModel theModel = plotView.Model as IPlotModel;
+                if (theModel != null)
+                    theModel.Update(true);
+            }
+        }
+
+        /// <summary>
+        /// Stub method for interface. This method is not used as the plots are not editable.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="xAxisType"></param>
+        /// <param name="yAxisType"></param>
+        /// <param name="colour"></param>
+        /// <param name="lineType"></param>
+        /// <param name="markerType"></param>
+        /// <param name="showOnLegend"></param>
+        public void DrawLineAndMarkers(
+     string title,
+     IEnumerable x,
+     IEnumerable y,
+     Models.Graph.Axis.AxisType xAxisType,
+     Models.Graph.Axis.AxisType yAxisType,
+     Color colour,
+     Models.Graph.LineType lineType,
+     Models.Graph.MarkerType markerType,
+     bool showOnLegend)
+        {
+        }
+
+        /// <summary>
+        /// Stub method for interface. This method is not used as the plots are not editable.
+        /// </summary>
+        /// <param name="text">The text for the footer</param>
+        /// <param name="italics">Italics?</param>
+        public void FormatCaption(string text, bool italics)
+        {
+        }
+
+        /// <summary>
+        /// Export the graph to the specified 'bitmap'
+        /// </summary>
+        /// <param name="bitmap">Bitmap to write to</param>
+        /// <param name="legendOutside">Put legend outside of graph?</param>
+        public void Export(Bitmap bitmap, bool legendOutside)
+        {
+            //TODO: This will only save the last bitmap. Might need to change the interface.
+            foreach (PlotView plot in plots)
+            {
+                DockStyle saveStyle = plot.Dock;
+                plot.Dock = DockStyle.None;
+                plot.Width = bitmap.Width;
+                plot.Height = bitmap.Height;
+
+                LegendPosition savedLegendPosition = LegendPosition.RightTop;
+                if (legendOutside)
+                {
+                    savedLegendPosition = plot.Model.LegendPosition;
+                    plot.Model.LegendPlacement = LegendPlacement.Outside;
+                    plot.Model.LegendPosition = LegendPosition.RightTop;
+                }
+
+                plot.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+
+                if (legendOutside)
+                {
+                    plot.Model.LegendPlacement = LegendPlacement.Inside;
+                    plot.Model.LegendPosition = savedLegendPosition;
+                }
+
+                plot.Dock = saveStyle;
+            }
+        }
+
+        /// <summary>
         /// Invoked when the user clicks on an axis.
         /// </summary>
         public event ClickAxisDelegate OnAxisClick
@@ -145,7 +227,11 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user hovers over a series point.
         /// </summary>
-        public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
+        public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint
+        {
+            add { }
+            remove { }
+        }
 
         /// <summary>
         /// Left margin in pixels.
@@ -189,78 +275,6 @@ namespace UserInterface.Views
                 }
 
                 p.Model.InvalidatePlot(true);
-            }
-        }
-
-        /// <summary>
-        ///  Draw a line and markers series with the specified arguments.
-        /// </summary>
-        /// <param name="title">The series title</param>
-        /// <param name="x">The x values for the series</param>
-        /// <param name="y">The y values for the series</param>
-        /// <param name="xAxisType">The axis type the x values are related to</param>
-        /// <param name="yAxisType">The axis type the y values are related to</param>
-        /// <param name="colour">The series color</param>
-        /// <param name="lineType">The type of series line</param>
-        /// <param name="markerType">The type of series markers</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        public void DrawLineAndMarkers(
-             string title,
-             IEnumerable x,
-             IEnumerable y,
-             Models.Graph.Axis.AxisType xAxisType,
-             Models.Graph.Axis.AxisType yAxisType,
-             Color colour,
-             Models.Graph.Series.LineType lineType,
-             Models.Graph.Series.MarkerType markerType,
-             bool showOnLegend)
-        {
-            if (x != null && y != null)
-            {
-                Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
-                series.OnHoverOverPoint += OnHoverOverPoint;
-                if (showOnLegend)
-                    series.Title = title;
-                series.Color = ConverterExtensions.ToOxyColor(colour);
-                series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
-                series.XAxisKey = xAxisType.ToString();
-                series.YAxisKey = yAxisType.ToString();
-                series.CanTrackerInterpolatePoints = false;
-
-                bool filled = false;
-                string oxyMarkerName = markerType.ToString();
-                if (oxyMarkerName.StartsWith("Filled"))
-                {
-                    oxyMarkerName = oxyMarkerName.Remove(0, 6);
-                    filled = true;
-                }
-
-                // Line type.
-                LineStyle oxyLineType;
-                if (Enum.TryParse<LineStyle>(lineType.ToString(), out oxyLineType))
-                {
-                    series.LineStyle = oxyLineType;
-                }
-
-                // Marker type.
-                MarkerType type;
-                if (Enum.TryParse<MarkerType>(oxyMarkerName, out type))
-                {
-                    series.MarkerType = type;
-                }
-
-                series.MarkerSize = 7.0;
-                series.MarkerStroke = ConverterExtensions.ToOxyColor(colour);
-                if (filled)
-                {
-                    series.MarkerFill = ConverterExtensions.ToOxyColor(colour);
-                    series.MarkerStroke = OxyColors.White;
-                }
-
-                if (title.Equals("Above Ground"))
-                    pAboveGround.Model.Series.Add(series);
-                else
-                    pBelowGround.Model.Series.Add(series);
             }
         }
 
@@ -438,10 +452,26 @@ namespace UserInterface.Views
         /// <summary>
         /// Add an action (on context menu) on the memo.
         /// </summary>
-        /// <param name="buttonText">Text for button</param>
-        /// <param name="onClick">Event handler for button click</param>
-        public void AddContextAction(string buttonText, System.EventHandler onClick)
+        /// <param name="menuText">Menu item text</param>
+        /// <param name="ticked">Menu ticked?</param>
+        /// <param name="onClick">Event handler for menu item click</param>
+        public void AddContextAction(string menuText, bool ticked, System.EventHandler onClick)
         {
+        }
+
+        /// <summary>
+        /// Gets the interval (major step) of the specified axis.
+        /// </summary>
+        public double AxisMajorStep(Models.Graph.Axis.AxisType axisType)
+        {
+            OxyPlot.Axes.Axis axis = GetAxis(axisType);
+
+            if (axis != null)
+            {
+                return axis.IntervalLength;
+            }
+            else
+                return double.NaN;
         }
 
         /// <summary>
@@ -604,6 +634,14 @@ namespace UserInterface.Views
             ResizeControls();
 
             SetupGraphs();
+        }
+
+        public void SetupHeights(DateTime[] dates, double[] heights)
+        {
+            for (int i = 0; i < dates.Count(); i++)
+            {
+                dgvHeights.Rows.Add(dates[i], heights[i] / 1000);
+            }
         }
 
         private void ResizeControls()
@@ -784,6 +822,26 @@ namespace UserInterface.Views
             return table;
         }
 
+        public DateTime[] SaveDates()
+        {
+            List<DateTime> dates = new List<DateTime>();
+            foreach(DataGridViewRow row in dgvHeights.Rows)
+            {
+                dates.Add(DateTime.Parse(row.Cells[0].Value.ToString()));
+            }
+            return dates.ToArray();
+        }
+
+        public double[] SaveHeights()
+        {
+            List<double> heights= new List<double>();
+            foreach (DataGridViewRow row in dgvHeights.Rows)
+            {
+                heights.Add(Convert.ToDouble(row.Cells[1].Value.ToString()) * 1000);
+            }
+            return heights.ToArray();
+        }
+
         private void ForestryView_Resize(object sender, EventArgs e)
         {
             ResizeControls();
@@ -849,6 +907,11 @@ namespace UserInterface.Views
                 Grid.CurrentCell = Grid[currentCell[0], currentCell[1]];
                 currentCell = new int[2] {-1,-1};
             }
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            dgvHeights.Rows.Add(dateTimePicker1.Value.Date, 0);
         }
     }
 }
