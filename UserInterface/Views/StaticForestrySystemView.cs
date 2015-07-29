@@ -654,13 +654,33 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in Scalars.Rows)
                 height += row.Height;
             Scalars.Width = width + 3;
-            if (height + 25 > Scalars.Parent.Height / 2)
+            if (height + 25 > Scalars.Parent.Height / 3)
             {
-                Scalars.Height = Scalars.Parent.Height / 2;
+                Scalars.Height = Scalars.Parent.Height / 3;
                 Scalars.Width += 20; //extra width for scrollbar
             }
             else
                 Scalars.Height = height + 25;
+
+            //relocate date picker
+            calendar.Location = new Point(0, Scalars.Location.Y + Scalars.Height + 10);
+
+            //resize tree heights grid
+            int hWidth = 0;
+            int hHeight = 0;
+            foreach (DataGridViewColumn col in dgvHeights.Columns)
+                hWidth += col.Width;
+            foreach (DataGridViewRow row in dgvHeights.Rows)
+                hHeight += row.Height;
+            dgvHeights.Width = hWidth + dgvHeights.RowHeadersWidth + 3;
+            if (hHeight + 25 >= Grid.Parent.Height / 3)
+            {
+                dgvHeights.Height = Grid.Parent.Height / 3;
+                dgvHeights.Width += 25;
+            }
+            else
+                dgvHeights.Height = hHeight + dgvHeights.ColumnHeadersHeight + 3; //ternary is to catch case where Rows.Count == 0
+            dgvHeights.Location = new Point(calendar.Width + 3, 0);
 
             //resize Grid
             width = 0;
@@ -671,34 +691,17 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in Grid.Rows)
                 height += row.Height;
             Grid.Width = width + 3;
-            if (height + 25 > Grid.Parent.Height / 2)
+            if (height + 25 > Grid.Parent.Height / 3)
             {
-                Grid.Height = Grid.Parent.Height / 2;
+                Grid.Height = Grid.Parent.Height / 3;
                 Grid.Width += 25; //extra width for scrollbar
             }
             else
                 Grid.Height = height + 25;
-            Grid.Location = new Point(Math.Max(Scalars.Width, calendar.Width) + 5, 0);
 
-            //relocate date picker
-            calendar.Location = new Point(0, Scalars.Location.Y + Scalars.Height + 10);
-
-            //resize tree heights grid
-            int hWidth = 0;
-            int hHeight = 0;
-            foreach(DataGridViewColumn col in dgvHeights.Columns)
-                hWidth += col.Width;
-            foreach (DataGridViewRow row in dgvHeights.Rows)
-                hHeight += row.Height;
-            dgvHeights.Width = hWidth + dgvHeights.RowHeadersWidth + 3; 
-            if (hHeight + 25 + dgvHeights.Location.Y >= Grid.Height)
-            {
-                dgvHeights.Height = Grid.Height - dgvHeights.Location.Y;
-                dgvHeights.Width = hWidth + dgvHeights.RowHeadersWidth + 25;
-            }
-            else
-                dgvHeights.Height = hHeight + dgvHeights.ColumnHeadersHeight + 3; //ternary is to catch case where Rows.Count == 0
-            dgvHeights.Location = new Point(0, calendar.Location.Y + calendar.Height + 10);
+            Grid.Location = new Point(dgvHeights.Location.X + dgvHeights.Width + 3, 0);
+            if (Grid.Width + Grid.Location.X > Grid.Parent.Width)
+                Grid.Width = Grid.Parent.Width - Grid.Location.X;
 
             height = Math.Max(Grid.Height, dgvHeights.Height);
             width = Math.Max(Grid.Width, dgvHeights.Width);

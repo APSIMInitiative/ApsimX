@@ -93,7 +93,7 @@
             this.Grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.Grid.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Grid.Location = new System.Drawing.Point(239, 0);
+            this.Grid.Location = new System.Drawing.Point(291, 0);
             this.Grid.Name = "Grid";
             this.Grid.RowHeadersVisible = false;
             this.Grid.Size = new System.Drawing.Size(236, 272);
@@ -139,9 +139,9 @@
             this.dgvHeights.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Date,
             this.TreeHeight});
-            this.dgvHeights.Location = new System.Drawing.Point(4, 275);
+            this.dgvHeights.Location = new System.Drawing.Point(226, 0);
             this.dgvHeights.Name = "dgvHeights";
-            this.dgvHeights.Size = new System.Drawing.Size(223, 150);
+            this.dgvHeights.Size = new System.Drawing.Size(59, 272);
             this.dgvHeights.TabIndex = 7;
             this.dgvHeights.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvHeights_RowsRemoved);
             // 

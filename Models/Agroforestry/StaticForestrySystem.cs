@@ -174,11 +174,10 @@ namespace Models.Agroforestry
             {
                 ZoneInfo newZone = new ZoneInfo();
                 newZone.zone = Apsim.Child(this, Table[0][i - 1]) as Zone;
-                newZone.WindReduction = Convert.ToDouble(Table[i][0]);
-                newZone.Shade = Convert.ToDouble(Table[i][1]);
-                newZone.RLD = new double[Table[1].Count - 4];
-                for (int j = 4; j < Table[1].Count; j++)
-                    newZone.RLD[j - 4] = Convert.ToDouble(Table[i][j]);
+                newZone.Shade = Convert.ToDouble(Table[i][0]);
+                newZone.RLD = new double[Table[1].Count - 3];
+                for (int j = 3; j < Table[1].Count; j++)
+                    newZone.RLD[j - 3] = Convert.ToDouble(Table[i][j]);
                 ZoneInfoList.Add(newZone);
             }
         }
@@ -345,11 +344,6 @@ namespace Models.Agroforestry
         /// The name of the zone.
         /// </summary>
         public Zone zone;
-
-        /// <summary>
-        /// Wind value.
-        /// </summary>
-        public double WindReduction;
 
         /// <summary>
         /// Shade value.

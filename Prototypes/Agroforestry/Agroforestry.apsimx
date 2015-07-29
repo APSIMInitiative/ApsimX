@@ -7221,11 +7221,15 @@ namespace Models
         <dateTime>2015-07-10T00:00:00</dateTime>
         <dateTime>2015-07-23T00:00:00</dateTime>
         <dateTime>2015-07-20T00:00:00</dateTime>
+        <dateTime>2015-10-17T00:00:00</dateTime>
+        <dateTime>2015-10-27T00:00:00</dateTime>
       </dates>
       <heights>
         <double>5000</double>
         <double>10000</double>
         <double>20000</double>
+        <double>30000</double>
+        <double>50000</double>
       </heights>
     </StaticForestrySystem>
     <Graph>
