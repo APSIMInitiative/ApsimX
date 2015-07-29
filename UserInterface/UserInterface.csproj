@@ -140,6 +140,7 @@
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
+    <Compile Include="Presenters\StaticForestrySystemPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -149,12 +150,8 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
-    <Compile Include="Utility\DateTimeCellType.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Utility\FindAndReplaceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Utility\DateTimeCellType.cs" />
+    <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.designer.cs">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </Compile>
@@ -212,6 +209,12 @@
     </Compile>
     <Compile Include="Views\FolderView.Designer.cs">
       <DependentUpon>FolderView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StaticForestrySystemView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\StaticForestrySystemView.Designer.cs">
+      <DependentUpon>StaticForestrySystemView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\XYPairsView.cs">
       <SubType>UserControl</SubType>
@@ -387,6 +390,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FolderView.resx">
       <DependentUpon>FolderView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\StaticForestrySystemView.resx">
+      <DependentUpon>StaticForestrySystemView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\XYPairsView.resx">
       <DependentUpon>XYPairsView.cs</DependentUpon>
