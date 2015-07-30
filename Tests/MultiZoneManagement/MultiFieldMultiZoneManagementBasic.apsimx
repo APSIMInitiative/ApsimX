@@ -16,7 +16,7 @@
     </Test>
   </Tests>
   <Simulation>
-    <Name>TwoZone_GodLevelManagement</Name>
+    <Name>MultiPaddockSimulation</Name>
     <Clock>
       <Name>Clock</Name>
       <StartDate>1998-07-01T00:00:00</StartDate>
@@ -37,12 +37,11 @@
       <Script>
         <Today_Rain>0</Today_Rain>
       </Script>
-      <Code><![CDATA[using System;
+      <Code><![CDATA[//this module intercepts rain so that it can be applied with irrigation rather than independently
+
+using System;
 using Models.Core;
 using APSIM.Shared.Utilities;
-
-
-
 using System.Collections.Generic;
 using System.Text;
 using Models.PMF;
@@ -64,8 +63,8 @@ public class Script : Model
    private void OnPreparingNewWeatherData(object sender, EventArgs e)
    {
 
-      Today_Rain = Met.Rain;
-      Met.Rain = 0;
+      Today_Rain = Met.Rain; //takes note of how much rain was due to fall today
+      Met.Rain = 0; //and then sets it to zero
 }
 }
 }
@@ -77,22 +76,34 @@ public class Script : Model
       <Script>
         <Today_PatchIrrigation>
         </Today_PatchIrrigation>
-        <On_off>True</On_off>
-        <Crop_in>True</Crop_in>
+        <SoilPAW>
+        </SoilPAW>
+        <TodayDeficit>
+        </TodayDeficit>
+        <IrrigDeficit>
+        </IrrigDeficit>
         <No_fields>4</No_fields>
+        <On_off>True</On_off>
         <Start_irrig>1998-10-01</Start_irrig>
         <Finish_irrig>1999-04-01</Finish_irrig>
-        <Application>0</Application>
         <Irrig_eff>0</Irrig_eff>
-        <Resp_irrig>True</Resp_irrig>
+        <Nozzle_diameter>0</Nozzle_diameter>
         <Rain_pause>0</Rain_pause>
         <Days_pause>0</Days_pause>
+        <Crop_in>True</Crop_in>
+        <Application>0</Application>
+        <Resp_irrig>True</Resp_irrig>
+        <Var_rate>True</Var_rate>
+        <Var_field>False</Var_field>
         <Soil_depth>0</Soil_depth>
         <Irrig_paw>0</Irrig_paw>
-        <Irrig_method>Mean</Irrig_method>
-        <Nozzle_diameter>0</Nozzle_diameter>
+        <Irrig_method>Driest</Irrig_method>
+        <Current_TodayDeficit>0</Current_TodayDeficit>
+        <Current_IrrigDeficit>0</Current_IrrigDeficit>
       </Script>
-      <Code><![CDATA[using System;
+      <Code><![CDATA[//this module describes the irrigator, it's use and how much irrigation should be applied to each field
+
+using System;
 using Models.Core;
 using Models.PMF.OldPlant; //don't need OldPlant when use MCSP
 using System.Collections.Generic;
@@ -108,52 +119,57 @@ namespace Models
 		[Link] Clock Clock; 
 		[Link] Weather Weather;
 		[Link] Simulation Simulation;
-		//private float Rain;
 		
 		public double[] Today_PatchIrrigation {get; set;}
+		public double[] SoilPAW {get; set;}
+		public double[] TodayDeficit {get; set; }
+		public double[] IrrigDeficit {get; set; }
 		
-		[Description("Irrigation on? (True/False)")]
-	public bool On_off {get; set;}
-	[Description("Only irrigate when crop is present? (True/False)")]
-	public bool Crop_in {get; set;}
 	[Description("Number of fields to irrigate")]
 	public double No_fields {get; set;}
+	[Description("Irrigation on? (True/False)")]
+	public bool On_off {get; set;}
 	[Description("Date irrigator switched on")]
 	public DateTime Start_irrig {get; set;}
 	[Description("Date irrigator switched off")]
 	public DateTime Finish_irrig {get; set;}
-    [Description("Amount of irrigation applied per day (mm)")]
-	public float Application {get; set;}
-    [Description("Irrigation efficiency (%)")]
+	[Description("Irrigation efficiency (%)")]
 	public float Irrig_eff {get; set;}
-    [Description("Responsive irrigation management? (True/False)")]
-	public bool Resp_irrig {get; set;}
+	[Description("Wetting diameter of nozzle (m)")]
+	public double Nozzle_diameter {get; set;}
 	[Description("Amount of rainfall in last 3 days causes irrigator to pause (mm)")]
 	public float Rain_pause {get; set;}
     [Description("Number of days irrigator will pause after rainfall")]
 	public float Days_pause {get; set;}
+	[Description("Only irrigate when crop is present? (True/False)")]
+	public bool Crop_in {get; set;}
+	[Description("Depth of irrigation applied per day for set irrigation (mm)")]
+	public float Application {get; set;}
+    [Description("Irrigation responds to soil moisture? (True/False)")]
+	public bool Resp_irrig {get; set;}
+	[Description("Variable rate irrigation? (True/False)")]
+	public bool Var_rate {get; set;}
+	[Description("Variable rate on a field basis? (True/False)")]
+	public bool Var_field {get; set;}
 	[Description("Depth to which water deficit is considered (mm)")]
 	public float Soil_depth {get; set;}
 	[Description("PAW lost as threshold for irrigation (%)")]
 	public float Irrig_paw {get; set;}
 	[Description("Method by which PAW is calculated on a field basis (Mean, Driest, Wettest)")]
 	public string Irrig_method {get; set;}
-	[Description("Wetting diameter of nozzle (m)")]
-	public double Nozzle_diameter {get; set;}
 
         
         private Zone[] Zones {get; set; }
-        
-        
+      
         private int Irrigator_position;
 		private int Counter;
 		
 		private double Rain3;
 		private double[] Rain_3;
 		private double Days2Pause;
-		public double Current_TodayDeficit;
-		public double Current_IrrigDeficit;
-		
+		public double Current_TodayDeficit {get; set; }
+		public double Current_IrrigDeficit {get; set; }
+
 		//setting things to zero
 		[EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -166,7 +182,7 @@ namespace Models
 			Rain_3[1] = 0;
 			Rain_3[2] = 0;
 			
-			//THESE ARE HERE BECAUSE INTERFACE BROKEN - TO BE REMOVED
+			//THESE ARE HERE BECAUSE INTERFACE IS BROKEN - TO BE REMOVED
 			Application = 10;
 			Irrig_eff = 80;
 			Rain_pause = 30;
@@ -179,163 +195,207 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void DoStartOfSimulation(object sender, EventArgs e)
         {
-               // Set up our list on zones in the simulation
+               // Set up our list of zones in the simulation
                List<Zone> zones = new List<Zone>();
                foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
                {
-                     if (zone is Simulation)
-                     {
-                        // top level simulation - we don't want this.
-                     }
-                     else
-                     {
-                     zones.Add(zone as Zone);
-                  }
+               		if (zone is Simulation)
+                    {
+                       // top level simulation - we don't want this.
+                    }
+                    else
+                    {
+                    	zones.Add(zone as Zone);
+                  	}
                }
                Zones = zones.ToArray();
-               Today_PatchIrrigation = new double[Zones.Length];
+               
+               //set up arrays
+               Today_PatchIrrigation = new double[Zones.Length+1];
+               SoilPAW = new double[Zones.Length+1];
+               TodayDeficit = new double[Zones.Length+1];
+               IrrigDeficit = new double[Zones.Length+1];
          }
 		
 		
 		[EventSubscribe("DoManagement")]
 		private void DoManagement(object sender, EventArgs e)
-		//Only irrigates between set dates and switched on
+		
 		{
-		if (DateUtilities.WithinDates(Start_irrig, Clock.Today.Date, Finish_irrig) && (On_off)) {
-
-			//calculates rain in last 3 days and whether irrigator is paused 
-			Rain_3[2] = Rain_3[1]; //passes the days backwards
-			Rain_3[1] = Rain_3[0];
-			Rain_3[0] = (double) Apsim.Get(Simulation, "CatchRain.Script.Today_Rain");
-			Rain3 = Rain_3[0] + Rain_3[1] + Rain_3[2];
-			if (Rain3 >= Rain_pause) {
-				Days2Pause = Days_pause;
-			} else {
-				Days2Pause = Days2Pause - 1;
-			}
-			
 			//sets todays irrigation for each patch to 0
-			for (int i = 0; i < Zones.Length; i++) {
+			for (int i = 0; i < Zones.Length; i++) 
+			{
 				Today_PatchIrrigation[i] = 0;
-				}
-
-			//Moves the irrigator around the fields every day unless paused
-			if (Counter < No_fields && Days2Pause < 0.5) {
-				Irrigator_position = Counter;
-				Counter = Counter + 1;
-			} else if (Counter >= No_fields && Days2Pause < 0.5) {
-				Irrigator_position = Counter;
-				Counter = 1;
+				TodayDeficit[i] = 0;
+				IrrigDeficit[i] = 0;
+				SoilPAW[i] = 0;
 			}
 
-			if (Resp_irrig) {
-
-				//Calculate PAW and deficit for each patch...
-
-				double[] SoilPAW = null;
-				double[] TodayDeficit = null;
-				double[] IrrigDeficit = null;
-
-				SoilPAW = new double[Zones.Length + 1];
-				TodayDeficit = new double[Zones.Length + 1];
-				IrrigDeficit = new double[Zones.Length + 1];
-
+			if (DateUtilities.WithinDates(Start_irrig, Clock.Today.Date, Finish_irrig) && (On_off)) 
+			{ //Only irrigates between set dates and switched on
 				
-				for (int i = 0; i < Zones.Length; i++) {
-					Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;
-					double[] sw_dul = soil.SoilWater.DULmm;
-					double[] sw_sw = soil.SoilWater.SWmm;
-					double[] sw_15 = soil.SoilWater.LL15mm;
-					double MySoilDepth = 0;
-					for (int z = 0; z <= soil.SoilWater.dlayer.Length - 1; z++) {
-						MySoilDepth = MySoilDepth + soil.SoilWater.dlayer[z];
-						if (MySoilDepth <= Soil_depth) {
-							SoilPAW[i] = SoilPAW [i] + sw_dul[z] - sw_15[z];
-							TodayDeficit[i] = TodayDeficit[i] + sw_dul[z] - Math.Min(sw_dul[z], sw_sw[z]);
-						}
-					}
-					IrrigDeficit[i] = (Irrig_paw / 100 * SoilPAW[i]);
-					
+				//calculates rain in last 3 days and whether irrigator is paused 
+				Rain_3[2] = Rain_3[1]; //passes the days backwards
+				Rain_3[1] = Rain_3[0]; //passes the days backwards
+				Rain_3[0] = (double) Apsim.Get(Simulation, "CatchRain.Script.Today_Rain"); //today's rain caught in the CatchRain manager script
+				Rain3 = Rain_3[0] + Rain_3[1] + Rain_3[2]; //sums the rain in the last 3 days
+				if (Rain3 >= Rain_pause) //and if the total is greater than required for irrigator to pause (from UI)
+				{ 
+					Days2Pause = Days_pause; //the irrigator is paused for set no. days (from UI)
+				} 
+				else 
+				{
+					Days2Pause = Days2Pause - 1; // if not, a day is taken from the pause amount
+				}
+			
+				//Moves the irrigator around the fields every day unless paused. If in the last field, will go onto first field next day.
+				if (Counter < No_fields && Days2Pause < 0.5) 
+				{
+					Irrigator_position = Counter;
+					Counter = Counter + 1;
+				} 
+				else if (Counter >= No_fields && Days2Pause < 0.5) 
+				{
+					Irrigator_position = Counter;
+					Counter = 1;
 				}
 
-				//Determines the current fields deficit and threshold depending on how it's calculated 
-				double Sum_Area = 0;
+				if (Resp_irrig)  //if model set to use irrigation responsive to soil water (from UI)
+				{
+					//Calculate potential PAW and deficit for each patch...
 
-				if (Irrig_method == "Wettest") {
-					Current_TodayDeficit = 0;
-					Current_IrrigDeficit = 0.0001;
-				} else if (Irrig_method == "Driest") {
-					Current_TodayDeficit = 1000;
-					Current_IrrigDeficit = 1;
-				} else if (Irrig_method == "Mean") {
-					Current_TodayDeficit = 0;
+					for (int i = 0; i < Zones.Length; i++) 
+					{
+						Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;
+						double[] sw_dul = soil.SoilWater.DULmm;
+						double[] sw_sw = soil.SoilWater.SWmm;
+						double[] sw_15 = soil.SoilWater.LL15mm;
+						double MySoilDepth = 0;
+						for (int z = 0; z <= soil.SoilWater.dlayer.Length - 1; z++) 
+						{
+							MySoilDepth = MySoilDepth + soil.SoilWater.dlayer[z];
+							if (MySoilDepth <= Soil_depth) 
+							{
+								SoilPAW[i] = SoilPAW [i] + (sw_dul[z] - sw_15[z]);
+								TodayDeficit[i] = TodayDeficit[i] + (sw_dul[z] - Math.Min(sw_dul[z], sw_sw[z]));
+							}
+						}
+						IrrigDeficit[i] = ((Irrig_paw / 100) * SoilPAW[i]);
+					
+					}
+
+					//Determines the current fields deficit and threshold (depending on how it's calculated - from UI)
+					double Sum_Area = 0;
+
+					if (Irrig_method == "Wettest") 
+					{
+						Current_TodayDeficit = 0;
+						Current_IrrigDeficit = 0.0001;
+					} 
+					else if (Irrig_method == "Driest") 
+					{
+						Current_TodayDeficit = 1000;
+						Current_IrrigDeficit = 1;
+					} 
+					else if (Irrig_method == "Mean") 
+					{
+						Current_TodayDeficit = 0;
+						Current_IrrigDeficit = 0;
+					}
+
+                
+					for (int i = 0; i < Zones.Length; i++) //cycles through each patch that is within the paddock where the irrigator is
+					{
+						double Current_Paddock = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
+						double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area");
+					
+						if (Current_Paddock == Irrigator_position) 
+						{
+							if (Irrig_method == "Wettest" && ((TodayDeficit[i] / IrrigDeficit[i]) > (Current_TodayDeficit / Current_IrrigDeficit))) 
+							{
+								Current_TodayDeficit = TodayDeficit[i];
+								//Driest todays deficit
+								Current_IrrigDeficit = IrrigDeficit[i];
+								//Selected irrig deficit threshold
+							} 
+							else if (Irrig_method == "Driest" && ((TodayDeficit[i] / IrrigDeficit[i]) < (Current_TodayDeficit / Current_IrrigDeficit))) 
+							{
+								Current_TodayDeficit = TodayDeficit[i];
+								Current_IrrigDeficit = IrrigDeficit[i];
+								//Selected irrig deficit threshold
+							} 
+							else if (Irrig_method == "Mean") 
+							{
+								Current_TodayDeficit = Current_TodayDeficit + (TodayDeficit[i] * Current_Area);
+								Current_IrrigDeficit = Current_IrrigDeficit + (IrrigDeficit[i] * Current_Area);
+								Sum_Area = Sum_Area + Current_Area;
+							}
+						}
+							
+						if (Current_Paddock == Irrigator_position && Irrig_method == "Mean")
+						{
+							Current_TodayDeficit = Current_TodayDeficit / Sum_Area;
+							Current_IrrigDeficit = Current_IrrigDeficit / Sum_Area;
+						}
+					
+					}
+ 
+				} 
+				else if (!Resp_irrig) //If irrigation is not responsive  
+				{
+					Current_TodayDeficit = 1;
 					Current_IrrigDeficit = 0;
 				}
 
-                
-				for (int i = 0; i < Zones.Length; i++) {
-					
+				//Moves through all of the paddocks
+				for (int i = 0; i < Zones.Length; i++) 
+				{
 					double Current_Paddock = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
-					double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area");
+					double Current_CropStage = (double) Apsim.Get(Zones[i], "Wheat.Zadok.Stage");
+					string Status = "Dead";
+					Today_PatchIrrigation[i] = 0;
+							
+					//If option selected then irrigates only alive crops 
+					if ((Crop_in && Current_CropStage > 0 && Current_CropStage < 100) || !Crop_in) 
+					{
+						Status = "alive";
+					} 
+					else 
+					{
+						Status = "Dead";
+					}
 				
-					//cycles through each patch that that is within the paddock where the irrigator is
-					if (Current_Paddock == Irrigator_position) {
-						if (Irrig_method == "Wettest" & (TodayDeficit[i] / IrrigDeficit[i]) > (Current_TodayDeficit / Current_IrrigDeficit)) {
-							Current_TodayDeficit = TodayDeficit[i];
-							//Driest todays deficit
-							Current_IrrigDeficit = IrrigDeficit[i];
-							//Selected irrig deficit threshold
-						} else if (Irrig_method == "Driest" & (TodayDeficit[i] / IrrigDeficit[i]) < (Current_TodayDeficit / Current_IrrigDeficit)) {
-							Current_TodayDeficit = TodayDeficit[i];
-							Current_IrrigDeficit = IrrigDeficit[i];
-							//Selected irrig deficit threshold
-						} else if (Irrig_method == "Mean") {
-							Current_TodayDeficit = Current_TodayDeficit + (TodayDeficit[i] * Current_Area);
-							Current_IrrigDeficit = Current_IrrigDeficit + (IrrigDeficit[i] * Current_Area);
-							Sum_Area = Sum_Area + Current_Area;
+					// allocates irrigation if the irrigator is in that paddock, the crops are in, the irrigator isn't paused by rain and if the paddock 'needs' water
+					if (Var_rate)
+					{
+						if (Var_field) 
+						{
+							//on a field basis if variable rate field irrigation
+							if (Current_Paddock == Irrigator_position && Status == "alive" && (Days2Pause < 0.5) && (Current_TodayDeficit >= Current_IrrigDeficit))
+							{
+								Today_PatchIrrigation[i] = (Current_TodayDeficit * (Irrig_eff / 100));
+							}	
+						}
+						else
+						{
+							//on a patch basis if variable rate patch irrigation
+							if (Current_Paddock == Irrigator_position && Status == "alive" && (Days2Pause < 0.5) && (TodayDeficit[i] >= IrrigDeficit[i]))
+							{
+								Today_PatchIrrigation[i] = (TodayDeficit[i] * (Irrig_eff / 100));
+							}	
 						}
 					}
-
-					if (Current_Paddock == Irrigator_position & Irrig_method == "Mean") {
-						Current_TodayDeficit = Current_TodayDeficit / Sum_Area;
-						Current_IrrigDeficit = Current_IrrigDeficit / Sum_Area;
+					else
+					{
+						//on a field basis if set application rate irrigation
+						if (Current_Paddock == Irrigator_position && Status == "alive" && (Days2Pause < 0.5) && (Current_TodayDeficit >= Current_IrrigDeficit)) 
+						{
+							Today_PatchIrrigation[i] = (Application * (Irrig_eff / 100));
+						}	
 					}
-
 				}
-
-				//Is irrigation responsive?   
-			} else if (!Resp_irrig) {
-				Current_TodayDeficit = 1;
-				Current_IrrigDeficit = 0;
 			}
-
-
-			//Moves through all of the paddocks
-			for (int i = 0; i < Zones.Length; i++) {
-				double Current_Paddock = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
-				string Status = "Dead";
-				Today_PatchIrrigation[i] = 0;
-					
-				//If option selected then irrigates only alive crops 
-				if (Crop_in){
-					Status = "alive";
-					} else {
-					Status = "Dead";
-				}
-				
-				//Irrigates in relevant paddocks if the irrigator is in that paddock, the crops are in, the irrigator isn't paused by rain and if the paddock 'needs' water
-				if (Current_Paddock == Irrigator_position && Status == "alive" && Days2Pause < 0.5 && Current_TodayDeficit >= Current_IrrigDeficit) {
-				
-					Today_PatchIrrigation[i] = (Application * (Irrig_eff / 100));
-
-				}
-
-			}
-
 		}
-
-	}
-		
 	}
 }
 ]]></Code>
@@ -346,7 +406,7 @@ namespace Models
         <Field_no>1</Field_no>
         <Field_crop>Hartog</Field_crop>
         <Sow_date>1998-09-01</Sow_date>
-        <Sow_density>15</Sow_density>
+        <Sow_density>150</Sow_density>
         <Sow_depth>20</Sow_depth>
         <Sow_row>650</Sow_row>
         <Fert1_date>1998-09-01</Fert1_date>
@@ -438,21 +498,18 @@ namespace Models
 					{
 						Plant15 wheat = Apsim.Find(Zones[i], typeof(Plant15)) as Plant15;//instead of Plant15 will just be Plant when move to MCSP
 						wheat.Sow(population:Sow_density, cultivar:Field_crop, depth:Sow_depth, rowSpacing:Sow_row);
-						//Console.WriteLine(Today + " - " + Cr.Cultivar.ToString + " sown into " + SubPaddock.FullName)
 					}
 					
 				if (Clock.Today.Date == Harvest_date && Current_Paddock == Field_no)
 					{
 						Plant15 wheat = Apsim.Find(Zones[i], typeof(Plant15)) as Plant15;//instead of Plant15 will just be Plant when move to MCSP
 						//wheat.harvest();// NO IDEA WHY THIS WON'T HARVEST
-						//Console.WriteLine(Today + " - " + SubPaddock.FullName + " harvested")
 					}
 					
 				if ((Clock.Today.Date == Fert1_date || Clock.Today.Date == Fert2_date) && Current_Paddock == Field_no)	
 					{
 						Fertiliser fertiliser = Apsim.Find(Zones[i], typeof(Fertiliser)) as Fertiliser;
-						fertiliser.Apply(Amount: Fert_rate, Depth: Fert_depth, Type: Fertiliser.Types.NO3N); //FERT NOT APPLIED, NOT DUE TO OR OPERATOR ABOVE
-						//Console.WriteLine(Today + " - " + fert.Amount.ToString + " of " + fert.Type.ToString + " applied to " + SubPaddock.FullName)
+						fertiliser.Apply(Amount: Fert_rate, Depth: Fert_depth, Type: Fertiliser.Types.NO3N);
 					}
 				
 			}
@@ -465,13 +522,13 @@ namespace Models
       <Name>Manager_Field_02</Name>
       <Script>
         <Field_no>2</Field_no>
-        <Field_crop>Spear</Field_crop>
-        <Sow_date>1998-09-16</Sow_date>
-        <Sow_density>15</Sow_density>
+        <Field_crop>Hartog</Field_crop>
+        <Sow_date>1998-09-01</Sow_date>
+        <Sow_density>150</Sow_density>
         <Sow_depth>20</Sow_depth>
         <Sow_row>650</Sow_row>
-        <Fert1_date>1998-09-16</Fert1_date>
-        <Fert2_date>1998-11-16</Fert2_date>
+        <Fert1_date>1998-09-01</Fert1_date>
+        <Fert2_date>1998-11-01</Fert2_date>
         <Fert_rate>0</Fert_rate>
         <Fert_depth>0</Fert_depth>
         <Harvest_date>1999-02-01</Harvest_date>
@@ -559,21 +616,18 @@ namespace Models
 					{
 						Plant15 wheat = Apsim.Find(Zones[i], typeof(Plant15)) as Plant15;//instead of Plant15 will just be Plant when move to MCSP
 						wheat.Sow(population:Sow_density, cultivar:Field_crop, depth:Sow_depth, rowSpacing:Sow_row);
-						//Console.WriteLine(Today + " - " + Cr.Cultivar.ToString + " sown into " + SubPaddock.FullName)
 					}
 					
 				if (Clock.Today.Date == Harvest_date && Current_Paddock == Field_no)
 					{
 						Plant15 wheat = Apsim.Find(Zones[i], typeof(Plant15)) as Plant15;//instead of Plant15 will just be Plant when move to MCSP
 						//wheat.harvest();// NO IDEA WHY THIS WON'T HARVEST
-						//Console.WriteLine(Today + " - " + SubPaddock.FullName + " harvested")
 					}
 					
 				if ((Clock.Today.Date == Fert1_date || Clock.Today.Date == Fert2_date) && Current_Paddock == Field_no)	
 					{
 						Fertiliser fertiliser = Apsim.Find(Zones[i], typeof(Fertiliser)) as Fertiliser;
-						fertiliser.Apply(Amount: Fert_rate, Depth: Fert_depth, Type: Fertiliser.Types.NO3N); //FERT NOT APPLIED, NOT DUE TO OR OPERATOR ABOVE
-						//Console.WriteLine(Today + " - " + fert.Amount.ToString + " of " + fert.Type.ToString + " applied to " + SubPaddock.FullName)
+						fertiliser.Apply(Amount: Fert_rate, Depth: Fert_depth, Type: Fertiliser.Types.NO3N);
 					}
 				
 			}
@@ -586,13 +640,13 @@ namespace Models
       <Name>Manager_Field_03</Name>
       <Script>
         <Field_no>3</Field_no>
-        <Field_crop>Gutha</Field_crop>
-        <Sow_date>1998-10-01</Sow_date>
-        <Sow_density>15</Sow_density>
+        <Field_crop>Hartog</Field_crop>
+        <Sow_date>1998-09-01</Sow_date>
+        <Sow_density>150</Sow_density>
         <Sow_depth>20</Sow_depth>
         <Sow_row>650</Sow_row>
-        <Fert1_date>1998-10-01</Fert1_date>
-        <Fert2_date>1998-12-01</Fert2_date>
+        <Fert1_date>1998-09-01</Fert1_date>
+        <Fert2_date>1998-11-01</Fert2_date>
         <Fert_rate>0</Fert_rate>
         <Fert_depth>0</Fert_depth>
         <Harvest_date>1999-02-01</Harvest_date>
@@ -680,21 +734,18 @@ namespace Models
 					{
 						Plant15 wheat = Apsim.Find(Zones[i], typeof(Plant15)) as Plant15;//instead of Plant15 will just be Plant when move to MCSP
 						wheat.Sow(population:Sow_density, cultivar:Field_crop, depth:Sow_depth, rowSpacing:Sow_row);
-						//Console.WriteLine(Today + " - " + Cr.Cultivar.ToString + " sown into " + SubPaddock.FullName)
 					}
 					
 				if (Clock.Today.Date == Harvest_date && Current_Paddock == Field_no)
 					{
 						Plant15 wheat = Apsim.Find(Zones[i], typeof(Plant15)) as Plant15;//instead of Plant15 will just be Plant when move to MCSP
 						//wheat.harvest();// NO IDEA WHY THIS WON'T HARVEST
-						//Console.WriteLine(Today + " - " + SubPaddock.FullName + " harvested")
 					}
 					
 				if ((Clock.Today.Date == Fert1_date || Clock.Today.Date == Fert2_date) && Current_Paddock == Field_no)	
 					{
 						Fertiliser fertiliser = Apsim.Find(Zones[i], typeof(Fertiliser)) as Fertiliser;
-						fertiliser.Apply(Amount: Fert_rate, Depth: Fert_depth, Type: Fertiliser.Types.NO3N); //FERT NOT APPLIED, NOT DUE TO OR OPERATOR ABOVE
-						//Console.WriteLine(Today + " - " + fert.Amount.ToString + " of " + fert.Type.ToString + " applied to " + SubPaddock.FullName)
+						fertiliser.Apply(Amount: Fert_rate, Depth: Fert_depth, Type: Fertiliser.Types.NO3N); 
 					}
 				
 			}
@@ -707,13 +758,13 @@ namespace Models
       <Name>Manager_Field_04</Name>
       <Script>
         <Field_no>4</Field_no>
-        <Field_crop>Wilgoyne</Field_crop>
-        <Sow_date>1998-10-15</Sow_date>
-        <Sow_density>15</Sow_density>
+        <Field_crop>Hartog</Field_crop>
+        <Sow_date>1998-09-01</Sow_date>
+        <Sow_density>150</Sow_density>
         <Sow_depth>20</Sow_depth>
         <Sow_row>650</Sow_row>
-        <Fert1_date>1998-10-15</Fert1_date>
-        <Fert2_date>1998-12-15</Fert2_date>
+        <Fert1_date>1998-09-01</Fert1_date>
+        <Fert2_date>1998-11-01</Fert2_date>
         <Fert_rate>0</Fert_rate>
         <Fert_depth>0</Fert_depth>
         <Harvest_date>1999-02-01</Harvest_date>
@@ -801,21 +852,18 @@ namespace Models
 					{
 						Plant15 wheat = Apsim.Find(Zones[i], typeof(Plant15)) as Plant15;//instead of Plant15 will just be Plant when move to MCSP
 						wheat.Sow(population:Sow_density, cultivar:Field_crop, depth:Sow_depth, rowSpacing:Sow_row);
-						//Console.WriteLine(Today + " - " + Cr.Cultivar.ToString + " sown into " + SubPaddock.FullName)
 					}
 					
 				if (Clock.Today.Date == Harvest_date && Current_Paddock == Field_no)
 					{
 						Plant15 wheat = Apsim.Find(Zones[i], typeof(Plant15)) as Plant15;//instead of Plant15 will just be Plant when move to MCSP
 						//wheat.harvest();// NO IDEA WHY THIS WON'T HARVEST
-						//Console.WriteLine(Today + " - " + SubPaddock.FullName + " harvested")
 					}
 					
 				if ((Clock.Today.Date == Fert1_date || Clock.Today.Date == Fert2_date) && Current_Paddock == Field_no)	
 					{
 						Fertiliser fertiliser = Apsim.Find(Zones[i], typeof(Fertiliser)) as Fertiliser;
-						fertiliser.Apply(Amount: Fert_rate, Depth: Fert_depth, Type: Fertiliser.Types.NO3N); //FERT NOT APPLIED, NOT DUE TO OR OPERATOR ABOVE
-						//Console.WriteLine(Today + " - " + fert.Amount.ToString + " of " + fert.Type.ToString + " applied to " + SubPaddock.FullName)
+						fertiliser.Apply(Amount: Fert_rate, Depth: Fert_depth, Type: Fertiliser.Types.NO3N);
 					}
 				
 			}
@@ -827,21 +875,27 @@ namespace Models
     <Manager>
       <Name>ApplyWater</Name>
       <Script>
+        <IrrApp>
+        </IrrApp>
         <TotWaterApp>
         </TotWaterApp>
         <Runoff>
         </Runoff>
+        <RunoffField>
+        </RunoffField>
         <TargetHourlyApp>
         </TargetHourlyApp>
         <ActualHourlyApp>
         </ActualHourlyApp>
-        <TopKS>0</TopKS>
-        <RunoffArea>
-        </RunoffArea>
         <TotArea>
         </TotArea>
-        <IrrApp>
-        </IrrApp>
+        <TopKS>0</TopKS>
+        <RunOn>
+        </RunOn>
+        <AreaRunOn>
+        </AreaRunOn>
+        <WaterExport>
+        </WaterExport>
       </Script>
       <Code><![CDATA[using System;
 using Models.Core;
@@ -861,11 +915,14 @@ namespace Models
 		public double[] IrrApp { get; set;}
 		public double[] TotWaterApp { get; set;}
 		public double[] Runoff { get; set;}
-		public double[] RunoffArea { get; set;}
+		public double[] RunoffField { get; set;}
 		public double[] TargetHourlyApp { get; set;}
 		public double[] ActualHourlyApp { get; set;}
 		public double[] TotArea {get; set;}
 		public double TopKS {get; set;}
+		public double[] RunOn {get; set;}
+		public double[] AreaRunOn {get; set;}
+		public double[] WaterExport {get; set;}
 		
 		[EventSubscribe("StartOfSimulation")]
 		private void DoStartOfSimulation(object sender, EventArgs e)
@@ -894,6 +951,7 @@ namespace Models
 			IrrApp = new double[Zones.Length];
 			TotWaterApp = new double[Zones.Length];
 			Runoff = new double[Zones.Length];
+			RunOn = new double[Zones.Length];
 			
 			//get all the info we need
             IrrApp = (double[]) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.Today_PatchIrrigation");
@@ -901,10 +959,12 @@ namespace Models
             double NozDiam = (double) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.Nozzle_diameter");
             double RainApp = (double) Apsim.Get(Simulation, "CatchRain.Script.Today_Rain");
             
-            RunoffArea = new double[(int)TotFields];
+            RunoffField = new double[(int)TotFields];
             TotArea = new double[(int)TotFields];
+            AreaRunOn = new double[(int)TotFields];
+            WaterExport = new double[(int)TotFields];
             
-			//Calculate how much water (irrigation and rainfall to apply to each zone and apply it
+			//Calculate how much water (irrigation and rainfall) to apply to each zone and apply it
 		    for (int i = 0; i < Zones.Length; i++)
             {
                		//create the variables we need
@@ -913,6 +973,7 @@ namespace Models
 					double Current_IrrPos = (double) Apsim.Get(Zones[i], "Manager_P.Script.Irrigator_position");
 					double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area");
 					double Current_Field = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
+					string Current_LandPos = (string) Apsim.Get(Zones[i], "Manager_P.Script.Landscape_position");
 										
               		//create the links we need
                		Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;
@@ -931,7 +992,7 @@ namespace Models
 					
 					TotArea[(int)Current_Field-1] = TotArea[(int)Current_Field-1] + Current_Area;
 					
-					//populate hourly water application array
+					//populate hourly water application array THIS IS CORRECT
 					for (int j = 0; j < TargetHourlyApp.Length; j++) //for each hour
 					{
 						TargetHourlyApp[j] = RainAppRate; //add the rain
@@ -952,13 +1013,12 @@ namespace Models
 
 					for (int j = 0; j < TargetHourlyApp.Length; j++) //for each hour
 					{
-						if (TargetHourlyApp[j] > TopKS) // if the amount of water to appply is greater than the surface infiltration rate then
+						if ((TargetHourlyApp[j] > TopKS) && Current_LandPos == "Loss") // if the amount of water to appply is greater than the surface infiltration rate then
 						{
-							Runoff[i] = Runoff[i] + (TargetHourlyApp[j] - TopKS); //runoff anything above the maximum infiltration rate
-							RunoffArea[(int)Current_Field-1] = RunoffArea[(int)Current_Field-1] + ((TargetHourlyApp[j] - TopKS) / Current_Area);
+							Runoff[i] = Runoff[i] + (TargetHourlyApp[j] - TopKS); //runoff anything above the maximum infiltration rate and sum it over the patch
 							ActualHourlyApp[j] = TopKS; // and only apply what can infiltrate
 						}
-						else if (TargetHourlyApp[j] <= TopKS)
+						else if (TargetHourlyApp[j] <= TopKS || Current_LandPos != "Loss")
 						{
 							ActualHourlyApp[j] = TargetHourlyApp[j];
 						}
@@ -969,21 +1029,34 @@ namespace Models
 					{
 						TotWaterApp[i] = TotWaterApp[i] + ActualHourlyApp[j]; // how much water is being applied per patch
 					}
-		
-            }
+					
+					RunoffField[(int)Current_Field-1] = RunoffField[(int)Current_Field-1] + ((Runoff[i]*10000) * Current_Area); //Multiply runoff in mm per patch by 10,000 to convert to litres/ha then by the number of ha to get a volume in litres of water running off the patch. Sum across all the patches losing water in the field.
+					
+					
+					if (Current_LandPos == "Gain")
+            		{
+            			AreaRunOn[(int)Current_Field-1] = AreaRunOn[(int)Current_Field-1] + Current_Area;
+	           		}
+	        }
             
-            //then for each zone find out if runoff to be applied and apply it value in RunoffArea[i] * Carurrent_Area
+            //then for each zone find out if runoff to be applied and apply it value in RunoffField[i] * Current_Area
             for (int i = 0; i < Zones.Length; i++)
             {
             	double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area");
             	string Current_LandPos = (string) Apsim.Get(Zones[i], "Manager_P.Script.Landscape_position");
             	double Current_Field = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
             	Irrigation irrigation = Apsim.Find(Zones[i], typeof(Irrigation)) as Irrigation;
-            	
-            	if (Current_LandPos == "Gain")
+            	            	
+            	if (RunoffField[(int)Current_Field-1]> 0 && Current_LandPos == "Gain")
             	{
-            		TotWaterApp[i] = TotWaterApp[i] + ((RunoffArea[(int)Current_Field-1] / TotArea[(int)Current_Field-1]) * Current_Area);
+            		RunOn[i] = (((RunoffField[(int)Current_Field-1] / AreaRunOn[(int)Current_Field-1])/10000)* Current_Area);
+            		TotWaterApp[i] = TotWaterApp[i] + RunOn[i];
 	           	}
+	           	else if (RunoffField[(int)Current_Field-1]> 0 && AreaRunOn[(int)Current_Field-1] == 0)
+	           	{
+	           		WaterExport[(int)Current_Field-1] = (RunoffField[(int)Current_Field-1]/10000) / TotArea[(int)Current_Field-1];
+	           	}
+	           	
                 //apply the water
                	irrigation.Apply(TotWaterApp[i]);        
             
@@ -997,14 +1070,18 @@ namespace Models
     <Manager>
       <Name>Field_Reporting</Name>
       <Script>
+        <RArea_Array>
+        </RArea_Array>
         <RYieldArea_Array>
         </RYieldArea_Array>
         <RIrrigationArea_Array>
         </RIrrigationArea_Array>
+        <RWaterArea_Array>
+        </RWaterArea_Array>
         <RFertiliserArea_Array>
         </RFertiliserArea_Array>
-        <RArea_Array>
-        </RArea_Array>
+        <RDrainArea_Array>
+        </RDrainArea_Array>
       </Script>
       <Code><![CDATA[using System;
 using Models.Core;
@@ -1021,15 +1098,22 @@ namespace Models
 		[Link] Simulation Simulation;
 		
 		private Zone[] Zones {get; set; }
+		private double No_Fields {get; set; }
 		private double[] Yield_Array { get; set; }
 		public double[] RArea_Array { get; set; }
 		public double[] RYieldArea_Array { get; set; }
 		private double[] Irrigation_Array { get; set; }
 		public double[] RIrrigationArea_Array { get; set; }
+		private double[] Water_Array { get; set; }
+		public double[] RWaterArea_Array { get; set; }
 		private double[] Fertiliser_Array { get; set; }
 		public double[] RFertiliserArea_Array { get; set; }
+		private double[] Drain_Array { get; set; }
+		public double[] RDrainArea_Array { get; set; }
 		private double[] Current_Irrigation { get; set; }
+		private double[] Current_Water { get; set; }
 		private double[] Current_Rain { get; set; }
+		private double[] Current_Drain { get; set; }
 		
 		
 		[EventSubscribe("StartOfSimulation")]
@@ -1056,29 +1140,37 @@ namespace Models
 		private void DoManagement(object sender, EventArgs e)
 		{
 
-			//****FIX THIS****//double No_Fields = (double) Apsim.Get(this, "MultiZoneIrrigator.Script.No_fields");
-			double No_Fields = 4;
+			No_Fields = (double) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.No_fields");
 			Yield_Array = new double[(int)No_Fields];
 			RArea_Array = new double[(int)No_Fields];
 			RYieldArea_Array = new double[(int)No_Fields];
 			Irrigation_Array = new double[(int)No_Fields];
 			RIrrigationArea_Array = new double[(int)No_Fields];
+			Water_Array = new double[(int)No_Fields];
+			RWaterArea_Array = new double[(int)No_Fields];
 			Fertiliser_Array = new double[(int)No_Fields];
 			RFertiliserArea_Array = new double[(int)No_Fields];
+			Drain_Array = new double[(int)No_Fields];
+			RDrainArea_Array = new double[(int)No_Fields];
 			
 			Current_Irrigation = new double[Zones.Length];			
 			Current_Irrigation = (double[]) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.Today_PatchIrrigation");
-
-			//Calculate soil water deficit in each zone
-		    for (int i = 0; i < Zones.Length; i++)
+			
+			Current_Water = new double[Zones.Length];			
+			Current_Water = (double[]) Apsim.Get(Simulation, "ApplyWater.Script.TotWaterApp");
+			
+			for (int i = 0; i < Zones.Length; i++)
             {
                double Current_Paddock = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
                double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area"); 
                double Current_Yield = (double) Apsim.Get(Zones[i], "Wheat.AboveGround.Wt");
                double Current_Fertiliser = (double) Apsim.Get(Zones[i], "Fertiliser.NitrogenApplied");
+               double Current_Drain = (double) Apsim.Get(Zones[i], "Soil.SoilWater.Drainage");
                Yield_Array[(int)Current_Paddock-1] += Current_Yield * Current_Area;
                Irrigation_Array[(int)Current_Paddock-1] += Current_Irrigation[i] * Current_Area;
+               Water_Array[(int)Current_Paddock-1] += Current_Water[i] * Current_Area;
                Fertiliser_Array[(int)Current_Paddock-1] += Current_Fertiliser * Current_Area;
+               Drain_Array[(int)Current_Paddock-1] += Current_Drain * Current_Area;
                RArea_Array[(int)Current_Paddock-1] += Current_Area;
             }
             
@@ -1086,106 +1178,9 @@ namespace Models
             {
             	RYieldArea_Array[i] = Yield_Array[i] / RArea_Array[i];
             	RIrrigationArea_Array[i] = Irrigation_Array[i] / RArea_Array[i];
+            	RWaterArea_Array[i] = Water_Array[i] / RArea_Array[i];
             	RFertiliserArea_Array[i] = Fertiliser_Array[i] / RArea_Array[i];
-            }
-		}
-		
-	}
-}
-]]></Code>
-    </Manager>
-    <Manager>
-      <Name>Runoff_Reporting</Name>
-      <Script>
-        <RArea_Array>
-        </RArea_Array>
-        <RYieldArea_Array>
-        </RYieldArea_Array>
-        <RIrrigationArea_Array>
-        </RIrrigationArea_Array>
-        <RFertiliserArea_Array>
-        </RFertiliserArea_Array>
-      </Script>
-      <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using System.Collections.Generic;
-using Models.Soils;
-
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Summary Summary;
-		[Link] Simulation Simulation;
-		
-		private Zone[] Zones {get; set; }
-		private double[] Yield_Array { get; set; }
-		public double[] RArea_Array { get; set; }
-		public double[] RYieldArea_Array { get; set; }
-		private double[] Irrigation_Array { get; set; }
-		public double[] RIrrigationArea_Array { get; set; }
-		private double[] Fertiliser_Array { get; set; }
-		public double[] RFertiliserArea_Array { get; set; }
-		private double[] Current_Irrigation { get; set; }
-		private double[] Current_Rain { get; set; }
-		
-		[EventSubscribe("StartOfSimulation")]
-		private void DoStartOfSimulation(object sender, EventArgs e)
-		{
-		       // Set up our list on zones in the simulation
-		       List<Zone> zones = new List<Zone>();
-               foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))
-               {
-               	  if (zone is Simulation)
-               	  {
-               	     // top level simulation - we don't want this.
-               	  }
-               	  else
-               	  {
-                     zones.Add(zone as Zone);
-                  }
-               }
-               Zones = zones.ToArray();
-               
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void DoManagement(object sender, EventArgs e)
-		{
-
-			//****FIX THIS****//double No_Fields = (double) Apsim.Get(this, "MultiZoneIrrigator.Script.No_fields");
-			double No_Fields = 4;
-			Yield_Array = new double[(int)No_Fields];
-			RArea_Array = new double[(int)No_Fields];
-			RYieldArea_Array = new double[(int)No_Fields];
-			Irrigation_Array = new double[(int)No_Fields];
-			RIrrigationArea_Array = new double[(int)No_Fields];
-			Fertiliser_Array = new double[(int)No_Fields];
-			RFertiliserArea_Array = new double[(int)No_Fields];
-			
-			Current_Irrigation = new double[Zones.Length];			
-			Current_Irrigation = (double[]) Apsim.Get(Simulation, "MultiZoneIrrigator.Script.Today_PatchIrrigation");
-
-			//Calculate soil water deficit in each zone
-		    for (int i = 0; i < Zones.Length; i++)
-            {
-               double Current_Paddock = (double) Apsim.Get(Zones[i], "Manager_P.Script.This_field_no");
-               double Current_Area = (double) Apsim.Get(Zones[i], "Manager_P.Script.Patch_area"); 
-               double Current_Yield = (double) Apsim.Get(Zones[i], "Wheat.AboveGround.Wt");
-               double Current_Fertiliser = (double) Apsim.Get(Zones[i], "Fertiliser.NitrogenApplied");
-               Yield_Array[(int)Current_Paddock-1] += Current_Yield * Current_Area;
-               Irrigation_Array[(int)Current_Paddock-1] += Current_Irrigation[i] * Current_Area;
-               Fertiliser_Array[(int)Current_Paddock-1] += Current_Fertiliser * Current_Area;
-               RArea_Array[(int)Current_Paddock-1] += Current_Area;
-            }
-            
-            for (int i = 0; i < RYieldArea_Array.Length; i++)
-            {
-            	RYieldArea_Array[i] = Yield_Array[i] / RArea_Array[i];
-            	RIrrigationArea_Array[i] = Irrigation_Array[i] / RArea_Array[i];
-            	RFertiliserArea_Array[i] = Fertiliser_Array[i] / RArea_Array[i];
+            	RDrainArea_Array[i] = Drain_Array[i] / RArea_Array[i];
             }
 		}
 		
@@ -1270,6 +1265,7 @@ namespace Models
           <string>[Fertiliser].NitrogenApplied</string>
           <string>[Manager_P].Script.This_field_no</string>
           <string>[Manager_P].Script.Patch_area</string>
+          <string>[Soil].SoilWater.Drainage</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].EndOfDay</string>
@@ -20729,18 +20725,14 @@ namespace Models
         <string>[Clock].Today</string>
         <string>[Field_Reporting].Script.RYieldArea_Array</string>
         <string>[Field_Reporting].Script.RIrrigationArea_Array</string>
+        <string>[Field_Reporting].Script.RWaterArea_Array</string>
         <string>[Field_Reporting].Script.RFertiliserArea_Array</string>
         <string>[Field_Reporting].Script.RArea_Array</string>
-        <string>[Weather].Rain</string>
-        <string>[CatchRain].Script.Today_Rain</string>
         <string>[ApplyWater].Script.TotWaterApp</string>
-        <string>[ApplyWater].Script.Runoff</string>
+        <string>[ApplyWater].Script.WaterExport</string>
         <string>[MultiZoneIrrigator].Script.Today_PatchIrrigation</string>
-        <string>[ApplyWater].Script.TargetHourlyApp</string>
-        <string>[ApplyWater].Script.ActualHourlyApp</string>
-        <string>[ApplyWater].Script.TopKS</string>
-        <string>[ApplyWater].Script.RunoffArea</string>
-        <string>[ApplyWater].Script.TotArea</string>
+        <string>[CatchRain].Script.Today_Rain</string>
+        <string>[Field_Reporting].Script.RDrainArea_Array</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfDay</string>
@@ -20849,135 +20841,6 @@ namespace Models
       <DisabledSeries />
     </Graph>
     <Graph>
-      <Name>Irrigation Field</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Biomass</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Series>
-        <Title>Field_01</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(1)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Field_02</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(2)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Field_03</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(3)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Field_04</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(4)</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <Series>
-        <Title>Rain</Title>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <X>
-          <TableName>ReportMaster</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>ReportMaster</TableName>
-          <FieldName>CatchRain.Script.Today_Rain</FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>true</Cumulative>
-      </Series>
-      <LegendPosition>TopLeft</LegendPosition>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
       <Name>Fertiliser Field</Name>
       <Axis>
         <Type>Bottom</Type>
@@ -21070,6 +20933,434 @@ namespace Models
         <Y>
           <TableName>ReportMaster</TableName>
           <FieldName>Field_Reporting.Script.RFertiliserArea_Array(4)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>Irrigation Field</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Field_01</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(1)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_02</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(2)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_03</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(3)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_04</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RIrrigationArea_Array(4)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>Water Field</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Field_01</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RWaterArea_Array(1)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_02</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RWaterArea_Array(2)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_03</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RWaterArea_Array(3)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_04</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RWaterArea_Array(4)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Rain</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Dash</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>CatchRain.Script.Today_Rain</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>Export Field</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Field_01</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>ApplyWater.Script.WaterExport(1)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_02</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>ApplyWater.Script.WaterExport(2)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_03</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>ApplyWater.Script.WaterExport(3)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_04</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>ApplyWater.Script.WaterExport(4)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <LegendPosition>TopLeft</LegendPosition>
+      <ShowRegressionLine>false</ShowRegressionLine>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>Drain Field</Name>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Date</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Biomass</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Series>
+        <Title>Field_01</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16776961</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RDrainArea_Array(1)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_02</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-65536</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RDrainArea_Array(2)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_03</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16711936</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RDrainArea_Array(3)</FieldName>
+        </Y>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <ShowInLegend>true</ShowInLegend>
+        <Cumulative>true</Cumulative>
+      </Series>
+      <Series>
+        <Title>Field_04</Title>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-32768</ColourArgb>
+        <Marker>None</Marker>
+        <Line>Solid</Line>
+        <X>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Clock.Today</FieldName>
+        </X>
+        <Y>
+          <TableName>ReportMaster</TableName>
+          <FieldName>Field_Reporting.Script.RDrainArea_Array(4)</FieldName>
         </Y>
         <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
