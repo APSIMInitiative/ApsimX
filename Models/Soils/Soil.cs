@@ -241,7 +241,7 @@ namespace Models.Soils
         public double[] SAT { get { return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
-        internal double[] KS { get { return Map(waterNode.KS, waterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] KS { get { return Map(waterNode.KS, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>SWCON at standard thickness. Units: 0-1</summary>
         internal double[] SWCON 
