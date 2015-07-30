@@ -118,34 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Maize" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Maize.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="MCSP" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\MCSP.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="OilPalm" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OilPalm.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Potato" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Potato.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ResidueTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ResidueTypes.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="Slurp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Slurp.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="Wheat" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Wheat.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="WheatPMFPrototype" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\WheatPMFPrototype.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="Supplement" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Supplement.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="FodderBeet" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\FodderBeet.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

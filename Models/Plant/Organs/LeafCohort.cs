@@ -15,12 +15,35 @@ namespace Models.PMF.Organs
     /// A leaf cohort model
     /// </summary>
     /// <remarks>
+    /// 
+    /// @startuml
+    /// Initialized -> Appeared: Appearance 
+    /// Appeared -> Expanded: GrowthDuration
+    /// Expanded -> Senescing: LagDuration
+    /// Senescing -> Senesced: SenescenceDuration
+    /// Senesced -> Detaching: DetachmentLagDuration
+    /// Detaching -> Detached: DetachmentDuration
+    /// Initialized ->Expanded: IsGrowing
+    /// Initialized -> Senesced: IsAlive
+    /// Initialized -> Senesced: IsGreen
+    /// Initialized -> Senescing: IsNotSenescing
+    /// Senescing -> Senesced: IsSenescing
+    /// Expanded -> Detached: IsFullyExpanded
+    /// Senesced -> Detached: ShouldBeDead
+    /// Senesced -> Detached: Finished
+    /// Appeared -> Detached: IsAppeared
+    /// Initialized -> Detached: IsInitialised
+    /// @enduml
+    /// 
     /// Leaf death
     /// ------------------------
     /// The leaf area, structural biomass and structural nitrogen of 
     /// green (live) parts is subtracted by a fraction.
-    ///</remarks>
+    /// 
+    /// </remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafCohort : Model
     {
         #region Paramater Input Classes
@@ -50,9 +73,11 @@ namespace Models.PMF.Organs
 
         #region Class Fields
         /// <summary>The rank</summary>
-        public int Rank = 0;  // 1 based ranking
+        [Description("Rank")]
+        public int Rank { get; set; }  // 1 based ranking
         /// <summary>The area</summary>
-        public double Area = 0;
+        [Description("Area")]
+        public double Area { get; set; }
         //Leaf coefficients
         /// <summary>The age</summary>
         [XmlIgnore]
@@ -295,7 +320,7 @@ namespace Models.PMF.Organs
         /// </value>
         public bool IsSenescing
         {
-            get { return IsGreen && (Age > (GrowthDuration + LagDuration)); }
+            get { return (Age > (GrowthDuration + LagDuration)); }
         }
         /// <summary>Gets a value indicating whether this instance is not senescing.</summary>
         /// <value>
@@ -769,7 +794,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the appearance.</summary>
         /// <param name="LeafFraction">The leaf fraction.</param>
         /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        public void DoAppearance(double LeafFraction, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
+        public void DoAppearance(double LeafFraction, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
         {
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
@@ -814,7 +839,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the potential growth.</summary>
         /// <param name="TT">The tt.</param>
         /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        virtual public void DoPotentialGrowth(double TT, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
+        virtual public void DoPotentialGrowth(double TT, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double StartPopulation = CohortPopulation;
@@ -918,7 +943,7 @@ namespace Models.PMF.Organs
         /// <summary>Does the actual growth.</summary>
         /// <param name="TT">The tt.</param>
         /// <param name="LeafCohortParameters">The leaf cohort parameters.</param>
-        virtual public void DoActualGrowth(double TT, Models.PMF.Organs.Leaf.InitialLeafValues LeafCohortParameters)
+        virtual public void DoActualGrowth(double TT, Models.PMF.Organs.Leaf.LeafCohortParameters LeafCohortParameters)
         {
             if (IsAppeared)
             {
@@ -1151,6 +1176,19 @@ namespace Models.PMF.Organs
         }
         #endregion
 
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
+        }
     }
 }
    

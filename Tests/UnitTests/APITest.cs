@@ -143,7 +143,7 @@ namespace UnitTests
             // Test the models that are in scope of zone2.graph
             List<IModel> inScopeForGraph = Apsim.FindAll(graph);
             Assert.AreEqual(inScopeForGraph.Count, 10);
-            Assert.AreEqual(inScopeForGraph[0].Name, "Graph1");
+            Assert.AreEqual(inScopeForGraph[0].Name, "Series1");
             Assert.AreEqual(inScopeForGraph[1].Name, "Soil");
             Assert.AreEqual(inScopeForGraph[2].Name, "SurfaceOrganicMatter");
             Assert.AreEqual(inScopeForGraph[3].Name, "Field2SubZone");
@@ -240,7 +240,6 @@ namespace UnitTests
         [Test]
         public void SetTest()
         {
-            Weather weather = this.simulation.Children[0] as Weather;
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 0.0);
             this.simulation.Set("[Weather].Rain", 111.0);
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 111.0);
@@ -275,7 +274,7 @@ namespace UnitTests
         public void ChildrenRecursivelyTest()
         {
             List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 19);
+            Assert.AreEqual(allChildren.Count, 20);
 
             List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
             Assert.AreEqual(childZones.Count, 3);

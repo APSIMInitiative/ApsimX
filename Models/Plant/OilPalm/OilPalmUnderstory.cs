@@ -6,6 +6,7 @@ using Models.Core;
 using System.Reflection;
 using System.Collections;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 
 namespace Models.PMF.OilPalm
@@ -39,7 +40,7 @@ namespace Models.PMF.OilPalm
         Soils.SoilNitrogen SoilN = null;
         /// <summary>The met data</summary>
         [Link]
-        Weather MetData = null;
+        IWeather MetData = null;
 
         /// <summary>The kl</summary>
         double kl = 0.04;

@@ -8,7 +8,8 @@ using System.IO;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Generic phase in phenology
+    /// This generic phase uses a thermal time target to determine the duration between growth stages.
+    /// Thermal time is accumulated until the target is met and remaining thermal time is forwarded to the next phase.
     /// </summary>
     /// \param Target The thermal time target in this phase.
     /// <remarks>
@@ -19,6 +20,8 @@ namespace Models.PMF.Phen
     /// function if the phase target is met today.
     /// </remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class GenericPhase : Phase
     {
         [Link(IsOptional=true)]
@@ -82,7 +85,10 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return _TTinPhase / CalcTarget();
+                if (CalcTarget() == 0)
+                    return 1;
+                else
+                    return _TTinPhase / CalcTarget();
             }
         }
 

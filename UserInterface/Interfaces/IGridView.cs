@@ -24,6 +24,9 @@ namespace UserInterface.Interfaces
         /// </summary>
         event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
 
+        /// <summary>Occurs when user clicks a button on the cell.</summary>
+        event EventHandler<GridCellsChangedArgs> ButtonClick;
+
         /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
@@ -48,6 +51,11 @@ namespace UserInterface.Interfaces
         /// Gets or sets a value indicating whether the grid has an auto filter
         /// </summary>
         bool AutoFilterOn { get; set; }
+
+        /// <summary>
+        /// The name of the associated model.
+        /// </summary>
+        string ModelName { get; set; }
 
         /// <summary>
         /// Gets or sets the currently selected cell.
@@ -82,10 +90,20 @@ namespace UserInterface.Interfaces
         void ClearContextActions();
 
         /// <summary>
+        /// Load the image associated with the Model (if it exists).
+        /// </summary>
+        void LoadImage();
+
+        /// <summary>
         /// Returns true if the grid row is empty.
         /// </summary>
         /// <param name="rowIndex">The row index</param>
         /// <returns>True if the specified row is empty</returns>
         bool RowIsEmpty(int rowIndex);
+
+        /// <summary>
+        /// Resizes controls on the GridView.
+        /// </summary>
+        void ResizeControls();
     }
 }

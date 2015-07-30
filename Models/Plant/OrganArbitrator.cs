@@ -12,12 +12,34 @@ using APSIM.Shared.Utilities;
 namespace Models.PMF
 {
     /// <summary>
-    /// This module takes Supplies and Demands of DM and N from each organ in the plant.  Firstly it gets DM Demands form organs
-    /// and does a potential DM allocation based on these.  Then it gets N demands and allocates these to organs.  Finally it works
-    /// out if N allocations were sufficient to meet minimum N concentratins of the organs and constrain DM allocations to maintain 
-    /// minimum N concentrations if N is not sufficient
+    /// There are a number of passes involved in the allocation of Weight (Wt).
+    ///   Wt_Step 1. Set up DM supplies and demands.  Each organ may have a demand for Structural, Metabolic and Non-structural Wt.  Each organ may supply Fresh DM from photosynthesis and/or stored DM from retranslocation of its Non-structural pool.
+    ///   Wt_Step 2. In this step freshly fixed Wt is partitioned to organs based on their relative Structural and Metabolic demands such that if there is not enough freshly fixed Wt to meet these demands the organs with the highest demands get the greatest share of the photosynthesis.
+    ///   Wt_Step 3. In the second step any freshly fixed DM that was surplus to Structural and Metabolic demands is partitioned to sink organs.  An organ will be a sink if it is parameterised to have a Non-structural (mobile) component and the capacity of each organ to receive excess DM depends on its structural fraction (which determines the Non-structural Fraction and subsequent sink capacity).  If there is still fresh DM unallocated after the second pass this remains unallocated with the assumption that in this case the plant would down regulate photosynthesis due to lack of sink capacity.
+    ///   Wt_Step 4. In this step, Non-structural DM is reallocated from Non-Structural pools if there was insufficient DM to meet the structural and metabolic DM demands of organs.
+    ///   The arbitrator then sends a potential DM allocation to each organ that they use to calculate their N demands and then steps through N partitioning routines.  The final pass in biomass partitioning comes after N partitioning
+    ///   
+    ///   N_Step 1. Set up N supplies and demands.  Each organ may (or may not) supply N in a number of ways.  Each organ has (potentially) a structural, metabolic and Non-structural N Demand.  The structural N demand is that required to grow immobile biomass components, Metabolic N is that required to produce working biomass such as the photosynthetic mechanism in the leaves.  The Non-structural N demand is considered to be the luxury uptake and storage of highly mobile N compounds such as nitrate.
+    ///       Each of the following 4 steps have a number of processes in common; Firstly the arbitrator determines each organs current N demand (that outstanding after previous N partitioning steps), then it allocates N to each demanding organ (There are three ways that N can be allocated, see below), then it sets for each supplying organ the amount of N that was taken up.
+    ///   N_Step 2. NReallocation.  This is the supply of N within the plant by the reallocation of sensing and/or Non-structural N which is the lowest energy form of N available to the plant so is partitioned first.
+    ///   N_Step 3. NUptake.  This is the supply of mineral N from the environment (typically by roots from the soil). In this step the arbitrator partitions the potential N uptake supply to satisfy all organs N demands (Structural, Metabolic and Non-structural).  If supply is sufficient this will replenish all Non-structural N that was reallocated in the previous step.  If not the N conc of organs with a Non-structural N component will begin to fall.  If total N demand is less than the uptake supply the crop will leave the surplus mineral N in the soil.
+    ///   N_Step 4. NFixation.  This is the supply of symbiotically fixed N and is redundant for Non-fixers!  The arbitrator will asks all N fixing organs (typically nodules) for their potential N fixation supply and then partition this to meet the Structural and Metabolic N demands of organs.  The arbitrator will not fix N to meet Non-structural N demands to minimise the biomass cost of fixation which is metabolically expensive.  Fixation follows uptake to enable the arbitrator to capture the "Lazy" N fixing behaviour of some legumes.  Once fixation is calculated the arbitrator determines the DM cost of this fixation.
+    ///   N_Step 5. NRetranslocation.  This is only invoked under sever N shortage when NReallocation and Uptake (and fixation if appropriate) cannot meet structural and metabolic N demands.  It this step the arbitrator will remove Metabolic N from older leaf cohorts to meet the N demand of new leaves and reproductive organs.
+    /// 
+    /// 
+    ///       In all of these N partitioning steps there are three options the developer may chose for determining the allocation of N between demanding organs.
+    ///   1. RelativeAllocation.  If this option is used all N is partitioned to organs relative to their demand so that the organs with the larger N demand get a larger share of a limited N supply.
+    ///   2. PriorityAllocation.  If this option is used the arbitrator steps through all organs in order of priority (set by the order they appear in the IDE) allocating N to meet all of the first organs structural and metabolic N demands before partitioning any to the next organ in the hierarchy.  Once it has stepped through all organs and allocated their minimum (structural and metabolic) N demands it will then step through them again and allocate their luxury (Non-structural) N demands in the same way.
+    ///   3. PrioritythenRelativeAllocation.  If this option is used the arbitrator steps through all organs in order of priority allocating N to meet minimum N demands.  However on the second pass it allocated N relative to the organs outstanding demands such that the organ with the greatest luxury N demand will get the greatest share of the N allocation.
+    ///   
+    ///   Wt_Step 5. Once N is allocated the arbitrator then reduces the Wt allocation of each organ to account for the metabolic cost of N fixation.  The Wt reduction is spread around all organs and an organ will only have its Wt allocation limited until it reaches maximum N conc.
+    ///   Wt_Step 6. Then the arbitrator determines if the N allocated to each organ is sufficient for that organ to reach its minimum N concentration.  If not the arbitrator will constrain the biomass growth of that organ and discards the surplus biomass.  This assume that under sever N stress photosynthesis would be down regulated due to N inadequacy limiting sink strength.
+    ///   
+    ///   Once these steps are complete the Arbitrator finally communicates to each organ its state changes as a result of arbitration.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class OrganArbitrator : Model, IUptake
     {
         #region Class Members
@@ -33,10 +55,10 @@ namespace Models.PMF
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [Description("Select method used for Arbitration")]
-        public string NArbitrationOption = "";
+        public string NArbitrationOption { get; set; }
         /// <summary>The mentod used to arbitrate DM allocations </summary>
         [Description("Select method used for DMArbitration")]
-        public string DMArbitrationOption = "";
+        public string DMArbitrationOption { get; set; }
         /// <summary>The nutrient drivers</summary>
         [Description("List of nutrients that the arbitrator will consider")]
         public string[] NutrientDrivers = null;
@@ -255,9 +277,9 @@ namespace Models.PMF
         }
 
         /// <summary>The dm</summary>
-        private BiomassArbitrationType DM = null;
+        public BiomassArbitrationType DM = null;
         /// <summary>The n</summary>
-        private BiomassArbitrationType N = null;
+        public BiomassArbitrationType N = null;
         //private BiomassArbitrationType P = null;
         //private BiomassArbitrationType K = null;
 
@@ -437,6 +459,20 @@ namespace Models.PMF
         /// <value>NO3 supplies from each soil layer</value>
         [XmlIgnore]
         public double[] PotentialNO3NUptake { get; set; }
+
+        /// <summary>Gets and Sets NO3 Supply</summary>
+        /// <value>NO3 supplies from each soil layer</value>
+        [XmlIgnore]
+        public double TotalPotentialNO3Uptake
+        {
+            get
+            {
+                if (PotentialNO3NUptake != null)
+                    return MathUtilities.Sum(PotentialNO3NUptake);
+                else
+                    return 0;
+            }
+        }
 
         /// <summary>Gets and Sets NH4 Supply</summary>
         /// <value>NH4 supplies from each soil layer</value>

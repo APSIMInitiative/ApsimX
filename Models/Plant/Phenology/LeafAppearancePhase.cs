@@ -7,9 +7,11 @@ using Models.PMF.Organs;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Leaf appearance phenological phase
+    /// This phase extends from the end of the previous phase until the end of leaf appearance.  The duration of this phase is determined by leaf appearance and the final main stem leaf number.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafAppearancePhase : Phase
     {
         /// <summary>The leaf</summary>

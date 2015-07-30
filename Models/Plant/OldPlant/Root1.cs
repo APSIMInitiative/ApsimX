@@ -291,7 +291,16 @@ namespace Models.PMF.OldPlant
         // Soil water
         /// <summary>Gets the sw supply.</summary>
         /// <value>The sw supply.</value>
-        public override double SWSupply { get { return MathUtilities.Sum(sw_supply); } }
+        public override double SWSupply 
+        { 
+            get 
+            {
+                if (sw_supply != null)
+                    return MathUtilities.Sum(sw_supply);
+                else
+                    return 0;
+            } 
+        }
         /// <summary>Gets the sw demand.</summary>
         /// <value>The sw demand.</value>
         public override double SWDemand { get { return sw_demand; } }
@@ -814,12 +823,16 @@ namespace Models.PMF.OldPlant
             {
                 bool valuesFound = false;
                 double ratio = 0.0;
-                for (int i = 0; i < sw_avail_pot.Length; i++)
+                if (sw_avail_pot != null)
                 {
-                    if (sw_avail_pot[i] > 0)
+                    
+                    for (int i = 0; i < sw_avail_pot.Length; i++)
                     {
-                        ratio += sw_avail[i] / sw_avail_pot[i];
-                        valuesFound = true;
+                        if (sw_avail_pot[i] > 0)
+                        {
+                            ratio += sw_avail[i] / sw_avail_pot[i];
+                            valuesFound = true;
+                        }
                     }
                 }
                 if (valuesFound)
@@ -853,13 +866,18 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                double[] FASW = new double[Soil.Thickness.Length];
-                for (int i = 0; i < Soil.Thickness.Length; i++)
+                if (ll_dep != null && DULmm != null)
                 {
-                    FASW[i] = MathUtilities.Divide(Soil.Water[i] - ll_dep[i], DULmm[i] - ll_dep[i], 0.0);
-                    FASW[i] = MathUtilities.Constrain(FASW[i], 0.0, 1.0);
+                    double[] FASW = new double[Soil.Thickness.Length];
+                    for (int i = 0; i < Soil.Thickness.Length; i++)
+                    {
+                        FASW[i] = MathUtilities.Divide(Soil.Water[i] - ll_dep[i], DULmm[i] - ll_dep[i], 0.0);
+                        FASW[i] = MathUtilities.Constrain(FASW[i], 0.0, 1.0);
+                    }
+                    return FASW;
                 }
-                return FASW;
+                else
+                    return new double[0];
             }
         }
         /// <summary>Gets the fasw.</summary>
@@ -880,19 +898,32 @@ namespace Models.PMF.OldPlant
                 double weighting_factor = MathUtilities.Divide(rootdepth_in_layer, Soil.Thickness[layer], 0.0);
                 int next_layer = Math.Min(layer + 1, deepest_layer);
 
-                double fasw1 = FASWLayered[layer];
-                double fasw2 = FASWLayered[next_layer];
+                double[] faswlayered = FASWLayered;
+                if (faswlayered.Length > 0)
+                {
+                    double fasw1 = FASWLayered[layer];
+                    double fasw2 = FASWLayered[next_layer];
 
-                fasw1 = Math.Min(1.0, Math.Max(0.0, fasw1));
-                fasw2 = Math.Min(1.0, Math.Max(0.0, fasw2));
-
-                return weighting_factor * fasw2 + (1.0 - weighting_factor) * fasw1;
+                    fasw1 = Math.Min(1.0, Math.Max(0.0, fasw1));
+                    fasw2 = Math.Min(1.0, Math.Max(0.0, fasw2));
+                    return weighting_factor * fasw2 + (1.0 - weighting_factor) * fasw1;
+                }
+                return 0;
             }
         }
         /// <summary>Root length density - needed by SWIM</summary>
         /// <value>The root length density.</value>
         [Units("mm/mm^3")]
-        public double[] RootLengthDensity { get { return MathUtilities.Divide(RootLength, Soil.Thickness); } }
+        public double[] RootLengthDensity 
+        { 
+            get 
+            {
+                if (RootLength != null)
+                    return MathUtilities.Divide(RootLength, Soil.Thickness);
+                else
+                    return new double[0];
+            } 
+        }
         /// <summary>Calculate the extractable soil water in the root zone (mm).</summary>
         /// <value>The esw in root zone.</value>
         internal double ESWInRootZone

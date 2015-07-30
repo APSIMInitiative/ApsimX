@@ -92,11 +92,11 @@ namespace Models
                     JobManager jobManager = new JobManager();
                     jobManager.AddJob(runApsim);
                     jobManager.Start(waitUntilFinished: true);
-                    
-                    if (runApsim.JobsRanOK())
-                        exitCode = 0;
-                    else
+
+                    if (jobManager.SomeHadErrors)
                         exitCode = 1;
+                    else
+                        exitCode = 0;
                 }
 
                 timer.Stop();
@@ -108,6 +108,8 @@ namespace Models
                 exitCode = 1;
             }
 
+            if (exitCode != 0)
+                Console.WriteLine("ERRORS FOUND!!");
             return exitCode;
         }
 
@@ -307,7 +309,7 @@ namespace Models
                 // Extract the path from the filespec. If non specified then assume
                 // current working directory.
                 string path = Path.GetDirectoryName(this.FileSpec);
-                if (path == null)
+                if (path == null | path == "")
                 {
                     path = Directory.GetCurrentDirectory();
                 }

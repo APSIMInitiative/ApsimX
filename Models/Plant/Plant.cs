@@ -83,7 +83,7 @@ namespace Models.PMF
 
         /// <summary>The sowing data</summary>
         [XmlIgnore]
-        public SowPlant2Type SowingData;
+        public SowPlant2Type SowingData { get; set; }
 
         /// <summary>Gets the organs.</summary>
         [XmlIgnore]
@@ -128,6 +128,7 @@ namespace Models.PMF
         private Cultivar cultivarDefinition;
 
         /// <summary>Gets the water supply demand ratio.</summary>
+        [Units("0-1")]
         public double WaterSupplyDemandRatio
         {
             get
@@ -158,8 +159,10 @@ namespace Models.PMF
             {
                 if (Phenology != null)
                     return Phenology.Emerged;
+                    //If the crop model has phenology and the crop is emerged return true
                 else
-                    return true;
+                    return IsAlive;
+                    //Else if the crop is in the grown returen true
             }
         }
         
@@ -236,6 +239,9 @@ namespace Models.PMF
                 Harvesting.Invoke(this, new EventArgs());
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " was harvested today."));
+
+            foreach (IOrgan O in Organs)
+                O.DoHarvest();
         }
         
         /// <summary>End the crop.</summary>
@@ -268,5 +274,28 @@ namespace Models.PMF
             Population = 0;
         }
         #endregion
+
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child is Cultivar)
+                {
+                }
+                else
+                    child.Document(tags, headingLevel, indent);
+            }
+
+            // now write all cultivars in a list.
+            tags.Add(new AutoDocumentation.Heading("Cultivars", headingLevel));
+            foreach (IModel child in Apsim.Children(this, typeof(Cultivar)))
+                tags.Add(new AutoDocumentation.Paragraph(child.Name, indent));
+        }
     }
 }

@@ -20,9 +20,17 @@ namespace Models.Core
     {
         /// <summary>The _ file name</summary>
         private string _FileName;
+
+        /// <summary>The job manager</summary>
+        JobManager jobManager;
+
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
+
+        /// <summary>Gets or sets the version.</summary>
+        [XmlAttribute("Version")]
+        public int Version { get; set; }
 
         /// <summary>Gets a value indicating whether this job is completed. Set by JobManager.</summary>
         [XmlIgnore]
@@ -63,7 +71,9 @@ namespace Models.Core
         /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public static Simulations Read(string FileName)
         {
-            
+            // Run the converter.
+            Converter.ConvertToLatestVersion(FileName);
+
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(FileName, Assembly.GetExecutingAssembly()) as Simulations;
 
@@ -112,6 +122,8 @@ namespace Models.Core
         /// <exception cref="System.Exception">Simulations.Read() failed. Invalid simulation file.\n</exception>
         public static Simulations Read(XmlNode node)
         {
+            // Run the converter.
+            Converter.ConvertToLatestVersion(node);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;
@@ -142,6 +154,7 @@ namespace Models.Core
         private static void CallOnLoaded(IModel model)
         {
             // Call OnLoaded in all models.
+            Apsim.CallEventHandler(model, "Loaded", null);
             foreach (Model child in Apsim.ChildrenRecursively(model))
                 Apsim.CallEventHandler(child, "Loaded", null);
         }
@@ -293,8 +306,10 @@ namespace Models.Core
         /// <param name="e"></param>
         public void Run(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
+            this.ErrorMessage = null;
+
             // Get a reference to the JobManager so that we can add jobs to it.
-            JobManager jobManager = e.Argument as JobManager;
+            jobManager = e.Argument as JobManager;
 
             // Get a reference to our child DataStore.
             DataStore store = Apsim.Child(this, typeof(DataStore)) as DataStore;
@@ -316,6 +331,8 @@ namespace Models.Core
             else
                 simulationsToRun = Simulations.FindAllSimulationsToRun(SimulationToRun);
 
+            MakeSubstitutions(simulationsToRun);
+
             NumToRun = simulationsToRun.Length;
             NumCompleted = 0;
 
@@ -333,6 +350,35 @@ namespace Models.Core
                     simulation.Commencing -= OnSimulationCommencing;
                     simulation.Commencing += OnSimulationCommencing;
                     jobManager.AddJob(simulation);
+                }
+            }
+        }
+
+        /// <summary>Make model substitutions if necessary.</summary>
+        /// <param name="simulations">The simulations to make substitutions in.</param>
+        private void MakeSubstitutions(Simulation[] simulations)
+        {
+            IModel replacements = Apsim.Child(this, "Replacements");
+            if (replacements != null)
+            {
+                foreach (IModel replacement in replacements.Children)
+                {
+                    foreach (Simulation simulation in simulations)
+                    {
+                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
+                        {
+                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                // Do replacement.
+                                IModel newModel = Apsim.Clone(replacement);
+                                int index = match.Parent.Children.IndexOf(match as Model);
+                                match.Parent.Children.Insert(index, newModel as Model);
+                                newModel.Parent = match.Parent;
+                                match.Parent.Children.Remove(match as Model);
+                                CallOnLoaded(newModel);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -358,16 +404,23 @@ namespace Models.Core
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
+            Simulation simulation = sender as Simulation;
             bool RunAllCompleted = false;
             lock (this)
             {
                 NumCompleted++;
                 RunAllCompleted = NumCompleted == NumToRun;
+                if (simulation.ErrorMessage != null)
+                {
+                    if (ErrorMessage == null)
+                        ErrorMessage += "Errors were found in these simulations:\r\n";
+                    ErrorMessage += simulation.Name + "\r\n";
+                }
             }
             if (RunAllCompleted)
             {
                 CallAllCompleted();
-                (sender as Simulation).Commencing -= OnSimulationCommencing;
+                simulation.Commencing -= OnSimulationCommencing;
             }
         }
 
@@ -377,6 +430,48 @@ namespace Models.Core
             object[] args = new object[] { this, new EventArgs() };
             foreach (Model model in Apsim.ChildrenRecursively(this))
                 Apsim.CallEventHandler(model, "AllCompleted", args);
+        }
+
+        /// <summary>Documents the specified model.</summary>
+        /// <param name="modelNameToDocument">The model name to document.</param>
+        /// <param name="tags">The auto doc tags.</param>
+        /// <param name="headingLevel">The starting heading level.</param>
+        public void DocumentModel(string modelNameToDocument, List<AutoDocumentation.ITag> tags, int headingLevel)
+        {
+            Simulation simulation = Apsim.Find(this, typeof(Simulation)) as Simulation;
+            if (simulation != null)
+            {
+                // Find the model of the right name.
+                IModel modelToDocument = Apsim.Find(simulation, modelNameToDocument);
+
+                // Get the path of the model (relative to parentSimulation) to document so that 
+                // when replacements happen below we will point to the replacement model not the 
+                // one passed into this method.
+                string pathOfSimulation = Apsim.FullPath(simulation) + ".";
+                string pathOfModelToDocument = Apsim.FullPath(modelToDocument).Replace(pathOfSimulation, "");
+
+                // Clone the simulation
+                Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
+
+                // Make any substitutions.
+                MakeSubstitutions(new Simulation[] { clonedSimulation });
+
+                // Now use the path to get the model we want to document.
+                modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
+
+                // resolve all links in cloned simulation.
+                Apsim.ResolveLinks(clonedSimulation);
+                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
+                    Apsim.ResolveLinks(child);
+
+                // Document the model.
+                modelToDocument.Document(tags, headingLevel, 0);
+
+                // Unresolve links.
+                Apsim.UnresolveLinks(clonedSimulation);
+                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
+                    Apsim.UnresolveLinks(child);
+            }
         }
     }
 }

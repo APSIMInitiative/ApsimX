@@ -25,61 +25,80 @@ namespace UserInterface.Classes
             List<string> RTFParsed = ParseRTF(RTF);
 
             // Create HTML from our list of RTF bits.
-            string HTML = "\r\n<html><body>\r\n";
+            StringBuilder HTML = new StringBuilder("\r\n<html><body>\r\n");
 
+            bool inParagraph = false;
+            bool inHeading = false;
             string style = string.Empty;
             bool superscript = false;
             foreach (string code in RTFParsed)
             {
-                if (code == "fs32") { HTML += "<h1>"; style = "h1"; }
-                else if (code == "fs28") { HTML += "<h2>"; style = "h2"; }
-                else if (code == "fs24") { HTML += "<h3>"; style = "h3"; }
+                if (code == "fs32")      { inHeading = true; HTML.Append("<h1>"); style = "h1"; }
+                else if (code == "fs28") { inHeading = true; HTML.Append("<h2>"); style = "h2"; }
+                else if (code == "fs24") { inHeading = true; HTML.Append("<h3>"); style = "h3"; }
                 else if (code == "fs20")
                 {
                     if (style != string.Empty)
                     {
-                        HTML += "</" + style + ">\r\n";
+                        HTML.Append("</" + style + ">\r\n");
                         style = string.Empty;
+                        inHeading = false; 
                     }
 
                 }
                 else if (code == "par")
                 {
-                    HTML += "<br/>\r\n";
+                    if (inParagraph)
+                        HTML.Append("\r\n</p>\r\n");
+                    HTML.Append("<p>\r\n");
+                    inParagraph = true;
                 }
-                else if (code == "b") HTML += "<b>";
-                else if (code == "b0") HTML += "</b>";
-                else if (code == "i") HTML += "<i>";
-                else if (code == "i0") HTML += "</i>";
-                else if (code == "ul") HTML += "<u>";
-                else if (code == "ulnone") HTML += "</u>";
-                else if (code == "strike") HTML += "<strike>";
-                else if (code == "strike0") HTML += "</strike>";
-                else if (code == "up9") { HTML += "<sup>"; superscript = true; }
-                else if (code == "dn9") { HTML += "<sub>"; }
-                else if (code == "up0")
-                {
-                    if (superscript)
-                    { HTML += "</sup>"; superscript = false; }
-                    else
-                    { HTML += "</sub>"; }
-                }
-                else if (code.StartsWith("http://"))
-                    HTML += "<a href=\"" + code + "\">" + code + "</a>";
+                else if (inHeading)
+                    HTML.Append(code);
                 else
-                    HTML += code;
+                {
+                    if (!inParagraph)
+                    {
+                        HTML.Append("<p>\r\n");
+                        inParagraph = true;
+                    }
+
+                    if (code == "b") HTML.Append("<b>");
+                    else if (code == "b0") HTML.Append("</b>");
+                    else if (code == "i") HTML.Append("<i>");
+                    else if (code == "i0") HTML.Append("</i>");
+                    else if (code == "ul") HTML.Append("<u>");
+                    else if (code == "ulnone") HTML.Append("</u>");
+                    else if (code == "strike") HTML.Append("<strike>");
+                    else if (code == "strike0") HTML.Append("</strike>");
+                    else if (code == "up9") { HTML.Append("<sup>"); superscript = true; }
+                    else if (code == "dn9") { HTML.Append("<sub>"); }
+                    else if (code == "up0")
+                    {
+                        if (superscript)
+                        { HTML.Append("</sup>"); superscript = false; }
+                        else
+                        { HTML.Append("</sub>"); }
+                    }
+                    else if (code.StartsWith("http://"))
+                        HTML.Append("<a href=\"" + code + "\">" + code + "</a>");
+                    else
+                        HTML.Append(code);
+                }
             }
 
             // Make sure we close any outstanding styles.
             if (style != string.Empty)
             {
-                HTML += "</" + style + ">\r\n";
+                HTML.Append("</" + style + ">\r\n");
                 style = string.Empty;
             }
+            if (inParagraph)
+                HTML.Append("\r\n</p>");
 
-            HTML += "\r\n</body></html>";
+            HTML.Append("\r\n</body></html>");
 
-            return HTML;
+            return HTML.ToString();
         }
 
         /// <summary>
@@ -119,7 +138,10 @@ namespace UserInterface.Classes
             if (text != string.Empty)
                 AddRTFItem(text, ref RTFParsed);
 
-
+            // Remove trailing par codes.
+            while (RTFParsed[RTFParsed.Count - 1] == "par")
+                RTFParsed.RemoveAt(RTFParsed.Count - 1);
+    
             return RTFParsed;
         }
 
@@ -183,14 +205,19 @@ namespace UserInterface.Classes
                 else if (RTF[pos] == '}')
                     numOpenBrackets--;
                 else if (RTF[pos] != '\r' && RTF[pos] != '\n')
+                {
                     code += RTF[pos];
+                    if (code == "generator")
+                        while (pos < RTF.Length && RTF[pos] != '}')
+                            pos++;
+                }
 
                 pos++;
             }
 
             if (Array.IndexOf(codesToKeep, code) != -1)
             {
-                if (code == "par" && RTFCodes[RTFCodes.Count - 1] == "fs20")
+                if (code == "par" && RTFCodes.Count > 0 && RTFCodes[RTFCodes.Count - 1] == "fs20")
                 {
                     // Skip the par - associated with a heading.
                 }

@@ -15,10 +15,13 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of a nominated external APSIM numerical variable")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ExternalVariable : Model, IFunction
     {
         /// <summary>The variable name</summary>
-        public string VariableName = "";
+        [Description("VariableName")]
+        public string VariableName { get; set; }
 
 
 

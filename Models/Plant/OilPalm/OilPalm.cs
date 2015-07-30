@@ -96,7 +96,7 @@ namespace Models.PMF.OilPalm
         Clock Clock = null;
         /// <summary>The met data</summary>
         [Link]
-        Weather MetData = null;
+        IWeather MetData = null;
         /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
@@ -228,6 +228,12 @@ namespace Models.PMF.OilPalm
         [Units("0-1")]
         double FWexpan = 0.0;
 
+        /// <summary>Factor for daily VPD effect on photosynthesis</summary>
+        [XmlIgnore]
+        [Units("0-1")]
+        public double Fvpd { get; set; }
+
+
         /// <summary>Factor for daily nitrogen stress effect on photosynthesis</summary>
         /// <value>The function.</value>
         [XmlIgnore]
@@ -340,97 +346,97 @@ namespace Models.PMF.OilPalm
 
         /// <summary>The frond appearance rate</summary>
         [Link]
-        [Description("Frond appearance rate under optimal temperature conditions.")]
+        [Description("This function returns the frond appearance rate under optimal temperature conditions.")]
         [Units("d")]
         IFunction FrondAppearanceRate = null;
         /// <summary>The relative developmental rate</summary>
         [Link]
-        [Description("Relative rate of plant development (e.g. frond appearance) as affected by air temperature")]
+        [Description("This function returns the relative rate of plant development (e.g. frond appearance) as affected by air temperature.")]
         [Units("0-1")]
         IFunction RelativeDevelopmentalRate = null;
         /// <summary>The frond maximum area</summary>
         [Link]
-        [Description("Maximum area of an individual frond")]
+        [Description("This function returns the maximum area of an individual frond.")]
         [Units("m^2")]
         IFunction FrondMaxArea = null;
         /// <summary>The direct extinction coeff</summary>
         [Link]
-        [Description("Beer-Lambert law extinction coefficient for direct beam radiation")]
+        [Description("This function returns the Beer-Lambert law extinction coefficient for direct beam radiation.")]
         [Units("unitless")]
         IFunction DirectExtinctionCoeff = null;
         /// <summary>The diffuse extinction coeff</summary>
         [Link]
-        [Description("Beer-Lambert law extinction coefficient for diffuse beam radiation")]
+        [Description("This function returns the Beer-Lambert law extinction coefficient for diffuse beam radiation.")]
         [Units("unitless")]
         IFunction DiffuseExtinctionCoeff = null;
         /// <summary>The expanding fronds</summary>
         [Link]
-        [Description("The number of expanding fronds at a given point in time.")]
+        [Description("This function returns the number of expanding fronds at a given point in time.")]
         [Units("/palm")]
         IFunction ExpandingFronds = null;
         /// <summary>The initial frond number</summary>
         [Link]
-        [Description("The number of fronds on the palm at planting")]
+        [Description("This function returns the number of fronds on the palm at planting.")]
         [Units("/palm")]
         IFunction InitialFrondNumber = null;
         /// <summary>The rue</summary>
         [Link]
-        [Description("Radiation use efficiency for total short wave radiation.")]
+        [Description("This function returns the radiation use efficiency for total short wave radiation.")]
         [Units("g/m^2")]
         IFunction RUE = null;
         /// <summary>The root front velocity</summary>
         [Link]
-        [Description("Root front velocity")]
+        [Description("This function returns the root front velocity, that is the vertical rate of root front advance.")]
         [Units("mm/d")]
         IFunction RootFrontVelocity = null;
         /// <summary>The root senescence rate</summary>
         [Link]
-        [Description("Fraction of the live root system that senesces per day (ie first order decay coefficient)")]
+        [Description("This function returns the fraction of the live root system that senesces per day (ie first order decay coefficient).")]
         [Units("/d")]
         IFunction RootSenescenceRate = null;
         /// <summary>The specific leaf area</summary>
         [Link]
-        [Description("Amount of frond area per unit frond mass. Used to calculate frond dry matter demand")]
+        [Description("This function returns the amount of frond area per unit frond mass. This is used to calculate frond dry matter demand.")]
         [Units("m^2/g")]
         IFunction SpecificLeafArea = null;
         /// <summary>The specific leaf area maximum</summary>
         [Link]
-        [Description("Maximum amount of frond area per unit frond mass. Used to limit area growth when dry matter is limiting")]
+        [Description("This function returns the maximum amount of frond area per unit frond mass. Used to limit area growth when dry matter is limiting.")]
         [Units("m^2/g")]
         IFunction SpecificLeafAreaMax = null;
         /// <summary>The root fraction</summary>
         [Link]
-        [Description("Fraction of daily growth partitioned into the root system")]
+        [Description("This function returns the fraction of daily growth partitioned into the root system.")]
         [Units("0-1")]
         IFunction RootFraction = null;
         /// <summary>The bunch size maximum</summary>
         [Link]
-        [Description("Maximum bunch size on a dry mass basis")]
+        [Description("This function returns the maximum bunch size on a dry mass basis.")]
         [Units("g")]
         IFunction BunchSizeMax = null;
         /// <summary>The female flower fraction</summary>
         [Link]
-        [Description("Female fraction of a cohort's population of inflorescences as affected by age")]
+        [Description("This function returns the female fraction of a cohort's population of inflorescences as affected by age.")]
         [Units("0-1")]
         IFunction FemaleFlowerFraction = null;
         /// <summary>The FFF stress impact</summary>
         [Link]
-        [Description("Fraction of inflorescences that become female each day during the gender determination phase")]
+        [Description("This function returns the fraction of inflorescences that become female each day during the gender determination phase.")]
         [Units("0-1")]
         IFunction FFFStressImpact = null;
         /// <summary>The stem to frond fraction</summary>
         [Link]
-        [Description("Ratio of stem to frond growth as affected by plant age")]
+        [Description("This function returns the ratio of stem to frond growth as affected by plant age.")]
         [Units("g/g")]
         IFunction StemToFrondFraction = null;
         /// <summary>The flower abortion fraction</summary>
         [Link]
-        [Description("Fraction of inflorescences that become aborted each day during the flower abortion phase")]
+        [Description("This function returns the fraction of inflorescences that become aborted each day during the flower abortion phase.")]
         [Units("0-1")]
         IFunction FlowerAbortionFraction = null;
         /// <summary>The bunch failure fraction</summary>
         [Link]
-        [Description("Fraction of bunches that fail each day during the bunch failure phase")]
+        [Description("This function returns the fraction of bunches that fail each day during the bunch failure phase.")]
         [Units("0-1")]
         IFunction BunchFailureFraction = null;
 
@@ -439,53 +445,53 @@ namespace Models.PMF.OilPalm
 
         /// <summary>The kn o3</summary>
         [Link]
-        [Description("NO3 Uptake coefficient - Fraction of NO3 available at a soil concentration of 1ppm ")]
+        [Description("This function describes the NO3 uptake coefficient for a simple second-order decay.  Its value represents the fraction of NO3 available at a soil concentration of 1ppm. ")]
         [Units("/ppm")]
         IFunction KNO3 = null;
 
         /// <summary>The stem n concentration</summary>
         [Link]
-        [Description("Stem nitrogen concentration on dry mass basis")]
+        [Description("This function returns the stem nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction StemNConcentration = null;
         /// <summary>The bunch n concentration</summary>
         [Link]
-        [Description("Bunch nitrogen concentration on dry mass basis")]
+        [Description("This function returns the bunch nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction BunchNConcentration = null;
         /// <summary>The root n concentration</summary>
         [Link]
-        [Description("Root nitrogen concentration on dry mass basis")]
+        [Description("This function returns the root nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction RootNConcentration = null;
         /// <summary>The bunch oil conversion factor</summary>
         [Link]
-        [Description("Conversion factor to convert carbohydrate to bunch dry mass to account for oil content")]
+        [Description("This function returns the conversion factor to convert carbohydrate to bunch dry mass to account for oil content.")]
         [Units("g/g")]
         IFunction BunchOilConversionFactor = null;
         /// <summary>The ripe bunch water content</summary>
         [Link] 
-        [Description("Fractional contribution of water to fresh bunch mass")]
+        [Description("This function returns the fractional contribution of water to fresh bunch mass.")]
         [Units("g/g")]
         IFunction RipeBunchWaterContent = null;
         /// <summary>The harvest frond number</summary>
         [Link]
-        [Description("Frond number removed when bunches are ready for harvest - used to determine harvest time")]
+        [Description("This function returns the frond number removed when bunches are ready for harvest.  This is used to determine harvest time.")]
         [Units("/palm")]
         IFunction HarvestFrondNumber = null;
         /// <summary>The frond maximum n concentration</summary>
         [Link]
-        [Description("Maximum frond nitrogen concentration on dry mass basis")]
+        [Description("This function returns the maximum frond nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction FrondMaximumNConcentration = null;
         /// <summary>The frond critical n concentration</summary>
         [Link]
-        [Description("Critical frond nitrogen concentration on dry mass basis")]
+        [Description("This function returns the critical frond nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction FrondCriticalNConcentration = null;
         /// <summary>The frond minimum n concentration</summary>
         [Link]
-        [Description("Minimum frond nitrogen concentration on dry mass basis")]
+        [Description("This function returns the minimum frond nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction FrondMinimumNConcentration = null;
 
@@ -676,6 +682,7 @@ namespace Models.PMF.OilPalm
             BunchGrowth = 0;
             Fn = 1;
             FW = 1;
+            Fvpd = 1;
             PEP = 0;
             EP = 0;
             RootDepth = 0;
@@ -723,7 +730,11 @@ namespace Models.PMF.OilPalm
             for (int i = 0; i < (int)InitialFrondNumber.Value + 60; i++)
             {
                 BunchType B = new BunchType();
-                B.FemaleFraction = FemaleFlowerFraction.Value;
+                if (i>40) 
+                   B.FemaleFraction =  FemaleFlowerFraction.Value;
+                else
+                    B.FemaleFraction = 0;
+
                 Bunches.Add(B);
             }
             RootDepth = InitialRootDepth;
@@ -760,7 +771,7 @@ namespace Models.PMF.OilPalm
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(this, string.Format("A crop of OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of "+SowingData.Cultivar+" OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -993,7 +1004,7 @@ namespace Models.PMF.OilPalm
             double RUEcloud = RUE.Value * (1 + 0.33 * cover_green);
             double WF = DiffuseLightFraction;
             double RUEadj = WF * WF * RUEcloud + (1 - WF * WF) * RUEclear;
-            DltDM = RUEadj * Fn * MetData.Radn * cover_green * FW;
+            DltDM = RUEadj * Math.Min(Fn,Fvpd) * MetData.Radn * cover_green * FW;
 
             double DMAvailable = DltDM;
             double[] FrondsAge = new double[Fronds.Count];
@@ -1124,16 +1135,53 @@ namespace Models.PMF.OilPalm
                 BiomassRemoved.Invoke(BiomassRemovedData);
             }
         }
+        /// <summary>Saturated Vapour Pressuer</summary>
+        /// <param name="temp">The temperature.</param>
+        /// <returns></returns>
+        private double svp(double temp)  
+        {
+            return 6.1078 * Math.Exp(17.269 * temp / (237.3 + temp));
+        }
+
+        /// <summary>VPDs this instance.</summary>
+        /// <returns></returns>
+        /// The following helper functions [VDP and svp] are for calculating Fvdp
+        ///         /// <summary>Gets the lai.</summary>
+        /// <value>The lai.</value>
+        [Description("Vapour Pressure Deficit")]
+        [Units("kPa")]
+        public double VPD
+        {
+            get
+            {
+                double VPDmint = svp(MetData.MinT) - MetData.VP;
+                VPDmint = Math.Max(VPDmint, 0.0);
+
+                double VPDmaxt = svp(MetData.MaxT) - MetData.VP;
+                VPDmaxt = Math.Max(VPDmaxt, 0.0);
+
+                double vdp = 0.75 * VPDmaxt + 0.25 * VPDmint;
+                return vdp;
+            }
+        }
         /// <summary>Does the water balance.</summary>
         private void DoWaterBalance()
         {
-            PEP = Soil.SoilWater.Eo * cover_green;
+            if (VPD <= 18.0)
+                Fvpd = 1;
+            else
+                Fvpd = Math.Max(0.0, 1 - (VPD - 18) / (50 - 18));
+
+
+            PEP = Soil.SoilWater.Eo * cover_green*Math.Min(Fn, Fvpd);
 
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green / 0.9, 0.01) * (Soil.Water[j] - Soil.SoilWater.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
+            if (TotPotSWUptake == 0)
+                throw new Exception("Total potential soil water uptake is zero");
 
             EP = 0.0;
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)

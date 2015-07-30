@@ -71,6 +71,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            string[] split;
             this.grid = view as IGridView;
             this.model = model as Model;
             this.explorerPresenter = explorerPresenter;
@@ -78,7 +79,15 @@ namespace UserInterface.Presenters
             this.FindAllProperties();
             this.PopulateGrid(this.model);
             this.grid.CellsChanged += this.OnCellValueChanged;
+            this.grid.ButtonClick += OnFileBrowseClick;
+            this.grid.ResizeControls();
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            if (model != null)
+            {
+                split = this.model.GetType().ToString().Split('.');
+                this.grid.ModelName = split[split.Length - 1];
+                this.grid.LoadImage();
+            }
         }
 
         /// <summary>
@@ -87,6 +96,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.grid.CellsChanged -= this.OnCellValueChanged;
+            this.grid.ButtonClick -= OnFileBrowseClick;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
@@ -201,6 +211,10 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = crop.CultivarNames;
                     }
                     
+                }
+                else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FileName)
+                {
+                    cell.EditorType = EditorTypeEnum.Button;
                 }
                 else
                 {
@@ -337,6 +351,22 @@ namespace UserInterface.Presenters
             if (changedModel == this.model)
             {
                 this.PopulateGrid(this.model);
+            }
+        }
+
+        /// <summary>
+        /// Called when user clicks on a file name.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
+        {
+            string fileName = explorerPresenter.AskUserForFile("Select file");
+            if (fileName != null)
+            {
+                e.ChangedCells[0].Value = fileName;
+                OnCellValueChanged(sender, e);
+                PopulateGrid(model);
             }
         }
     }

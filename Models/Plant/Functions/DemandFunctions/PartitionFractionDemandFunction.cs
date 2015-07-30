@@ -9,7 +9,7 @@ namespace Models.PMF.Functions.DemandFunctions
     /// Partition fraction demand function
     /// </summary>
     [Serializable]
-    [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!.  This function returns the specified proportion of total DM supply.  The organ may not get this proportion if the sum of demands from other organs exceeds DM supply")]
+    [Description("Demand is calculated as a fraction of the total plant supply term.")]
     public class PartitionFractionDemandFunction : Model, IFunction
     {
         /// <summary>The partition fraction</summary>

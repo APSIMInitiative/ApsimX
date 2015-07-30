@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models.PMF.Functions
 {
@@ -11,18 +12,21 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the difference between today's and yesterday's photoperiods in hours.")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PhotoperiodDeltaFunction : Model, IFunction
     {
 
         /// <summary>The met data</summary>
         [Link]
-        protected Weather MetData = null;
+        protected IWeather MetData = null;
 
         /// <summary>The clock</summary>
         [Link]
         protected Clock Clock = null;
 
         /// <summary>The twilight</summary>
+        [Description("Twilight")]
         public double Twilight = 0;
 
         /// <summary>Gets the value.</summary>

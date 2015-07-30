@@ -340,38 +340,32 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Export" action
+        /// Event handler for a User interface "Create documentation" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Export to HTML")]
-        public void ExportToHTML(object sender, EventArgs e)
+        [ContextMenu(MenuName = "Create documentation")]
+        public void CreateDocumentation(object sender, EventArgs e)
         {
-            string destinationFolder = this.explorerPresenter.AskUserForFolder("Select folder to export to");
+            string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
             if (destinationFolder != null)
             {
-                ExportToHTML(destinationFolder);
-            }
-        }
+                explorerPresenter.ShowMessage("Creating documentation...", DataStore.ErrorLevel.Information);
+                Cursor.Current = Cursors.WaitCursor;
 
-        /// <summary>Exports the currently selected model to HTML.</summary>
-        /// <param name="destinationFolder">The destination folder.</param>
-        public void ExportToHTML(string destinationFolder)
-        {
-            Model modelClicked = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-            if (modelClicked != null)
-            {
-                if (modelClicked is Simulations)
+                try
                 {
-                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath, destinationFolder);
+                    ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
                     this.explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.ShowMessage("Finished creating documentation", DataStore.ErrorLevel.Information);
+                    Process.Start(command.FileNameWritten);
                 }
-                else
+                catch (Exception err)
                 {
-                    string fileName = Path.Combine(destinationFolder, modelClicked.Name + ".html");
-
-                    Classes.PMFDocumentation.Go(fileName, modelClicked);
+                    explorerPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
                 }
+
+                Cursor.Current = Cursors.Default;
             }
         }
 

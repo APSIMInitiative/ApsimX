@@ -5,6 +5,8 @@ using Models.Core;
 using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
+using Models.Interfaces;
+using Models.PMF.Functions;
 
 
 namespace Models.PMF.Organs
@@ -17,9 +19,9 @@ namespace Models.PMF.Organs
     {
         #region Links to other models or compontnets
         /// <summary>The live</summary>
-        [Link] public Biomass Live = null;
+        [Link] [DoNotDocument] public Biomass Live = null;
         /// <summary>The dead</summary>
-        [Link] public Biomass Dead = null;
+        [Link] [DoNotDocument] public Biomass Dead = null;
         #endregion
 
         /// <summary>The clock</summary>
@@ -28,7 +30,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The met data</summary>
         [Link]
-        public Weather MetData = null;
+        public IWeather MetData = null;
 
         /// <summary>Gets or sets the dm supply.</summary>
         /// <value>The dm supply.</value>
@@ -159,6 +161,39 @@ namespace Models.PMF.Organs
         {
             Live.Clear();
             Dead.Clear();
+        }
+
+        /// <summary>
+        /// Do harvest logic for this organ
+        /// </summary>
+        virtual public void DoHarvest() { }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // write a list of constant functions.
+            foreach (IModel child in Apsim.Children(this, typeof(Constant)))
+                child.Document(tags, -1, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child is Constant || child is Biomass || child is CompositeBiomass || child is ArrayBiomass)
+                {
+                    // don't document.
+                }
+                else
+                    child.Document(tags, headingLevel + 1, indent);
+            }
         }
     }
 }

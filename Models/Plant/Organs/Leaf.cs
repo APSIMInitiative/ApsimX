@@ -18,39 +18,41 @@ namespace Models.PMF.Organs
     /// </summary>
     /// \param KDead The extinction coefficient for dead leaf (\f$k_d\f$).
     /// \param FrostFraction The fraction of leaf death caused by frost event.
+    /// \param GsMax The maximum stomatal conductance (m/s).
+    /// \param R50 SolRad at which stomatal conductance decreases to 50% (W/m2).
     /// \retval MaxCover The maximum coverage (\f$C_{max}\f$) with default value 1, 
     ///     which is set by manager sowing. 
     /// \retval LAI Leaf area index for green leaf (\f$\text{LAI}_{g}\f$, \f$m^2 m^{-2}\f$)
     /// \retval LAIDead Leaf area index for dead leaf  (\f$\text{LAI}_{d}\f$, \f$m^2 m^{-2}\f$)
     /// \retval LAITotal Total LAI including live and dead parts (\f$m^2 m^{-2}\f$)
     ///     \f[
-    /// /// LAI = \text{LAI}_{g} + \text{LAI}_{d}
+    ///     LAI = \text{LAI}_{g} + \text{LAI}_{d}
     ///     \f]
     /// \retval CoverGreen Cover for green leaf (\f$C_g\f$, unitless). 
     ///     \f$C_g\f$ is calculated according to
     ///     extinction coefficient of green leaf (\f$k_{g}\f$).
     ///     \f[
-    /// /// C_{g}=C_{max}(1-\exp(-k_{g}\frac{\text{LAI}_{g}}{C_{max}}))
+    ///     C_{g}=C_{max}(1-\exp(-k_{g}\frac{\text{LAI}_{g}}{C_{max}}))
     ///     \f]
     ///     where, \f$k\f$ is the extinction coefficient which calculates 
     ///     by parameter "ExtinctionCoeff". 
     ///     As the default value of \f$C_{max}\f$ is 1, the function is reduced to
     ///     \f[
-    /// /// C_{g}=1-\exp(-k_{g}\text{LAI}_{g})
+    ///      C_{g}=1-\exp(-k_{g}\text{LAI}_{g})
     ///     \f]
     /// \retval CoverDead Cover for dead leaf (\f$C_d\f$, unitless).
     ///     \f$C_d\f$ is calculated according to
     ///     extinction coefficient of dead leaf (\f$k_{d}\f$).
     ///     \f[
-    /// /// C_{d}=1-\exp(-k_{d}\text{LAI}_{d})
+    ///     C_{d}=1-\exp(-k_{d}\text{LAI}_{d})
     ///     \f]
     /// \retval CoverTotal Total cover for green and dead leaves (\f$C_t\f$, unitless).
     ///     \f[
-    /// /// C_{t} = 1 - (1 - C_{g})(1 - C_{d})
+    ///     C_{t} = 1 - (1 - C_{g})(1 - C_{d})
     ///     \f]
     /// 
-    /// \retval Height Plant height (mm). 
-    /// \retval Depth Plant depth (mm). Equal to plant height (not sure its function?)
+    /// \retval Height Plant height from Structure (mm). 
+    /// \retval Depth Plant height from Structure (mm). Equal to plant height (not sure its function?)
     /// \retval FRGR Fractional relative growth rate (unitless, 0-1)
     ///     with 1.0 at full growth rate and 0.0 at no growth.
     /// \retval PotentialEP Potential evapotranspiration. Set by MICROCLIMATE.
@@ -66,6 +68,11 @@ namespace Models.PMF.Organs
     /// The leaves in the seed are initialized from all children with model 
     /// \ref Models.PMF.Organs.LeafCohort "LeafCohort". 
     /// 
+    /// Potential growth 
+    /// ------------------------
+    /// 
+    /// Senescence
+    /// ------------------------
     /// Frost impact on leaf death
     /// ------------------------
     /// Each cohort leaf is killed by a fraction if value of FrostFraction is more than 0. 
@@ -75,6 +82,8 @@ namespace Models.PMF.Organs
     /// </remarks>
     [Serializable]
     [Description("Leaf Class")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Leaf : BaseOrgan, AboveGround, ICanopy
     {
         #region Canopy interface
@@ -126,6 +135,7 @@ namespace Models.PMF.Organs
         public double FRGR { get { return Photosynthesis.FRGR; } }
         
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
+        [Units("mm")]
         public double PotentialEP { get;  set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
@@ -158,10 +168,11 @@ namespace Models.PMF.Organs
         /// 
         /// </summary>
         [Serializable]
-        public class InitialLeafValues : Model
+        public class LeafCohortParameters : Model
         {
             /// <summary>The maximum area</summary>
             [Link]
+            [Units("mm2")]
             public IFunction MaxArea = null;
             /// <summary>The growth duration</summary>
             [Link]
@@ -240,9 +251,10 @@ namespace Models.PMF.Organs
         // the response it was capturing in leaf was where leaf area senescence is acellerated but other development processes are not.
 
         /// <summary>The initial leaves</summary>
+        [DoNotDocument]
         private LeafCohort[] InitialLeaves;
         /// <summary>The leaf cohort parameters</summary>
-        [Link] InitialLeafValues LeafCohortParameters = null;
+        [Link] LeafCohortParameters CohortParameters = null;
         /// <summary>The photosynthesis</summary>
         [Link] RUEModel Photosynthesis = null;
         /// <summary>The thermal time</summary>
@@ -274,15 +286,19 @@ namespace Models.PMF.Organs
         public double KDead { get; set; }
         /// <summary>Gets or sets the gs maximum.</summary>
         /// <value>The gs maximum.</value>
+        [Description("GsMax")]
         public double GsMax { get; set; }
         /// <summary>Gets or sets the R50.</summary>
         /// <value>The R50.</value>
+        [Description("R50")]
         public double R50 { get; set; }
         /// <summary>Gets or sets the emissivity.</summary>
         /// <value>The emissivity.</value>
+        [Description("Emissivity")]
         public double Emissivity { get; set; }
         /// <summary>Gets or sets the albido.</summary>
         /// <value>The albido.</value>
+        [Description("Albido")]
         public double Albido { get; set; }
         
         #endregion
@@ -318,7 +334,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Leaves[CurrentRank-1].CoverAbove;
+                if (CurrentRank - 1 < Leaves.Count || CurrentRank - 1 >= Leaves.Count)
+                    return 0;
+                else
+                    return Leaves[CurrentRank-1].CoverAbove;
             }
         }
 
@@ -800,7 +819,7 @@ namespace Models.PMF.Organs
             get
             {
                 double F = 1;
-                double FunctionalNConc = (LeafCohortParameters.CriticalNConc.Value - (LeafCohortParameters.MinimumNConc.Value * LeafCohortParameters.StructuralFraction.Value)) * (1 / (1 - LeafCohortParameters.StructuralFraction.Value));
+                double FunctionalNConc = (CohortParameters.CriticalNConc.Value - (CohortParameters.MinimumNConc.Value * CohortParameters.StructuralFraction.Value)) * (1 / (1 - CohortParameters.StructuralFraction.Value));
                 if (FunctionalNConc == 0)
                     F = 1;
                 else
@@ -909,7 +928,7 @@ namespace Models.PMF.Organs
                     Leaves[i].Rank = AppearingNode;
                     Leaves[i].CohortPopulation = Structure.TotalStemPopn;
                     Leaves[i].Age = CohortAge;
-                    Leaves[i].DoAppearance(FinalFraction, LeafCohortParameters);
+                    Leaves[i].DoAppearance(FinalFraction, CohortParameters);
                     if (NewLeaf != null)
                         NewLeaf.Invoke();
                 }
@@ -918,7 +937,7 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort L in Leaves)
                 {
                     CurrentRank = L.Rank;
-                    L.DoPotentialGrowth(ThermalTime.Value, LeafCohortParameters);
+                    L.DoPotentialGrowth(ThermalTime.Value, CohortParameters);
                     if ((L.IsFullyExpanded == false) && (NextExpandingLeaf == false))
                     {
                         NextExpandingLeaf = true;
@@ -953,7 +972,7 @@ namespace Models.PMF.Organs
 
                     Leaf.DoInitialisation();
                     Structure.MainStemNodeNo += 1.0;
-                    Leaf.DoAppearance(1.0, LeafCohortParameters);
+                    Leaf.DoAppearance(1.0, CohortParameters);
                 }
                 else //Leaves are primordia and have not yet emerged, initialise but do not set appeared values yet
                     Leaf.DoInitialisation();
@@ -969,7 +988,7 @@ namespace Models.PMF.Organs
            // WaterAllocation = 0;
             
             foreach (LeafCohort L in Leaves)
-                L.DoActualGrowth(ThermalTime.Value, LeafCohortParameters);
+                L.DoActualGrowth(ThermalTime.Value, CohortParameters);
 
             Structure.UpdateHeight();
 
@@ -1546,7 +1565,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafCohortParameters.MaximumNConc.Value;
+                return CohortParameters.MaximumNConc.Value;
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
@@ -1555,7 +1574,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafCohortParameters.CriticalNConc.Value;
+                return CohortParameters.CriticalNConc.Value;
             }
         }
         #endregion

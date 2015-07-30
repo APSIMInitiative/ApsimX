@@ -148,7 +148,7 @@
   <data name="Report" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SyntaxHighlighting\Report.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Plant2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Plant2.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="XYPairsGraph" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XYPairsGraph.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models.PMF.OldPlant
 {
@@ -16,7 +17,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The met data</summary>
         [Link]
-        Weather MetData = null;
+        IWeather MetData = null;
 
         /// <summary>The c o2</summary>
         public double CO2 = 350;

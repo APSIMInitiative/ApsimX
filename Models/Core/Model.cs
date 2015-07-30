@@ -44,7 +44,11 @@ namespace Models.Core
         [XmlElement(typeof(Zone))]
         [XmlElement(typeof(Model))]
         [XmlElement(typeof(ModelCollectionFromResource))]
+        [XmlElement(typeof(Models.Agroforestry.LocalMicroClimate))]
+        [XmlElement(typeof(Models.Agroforestry.StaticForestrySystem))]
         [XmlElement(typeof(Models.Graph.Graph))]
+        [XmlElement(typeof(Models.Graph.Series))]
+        [XmlElement(typeof(Models.Graph.Regression))]
         [XmlElement(typeof(Models.PMF.Plant))]
         [XmlElement(typeof(Models.PMF.Slurp.Slurp))]
         [XmlElement(typeof(Models.PMF.OilPalm.OilPalm))]
@@ -77,6 +81,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.Factorial.Factor))]
         [XmlElement(typeof(Memo))]
         [XmlElement(typeof(Folder))]
+        [XmlElement(typeof(Replacements))]
         [XmlElement(typeof(Soils.Water))]
         [XmlElement(typeof(Soils.SoilCrop))]
         [XmlElement(typeof(Soils.SoilCropOilPalm))]
@@ -107,7 +112,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.HIReproductiveOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.Leaf))]
         [XmlElement(typeof(Models.PMF.Organs.LeafCohort))]
-        [XmlElement(typeof(Models.PMF.Organs.Leaf.InitialLeafValues))]
+        [XmlElement(typeof(Models.PMF.Organs.Leaf.LeafCohortParameters))]
         [XmlElement(typeof(Models.PMF.Organs.Nodule))]
         [XmlElement(typeof(Models.PMF.Organs.ReproductiveOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.ReserveOrgan))]
@@ -125,6 +130,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.GotoPhase))]
         [XmlElement(typeof(Models.PMF.Phen.LeafAppearancePhase))]
         [XmlElement(typeof(Models.PMF.Phen.LeafDeathPhase))]
+        [XmlElement(typeof(Models.PMF.Phen.NodeNumberPhase))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
         [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
         [XmlElement(typeof(Models.PMF.Functions.AccumulateFunction))]
@@ -138,6 +144,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.ExponentialFunction))]
         [XmlElement(typeof(Models.PMF.Functions.ExpressionFunction))]
         [XmlElement(typeof(Models.PMF.Functions.ExternalVariable))]
+        [XmlElement(typeof(Models.PMF.Functions.HoldFunction))]
         [XmlElement(typeof(Models.PMF.Functions.InPhaseTtFunction))]
         [XmlElement(typeof(Models.PMF.Functions.LessThanFunction))]
         [XmlElement(typeof(Models.PMF.Functions.LinearInterpolationFunction))]
@@ -161,6 +168,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.SubtractFunction))]
         [XmlElement(typeof(Models.PMF.Functions.VariableReference))]
         [XmlElement(typeof(Models.PMF.Functions.WeightedTemperatureFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.XYPairs))]
         [XmlElement(typeof(Models.PMF.Functions.Zadok))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.AllometricDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.InternodeDemandFunction))]
@@ -168,6 +176,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PopulationBasedDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PotentialSizeDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.RelativeGrowthRateDemandFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.FillingRateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.HeightFunction))]
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.InPhaseTemperatureFunction))]
         [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction))]
@@ -192,6 +201,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OldPlant.SWStress))]
         [XmlElement(typeof(Models.PMF.SimpleTree))]
         [XmlElement(typeof(Models.PMF.Cultivar))]
+        [XmlElement(typeof(Models.Zones.CircularZone))]
+        [XmlElement(typeof(Models.Zones.RectangularZone))]
         public List<Model> Children { get; set; }
 
         /// <summary>
@@ -205,5 +216,23 @@ namespace Models.Core
         /// </summary>
         [XmlIgnore]
         public bool IsHidden { get; set; }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public virtual void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                child.Document(tags, headingLevel + 1, indent);
+        }
+
     }
 }

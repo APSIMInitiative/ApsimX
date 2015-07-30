@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Emerging phase in phenology
+    /// This phase simulates time to emergence as a function of sowing depth.  Thermal time to emergence = Sowing Depth x Shoot Rate + Shoot Lag.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 
     /// provide the sowing depth (\f$D_{seed}\f$).
@@ -29,6 +30,8 @@ namespace Models.PMF.Phen
     /// \f]
     /// </remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class EmergingPhase : GenericPhase
     {
         /// <summary>The plant</summary>
@@ -37,9 +40,15 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets or sets the shoot lag.</summary>
         /// <value>The shoot lag.</value>
+        [Units("oCd")]
+       // [XmlIgnore]
+        [Description("ShootLag")]
         public double ShootLag { get; set; }
         /// <summary>Gets or sets the shoot rate.</summary>
-        /// <value>The shoot rate.</value>
+        /// <value>The shoot rate</value>
+        [Units("oCd/mm")]
+       // [XmlIgnore]
+        [Description("ShootRate")]
         public double ShootRate { get; set; }
 
         /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>

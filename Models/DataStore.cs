@@ -441,6 +441,19 @@ namespace Models
         /// <returns></returns>
         public DataTable GetFilteredData(string tableName, string filter)
         {
+            return GetFilteredData(tableName, new string[] { "*" }, filter);
+        }
+
+        /// <summary>
+        /// Return all data from the specified simulation and table name. If simulationName = "*"
+        /// the all simulation data will be returned.
+        /// </summary>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="fieldNames">Field names to get data for.</param>
+        /// <param name="filter">The filter.</param>
+        /// <returns></returns>
+        public DataTable GetFilteredData(string tableName, string[] fieldNames, string filter)
+        {
             Open(forWriting: false);
             if (Connection == null || !TableExists("Simulations") || tableName == null)
                 return null;
@@ -448,7 +461,16 @@ namespace Models
             {
                 string sql;
 
-                sql = "SELECT S.Name as SimulationName, T.* FROM " + tableName + " T" + ", Simulations S ";
+                // Create a string of comma separated field names.
+                string fieldNameString = string.Empty;
+                foreach (string fieldName in fieldNames)
+                {
+                    if (fieldNameString != string.Empty)
+                        fieldNameString += ",";
+                    fieldNameString += "[" + fieldName + "]";
+                }
+
+                sql = "SELECT S.Name as SimulationName, " + fieldNameString + " FROM " + tableName + " T" + ", Simulations S ";
                 sql += "WHERE ID = SimulationID";
                 if (filter != null)
                 {
@@ -550,7 +572,7 @@ namespace Models
             StreamWriter report = report = new StreamWriter(fileName);
             foreach (string simulationName in dataStore.SimulationNames)
             {
-                Summary.WriteReport(dataStore, simulationName, report, null, html: false);
+                Summary.WriteReport(dataStore, simulationName, report, null, outtype: Summary.OutputType.html);
                 report.WriteLine();
                 report.WriteLine();
                 report.WriteLine("############################################################################");
@@ -845,7 +867,7 @@ namespace Models
 
             for (int i = 0; i < names.Length; i++)
             {
-                if (!columnNames.Contains(names[i]))
+                if (!columnNames.Contains(names[i], StringComparer.OrdinalIgnoreCase))
                 {
                     string sql = "ALTER TABLE " + tableName + " ADD COLUMN [";
                     sql += names[i] + "] " + GetSQLColumnType(types[i]);

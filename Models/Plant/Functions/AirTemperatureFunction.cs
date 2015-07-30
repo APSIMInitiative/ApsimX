@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using Models.Interfaces;
 
 namespace Models.PMF.Functions
 {
@@ -15,10 +16,12 @@ namespace Models.PMF.Functions
 
         /// <summary>The met data</summary>
         [Link]
-        protected Weather MetData = null;
+        protected IWeather MetData = null;
 
         /// <summary>Gets or sets the xy pairs.</summary>
-        public XYPairs XYPairs { get; set; }   // Temperature effect on Growth Interpolation Set
+        /// <value>The xy pairs.</value>
+        [Link]
+        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>Number of 3 hourly temperatures</summary>
         private const int num3hr = 24 / 3;           // 
@@ -111,6 +114,27 @@ namespace Models.PMF.Functions
             double t_deviation = t_range_fract[period-1] * diurnal_range;
 
             return tmin + t_deviation;
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
+            // Links aren't resolved at this point so go find xy pairs manually.
+            XYPairs xypairs = Apsim.Child(this, "XYPairs") as XYPairs;
+
+            // add graph and table.
+            if (xypairs != null)
+                tags.Add(new AutoDocumentation.GraphAndTable(xypairs, Name, "Temperature (oC)", Name + " (deg. day)", indent));
         }
 
     }

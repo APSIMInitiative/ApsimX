@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Views
 {
+    
     partial class HTMLView
     {
         /// <summary> 
@@ -31,7 +32,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HTMLView));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.richTextBox1 = new FullRichtextBox(); // new System.Windows.Forms.RichTextBox();
             this.ToolStrip1 = new System.Windows.Forms.ToolStrip();
             this.headingComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.ToolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -52,14 +53,13 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.Location = new System.Drawing.Point(4, 28);
+            this.richTextBox1.Location = new System.Drawing.Point(0, 25);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(840, 589);
+            this.richTextBox1.Size = new System.Drawing.Size(528, 428);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             this.richTextBox1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.OnLinkClicked);
@@ -79,7 +79,7 @@
             this.subscriptButton});
             this.ToolStrip1.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip1.Name = "ToolStrip1";
-            this.ToolStrip1.Size = new System.Drawing.Size(847, 28);
+            this.ToolStrip1.Size = new System.Drawing.Size(528, 25);
             this.ToolStrip1.TabIndex = 2;
             this.ToolStrip1.Text = "ToolStrip1";
             // 
@@ -91,19 +91,19 @@
             "Heading 3",
             "Normal"});
             this.headingComboBox.Name = "headingComboBox";
-            this.headingComboBox.Size = new System.Drawing.Size(121, 28);
+            this.headingComboBox.Size = new System.Drawing.Size(92, 25);
             this.headingComboBox.Text = "Normal";
             this.headingComboBox.TextChanged += new System.EventHandler(this.OnHeadingChanged);
             // 
             // ToolStripSeparator1
             // 
             this.ToolStripSeparator1.Name = "ToolStripSeparator1";
-            this.ToolStripSeparator1.Size = new System.Drawing.Size(6, 28);
+            this.ToolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // ToolStripSeparator2
             // 
             this.ToolStripSeparator2.Name = "ToolStripSeparator2";
-            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 28);
+            this.ToolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // boldButton
             // 
@@ -111,7 +111,7 @@
             this.boldButton.Image = ((System.Drawing.Image)(resources.GetObject("boldButton.Image")));
             this.boldButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.boldButton.Name = "boldButton";
-            this.boldButton.Size = new System.Drawing.Size(23, 25);
+            this.boldButton.Size = new System.Drawing.Size(23, 22);
             this.boldButton.Text = "Bold";
             this.boldButton.Click += new System.EventHandler(this.OnBoldClick);
             // 
@@ -121,7 +121,7 @@
             this.italicButton.Image = ((System.Drawing.Image)(resources.GetObject("italicButton.Image")));
             this.italicButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.italicButton.Name = "italicButton";
-            this.italicButton.Size = new System.Drawing.Size(23, 25);
+            this.italicButton.Size = new System.Drawing.Size(23, 22);
             this.italicButton.Text = "Italic";
             this.italicButton.Click += new System.EventHandler(this.OnItalicClick);
             // 
@@ -131,7 +131,7 @@
             this.underlineButton.Image = ((System.Drawing.Image)(resources.GetObject("underlineButton.Image")));
             this.underlineButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.underlineButton.Name = "underlineButton";
-            this.underlineButton.Size = new System.Drawing.Size(23, 25);
+            this.underlineButton.Size = new System.Drawing.Size(23, 22);
             this.underlineButton.Text = "Underline";
             this.underlineButton.Click += new System.EventHandler(this.OnUnderlineClick);
             // 
@@ -141,7 +141,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 25);
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "toolStripButton1";
             this.toolStripButton1.Click += new System.EventHandler(this.OnStrikeThroughClick);
             // 
@@ -151,7 +151,7 @@
             this.superscriptButton.Image = ((System.Drawing.Image)(resources.GetObject("superscriptButton.Image")));
             this.superscriptButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.superscriptButton.Name = "superscriptButton";
-            this.superscriptButton.Size = new System.Drawing.Size(23, 25);
+            this.superscriptButton.Size = new System.Drawing.Size(23, 22);
             this.superscriptButton.Text = "toolStripButton2";
             this.superscriptButton.Click += new System.EventHandler(this.OnSuperscriptClick);
             // 
@@ -161,19 +161,18 @@
             this.subscriptButton.Image = ((System.Drawing.Image)(resources.GetObject("subscriptButton.Image")));
             this.subscriptButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.subscriptButton.Name = "subscriptButton";
-            this.subscriptButton.Size = new System.Drawing.Size(23, 25);
+            this.subscriptButton.Size = new System.Drawing.Size(23, 22);
             this.subscriptButton.Text = "toolStripButton2";
             this.subscriptButton.Click += new System.EventHandler(this.OnSubscriptClick);
             // 
             // HTMLView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.ToolStrip1);
             this.Controls.Add(this.richTextBox1);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Controls.Add(this.ToolStrip1);
             this.Name = "HTMLView";
-            this.Size = new System.Drawing.Size(847, 620);
+            this.Size = new System.Drawing.Size(528, 453);
             this.ToolStrip1.ResumeLayout(false);
             this.ToolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -184,7 +183,7 @@
         #endregion
 
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private FullRichtextBox richTextBox1;
         internal System.Windows.Forms.ToolStrip ToolStrip1;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator1;
         internal System.Windows.Forms.ToolStripSeparator ToolStripSeparator2;
@@ -195,5 +194,27 @@
         private System.Windows.Forms.ToolStripButton superscriptButton;
         private System.Windows.Forms.ToolStripButton subscriptButton;
         private System.Windows.Forms.ToolStripComboBox headingComboBox;
+    }
+
+    public partial class FullRichtextBox : System.Windows.Forms.RichTextBox
+    {
+
+#if !__MonoCS__
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        static extern System.IntPtr LoadLibrary(string lpFileName);
+
+        protected override System.Windows.Forms.CreateParams CreateParams
+        {
+            get
+            {
+                System.Windows.Forms.CreateParams param = base.CreateParams;
+                if (LoadLibrary("msftedit.dll") != System.IntPtr.Zero)
+                {
+                    param.ClassName = "RICHEDIT50W";
+                }
+                return param;
+            }
+        }
+#endif
     }
 }

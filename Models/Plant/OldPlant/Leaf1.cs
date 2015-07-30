@@ -140,7 +140,7 @@ namespace Models.PMF.OldPlant
 
         /// <summary>The met data</summary>
         [Link]
-        Weather MetData = null;
+        IWeather MetData = null;
 
         /// <summary>Gets or sets the node number correction.</summary>
         /// <value>The node number correction.</value>

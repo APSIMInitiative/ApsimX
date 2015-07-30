@@ -53,6 +53,8 @@ namespace UserInterface.Presenters
 
             this.dataStoreView.Grid.NumericFormat = "N3";
             this.dataStoreView.TableNames = this.GetTableNames();
+
+            this.dataStoreView.Grid.ResizeControls();
         }
 
         /// <summary>
@@ -127,7 +129,7 @@ namespace UserInterface.Presenters
             StreamWriter report = report = new StreamWriter(fileName);
             foreach (string simulationName in dataStoreToUse.SimulationNames)
             {
-                Summary.WriteReport(dataStoreToUse, simulationName, report, null, html: false);
+                Summary.WriteReport(dataStoreToUse, simulationName, report, null, outtype: Summary.OutputType.html);
                 report.WriteLine();
                 report.WriteLine();
                 report.WriteLine("############################################################################");

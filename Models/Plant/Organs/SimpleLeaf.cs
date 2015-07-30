@@ -359,12 +359,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (PotentialBiomass != null)
-            {
-                //FIXME.  Have changed potential Biomass function to give delta rather than accumulation.  MCSP will need to be altered
-                DeltaBiomass = PotentialBiomass.Value; //- BiomassYesterday; //Over the defalt DM supply of 1 if there is a photosynthesis function present
-                //BiomassYesterday = PotentialBiomass.Value;
-            }
 
             EP = 0;
         }
@@ -411,7 +405,16 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
+                if (PotentialBiomass != null)
+                {
+                    DeltaBiomass = PotentialBiomass.Value; //Over the defalt DM supply of 1 if there is a photosynthesis function present
+                }
+
                 FRGR = FRGRFunction.Value;
+                if (CoverFunction == null & ExtinctionCoefficientFunction == null)
+                {
+                    throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
+                }
                 if (CoverFunction != null)
                     LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value * -1));
                 if (LAIFunction != null)

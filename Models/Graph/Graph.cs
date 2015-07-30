@@ -17,7 +17,7 @@ namespace Models.Graph
     [ViewName("UserInterface.Views.GraphView")]
     [PresenterName("UserInterface.Presenters.GraphPresenter")]
     [Serializable]
-    public class Graph : Model
+    public class Graph : Model, AutoDocumentation.ITag
     {
         /// <summary>
         /// The data store to use when retrieving data
@@ -62,11 +62,6 @@ namespace Models.Graph
         }
 
         /// <summary>
-        /// Gets or sets the title of the graph
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
         /// Gets or sets the caption at the bottom of the graph
         /// </summary>
         public string Caption { get; set; }
@@ -80,8 +75,8 @@ namespace Models.Graph
         /// <summary>
         /// Gets or sets a list of all series
         /// </summary>
-        [XmlElement("Series")]
-        public List<Series> Series { get; set; }
+        [XmlIgnore]
+        public List<IModel> Series { get { return Apsim.Children(this, typeof(Series)); } }
 
         /// <summary>
         /// Gets or sets the location of the legend
@@ -89,36 +84,99 @@ namespace Models.Graph
         public LegendPositionType LegendPosition { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether an overall regression line and stats for all series?
-        /// </summary>
-        public bool ShowRegressionLine { get; set; }
-
-        /// <summary>
         /// Gets or sets a list of raw grpah series that should be disabled.
         /// </summary>
         public List<string> DisabledSeries { get; set; }
 
         /// <summary>
-        /// Gets an instance of the data store. Creates it if it doesn't exist.
+        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
         /// </summary>
-        public DataStore DataStore
+        public bool IncludeInDocumentation { get; set; }
+
+        /// <summary>Gets the definitions to graph.</summary>
+        /// <returns>A list of series definitions.</returns>
+        public List<SeriesDefinition> GetDefinitionsToGraph()
         {
-            get
-            {
-                if (this.dataStore == null)
-                    this.dataStore = new DataStore(this);
-                return this.dataStore;
-            }
+            EnsureAllAxesExist();
+
+            List<SeriesDefinition> definitions = new List<SeriesDefinition>();
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+                series.GetSeriesToPutOnGraph(definitions);
+
+            return definitions;
+        }
+
+        /// <summary>Gets the annotations to graph.</summary>
+        /// <returns>A list of series annotations.</returns>
+        public List<Annotation> GetAnnotationsToGraph()
+        {
+            List<Annotation> annotations = new List<Annotation>();
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+                series.GetAnnotationsToPutOnGraph(annotations);
+
+            return annotations;
         }
 
         /// <summary>
-        /// Get a list of valid field names
+        /// Writes documentation for this function by adding to the list of documentation tags.
         /// </summary>
-        /// <param name="graphValues">The graph values object</param>
-        /// <returns>The list of field names that are valid</returns>
-        public IEnumerable GetValidFieldNames(GraphValues graphValues)
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            return graphValues.ValidFieldNames(this);
+            if (IncludeInDocumentation)
+                tags.Add(this);
         }
+
+        /// <summary>
+        /// Ensure that we have all necessary axis objects.
+        /// </summary>
+        private void EnsureAllAxesExist()
+        {
+            // Get a list of all axis types that are referenced by the series.
+            List<Models.Graph.Axis.AxisType> allAxisTypes = new List<Models.Graph.Axis.AxisType>();
+            foreach (Series series in Series)
+            {
+                allAxisTypes.Add(series.XAxis);
+                allAxisTypes.Add(series.YAxis);
+            }
+
+            // Go through all graph axis objects. For each, check to see if it is still needed and
+            // if so copy to our list.
+            List<Axis> allAxes = new List<Axis>();
+            bool unNeededAxisFound = false;
+            foreach (Axis axis in Axes)
+            {
+                if (allAxisTypes.Contains(axis.Type))
+                    allAxes.Add(axis);
+                else
+                    unNeededAxisFound = true;
+            }
+
+            // Go through all series and make sure an axis object is present in our AllAxes list. If
+            // not then go create an axis object.
+            bool axisWasAdded = false;
+            foreach (Series S in Series)
+            {
+                Axis foundAxis = allAxes.Find(a => a.Type == S.XAxis);
+                if (foundAxis == null)
+                {
+                    allAxes.Add(new Axis() { Type = S.XAxis });
+                    axisWasAdded = true;
+                }
+
+                foundAxis = allAxes.Find(a => a.Type == S.YAxis);
+                if (foundAxis == null)
+                {
+                    allAxes.Add(new Axis() { Type = S.YAxis });
+                    axisWasAdded = true;
+                }
+            }
+
+            if (unNeededAxisFound || axisWasAdded)
+                Axes = allAxes;
+        }
+
     }
 }

@@ -10,8 +10,11 @@ namespace Models
     using System.Data;
     using System.IO;
     using System.Reflection;
-    using Models.Core;
     using APSIM.Shared.Utilities;
+    using MigraDoc.DocumentObjectModel;
+    using MigraDoc.DocumentObjectModel.Tables;
+    using MigraDoc.RtfRendering;
+    using Models.Core;
 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
@@ -21,7 +24,7 @@ namespace Models
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     public class Summary : Model, ISummary
-    {      
+    {
         /// <summary>
         /// The messages data table.
         /// </summary>
@@ -30,8 +33,29 @@ namespace Models
         /// <summary>
         /// A link to the clock in the simulation.
         /// </summary>
-        [Link] 
+        [Link]
         private Clock clock = null;
+
+        /// <summary>
+        /// Enumeration used to indicate the format of the output string
+        /// </summary>
+        public enum OutputType
+        {
+            /// <summary>
+            /// Plain ASCII text
+            /// </summary>
+            plain,
+
+            /// <summary>
+            /// HTML format
+            /// </summary>
+            html,
+
+            /// <summary>
+            /// RTF format
+            /// </summary>
+            rtf
+        }
 
         /// <summary>
         /// Gets a link to the simulation.
@@ -51,19 +75,59 @@ namespace Models
         /// <param name="simulationName">The simulation name to produce a summary report for</param>
         /// <param name="writer">Text writer to write to</param>
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
-        /// <param name="html">Indicates whether to produce html format</param>
+        /// <param name="outtype">Indicates the format to be produced</param>
         public static void WriteReport(
             DataStore dataStore,
             string simulationName,
             TextWriter writer,
             string apsimSummaryImageFileName,
-            bool html)
+            OutputType outtype)
         {
-            if (html)
+            Document document = null;
+            RtfDocumentRenderer renderer = null;
+
+            if (outtype == OutputType.html)
             {
                 writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 writer.WriteLine("<html>");
                 writer.WriteLine("<body>");
+            }
+            else if (outtype == OutputType.rtf)
+            {
+                document = new Document();
+                renderer = new RtfDocumentRenderer();
+
+                // Get the predefined style Normal.
+                Style style = document.Styles["Normal"];
+
+                // Because all styles are derived from Normal, the next line changes the 
+                // font of the whole document. Or, more exactly, it changes the font of
+                // all styles and paragraphs that do not redefine the font.
+                style.Font.Name = "Arial";
+
+                // Heading1 to Heading9 are predefined styles with an outline level. An outline level
+                // other than OutlineLevel.BodyText automatically creates the outline (or bookmarks) 
+                // in PDF.
+                style = document.Styles["Heading2"];
+                style.Font.Size = 14;
+                style.Font.Bold = true;
+                style.Font.Color = Colors.DarkBlue;
+                style.ParagraphFormat.PageBreakBefore = false;
+                style.ParagraphFormat.SpaceAfter = 3;
+                style.ParagraphFormat.SpaceBefore = 16;
+
+                style = document.Styles["Heading3"];
+                style.Font.Size = 12;
+                style.Font.Bold = true;
+                style.Font.Color = Colors.DarkBlue;
+                style.ParagraphFormat.SpaceBefore = 10;
+                style.ParagraphFormat.SpaceAfter = 2;
+
+                // Create a new style called Monospace based on style Normal
+                style = document.Styles.AddStyle("Monospace", "Normal");
+                System.Drawing.FontFamily monoFamily = new System.Drawing.FontFamily(System.Drawing.Text.GenericFontFamilies.Monospace);
+                style.Font.Name = monoFamily.Name;
+                Section section = document.AddSection();
             }
 
             // Get the initial conditions table.            
@@ -82,48 +146,56 @@ namespace Models
                     if (tables[i].Rows.Count > 0 || tables[i + 1].Rows.Count > 0)
                     {
                         string heading = tables[i].TableName;
-                        WriteHeading(writer, heading, html);
+                        WriteHeading(writer, heading, outtype, document);
 
                         // Write the manager script.
                         if (tables[i].Rows.Count == 1 && tables[i].Rows[0][0].ToString() == "Script code: ")
                         {
-                            WriteScript(writer, tables[i].Rows[0], html);
+                            WriteScript(writer, tables[i].Rows[0], outtype, document);
                         }
                         else
                         {
                             // Write the properties table if we have any properties.
                             if (tables[i].Rows.Count > 0)
                             {
-                                WriteTable(writer, tables[i], html, includeHeadings: false, className: "PropertyTable");
+                                WriteTable(writer, tables[i], outtype, "PropertyTable", document);
                             }
 
                             // Write the general data table if we have any data.
                             if (tables[i + 1].Rows.Count > 0)
                             {
-                                WriteTable(writer, tables[i + 1], html, includeHeadings: true, className: "ApsimTable");
+                                WriteTable(writer, tables[i + 1], outtype, "ApsimTable", document);
                             }
                         }
 
-                        writer.WriteLine("<br/>");
+                        if (outtype == OutputType.html)
+                            writer.WriteLine("<br/>");
                     }
                 }
             }
 
             // Write out all messages.
-            WriteHeading(writer, "Simulation log:", html);
+            WriteHeading(writer, "Simulation log:", outtype, document);
             DataTable messageTable = GetMessageTable(dataStore, simulationName);
-            WriteMessageTable(writer, messageTable, html, false, "MessageTable");
+            WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", document);
 
-            if (html)
+            if (outtype == OutputType.html)
             {
                 writer.WriteLine("</body>");
                 writer.WriteLine("</html>");
+            }
+            else if (outtype == OutputType.rtf)
+            {
+                string rtf = renderer.RenderToString(document, Path.GetTempPath());
+                writer.Write(rtf);
             }
         }
 
         /// <summary>
         /// All simulations have been completed. 
         /// </summary>
+        /// <param name="sender">The sending Object</param>
+        /// <param name="e">Arguments associated with the event</param>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
@@ -141,8 +213,8 @@ namespace Models
         public void WriteMessage(IModel model, string message)
         {
             string modelFullPath = Apsim.FullPath(model);
-            string relativeModelPath = modelFullPath.Replace(Apsim.FullPath(Simulation) + ".", string.Empty);
-                
+            string relativeModelPath = modelFullPath.Replace(Apsim.FullPath(Simulation) + ".", string.Empty).TrimStart(".".ToCharArray());
+
             DataRow newRow = this.messagesTable.NewRow();
             newRow["ComponentName"] = relativeModelPath;
             newRow["Date"] = this.clock.Today;
@@ -170,7 +242,7 @@ namespace Models
         }
 
         #region Private static summary report generation
-                
+
         /// <summary>
         /// Create a message table ready for writing.
         /// </summary>
@@ -191,8 +263,15 @@ namespace Models
                 {
                     // Work out the column 1 text.
                     string modelName = (string)row[1];
-                    DateTime date = (DateTime)row[2];
-                    string col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
+
+                    string col1Text;
+                    if (row[2].GetType() == typeof(DateTime))
+                    {
+                        DateTime date = (DateTime)row[2];
+                        col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
+                    }
+                    else
+                        col1Text = row[2].ToString();
 
                     // If the date and model name have changed then write a row.
                     if (col1Text != previousCol1Text)
@@ -228,6 +307,10 @@ namespace Models
 
                     previousMessage += "\r\n";
                 }
+                if (previousMessage != null)
+                {
+                    messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage });
+                }
             }
 
             return messageTable;
@@ -238,12 +321,18 @@ namespace Models
         /// </summary>
         /// <param name="writer">Text writer to write to</param>
         /// <param name="heading">The heading to write</param>
-        /// <param name="html">Indicates whether to produce html format</param>
-        private static void WriteHeading(TextWriter writer, string heading, bool html)
+        /// <param name="outtype">Indicates the format to be produced</param>
+        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
+        private static void WriteHeading(TextWriter writer, string heading, OutputType outtype, Document document)
         {
-            if (html)
+            if (outtype == OutputType.html)
             {
                 writer.WriteLine("<h2>" + heading + "</h2>");
+            }
+            else if (outtype == OutputType.rtf)
+            {
+                Section section = document.LastSection;
+                Paragraph paragraph = section.AddParagraph(heading, "Heading2");
             }
             else
             {
@@ -257,22 +346,30 @@ namespace Models
         /// </summary>
         /// <param name="writer">Text writer to write to</param>
         /// <param name="row">The data table row containing the script</param>
-        /// <param name="html">Indicates whether to produce html format</param>
-        private static void WriteScript(TextWriter writer, DataRow row, bool html)
+        /// <param name="outtype">Indicates the format to be produced</param>
+        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
+        private static void WriteScript(TextWriter writer, DataRow row, OutputType outtype, Document document)
         {
             string st = row[1].ToString();
             st = st.Replace("\t", "    ");
-            if (html)
+            if (outtype == OutputType.html)
             {
-                st = st.Replace("<", "LE");
-                st = st.Replace(">", "GE");
-                st = st.Replace("&&", "and");
+                st = st.Replace("&", "&amp;");
+                st = st.Replace("<", "&lt;");
+                st = st.Replace(">", "&gt;");
                 st = st.Replace("\r", string.Empty);
                 st = st.Replace("\n", "<br/>");
                 st = st.Replace("<br/>", "<br/>\r\n");
+                writer.WriteLine(st);
             }
-
-            writer.WriteLine(st);
+            else if (outtype == OutputType.rtf)
+            {
+                Paragraph paragraph = document.LastSection.AddParagraph(st, "Monospace");
+            }
+            else
+            {
+                writer.WriteLine(st);
+            }
         }
 
         /// <summary>
@@ -280,21 +377,86 @@ namespace Models
         /// </summary>
         /// <param name="writer">The writer to write to</param>
         /// <param name="table">The table to write</param>
-        /// <param name="html">Indicates whether html format should be produced</param>
-        /// <param name="includeHeadings">Include headings in the html table produced?</param>
+        /// <param name="outtype">Indicates the format to be produced</param>
         /// <param name="className">The class name of the generated html table</param>
-        private static void WriteTable(TextWriter writer, DataTable table, bool html, bool includeHeadings, string className)
+        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
+        private static void WriteTable(TextWriter writer, DataTable table, OutputType outtype, string className, Document document)
         {
-            if (html)
+            bool showHeadings = className != "PropertyTable";
+            if (outtype == OutputType.html)
             {
-                bool showHeadings = className != "PropertyTable";
                 string line = DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings);
                 line = line.Replace("\r\n", "<br/>");
                 writer.WriteLine(line);
             }
+            else if (outtype == OutputType.rtf)
+            {
+                Table tabl = new Table();
+                tabl.Borders.Width = 0.75;
+
+                foreach (DataColumn col in table.Columns)
+                {
+                    Column column = tabl.AddColumn(Unit.FromCentimeter(18.0 / table.Columns.Count));
+                }
+
+                if (showHeadings)
+                {
+                    Row row = tabl.AddRow();
+                    row.Shading.Color = Colors.PaleGoldenrod;
+                    tabl.Shading.Color = new Color(245, 245, 255);
+                    for (int i = 0; i < table.Columns.Count; i++)
+                    {
+                        Cell cell = row.Cells[i];
+                        Paragraph paragraph = cell.AddParagraph();
+                        if (i == 0)
+                            paragraph.Format.Alignment = ParagraphAlignment.Left;
+                        else
+                            paragraph.Format.Alignment = ParagraphAlignment.Right;
+                        paragraph.AddText(table.Columns[i].ColumnName);
+                    }
+                }
+
+                foreach (DataRow row in table.Rows)
+                {
+                    bool titleRow = Convert.IsDBNull(row[0]);
+                    string st;
+                    Row newRow = tabl.AddRow();
+
+                    for (int i = 0; i < table.Columns.Count; i++)
+                    {
+                        if (titleRow && i == 0)
+                        {
+                            st = "Total";
+                            newRow.Format.Font.Color = Colors.DarkOrange;
+                            newRow.Format.Font.Bold = true;
+                        }
+                        else
+                            st = row[i].ToString();
+
+                        Cell cell = newRow.Cells[i];
+                        Paragraph paragraph = cell.AddParagraph();
+                        if (!showHeadings)
+                        {
+                            cell.Borders.Style = BorderStyle.None;
+                            paragraph.Format.Alignment = ParagraphAlignment.Left;
+                        }
+                        else if (i == 0)
+                            paragraph.Format.Alignment = ParagraphAlignment.Left;
+                        else
+                            paragraph.Format.Alignment = ParagraphAlignment.Right;
+
+                        if (showHeadings && i == 0)
+                            paragraph.AddFormattedText(st, TextFormat.Bold);
+                        else
+                            paragraph.AddText(st);
+                    }
+                }
+
+                document.LastSection.Add(tabl);
+                document.LastSection.AddParagraph(); // Just to give a bit of spacing
+            }
             else
             {
-                bool showHeadings = className != "PropertyTable";
                 string line = DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings);
                 writer.WriteLine(line);
             }
@@ -305,16 +467,22 @@ namespace Models
         /// </summary>
         /// <param name="writer">The writer to write to</param>
         /// <param name="table">The table to write</param>
-        /// <param name="html">Indicates whether html format should be produced</param>
+        /// <param name="outtype">Indicates the format to be produced</param>
         /// <param name="includeHeadings">Include headings in the html table produced?</param>
         /// <param name="className">The class name of the generated html table</param>
-        private static void WriteMessageTable(TextWriter writer, DataTable table, bool html, bool includeHeadings, string className)
+        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
+        private static void WriteMessageTable(TextWriter writer, DataTable table, OutputType outtype, bool includeHeadings, string className, Document document)
         {
             foreach (DataRow row in table.Rows)
             {
-                if (html)
+                if (outtype == OutputType.html)
                 {
                     writer.WriteLine("<h3>" + row[0] + "</h3>");
+                }
+                else if (outtype == OutputType.rtf)
+                {
+                    Section section = document.LastSection;
+                    Paragraph paragraph = section.AddParagraph(row[0].ToString(), "Heading3");
                 }
                 else
                 {
@@ -325,18 +493,27 @@ namespace Models
 
                 string st = row[1].ToString();
                 st = st.Replace("\t", "    ");
-                if (html)
+                if (outtype == OutputType.html)
                 {
                     st = st.Replace("\r", string.Empty);
                     st = st.Replace("\n", "<br/>");
                     st = st.Replace("<br/>", "<br/>\r\n");
+                    writer.WriteLine(st);
+                }
+                else if (outtype == OutputType.rtf)
+                {
+                    Section section = document.LastSection;
+                    Paragraph paragraph = section.AddParagraph(st, "Monospace");
+                    if (st.Contains("WARNING:"))
+                        paragraph.Format.Font.Color = Colors.OrangeRed;
+                    else if (st.Contains("ERROR:"))
+                        paragraph.Format.Font.Color = Colors.Red;
                 }
                 else
                 {
                     st = StringUtilities.IndentText(st, 4);
+                    writer.WriteLine(st);
                 }
-
-                writer.WriteLine(st);
             }
         }
 

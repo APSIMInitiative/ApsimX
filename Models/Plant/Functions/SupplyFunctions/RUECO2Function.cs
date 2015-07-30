@@ -3,23 +3,27 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using Models.Interfaces;
 
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
-    /// This model calculates CO2 Impact on RUE using the approach of Reyenga, Howden, Meinke, Mckeon (1999) Modelling global change impact on wheat cropping in south-east Queensland, Australia. Enivironmental Modelling and Software 14:297-306
+    /// This model calculates CO2 Impact on RUE using the approach of Reyenga, Howden, Meinke, Mckeon (1999) Modelling global change impact on wheat cropping in south-east Queensland, Australia. Environmental Modelling and Software 14:297-306
     /// </summary>
     [Serializable]
     [Description("This model calculates CO2 Impact on RUE using the approach of <br>Reyenga, Howden, Meinke, Mckeon (1999) <br>Modelling global change impact on wheat cropping in south-east Queensland, Australia. <br>Enivironmental Modelling & Software 14:297-306")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class RUECO2Function : Model, IFunction
     {
         /// <summary>The photosynthetic pathway</summary>
-        public String PhotosyntheticPathway = "";
+        [Description("PhotosyntheticPathway")]
+        public String PhotosyntheticPathway { get; set; }
 
 
         /// <summary>The met data</summary>
         [Link]
-        protected Weather MetData = null;
+        protected IWeather MetData = null;
 
         /// <summary>The c o2</summary>
         double CO2 = 350;  // If CO2 is not supplied we default to 350 ppm

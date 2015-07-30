@@ -97,6 +97,7 @@ namespace UserInterface.Views
             TreeView.Nodes.Add(rootNode);
             RefreshNode(rootNode, nodeDescriptions);
             TreeView.Nodes[0].Expand(); // expand the root tree node
+            TreeView.ShowNodeToolTips = true;
         }
 
         /// <summary>Moves the specified node up 1 position.</summary>
@@ -309,6 +310,20 @@ namespace UserInterface.Views
                 return null;
         }
 
+        /// <summary>A helper function that asks user for a file.</summary>
+        /// <param name="prompt"></param>
+        /// <returns>
+        /// Returns the selected file or null if action cancelled by user.
+        /// </returns>
+        public string AskUserForFile(string prompt)
+        {
+            openFileDialog.Title = prompt;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+                return openFileDialog.FileName;
+            else
+                return null;
+        }
+
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
@@ -334,6 +349,7 @@ namespace UserInterface.Views
             message += "\n";
             StatusWindow.Text = message;
             this.toolTip1.SetToolTip(this.StatusWindow, message);
+            Application.DoEvents();
         }
 
         /// <summary>
@@ -382,6 +398,8 @@ namespace UserInterface.Views
         private void RefreshNode(TreeNode node, NodeDescriptionArgs description)
         {
             node.Text = description.Name;
+
+            node.ToolTipText = description.ToolTip;
 
             // Make sure the tree node image is right.
             int imageIndex = TreeImageList.Images.IndexOfKey(description.ResourceNameForImage);
@@ -660,6 +678,14 @@ namespace UserInterface.Views
         }
 
         #endregion
+
+        private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TreeView.SelectedNode = e.Node;
+            }
+        }
     }
 }
 

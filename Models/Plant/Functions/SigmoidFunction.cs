@@ -11,14 +11,27 @@ namespace Models.PMF.Functions
     /// </summary>
     [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SigmoidFunction : Model, IFunction
     {
+        /// <summary>constructor</summary>
+        public SigmoidFunction()
+        {
+            Xmax = 1.0;
+            Xo = 1.0;
+            b = 1.0;
+        }
+
         /// <summary>The xmax</summary>
-        public double Xmax = 1.0;
+        [Description("Xmax")]
+        public double Xmax { get; set; }
         /// <summary>The xo</summary>
-        public double Xo = 1.0;
+        [Description("Xo")]
+        public double Xo { get; set; }
         /// <summary>The b</summary>
-        public double b = 1.0;
+        [Description("b")]
+        public double b { get; set; }
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 

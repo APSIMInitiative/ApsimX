@@ -118,7 +118,7 @@ namespace Models
 
         /// <summary>The weather</summary>
         [Link]
-        Weather Weather = null;
+        IWeather Weather = null;
 
         /// <summary>The _albedo</summary>
         private double _albedo = 0;
@@ -374,7 +374,12 @@ namespace Models
         {
             day = Clock.Today.DayOfYear;
             year = Clock.Today.Year;
-            //DateUtility.JulianDayNumberToDayOfYear(time.startday, day, year)
+            radn = Weather.Radn;
+            maxt = Weather.MaxT;
+            mint = Weather.MinT;
+            rain = Weather.Rain;
+            vp = Weather.VP;
+            wind = Weather.Wind;
         }
 
         /// <summary>Called when [change gs maximum].</summary>
@@ -389,20 +394,6 @@ namespace Models
                 throw new Exception("Unknown Canopy Component: " + Convert.ToString(ChangeGSMax.component));
             }
             ComponentData[senderIdx].Gsmax += ChangeGSMax.dlt;
-        }
-
-        /// <summary>Obtain all relevant met data</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
-        {
-            radn = Weather.MetData.Radn;
-            maxt = Weather.MetData.Maxt;
-            mint = Weather.MetData.Mint;
-            rain = Weather.MetData.Rain;
-            vp = Weather.MetData.VP;
-            wind = Weather.MetData.Wind;
         }
 
         /// <summary>Gets all canopies in simulation</summary>
@@ -752,6 +743,7 @@ namespace Models
             SetupCropTypes("vine", "Crop");
             SetupCropTypes("weed", "Crop");
             SetupCropTypes("wheat", "Crop");
+            SetupCropTypes("Tef", "Crop");
             SetupCropTypes("WheatPMFPrototype", "Crop");
             SetupCropTypes("WhiteClover", "Legume");
             SetupCropTypes("FodderBeet", "Crop");

@@ -6,6 +6,7 @@
     <Name>Structural</Name>
     <Folder />
     <Zone />
+    <Replacements />
   </Folder>
   <Folder>
     <Name>Standard models</Name>
@@ -22,8 +23,6 @@
     <Summary>
       <Name>Summary</Name>
     </Summary>
-    <Arbitrator/>
-    <Supplement/>
     <Report>
       <Name>Report</Name>
       <VariableNames>
@@ -575,7 +574,6 @@
 </html>]]>
       </MemoText>
     </Memo>
-    <Log />
   </Folder>
   <Folder>
     <Name>Crops</Name>
@@ -589,11 +587,6 @@
       <Name>OilPalm</Name>
       <ResourceName>OilPalm</ResourceName>
     </OilPalm>
-    <Plant>
-      <Name>Potato</Name>
-      <ResourceName>Potato</ResourceName>
-      <CropType>Potato</CropType>
-    </Plant>
     <Slurp>
       <Name>Slurp</Name>
       <CropType>Slurp</CropType>
@@ -611,36 +604,6 @@
       <localRootDepth>500</localRootDepth>
       <localSurfaceRootLengthDensity>0.05</localSurfaceRootLengthDensity>
     </Slurp>
-    <AgPasture>
-      <Name>AgPasture</Name>
-      <alt_N_uptake>no</alt_N_uptake>
-      <SwardName>AgPasture</SwardName>
-      <NumSpecies>1</NumSpecies>
-      <WaterUptakeSource>calc</WaterUptakeSource>
-      <SpeciesName>
-        <string>Ryegrass</string>
-      </SpeciesName>
-      <SpeciesNType>
-        <string>grass</string>
-      </SpeciesNType>
-      <SpeciesCType>
-        <string>C3</string>
-      </SpeciesCType>
-      <InitialDMShoot>
-        <double>2000</double>
-      </InitialDMShoot>
-      <InitialDMRoot>
-        <double>500</double>
-      </InitialDMRoot>
-      <MinimumGreenWt>
-        <double>300</double>
-      </MinimumGreenWt>
-      <InitialRootDepth>
-        <double>750</double>
-      </InitialRootDepth>
-      <ExpoLinearDepthParam>0.1</ExpoLinearDepthParam>
-      <ExpoLinearCurveParam>3</ExpoLinearCurveParam>
-    </AgPasture>
     <Folder>
       <Name>Wheat cultivars</Name>
       <Folder>
@@ -792,7 +755,7 @@
           <Alias>wedgetail</Alias>
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.value = 380</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 380</Command>
           <Command />
         </Cultivar>
         <Cultivar>
@@ -808,7 +771,7 @@
           <Alias>l</Alias>
           <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.value = 550</Command>
+          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 550</Command>
         </Cultivar>
         <Cultivar>
           <Name>Lincoln</Name>
@@ -829,10 +792,10 @@
           <Alias>eaglehawk</Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
-          <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.value = 500</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.value = 655</Command>
-          <Command>[Phenology].FloweringToStartGrainFill.Target.value = 250</Command>
-          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.value = 500</Command>
+          <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 500</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 655</Command>
+          <Command>[Phenology].FloweringToStartGrainFill.Target.Value = 250</Command>
+          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 500</Command>
         </Cultivar>
         <Cultivar>
           <Name>Marombi</Name>
@@ -840,7 +803,7 @@
           <Alias />
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.value = 455</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 455</Command>
           <Command />
         </Cultivar>
       </Folder>
@@ -873,25 +836,17 @@
       </Axis>
       <Series>
         <Title>Series1</Title>
-        <Type>Line</Type>
+        <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
         <Marker>None</Marker>
         <Line>Solid</Line>
-        <X>
-          <TableName>Report</TableName>
-          <FieldName>Clock.Today</FieldName>
-        </X>
-        <Y>
-          <TableName>Report</TableName>
-          <FieldName></FieldName>
-        </Y>
-        <ShowRegressionLine>false</ShowRegressionLine>
         <ShowInLegend>true</ShowInLegend>
         <SplitOn>Simulation</SplitOn>
       </Series>
     </Graph>
+    <Regression></Regression>
   </Folder>
   <Folder>
     <Name>Data store and analysis models</Name>

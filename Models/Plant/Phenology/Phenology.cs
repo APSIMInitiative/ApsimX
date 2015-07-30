@@ -25,94 +25,85 @@ namespace Models.PMF.Phen
         /// <summary>The stage at phase change</summary>
         public String EventStageName = "";
     }
-        /*! <summary>
-    Perform daily increase of phenology.
-    </summary>
-    \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
-    should be included as the last child of 
-    \ref Models.PMF.Phen.Phenology "Phenology" model
-    \pre A Models.Clock "Clock" model has to exist.
-    \retval CurrentPhaseName The current phase name.
-    \retval CurrentStageName The current stage name. 
-    Return name of parameter \p Start of 
-    \ref Models.PMF.Phen.Phase "Phase" model 
-    on the day of phase starting, or ? in other days.
-    \retval Stage A one based stage number (start from 1).
-    \retval DaysAfterSowing The day after sowing. 
-    \retval FractionInCurrentPhase The fraction in current phase (0-1).
-    <remarks>
-    Generally, the plant phenology is divided into \f$N_{p}\f$ 
-    phases (i.e. \ref Models.PMF.Phen.Phase "Phase" functions) and stages 
-    (children number of Phenology model, only count 
-    \ref Models.PMF.Phen.Phase "Phase" models).
-    Any models inherited from \ref Models.PMF.Phen.Phase "Phase" models 
-    could be used as children of Phenology model, except the last phase,
-    which should be the \ref Models.PMF.Phen.EndPhase "EndPhase" model.
-    
-    The stage names are defined by the \p Start and \p End parameters 
-    in each \ref Models.PMF.Phen.Phase "Phase" model. Consequently,
-    The parameter value of \p Start should equal to the parameter value
-    of \p End of previous \ref Models.PMF.Phen.Phase "Phase" model,
-    except for the first phase. The parameter value of \p End 
-    should equal to the parameter value of \p Start of next 
-    \ref Models.PMF.Phen.Phase "Phase" function, except for the last phase. 
-    The equality of stage and phase number raise from the last phase,
-    which is \ref Models.PMF.Phen.EndPhase "EndPhase" model and the 
-    \t End stage is unused. 
-    
-    For example, the wheat phenology model defines 9 stages from sowing to maturity.
-    See the diagram below for definitions of stages and phases, 
-    and models used for each phase.
-    
-    \startuml
-    Sowing -> Germination : Germinating
-    Germination -> Emergence : Emerging
-    Emergence ->  TerminalSpikelet : Vegetative
-    TerminalSpikelet-> FlagLeaf : FloralInitiation\nToFlagLeaf
-    FlagLeaf -> Flowering : Spike\nDevelopment
-    Flowering -> StartGrainFill: Grain\nDevelopment
-    StartGrainFill -> EndGrainFill : GrainFilling
-    EndGrainFill -> Maturity : Maturing
-    Maturity -> Unused: ReadyFor\nHarvesting
-
-    note over Sowing, Germination : GerminatingPhase
-    note over Germination, Emergence : EmergingPhase
-    note over Emergence, TerminalSpikelet : GenericPhase
-    note over TerminalSpikelet, FlagLeaf : LeafAppearancePhase
-    note over FlagLeaf, Flowering : GenericPhase
-    note over Flowering, StartGrainFill: GenericPhase
-    note over StartGrainFill, EndGrainFill : GenericPhase
-    note over EndGrainFill, Maturity : GenericPhase
-    note over Maturity, Unused: EndPhase
-    \enduml
-
-    
-    
-    On commencing simulation and sowing
-    ----------------
-    On commencing simulation and sowing
-    \ref Models.PMF.Phen.Phenology "Phenology" function and all related 
-    \ref Models.PMF.Phen.Phase "Phase" functions will be reset.
-    
-    On harvest
-    -----------------
-    On harvest, \ref Models.PMF.Phen.Phenology "Phenology" will 
-    jump to the last phase function i.e. \ref Models.PMF.Phen.EndPhase 
-    "EndPhase" function.
-    
-    On daily
-    -----------------
-    Phenology function performs a daily time step function, get the current 
-    phase to do its development for the day. If thermal time is leftover after 
-    Phase is progressed, and the time step for the subsequent phase is calculated 
-    using leftover thermal time.
-    
-    
-    </remarks>
-    */
     /// <summary>
-    /// A phenology model
+    /// This model simulates the development of the crop through successive growth <i>phases</i>.  Each phase is bound by distinct growth <i>stages</i>.  Phases often require a target to be reached to signal movement to the next phase.  Differences between cultivars are specified by changing the values of the default parameters shown below.
     /// </summary>
+    /// \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
+    /// should be included as the last child of 
+    /// \ref Models.PMF.Phen.Phenology "Phenology" model
+    /// \pre A Models.Clock "Clock" model has to exist.
+    /// \retval CurrentPhaseName The current phase name.
+    /// \retval CurrentStageName The current stage name. 
+    /// Return name of parameter \p Start of 
+    /// \ref Models.PMF.Phen.Phase "Phase" model 
+    /// on the day of phase starting, or ? in other days.
+    /// \retval Stage A one based stage number (start from 1).
+    /// \retval DaysAfterSowing The day after sowing. 
+    /// \retval FractionInCurrentPhase The fraction in current phase (0-1).
+    /// <remarks>
+    /// Generally, the plant phenology is divided into \f$N_{p}\f$ 
+    /// phases (i.e. \ref Models.PMF.Phen.Phase "Phase" functions) and stages 
+    /// (children number of Phenology model, only count 
+    /// \ref Models.PMF.Phen.Phase "Phase" models).
+    /// 
+    /// Any models inherited from \ref Models.PMF.Phen.Phase "Phase" models 
+    /// could be used as children of Phenology model, except the last phase,
+    /// which should be the \ref Models.PMF.Phen.EndPhase "EndPhase" model.
+    /// The stage names are defined by the \p Start and \p End parameters 
+    /// in each \ref Models.PMF.Phen.Phase "Phase" model. Consequently,
+    /// The parameter value of \p Start should equal to the parameter value
+    /// of \p End of previous \ref Models.PMF.Phen.Phase "Phase" model,
+    /// except for the first phase. The parameter value of \p End 
+    /// should equal to the parameter value of \p Start of next 
+    /// \ref Models.PMF.Phen.Phase "Phase" function, except for the last phase. 
+    /// The equality of stage and phase number raise from the last phase,
+    /// which is \ref Models.PMF.Phen.EndPhase "EndPhase" model and the 
+    /// \p End stage is unused. 
+    /// 
+    /// For example, the wheat phenology model defines 9 stages from sowing to maturity.
+    /// See the diagram below for definitions of stages and phases, 
+    /// and models used for each phase.
+    /// 
+    /// \startuml
+    /// Sowing -> Germination : Germinating
+    /// Germination -> Emergence : Emerging
+    /// Emergence ->  TerminalSpikelet : Vegetative
+    /// TerminalSpikelet-> FlagLeaf : FloralInitiation\nToFlagLeaf
+    /// FlagLeaf -> Flowering : Spike\nDevelopment
+    /// Flowering -> StartGrainFill: Grain\nDevelopment
+    /// StartGrainFill -> EndGrainFill : GrainFilling
+    /// EndGrainFill -> Maturity : Maturing
+    /// Maturity -> Unused: ReadyFor\nHarvesting
+    /// 
+    /// note over Sowing, Germination : GerminatingPhase
+    /// note over Germination, Emergence : EmergingPhase
+    /// note over Emergence, TerminalSpikelet : GenericPhase
+    /// note over TerminalSpikelet, FlagLeaf : LeafAppearancePhase
+    /// note over FlagLeaf, Flowering : GenericPhase
+    /// note over Flowering, StartGrainFill: GenericPhase
+    /// note over StartGrainFill, EndGrainFill : GenericPhase
+    /// note over EndGrainFill, Maturity : GenericPhase
+    /// note over Maturity, Unused: EndPhase
+    /// \enduml
+    /// 
+    /// On commencing simulation and sowing
+    /// ----------------
+    /// On commencing simulation and sowing
+    /// \ref Models.PMF.Phen.Phenology "Phenology" function and all related 
+    /// \ref Models.PMF.Phen.Phase "Phase" functions will be reset.
+    /// On harvest
+    /// -----------------
+    /// On harvest, \ref Models.PMF.Phen.Phenology "Phenology" will 
+    /// jump to the last phase function i.e. \ref Models.PMF.Phen.EndPhase 
+    /// "EndPhase" function.
+    /// On daily
+    /// -----------------
+    /// Phenology function performs a daily time step function, get the current 
+    /// phase to do its development for the day. If thermal time is leftover after 
+    /// Phase is progressed, and the time step for the subsequent phase is calculated 
+    /// using leftover thermal time.
+    /// 
+    /// </remarks>
     [Serializable]
     public class Phenology : Model
     {
@@ -165,8 +156,10 @@ namespace Models.PMF.Phen
         private int CurrentPhaseIndex;
         /// <summary>The _ accumulated tt</summary>
         private double _AccumulatedTT = 0;
-        /// <summary>The currently on first day of phase</summary>
-        private string CurrentlyOnFirstDayOfPhase = "";
+        /// <summary>The currently on first day of phase.  This is an array that lists all the stages that are pased on this day</summary>
+        private string[] CurrentlyOnFirstDayOfPhase = new string[] {"","","","","",""};
+        /// <summary>The number of stages that have been passed today</summary>
+        private int StagesPassedToday = 0;
         /// <summary>The just initialised</summary>
         private bool JustInitialised = true;
         /// <summary>The fraction biomass removed</summary>
@@ -188,7 +181,7 @@ namespace Models.PMF.Phen
             JustInitialised = true;
             Emerged = false;
             SowDate = Clock.Today;
-            CurrentlyOnFirstDayOfPhase = "";
+            CurrentlyOnFirstDayOfPhase = new string[] { "", "", "", "", "", "" };
             CurrentPhaseIndex = 0;
             FractionBiomassRemoved = 0;
             foreach (Phase phase in Phases)
@@ -321,6 +314,20 @@ namespace Models.PMF.Phen
                 Clear();
         }
   
+         /// <summary>Called at the start of each day</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            //reset all members to the CurrentlyOnFirstDayOfPhase array to nothing so new stages passed today can be inserted
+            for (int i = 0; i < CurrentlyOnFirstDayOfPhase.Length; i++)
+                CurrentlyOnFirstDayOfPhase[i] = "";
+            //reset StagesPassedToday to zero to restart count for the new day
+            StagesPassedToday = 0;
+        }
+
+
         /// <summary>Look for a particular phase and return it's index or -1 if not found.</summary>
         /// <param name="Name">The name.</param>
         /// <returns></returns>
@@ -366,37 +373,42 @@ namespace Models.PMF.Phen
                 if (Phases == null || Phases.Count == 0)
                     OnSimulationCommencing(null, null);
 
-                CurrentlyOnFirstDayOfPhase = "";
-                if (JustInitialised)
-                {
-                    CurrentlyOnFirstDayOfPhase = Phases[0].Start;
-                    JustInitialised = false;
-                }
+                    if (CurrentlyOnFirstDayOfPhase[0] == "")
+                        if (JustInitialised)
+                        {
+                            CurrentlyOnFirstDayOfPhase[0] = Phases[0].Start;
+                            JustInitialised = false;
+                        }
+
                 double FractionOfDayLeftOver = CurrentPhase.DoTimeStep(1.0);
 
                 if (FractionOfDayLeftOver > 0)
                 {
-                    // Transition to the next phase.
-                    if (CurrentPhaseIndex + 1 >= Phases.Count)
-                        throw new Exception("Cannot transition to the next phase. No more phases exist");
+                     while (FractionOfDayLeftOver > 0)// Transition to the next phase.
+                    {
+                        if (CurrentPhaseIndex + 1 >= Phases.Count)
+                            throw new Exception("Cannot transition to the next phase. No more phases exist");
 
-                    if (CurrentPhase is EmergingPhase)
-                        Emerged = true;
+                        if (CurrentPhase is EmergingPhase)
+                            Emerged = true;
 
-                    CurrentPhase = Phases[CurrentPhaseIndex + 1];
-                    if (GrowthStage != null)
-                        GrowthStage.Invoke();
+                        CurrentPhase = Phases[CurrentPhaseIndex + 1];
+                        if (GrowthStage != null)
+                            GrowthStage.Invoke();
 
-
-                    // Tell the new phase to use the fraction of day left.
-                    FractionOfDayLeftOver = CurrentPhase.AddTT(FractionOfDayLeftOver);
-                    Stage = CurrentPhaseIndex + 1;
+                       // run the next phase with the left over time step from the phase we have just completed
+                        FractionOfDayLeftOver = CurrentPhase.DoTimeStep(FractionOfDayLeftOver);
+                       
+                        Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+                    }
                 }
                 else
+                {
                     Stage = (CurrentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+                }
 
                 _AccumulatedTT += CurrentPhase.TTForToday;
-
+               
                 if (Emerged && PostPhenology != null)
                     PostPhenology.Invoke(this, new EventArgs());
 
@@ -431,7 +443,8 @@ namespace Models.PMF.Phen
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
 
-                CurrentlyOnFirstDayOfPhase = CurrentPhase.Start;
+                CurrentlyOnFirstDayOfPhase[StagesPassedToday] = CurrentPhase.Start;
+                StagesPassedToday += 1;
 
                 // If the new phase is a rewind phase then reinitialise all phases and rewind back to the
                 // first phase.
@@ -470,7 +483,13 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public bool OnDayOf(String StageName)
         {
-            return (StageName.Equals(CurrentlyOnFirstDayOfPhase, StringComparison.CurrentCultureIgnoreCase));
+            bool StageToday = false;
+            for (int i = 0; i < CurrentlyOnFirstDayOfPhase.Length; i++)
+                if (CurrentlyOnFirstDayOfPhase[i] == StageName)
+                    StageToday = true;
+            
+            return StageToday;
+            //return (StageName.Equals(CurrentlyOnFirstDayOfPhase, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -519,6 +538,29 @@ namespace Models.PMF.Phen
 
             else
                 return CurrentPhaseIndex >= StartPhaseIndex && CurrentPhaseIndex <= EndPhaseIndex;
+        }
+
+        /// <summary>
+        /// A utility function to return true if the simulation is at or past
+        /// the specified startstage.
+        /// </summary>
+        /// <param name="Start">The start.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot test between stages  + Start +   + End</exception>
+        public bool Beyond(String Start)
+        {
+            string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
+            double StartFraction = 0;
+            if (StartFractionSt != "")
+                StartFraction = Convert.ToDouble(StartFractionSt);
+
+            int StartPhaseIndex = Phases.IndexOf(PhaseStartingWith(Start));
+            int CurrentPhaseIndex = Phases.IndexOf(CurrentPhase);
+
+            if (CurrentPhaseIndex >= StartPhaseIndex)
+                return true;
+            else
+                return false;
         }
 
         /// <summary>

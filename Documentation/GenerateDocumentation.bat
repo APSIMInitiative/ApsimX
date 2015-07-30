@@ -1,12 +1,13 @@
- @echo off
+@echo off
+
+if EXIST errors.txt del errors.txt
 
 rem Generate model validation and configuration documentation
-..\Bin\UserInterface.exe CreateModelDocumentation.cs
+for %%M in (Wheat OilPalm) do (
+    echo Generating PDF for model %%M
+    set ModelName=%%M
+    ..\Bin\UserInterface.exe CreateModelDocumentation.cs
+)
 
-rem Generate DOxygen documentation for all of APSIM
-"c:\Program Files\doxygen\bin\doxygen.exe" Doxyfile
-
-echo Can now copy the html directory to www.apsim.info into 
-echo d:\Websites\ApsimX\Help. Best to do this via remote desktop - quicker than FTP
-
-pause
+rem echo Generating DOxygen documentation for all of APSIM
+rem "c:\Program Files\doxygen\bin\doxygen.exe" Doxyfile 1>Nul 2>Nul

@@ -17,279 +17,148 @@ using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
 {
+    /// <summary>
+    /// A presenter for a graph.
+    /// </summary>
     class GraphPresenter : IPresenter, IExportable
     {
-        private IGraphView GraphView;
-        private Graph Graph;
-        private ExplorerPresenter ExplorerPresenter;
-        private Models.DataStore DataStore;
-        private IPresenter CurrentPresenter = null;
-        private List<SeriesInfo> seriesMetadata = new List<SeriesInfo>();
+        /// <summary>The graph view</summary>
+        private IGraphView graphView;
 
-        /// <summary>
-        /// Attach the model to the view.
-        /// </summary>
-        public void Attach(object Model, object View, ExplorerPresenter explorerPresenter)
+        /// <summary>The graph</summary>
+        private Graph graph;
+
+        /// <summary>The explorer presenter</summary>
+        private ExplorerPresenter explorerPresenter;
+
+        /// <summary>The current presenter</summary>
+        private IPresenter currentPresenter = null;
+
+        /// <summary>The series definitions to show on graph.</summary>
+        private List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
+
+        /// <summary>Attach the model to the view.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="explorerPresenter">The explorer presenter.</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Graph = Model as Graph;
-            GraphView = View as GraphView;
-            ExplorerPresenter = explorerPresenter;
+            this.graph = model as Graph;
+            this.graphView = view as GraphView;
+            this.explorerPresenter = explorerPresenter;
 
-            GraphView.OnAxisClick += OnAxisClick;
-            GraphView.OnPlotClick += OnPlotClick;
-            GraphView.OnLegendClick += OnLegendClick;
-            GraphView.OnTitleClick += OnTitleClick;
-            GraphView.OnCaptionClick += OnCaptionClick;
-            GraphView.OnHoverOverPoint += OnHoverOverPoint;
-            ExplorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
-            this.GraphView.AddContextAction("Copy graph XML to clipboard", CopyGraphXML);
-
-            // Connect to a datastore.
-            DataStore = new Models.DataStore(Graph);
+            graphView.OnAxisClick += OnAxisClick;
+            graphView.OnLegendClick += OnLegendClick;
+            graphView.OnCaptionClick += OnCaptionClick;
+            graphView.OnHoverOverPoint += OnHoverOverPoint;
+            explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
+            this.graphView.AddContextAction("Copy graph to clipboard", false, CopyGraphToClipboard);
+            this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
 
             DrawGraph();
         }
 
-        /// <summary>
-        /// Detach the model from the view.
-        /// </summary>
+        /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            if (CurrentPresenter != null)
-            {
-                CurrentPresenter.Detach();
-            }
-            GraphView.OnAxisClick -= OnAxisClick;
-            GraphView.OnPlotClick -= OnPlotClick;
-            GraphView.OnLegendClick -= OnLegendClick;
-            GraphView.OnTitleClick -= OnTitleClick;
-            GraphView.OnCaptionClick -= OnCaptionClick;
-            GraphView.OnHoverOverPoint -= OnHoverOverPoint;
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
-            DataStore.Disconnect();
+            if (currentPresenter != null)
+                currentPresenter.Detach();
+            graphView.OnAxisClick -= OnAxisClick;
+            graphView.OnLegendClick -= OnLegendClick;
+            graphView.OnCaptionClick -= OnCaptionClick;
+            graphView.OnHoverOverPoint -= OnHoverOverPoint;
+            explorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
         }
 
-        /// <summary>
-        /// Draw the graph on the screen.
-        /// </summary>
+        /// <summary>Draw the graph on the screen.</summary>
         public void DrawGraph()
         {
-            GraphView.Clear();
-            if (Graph != null && Graph.Series != null)
+            graphView.Clear();
+            if (graph != null && graph.Series != null)
             {
-                // Create all series.
-                FillSeriesInfo();
-                foreach (SeriesInfo seriesInfo in seriesMetadata)
-                    seriesInfo.DrawOnView(this.GraphView);
+                // Get a list of series definitions.
+                seriesDefinitions = graph.GetDefinitionsToGraph();
+                foreach (SeriesDefinition definition in seriesDefinitions)
+                    DrawOnView(definition);
+
+                // Update axis maxima and minima
+                graphView.UpdateView();
+
+                // Get a list of series annotations.
+                DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the axes.
-                foreach (Models.Graph.Axis A in Graph.Axes)
+                foreach (Models.Graph.Axis A in graph.Axes)
                     FormatAxis(A);
 
-                // Add any regression lines if necessary.
-                AddRegressionLines();
-
                 // Format the legend.
-                GraphView.FormatLegend(Graph.LegendPosition);
+                graphView.FormatLegend(graph.LegendPosition);
 
                 // Format the title
-                GraphView.FormatTitle(Graph.Title);
+                graphView.FormatTitle(graph.Name);
 
                 //Format the footer
-                GraphView.FormatCaption(Graph.Caption);
+                if (graph.Caption == string.Empty)
+                    graphView.FormatCaption("Double click to add a caption", true);
+                else
+                    graphView.FormatCaption(graph.Caption, false);
 
                 // Remove series titles out of the graph disabled series list when
                 // they are no longer valid i.e. not on the graph.
-                IEnumerable<string> validSeriesTitles = this.seriesMetadata.Select(s => s.Title);
-                List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.Graph.DisabledSeries));
-                this.Graph.DisabledSeries.Clear();
-                this.Graph.DisabledSeries.AddRange(seriesTitlesToKeep);
+                IEnumerable<string> validSeriesTitles = this.seriesDefinitions.Select(s => s.title);
+                List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
+                this.graph.DisabledSeries.Clear();
+                this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
 
-                GraphView.Refresh();
+                graphView.Refresh();
             }
         }
 
-        /// <summary>
-        /// Add in regression lines if necessary.
-        /// </summary>
-        private void AddRegressionLines()
+        /// <summary>Draws the specified series definition on the view.</summary>
+        /// <param name="definition">The definition.</param>
+        private void DrawOnView(SeriesDefinition definition)
         {
-            int seriesIndex = 0;
-            if (this.Graph.ShowRegressionLine)
+            if (!graph.DisabledSeries.Contains(definition.title))
             {
-                // Get all x and y values.
-                List<double> x = new List<double>();
-                List<double> y = new List<double>();
-                foreach (SeriesInfo seriesInfo in seriesMetadata)
-                {
-                    if (seriesInfo.X != null && seriesInfo.Y != null)
-                    {
-                        foreach (double value in seriesInfo.X)
-                            x.Add(value);
-                        foreach (double value in seriesInfo.Y)
-                            y.Add(value);
-                    }
-                }
+                // Create the series and populate it with data.
+                if (definition.type == SeriesType.Bar)
+                    graphView.DrawBar(definition.title, definition.x, definition.y,
+                                      definition.xAxis, definition.yAxis, definition.colour, definition.showInLegend);
 
-                MathUtilities.RegrStats stats = MathUtilities.CalcRegressionStats(x, y);
-                AddRegressionToGraph(this.GraphView, stats, Axis.AxisType.Bottom, Axis.AxisType.Left,
-                                        Color.Black, seriesIndex);
-                seriesIndex++;
-            }
-
-            foreach (SeriesInfo seriesInfo in seriesMetadata)
-            {
-                if (seriesInfo.X != null && seriesInfo.Y != null && seriesInfo.series.ShowRegressionLine)
-                {
-                    MathUtilities.RegrStats stats = MathUtilities.CalcRegressionStats(seriesInfo.X, seriesInfo.Y);
-                    if (stats != null)
-                    {
-                        AddRegressionToGraph(this.GraphView, stats, seriesInfo.series.XAxis, seriesInfo.series.YAxis, seriesInfo.Colour, seriesIndex);
-                        seriesIndex++;
-                    }
-                }
+                else if (definition.type == SeriesType.Scatter)
+                    graphView.DrawLineAndMarkers(definition.title, definition.x, definition.y, 
+                                                 definition.xAxis, definition.yAxis, definition.colour,
+                                                 definition.line, definition.marker, definition.showInLegend);
+                
+                else if (definition.type == SeriesType.Area)
+                    graphView.DrawArea(definition.title, definition.x, definition.y, definition.x2, definition.y2,
+                                       definition.xAxis, definition.yAxis, definition.colour, definition.showInLegend);
             }
         }
 
-        /// <summary>
-        /// This method fills the series info list from the graph series.
-        /// </summary>
-        private void FillSeriesInfo()
+        /// <summary>Draws the specified series definition on the view.</summary>
+        /// <param name="definition">The definition.</param>
+        private void DrawOnView(List<Annotation> annotations)
         {
-            seriesMetadata.Clear();
-            foreach (Models.Graph.Series S in Graph.Series)
+            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom);
+            double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
+            double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
+            double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
+            double majorStepY = graphView.AxisMajorStep(Axis.AxisType.Left);
+            double lowestAxisScale = Math.Min(minimumX, minimumY);
+            double largestAxisScale = Math.Max(maximumX, maximumY);
+            
+            for (int i = 0; i < annotations.Count; i++)
             {
-                if (S.X != null && S.Y != null)
-                    this.FillSeriesInfoFromSeries(S);
+                int numLines = StringUtilities.CountSubStrings(annotations[i].text, "\r\n") + 1;
+                double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
+
+                double yPosition = largestAxisScale - i * interval;
+                graphView.DrawText(annotations[i].text, minimumX, yPosition, Axis.AxisType.Bottom, Axis.AxisType.Left, annotations[i].colour);
             }
         }
 
-        /// <summary>
-        /// Fill series information list from the specified series.
-        /// </summary>
-        /// <param name="series">The series to use</param>
-        private void FillSeriesInfoFromSeries(Series series)
-        {
-            Simulation parentSimulation = Apsim.Parent(this.Graph, typeof(Simulation)) as Simulation;
-            if (this.Graph.Parent is Soil)
-            {
-                FillSeriesInfoFromRawSeries(series);
-                return;
-            }
-
-            // See if graph is inside a simulation. If so then graph the simulation.
-            if (parentSimulation != null)
-            {
-                FillSeriesInfoFromSimulations(new string[] { parentSimulation.Name }, series);
-                return;
-            }
-
-            // See if graph is inside an experiment. If so then graph all series in experiment.
-            Experiment parentExperiment = Apsim.Parent(this.Graph, typeof(Experiment)) as Experiment;
-            if (parentExperiment != null)
-            {
-                FillSeriesInfoFromSimulations(parentExperiment.Names(), series);
-                return;
-            }
-
-            // Must be at top level so look for experiments first.
-            IModel[] experiments = Apsim.FindAll(this.Graph, typeof(Experiment)).ToArray();
-            if (experiments.Length > 0)
-            {
-                FillSeriesInfoFromExperiments(experiments, series);
-                return;
-            }
-
-            // If we get this far then simply graph every simulation we can find.
-            IModel[] simulations = Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
-            if (simulations != null)
-            {
-                IEnumerable<string> simulationNames = simulations.Select(s => s.Name);
-                FillSeriesInfoFromSimulations(simulationNames.ToArray(), series);
-                return;
-            }
-        }
-
-        /// <summary>
-        /// Fill series information list from a list of simulation names.
-        /// </summary>
-        /// <param name="simulationNames">List of simulation names</param>
-        /// <param name="series">Associated series</param>
-        private void FillSeriesInfoFromSimulations(string[] simulationNames, Series series)
-        {
-            foreach (string simulationName in simulationNames)
-            {
-                string filter = "Name = '" + simulationName + "'";
-
-                int seriesIndex = Array.IndexOf(simulationNames, simulationName);
-
-                SeriesInfo info = new SeriesInfo(
-                    graph: Graph,
-                    dataStore: DataStore,
-                    series: series,
-                    title: simulationName,
-                    filter: filter,
-                    seriesIndex: seriesIndex,
-                    numSeries: simulationNames.Length);
-
-                if (!(this.Graph.Parent is Soil) && simulationNames.Length == 1)
-                    info.Title = series.Y.FieldName;
-
-                seriesMetadata.Add(info);
-            }
-        }
-
-        /// <summary>
-        /// Fill series information list from a list of simulation names.
-        /// </summary>
-        /// <param name="simulationNames">List of simulation names</param>
-        /// <param name="series">Associated series</param>
-        private void FillSeriesInfoFromExperiments(IModel[] experiments, Series series)
-        {
-            foreach (Experiment experiment in experiments)
-            {
-                string filter = "NAME IN " + "(" + StringUtilities.Build(experiment.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-
-                int seriesIndex = Array.IndexOf(experiments, experiment);
-
-                SeriesInfo info = new SeriesInfo(
-                    graph: Graph,
-                    dataStore: DataStore,
-                    series: series,
-                    title: experiment.Name,
-                    filter: filter,
-                    seriesIndex: seriesIndex,
-                    numSeries: experiments.Length);
-
-                if (experiments.Length == 1)
-                {
-                    info.Title = series.Y.FieldName;
-                }
-                seriesMetadata.Add(info);
-            }
-        }
-
-        /// <summary>
-        /// Fill series information list from just the raw series
-        /// </summary>
-        /// <param name="simulationNames">List of simulation names</param>
-        /// <param name="series">Associated series</param>
-        private void FillSeriesInfoFromRawSeries(Series series)
-        {
-            SeriesInfo info = new SeriesInfo(
-                graph: Graph,
-                dataStore: DataStore,
-                series: series,
-                title: series.Title,
-                filter: null,
-                seriesIndex: 1,
-                numSeries: 1);
-            seriesMetadata.Add(info);
-        }
-
-        /// <summary>
-        /// Format the specified axis.
-        /// </summary>
+        /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
         private void FormatAxis(Models.Graph.Axis axis)
         {
@@ -300,499 +169,196 @@ namespace UserInterface.Presenters
                 // X or Y field name depending on whether 'axis' is an x axis or a y axis.
                 HashSet<string> names = new HashSet<string>();
 
-                foreach (Series series in Graph.Series)
+                foreach (SeriesDefinition definition in seriesDefinitions)
                 {
-                    if (series.X != null && series.XAxis == axis.Type)
-                    {
-                        names.Add(series.X.FieldName);
-                    }
-                    if (series.Y != null && series.YAxis == axis.Type)
-                    {
-                        names.Add(series.Y.FieldName);
-                    }
+                    if (definition.x != null && definition.xAxis == axis.Type && definition.xFieldName != null)
+                        names.Add(definition.xFieldName);
+                    if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
+                        names.Add(definition.yFieldName);
                 }
 
                 // Create a default title by appending all 'names' together.
                 title = StringUtilities.BuildString(names.ToArray(), ", ");
             }
-            GraphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval);
+            graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval);
         }
 
-        /// <summary>
-        /// Return a list of simulations or experiments in scope to graph
-        /// </summary>
-        /// <returns>The list of simulations or experiments</returns>
-        private IModel[] FindSomethingToGraph()
-        {
-            // See if graph is inside an experiment. If so return it.
-            IModel parentExperiment = Apsim.Parent(this.Graph, typeof(Experiment)) as Experiment;
-            if (parentExperiment != null)
-                return new IModel[] { parentExperiment };
-
-            // See if graph is inside a simulation. If so return it.
-            IModel parentSimulation = Apsim.Parent(this.Graph, typeof(Simulation)) as Simulation;
-            if (parentSimulation != null)
-                return new IModel[] { parentSimulation };
-            
-            // Must be at top level so look for experiments first.
-            IModel[] experiments = Apsim.FindAll(this.Graph, typeof(Experiment)).ToArray();
-            if (experiments.Length > 0)
-                return experiments;
-
-            // If we get this far then simply graph every simulation we can find.
-            return Apsim.FindAll(this.Graph, typeof(Simulation)).ToArray();
-        }
-
-        /// <summary>
-        /// Export the contents of this graph to the specified file.
-        /// </summary>
+        /// <summary>Export the contents of this graph to the specified file.</summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
         public string ConvertToHtml(string folder)
         {
-            Rectangle r = new Rectangle(0, 0, 800, 800);
+            Rectangle r = new Rectangle(0, 0, 800, 500);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
-            GraphView.Export(img);
+            graphView.Export(img, true);
 
-            string fileName = Path.Combine(folder, Graph.Name + ".png");
+            string fileName = Path.Combine(folder, graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
-            string html = "<img class=\"graph\" src=\"" + Graph.Name + ".png" + "\"/>";
-            if (this.Graph.Caption != null)
-                html += "<p>" + this.Graph.Caption + "</p>";
+            string html = "<img class=\"graph\" src=\"" + fileName + "\"/>";
+            if (this.graph.Caption != null)
+                html += "<p>" + this.graph.Caption + "</p>";
             return html;
         }
 
-        /// <summary>Gets the series names.</summary>
+        /// <summary>Export the contents of this graph to the specified file.</summary>
+        /// <param name="folder">The folder.</param>
         /// <returns></returns>
-        public string[] GetSeriesNames()
+        public string ExportToPDF(string folder)
         {
-            IEnumerable<string> validSeriesTitles = this.seriesMetadata.Select(s => s.Title);
+            Rectangle r = new Rectangle(0, 0, 800, 500);
+            Bitmap img = new Bitmap(r.Width, r.Height);
 
-            return validSeriesTitles.ToArray();
+            graphView.Export(img, true);
+
+            string fileName = Path.Combine(folder, graph.Name + ".png");
+            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+
+            return fileName;
         }
 
-        /// <summary>
-        /// The graph model has changed.
-        /// </summary>
+        /// <summary>Gets the series names.</summary>
+        /// <returns>A list of series names.</returns>
+        public string[] GetSeriesNames()
+        {
+            return seriesDefinitions.Select(s => s.title).ToArray();
+        }
+
+        /// <summary>The graph model has changed.</summary>
+        /// <param name="Model">The model.</param>
         private void OnGraphModelChanged(object Model)
         {
             DrawGraph();
         }
 
-        /// <summary>
-        /// User has clicked an axis.
-        /// </summary>
+        /// <summary>User has clicked an axis.</summary>
+        /// <param name="axisType">Type of the axis.</param>
         private void OnAxisClick(Axis.AxisType axisType)
         {
             AxisPresenter AxisPresenter = new AxisPresenter();
-            CurrentPresenter = AxisPresenter;
+            currentPresenter = AxisPresenter;
             AxisView A = new AxisView();
-            GraphView.ShowEditorPanel(A);
-            AxisPresenter.Attach(GetAxis(axisType), A, ExplorerPresenter);
+            graphView.ShowEditorPanel(A);
+            AxisPresenter.Attach(GetAxis(axisType), A, explorerPresenter);
         }
 
-        /// <summary>
-        /// User has clicked the plot area.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnPlotClick(object sender, EventArgs e)
-        {
-            SeriesPresenter SeriesPresenter = new SeriesPresenter();
-            CurrentPresenter = SeriesPresenter; 
-            SeriesView SeriesView = new SeriesView();
-            GraphView.ShowEditorPanel(SeriesView);
-            SeriesPresenter.Attach(Graph, SeriesView, ExplorerPresenter);
-        }
-
-        /// <summary>
-        /// User has clicked a title.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnTitleClick(object sender, EventArgs e)
-        {
-            TitlePresenter titlePresenter = new TitlePresenter();
-            CurrentPresenter = titlePresenter; 
-            
-            TitleView t = new TitleView();
-            GraphView.ShowEditorPanel(t);
-            titlePresenter.Attach(Graph, t, ExplorerPresenter);
-        }
-
-        /// <summary>
-        /// User has clicked a footer.
-        /// </summary>
+        /// <summary>User has clicked a footer.</summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
         private void OnCaptionClick(object sender, EventArgs e)
         {
             TitlePresenter titlePresenter = new TitlePresenter();
-            CurrentPresenter = titlePresenter;
+            currentPresenter = titlePresenter;
             titlePresenter.ShowCaption = true;
 
             TitleView t = new TitleView();
-            GraphView.ShowEditorPanel(t);
-            titlePresenter.Attach(Graph, t, ExplorerPresenter);
+            graphView.ShowEditorPanel(t);
+            titlePresenter.Attach(graph, t, explorerPresenter);
         }
 
-        /// <summary>
-        /// Get an axis 
-        /// </summary>
+        /// <summary>Get an axis</summary>
+        /// <param name="axisType">Type of the axis.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Cannot find axis with type:  + axisType.ToString()</exception>
         private object GetAxis(Axis.AxisType axisType)
         {
-            foreach (Axis A in Graph.Axes)
+            foreach (Axis A in graph.Axes)
                 if (A.Type.ToString() == axisType.ToString())
                     return A;
             throw new Exception("Cannot find axis with type: " + axisType.ToString());
         }
 
-        /// <summary>
-        /// The axis has changed 
-        /// </summary>
+        /// <summary>The axis has changed</summary>
+        /// <param name="Axis">The axis.</param>
         private void OnAxisChanged(Axis Axis)
         {
             DrawGraph();
         }
 
-        /// <summary>
-        /// User has clicked the legend.
-        /// </summary>
+        /// <summary>User has clicked the legend.</summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
         private void OnLegendClick(object sender, LegendClickArgs e)
         {
             
             LegendPresenter presenter = new LegendPresenter(this);
-            CurrentPresenter = presenter;
+            currentPresenter = presenter;
 
             LegendView view = new LegendView();
-            GraphView.ShowEditorPanel(view);
-            presenter.Attach(Graph, view, ExplorerPresenter);
+            graphView.ShowEditorPanel(view);
+            presenter.Attach(graph, view, explorerPresenter);
     }
 
-        /// <summary>
-        /// User has hovered over a point on the graph.
-        /// </summary>
+        /// <summary>User has hovered over a point on the graph.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         private void OnHoverOverPoint(object sender, EventArguments.HoverPointArgs e)
         {
             // Find the correct series.
-            foreach (SeriesInfo series in this.seriesMetadata)
+            foreach (SeriesDefinition definition in seriesDefinitions)
             {
-                if (series.Title == e.SeriesName)
+                if (definition.title == e.SeriesName)
                 {
-                    e.HoverText = series.GetSimulationNameForPoint(e.X, e.Y);
+                    e.HoverText = GetSimulationNameForPoint(e.X, e.Y);
                     return;
                 }
             }
         }
 
-        /// <summary>
-        /// User has clicked "copy graph xml" menu item.
-        /// </summary>
+        /// <summary>User has clicked "copy graph" menu item.</summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void CopyGraphXML(object sender, EventArgs e)
+        private void CopyGraphToClipboard(object sender, EventArgs e)
         {
             // Set the clipboard text.
-            System.Windows.Forms.Clipboard.SetText(Apsim.Serialise(this.Graph));
+            Bitmap bitmap = new Bitmap(800, 600);
+            graphView.Export(bitmap, false);
+            System.Windows.Forms.Clipboard.SetImage(bitmap);
+        }
+
+        /// <summary>User has clicked "Include In Documentation" menu item.</summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void IncludeInDocumentationClicked(object sender, EventArgs e)
+        {
+            graph.IncludeInDocumentation = !graph.IncludeInDocumentation; // toggle
+            this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
         }
 
         /// <summary>
-        /// Add regression line and stats to graph
+        /// Look for the row in data that has the specified x and y. 
         /// </summary>
-        /// <param name="graphView">The graph to add line and stats to</param>
-        /// <param name="stats">The regression stats</param>
-        /// <param name="xAxis">The associated x axis</param>
-        /// <param name="yAxis">The associated y axis</param>
-        /// <param name="colour">The color to use</param>
-        /// <param name="seriesIndex">The series index</param>
-        private static void AddRegressionToGraph(IGraphView graphView, 
-                                                 MathUtilities.RegrStats stats,
-                                                 Axis.AxisType xAxis, Axis.AxisType yAxis,
-                                                 Color colour,
-                                                 int seriesIndex)
+        /// <param name="x">The x coordinate</param>
+        /// <param name="y">The y coordinate</param>
+        /// <returns>The simulation name of the row</returns>
+        private string GetSimulationNameForPoint(double x, double y)
         {
-            if (stats != null)
+            foreach (SeriesDefinition definition in seriesDefinitions)
             {
-                double minimumX = graphView.AxisMinimum(xAxis);
-                double maximumX = graphView.AxisMaximum(xAxis);
-                double minimumY = graphView.AxisMinimum(yAxis);
-                double maximumY = graphView.AxisMaximum(yAxis);
-
-                double[] regressionX = new double[] { minimumX, maximumX };
-                double[] regressionY = new double[] { stats.m * minimumX + stats.c, stats.m * maximumX + stats.c };
-                graphView.DrawLineAndMarkers("", regressionX, regressionY,
-                                             xAxis, yAxis, colour,
-                                             Series.LineType.Solid, Series.MarkerType.None, true);
-
-                // Show the 1:1 line
-                double lowestAxisScale = Math.Min(minimumX, minimumY);
-                double largestAxisScale = Math.Max(maximumX, maximumY);
-                double[] oneToOne = new double[] { lowestAxisScale, largestAxisScale };
-                graphView.DrawLineAndMarkers("", oneToOne, oneToOne,
-                                             xAxis, yAxis, colour,
-                                             Series.LineType.Dash, Series.MarkerType.None, true);
-
-                // Draw the equation.
-                double interval = (largestAxisScale - lowestAxisScale) / 13;
-                double yPosition = largestAxisScale - seriesIndex * interval;
-
-                string equation = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
-                                                "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
-                                                "RSR = {7:F2}, RMSD = {8:F2}",
-                                                new object[] {stats.m,
-                                                                          stats.c,
-                                                                          stats.R2,
-                                                                          stats.n,
-                                                                          stats.NSE,
-                                                                          stats.ME,
-                                                                          stats.MAE,
-                                                                          stats.RSR,
-                                                                          stats.RMSD});
-                graphView.DrawText(equation, lowestAxisScale, yPosition, xAxis, yAxis, colour);
-            }
-        }
-
-        /// <summary>
-        /// A class for holding series information and data.
-        /// </summary>
-        private class SeriesInfo
-        {
-            /// <summary>
-            /// The graph model
-            /// </summary>
-            private Graph graph;
-
-            /// <summary>
-            /// The data store
-            /// </summary>
-            private DataStore dataStore;
-
-            /// <summary>
-            /// The series index
-            /// </summary>
-            private int seriesIndex;
-            
-            /// <summary>
-            /// The number of series.
-            /// </summary>
-            private int numSeries;
-
-            /// <summary>
-            /// Gets or set the filter used to get the data.
-            /// </summary>
-            private string filter;
-
-            /// <summary>
-            /// Gets the data for the series.
-            /// </summary>
-            private DataTable data;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="SeriesInfo" /> class.
-            /// </summary>
-            public SeriesInfo(
-                Graph graph,
-                DataStore dataStore,
-                Series series,
-                string title, 
-                string filter,
-                int seriesIndex, int numSeries)
-            {
-                this.graph = graph;
-                this.dataStore = dataStore;
-                this.series = series;
-                this.Title = title;
-                this.filter = filter;
-                this.seriesIndex = seriesIndex;
-                this.numSeries = numSeries;
-            }
-
-            /// <summary>
-            /// The associated graph series.
-            /// </summary>
-            public Series series { get; set; }
-
-            /// <summary>
-            /// Gets the series title.
-            /// </summary>
-            public string Title { get; set; }
-
-            /// <summary>
-            /// Gets the series colour.
-            /// </summary>
-            public Color Colour 
-            { 
-                get
+                if (definition.simulationNamesForEachPoint != null)
                 {
-                    // Colour from a palette?
-                    if (numSeries > 1)
+                    IEnumerator xEnum = definition.x.GetEnumerator();
+                    IEnumerator yEnum = definition.y.GetEnumerator();
+                    IEnumerator simNameEnum = definition.simulationNamesForEachPoint.GetEnumerator();
+
+                    while (xEnum.MoveNext() && yEnum.MoveNext() && simNameEnum.MoveNext())
                     {
-                        return Utility.Colour.ChooseColour(seriesIndex);
-                    }
-                    else
-                    {
-                        return series.Colour;
-                    }
-                }
-            }
+                        object rowX = xEnum.Current;
+                        object rowY = yEnum.Current;
 
-            /// <summary>
-            /// Get the x values
-            /// </summary>
-            public IEnumerable X
-            {
-                get
-                {
-                    return GetData(series.X);
-                }
-            }
-
-            /// <summary>
-            /// Get the y values
-            /// </summary>
-            public IEnumerable Y
-            {
-                get
-                {
-                    IEnumerable data = GetData(series.Y);
-                    if (series.Cumulative)
-                    {
-                        data = MathUtilities.Cumulative((IEnumerable<double>)data);
-                    }
-
-                    return data;
-                }
-            }
-
-            /// <summary>
-            /// Get the x2 values
-            /// </summary>
-            public IEnumerable X2
-            {
-                get
-                {
-                    return GetData(series.X2);
-                }
-            }
-
-            /// <summary>
-            /// Get the y2 values
-            /// </summary>
-            public IEnumerable Y2
-            {
-                get
-                {
-                    return GetData(series.Y2);
-                }
-            }
-
-            /// <summary>
-            /// Draw this series on the view
-            /// </summary>
-            public void DrawOnView(IGraphView graphView)
-            {
-                if (series.Type == Series.SeriesType.Line)
-                    series.Type = Series.SeriesType.Scatter;
-
-                string title = Title;
-                if (series.Title != null && !series.Title.StartsWith("Series") && numSeries == 1)
-                    title = series.Title;
-
-                if (!graph.DisabledSeries.Contains(title))
-                {
-                    // Create the series and populate it with data.
-                    if (series.Type == Models.Graph.Series.SeriesType.Bar)
-                    {
-                        graphView.DrawBar(title, X, Y, series.XAxis, series.YAxis, Colour, series.ShowInLegend);
-                    }
-
-                    else if (series.Type == Series.SeriesType.Scatter)
-                    {
-                        graphView.DrawLineAndMarkers(title, X, Y, series.XAxis, series.YAxis, Colour,
-                                                     series.Line, series.Marker, series.ShowInLegend);
-                    }
-                    else if (X2 != null && Y2 != null)
-                    {
-                        graphView.DrawArea(title, X, Y, X2, Y2, series.XAxis, series.YAxis, Colour, series.ShowInLegend);
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Look for the row in data that has the specified x and y. 
-            /// </summary>
-            /// <param name="x">The x coordinate</param>
-            /// <param name="y">The y coordinate</param>
-            /// <returns>The simulation name of the row</returns>
-            public string GetSimulationNameForPoint(double x, double y)
-            {
-                if (this.data != null)
-                {
-                    foreach (DataRow row in this.data.Rows)
-                    {
-                        object rowX = row[series.X.FieldName];
-                        object rowY = row[series.Y.FieldName];
-
-                        if (rowX is double && rowY is double)
+                        if (rowX is double && rowY is double &&
+                            MathUtilities.FloatsAreEqual(x, (double)rowX) &&
+                            MathUtilities.FloatsAreEqual(y, (double)rowY))
                         {
-                            if (MathUtilities.FloatsAreEqual(x, (double)rowX) &&
-                                MathUtilities.FloatsAreEqual(y, (double)rowY))
-                            {
-                                object simulationName = row["SimulationName"];
-                                if (simulationName != null)
-                                {
-                                    return simulationName.ToString();
-                                }
-                            }
+                            object simulationName = simNameEnum.Current;
+                            if (simulationName != null)
+                                return simulationName.ToString();
                         }
                     }
                 }
-
-                return null;
             }
-
-            /// <summary>
-            /// Gets the data table for this series.
-            /// </summary>
-            private IEnumerable GetData(GraphValues graphValues)
-            {
-                if (graphValues != null && graphValues.TableName == null && graphValues.FieldName != null)
-                {
-                    // Use reflection to access a property.
-                    return graphValues.GetData(this.graph);
-                }
-                else if (graphValues != null && graphValues.TableName != null && graphValues.FieldName != null)
-                {
-                    // Create the data if we haven't already
-                    if (this.data == null && this.dataStore.TableExists(graphValues.TableName))
-                    {
-                        this.data = this.dataStore.GetFilteredData(graphValues.TableName, filter);
-                    }
-                    
-                    // If the field exists in our data table then return it.
-                    if (this.data != null && graphValues.FieldName != null && this.data.Columns[graphValues.FieldName] != null)
-                    {
-                        if (this.data.Columns[graphValues.FieldName].DataType == typeof(DateTime))
-                        {
-                            return DataTableUtilities.GetColumnAsDates(this.data, graphValues.FieldName);
-                        }
-                        else if (this.data.Columns[graphValues.FieldName].DataType == typeof(string))
-                        {
-                            return DataTableUtilities.GetColumnAsStrings(this.data, graphValues.FieldName);
-                        }
-                        else
-                        {
-                            return DataTableUtilities.GetColumnAsDoubles(this.data, graphValues.FieldName);
-                        }
-                    }
-                }
-
-                return null;
-            }
+            return null;
         }
     }
 }

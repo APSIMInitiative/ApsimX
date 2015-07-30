@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using Models.PMF.Functions;
 using System.Xml.Serialization;
+using Models.Interfaces;
 
 namespace Models.PMF.Phen
 {
@@ -56,6 +57,8 @@ namespace Models.PMF.Phen
     /// where \f$L_{P}\f$ is the day length (h) from \ref Models.PMF.Functions.PhotoperiodFunction.
     ///</remarks>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class VernalisationCW : Model
     {
         /// <summary>The phenology</summary>
@@ -68,7 +71,7 @@ namespace Models.PMF.Phen
 
         /// <summary>The weather</summary>
         [Link]
-        Weather Weather = null;
+        IWeather Weather = null;
 
         /// <summary>Gets or sets the photop eff.</summary>
         /// <value>The photop eff.</value>
@@ -86,31 +89,37 @@ namespace Models.PMF.Phen
         private double Mint = 0;
         /// <summary>Gets or sets the vern sens.</summary>
         /// <value>The vern sens.</value>
+        [Description("VernSens")]
         public double VernSens { get; set; }
         /// <summary>Gets or sets the photop sens.</summary>
         /// <value>The photop sens.</value>
+        [Description("PhotopSens")]
         public double PhotopSens { get; set; }
         /// <summary>The start stage for effects</summary>
-        public string StartStageForEffects = "";
+        [Description("StartStageForEffects")]
+        public string StartStageForEffects { get; set; }
         /// <summary>The end stage for effects</summary>
-        public string EndStageForEffects = "";
+        [Description("EndStageForEffects")]
+        public string EndStageForEffects { get; set; }
         /// <summary>The start stage for cumulative vd</summary>
-        public string StartStageForCumulativeVD = "";
+        [Description("StartStageForCumulativeVD")]
+        public string StartStageForCumulativeVD { get; set; }
         /// <summary>The end stage for cumulative vd</summary>
-        public string EndStageForCumulativeVD = "";
+        [Description("EndStageForCumulativeVD")]
+        public string EndStageForCumulativeVD { get; set; }
 
         /// <summary>The cumulative vd</summary>
         private double CumulativeVD = 0;
 
-        /// <summary>Trap the NewWeatherDataAvailable event.</summary>
+        /// <summary>Trap the DoDailyInitialisation event.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            Maxt = Weather.MetData.Maxt;
-            Mint = Weather.MetData.Mint;
-            Vernalisation(Weather.MetData.Maxt, Weather.MetData.Mint);
+            Maxt = Weather.MaxT;
+            Mint = Weather.MinT;
+            Vernalisation(Weather.MaxT, Weather.MinT);
         }
 
         /// <summary>Initialise everything</summary>

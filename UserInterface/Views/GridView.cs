@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Drawing;
     using System.Windows.Forms;
     using Classes;
     using DataGridViewAutoFilter;
@@ -62,6 +63,9 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler<GridHeaderClickedArgs> ColumnHeaderClicked;
 
+        /// <summary>Occurs when user clicks a button on the cell.</summary>
+        public event EventHandler<GridCellsChangedArgs> ButtonClick;
+
         /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
@@ -77,6 +81,15 @@ namespace UserInterface.Views
                 this.table = value;
                 this.PopulateGrid();
             }
+        }
+
+        /// <summary>
+        /// The name of the associated model.
+        /// </summary>
+        public string ModelName
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -230,6 +243,32 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Loads an image from a supplied bitmap.
+        /// </summary>
+        /// <param name="bitmap">The image to display.</param>
+        public void LoadImage(Bitmap bitmap)
+        {
+            pictureBox1.Image = bitmap;
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+        }
+
+        /// <summary>
+        /// Loads an image from a manifest resource.
+        /// </summary>
+        public void LoadImage()
+        {
+            System.Reflection.Assembly thisExe = System.Reflection.Assembly.GetExecutingAssembly();
+            System.IO.Stream file = thisExe.GetManifestResourceStream("UserInterface.Resources.PresenterPictures." + ModelName + ".png");
+            if (file == null)
+                pictureBox1.Visible = false;
+            else
+            {
+                pictureBox1.Image = Image.FromStream(file);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+
+        /// <summary>
         /// Returns true if the grid row is empty.
         /// </summary>
         /// <param name="rowIndex">The row index</param>
@@ -333,14 +372,12 @@ namespace UserInterface.Views
                         for (int col = 0; col < this.DataSource.Columns.Count; col++)
                         {
                             this.Grid[col, row].Value = this.DataSource.Rows[row][col];
-
                             //if (row == 0)
                             //{
                             //    this.Grid.Columns[col].Width = Math.Max(this.Grid.Columns[col].MinimumWidth,
                             //                                            this.Grid.Columns[col].GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true));
                             //}
                         }
-
                         this.Grid.RowCount = this.DataSource.Rows.Count;
                     }
                 }
@@ -428,6 +465,53 @@ namespace UserInterface.Views
                     this.CellsChanged(this, args);
                 }
             }
+        }
+
+        /// <summary>
+        /// Called when the window is resized to resize all grid controls.
+        /// </summary>
+        public void ResizeControls()
+        {
+            if (Grid.ColumnCount == 0)
+                return;
+
+            //resize Grid
+            int width = 0;
+            int height = 0;
+
+            foreach (DataGridViewColumn col in Grid.Columns)
+                width += col.Width;
+            foreach (DataGridViewRow row in Grid.Rows)
+                    height += row.Height;
+            height += Grid.ColumnHeadersHeight;
+            if (width + 3 > Grid.Parent.Width)
+                Grid.Width = Grid.Parent.Width;
+            else
+                Grid.Width = width + 3;
+
+            if (height + 25 > (Grid.Parent.Parent == null ? Grid.Parent.Height / 2 : Grid.Parent.Height))
+            {
+                Grid.Height = Grid.Parent.Parent == null ? Grid.Parent.Height / 2 : Grid.Parent.Height;
+                if (width + 25 > Grid.Parent.Width)
+                    Grid.Width = Grid.Parent.Width;
+                else 
+                    Grid.Width += 25; //extra width for scrollbar
+            }
+            else
+                Grid.Height = height + 25;
+            Grid.Location = new Point(0, 0);
+
+            if (Grid.RowCount == 0)
+            {
+                Grid.Width = 0;
+                Grid.Height = 0;
+                Grid.Visible = false;
+            }
+
+            //resize PictureBox
+            pictureBox1.Location = new Point(Grid.Width, 0);
+            pictureBox1.Height = pictureBox1.Parent.Height;
+            pictureBox1.Width = pictureBox1.Parent.Width - pictureBox1.Location.X;
         }
 
         /// <summary>
@@ -627,6 +711,28 @@ namespace UserInterface.Views
             if (cellsChanged.Count > 0 && this.CellsChanged != null)
             {
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+            }
+        }
+
+        private void GridView_Resize(object sender, EventArgs e)
+        {
+            ResizeControls();
+        }
+
+        /// <summary>
+        /// User has clicked a cell.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="DataGridViewCellEventArgs"/> instance containing the event data.</param>
+        private void OnCellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            IGridCell cell = this.GetCell(e.ColumnIndex, e.RowIndex);
+            if (cell != null && cell.EditorType == EditorTypeEnum.Button)
+            {
+                GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
+                cellClicked.ChangedCells = new List<IGridCell>();
+                cellClicked.ChangedCells.Add(cell);
+                ButtonClick(this, cellClicked);
             }
         }
     }
