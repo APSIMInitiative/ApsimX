@@ -75,7 +75,7 @@ namespace Models.Core
             if (summaryNode != null)
             {
                 string paragraphSoFar = string.Empty;
-                StringReader reader = new StringReader(summaryNode.InnerText);
+                StringReader reader = new StringReader(summaryNode.InnerXml);
                 string line = reader.ReadLine();
                 while (line != null)
                 {

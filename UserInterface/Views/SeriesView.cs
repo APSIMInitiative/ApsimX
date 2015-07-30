@@ -8,15 +8,15 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data;
     using System.Drawing;
+    using System.Data;
     using System.Linq;
     using System.Text;
     using System.Windows.Forms;
     using Interfaces;
 
     /// <summary>
-    /// A view for adding, removing and editing graph series.
+    /// This view allows a single series to be edited.
     /// </summary>
     public partial class SeriesView : UserControl, ISeriesView
     {
@@ -25,178 +25,516 @@ namespace UserInterface.Views
         /// </summary>
         public SeriesView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         /// <summary>
-        /// Invoked when a series has been selected by user.
+        /// Invoked when the user changes the series type
         /// </summary>
-        public event EventHandler SeriesSelected;
+        public event EventHandler SeriesTypeChanged;
 
         /// <summary>
-        /// Invoked when a new empty series is added.
+        /// Invoked when the user changes the series line type
         /// </summary>
-        public event EventHandler SeriesAdded;
+        public event EventHandler SeriesLineTypeChanged;
 
         /// <summary>
-        /// Invoked when a series is deleted.
+        /// Invoked when the user changes the series marker type
         /// </summary>
-        public event EventHandler SeriesDeleted;
+        public event EventHandler SeriesMarkerTypeChanged;
 
         /// <summary>
-        /// Invoked when a series is deleted.
+        /// Invoked when the user changes the color
         /// </summary>
-        public event EventHandler AllSeriesCleared;
+        public event EventHandler ColourChanged;
 
         /// <summary>
-        /// Invoked when a series is renamed
+        /// Invoked when the user changes the x on top field
         /// </summary>
-        public event EventHandler SeriesRenamed;
+        public event EventHandler XOnTopChanged;
 
         /// <summary>
-        /// Gets the series editor.
+        /// Invoked when the user changes the y on right field
         /// </summary>
-        public ISeriesEditorView SeriesEditor
+        public event EventHandler YOnRightChanged;
+
+        /// <summary>
+        /// Invoked when the user changes the cumulative Y field
+        /// </summary>
+        public event EventHandler CumulativeYChanged;
+        
+        /// <summary>
+        /// Invoked when the user changes the cumulative X field
+        /// </summary>
+        public event EventHandler CumulativeXChanged;
+
+        /// <summary>
+        /// Invoked when the user changes the x
+        /// </summary>
+        public event EventHandler XChanged;
+
+        /// <summary>
+        /// Invoked when the user changes the y
+        /// </summary>
+        public event EventHandler YChanged;
+
+        /// <summary>
+        /// Invoked when the user changes the x2
+        /// </summary>
+        public event EventHandler X2Changed;
+
+        /// <summary>
+        /// Invoked when the user changes the y2
+        /// </summary>
+        public event EventHandler Y2Changed;
+
+        /// <summary>
+        /// Invoked when the user changes the data source
+        /// </summary>
+        public event EventHandler DataSourceChanged;
+
+        /// <summary>
+        /// Invoked when the user changes the show in legend
+        /// </summary>
+        public event EventHandler ShowInLegendChanged;
+
+        /// <summary>
+        /// Gets or sets the series type
+        /// </summary>
+        public string SeriesType
         {
             get
             {
-                return this.seriesEditorView1;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the series editor is visible.
-        /// </summary>
-        public bool EditorVisible
-        {
-            get
-            {
-                return this.seriesEditorView1.Visible;
+                return comboBox2.Text;
             }
 
             set
             {
-                this.seriesEditorView1.Visible = value;
+                if (comboBox2.Items.IndexOf(value) != -1)
+                {
+                    comboBox2.Text = value;
+                }
             }
         }
 
         /// <summary>
-        /// Gets or sets the series names.
+        /// Gets or sets the series line type
         /// </summary>
-        public string[] SeriesNames
+        public string SeriesLineType
         {
             get
             {
-                List<string> names = new List<string>();
-                foreach (ListViewItem item in this.listView1.Items)
-                {
-                    names.Add(item.Text);
-                }
-
-                return names.ToArray();
+                return comboBox3.Text;
             }
 
             set
             {
-                this.listView1.Items.Clear();
-                foreach (string st in value)
-                {
-                    this.listView1.Items.Add(st);
-                }
-
-                if (this.listView1.Items.Count > 0)
-                    this.listView1.Items[0].Selected = true;
+                comboBox3.Text = value;
             }
         }
 
         /// <summary>
-        /// Gets or sets the selected series name.
+        /// Gets or sets the series marker type
         /// </summary>
-        public string SelectedSeriesName
+        public string SeriesMarkerType
         {
             get
             {
-                if (this.listView1.SelectedItems.Count > 0)
-                {
-                    return this.listView1.SelectedItems[0].Text;
-                }
-
-                return null;
+                return comboBox4.Text;
             }
 
             set
             {
-                foreach (ListViewItem item in this.listView1.Items)
-                {
-                    item.Selected = item.Text == value;
-                }
+                comboBox4.Text = value;
             }
         }
 
         /// <summary>
-        /// User has changed the series.
+        /// Gets or sets the series color.
         /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnListView1SelectedIndexChanged(object sender, EventArgs e)
+        public Color Colour
         {
-            if (this.SeriesSelected != null)
+            get
             {
-                this.SeriesSelected.Invoke(sender, e);
+                return button1.BackColor;
+            }
+
+            set
+            {
+                button1.BackColor = value;
             }
         }
 
         /// <summary>
-        /// Add a new series
+        /// Gets or sets a value indicating whether x is on top.
         /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnAddToolStripMenuItemClick(object sender, EventArgs e)
+        public bool XOnTop
         {
-            if (this.SeriesAdded != null)
+            get
             {
-                this.SeriesAdded.Invoke(sender, e);
+                return checkBox1.Checked;
+            }
+
+            set
+            {
+                checkBox1.Checked = value;
             }
         }
 
         /// <summary>
-        /// Delete the selected series.
+        /// Gets or sets a value indicating whether y is on right.
         /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnDeleteToolStripMenuItemClick(object sender, EventArgs e)
+        public bool YOnRight
         {
-            if (this.SeriesDeleted != null)
+            get
             {
-                this.SeriesDeleted.Invoke(sender, e);
+                return checkBox2.Checked;
+            }
+
+            set
+            {
+                checkBox2.Checked = value;
             }
         }
 
         /// <summary>
-        /// Clear all series
+        /// Gets or sets a value indicating whether the Y series is cumulative.
         /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnClearAllSeriesToolStripMenuItemClick(object sender, EventArgs e)
+        /// <value><c>true</c> if cumulative; otherwise, <c>false</c>.</value>
+        public bool CumulativeY
         {
-            if (this.AllSeriesCleared != null)
+            get
             {
-                this.AllSeriesCleared.Invoke(sender, e);
+                return this.cumulativeCheckBox.Checked;
+            }
+
+            set
+            {
+                this.cumulativeCheckBox.Checked = value;
             }
         }
 
         /// <summary>
-        /// User has finished renaming a series name.
+        /// Gets or sets a value indicating whether the X series is cumulative.
         /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnSeriesRenameAfterLabelEdit(object sender, LabelEditEventArgs e)
+        /// <value><c>true</c> if cumulative; otherwise, <c>false</c>.</value>
+        public bool CumulativeX
         {
-            if (this.SeriesRenamed != null && e.Label != null)
+            get
             {
-                listView1.Items[e.Item].Text = e.Label;
-                this.SeriesRenamed.Invoke(sender, null);
+                return this.cumulativeCheckBoxX.Checked;
+            }
+
+            set
+            {
+                this.cumulativeCheckBoxX.Checked = value;
             }
         }
+
+        /// <summary>
+        /// Gets or set the show in legend checkbox
+        /// </summary>
+        public bool ShowInLegend
+        {
+            get
+            {
+                return checkBox5.Checked;
+            }
+
+            set
+            {
+                if (checkBox5.Checked != value)
+                    checkBox5.Checked = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the x variable name
+        /// </summary>
+        public string X
+        {
+            get
+            {
+                return xComboBox.Text;
+            }
+
+            set
+            {
+                xComboBox.Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the y variable name
+        /// </summary>
+        public string Y
+        {
+            get
+            {
+                return yComboBox.Text;
+            }
+
+            set
+            {
+                yComboBox.Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the second x variable name
+        /// </summary>
+        public string X2
+        {
+            get
+            {
+                return x2ComboBox.Text;
+            }
+
+            set
+            {
+                x2ComboBox.Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the second y variable name
+        /// </summary>
+        public string Y2
+        {
+            get
+            {
+                return y2ComboBox.Text;
+            }
+
+            set
+            {
+                y2ComboBox.Text = value;
+            }
+        }
+
+        /// <summary>Gets the graph view.</summary>
+        public IGraphView GraphView { get { return graphView1; } }
+
+        /// <summary>
+        /// Show the x2 an y2 fields?
+        /// </summary>
+        /// <param name="show">Indicates whether the fields should be shown</param>
+        public void ShowX2Y2(bool show)
+        {
+            this.x2ComboBox.Visible = show;
+            this.y2ComboBox.Visible = show;
+            this.label4.Visible = show;
+            this.label5.Visible = show;
+        }
+
+        /// <summary>
+        /// Sets the list of available data sources.
+        /// </summary>
+        /// <param name="data">The available data sources</param>
+        public void SetDataSources(string[] dataSources)
+        {
+            comboBox1.Items.Clear();
+            comboBox1.Items.AddRange(dataSources);
+        }
+
+        /// <summary>
+        /// Gets or sets the selected data source name.
+        /// </summary>
+        public string DataSource
+        {
+            get
+            {
+                return comboBox1.Text;
+            }
+
+            set
+            {
+                comboBox1.Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a list of field names 
+        /// </summary>
+        /// <param name="fieldNames">The available field names</param>
+        public void SetFieldNames(string[] fieldNames)
+        {
+            xComboBox.Items.Clear();
+            xComboBox.Items.AddRange(fieldNames);
+            yComboBox.Items.Clear();
+            yComboBox.Items.AddRange(fieldNames);
+            x2ComboBox.Items.Clear();
+            x2ComboBox.Items.AddRange(fieldNames);
+            y2ComboBox.Items.Clear();
+            y2ComboBox.Items.AddRange(fieldNames);
+        }
+
+        /// <summary>
+        /// Scatter type has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnComboBox2Changed(object sender, EventArgs e)
+        {
+            if (SeriesTypeChanged != null)
+                SeriesTypeChanged.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// Line type has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnComboBox3Changed(object sender, EventArgs e)
+        {
+            if (SeriesLineTypeChanged != null)
+                SeriesLineTypeChanged.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// Marker type has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnComboBox4Changed(object sender, EventArgs e)
+        {
+            if (SeriesMarkerTypeChanged != null)
+                SeriesMarkerTypeChanged.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// Colour has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnButton1Click(object sender, EventArgs e)
+        {
+            colorDialog1.Color = button1.BackColor;
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                button1.BackColor = colorDialog1.Color;
+                if (ColourChanged != null)
+                    ColourChanged.Invoke(sender, e);
+            }
+        }
+
+        /// <summary>
+        /// X on top has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCheckBox1Changed(object sender, EventArgs e)
+        {
+            if (XOnTopChanged != null)
+                XOnTopChanged.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// Y on right has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCheckBox2Changed(object sender, EventArgs e)
+        {
+            if (YOnRightChanged != null)
+                YOnRightChanged.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// Data source has changed
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnComboBox1Changed(object sender, EventArgs e)
+        {
+            if (DataSourceChanged != null)
+                DataSourceChanged.Invoke(sender, e);
+        }
+
+        /// <summary>
+        /// The show in legend checkbox has been clicked.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCheckBox5Changed(object sender, EventArgs e)
+        {
+            if (ShowInLegendChanged != null)
+            {
+                ShowInLegendChanged.Invoke(sender, e);
+            }
+        }
+
+        /// <summary>
+        /// X value has changed.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void xComboBox_TextChanged(object sender, EventArgs e)
+        {
+            if (XChanged != null)
+            {
+                XChanged.Invoke(sender, e);
+            }
+        }
+
+        /// <summary>
+        /// Y value has changed.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void yComboBox_TextChanged(object sender, EventArgs e)
+        {
+            if (YChanged != null)
+            {
+                YChanged.Invoke(sender, e);
+            }
+
+        }
+
+        /// <summary>
+        /// X2 value has changed.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void x2ComboBox_TextChanged(object sender, EventArgs e)
+        {
+            if (X2Changed != null)
+            {
+                X2Changed.Invoke(sender, e);
+            }
+
+        }
+
+        /// <summary>
+        /// Y2 value has changed.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void y2ComboBox_TextChanged(object sender, EventArgs e)
+        {
+            if (Y2Changed != null)
+            {
+                Y2Changed.Invoke(sender, e);
+            }
+        }
+
+        /// <summary>Handles the CheckedChanged event of the cumulativeCheckBox control.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnCheckedChanged(object sender, EventArgs e)
+        {
+            if (this.CumulativeYChanged != null)
+                this.CumulativeYChanged(this, e);
+        }
+
+        /// <summary>Handles the CheckedChanged event of the cumulativeCheckBoxX control.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnCumulativeXCheckedChanged(object sender, EventArgs e)
+        {
+            if (this.CumulativeXChanged != null)
+                this.CumulativeXChanged(this, e);
+        }
+
     }
 }

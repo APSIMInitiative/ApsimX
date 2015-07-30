@@ -196,8 +196,8 @@ namespace UserInterface.Presenters
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Red,
-                                                     Series.LineType.Solid,
-                                                     Series.MarkerType.None,
+                                                     LineType.Solid,
+                                                     MarkerType.None,
                                                      true);
             this.weatherDataView.Graph.DrawLineAndMarkers("Minimum temperature",
                                                      DateUtilities.LowerCaseMonths,
@@ -205,8 +205,8 @@ namespace UserInterface.Presenters
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Orange,
-                                                     Series.LineType.Solid,
-                                                     Series.MarkerType.None,
+                                                     LineType.Solid,
+                                                     MarkerType.None,
                                                      true);
             this.weatherDataView.Graph.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN);
             this.weatherDataView.Graph.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN);

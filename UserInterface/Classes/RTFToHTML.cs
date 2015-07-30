@@ -138,7 +138,10 @@ namespace UserInterface.Classes
             if (text != string.Empty)
                 AddRTFItem(text, ref RTFParsed);
 
-
+            // Remove trailing par codes.
+            while (RTFParsed[RTFParsed.Count - 1] == "par")
+                RTFParsed.RemoveAt(RTFParsed.Count - 1);
+    
             return RTFParsed;
         }
 
@@ -202,7 +205,12 @@ namespace UserInterface.Classes
                 else if (RTF[pos] == '}')
                     numOpenBrackets--;
                 else if (RTF[pos] != '\r' && RTF[pos] != '\n')
+                {
                     code += RTF[pos];
+                    if (code == "generator")
+                        while (pos < RTF.Length && RTF[pos] != '}')
+                            pos++;
+                }
 
                 pos++;
             }

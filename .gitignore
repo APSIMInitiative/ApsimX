@@ -33,6 +33,5 @@ _ReSharper*/
 Documentation/html
 *.db
 packages/
-Documents/
 *.csv
-*.sum
+Tests/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.db.sum

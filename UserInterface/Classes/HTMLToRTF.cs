@@ -64,7 +64,10 @@ namespace UserInterface.Classes
                     rtf.Append(@"\fs20\par ");
                 else if (section == "</h3>")
                     rtf.Append(@"\fs20\par ");
-                else if (section == "<br/>")
+                else if (section == "<p>")
+                {
+                }
+                else if (section == "</p>")
                     rtf.Append(@"\par ");
                 else
                     rtf.Append(section);
@@ -84,7 +87,7 @@ namespace UserInterface.Classes
                                    "<strike>", "</strike>", "<sup>", "</sup>",
                                    "<sub>", "</sub>",
                                    "<h1>", "</h1>", "<h2>", "</h2>", "<h3>", "</h3>",
-                                   "<br/>"};
+                                   "<p>", "</p>"};
 
 
             List<string> htmlParsed = new List<string>();

@@ -142,16 +142,17 @@ namespace UnitTests
 
             // Test the models that are in scope of zone2.graph
             List<IModel> inScopeForGraph = Apsim.FindAll(graph);
-            Assert.AreEqual(inScopeForGraph.Count, 9);
-            Assert.AreEqual(inScopeForGraph[0].Name, "Soil");
-            Assert.AreEqual(inScopeForGraph[1].Name, "SurfaceOrganicMatter");
-            Assert.AreEqual(inScopeForGraph[2].Name, "Field2SubZone");
-            Assert.AreEqual(inScopeForGraph[3].Name, "Field2");
-            Assert.AreEqual(inScopeForGraph[4].Name, "Weather");
-            Assert.AreEqual(inScopeForGraph[5].Name, "Clock");
-            Assert.AreEqual(inScopeForGraph[6].Name, "Summary");
-            Assert.AreEqual(inScopeForGraph[7].Name, "Field1");
-            Assert.AreEqual(inScopeForGraph[8].Name, "Test");
+            Assert.AreEqual(inScopeForGraph.Count, 10);
+            Assert.AreEqual(inScopeForGraph[0].Name, "Series1");
+            Assert.AreEqual(inScopeForGraph[1].Name, "Soil");
+            Assert.AreEqual(inScopeForGraph[2].Name, "SurfaceOrganicMatter");
+            Assert.AreEqual(inScopeForGraph[3].Name, "Field2SubZone");
+            Assert.AreEqual(inScopeForGraph[4].Name, "Field2");
+            Assert.AreEqual(inScopeForGraph[5].Name, "Weather");
+            Assert.AreEqual(inScopeForGraph[6].Name, "Clock");
+            Assert.AreEqual(inScopeForGraph[7].Name, "Summary");
+            Assert.AreEqual(inScopeForGraph[8].Name, "Field1");
+            Assert.AreEqual(inScopeForGraph[9].Name, "Test");
             
             List<IModel> zones = Apsim.FindAll(graph, typeof(Zone));
             Assert.AreEqual(zones.Count, 4);
@@ -273,7 +274,7 @@ namespace UnitTests
         public void ChildrenRecursivelyTest()
         {
             List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 19);
+            Assert.AreEqual(allChildren.Count, 20);
 
             List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
             Assert.AreEqual(childZones.Count, 3);

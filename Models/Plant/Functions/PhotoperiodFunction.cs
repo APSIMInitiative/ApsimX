@@ -8,7 +8,7 @@ using Models.Interfaces;
 
 namespace Models.PMF.Functions
 {
-    /// <summary>Returns the value of todays photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead.</summary>
+    /// <summary>Returns the value of today's photoperiod calculated using the specified latitude and twilight sun angle threshold.  If variable called ClimateControl.PhotoPeriod can be found this will be used instead.</summary>
     /// <remarks>The day length is calculated with \ref MathUtilities.DayLength.</remarks>
     /// \pre A \ref Models.WeatherFile function has to exist.
     /// \pre A \ref Models.Clock function has to be existed to retrieve day of year
@@ -30,6 +30,7 @@ namespace Models.PMF.Functions
 
         /// <summary>The twilight</summary>
         [Description("Twilight")]
+        [Units("degrees")]
         public double Twilight { get; set; }
 
         /// <summary>Gets the value.</summary>
@@ -69,7 +70,7 @@ namespace Models.PMF.Functions
             // get description of this class.
             AutoDocumentation.GetClassDescription(this, tags, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>Twilight = " + Twilight.ToString() + "</i>", indent));
+            tags.Add(new AutoDocumentation.Paragraph("<i>Twilight = " + Twilight.ToString() + " (degrees)</i>", indent));
         }
 
     }
