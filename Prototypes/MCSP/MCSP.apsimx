@@ -9,8 +9,21 @@
         <Name>Introduction</Name>
         <MemoText><![CDATA[
 <html><body>
+<h1>
+The Multiple Crop Single Purpose model
+</h1>
+<h2>
+Authors:
+</h2>
 <p>
-This model has been built to simulate Multiple Crops in simulations that serve a Single Purpose (MCSP).  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands.  It does not simulate yield, this is specified as an input.  Yield will be reduced below the specified potential yield is N or water supplies from the soil are insufficient to meet demand.  The model has been paramaterised for the single purpose of simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that it is empirical and the parameters might need changing for crops from different areas.
+Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand
+</p>
+<p>
+
+</p>
+<p>
+This model has been built to simulate Multiple Crops in simulations that serve a Single Purpose (MCSP).  It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model (Cichota etal It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands.  It does not simulate yield, this is specified as an input.  Yield will be reduced below the specified potential yield is N or water supplies from the soil are insufficient to meet demand.  The model has been paramaterised for the single purpose of simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that it is empirical and the parameters might need changing for crops from different areas.
+
 </p>
 </body></html>]]></MemoText>
       </Memo>
@@ -21,7 +34,7 @@ This model has been built to simulate Multiple Crops in simulations that serve a
           <MemoText><![CDATA[
 <html><body>
 <p>
-This is the Product yield (g/m2</sub> fresh weight) that MSCP will predict provided nitrogen and water supply are adequate
+This is the Product yield (g/m2 fresh weight) that MSCP will predict provided nitrogen and water supply are adequate
 </p>
 </body></html>]]></MemoText>
         </Memo>
@@ -112,7 +125,7 @@ Is another coefficient for the potential biomass accumulation function
           <MemoText><![CDATA[
 <html><body>
 <p>
-This variable is the product yield of the crop in g/m2</sub> dry weight
+This variable is the product yield of the crop in g/m2 dry weight
 </p>
 </body></html>]]></MemoText>
         </Memo>
@@ -127,6 +140,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
       </MultiplyFunction>
       <DivideFunction>
         <Name>Ymax</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+This variable is the total biomass (g/m2dry weight) that the crop will produce at maturity in the absence of stress
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <VariableReference>
           <Name>DryYield</Name>
           <VariableName>[DryYield].Value</VariableName>
@@ -149,6 +171,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
       </DivideFunction>
       <SigmoidFunction2>
         <Name>TotalBiomassAtStartReproductive</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+This variable is the solution of the potential biomass accumulation function at the onset of growth of the product organ and is used in the calculation of partitioning coefficients
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <VariableReference>
           <Name>XValue</Name>
           <VariableName>[Phenology].CanopyExpanding.Target.Value</VariableName>
@@ -168,6 +199,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
       </SigmoidFunction2>
       <SigmoidFunction2>
         <Name>TotalBiomassAtStartSenescence</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+This variable is the solution of the potential biomass accumulation function at the onset of canopy senescence when the stover organ stops growing and is used in the calculation of partitioning coefficients
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <AddFunction>
           <Name>XValue</Name>
           <VariableReference>
@@ -194,6 +234,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
       </SigmoidFunction2>
       <SigmoidFunction2>
         <Name>TotalBiomassAtMaturity</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+This will be close to Ymax in many but because the potential yield function is sigmoidal the crop doesnt quite reach the Ymax asymtote by maturity so this give a more precices biomass at maturity for calculating partitioning coefficients 
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <AddFunction>
           <Name>XValue</Name>
           <VariableReference>
@@ -224,6 +273,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
       </SigmoidFunction2>
       <Phenology>
         <Name>Phenology</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+Simple phenology with key stages for the onset of growth of the product organ and the onset of senesence when the canopy cover beging decreasing
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
           <XYPairs>
@@ -251,6 +309,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+This will be close to Ymax in many but because the potential yield function is sigmoidal the crop doesnt quite reach the Ymax asymtote by maturity so this give a more precices biomass at maturity for calculating partitioning coefficients 
+</p>
+</body></html>]]></MemoText>
+          </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>0</ShootLag>
@@ -258,6 +325,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
         </EmergingPhase>
         <GenericPhase>
           <Name>CanopyExpanding</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+During this phase the plant only partitions biomass to Root and Stover (leaf and stem) Organs
+</p>
+</body></html>]]></MemoText>
+          </Memo>
           <Constant>
             <Name>Target</Name>
             <Value>1000</Value>
@@ -271,6 +347,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
         </GenericPhase>
         <GenericPhase>
           <Name>YieldIncreasing</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+During this phase the plant is partitioning biomass to Root Stover and Product organs
+</p>
+</body></html>]]></MemoText>
+          </Memo>
           <Constant>
             <Name>Target</Name>
             <Value>600</Value>
@@ -284,6 +369,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
         </GenericPhase>
         <GenericPhase>
           <Name>Senescing</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+During this phase the plant is partitioning biomass to Root and Product organs and the canopy cover decreases from its maximum to zero
+</p>
+</body></html>]]></MemoText>
+          </Memo>
           <Constant>
             <Name>Target</Name>
             <Value>600</Value>
@@ -305,6 +399,15 @@ This variable is the product yield of the crop in g/m2</sub> dry weight
             <Name>ThermalTime</Name>
             <VariableName>[Phenology].ThermalTime.Value</VariableName>
           </VariableReference>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+During this phase the plant does bugger all but wait to be ready for harvest
+</p>
+</body></html>]]></MemoText>
+          </Memo>
           <Start>EndReproductive</Start>
           <End>Maturity</End>
         </GenericPhase>
@@ -350,10 +453,60 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Constant>
-          <Name>NConc</Name>
-          <Value>0.008</Value>
-        </Constant>
+        <MultiplyFunction>
+          <Name>PotentialBiomass</Name>
+          <DeltaFunction>
+            <Name>PotentialBiomass</Name>
+            <SigmoidFunction2>
+              <Name>Integral</Name>
+              <VariableReference>
+                <Name>Ymax</Name>
+                <VariableName>[Ymax].Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>XValue</Name>
+                <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>Xo</Name>
+                <VariableName>[XoBiomass].Value</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>b</Name>
+                <VariableName>[bBiomass].Value</VariableName>
+              </VariableReference>
+            </SigmoidFunction2>
+            <StartStageName>Emergence</StartStageName>
+          </DeltaFunction>
+          <LinearInterpolationFunction>
+            <Name>WaterStressFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.1</double>
+                <double>0.7</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Stover].Fw</XProperty>
+          </LinearInterpolationFunction>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+PotentialBiomass function provides the DM fixation supply to the arbitrator which is then partitioned between the organs based on their DM Demands (From DMDemandFunctions).  In this case it takes the daily delta of a sigmoidal function to estimate daily potential biomass production as a function of accumulated thermal time and reduces this for water stress effects
+</p>
+</body></html>]]></MemoText>
+          </Memo>
+        </MultiplyFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Memo>
@@ -456,6 +609,15 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
         </PartitionFractionDemandFunction>
         <PhaseLookup>
           <Name>CoverFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+The cover of the canopy is estimated using a simple sigmoidal increase in the expanding phases and a linear decrease in the senescing phase
+</p>
+</body></html>]]></MemoText>
+          </Memo>
           <PhaseLookupValue>
             <Name>Expanding</Name>
             <SigmoidFunction2>
@@ -531,17 +693,17 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
         </PhaseLookup>
         <Constant>
           <Name>ExtinctionCoefficientFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+The extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover
+</p>
+</body></html>]]></MemoText>
+          </Memo>
           <Value>0.5</Value>
         </Constant>
-        <PhaseLookupValue>
-          <Name>NitrogenDemandSwitch</Name>
-          <Constant>
-            <Name>Function</Name>
-            <Value>1</Value>
-          </Constant>
-          <Start>Emergence</Start>
-          <End>StartSenescence</End>
-        </PhaseLookupValue>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
           <XYPairs>
@@ -577,51 +739,19 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
             </Y>
           </XYPairs>
         </AirTemperatureFunction>
-        <MultiplyFunction>
-          <Name>PotentialBiomass</Name>
-          <DeltaFunction>
-            <Name>PotentialBiomass</Name>
-            <SigmoidFunction2>
-              <Name>Integral</Name>
-              <VariableReference>
-                <Name>Ymax</Name>
-                <VariableName>[Ymax].Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>XValue</Name>
-                <VariableName>[Phenology].AccumulatedThermalTime.Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>Xo</Name>
-                <VariableName>[XoBiomass].Value</VariableName>
-              </VariableReference>
-              <VariableReference>
-                <Name>b</Name>
-                <VariableName>[bBiomass].Value</VariableName>
-              </VariableReference>
-            </SigmoidFunction2>
-            <StartStageName>Emergence</StartStageName>
-          </DeltaFunction>
-          <LinearInterpolationFunction>
-            <Name>WaterStressFactor</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>0</double>
-                <double>0.1</double>
-                <double>0.7</double>
-                <double>1</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>0</double>
-                <double>1</double>
-                <double>1</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Stover].Fw</XProperty>
-          </LinearInterpolationFunction>
-        </MultiplyFunction>
+        <Constant>
+          <Name>NConc</Name>
+          <Value>0.008</Value>
+        </Constant>
+        <PhaseLookupValue>
+          <Name>NitrogenDemandSwitch</Name>
+          <Constant>
+            <Name>Function</Name>
+            <Value>1</Value>
+          </Constant>
+          <Start>Emergence</Start>
+          <End>StartSenescence</End>
+        </PhaseLookupValue>
         <BiomassYesterday>0</BiomassYesterday>
         <LAI>0</LAI>
         <Height>0</Height>
@@ -709,6 +839,15 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
       </GenericAboveGroundOrgan>
       <Root>
         <Name>Root</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <CompositeBiomass>
           <Name>Live</Name>
           <Propertys>
@@ -736,6 +875,15 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
               <double>0</double>
             </Y>
           </XYPairs>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[
+<html><body>
+<p>
+This is important in MCSP as it is set for each species to represent their differences in rooting patterns between crop species
+</p>
+</body></html>]]></MemoText>
+          </Memo>
           <XProperty>[Root].LayerMidPointDepth</XProperty>
         </LinearInterpolationFunction>
         <Constant>
@@ -846,6 +994,15 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
       </Root>
       <Nodule>
         <Name>Nodule</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[
+<html><body>
+<p>
+The nodule organ is unparameterised and simply has a switch that is turned on for legume crops (so they can fix what ever N the crop demands) and switched off for non legume crops (which fix no N)
+</p>
+</body></html>]]></MemoText>
+        </Memo>
         <Biomass>
           <Name>Live</Name>
         </Biomass>
@@ -1135,6 +1292,15 @@ Rape has 0oCd duration canopy expanding, senescence and maturity targets with a 
         <Command>[Root].MinimumNConc.Value = 0.008</Command>
         <Command>[Root].MaximumNConc.Value = 0.008</Command>
       </Cultivar>
+      <Memo>
+        <Name>References</Name>
+        <MemoText><![CDATA[
+<html><body>
+<p>
+Cichota R, Brown H, Snow VO, Wheeler DM, Hedderley D, Zyskowski R, Thomas S. 2010. A nitrogen balance model for environmental accountability in cropping systems. New Zealand Journal of Crop and Horticultural Science,38: 189-207.
+</p>
+</body></html>]]></MemoText>
+      </Memo>
       <CropType>SLURP</CropType>
     </Plant>
   </Replacements>
