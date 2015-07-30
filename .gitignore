@@ -35,3 +35,4 @@ Documentation/html
 packages/
 *.csv
 Tests/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.db.sum
+*.sum

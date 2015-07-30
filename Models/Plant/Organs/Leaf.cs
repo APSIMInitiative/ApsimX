@@ -986,18 +986,20 @@ namespace Models.PMF.Organs
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
            // WaterAllocation = 0;
-            
-            foreach (LeafCohort L in Leaves)
-                L.DoActualGrowth(ThermalTime.Value, CohortParameters);
-
-            Structure.UpdateHeight();
-
-            //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
-            FractionDied = 0;
-            if (DeadCohortNo > 0 && GreenCohortNo > 0)
+            if (Plant.IsAlive)
             {
-                double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
-                FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                foreach (LeafCohort L in Leaves)
+                    L.DoActualGrowth(ThermalTime.Value, CohortParameters);
+
+                Structure.UpdateHeight();
+
+                //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
+                FractionDied = 0;
+                if (DeadCohortNo > 0 && GreenCohortNo > 0)
+                {
+                    double DeltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
+                    FractionDied = DeltaDeadLeaves / GreenCohortNo;
+                }
             }
         }
         /// <summary>Zeroes the leaves.</summary>

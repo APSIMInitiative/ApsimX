@@ -5493,14 +5493,12 @@ namespace Models
           <Name>4</Name>
           <Specifications>
             <string>[PotatoSowingRule].Script.RowSpace=300</string>
-            <string>[PotatoSowingRule].Script.RowWidth=770</string>
           </Specifications>
         </Factor>
         <Factor>
           <Name>2</Name>
           <Specifications>
             <string>[PotatoSowingRule].Script.RowSpace=600</string>
-            <string>[PotatoSowingRule].Script.RowWidth=770</string>
           </Specifications>
         </Factor>
         <Specifications />

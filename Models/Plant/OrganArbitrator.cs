@@ -444,7 +444,31 @@ namespace Models.PMF
                     return 0.0;
             }
         }
-        
+
+        /// <summary>Gets the n supply relative to N demand.</summary>
+        /// <value>The n supply.</value>
+        [XmlIgnore]
+        public double FN
+        {
+            get
+            {
+                
+                if (Plant.IsAlive)
+                {
+                    if (Plant.Phenology != null)
+                    {
+                        if ((Plant.Phenology.Emerged == true) && (N.TotalPlantDemand > 0) && (N.TotalPlantSupply > 0))
+                            return Math.Min(1,N.TotalPlantSupply/N.TotalPlantDemand);
+                        else return 1;
+                    }
+                    else
+                        return Math.Min(1, N.TotalPlantSupply / N.TotalPlantDemand);
+                }
+                else
+                    return 1;
+            }
+        }
+
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
         public double DeltaWt
