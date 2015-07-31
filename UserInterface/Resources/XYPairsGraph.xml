@@ -10,19 +10,14 @@
     <Title>X</Title>
   </Axis>
   <Series>
-    <Type>Line</Type>
+    <Type>Scatter</Type>
     <Title>StressFactor</Title>
     <ShowInLegend>true</ShowInLegend>
     <XAxis>Bottom</XAxis>
     <YAxis>Left</YAxis>
     <ColourArgb>-65536</ColourArgb>
     <Marker>None</Marker>
-    <X>
-      <FieldName>[XYPairs].X</FieldName>
-    </X>
-    <Y>
-      <FieldName>[XYPairs].Y</FieldName>
-    </Y>
-    <SplitOn>*</SplitOn>
+    <XFieldName>[XYPairs].X</XFieldName>
+    <YFieldName>[XYPairs].Y</YFieldName>
   </Series>
 </Graph>
