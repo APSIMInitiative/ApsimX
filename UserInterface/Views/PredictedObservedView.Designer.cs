@@ -52,6 +52,8 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.Location = new System.Drawing.Point(14, 51);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 21);
@@ -69,9 +71,11 @@
             // 
             // FileNameLabel
             // 
+            this.FileNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.FileNameLabel.Location = new System.Drawing.Point(14, 14);
             this.FileNameLabel.Name = "FileNameLabel";
-            this.FileNameLabel.Size = new System.Drawing.Size(81, 13);
+            this.FileNameLabel.Size = new System.Drawing.Size(86, 21);
             this.FileNameLabel.TabIndex = 7;
             this.FileNameLabel.Text = "Predicted table:";
             // 
@@ -86,6 +90,8 @@
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.Location = new System.Drawing.Point(14, 89);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(86, 21);
