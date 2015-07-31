@@ -176,7 +176,6 @@
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
-    <Compile Include="Presenters\PredictedObservedPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\LegendPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
@@ -248,12 +247,6 @@
       <DependentUpon>HTMLView.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ISummaryView.cs" />
-    <Compile Include="Views\PredictedObservedView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\PredictedObservedView.Designer.cs">
-      <DependentUpon>PredictedObservedView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\SeriesView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -408,9 +401,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HTMLView.resx">
       <DependentUpon>HTMLView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\PredictedObservedView.resx">
-      <DependentUpon>PredictedObservedView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SeriesView.resx">
       <DependentUpon>SeriesView.cs</DependentUpon>
