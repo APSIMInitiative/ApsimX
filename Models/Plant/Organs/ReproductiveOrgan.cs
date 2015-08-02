@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// The reproductive organ
+    /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
     public class ReproductiveOrgan : BaseOrgan, Reproductive, AboveGround
@@ -150,8 +150,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            Number = NumberFunction.Value;
-            MaximumSize = MaximumPotentialGrainSize.Value;
+            if (Plant.IsAlive)
+            {
+                Number = NumberFunction.Value;
+                MaximumSize = MaximumPotentialGrainSize.Value;
+            }
         }
 
         /// <summary>Called when crop is ending</summary>

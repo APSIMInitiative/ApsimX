@@ -19,20 +19,25 @@ namespace Models.PostSimulationTools
     /// If the file does NOT have a 'SimulationName' column then all data will be input.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PredictedObservedView")]
-    [PresenterName("UserInterface.Presenters.PredictedObservedPresenter")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PredictedObserved : Model, IPostSimulationTool
     {
         /// <summary>Gets or sets the name of the predicted table.</summary>
         /// <value>The name of the predicted table.</value>
+        [Description("Predicted table")]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.TableName)]
         public string PredictedTableName { get; set; }
         /// <summary>Gets or sets the name of the observed table.</summary>
         /// <value>The name of the observed table.</value>
+        [Description("Observed table")]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.TableName)]
         public string ObservedTableName { get; set; }
         /// <summary>Gets or sets the field name used for match.</summary>
         /// <value>The field name used for match.</value>
+        [Description("Field name to use for matching predicted with observed data")]
+        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.FieldName)]
         public string FieldNameUsedForMatch { get; set; }
-
 
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         /// <param name="dataStore">The data store.</param>

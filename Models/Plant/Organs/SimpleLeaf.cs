@@ -195,7 +195,7 @@ namespace Models.PMF.Organs
             {
                 double MaxNContent = Live.Wt * NConc.Value;
                 return Live.N / MaxNContent;
-            } //FIXME: Nitrogen stress factor should be implemented in simple leaf.
+            } 
         }
 
         /// <summary>Gets or sets the lai dead.</summary>
@@ -393,6 +393,13 @@ namespace Models.PMF.Organs
                 if (StructuralFraction != null)
                     _StructuralFraction = StructuralFraction.Value;
             }
+        }
+
+        /// <summary>Clears this instance.</summary>
+        protected override void Clear()
+        {
+            base.Clear();
+            Height = 0;
         }
         #endregion
 
