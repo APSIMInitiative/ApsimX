@@ -421,7 +421,7 @@ namespace SWIMFrame
                 are = MathUtilities.Max(div);
                 if (are > re)
                 {
-                    return i - 1;
+                    return i;
                 }
             }
             return 0;

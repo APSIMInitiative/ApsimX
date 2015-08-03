@@ -55,6 +55,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SWIMTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -85,10 +86,17 @@
       <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
       <Name>Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\SWIMFrame\SWIMFrame.csproj">
+      <Project>{e456aba4-bf7b-4be7-9c29-26e66f49922b}</Project>
+      <Name>SWIMFrame</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UserInterface\UserInterface.csproj">
       <Project>{27056DED-A49C-4351-90A8-DFA9C8AC906E}</Project>
       <Name>UserInterface</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
