@@ -68,7 +68,7 @@ namespace UserInterface.Forms
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
             else
             {
-                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below. \r\nRight click on them to show more detail or to upgrade.";
+                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
                 PopulateUpgradeList();
             }
 

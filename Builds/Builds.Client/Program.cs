@@ -36,17 +36,12 @@ namespace Builds.Client
 
                             Console.Write(issueID);
                         }
-                        else if (args[1] == "/AddBuild")
-                        {
-                            if (issueID > 0)
-                                buildService.AddBuild(pullRequestID, issueID, issueTitle);
-                        }
                         else
-                            throw new Exception("Invalid switch. Should be /GetIssueID or /AddBuild");
+                            throw new Exception("Invalid switch. Should be /GetIssueID");
                     }
                 }
                 else
-                    throw new Exception("Usage: Builds.Client.exe PullRequestID [/GetIssueID | /AddBuild]");
+                    throw new Exception("Usage: Builds.Client.exe PullRequestID /GetIssueID");
 
                 return 0;
             }

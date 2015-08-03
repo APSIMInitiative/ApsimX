@@ -70,7 +70,7 @@ namespace BuildService
             if (issueResolvedDate != DateTime.MinValue)
             {
                 string sql = "SELECT * FROM ApsimXBuilds " +
-                             "WHERE Date > " + string.Format("#{0:yyyy-MM-dd}#", issueResolvedDate) +
+                             "WHERE Date >= Convert(datetime, '" + string.Format("{0:yyyy-MM-dd}", issueResolvedDate) + "')" +
                              " ORDER BY Date DESC";
 
 
