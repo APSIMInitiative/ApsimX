@@ -24,7 +24,7 @@ namespace SWIMFrame
             double dzmin;
             double[] x;
             double[,] dz = new double[2, 10]; //only for testing? if not will need to change hardcoded dimensions.
-            bool Kgiven = false;
+            bool Kgiven = true;
             SoilProps sp1, sp2;
             FluxTable ft1, ft2;
 

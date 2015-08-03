@@ -30,6 +30,46 @@ namespace SWIMFrame
             fhd = Math.Pow(1.0 + Math.Pow(hd / hg, n), -m);
         }
 
+        /// <summary>
+        /// Helper function for unit testing. Only tests values that are modified by Params
+        /// </summary>
+        /// <param name="etaTest">Expected eta</param>
+        /// <param name="fheTest">Expected fhe</param>
+        /// <param name="fhdTest">Expected fhd</param>
+        /// <returns></returns>
+        public static bool TestParams(int sidTest, double etaTest, double fheTest, double fhdTest)
+        {
+            if (sidTest==103)
+            {
+                ths = 0.4;
+                Ks = 2.0;
+                he = -2.0;
+                hd = -10000000.0;
+                p = 1.0;
+                hg = -10.0;
+                m = 0.14285714285714285;
+                n = 2.3333333333333335;
+            }
+            else
+            {
+                ths = 0.6;
+                Ks = 0.2;
+                he = -2.0;
+                hd = -10000000.0;
+                p = 1.0;
+                hg = -40.0;
+                m = 5.26315789473684181E-002;
+                n = 2.1111111111111112;
+            }
+
+            Params(sidTest, ths, Ks, he, hd, p, hg, m, n);
+
+            if (etaTest == eta && fheTest == fhe && fhdTest == fhd)
+                return true;
+            else
+                return false;
+        }
+
         public static double Sofh(double h)
         {
             double f;

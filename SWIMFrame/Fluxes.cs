@@ -228,10 +228,8 @@ namespace SWIMFrame
             // Get z and dz/dq for flux q and phi from aphi(n1) to aphi(n2).
             // q is global to subroutine fluxtbl.
             np = n2 - n1 + 1;
-            Vector<double> akV = Vector<double>.Build.DenseOfArray(aK);
-            Vector<double> hpKV = Vector<double>.Build.DenseOfArray(hpK);
-            double[] daTemp = MathUtilities.Subtract_Value(akV.SubVector(n1, n2-n1+1).ToArray(), q);
-            double[] dbTemp = MathUtilities.Subtract_Value(akV.SubVector(n1, n2 - n1).ToArray(), q);
+            double[] daTemp = MathUtilities.Subtract_Value(aK.Slice(n1, n2), q);
+            double[] dbTemp = MathUtilities.Subtract_Value(hpK.Slice(n1, n2-1), q);
             for (int idx = 0; idx < da.Length; idx++)
             {
                 da[idx] = 1.0 / daTemp[idx];
@@ -240,24 +238,18 @@ namespace SWIMFrame
             }
 
             // apply Simpson's rule
-            Vector<double> aphiV = Vector<double>.Build.DenseOfArray(aphi);
-            Vector<double> daV = Vector<double>.Build.DenseOfArray(da);
-
             // sum((aphi(n1+1:n2)-aphi(n1:n2-1))*(da(1:np-1)+4*db+da(2:np))/6) for both of these stupid lines... find something better.
-            Vector<double> t1 = Vector<double>.Build.DenseOfArray(aphi.Slice(n1 + 1, n2));
-            Vector<double> t2 = Vector<double>.Build.DenseOfArray(aphi.Slice(n1, n2 - 1));
-            Vector<double> t3 = Vector<double>.Build.DenseOfArray(da.Slice(1, np - 1));
-            Vector<double> t4 = Vector<double>.Build.DenseOfArray(da.Slice(2, np));
+            double[] t1 = aphi.Slice(n1 + 1, n2);
+            double[] t2 = aphi.Slice(n1, n2 - 1);
+            double[] t3 = da.Slice(1, np - 1);
+            double[] t4 = da.Slice(2, np);
 
-            Vector<double> first = t1.Subtract(t2);
-            Vector<double> second = t4.Add(4);
-            Vector<double> third = t4.Divide(6);
-
-            //u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
-            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(t1.Subtract(t2).ToArray(), MathUtilities.Add(MathUtilities.Multiply(t3.Add(4).ToArray(), db), t4.ToArray())), 6)); // this is madness!
+            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(MathUtilities.Subtract(t1,t2), MathUtilities.Add(MathUtilities.Multiply(MathUtilities.AddValue(t3, 4), db), t4)), 6)); // this is madness!
             da = MathUtilities.Multiply(da, da);
             db = MathUtilities.Multiply(db, db);
-            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(t1.Subtract(t2).ToArray(), MathUtilities.Add(MathUtilities.Multiply(t3.Add(4).ToArray(), db), t4.ToArray())), 6)); // this is madness!
+            t3 = da.Slice(1, np - 1);
+            t4 = da.Slice(2, np);
+            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(MathUtilities.Subtract(t1, t2), MathUtilities.Add(MathUtilities.Multiply(MathUtilities.AddValue(t3, 4), db), t4)), 6)); // this is madness!
             return u;
         }
 
@@ -273,11 +265,9 @@ namespace SWIMFrame
             double[] u0 = new double[2];
 
             i = ia; j = ib; n = nu;
-            //write (*,*) i,j
             if (i == j) // free drainage
             {
                 return aK[i];
-                //write (*,*) "aK[i] ",aK[i],i
             }
             ha = ah[i]; hb = ah[j]; Ka = aK[i]; Kb = aK[j];
             if (i >= n && j >= n) // saturated flow
