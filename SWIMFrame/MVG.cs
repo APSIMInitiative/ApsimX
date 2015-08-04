@@ -109,12 +109,12 @@ namespace SWIMFrame
 
         public static double KofhS(double h, double S)
         {
-            return Math.Pow(Ks * S, eta);
+            return Ks * Math.Pow(S, eta);
         }
 
         public static double Kofh(double h)
         {
-            return Math.Pow(Ks * Sofh(h), eta);
+            return Ks * Math.Pow(Sofh(h), eta);
         }
     }
 }

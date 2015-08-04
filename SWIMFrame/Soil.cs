@@ -37,7 +37,7 @@ namespace SWIMFrame
         public static SoilProps gensptbl(double dzmin, SoilParam sPar, bool Kgiven)
         {
             int nlimax = 220;
-            int i, j, nli1, n, nc, nld;
+            int i, j, nli1, nc, nld;
             double[] h= new double[nlimax + 3];
             double[] lhr= new double[nlimax + 3];
             double[] K = new double[nlimax + 3];
@@ -50,7 +50,6 @@ namespace SWIMFrame
             SoilProps sp = new SoilProps();
             sp.sid = sPar.sid; sp.ths = sPar.ths; sp.ks = sPar.ks;
             sp.he = sPar.he; sp.phie = phie; sp.S = S; sp.n = sPar.layers;
-            n = sp.n;
 
             // Find start of significant fluxes.
             hdry = sPar.hd; // normally -1e7 cm
@@ -63,7 +62,7 @@ namespace SWIMFrame
                 x = Math.Exp(-dlh); // x*x*x=0.1
                 h[0] = hdry;
                 K[0] = MVG.Kofh(h[0]);
-                phi[1] = 0.0;
+                phi[0] = 0.0;
                 for (i = 1; i < nlimax; i++) // should exit well before nlimax
                 {
                     h[i] = x * h[i - 1];
@@ -84,11 +83,11 @@ namespace SWIMFrame
             else
             {
                 // Calculate K and find start of significant fluxes.
-                Props(sp, hdry, phidry, lhr, h, Kgiven);
-                for (i = 2; i < n; i++)
+                Props(ref sp, hdry, phidry, lhr, h, Kgiven);
+                for (i = 2; i < sp.n; i++)
                     if (phi[i] > qsmall * dzmin)
                         break;
-                if (i > n)
+                if (i > sp.n)
                 {
                     Console.WriteLine("gensptbl: start of significant fluxes not found");
                     Environment.Exit(1);
@@ -101,16 +100,16 @@ namespace SWIMFrame
             // hdry and phidry are values where significant fluxes start.
             // Get props.
             sp.Kc = new double[sp.n];
-            Props(sp, hdry, phidry, lhr,h,Kgiven);
+            Props(ref sp, hdry, phidry, lhr,h,Kgiven);
             // Get ln(-h) and S values from dryness to approx -10000 cm.
             // These needed for vapour flux (rel humidity > 0.99 at -10000 cm).
             // To have complete S(h) coverage, bridge any gap between -10000 and h[1].
-            x = Math.Log(-Math.Max(vhmax, h[1]));
+            x = Math.Log(-Math.Max(vhmax, h[0]));
             lhd = Math.Log(-sPar.hd);
             dlh = Math.Log(10.0) / nhpd; // nhpd points per decade
             nli1 = (int)Math.Round((lhd - x) / dlh, 0);
             nld = nli1 + 1;
-            nc = 1 + n / 3; // n-1 has been made divisible by 3
+            nc = 1 + sp.n / 3; // n-1 has been made divisible by 3
             // fill out the rest of the structure.
              sp.nld = nld; sp.nc = nc;
              sp.h = h; sp.K = K; sp.phi = phi;
@@ -151,14 +150,14 @@ namespace SWIMFrame
             sp.Sc = new double[sp.n];
             sp.hc = new double[sp.n];
             sp.phic = new double[sp.n];
-            for (i = 0; i < n; i += 3)
+            for (i = 0; i < sp.n; i += 3)
             {
                 j = j + 1;
                 sp.Sc[j] = S[i];
                 sp.hc[j] = h[i];
                 sp.Kc[j] = K[i];
                 sp.phic[j] = phi[i];
-                if (i == n)
+                if (i == sp.n)
                     break;
 
                 cco = Cuco(sp.phi.Skip(i).Take(4).ToArray(), sp.K.Skip(i).Take(4).ToArray());
@@ -180,7 +179,7 @@ namespace SWIMFrame
             return sp;
         }
 
-        private static void Props(SoilProps sp, double hdry, double phidry, double[] lhr, double[] h, bool Kgiven)
+        private static void Props(ref SoilProps sp, double hdry, double phidry, double[] lhr, double[] h, bool Kgiven)
         {
             int i, j, nli;
             double[] g = new double[200];
@@ -190,9 +189,12 @@ namespace SWIMFrame
             nli = 3 * j; //nli divisible by 2 (for integrations) and 3 (for cubic coeffs)
             if (sp.he > hwet) nli = 3 * (j + 1) - 1; // to allow for extra points
             dlhr = -Math.Log(hdry / hwet) / nli; // even spacing in log(-h)
+
+            double[] slice = lhr.Slice(1, nli + 1);
             for (int idx = nli; idx >= 0; idx--)    //
-                lhr[idx] = -idx * dlhr;              // will need to check this, fortran syntax is unknown: lhr(1:nli+1)=(/(-i*dlhr,i=nli,0,-1)/)
-            lhr = lhr.Reverse().ToArray();       //
+                slice[idx] = -idx * dlhr;              // will need to check this, fortran syntax is unknown: lhr(1:nli+1)=(/(-i*dlhr,i=nli,0,-1)/)
+            Array.Reverse(slice);
+            Array.Copy(slice, lhr, slice.Length);
             for (int idx = 0; idx < nli + 1; idx++)
                 h[idx] = hwet * Math.Exp(lhr[idx]);
 
@@ -206,6 +208,7 @@ namespace SWIMFrame
                 sp.n = nli + 1;
 
             sp.K = new double[sp.n];
+            sp.Kc = new double[sp.n];
             sp.phi = new double[sp.n];
 
             if (Kgiven)
@@ -260,7 +263,8 @@ namespace SWIMFrame
                 sp.K[sp.n - 1] = sp.K[sp.n];
                 sp.n = sp.n - 1;
             }
-            phie = sp.phi[sp.n-1];
+            phie = sp.phi[sp.n - 1];
+            sp.phie = phie;
         }
 
         private static double[] Cuco(double[] x, double[] y)
