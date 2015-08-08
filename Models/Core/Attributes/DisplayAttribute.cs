@@ -36,9 +36,12 @@ namespace Models.Core
             /// <summary>
             /// A file name editor.
             /// </summary>
-            FileName
+            FileName,
 
-
+            /// <summary>
+            /// A field name editor.
+            /// </summary>
+            FieldName
         }
 
         /// <summary>

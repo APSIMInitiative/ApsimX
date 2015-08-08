@@ -356,51 +356,54 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            
-            // Do Root Front Advance
-            int RootLayer = LayerIndex(Depth);
-            double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
 
-            Depth = Depth + RootFrontVelocity.Value * soilCrop.XF[RootLayer] * TEM;
-            double MaxDepth = 0;
-            for (int i = 0; i < Soil.Thickness.Length; i++)
-                if (soilCrop.XF[i] > 0)
-                    MaxDepth += Soil.Thickness[i];
-
-            Depth = Math.Min(Depth, MaxDepth);
-
-            // Do Root Senescence
-            FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
-
-            for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+            if (Plant.IsAlive)
             {
-                double DM = LayerLive[layer].Wt * _SenescenceRate * 10.0;
-                double N = LayerLive[layer].StructuralN * _SenescenceRate * 10.0;
-                LayerLive[layer].StructuralWt *= (1.0 - _SenescenceRate);
-                LayerLive[layer].NonStructuralWt *= (1.0 - _SenescenceRate);
-                LayerLive[layer].StructuralN *= (1.0 - _SenescenceRate);
-                LayerLive[layer].NonStructuralN *= (1.0 - _SenescenceRate);
+                // Do Root Front Advance
+                int RootLayer = LayerIndex(Depth);
+                double TEM = (TemperatureEffect == null) ? 1 : TemperatureEffect.Value;
+
+                Depth = Depth + RootFrontVelocity.Value * soilCrop.XF[RootLayer] * TEM;
+                double MaxDepth = 0;
+                for (int i = 0; i < Soil.Thickness.Length; i++)
+                    if (soilCrop.XF[i] > 0)
+                        MaxDepth += Soil.Thickness[i];
+
+                Depth = Math.Min(Depth, MaxDepth);
+
+                // Do Root Senescence
+                FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[Soil.Thickness.Length];
+
+                for (int layer = 0; layer < Soil.Thickness.Length; layer++)
+                {
+                    double DM = LayerLive[layer].Wt * _SenescenceRate * 10.0;
+                    double N = LayerLive[layer].StructuralN * _SenescenceRate * 10.0;
+                    LayerLive[layer].StructuralWt *= (1.0 - _SenescenceRate);
+                    LayerLive[layer].NonStructuralWt *= (1.0 - _SenescenceRate);
+                    LayerLive[layer].StructuralN *= (1.0 - _SenescenceRate);
+                    LayerLive[layer].NonStructuralN *= (1.0 - _SenescenceRate);
 
 
 
-                FOMType fom = new FOMType();
-                fom.amount = (float)DM;
-                fom.N = (float)N;
-                fom.C = (float)(0.40 * DM);
-                fom.P = 0;
-                fom.AshAlk = 0;
+                    FOMType fom = new FOMType();
+                    fom.amount = (float)DM;
+                    fom.N = (float)N;
+                    fom.C = (float)(0.40 * DM);
+                    fom.P = 0;
+                    fom.AshAlk = 0;
 
-                FOMLayerLayerType Layer = new FOMLayerLayerType();
-                Layer.FOM = fom;
-                Layer.CNR = 0;
-                Layer.LabileP = 0;
+                    FOMLayerLayerType Layer = new FOMLayerLayerType();
+                    Layer.FOM = fom;
+                    Layer.CNR = 0;
+                    Layer.LabileP = 0;
 
-                FOMLayers[layer] = Layer;
+                    FOMLayers[layer] = Layer;
+                }
+                FOMLayerType FomLayer = new FOMLayerType();
+                FomLayer.Type = Plant.CropType;
+                FomLayer.Layer = FOMLayers;
+                IncorpFOM.Invoke(FomLayer);
             }
-            FOMLayerType FomLayer = new FOMLayerType();
-            FomLayer.Type = Plant.CropType;
-            FomLayer.Layer = FOMLayers;
-            IncorpFOM.Invoke(FomLayer);
         }
 
         /// <summary>Does the water uptake.</summary>
@@ -540,6 +543,8 @@ namespace Models.PMF.Organs
                 FomLayer.Type = Plant.CropType;
                 FomLayer.Layer = FOMLayers;
                 IncorpFOM.Invoke(FomLayer);
+
+                Clear();
             }
         }
 

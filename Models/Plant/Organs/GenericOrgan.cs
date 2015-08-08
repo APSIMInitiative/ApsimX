@@ -174,7 +174,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
+                if (DMDemandFunction != null)
+                    StructuralDMDemand = DMDemandFunction.Value * _StructuralFraction;
+                else
+                    StructuralDMDemand = 0;
                 double MaximumDM = (StartLive.StructuralWt + StructuralDMDemand) * 1 / _StructuralFraction;
                 MaximumDM = Math.Min(MaximumDM, 10000); // FIXME-EIT Temporary solution: Cealing value of 10000 g/m2 to ensure that infinite MaximumDM is not reached when 0% goes to structural fraction   
                 NonStructuralDMDemand = Math.Max(0.0, MaximumDM - StructuralDMDemand - StartLive.StructuralWt - StartLive.NonStructuralWt);
@@ -404,43 +407,46 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         protected void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            Biomass Loss = new Biomass();
-            Loss.StructuralWt = Live.StructuralWt * SenescenceRate;
-            Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate;
-            Loss.StructuralN = Live.StructuralN * SenescenceRate;
-            Loss.NonStructuralN = Live.NonStructuralN * SenescenceRate;
-
-            Live.StructuralWt -= Loss.StructuralWt;
-            Live.NonStructuralWt -= Loss.NonStructuralWt;
-            Live.StructuralN -= Loss.StructuralN;
-            Live.NonStructuralN -= Loss.NonStructuralN;
-
-            Dead.StructuralWt += Loss.StructuralWt;
-            Dead.NonStructuralWt += Loss.NonStructuralWt;
-            Dead.StructuralN += Loss.StructuralN;
-            Dead.NonStructuralN += Loss.NonStructuralN;
-
-            double DetachedFrac = 0;
-            if (DetachmentRateFunction != null)
-                DetachedFrac = DetachmentRateFunction.Value;
-            if (DetachedFrac > 0.0)
+            if (Plant.IsAlive)
             {
-                double DetachedWt = Dead.Wt * DetachedFrac;
-                double DetachedN = Dead.N * DetachedFrac;
+                Biomass Loss = new Biomass();
+                Loss.StructuralWt = Live.StructuralWt * SenescenceRate;
+                Loss.NonStructuralWt = Live.NonStructuralWt * SenescenceRate;
+                Loss.StructuralN = Live.StructuralN * SenescenceRate;
+                Loss.NonStructuralN = Live.NonStructuralN * SenescenceRate;
 
-                Dead.StructuralWt *= (1 - DetachedFrac);
-                Dead.StructuralN *= (1 - DetachedFrac);
-                Dead.NonStructuralWt *= (1 - DetachedFrac);
-                Dead.NonStructuralN *= (1 - DetachedFrac);
-                Dead.MetabolicWt *= (1 - DetachedFrac);
-                Dead.MetabolicN *= (1 - DetachedFrac);
+                Live.StructuralWt -= Loss.StructuralWt;
+                Live.NonStructuralWt -= Loss.NonStructuralWt;
+                Live.StructuralN -= Loss.StructuralN;
+                Live.NonStructuralN -= Loss.NonStructuralN;
 
-                if (DetachedWt > 0)
-                    SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+                Dead.StructuralWt += Loss.StructuralWt;
+                Dead.NonStructuralWt += Loss.NonStructuralWt;
+                Dead.StructuralN += Loss.StructuralN;
+                Dead.NonStructuralN += Loss.NonStructuralN;
+
+                double DetachedFrac = 0;
+                if (DetachmentRateFunction != null)
+                    DetachedFrac = DetachmentRateFunction.Value;
+                if (DetachedFrac > 0.0)
+                {
+                    double DetachedWt = Dead.Wt * DetachedFrac;
+                    double DetachedN = Dead.N * DetachedFrac;
+
+                    Dead.StructuralWt *= (1 - DetachedFrac);
+                    Dead.StructuralN *= (1 - DetachedFrac);
+                    Dead.NonStructuralWt *= (1 - DetachedFrac);
+                    Dead.NonStructuralN *= (1 - DetachedFrac);
+                    Dead.MetabolicWt *= (1 - DetachedFrac);
+                    Dead.MetabolicN *= (1 - DetachedFrac);
+
+                    if (DetachedWt > 0)
+                        SurfaceOrganicMatter.Add(DetachedWt * 10, DetachedN * 10, 0, Plant.CropType, Name);
+                }
+
+                if ((DryMatterContent != null) && (Live.Wt != 0))
+                    LiveFWt = Live.Wt / DryMatterContent.Value;
             }
-
-            if ((DryMatterContent != null) && (Live.Wt != 0))
-                LiveFWt = Live.Wt / DryMatterContent.Value;
         }
 
         /// <summary>Called when crop is ending</summary>
