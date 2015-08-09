@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using UserInterface.Classes;
 using System.Diagnostics;
+using MigraDoc.RtfRendering;
+
 namespace UserInterface.Views
 {
     /// <summary>
@@ -17,19 +19,22 @@ namespace UserInterface.Views
     interface IHTMLView
     {
         /// <summary>
-        /// Add an action (on context menu) on the memo.
+        /// Path to find images on.
         /// </summary>
-        void AddContextAction(string ButtonText, System.EventHandler OnClick);
+        string ImagePath { get; set; }
 
         /// <summary>
-        /// Set or get the text of the richedit
+        /// Set the contents of the control. Can be RTF, HTML or MarkDown. If 
+        /// the contents are markdown and 'allowModification' = true then
+        /// user will be able to edit markdown.
         /// </summary>
-        string MemoText { get; set; }
+        void SetContents(string contents, bool allowModification);
 
         /// <summary>
-        /// Get or set the readonly name of the richedit.
+        /// Return the edited markdown.
         /// </summary>
-        bool ReadOnly { get; set; }
+        /// <returns></returns>
+        string GetMarkdown();
 
         /// <summary>
         /// Tells view to use a mono spaced font.
@@ -43,6 +48,11 @@ namespace UserInterface.Views
     public partial class HTMLView : UserControl, IHTMLView
     {
         /// <summary>
+        /// Path to find images on.
+        /// </summary>
+        public string ImagePath { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public HTMLView()
@@ -51,53 +61,65 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Set or get the text of the richedit
+        /// Set the contents of the control. Can be RTF, HTML or MarkDown. If 
+        /// the contents are markdown and 'allowModification' = true then
+        /// user will be able to edit markdown.
         /// </summary>
-        public string MemoText
+        public void SetContents(string contents, bool allowModification)
         {
-            get 
+            bool editingEnabled = false;
+            if (contents != null)
             {
-                return RTFToHTML.Convert(richTextBox1.Rtf);
+                textBox1.Text = contents;
+                editingEnabled = PopulateView(contents, editingEnabled);
             }
-            set 
+
+            if (!editingEnabled)
             {
-                if (value != null)
-                    richTextBox1.Rtf = HTMLToRTF.Convert(value);
+                richTextBox1.ContextMenuStrip = null;
+                textBox1.ContextMenuStrip = null;
             }
+            TurnEditorOn(false);
         }
 
         /// <summary>
-        /// Set or get the text of the richedit
+        /// Populate the view given the specified text.
         /// </summary>
-        public string MemoRTF
+        /// <param name="contents"></param>
+        /// <param name="editingEnabled"></param>
+        /// <returns></returns>
+        private bool PopulateView(string contents, bool editingEnabled)
         {
-            get
+            if (contents.Contains("@{\rtf"))
+                richTextBox1.Rtf = contents;
+            else
             {
-                return richTextBox1.Rtf;
-            }
-            set
-            {
-                if (value != null)
+                var doc = new MigraDoc.DocumentObjectModel.Document();
+                var section = doc.AddSection();
+                if (contents.Contains("<html>"))
+                    HtmlToMigraDoc.Convert(contents, section, ImagePath);
+                else
                 {
-                    richTextBox1.Rtf = value;
+                    MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
+                    markDown.ExtraMode = true;
+                    string html = markDown.Transform(contents);
+                    editingEnabled = true;
+                    HtmlToMigraDoc.Convert(html, section, ImagePath);
                 }
+                RtfDocumentRenderer renderer = new RtfDocumentRenderer();
+                richTextBox1.Rtf = renderer.RenderToString(doc, null);
             }
+
+            return editingEnabled;
         }
 
         /// <summary>
-        /// Get or set the readonly name of the richedit.
+        /// Return the edited markdown.
         /// </summary>
-        public bool ReadOnly 
+        /// <returns></returns>
+        public string GetMarkdown()
         {
-            get 
-            { 
-                return richTextBox1.ReadOnly; 
-            }
-            set 
-            { 
-                richTextBox1.ReadOnly = value;
-                ToolStrip1.Visible = !richTextBox1.ReadOnly;
-            }
+            return textBox1.Text;
         }
 
         /// <summary>
@@ -109,133 +131,21 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Add an action (on context menu) on the memo.
+        /// Turn the editor on or off.
         /// </summary>
-        public void AddContextAction(string buttonText, System.EventHandler onClick)
+        /// <param name="turnOn"></param>
+        private void TurnEditorOn(bool turnOn)
         {
-            contextMenuStrip1.Items.Add(buttonText);
-            contextMenuStrip1.Items[0].Click += onClick;
+            richTextBox1.Visible = !turnOn;
+            textBox1.Visible = turnOn;
+            richTextBox1.Dock = DockStyle.Fill;
+            textBox1.Dock = DockStyle.Fill;
+
+            menuItem1.Visible = !turnOn;
+            menuItem2.Visible = turnOn;
         }
 
         #region Event Handlers
-        /// <summary>
-        /// User has clicked bold.
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnBoldClick(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionFont.Bold)
-                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
-            else
-                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Bold);
-        }
-       
-        /// <summary>
-        /// User has clicked italics.
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnItalicClick(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionFont.Italic)
-                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
-            else
-                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Italic);
-        }
-        /// <summary>
-        /// User has clicked underline
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnUnderlineClick(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionFont.Underline)
-                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
-            else
-                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Underline);
-        }
-
-        /// <summary>
-        /// User has clicked strikethrough
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnStrikeThroughClick(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionFont.Strikeout)
-                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Regular);
-            else
-                richTextBox1.SelectionFont = new Font(richTextBox1.Font, FontStyle.Strikeout);
-        }
-
-        /// <summary>
-        /// User has clicked superscript
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnSuperscriptClick(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionCharOffset == 0)
-                richTextBox1.SelectionCharOffset = 8;
-            else
-                richTextBox1.SelectionCharOffset = 0;
-        }
-
-        /// <summary>
-        /// User has clicked subscript.
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnSubscriptClick(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionCharOffset == 0)
-                richTextBox1.SelectionCharOffset = -8;
-            else
-                richTextBox1.SelectionCharOffset = 0;
-        }
-
-        /// <summary>
-        /// User has changed the heading.
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnHeadingChanged(object sender, EventArgs e)
-        {
-            if (richTextBox1.SelectionFont != null)
-            {
-                if (headingComboBox.Text == "Heading 1")
-                    richTextBox1.SelectionFont = new Font(richTextBox1.Font.FontFamily, 16f);
-                else if (headingComboBox.Text == "Heading 2")
-                    richTextBox1.SelectionFont = new Font(richTextBox1.Font.FontFamily, 14f);
-                else if (headingComboBox.Text == "Heading 3")
-                    richTextBox1.SelectionFont = new Font(richTextBox1.Font.FontFamily, 12f);
-                else
-                    richTextBox1.SelectionFont = new Font(richTextBox1.Font.FontFamily, 10f, richTextBox1.SelectionFont.Style);
-            }
-        }
-
-        /// <summary>
-        /// User has changed the selection.
-        /// </summary>
-        /// <param name="sender">Sender of event.</param>
-        /// <param name="e">Event arguments</param>
-        private void OnSelectionChanged(object sender, EventArgs e)
-        {
-            richTextBox1.TextChanged -= OnHeadingChanged;
-            if (richTextBox1.SelectionFont == null)
-                headingComboBox.Text = "Normal";
-            else if (richTextBox1.SelectionFont.Size == 16f)
-                headingComboBox.Text = "Heading 1";
-            else if (richTextBox1.SelectionFont.Size == 14f)
-                headingComboBox.Text = "Heading 2";
-            else if (richTextBox1.SelectionFont.Size == 12f)
-                headingComboBox.Text = "Heading 3";
-            else if (richTextBox1.SelectionFont.Size == 10f)
-                headingComboBox.Text = "Normal";
-
-            richTextBox1.TextChanged += OnHeadingChanged;
-        }
 
         /// <summary>
         /// User has clicked a link.
@@ -247,7 +157,32 @@ namespace UserInterface.Views
             Process.Start(e.LinkText);
         }
 
-        #endregion
-    }
+        /// <summary>
+        /// User has clicked 'edit'
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnEditClick(object sender, EventArgs e)
+        {
+            TurnEditorOn(true);
+        }
 
+        /// <summary>
+        /// User has clicked 'preview'
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPreviewClick(object sender, EventArgs e)
+        {
+            TurnEditorOn(false);
+            PopulateView(textBox1.Text, true);
+        }
+
+        #endregion
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
+        }
+    }
 }

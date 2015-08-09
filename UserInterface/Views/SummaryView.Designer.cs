@@ -76,9 +76,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.htmlView1.AutoScroll = true;
             this.htmlView1.Location = new System.Drawing.Point(3, 3);
-            this.htmlView1.MemoText = "\r\n<html><body>\r\n\r\n</body></html>";
+            this.htmlView1.Text = "\r\n<html><body>\r\n\r\n</body></html>";
             this.htmlView1.Name = "htmlView1";
-            this.htmlView1.ReadOnly = false;
             this.htmlView1.Size = new System.Drawing.Size(460, 451);
             this.htmlView1.TabIndex = 0;
             // 

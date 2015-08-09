@@ -4,12 +4,9 @@
   <Memo>
     <Name>TitlePage</Name>
     <MemoText><![CDATA[
-<html><body>
-<h1>The APSIM Soil Arbitrator Model</h1>
-<p>
-<i>Huth, N.I., Fainges, J.L. and Holzworth, D.P.</i>
-</p>
-</body></html>]]></MemoText>
+# The APSIM Soil Arbitrator Model
+
+_Huth, N.I., Fainges, J.L. and Holzworth, D.P._]]></MemoText>
   </Memo>
   <DataStore>
     <Name>DataStore</Name>
@@ -20,62 +17,32 @@
     <Memo>
       <Name>Memo</Name>
       <MemoText><![CDATA[
-<html><body>
-<p>
 This test compares the water and nitrogen competition for simulations where a static crop canopy with LAI of 3, rooting depth of 1m and a daily N demand of 0.15 kgN/ha is a single crop, two half-populations or three one third-populations.  In each case the total canopy size and water demand of each of the single or split populations will be the same.  If the soil arbitrator is operating correctly the overall water and nitrogen balance of each simulation should be the same.  In the case of the split populations, the water and nitrogen supplies provided by the soil arbitrator to the sub-populations should sum to the same value calculated in the simulation for the full population.
-</p>
-<p>
+
 This test simulation also tests that the uptakes provided by the arbitrator are passed to the correct instances of each crop model within a multiple zone simulation.  In such a simulation there may be multiple instances of a wheat model for example.  The arbitrator must communicate such that the correct information is supplied to each instance of each particular crop model.
-</p>
-<p>
 
-</p>
-<p>
 The simulation includes 3 fields with up to three crops in each.
-</p>
-<p>
 
-</p>
-<p>
 Field 1
-</p>
-<p>
+
 Wheat: LAI = 3 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.15 (kg/ha)
-</p>
-<p>
 
-</p>
-<p>
 Field 2
-</p>
-<p>
+
 Wheat: LAI = 1.5 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.075 (kg/ha)
-</p>
-<p>
+
 Barley: LAI = 1.5 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.075 (kg/ha)
-</p>
-<p>
 
-</p>
-<p>
 Field 3
-</p>
-<p>
-Wheat: LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
-</p>
-<p>
-Barley: LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
-</p>
-<p>
-Oats:   LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
-</p>
-<p>
 
-</p>
-<p>
+Wheat: LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
+
+Barley: LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
+
+Oats:   LAI = 1.0 (m<sup>2</sup>/m<sup>2</sup>), N demand = 0.05 (kg/ha)
+
 The crops are simple instances of a static plant model and so the crop type is only of use in referencing the various instances of the models.
-</p>
-</body></html>]]></MemoText>
+]]></MemoText>
     </Memo>
     <Simulation>
       <Name>SplitPopulations</Name>
@@ -1595,6 +1562,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>SWTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1609,6 +1577,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>SWTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1623,6 +1592,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>SWTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note: Soil water levels are identical under single or split populations.</Caption>
       <Axis>
@@ -1660,6 +1630,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1674,6 +1645,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1688,6 +1660,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NO3Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note: Soil nitrate levels are identical under single or split populations.</Caption>
       <Axis>
@@ -1725,6 +1698,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1739,6 +1713,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1753,6 +1728,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>NH4Total</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note: Soil ammonium levels are identical under single or split populations.</Caption>
       <Axis>
@@ -1790,6 +1766,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>wheat.PotentialEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1804,6 +1781,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>TotalPEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1818,6 +1796,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>TotalPEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note that potential EP is identical across single or split populations.  This shows that the calculations in the Microclimate model are effective in handling split populations also.</Caption>
       <Axis>
@@ -1855,6 +1834,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>wheat.EP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field2</Name>
@@ -1869,6 +1849,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>TotalEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Series>
         <Name>Field3</Name>
@@ -1883,6 +1864,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         <YFieldName>TotalEP</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
       <Caption>Note that actual EP summed across single or split populations is identical for each simulation.</Caption>
       <Axis>

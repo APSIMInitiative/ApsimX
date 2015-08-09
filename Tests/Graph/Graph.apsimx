@@ -4,10 +4,8 @@
   <Memo>
     <Name>Memo</Name>
     <MemoText><![CDATA[
-<html><body>
 This example shows some of the graphing capabilities.GRAPH SCOPING EXAMPLE:There is a SoilWater graph in each of the three simulations that plots sw(1) over time with observed data. The data source used was *.report which indicates that all simulations in scope will be plotted on the graph. Likewise the observed data was plotted with a data source of *.observed which means all data in scope will be plotted. This graph was then copied to all simulations and then to the top level "Simulations" node. The graphs in the simulations show only the simulation data while the top level graph shows all simulations and data.GRAPH WHERE DATA IS COMING FROM PROPERTIES OF A MODEL:The second example` shows a soil depth plot where all data is coming directly from the properties of the 'Soil' model e.g. [Soil].AirDry ...<br/>
-
-</body></html>]]></MemoText>
+]]></MemoText>
   </Memo>
   <DataStore>
     <Name>DataStore</Name>

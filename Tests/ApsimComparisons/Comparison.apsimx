@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
     <MemoText><![CDATA[
-<html><body>
 The purpose of this test is to compare soil and nitrogen values against APSIM to ensure the models are the same.  The results should be accurate to within 1% or less. <br/>
-
-</body></html>]]></MemoText>
+]]></MemoText>
   </Memo>
   <Simulation>
     <Name>comparisons</Name>
@@ -840,6 +838,36 @@ namespace Models
   </DataStore>
   <Graph>
     <Name>NO3</Name>
+    <Series>
+      <Name />
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.TotalNO3</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Input</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Calculations.Script.TotalNO3</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
     <Axis>
       <Type>Bottom</Type>
       <Title>Year</Title>
@@ -856,112 +884,42 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
-    <Series>
-      <Title />
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Calculations.Script.TotalNO3</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <Series>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Input</TableName>
-        <FieldName>Date</FieldName>
-      </X>
-      <Y>
-        <TableName>Input</TableName>
-        <FieldName>Calculations.Script.TotalNO3</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
     <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>SW</Name>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Year</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
     <Series>
-      <Title />
-      <Type>Line</Type>
+      <Name />
+      <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-65536</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Calculations.Script.SW</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.SW</YFieldName>
       <ShowInLegend>false</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
     <Series>
-      <Type>Line</Type>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
-      <X>
-        <TableName>Input</TableName>
-        <FieldName>Date</FieldName>
-      </X>
-      <Y>
-        <TableName>Input</TableName>
-        <FieldName>Calculations.Script.SW</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>Input</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Calculations.Script.SW</YFieldName>
       <ShowInLegend>false</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
-    <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>TotalN</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Year</Title>
@@ -978,51 +936,42 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>TotalN</Name>
     <Series>
-      <Title />
-      <Type>Line</Type>
+      <Name />
+      <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-65536</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Calculations.Script.TotalN</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.TotalN</YFieldName>
       <ShowInLegend>false</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
     <Series>
-      <Type>Line</Type>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <Line>Dash</Line>
-      <X>
-        <TableName>Input</TableName>
-        <FieldName>Date</FieldName>
-      </X>
-      <Y>
-        <TableName>Input</TableName>
-        <FieldName>Calculations.Script.TotalN</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>Input</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Calculations.Script.TotalN</YFieldName>
       <ShowInLegend>false</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
-    <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
-    <DisabledSeries />
-  </Graph>
-  <Graph>
-    <Name>TotalC</Name>
     <Axis>
       <Type>Bottom</Type>
       <Title>Year</Title>
@@ -1039,51 +988,94 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
+    <LegendPosition>TopRight</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
+  <Graph>
+    <Name>TotalC</Name>
     <Series>
-      <Title />
-      <Type>Line</Type>
+      <Name />
+      <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-65536</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Calculations.Script.TotalC</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.TotalC</YFieldName>
       <ShowInLegend>false</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
     <Series>
-      <Type>Line</Type>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
       <ColourArgb>-16776961</ColourArgb>
       <Marker>None</Marker>
       <Line>Solid</Line>
-      <X>
-        <TableName>Input</TableName>
-        <FieldName>Date</FieldName>
-      </X>
-      <Y>
-        <TableName>Input</TableName>
-        <FieldName>Calculations.Script.TotalC</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
+      <TableName>Input</TableName>
+      <XFieldName>Date</XFieldName>
+      <YFieldName>Calculations.Script.TotalC</YFieldName>
       <ShowInLegend>false</ShowInLegend>
       <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
     </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title>Year</Title>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
     <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Graph>
     <Name>SW and rain</Name>
+    <Series>
+      <Name />
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-65536</ColourArgb>
+      <Marker>None</Marker>
+      <Line>Solid</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Calculations.Script.SW</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Series>
+      <Name>Series</Name>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Right</YAxis>
+      <ColourArgb>-16776961</ColourArgb>
+      <Marker>FilledCircle</Marker>
+      <Line>None</Line>
+      <TableName>Report</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>met.Rain</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
     <Axis>
       <Type>Bottom</Type>
       <Title>Year</Title>
@@ -1107,48 +1099,9 @@ namespace Models
       <Maximum>NaN</Maximum>
       <Interval>NaN</Interval>
     </Axis>
-    <Series>
-      <Title />
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>Calculations.Script.SW</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
-    <Series>
-      <Type>Line</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Right</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <X>
-        <TableName>Report</TableName>
-        <FieldName>Clock.Today</FieldName>
-      </X>
-      <Y>
-        <TableName>Report</TableName>
-        <FieldName>met.Rain</FieldName>
-      </Y>
-      <ShowRegressionLine>false</ShowRegressionLine>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-    </Series>
     <LegendPosition>TopRight</LegendPosition>
-    <ShowRegressionLine>false</ShowRegressionLine>
     <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Graph>
   <Tests>
     <Name>Tests</Name>

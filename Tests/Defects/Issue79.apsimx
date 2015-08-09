@@ -6,10 +6,8 @@
     <Memo>
       <Name>Memo</Name>
       <MemoText><![CDATA[
-<html><body>
 This test simulation has two 'Weather' models in it, one at the top level and one in the Field. It tests that GetWeather in the field links to the local 'WeatherOverridden' model and not the top level one. It also tests that WeatherOverridden can have a link to the top level Weather.<br/>
-
-</body></html>]]></MemoText>
+]]></MemoText>
     </Memo>
     <Weather>
       <Name>Weather</Name>
