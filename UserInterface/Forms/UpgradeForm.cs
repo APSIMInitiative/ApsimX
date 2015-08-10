@@ -92,7 +92,7 @@ namespace UserInterface.Forms
             try
             {
                 web.DownloadFile(@"https://www.apsim.info/ProductRegistration/APSIMDisclaimer.rtf", tempLicenseFileName);
-                htmlView1.MemoRTF = File.ReadAllText(tempLicenseFileName);
+                htmlView1.SetContents(File.ReadAllText(tempLicenseFileName), false);
             }
             catch (Exception)
             {

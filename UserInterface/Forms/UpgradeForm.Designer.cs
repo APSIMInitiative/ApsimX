@@ -307,11 +307,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.htmlView1.Location = new System.Drawing.Point(13, 440);
             this.htmlView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.htmlView1.MemoRTF = "{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0\\fnil\\fcharset0 Microsoft Sans Serif;}}\r\n{\\*\\genera" +
-    "tor Msftedit 5.41.21.2510;}\\viewkind4\\uc1\\pard\\lang3081\\f0\\fs20\\par\r\n}\r\n";
-            this.htmlView1.MemoText = "\r\n<html><body>\r\n\r\n</body></html>";
             this.htmlView1.Name = "htmlView1";
-            this.htmlView1.ReadOnly = true;
             this.htmlView1.Size = new System.Drawing.Size(692, 261);
             this.htmlView1.TabIndex = 26;
             // 
