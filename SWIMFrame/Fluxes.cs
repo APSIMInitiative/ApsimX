@@ -86,21 +86,19 @@ namespace SWIMFrame
                 nt = j;
                 ns = nt - nu;
                 if (j > nu)
-                    if (-(aphi[j] - aphi[j - 1]) / (aq[1, j] - aq[1, j - 1]) < (1 + rerr) * dz)
-                        Environment.Exit(0);
+                    if (-(aphi[j] - aphi[j - 1]) / (aq[0, j] - aq[0, j - 1]) < (1 + rerr) * dz)
+                        break;
             }
 
             // Get phi values phif for flux table using curvature of q vs phi.
             // rerr and cfac determine spacings of phif.
-            Vector<double> aphiV = Vector<double>.Build.DenseOfArray(aphi);
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
-            i = nonlin(nu, aphiV.SubVector(0, nu).ToArray(), aqM.Column(0).SubVector(0, nu).ToArray(), rerr);
-            re = curv(nu, aphiV.SubVector(0, nu).ToArray(), aqM.Column(0).SubVector(0, nu).ToArray());// for unsat phi
-            indices(nu - 2, re.Take(nu - 3).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, ref iphif);
+            i = nonlin(nu, aphi.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu), rerr);
+            re = curv(nu, aphi.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu));// for unsat phi
+            indices(nu - 2, re.Slice(1,nu-2).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, ref iphif);
             int[] iphifReverse = iphif.Take(nphif).Reverse().ToArray();
             for (int idx = 0; idx < nphif; idx++)
                 iphif[idx] = 1 + nu - iphifReverse[idx]; // locations of phif in aphi
-            aphiV = Vector<double>.Build.DenseOfArray(aphi); //may not need to do this; haevn't check in aphi has changed since last use.
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
             re = curv(1 + ns, aphi.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
             indices(ns - 1, re, ns, cfac, out nfs, ref ifs);
@@ -181,18 +179,18 @@ namespace SWIMFrame
 
             // Get accurate qi5(j,j)=Kofphi(phii(ip))
             ip = 0;
-            for (j = 1; j < i; j += 2)
+            for (j = 2; j < i - 1; j += 2)
             {
                 ip = ip + 1;
                 ii = iphif[ip] - 1;
-                for (int idx = 0; idx < aphi.Length; idx++) // Search down to locate phii position for cubic.
+                do // Search down to locate phii position for cubic.
                 {
                     if (aphi[ii] <= phii[ip])
                         break;
                     ii = ii - 1;
-                }
+                } while (true);
                 x = phii[ip] - aphi[ii];
-                qi5[j, j] = aK[ii] + x * (aKco[0, ii] + x * (aKco[1, ii] + x * aKco[2, ii]));
+                qi5[j-1, j-1] = aK[ii] + x * (aKco[0, ii] + x * (aKco[1, ii] + x * aKco[2, ii]));
             }
 
             for (int idx = 0; idx < i; idx++)

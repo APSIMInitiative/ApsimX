@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace SWIMFrame
 {
@@ -112,7 +113,7 @@ namespace SWIMFrame
             nc = 1 + sp.n / 3; // n-1 has been made divisible by 3
             // fill out the rest of the structure.
              sp.nld = nld; sp.nc = nc;
-             sp.h = h; sp.K = K; sp.phi = phi;
+             sp.h = h; 
              sp.lnh = new double[nld];
              sp.Sd = new double[nld];
              sp.Kco = new double[3, nc - 1];
@@ -121,7 +122,7 @@ namespace SWIMFrame
 
             // Store Sd and lnh in sp.
             sp.lnh[0] = lhd;
-            for (j = 1; j < nli1; j++)
+            for (j = 1; j <= nli1; j++)
                 sp.lnh[j] = lhd - dlh * j;
 
             if (Kgiven)
@@ -146,34 +147,34 @@ namespace SWIMFrame
             }
 
             // Get polynomial coefficients.
-            j = 0;
+            j = -1;
             sp.Sc = new double[sp.n];
             sp.hc = new double[sp.n];
             sp.phic = new double[sp.n];
-            for (i = 0; i < sp.n; i += 3)
+            Matrix<double> KcoM = Matrix<double>.Build.DenseOfArray(sp.Kco);
+            Matrix<double> phicoM = Matrix<double>.Build.DenseOfArray(sp.phico);
+            Matrix<double> ScoM = Matrix<double>.Build.DenseOfArray(sp.Sco);
+            for (i = 0; i <= sp.n; i += 3)
             {
                 j = j + 1;
                 sp.Sc[j] = S[i];
                 sp.hc[j] = h[i];
-                sp.Kc[j] = K[i];
-                sp.phic[j] = phi[i];
-                if (i == sp.n)
+                sp.Kc[j] = sp.K[i];
+                sp.phic[j] = sp.phi[i];
+                if (i == sp.n - 1)
                     break;
 
-                cco = Cuco(sp.phi.Skip(i).Take(4).ToArray(), sp.K.Skip(i).Take(4).ToArray());
-                for (int row = 0; row < sp.Kco.GetLength(0); row++)
-                    for (int col = 0; col < 2; col++)
-                        sp.Kco[row, col] = cco[col + 2];
+                cco = Cuco(sp.phi.Slice(i+1,i+4), sp.K.Slice(i+1, i+4));
+                KcoM.SetColumn(j, cco.Slice(2, 4));
+                sp.Kco = KcoM.ToArray();
 
-                cco = Cuco(sp.S.Skip(i).Take(4).ToArray(), sp.phi.Skip(i).Take(4).ToArray());
-                for (int row = 0; row < sp.Kco.GetLength(0); row++)
-                    for (int col = 0; col < 2; col++)
-                        sp.phico[row, col] = cco[col + 2];
+                cco = Cuco(sp.S.Slice(i + 1, i + 4), sp.phi.Slice(i + 1, i + 4));
+                phicoM.SetColumn(j, cco.Slice(2, 4));
+                sp.phico = phicoM.ToArray();
 
-                cco = Cuco(sp.phi.Skip(i).Take(4).ToArray(), sp.S.Skip(i).Take(4).ToArray());
-                for (int row = 0; row < sp.Kco.GetLength(0); row++)
-                    for (int col = 0; col < 2; col++)
-                        sp.Sco[row, col] = cco[col + 2];
+                cco = Cuco(sp.phi.Slice(i + 1, i + 4), sp.S.Slice(i + 1, i + 4));
+                ScoM.SetColumn(j, cco.Slice(2, 4));
+                sp.Sco = ScoM.ToArray();
             }
             // diags - end timing
             return sp;
@@ -212,12 +213,15 @@ namespace SWIMFrame
             sp.phi = new double[sp.n];
 
             if (Kgiven)
+            {
                 for (i = 0; i < sp.n; i++)
                 {
 
                     sp.S[i] = MVG.Sofh(h[i]);
                     sp.K[i] = MVG.KofhS(h[i], sp.S[i]);
                 }
+                sp.S[sp.n] = MVG.Sofh(h[sp.n]);
+            }
             else // calculate relative K by integration using dln(-h)
             {
 
@@ -245,12 +249,12 @@ namespace SWIMFrame
             }
 
             // Calculate phi by integration using dln(-h).
-            sp.phi[1] = phidry;
+            sp.phi[0] = phidry;
 
             for (i = 1; i < nli; i += 2) // integrate using Simpson's rule
                 sp.phi[i + 1] = sp.phi[i - 1] + dlhr * (sp.K[i - 1] * h[i - 1] + 4.0 * sp.K[i] * h[i] + sp.K[i + 1] * h[i + 1]) / 3.0;
 
-            sp.phi[2] = 0.5 * (sp.phi[1] + sp.phi[3]);
+            sp.phi[1] = 0.5 * (sp.phi[0] + sp.phi[2]);
 
             for (i = 2; i < nli - 1; i += 2)
                 sp.phi[i + 1] = sp.phi[i - 1] + dlhr * (sp.K[i - 1] * h[i - 1] + 4.0 * sp.K[i] * h[i] + sp.K[i + 1] * h[i + 1]) / 3.0;
@@ -274,8 +278,8 @@ namespace SWIMFrame
             double[] co = new double[4];
 
             s = 1.0 / (x[3] - x[0]);
-            x1 = s * (x[2] - x[0]);
-            x2 = s * (x[1] - x[0]);
+            x1 = s * (x[1] - x[0]);
+            x2 = s * (x[2] - x[0]);
             y3 = y[3] - y[0];
             x12 = x1 * x1;
             x13 = x1 * x12;
