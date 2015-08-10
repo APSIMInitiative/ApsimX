@@ -380,6 +380,15 @@ namespace UserInterface.Views
             mainForm.ToggleSecondExplorerViewVisible();
         }
 
+        /// <summary>
+        /// Close down APSIMX user interface.
+        /// </summary>
+        public void Close()
+        {
+            MainForm mainForm = Application.OpenForms[0] as MainForm;
+            mainForm.Close();
+        }
+
         /// <summary>Gets or sets the width of the tree view.</summary>
         public Int32 TreeWidth
         {
