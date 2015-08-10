@@ -145,6 +145,10 @@ namespace UserInterface.Forms
                     if (!checkBox1.Checked)
                         throw new Exception("You must agree to the license terms before upgrading.");
 
+                    if (firstNameBox.Text == null || lastNameBox.Text == null ||
+                        emailBox.Text == null || countryBox.Text == null)
+                        throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
+
                     Upgrade upgrade = upgrades[listView1.SelectedIndices[0]];
                     string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
 
@@ -189,10 +193,15 @@ namespace UserInterface.Forms
                             // Run the upgrader.
                             string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                             string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
-                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", versionNumber));
+                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
                             string arguments = StringUtilities.DQuote(ourDirectory) + " " + 
                                                StringUtilities.DQuote(newDirectory);
-                            Process.Start(upgraderFileName, arguments);
+
+                            ProcessStartInfo info = new ProcessStartInfo();
+                            info.FileName = upgraderFileName;
+                            info.Arguments = arguments;
+                            info.WorkingDirectory = Path.GetTempPath();
+                            Process.Start(info);
 
                             Cursor.Current = Cursors.Default;
 
@@ -215,10 +224,6 @@ namespace UserInterface.Forms
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            if (firstNameBox.Text == null || lastNameBox.Text == null ||
-                emailBox.Text == null || countryBox.Text == null)
-                throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
-
             using (BuildService.BuildProviderClient buildService = new BuildService.BuildProviderClient())
             {
                 buildService.RegisterUpgrade(firstNameBox.Text, lastNameBox.Text, organisationBox.Text,

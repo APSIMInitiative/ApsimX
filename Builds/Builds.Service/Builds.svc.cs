@@ -67,36 +67,33 @@ namespace BuildService
             List<Upgrade> upgrades = new List<Upgrade>();
 
             DateTime issueResolvedDate = GetIssueResolvedDate(issueNumber);
-            if (issueResolvedDate != DateTime.MinValue)
-            {
-                string sql = "SELECT * FROM ApsimXBuilds " +
-                             "WHERE Date >= Convert(datetime, '" + string.Format("{0:yyyy-MM-dd}", issueResolvedDate) + "')" +
+
+            string sql = "SELECT * FROM ApsimXBuilds " +
+                             //"WHERE Date >= Convert(datetime, '" + string.Format("{0:yyyy-MM-dd}", issueResolvedDate) + "')" +
+                             "WHERE Date >= " + string.Format("'{0:yyyy-MM-ddThh:mm:ss tt}'", issueResolvedDate) +
                              " ORDER BY Date DESC";
 
+            SqlCommand command = new SqlCommand(sql, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                int pullID = (int)reader["PullRequestID"];
+                DateTime date = (DateTime)reader["Date"];
 
-                SqlCommand command = new SqlCommand(sql, connection);
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    int pullID = (int)reader["PullRequestID"];
-                    DateTime date = (DateTime)reader["Date"];
+                int buildIssueNumber = (int)reader["IssueNumber"];
 
-                    if (IsClosed(pullID))
-                    {
-                        int buildIssueNumber = (int)reader["IssueNumber"];
+                string version = ((DateTime)reader["Date"]).ToString("yyyy.MM.dd") + "." + buildIssueNumber;
 
-                        Upgrade upgrade = new Upgrade();
-                        upgrade.ReleaseDate = (DateTime)reader["Date"];
-                        upgrade.issueNumber = buildIssueNumber;
-                        upgrade.IssueTitle = (string)reader["IssueTitle"];
-                        upgrade.IssueURL = @"https://github.com/APSIMInitiative/ApsimX/issues/" + buildIssueNumber;
-                        upgrade.ReleaseURL = @"http://bob.apsim.info/ApsimXFiles/" + buildIssueNumber + "/APSIMSetup.exe";
+                Upgrade upgrade = new Upgrade();
+                upgrade.ReleaseDate = (DateTime)reader["Date"];
+                upgrade.issueNumber = buildIssueNumber;
+                upgrade.IssueTitle = (string)reader["IssueTitle"];
+                upgrade.IssueURL = @"https://github.com/APSIMInitiative/ApsimX/issues/" + buildIssueNumber;
+                upgrade.ReleaseURL = @"http://bob.apsim.info/ApsimXFiles/" + buildIssueNumber + "/Apsim" + version + " Setup.exe";
 
-                        upgrades.Add(upgrade);
-                    }
-                }
-                reader.Close();
+                upgrades.Add(upgrade);
             }
+            reader.Close();
 
             return upgrades;
         }
@@ -108,7 +105,7 @@ namespace BuildService
         /// <returns>The date.</returns>
         private DateTime GetIssueResolvedDate(int issueNumber)
         {
-            DateTime resolvedDate = DateTime.MinValue;
+            DateTime resolvedDate = new DateTime(2015, 1, 1);
 
             string sql = "SELECT * FROM ApsimXBuilds " +
                          "WHERE IssueNumber = " + issueNumber;

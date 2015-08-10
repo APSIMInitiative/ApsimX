@@ -186,5 +186,4 @@ Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\UserInterface.exe; T
 
 
 [Run]
-Filename: {app}\Documentation\changes.html; Description: View the CHANGES file; Flags: postinstall shellexec skipifsilent
 Filename: {app}\Bin\UserInterface.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent

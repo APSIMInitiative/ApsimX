@@ -40,17 +40,7 @@ namespace Updater
         /// <param name="newInstallDirectory"></param>
         private static void DoUpate(string uninstallDirectory, string newInstallDirectory)
         {
-            // Wait for the user interface to close - just in case.
-            int i = 0;
-            while (i < 5 && Process.GetProcessesByName("UserInterface.exe").Count() > 0)
-            {
-                Thread.Sleep(1000);
-                i++;
-            }
-
-            // If user interface didn't shut down then abort.
-            if (i == 5)
-                throw new Exception("User interface is still running. Aborting upgrade.");
+            int i = WaitForProcess("UserInterface");
 
             // Uninstall old version.
             string uninstaller = Path.Combine(uninstallDirectory, "unins000.exe");
@@ -59,21 +49,11 @@ namespace Updater
             Process uninstallProcess = Process.Start(uninstaller, "/SILENT");
             uninstallProcess.WaitForExit();
 
-            // Wait for the uninstaller to close - just in case.
-            i = 0;
-            while (i < 5 && Process.GetProcessesByName("unins000.exe").Count() > 0)
-            {
-                Thread.Sleep(1000);
-                i++;
-            }
-
-            // If user interface didn't shut down then abort.
-            if (i == 5)
-                throw new Exception("Uninstaller is still running. Aborting upgrade.");
-
             // Install new version.
             Process installProcess = Process.Start(Path.Combine(Path.GetTempPath(), "ApsimSetup.exe"), "/SILENT");
             installProcess.WaitForExit();
+
+            WaitForProcess("APSIMSetup");
 
             // Write to the downloads database.
 
@@ -82,6 +62,22 @@ namespace Updater
             if (!File.Exists(userInterface))
                 throw new Exception("Cannot find user interface: " + userInterface);
             Process.Start(userInterface);
+        }
+
+        private static int WaitForProcess(string exeName)
+        {
+            // Wait for the user interface to close - just in case.
+            int i = 0;
+            while (i < 10 && Process.GetProcessesByName(exeName).Count() > 0)
+            {
+                Thread.Sleep(1000);
+                i++;
+            }
+
+            // If user interface didn't shut down then abort.
+            if (i == 10)
+                throw new Exception(exeName + " is still running. Aborting upgrade.");
+            return i;
         }
 
         private static void UpdateDB()
