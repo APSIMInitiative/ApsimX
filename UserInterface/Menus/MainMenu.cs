@@ -10,6 +10,10 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using System.Diagnostics;
+    using global::UserInterface.Forms;
+    using System.Windows.Forms;
+
+
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.
@@ -97,5 +101,24 @@ namespace UserInterface.Presenters
             process.StartInfo.FileName = "http://www.apsim.info/Documentation/ApsimX/Overview.aspx";
             process.Start();
         }
+
+        /// <summary>
+        /// User has clicked on Upgrade
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [MainMenu(MenuName = "Upgrade")]
+        public void OnUpgrade(object sender, EventArgs e)
+        {
+            Version version = new Version(Application.ProductVersion);
+            if (version.Revision == 0)
+                explorerPresenter.ShowMessage("You are on a custom build. You cannot upgrade.", DataStore.ErrorLevel.Error);
+            else
+            {
+                UpgradeForm form = new UpgradeForm(explorerPresenter);
+                form.Show();
+            }
+        }
+
     }
 }

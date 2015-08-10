@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f254267d-0a36-4a1d-a819-5a6d517b20fb" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://bob.apsim.info/APSIM.Build.Service/Builds.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Builds.disco" MetadataType="Disco" ID="f585e73e-db98-4837-9052-1183f682904d" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?disco" />
+    <MetadataFile FileName="Builds.xsd" MetadataType="Schema" ID="8362725e-49f3-47c1-922a-71411a214199" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd0" />
+    <MetadataFile FileName="Builds2.xsd" MetadataType="Schema" ID="bcc30a7c-378a-4940-a4c4-c1f8fa913c8d" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd2" />
+    <MetadataFile FileName="Builds.wsdl" MetadataType="Wsdl" ID="45916991-95aa-4dbe-abc9-f1282ccaa26d" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?wsdl" />
+    <MetadataFile FileName="Builds1.xsd" MetadataType="Schema" ID="ca02bbef-5dcd-43db-8aa4-57548663e5eb" SourceId="1" SourceUrl="http://bob.apsim.info/APSIM.Build.Service/Builds.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

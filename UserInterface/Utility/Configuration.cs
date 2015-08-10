@@ -49,6 +49,18 @@ namespace Utility
             }
         }
 
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Organisation { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Postcode { get; set; }
+        public string Country { get; set; }
+        public string Email { get; set; }
+
+
         /// <summary>Add a filename to the list.</summary>
         /// <param name="filename">File path</param>
         public void AddMruFile(string filename)
