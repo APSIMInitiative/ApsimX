@@ -19,26 +19,21 @@ namespace SWIMFrame
         static double rerr = 1.0e-2;
         static double cfac = 1.2;
         static double dh, q1, x, he, Ks, q;
-        static double[] ah = new double[mx];
-        static double[] aK = new double[mx];
-        static double[] aphi = new double[mx];
         static double[] hpK = new double[mx];
-        static double[] aS = new double[mx];
         static double[] phif = new double[mx];
         static double[] re = new double[mx];
         static double[] phii = new double[mx];
         static double[] phii5 = new double[mx];
-        static double[,] aKco = new double[3, mx];
-        static double[,] aphico = new double[3, mx];
         static double[,] aq = new double[mx, mx];
         static double[,] qf = new double[mx, mx];
         static double[,] qi1 = new double[mx, mx];
         static double[,] qi2 = new double[mx, mx];
         static double[,] qi3 = new double[mx, mx];
         static double[,] qi5 = new double[mx, mx];
+        static SoilProps sp;
         static FluxEnd pe = new FluxEnd();
 
-        public static void FluxTable(double dz, SoilProps sp)
+        public static void FluxTable(double dz, SoilProps props)
         {
             // Generates a flux table for use by other programs.
             // Assumes soil props available in sp of module soil.
@@ -46,61 +41,55 @@ namespace SWIMFrame
 
 
             //diags - timer start here
-
+            sp = props;
             ft.fend = new FluxEnd[2];
             nu = sp.nc;
-            Array.Copy(sp.hc, ah, sp.hc.Length);
-            Array.Copy(sp.Kc, aK, sp.Kc.Length);
-            Array.Copy(sp.phic, aphi, sp.phic.Length);
-            Array.Copy(sp.Sc, aS, sp.Sc.Length);
-            Array.Copy(sp.Kco, aKco, sp.Kco.Length);
-            Array.Copy(sp.phico, aphico, sp.phico.Length);
             he = sp.he; Ks = sp.ks;
 
             // Get K values for Simpson's integration rule in subroutine odef.
             for (i = 0; i < nu - 2; i++)
             {
-                x = 0.5 * (aphi[i + 1] - aphi[i]);
-                hpK[i] = aK[i] + x * (aKco[0, i] + x * (aKco[1, i] + x * aKco[2, i]));
+                x = 0.5 * (sp.phic[i + 1] - sp.phic[i]);
+                hpK[i] = sp.Kc[i] + x * (sp.Kco[0, i] + x * (sp.Kco[1, i] + x * sp.Kco[2, i]));
             }
 
             // Get fluxes aq(1,:) for values aphi[i] at bottom (wet), aphi(1) at top (dry).
             // These are used to select suitable phi values for flux table.
             nit = 0;
-            aq[0, 0] = aK[0]; // q=K here because dphi/dz=0
+            aq[0, 0] = sp.Kc[0]; // q=K here because dphi/dz=0
             dh = 2.0; // for getting phi in saturated region
-            q1 = (aphi[0] - aphi[1]) / dz; // q1 is initial estimate
+            q1 = (sp.phic[0] - sp.phic[1]) / dz; // q1 is initial estimate
             aq[0, 1] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
             for (j = 2; j < nu + 20; j++) // 20*dh should be far enough for small curvature in (phi,q)
             {
                 if (j > nu) // part satn - set h, K and phi
                 {
-                    ah[j] = ah[j - 1] + dh * (j - nu);
-                    aK[j] = Ks;
-                    aphi[j] = aphi[j - 1] + Ks * dh * (j - nu);
+                    sp.hc[j] = sp.hc[j - 1] + dh * (j - nu);
+                    sp.Kc[j] = Ks;
+                    sp.phic[j] = sp.phic[j - 1] + Ks * dh * (j - nu);
                 }
 
                 // get approx q from linear extrapolation
-                q1 = aq[0, j - 1] + (aphi[j] - aphi[j - 1]) * (aq[0, j - 1] - aq[0, j - 2]) / (aphi[j - 1] - aphi[j - 2]);
+                q1 = aq[0, j - 1] + (sp.phic[j] - sp.phic[j - 1]) * (aq[0, j - 1] - aq[0, j - 2]) / (sp.phic[j - 1] - sp.phic[j - 2]);
                 aq[0, j] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
                 nt = j;
                 ns = nt - nu;
                 if (j > nu)
-                    if (-(aphi[j] - aphi[j - 1]) / (aq[0, j] - aq[0, j - 1]) < (1 + rerr) * dz)
+                    if (-(sp.phic[j] - sp.phic[j - 1]) / (aq[0, j] - aq[0, j - 1]) < (1 + rerr) * dz)
                         break;
             }
 
             // Get phi values phif for flux table using curvature of q vs phi.
             // rerr and cfac determine spacings of phif.
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
-            i = nonlin(nu, aphi.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu), rerr);
-            re = curv(nu, aphi.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu));// for unsat phi
+            i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu), rerr);
+            re = curv(nu, sp.phic.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu));// for unsat phi
             indices(nu - 2, re.Slice(1,nu-2).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, ref iphif);
             int[] iphifReverse = iphif.Take(nphif).Reverse().ToArray();
             for (int idx = 0; idx < nphif; idx++)
                 iphif[idx] = 1 + nu - iphifReverse[idx]; // locations of phif in aphi
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
-            re = curv(1 + ns, aphi.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
+            re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
             indices(ns - 1, re, ns, cfac, out nfs, ref ifs);
 
             for (int idx = nphif; idx < nphif + nfs - 2; idx++)
@@ -109,7 +98,7 @@ namespace SWIMFrame
             nphif = nphif + nfs - 1;
             for (int idx = 0; idx < nphif; idx++)
             {
-                phif[idx] = aphi[iphif[idx]];
+                phif[idx] = sp.phic[iphif[idx]];
                 qf[0, idx] = aq[0, iphif[idx]];
             }
             // Get rest of fluxes
@@ -118,7 +107,7 @@ namespace SWIMFrame
                 for (i = 1; i < j; i++)
                 {
                     q1 = qf[i - 1, j];
-                    if (ah[iphif[j]] - dz < ah[iphif[i]])
+                    if (sp.hc[iphif[j]] - dz < sp.hc[iphif[i]])
                         q1 = 0.0; // improve?
                     qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
@@ -128,7 +117,7 @@ namespace SWIMFrame
                 {
                     q1 = qf[i, j + 1];
                     if (j + 1 == i)
-                        q1 = q1 + (aphi[iphif[i]] - aphi[iphif[j]]) / dz;
+                        q1 = q1 + (sp.phic[iphif[i]] - sp.phic[iphif[j]]) / dz;
                     qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Use of flux table involves only linear interpolation, so gain accuracy
@@ -183,14 +172,16 @@ namespace SWIMFrame
             {
                 ip = ip + 1;
                 ii = iphif[ip] - 1;
+                if (ii >= sp.Kco.GetLength(1))
+                    ii = sp.Kco.GetLength(1) - 1;
                 do // Search down to locate phii position for cubic.
                 {
-                    if (aphi[ii] <= phii[ip])
+                    if (sp.phic[ii] <= phii[ip])
                         break;
                     ii = ii - 1;
                 } while (true);
-                x = phii[ip] - aphi[ii];
-                qi5[j-1, j-1] = aK[ii] + x * (aKco[0, ii] + x * (aKco[1, ii] + x * aKco[2, ii]));
+                x = phii[ip] - sp.phic[ii];
+                qi5[j-1, j-1] = sp.Kc[ii] + x * (sp.Kco[0, ii] + x * (sp.Kco[1, ii] + x * sp.Kco[2, ii]));
             }
 
             for (int idx = 0; idx < i; idx++)
@@ -236,18 +227,17 @@ namespace SWIMFrame
             }
 
             // apply Simpson's rule
-            // sum((aphi(n1+1:n2)-aphi(n1:n2-1))*(da(1:np-1)+4*db+da(2:np))/6) for both of these stupid lines... find something better.
-            double[] t1 = aphi.Slice(n1 + 1, n2);
-            double[] t2 = aphi.Slice(n1, n2 - 1);
-            double[] t3 = da.Slice(1, np - 1);
-            double[] t4 = da.Slice(2, np);
-
-            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(MathUtilities.Subtract(t1,t2), MathUtilities.Add(MathUtilities.Multiply(MathUtilities.AddValue(t3, 4), db), t4)), 6)); // this is madness!
+            // u[] = sum((aphi(n1+1:n2)-aphi(n1:n2-1))*(da(1:np-1)+4*db+da(2:np))/6). Love the C# implementation. Note aphi is now sp.phic
+            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
+                  (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)), 
+                  MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6)); // this is madness!
             da = MathUtilities.Multiply(da, da);
             db = MathUtilities.Multiply(db, db);
-            t3 = da.Slice(1, np - 1);
-            t4 = da.Slice(2, np);
-            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(MathUtilities.Subtract(t1, t2), MathUtilities.Add(MathUtilities.Multiply(MathUtilities.AddValue(t3, 4), db), t4)), 6)); // this is madness!
+            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
+                  (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)),
+                  MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6));
+            if (double.IsNaN(u[0]) || double.IsNaN(u[1]))
+                throw new Exception();
             return u;
         }
 
@@ -265,9 +255,9 @@ namespace SWIMFrame
             i = ia; j = ib; n = nu;
             if (i == j) // free drainage
             {
-                return aK[i];
+                return sp.Kc[i];
             }
-            ha = ah[i]; hb = ah[j]; Ka = aK[i]; Kb = aK[j];
+            ha = sp.hc[i]; hb = sp.hc[j]; Ka = sp.Kc[i]; Kb = sp.Kc[j];
             if (i >= n && j >= n) // saturated flow
                 return Ka * ((ha - hb) / dz + 1.0);
 
@@ -309,11 +299,11 @@ namespace SWIMFrame
                 {
                     Ks = Ka;
                     dh = ha - he;
-                    n1 = ib; n2 = n;
+                    n1 = ib; n2 = n-1;
                 }
                 else
                 {
-                    n1 = ib; n2 = ia;
+                    n1 = ib; n2 = ia-1;
                 }
             }
             else
@@ -327,14 +317,14 @@ namespace SWIMFrame
                 }
                 else
                     n1 = ia;
-                n2 = ib;
+                n2 = ib-1;
             }
             u0 = new double[] { 0.0, 0.0 }; // u(1) is z, u(2) is dz/dq (partial deriv)
             //write (*,*) q1,q,q2
             for (it = 1; it < maxit; it++)// bounded Newton iterations to get q that gives correct dz
             {
                 u = u0; //point?
-                u = odef(n1, n2, aK, hpK);
+                u = odef(n1, n2, sp.Kc, hpK);
                 //write (*,*) it,q,u(1),u(2)
                 if (i > n || j > n) // add sat solns
                 {
