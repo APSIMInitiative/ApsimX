@@ -84,13 +84,13 @@ namespace SWIMFrame
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
             i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu), rerr);
             re = curv(nu, sp.phic.Slice(1, nu), aqM.Column(0).ToArray().Slice(1, nu));// for unsat phi
-            indices(nu - 2, re.Slice(1,nu-2).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, ref iphif);
+            indices(nu - 2, re.Slice(1,nu-2).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, out iphif);
             int[] iphifReverse = iphif.Take(nphif).Reverse().ToArray();
             for (int idx = 0; idx < nphif; idx++)
                 iphif[idx] = 1 + nu - iphifReverse[idx]; // locations of phif in aphi
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
             re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
-            indices(ns - 1, re, ns, cfac, out nfs, ref ifs);
+            indices(ns - 1, re, ns, cfac, out nfs, out ifs);
 
             for (int idx = nphif; idx < nphif + nfs - 2; idx++)
                 iphif[idx] = nu - 1 + ifs[idx];
@@ -104,7 +104,7 @@ namespace SWIMFrame
             // Get rest of fluxes
             // First for lower end wetter
             for (j = 1; j < nphif - 1; j++)
-                for (i = 1; i < j; i++)
+                for (i = 1; i < j - 1; i++)
                 {
                     q1 = qf[i - 1, j];
                     if (sp.hc[iphif[j]] - dz < sp.hc[iphif[i]])
@@ -299,11 +299,11 @@ namespace SWIMFrame
                 {
                     Ks = Ka;
                     dh = ha - he;
-                    n1 = ib; n2 = n-1;
+                    n1 = ib; n2 = n;
                 }
                 else
                 {
-                    n1 = ib; n2 = ia-1;
+                    n1 = ib; n2 = ia;
                 }
             }
             else
@@ -316,8 +316,10 @@ namespace SWIMFrame
                     n2 = n;
                 }
                 else
+                {
                     n1 = ia;
-                n2 = ib-1;
+                    n2 = ib;
+                }
             }
             u0 = new double[] { 0.0, 0.0 }; // u(1) is z, u(2) is dz/dq (partial deriv)
             //write (*,*) q1,q,q2
@@ -405,19 +407,40 @@ namespace SWIMFrame
             return 0;
         }
 
+        /// <summary>
+        /// Test harness for indices; can't use extension method due to presence of ref and out vars.
+        /// </summary>
+        /// <param name="n">n</param>
+        /// <param name="c">c</param>
+        /// <param name="iend">iend</param>
+        /// <param name="fac">fac</param>
+        /// <param name="isel">isel</param>
+        /// <returns></returns>
+        public static KeyValuePair<int, int[]> TestIndices(int n, double[] c, int iend, double fac)
+        {
+            int nsel;
+            int[] isel = new int[n + 2];
+            indices(n, c, iend, fac, out nsel, out isel);
+            return new KeyValuePair<int, int[]>(nsel, isel);
+        }
+
         // get indices of elements selected using curvature
-        private static void indices(int n, double[] c, int iend, double fac, out int nsel, ref int[] isel)
+        private static void indices(int n, double[] c, int iend, double fac, out int nsel, out int[] isel)
         {
             int i, j;
             int[] di = new int[n];
+            isel = new int[n + 3] ;
             double[] ac = new double[n];
 
             for (int idx = 0; idx < c.Length; idx++)
             {
                 ac[idx] = Math.Abs(c[idx]);
+            }
+            for (int idx = 0; idx < c.Length; idx++)
+            {
                 di[idx] = (int)Math.Round(fac * MathUtilities.Max(ac) / ac[idx], MidpointRounding.ToEven); // min spacings
             }
-            isel[0] = 1; i = 1; j = 1;
+            isel[1] = 1; i = 1; j = 1;
             while (true) //will want to change this
             {
                 if (i >= iend)
@@ -438,6 +461,7 @@ namespace SWIMFrame
                 j++;
                 isel[j] = n + 2;
             }
+            isel = isel.Skip(1).ToArray();
             nsel = j;
         }
         // Return quadratic interpolation coeffs co.
