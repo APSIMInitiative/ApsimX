@@ -349,7 +349,18 @@ namespace UserInterface.Views
             message += "\n";
             StatusWindow.Text = message;
             this.toolTip1.SetToolTip(this.StatusWindow, message);
+            progressBar.Visible = false;
             Application.DoEvents();
+        }
+
+        /// <summary>
+        /// Show progress bar with the specified percent.
+        /// </summary>
+        /// <param name="percent"></param>
+        public void ShowProgress(int percent)
+        {
+            progressBar.Visible = true;
+            progressBar.Value = percent;
         }
 
         /// <summary>

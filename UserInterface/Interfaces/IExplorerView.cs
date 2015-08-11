@@ -238,6 +238,12 @@ namespace UserInterface.Interfaces
         /// Close down APSIMX user interface.
         /// </summary>
         void Close();
+
+        /// <summary>
+        /// Show progress bar with the specified percent.
+        /// </summary>
+        /// <param name="percent"></param>
+        void ShowProgress(int percent);
     }
 
 

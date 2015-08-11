@@ -1,36 +1,54 @@
-﻿using UserInterface.Views;
-using Models.Core;
-using System.Media;
-using System;
-using UserInterface.Presenters;
-using System.Diagnostics;
-using System.Threading;
-using Models.Factorial;
-using APSIM.Shared.Utilities;
-
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Presenters;
+    using System;
+    using System.Diagnostics;
+    using System.Media;
+    using System.Windows.Forms;
+
     class RunCommand : ICommand
     {
-        private Model ModelClicked;
-        private Simulations Simulations;
-        private JobManager JobManager;
-        private ExplorerPresenter ExplorerPresenter;
-        private Stopwatch Timer = new Stopwatch(); 
-        public bool ok { get; set; }
+        /// <summary>The model that was right clicked on by user.</summary>
+        private Model modelClicked;
+
+        /// <summary>The top level simulations object.</summary>
+        private Simulations simulations;
+
+        /// <summary>The job manager running the simulations.</summary>
+        private JobManager jobManager;
+
+        /// <summary>The explorer presenter.</summary>
+        private ExplorerPresenter explorerPresenter;
+
+        /// <summary>The stop watch we can use to time the runs.</summary>
+        private Timer timer = null;
+
+        /// <summary>The stop watch we can use to time the runs.</summary>
+        private Stopwatch stopwatch = new Stopwatch();
+
+        /// <summary>The number of jobs being run.</summary>
+        private int numSimulationsToRun;
+
+        /// <summary>Retuns true if simulations are running.</summary>
         public bool IsRunning { get; set; }
+
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public RunCommand(Simulations Simulations, Model Simulation, ExplorerPresenter presenter)
+        /// <param name="simulations">The top level simulations object.</param>
+        /// <param name="simulation">The simulation object clicked on.</param>
+        /// <param name="presenter">The explorer presenter.</param>
+        public RunCommand(Simulations simulations, Model simulation, ExplorerPresenter presenter)
         {
-            this.Simulations = Simulations;
-            this.ModelClicked = Simulation;
-            this.ExplorerPresenter = presenter;
+            this.simulations = simulations;
+            this.modelClicked = simulation;
+            this.explorerPresenter = presenter;
 
-            JobManager = new JobManager();
-            JobManager.AllJobsCompleted += OnComplete;
+            jobManager = new JobManager();
+            jobManager.AllJobsCompleted += OnComplete;
         }
 
         /// <summary>
@@ -40,21 +58,33 @@ namespace UserInterface.Commands
         {
             IsRunning = true;
 
-            if (ExplorerPresenter != null)
-                ExplorerPresenter.ShowMessage(ModelClicked.Name + " running...", Models.DataStore.ErrorLevel.Information);
+            stopwatch.Start();
 
-            Timer.Start();
-
-            if (ModelClicked is Simulations)
+            if (modelClicked is Simulations)
             {
-                Simulations.SimulationToRun = null;  // signal that we want to run all simulations.
+                simulations.SimulationToRun = null;  // signal that we want to run all simulations.
+                numSimulationsToRun = Simulations.FindAllSimulationsToRun(simulations).Length;
             }
             else
-                Simulations.SimulationToRun = ModelClicked;
-           
-            JobManager.AddJob(Simulations);
-            JobManager.AllJobsCompleted += OnComplete;
-            JobManager.Start(waitUntilFinished: false);
+            {
+                simulations.SimulationToRun = modelClicked;
+                numSimulationsToRun = Simulations.FindAllSimulationsToRun(modelClicked).Length;
+            }
+
+            if (explorerPresenter != null)
+                explorerPresenter.ShowMessage(modelClicked.Name + " running (" + numSimulationsToRun + ")", Models.DataStore.ErrorLevel.Information);
+
+
+            if (numSimulationsToRun > 1)
+            {
+                timer = new Timer();
+                timer.Interval = 1000;
+                timer.Tick += OnTimerTick;
+            }
+            jobManager.AddJob(simulations);
+            jobManager.AllJobsCompleted += OnComplete;
+            jobManager.Start(waitUntilFinished: false);
+            timer.Start();
         }
 
         /// <summary>
@@ -69,14 +99,14 @@ namespace UserInterface.Commands
         /// </summary>
         private void OnComplete(object sender, EventArgs e)
         {
-            Timer.Stop();
+            stopwatch.Stop();
 
-            string errorMessage = Simulations.ErrorMessage;
+            string errorMessage = simulations.ErrorMessage;
             if (errorMessage == null)
-                ExplorerPresenter.ShowMessage(ModelClicked.Name + " complete "
-                        + " [" + Timer.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
+                explorerPresenter.ShowMessage(modelClicked.Name + " complete "
+                        + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
             else
-                ExplorerPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+                explorerPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
 
             SoundPlayer player = new SoundPlayer();
             if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
@@ -85,6 +115,25 @@ namespace UserInterface.Commands
                 player.Stream = Properties.Resources.success;
             player.Play();
             IsRunning = false;
+        }
+
+        /// <summary>
+        /// The timer has ticked. Update the progress bar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            // One job will be the simulations object we added above. We don't want
+            // to count this in the list of simulations being run, hence the -1 below.
+            if (jobManager.JobCount > 1)
+            {
+                int numSimulationsRun = numSimulationsToRun - jobManager.JobCount;
+                double percent = numSimulationsRun * 1.0 / numSimulationsToRun * 100.0;
+                explorerPresenter.ShowProgress(Convert.ToInt32(percent));
+                if (jobManager.JobCount == 0)
+                    timer.Stop();
+            }
         }
     }
 }

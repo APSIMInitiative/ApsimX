@@ -250,6 +250,15 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Show progress bar with the specified percent.
+        /// </summary>
+        /// <param name="percent">Percent 0-100</param>
+        public void ShowProgress(int percent)
+        {
+            view.ShowProgress(percent);
+        }
+
+        /// <summary>
         /// Close the APSIMX user interface
         /// </summary>
         public void Close()
